@@ -83,6 +83,7 @@ export function GeneratorStudio({
   const [selectedGenerationId, setSelectedGenerationId] = useState<string | null>(null);
   const [credits, setCredits] = useState(currentUser?.credits ?? 0);
   const [zoomedImage, setZoomedImage] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<"current" | "history">("current");
 
   const displayedGeneration = generations.find(g => g.id === selectedGenerationId) ?? generations[0] ?? null;
   const gallery = displayedGeneration?.images ?? [];
@@ -441,114 +442,132 @@ export function GeneratorStudio({
           </button>
         </div>
       </div>
-
-        <div className="studio-card flex flex-col rounded-[2rem] p-6 md:p-8">
-          <h3 className="mb-5 text-lg font-semibold tracking-tight">历史记录</h3>
-
-          <div className="grid gap-3">
-            {generations.length > 0 ? (
-              generations.slice(0, compact ? 4 : 8).map((generation) => (
-                <button
-                  key={generation.id}
-                  type="button"
-                  onClick={() => setSelectedGenerationId(generation.id)}
-                  className={`group relative text-left overflow-hidden rounded-[1.25rem] border p-4 transition-all ${
-                    displayedGeneration?.id === generation.id
-                      ? "border-[var(--accent)] bg-[var(--surface-strong)] shadow-sm"
-                      : "border-[var(--line)] bg-[var(--surface-strong)]/30 hover:bg-[var(--surface-strong)]/60"
-                  }`}
-                >
-                  <div className="flex gap-3">
-                    {generation.images[0] && (
-                      <div className="shrink-0">
-                        <img 
-                          src={generation.images[0].url} 
-                          alt="Thumbnail" 
-                          className="size-16 rounded-xl object-cover border border-[var(--line)]" 
-                        />
-                      </div>
-                    )}
-                    <div className="flex-1 min-w-0 flex flex-col justify-between">
-                      <div className="mb-1 flex items-center justify-between gap-3 text-xs text-[var(--ink-soft)]">
-                        <span className="flex items-center gap-1.5 font-medium truncate">
-                          <div className={`size-1.5 shrink-0 rounded-full ${generation.providerMode === "built_in" ? "bg-[var(--accent)]" : "bg-teal-400"}`} />
-                          {generation.providerMode === "built_in" ? "内置渠道" : "自填渠道"}
-                        </span>
-                        <span className="shrink-0">
-                          {formatDistanceToNow(new Date(generation.createdAt), {
-                            addSuffix: true,
-                            locale: zhCN,
-                          })}
-                        </span>
-                      </div>
-                      <p className="line-clamp-2 text-sm text-[var(--ink)]/90">{generation.prompt}</p>
-                    </div>
-                  </div>
-                </button>
-              ))
-            ) : (
-              <div className="rounded-[1.25rem] border border-dashed border-[var(--line)] bg-[var(--surface-strong)]/20 px-4 py-8 text-center text-sm text-[var(--ink-soft)]">
-                还没有生成记录。
-              </div>
-            )}
-          </div>
-        </div>
       </div>
 
-      <div className="sticky top-6 flex min-w-0 flex-col">
-        <div className="studio-card flex flex-col overflow-hidden rounded-[2rem] p-5">
-          <div className="mb-4 flex items-center justify-between px-1">
-            <h3 className="text-lg font-semibold tracking-tight">生成结果</h3>
-            {displayedGeneration && (
-              <div className="flex gap-2 text-xs text-[var(--ink-soft)]">
-                <span className="rounded-full bg-[var(--surface-strong)] px-2 py-1">{displayedGeneration.model}</span>
-                <span className="rounded-full bg-[var(--surface-strong)] px-2 py-1">{displayedGeneration.size}</span>
-              </div>
-            )}
+      <div className="sticky top-6 flex min-w-0 flex-col max-h-[calc(100vh-3rem)]">
+        <div className="studio-card flex flex-col overflow-hidden rounded-[2rem] p-5 h-full">
+          <div className="mb-4 flex items-center gap-6 border-b border-[var(--line)] px-2 pb-3">
+            <button
+              onClick={() => setActiveTab("current")}
+              className={`text-base font-semibold transition-colors relative ${activeTab === "current" ? "text-[var(--ink)]" : "text-[var(--ink-soft)] hover:text-[var(--ink)]/80"}`}
+            >
+              生成结果
+              {activeTab === "current" && (
+                <div className="absolute -bottom-3 left-0 right-0 h-0.5 bg-[var(--accent)] rounded-t-full" />
+              )}
+            </button>
+            <button
+              onClick={() => setActiveTab("history")}
+              className={`text-base font-semibold transition-colors relative ${activeTab === "history" ? "text-[var(--ink)]" : "text-[var(--ink-soft)] hover:text-[var(--ink)]/80"}`}
+            >
+              历史记录
+              {activeTab === "history" && (
+                <div className="absolute -bottom-3 left-0 right-0 h-0.5 bg-[var(--accent)] rounded-t-full" />
+              )}
+            </button>
           </div>
 
-          <div className="flex-1">
-            {gallery.length > 0 ? (
-              <div className={`grid gap-4 h-full ${gallery.length > 1 ? "sm:grid-cols-2" : ""}`}>
-                {gallery.map((image) => (
-                  <div
-                    key={image.id}
-                    className="group relative overflow-hidden rounded-2xl border border-[var(--line)] bg-[var(--surface-strong)]/50"
-                  >
-                    <img
-                      src={image.url}
-                      alt="生成结果"
-                      className="aspect-[4/5] h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                    <div className="absolute inset-0 bg-black/40 opacity-0 transition-opacity duration-300 group-hover:opacity-100 flex items-center justify-center gap-3">
-                      <button 
-                        type="button"
-                        onClick={() => setZoomedImage(image.url)}
-                        className="rounded-full bg-white/20 p-3 text-white backdrop-blur-sm transition hover:bg-white/40 hover:scale-110"
-                        title="放大查看"
-                      >
-                        <ZoomIn className="size-5" />
-                      </button>
-                      <button 
-                        type="button"
-                        onClick={() => handleDownload(image.url)}
-                        className="rounded-full bg-[var(--accent)] p-3 text-white shadow-lg transition hover:bg-[var(--accent-soft)] hover:scale-110"
-                        title="下载保存"
-                      >
-                        <Download className="size-5" />
-                      </button>
+          <div className="flex-1 overflow-y-auto pr-1 overflow-x-hidden" style={{ scrollbarWidth: "thin" }}>
+            {activeTab === "current" && (
+              <div className="flex flex-col h-full gap-3">
+                {displayedGeneration && (
+                  <div className="flex justify-end px-1">
+                    <div className="flex gap-2 text-xs text-[var(--ink-soft)]">
+                      <span className="rounded-full bg-[var(--surface-strong)] px-2 py-1">{displayedGeneration.model}</span>
+                      <span className="rounded-full bg-[var(--surface-strong)] px-2 py-1">{displayedGeneration.size}</span>
                     </div>
                   </div>
-                ))}
-              </div>
-            ) : (
-              <div className="flex h-full min-h-[300px] flex-col items-center justify-center rounded-2xl border border-dashed border-[var(--line)] bg-[var(--surface-strong)]/20 px-6 py-12 text-center">
-                <div className="mb-3 rounded-full bg-[var(--surface-strong)] p-4 text-[var(--ink-soft)]">
-                  <Sparkles className="size-6 opacity-50" />
+                )}
+                <div className="flex-1 min-h-[300px]">
+                  {gallery.length > 0 ? (
+                    <div className={`grid gap-4 h-full ${gallery.length > 1 ? "sm:grid-cols-2" : ""}`}>
+                      {gallery.map((image) => (
+                        <div
+                          key={image.id}
+                          className="group relative overflow-hidden rounded-2xl border border-[var(--line)] bg-[var(--surface-strong)]/50"
+                        >
+                          <img
+                            src={image.url}
+                            alt="生成结果"
+                            className="aspect-[4/5] h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                          />
+                          <div className="absolute inset-0 bg-black/40 opacity-0 transition-opacity duration-300 group-hover:opacity-100 flex items-center justify-center gap-3">
+                            <button 
+                              type="button"
+                              onClick={() => setZoomedImage(image.url)}
+                              className="rounded-full bg-white/20 p-3 text-white backdrop-blur-sm transition hover:bg-white/40 hover:scale-110"
+                              title="放大查看"
+                            >
+                              <ZoomIn className="size-5" />
+                            </button>
+                            <button 
+                              type="button"
+                              onClick={() => handleDownload(image.url)}
+                              className="rounded-full bg-[var(--accent)] p-3 text-white shadow-lg transition hover:bg-[var(--accent-soft)] hover:scale-110"
+                              title="下载保存"
+                            >
+                              <Download className="size-5" />
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="flex h-full flex-col items-center justify-center rounded-2xl border border-dashed border-[var(--line)] bg-[var(--surface-strong)]/20 px-6 py-12 text-center">
+                      <div className="mb-3 rounded-full bg-[var(--surface-strong)] p-4 text-[var(--ink-soft)]">
+                        <Sparkles className="size-6 opacity-50" />
+                      </div>
+                      <p className="text-sm text-[var(--ink-soft)]">
+                        你的创意将在这里呈现。<br />输入提示词，点击生成即可开始。
+                      </p>
+                    </div>
+                  )}
                 </div>
-                <p className="text-sm text-[var(--ink-soft)]">
-                  你的创意将在这里呈现。<br />输入提示词，点击生成即可开始。
-                </p>
+              </div>
+            )}
+
+            {activeTab === "history" && (
+              <div className="grid grid-cols-2 gap-3 pb-2">
+                {generations.length > 0 ? (
+                  generations.map((generation) => (
+                    <button
+                      key={generation.id}
+                      type="button"
+                      onClick={() => {
+                        setSelectedGenerationId(generation.id);
+                        setActiveTab("current");
+                      }}
+                      className={`group relative overflow-hidden rounded-[1rem] border transition-all ${
+                        displayedGeneration?.id === generation.id
+                          ? "border-[var(--accent)] ring-2 ring-[var(--accent)]/20"
+                          : "border-[var(--line)] hover:border-[var(--ink-soft)]"
+                      }`}
+                    >
+                      {generation.images[0] ? (
+                        <div className="aspect-square w-full">
+                          <img 
+                            src={generation.images[0].url} 
+                            alt="History thumbnail" 
+                            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" 
+                          />
+                        </div>
+                      ) : (
+                        <div className="aspect-square w-full bg-[var(--surface-strong)]/30 flex items-center justify-center text-xs text-[var(--ink-soft)]">
+                          暂无图片
+                        </div>
+                      )}
+                      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-3 pt-8 opacity-0 transition-opacity group-hover:opacity-100">
+                        <p className="line-clamp-2 text-xs text-white text-left leading-relaxed">
+                          {generation.prompt}
+                        </p>
+                      </div>
+                    </button>
+                  ))
+                ) : (
+                  <div className="col-span-2 py-12 text-center text-sm text-[var(--ink-soft)]">
+                    还没有生成记录。
+                  </div>
+                )}
               </div>
             )}
           </div>
