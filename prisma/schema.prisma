@@ -22,6 +22,13 @@ enum GenerationStatus {
   FAILED
 }
 
+enum ShowcaseStatus {
+  PRIVATE
+  PENDING
+  FEATURED
+  TAKEDOWN_PENDING
+}
+
 model User {
   id                   String                @id @default(cuid())
   email                String                @unique
@@ -35,6 +42,7 @@ model User {
   customProviderConfig SavedProviderConfig?
   generations          GenerationJob[]
   featuredGenerations  GenerationJob[]       @relation("FeaturedByAdmin")
+  reviewedWorks        GenerationImage[]     @relation("ReviewedWorks")
 }
 
 model BuiltInProviderConfig {
@@ -97,9 +105,17 @@ model GenerationJob {
 }
 
 model GenerationImage {
-  id        String        @id @default(cuid())
-  jobId      String
-  url       String
-  createdAt DateTime      @default(now())
-  job       GenerationJob @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  id               String         @id @default(cuid())
+  jobId             String
+  url              String
+  showcaseStatus   ShowcaseStatus @default(PRIVATE)
+  showPromptPublic Boolean        @default(false)
+  submittedAt      DateTime?
+  featuredAt       DateTime?
+  reviewedAt       DateTime?
+  reviewNote       String?
+  reviewedById     String?
+  createdAt        DateTime       @default(now())
+  job              GenerationJob  @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  reviewedBy       User?          @relation("ReviewedWorks", fields: [reviewedById], references: [id])
 }

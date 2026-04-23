@@ -6,6 +6,7 @@ const adminLinks = [
   { href: "/admin", label: "概览" },
   { href: "/admin/invites", label: "邀请码" },
   { href: "/admin/users", label: "用户" },
+  { href: "/admin/works", label: "作品审核" },
   { href: "/admin/generations", label: "生成记录" },
 ];
 

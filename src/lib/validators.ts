@@ -1,5 +1,10 @@
 import { z } from "zod";
 
+import {
+  adminWorkReviewActions,
+  userWorkShowcaseActions,
+} from "@/lib/work-showcase";
+
 export const registerSchema = z.object({
   email: z.email("请输入正确的邮箱"),
   inviteCode: z.string().trim().default(""),
@@ -52,4 +57,14 @@ export const builtInProviderConfigSchema = z.object({
 export const providerProbeSchema = z.object({
   apiKey: z.string().trim().optional().nullable(),
   baseUrl: z.url("请输入正确的 Base URL"),
+});
+
+export const workShowcaseUpdateSchema = z.object({
+  action: z.enum(userWorkShowcaseActions),
+  showPromptPublic: z.boolean().optional(),
+});
+
+export const adminWorkReviewSchema = z.object({
+  action: z.enum(adminWorkReviewActions),
+  reviewNote: z.string().trim().max(300, "审核备注最多 300 个字符").optional().nullable(),
 });

@@ -2,12 +2,14 @@ import {
   GenerationStatus,
   ProviderMode,
   Role,
+  ShowcaseStatus,
   type GenerationImage,
   type GenerationJob,
   type User,
 } from "@prisma/client";
 
 import type { ProviderMode as UiProviderMode, UserRole } from "@/lib/types";
+import type { WorkShowcaseStatus } from "@/lib/work-showcase";
 
 export type SerializedGeneration = {
   count: number;
@@ -29,6 +31,65 @@ export type SerializedGeneration = {
   updatedAt: string;
 };
 
+type WorkJobFields = Pick<
+  GenerationJob,
+  "createdAt" | "id" | "model" | "negativePrompt" | "prompt" | "size" | "status" | "userId"
+>;
+
+type WorkReviewerFields = Pick<User, "email" | "id">;
+
+export type WorkRecord = GenerationImage & {
+  job: WorkJobFields;
+  reviewedBy?: WorkReviewerFields | null;
+};
+
+export type AdminWorkRecord = GenerationImage & {
+  job: WorkJobFields & {
+    user: WorkReviewerFields;
+  };
+  reviewedBy?: WorkReviewerFields | null;
+};
+
+export type SerializedWork = {
+  createdAt: string;
+  featuredAt: string | null;
+  generationCreatedAt: string;
+  generationStatus: "failed" | "pending" | "succeeded";
+  id: string;
+  jobId: string;
+  model: string;
+  negativePrompt: string | null;
+  ownerId: string;
+  prompt: string;
+  reviewNote: string | null;
+  reviewedAt: string | null;
+  reviewedById: string | null;
+  reviewer: {
+    email: string;
+    id: string;
+  } | null;
+  showcaseStatus: WorkShowcaseStatus;
+  showPromptPublic: boolean;
+  size: string;
+  submittedAt: string | null;
+  url: string;
+};
+
+export type SerializedAdminWork = SerializedWork & {
+  author: {
+    email: string;
+    id: string;
+  };
+};
+
+export type SerializedFeaturedWork = {
+  featuredAt: string | null;
+  id: string;
+  image: string;
+  prompt: string;
+  title: string;
+};
+
 export function toPrismaProviderMode(providerMode: UiProviderMode) {
   return providerMode === "built_in"
     ? ProviderMode.BUILT_IN
@@ -43,12 +104,70 @@ export function fromPrismaRole(role: Role): UserRole {
   return role === Role.ADMIN ? "admin" : "user";
 }
 
+export function fromPrismaShowcaseStatus(status: ShowcaseStatus): WorkShowcaseStatus {
+  return status;
+}
+
 export function serializeUser(user: Pick<User, "id" | "email" | "role" | "credits">) {
   return {
     credits: user.credits,
     email: user.email,
     id: user.id,
     role: fromPrismaRole(user.role),
+  };
+}
+
+export function serializeWork(work: WorkRecord): SerializedWork {
+  return {
+    createdAt: work.createdAt.toISOString(),
+    featuredAt: work.featuredAt?.toISOString() ?? null,
+    generationCreatedAt: work.job.createdAt.toISOString(),
+    generationStatus:
+      work.job.status === GenerationStatus.SUCCEEDED
+        ? "succeeded"
+        : work.job.status === GenerationStatus.FAILED
+          ? "failed"
+          : "pending",
+    id: work.id,
+    jobId: work.jobId,
+    model: work.job.model,
+    negativePrompt: work.job.negativePrompt,
+    ownerId: work.job.userId,
+    prompt: work.job.prompt,
+    reviewNote: work.reviewNote,
+    reviewedAt: work.reviewedAt?.toISOString() ?? null,
+    reviewedById: work.reviewedById,
+    reviewer: work.reviewedBy
+      ? {
+          email: work.reviewedBy.email,
+          id: work.reviewedBy.id,
+        }
+      : null,
+    showcaseStatus: fromPrismaShowcaseStatus(work.showcaseStatus),
+    showPromptPublic: work.showPromptPublic,
+    size: work.job.size,
+    submittedAt: work.submittedAt?.toISOString() ?? null,
+    url: work.url,
+  };
+}
+
+export function serializeAdminWork(work: AdminWorkRecord): SerializedAdminWork {
+  return {
+    ...serializeWork(work),
+    author: {
+      email: work.job.user.email,
+      id: work.job.user.id,
+    },
+  };
+}
+
+export function serializeFeaturedWork(work: WorkRecord): SerializedFeaturedWork {
+  return {
+    featuredAt: work.featuredAt?.toISOString() ?? null,
+    id: work.id,
+    image: work.url,
+    prompt: work.showPromptPublic ? work.job.prompt : "作者未公开提示词",
+    title: work.job.model,
   };
 }
 
