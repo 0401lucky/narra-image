@@ -1,6 +1,10 @@
-import { PrismaClient, Role } from "@prisma/client";
+import { Role } from "@prisma/client";
 
-const prisma = new PrismaClient();
+import { createPrismaClient } from "../src/lib/prisma-client";
+
+const prisma = createPrismaClient({
+  connectionString: process.env.DATABASE_URL || "",
+});
 
 async function main() {
   const bootstrapInviteCode =
