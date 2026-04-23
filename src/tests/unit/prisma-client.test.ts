@@ -1,4 +1,4 @@
-import { createPrismaClient } from "@/lib/prisma-client";
+import { createPrismaClient } from "../../../prisma/create-prisma-client";
 
 describe("Prisma 客户端工厂", () => {
   it("传入连接串后可以构造 Prisma 7 客户端", async () => {

@@ -3,7 +3,7 @@ import "server-only";
 import { PrismaClient } from "@prisma/client";
 
 import { getEnv } from "@/lib/env";
-import { createPrismaClient } from "@/lib/prisma-client";
+import { createPrismaClient } from "../../prisma/create-prisma-client";
 
 declare global {
   var __narraPrisma__: PrismaClient | undefined;

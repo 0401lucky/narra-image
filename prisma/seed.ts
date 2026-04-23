@@ -1,6 +1,6 @@
 import { Role } from "@prisma/client";
 
-import { createPrismaClient } from "../src/lib/prisma-client";
+import { createPrismaClient } from "./create-prisma-client";
 
 const prisma = createPrismaClient({
   connectionString: process.env.DATABASE_URL || "",
