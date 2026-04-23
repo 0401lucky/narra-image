@@ -1,74 +1,17 @@
-/* eslint-disable @next/next/no-img-element */
-
 import Link from "next/link";
-import { GenerationStatus } from "@prisma/client";
 
-import { db } from "@/lib/db";
 import { serializeUser } from "@/lib/prisma-mappers";
 import { getCurrentUserRecord } from "@/lib/server/current-user";
+import { listFeaturedWorks } from "@/lib/server/works";
 import { SiteHeader } from "@/components/marketing/site-header";
 import { FeaturedGallery } from "@/components/marketing/featured-gallery";
 
 export const dynamic = "force-dynamic";
 
-const fallbackWorks = [
-  {
-    id: "demo-1",
-    image:
-      "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=900&q=80",
-    prompt: "雨后城市、银色风衣、胶片颗粒、时尚封面",
-    title: "Raincoat Cover",
-  },
-  {
-    id: "demo-2",
-    image:
-      "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=900&q=80",
-    prompt: "暖色落日、时装大片、柔焦、高级妆面",
-    title: "Golden Issue",
-  },
-  {
-    id: "demo-3",
-    image:
-      "https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=900&q=80",
-    prompt: "未来建筑、极简镜面、竖版海报、编辑感",
-    title: "Mirror City",
-  },
-];
-
 export default async function Home() {
   const user = await getCurrentUserRecord();
   const currentUser = user ? serializeUser(user) : null;
-
-  const featuredJobs = await db.generationJob
-    .findMany({
-      where: {
-        featuredAt: {
-          not: null,
-        },
-        status: GenerationStatus.SUCCEEDED,
-      },
-      include: {
-        images: {
-          orderBy: { createdAt: "asc" },
-          take: 1,
-        },
-      },
-      orderBy: { featuredAt: "desc" },
-      take: 6,
-    })
-    .catch(() => []);
-
-  const works =
-    featuredJobs.length > 0
-      ? featuredJobs
-          .filter((job) => job.images[0])
-          .map((job) => ({
-            id: job.id,
-            image: job.images[0]!.url,
-            prompt: job.prompt,
-            title: job.model,
-          }))
-      : fallbackWorks;
+  const works = await listFeaturedWorks().catch(() => []);
 
   return (
     <main className="pb-20">
@@ -92,7 +35,16 @@ export default async function Home() {
           </Link>
         </div>
 
-        <FeaturedGallery works={works} />
+        {works.length > 0 ? (
+          <FeaturedGallery works={works} />
+        ) : (
+          <div className="studio-card rounded-[2rem] border border-dashed border-[var(--line)] p-10 text-center">
+            <h2 className="text-2xl font-semibold text-[var(--ink)]">精选作品还在审核中</h2>
+            <p className="mt-3 text-sm leading-relaxed text-[var(--ink-soft)]">
+              当前还没有公开展示的作品。登录后去创作台生成图片，再到作品页投稿精选。
+            </p>
+          </div>
+        )}
       </section>
     </main>
   );

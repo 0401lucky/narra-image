@@ -1,9 +1,5 @@
-/* eslint-disable @next/next/no-img-element */
-
 "use client";
 
-import { formatDistanceToNow } from "date-fns";
-import { zhCN } from "date-fns/locale";
 import { Sparkles, WandSparkles, Download, ZoomIn, X } from "lucide-react";
 import { useMemo, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
@@ -102,14 +98,16 @@ export function GeneratorStudio({
       const blob = await response.blob();
       const blobUrl = URL.createObjectURL(blob);
       const a = document.createElement("a");
+      const pathname = new URL(url, window.location.href).pathname;
+      const nameFromUrl = pathname.split("/").filter(Boolean).pop();
       a.href = blobUrl;
-      a.download = `narra-image-${Date.now()}.png`;
+      a.download = nameFromUrl && nameFromUrl.includes(".") ? nameFromUrl : "narra-image.png";
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(blobUrl);
-    } catch (e) {
-      window.open(url, "_blank");
+    } catch {
+      window.open(url, "_blank", "noopener,noreferrer");
     }
   }
 
@@ -306,6 +304,9 @@ export function GeneratorStudio({
                   ))}
                 </div>
               )}
+              {modelProbeError ? (
+                <p className="text-sm text-amber-700">{modelProbeError}</p>
+              ) : null}
             </div>
 
             <div className="space-y-2">

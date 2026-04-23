@@ -1,8 +1,14 @@
 "use client";
 
+import type { GenerationImage, GenerationJob, User } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { X } from "lucide-react";
+
+type GenerationAdminJob = GenerationJob & {
+  images: GenerationImage[];
+  user: Pick<User, "email">;
+};
 
 export function InviteCreator() {
   const router = useRouter();
@@ -353,7 +359,7 @@ export function BuiltInProviderForm({
   );
 }
 
-export function GenerationAdminCard({ job }: { job: any }) {
+export function GenerationAdminCard({ job }: { job: GenerationAdminJob }) {
   const [zoomedImage, setZoomedImage] = useState<string | null>(null);
   const [showPrompt, setShowPrompt] = useState(false);
 
@@ -401,8 +407,8 @@ export function GenerationAdminCard({ job }: { job: any }) {
           </div>
         </div>
         
-        <div className="mt-4 flex items-center justify-end">
-          <FeatureToggleButton featured={Boolean(job.featuredAt)} generationId={job.id} />
+        <div className="mt-4 flex items-center justify-end text-xs text-[var(--ink-soft)]">
+          <span>原始生成记录，仅用于后台追溯</span>
         </div>
       </div>
 

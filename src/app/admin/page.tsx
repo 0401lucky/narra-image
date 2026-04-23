@@ -1,5 +1,7 @@
 import { redirect } from "next/navigation";
 
+import { ShowcaseStatus } from "@prisma/client";
+
 import { db } from "@/lib/db";
 import { getBuiltInProviderConfigForAdmin } from "@/lib/providers/built-in-provider";
 import { requireAdminRecord } from "@/lib/server/current-user";
@@ -23,11 +25,9 @@ export default async function AdminPage() {
       db.user.count(),
       db.inviteCode.count(),
       db.generationJob.count(),
-      db.generationJob.count({
+      db.generationImage.count({
         where: {
-          featuredAt: {
-            not: null,
-          },
+          showcaseStatus: ShowcaseStatus.FEATURED,
         },
       }),
       getBuiltInProviderConfigForAdmin(),
@@ -54,7 +54,7 @@ export default async function AdminPage() {
             ["注册用户", userCount],
             ["邀请码总数", inviteCount],
             ["生成记录", generationCount],
-            ["首页精选", featuredCount],
+            ["公开作品", featuredCount],
           ].map(([label, value]) => (
             <div key={label} className="studio-card rounded-[1.8rem] p-5">
               <div className="text-sm text-[var(--ink-soft)]">{label}</div>

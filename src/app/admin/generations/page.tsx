@@ -1,5 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
-
 import { redirect } from "next/navigation";
 
 import { db } from "@/lib/db";
