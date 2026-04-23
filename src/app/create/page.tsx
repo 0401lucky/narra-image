@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 
+import { getCheckInSummary } from "@/lib/benefits/config";
 import { db } from "@/lib/db";
 import { serializeGeneration, serializeUser } from "@/lib/prisma-mappers";
 import { getCurrentUserRecord } from "@/lib/server/current-user";
@@ -15,7 +16,7 @@ export default async function CreatePage() {
     redirect("/login");
   }
 
-  const [savedProvider, jobs, builtInConfig] = await Promise.all([
+  const [savedProvider, jobs, builtInConfig, checkInSummary] = await Promise.all([
     db.savedProviderConfig.findUnique({
       where: { userId: user.id },
       select: {
@@ -36,13 +37,14 @@ export default async function CreatePage() {
       take: 24,
     }),
     getBuiltInProviderConfig(),
+    getCheckInSummary(user.id),
   ]);
 
   const currentUser = serializeUser(user);
 
   return (
     <main className="pb-20">
-      <SiteHeader currentUser={currentUser} />
+      <SiteHeader currentUser={currentUser} showCheckIn={false} />
 
       <section className="mx-auto max-w-6xl px-5 pt-8 pb-12 md:px-8">
         <div className="mb-6">
@@ -55,6 +57,7 @@ export default async function CreatePage() {
         </div>
 
         <GeneratorStudio
+          checkInSummary={checkInSummary}
           currentUser={currentUser}
           initialGenerations={jobs.map(serializeGeneration)}
           initialSavedProvider={savedProvider}

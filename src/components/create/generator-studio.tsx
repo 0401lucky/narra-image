@@ -1,8 +1,11 @@
 "use client";
 
-import { Sparkles, WandSparkles, Download, ZoomIn, X } from "lucide-react";
-import { useMemo, useState, useTransition } from "react";
+import { Sparkles, WandSparkles, Download, ZoomIn, X, ImagePlus } from "lucide-react";
+import { useMemo, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+
+import { CheckInButton } from "@/components/benefits/check-in-button";
+import type { GenerationType } from "@/lib/types";
 
 type ViewerUser = {
   credits: number;
@@ -13,6 +16,7 @@ type GenerationItem = {
   count: number;
   createdAt: string;
   creditsSpent: number;
+  generationType: GenerationType;
   id: string;
   images: Array<{
     id: string;
@@ -23,6 +27,7 @@ type GenerationItem = {
   prompt: string;
   providerMode: "built_in" | "custom";
   size: string;
+  sourceImageUrl: string | null;
   status: "pending" | "succeeded" | "failed";
 };
 
@@ -34,6 +39,10 @@ type SavedProvider = {
 
 type GeneratorStudioProps = {
   compact?: boolean;
+  checkInSummary: {
+    checkInReward: number;
+    checkedInToday: boolean;
+  };
   currentUser: ViewerUser;
   initialGenerations?: GenerationItem[];
   initialSavedProvider?: (SavedProvider & { models?: string[] }) | null;
@@ -52,6 +61,7 @@ const stylePresets = [
 
 export function GeneratorStudio({
   compact = false,
+  checkInSummary,
   currentUser,
   initialGenerations = [],
   initialSavedProvider = null,
@@ -63,6 +73,7 @@ export function GeneratorStudio({
   const [isFetchingModels, startFetchingModels] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [modelProbeError, setModelProbeError] = useState<string | null>(null);
+  const [generationType, setGenerationType] = useState<GenerationType>("text_to_image");
   const [prompt, setPrompt] = useState("");
   const [negativePrompt, setNegativePrompt] = useState("");
   const [model, setModel] = useState(
@@ -88,6 +99,11 @@ export function GeneratorStudio({
   const [credits, setCredits] = useState(currentUser?.credits ?? 0);
   const [zoomedImage, setZoomedImage] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<"current" | "history">("current");
+  const [referenceImage, setReferenceImage] = useState<{
+    file: File;
+    previewUrl: string;
+  } | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const displayedGeneration = generations.find(g => g.id === selectedGenerationId) ?? generations[0] ?? null;
   const gallery = displayedGeneration?.images ?? [];
@@ -128,30 +144,58 @@ export function GeneratorStudio({
 
     setError(null);
 
-    const response = await fetch("/api/generate", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        count,
-        customProvider:
-          providerMode === "custom"
-            ? {
-                apiKey: customApiKey,
-                baseUrl: customBaseUrl,
-                label: "我的渠道",
-                model,
-                remember: rememberProvider,
+    if (generationType === "image_to_image" && !referenceImage) {
+      setError("请先上传参考图");
+      return;
+    }
+
+    const response =
+      generationType === "image_to_image"
+        ? await fetch("/api/generate", {
+            method: "POST",
+            body: (() => {
+              const formData = new FormData();
+              formData.append("generationType", "image_to_image");
+              formData.append("model", model);
+              formData.append("prompt", prompt);
+              formData.append("providerMode", providerMode);
+              if (referenceImage) {
+                formData.append("image", referenceImage.file);
               }
-            : null,
-        model,
-        negativePrompt: negativePrompt || null,
-        prompt,
-        providerMode,
-        size,
-      }),
-    });
+              if (providerMode === "custom") {
+                formData.append("customApiKey", customApiKey);
+                formData.append("customBaseUrl", customBaseUrl);
+                formData.append("customModel", model);
+                formData.append("rememberProvider", rememberProvider ? "true" : "false");
+              }
+              return formData;
+            })(),
+          })
+        : await fetch("/api/generate", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              count,
+              customProvider:
+                providerMode === "custom"
+                  ? {
+                      apiKey: customApiKey,
+                      baseUrl: customBaseUrl,
+                      label: "我的渠道",
+                      model,
+                      remember: rememberProvider,
+                    }
+                  : null,
+              generationType: "text_to_image",
+              model,
+              negativePrompt: negativePrompt || null,
+              prompt,
+              providerMode,
+              size,
+            }),
+          });
 
     const result = (await response.json()) as {
       data?: {
@@ -176,6 +220,36 @@ export function GeneratorStudio({
     if (generation.providerMode === "built_in") {
       setCredits((current) => Math.max(0, current - generation.creditsSpent));
     }
+  }
+
+  async function handleReferenceImageChange(file: File | null) {
+    if (!file) {
+      return;
+    }
+
+    setReferenceImage({
+      file,
+      previewUrl: URL.createObjectURL(file),
+    });
+    setGenerationType("image_to_image");
+    setError(null);
+  }
+
+  async function handleUseImageForEdit(url: string) {
+    try {
+      const response = await fetch(url);
+      const blob = await response.blob();
+      const file = new File([blob], `edit-${Date.now()}.png`, {
+        type: blob.type || "image/png",
+      });
+      await handleReferenceImageChange(file);
+    } catch {
+      setError("当前图片暂时无法加入编辑，请稍后再试");
+      return;
+    }
+
+    setGenerationType("image_to_image");
+    setPrompt("");
   }
 
   async function handleProbeModels() {
@@ -238,15 +312,99 @@ export function GeneratorStudio({
           <div className="flex items-center gap-3 rounded-full border border-[var(--line)] bg-[var(--surface-strong)]/50 px-4 py-2 text-sm">
             <span className="text-[var(--ink-soft)]">剩余积分</span>
             <span className="font-semibold text-[var(--accent)]">{currentUser ? credits : "--"}</span>
+            {currentUser ? (
+              <CheckInButton
+                checkedInToday={checkInSummary.checkedInToday}
+                onCheckedIn={(latestCredits) => setCredits(latestCredits)}
+                rewardCredits={checkInSummary.checkInReward}
+                variant="compact"
+              />
+            ) : null}
           </div>
         </div>
 
         <div className="flex flex-col gap-5">
+          <div className="flex rounded-xl border border-[var(--line)] bg-[var(--surface-strong)]/30 p-1">
+            <button
+              type="button"
+              onClick={() => setGenerationType("text_to_image")}
+              className={`flex-1 rounded-lg px-3 py-2 text-sm font-medium transition-all ${
+                generationType === "text_to_image"
+                  ? "bg-[var(--card)] text-[var(--ink)] shadow-sm border border-[var(--line)]"
+                  : "text-[var(--ink-soft)] hover:text-[var(--ink)] border border-transparent"
+              }`}
+            >
+              文生图
+            </button>
+            <button
+              type="button"
+              onClick={() => setGenerationType("image_to_image")}
+              className={`flex-1 rounded-lg px-3 py-2 text-sm font-medium transition-all ${
+                generationType === "image_to_image"
+                  ? "bg-[var(--card)] text-[var(--ink)] shadow-sm border border-[var(--line)]"
+                  : "text-[var(--ink-soft)] hover:text-[var(--ink)] border border-transparent"
+              }`}
+            >
+              图生图
+            </button>
+          </div>
+
+          {generationType === "image_to_image" ? (
+            <div className="rounded-[1.25rem] border border-[var(--line)] bg-[var(--surface-strong)]/30 p-4">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <div className="text-sm font-medium text-[var(--ink)]">当前参考图</div>
+                  <p className="mt-1 text-sm text-[var(--ink-soft)]">
+                    上传一张参考图，或直接对结果图点击“加入编辑”继续迭代。
+                  </p>
+                </div>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={(event) => {
+                    void handleReferenceImageChange(event.target.files?.[0] ?? null);
+                  }}
+                />
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="inline-flex items-center gap-2 rounded-full border border-[var(--line)] px-4 py-2 text-sm text-[var(--ink-soft)] transition hover:border-[var(--accent)] hover:text-[var(--accent)]"
+                >
+                  <ImagePlus className="size-4" />
+                  {referenceImage ? "替换参考图" : "上传参考图"}
+                </button>
+              </div>
+
+              {referenceImage ? (
+                <div className="mt-4 flex items-center gap-3">
+                  <img
+                    src={referenceImage.previewUrl}
+                    alt="当前参考图"
+                    className="size-20 rounded-2xl border border-[var(--line)] object-cover"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setReferenceImage(null)}
+                    className="rounded-full border border-[var(--line)] px-3 py-1.5 text-xs text-[var(--ink-soft)] transition hover:border-rose-400 hover:text-rose-500"
+                  >
+                    移除参考图
+                  </button>
+                </div>
+              ) : null}
+            </div>
+          ) : null}
+
           <div className="relative group">
             <textarea
               value={prompt}
               onChange={(event) => setPrompt(event.target.value)}
-              placeholder="描述你想要生成的画面。例如：一位穿银色风衣的亚洲模特站在雨后的城市巷口，胶片颗粒感，杂志封面光影。"
+              placeholder={
+                generationType === "image_to_image"
+                  ? "描述你希望如何修改这张参考图，例如：保留人物姿态，改成胶片杂志风。"
+                  : "描述你想要生成的画面。例如：一位穿银色风衣的亚洲模特站在雨后的城市巷口，胶片颗粒感，杂志封面光影。"
+              }
               className="min-h-[140px] w-full resize-none rounded-[1.25rem] border border-[var(--line)] bg-[var(--surface-strong)]/50 px-5 py-4 text-base placeholder:text-[var(--ink-soft)]/50 outline-none transition-all focus:border-[var(--accent)] focus:bg-[var(--surface-strong)] focus:ring-4 focus:ring-[var(--accent)]/10"
             />
           </div>
@@ -264,9 +422,11 @@ export function GeneratorStudio({
             ))}
           </div>
 
-          <div className="grid gap-5 md:grid-cols-2">
+          <div className={`grid gap-5 ${generationType === "text_to_image" ? "md:grid-cols-2" : ""}`}>
             <div className="space-y-2">
-              <span className="text-sm font-medium text-[var(--ink-soft)]">生成模型</span>
+              <span className="text-sm font-medium text-[var(--ink-soft)]">
+                {generationType === "image_to_image" ? "编辑模型" : "生成模型"}
+              </span>
               <div className="flex gap-2">
                 <input
                   value={model}
@@ -309,7 +469,8 @@ export function GeneratorStudio({
               ) : null}
             </div>
 
-            <div className="space-y-2">
+            {generationType === "text_to_image" ? (
+              <div className="space-y-2">
               <span className="text-sm font-medium text-[var(--ink-soft)]">生成张数</span>
               <select
                 value={count}
@@ -322,29 +483,32 @@ export function GeneratorStudio({
                   </option>
                 ))}
               </select>
-            </div>
+              </div>
+            ) : null}
           </div>
 
-          <div className="grid gap-5 md:grid-cols-2">
-            <div className="space-y-2">
-              <span className="text-sm font-medium text-[var(--ink-soft)]">图片比例</span>
-              <div className="flex rounded-xl border border-[var(--line)] bg-[var(--surface-strong)]/30 p-1">
-                {sizeOptions.map((option) => (
-                  <button
-                    key={option.value}
-                    type="button"
-                    onClick={() => setSize(option.value as typeof size)}
-                    className={`flex-1 rounded-lg px-3 py-2 text-sm font-medium transition-all ${
-                      size === option.value
-                        ? "bg-[var(--card)] text-[var(--ink)] shadow-sm border border-[var(--line)]"
-                        : "text-[var(--ink-soft)] hover:text-[var(--ink)] border border-transparent"
-                    }`}
-                  >
-                    {option.label}
-                  </button>
-                ))}
+          <div className={`grid gap-5 ${generationType === "text_to_image" ? "md:grid-cols-2" : ""}`}>
+            {generationType === "text_to_image" ? (
+              <div className="space-y-2">
+                <span className="text-sm font-medium text-[var(--ink-soft)]">图片比例</span>
+                <div className="flex rounded-xl border border-[var(--line)] bg-[var(--surface-strong)]/30 p-1">
+                  {sizeOptions.map((option) => (
+                    <button
+                      key={option.value}
+                      type="button"
+                      onClick={() => setSize(option.value as typeof size)}
+                      className={`flex-1 rounded-lg px-3 py-2 text-sm font-medium transition-all ${
+                        size === option.value
+                          ? "bg-[var(--card)] text-[var(--ink)] shadow-sm border border-[var(--line)]"
+                          : "text-[var(--ink-soft)] hover:text-[var(--ink)] border border-transparent"
+                      }`}
+                    >
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
+            ) : null}
 
             <div className="space-y-2">
               <span className="text-sm font-medium text-[var(--ink-soft)]">通道选择</span>
@@ -381,15 +545,21 @@ export function GeneratorStudio({
               <span className="text-[var(--ink-soft)] transition-transform group-open:rotate-180">↓</span>
             </summary>
             <div className="border-t border-[var(--line)] p-5 grid gap-4">
-              <div className="space-y-2">
-                <span className="text-sm text-[var(--ink-soft)]">负向提示词</span>
-                <textarea
-                  value={negativePrompt}
-                  onChange={(event) => setNegativePrompt(event.target.value)}
-                  placeholder="比如：低清晰度、畸形手部、过曝"
-                  className="min-h-[80px] w-full resize-none rounded-xl border border-[var(--line)] bg-[var(--surface-strong)]/50 px-4 py-3 text-sm outline-none transition-all focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/10"
-                />
-              </div>
+              {generationType === "text_to_image" ? (
+                <div className="space-y-2">
+                  <span className="text-sm text-[var(--ink-soft)]">负向提示词</span>
+                  <textarea
+                    value={negativePrompt}
+                    onChange={(event) => setNegativePrompt(event.target.value)}
+                    placeholder="比如：低清晰度、畸形手部、过曝"
+                    className="min-h-[80px] w-full resize-none rounded-xl border border-[var(--line)] bg-[var(--surface-strong)]/50 px-4 py-3 text-sm outline-none transition-all focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/10"
+                  />
+                </div>
+              ) : (
+                <div className="rounded-xl border border-dashed border-[var(--line)] bg-[var(--surface-strong)]/30 px-4 py-3 text-sm text-[var(--ink-soft)]">
+                  图生图当前按单参考图单次编辑处理，结果出来后可以继续“加入编辑”迭代下一轮。
+                </div>
+              )}
 
               {providerMode === "custom" ? (
                 <div className="grid gap-4 md:grid-cols-2">
@@ -438,7 +608,7 @@ export function GeneratorStudio({
           <button
             type="button"
             onClick={() => startTransition(handleGenerate)}
-            disabled={isPending || !prompt.trim()}
+            disabled={isPending || !prompt.trim() || (generationType === "image_to_image" && !referenceImage)}
             className="group relative mt-2 flex w-full items-center justify-center gap-2 overflow-hidden rounded-[1.25rem] bg-[var(--ink)] px-6 py-4 text-base font-semibold text-white shadow-lg transition-all active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
           >
             <div className="absolute inset-0 bg-gradient-to-r from-[var(--accent)] to-[var(--accent-soft)] opacity-0 transition-opacity group-hover:opacity-100" />
@@ -448,7 +618,7 @@ export function GeneratorStudio({
               ) : (
                 <WandSparkles className="size-5 transition-transform group-hover:rotate-12" />
               )}
-              {currentUser ? "立即生成" : "登录后生成"}
+              {currentUser ? (generationType === "image_to_image" ? "开始编辑" : "立即生成") : "登录后生成"}
             </div>
           </button>
         </div>
@@ -484,6 +654,9 @@ export function GeneratorStudio({
                 {displayedGeneration && (
                   <div className="flex justify-end px-1">
                     <div className="flex gap-2 text-xs text-[var(--ink-soft)]">
+                      <span className="rounded-full bg-[var(--surface-strong)] px-2 py-1">
+                        {displayedGeneration.generationType === "image_to_image" ? "图生图" : "文生图"}
+                      </span>
                       <span className="rounded-full bg-[var(--surface-strong)] px-2 py-1">{displayedGeneration.model}</span>
                       <span className="rounded-full bg-[var(--surface-strong)] px-2 py-1">{displayedGeneration.size}</span>
                     </div>
@@ -518,6 +691,15 @@ export function GeneratorStudio({
                               title="下载保存"
                             >
                               <Download className="size-5" />
+                            </button>
+                          </div>
+                          <div className="absolute inset-x-3 bottom-3 flex justify-end">
+                            <button
+                              type="button"
+                              onClick={() => void handleUseImageForEdit(image.url)}
+                              className="rounded-full bg-white/90 px-3 py-1.5 text-xs font-medium text-[var(--ink)] shadow-sm transition hover:bg-[var(--accent)] hover:text-white"
+                            >
+                              加入编辑
                             </button>
                           </div>
                         </div>
@@ -567,6 +749,9 @@ export function GeneratorStudio({
                           暂无图片
                         </div>
                       )}
+                      <div className="absolute left-2 top-2 rounded-full bg-black/55 px-2 py-1 text-[10px] text-white">
+                        {generation.generationType === "image_to_image" ? "图生图" : "文生图"}
+                      </div>
                       <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-3 pt-8 opacity-0 transition-opacity group-hover:opacity-100">
                         <p className="line-clamp-2 text-xs text-white text-left leading-relaxed">
                           {generation.prompt}

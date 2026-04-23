@@ -384,13 +384,23 @@ export function GenerationAdminCard({ job }: { job: GenerationAdminJob }) {
         <div className="mb-3">
           <div className="flex items-center justify-between text-xs text-[var(--ink-soft)] mb-2">
             <span className="truncate max-w-[150px]" title={job.user?.email}>{job.user?.email || "未知用户"}</span>
-            <span className="shrink-0 rounded-full bg-[var(--surface-strong)] border border-[var(--line)] px-2 py-0.5">
-              {job.providerMode === "BUILT_IN" ? "内置渠道" : "自填渠道"}
-            </span>
+            <div className="flex items-center gap-2">
+              <span className="shrink-0 rounded-full bg-[var(--surface-strong)] border border-[var(--line)] px-2 py-0.5">
+                {job.generationType === "IMAGE_TO_IMAGE" ? "图生图" : "文生图"}
+              </span>
+              <span className="shrink-0 rounded-full bg-[var(--surface-strong)] border border-[var(--line)] px-2 py-0.5">
+                {job.providerMode === "BUILT_IN" ? "内置渠道" : "自填渠道"}
+              </span>
+            </div>
           </div>
           <p className="line-clamp-2 text-sm text-[var(--ink)] leading-relaxed">
             {job.prompt}
           </p>
+          {job.sourceImageUrl ? (
+            <p className="mt-2 text-xs text-[var(--ink-soft)]">
+              本条记录包含参考图，支持追溯图生图来源。
+            </p>
+          ) : null}
         </div>
         
         <div className="flex items-center justify-between mt-auto pt-2 border-t border-[var(--line)]/50">

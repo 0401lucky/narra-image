@@ -13,6 +13,12 @@ type PersistImageInput =
       userId: string;
     }
   | {
+      buffer: Buffer;
+      fileExtension?: string;
+      mimeType?: string;
+      userId: string;
+    }
+  | {
       url: string;
       userId: string;
     };
@@ -47,8 +53,10 @@ export async function persistGeneratedImage(input: PersistImageInput) {
 
   const env = getEnv();
   const client = createS3Client();
-  const fileName = `${input.userId}/${randomUUID()}.png`;
-  const body = Buffer.from(input.b64Json, "base64");
+  const extension = "fileExtension" in input ? input.fileExtension || "png" : "png";
+  const fileName = `${input.userId}/${randomUUID()}.${extension}`;
+  const body =
+    "buffer" in input ? input.buffer : Buffer.from(input.b64Json, "base64");
 
   if (client && env.S3_BUCKET) {
     await client.send(
@@ -68,7 +76,8 @@ export async function persistGeneratedImage(input: PersistImageInput) {
   }
 
   if (env.ENABLE_LOCAL_IMAGE_FALLBACK) {
-    return `data:${input.mimeType ?? "image/png"};base64,${input.b64Json}`;
+    const base64 = "buffer" in input ? input.buffer.toString("base64") : input.b64Json;
+    return `data:${input.mimeType ?? "image/png"};base64,${base64}`;
   }
 
   throw new Error("当前没有可用的图片存储配置");

@@ -1,11 +1,11 @@
 import "server-only";
 
-import OpenAI from "openai";
+import OpenAI, { toFile } from "openai";
 
 import { persistGeneratedImage } from "@/lib/storage/persist-generated-image";
 import { getBuiltInProviderConfig } from "@/lib/providers/built-in-provider";
 import { resolveGenerationProvider } from "@/lib/providers/resolve-provider";
-import type { ProviderMode } from "@/lib/types";
+import type { GenerationType, ProviderMode } from "@/lib/types";
 
 type CustomProviderConfig = {
   apiKey: string;
@@ -16,12 +16,18 @@ type CustomProviderConfig = {
 type GenerateImagesInput = {
   count: number;
   customProvider: CustomProviderConfig | null;
+  generationType: GenerationType;
   model: string;
   negativePrompt?: string | null;
   prompt: string;
   providerMode: ProviderMode;
   seed?: number | null;
-  size: "1024x1024" | "1024x1536" | "1536x1024";
+  size: string;
+  sourceImage?: {
+    data: Buffer;
+    fileName: string;
+    mimeType: string;
+  } | null;
   userId: string;
 };
 
@@ -46,20 +52,42 @@ export async function generateImages(input: GenerateImagesInput) {
     baseURL: provider.baseUrl,
   });
 
-  const result = await client.images.generate({
-    model: input.model || provider.model,
-    n: input.count,
-    prompt: input.prompt,
-    size: input.size,
-    ...(input.negativePrompt || input.seed
-      ? {
-          extra_body: {
-            negative_prompt: input.negativePrompt,
-            seed: input.seed,
+  if (input.generationType === "image_to_image" && !input.sourceImage) {
+    throw new Error("请先上传参考图");
+  }
+
+  const generateSize =
+    input.size === "1024x1536" || input.size === "1536x1024"
+      ? input.size
+      : "1024x1024";
+
+  const result = input.generationType === "image_to_image"
+    ? await client.images.edit({
+        image: await toFile(
+          input.sourceImage?.data ?? Buffer.alloc(0),
+          input.sourceImage?.fileName ?? "source.png",
+          {
+            type: input.sourceImage?.mimeType ?? "image/png",
           },
-        }
-      : {}),
-  });
+        ),
+        model: input.model || provider.model,
+        n: 1,
+        prompt: input.prompt,
+      })
+    : await client.images.generate({
+        model: input.model || provider.model,
+        n: input.count,
+        prompt: input.prompt,
+        size: generateSize,
+        ...(input.negativePrompt || input.seed
+          ? {
+              extra_body: {
+                negative_prompt: input.negativePrompt,
+                seed: input.seed,
+              },
+            }
+          : {}),
+      });
 
   const items = result.data ?? [];
 

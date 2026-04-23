@@ -1,17 +1,25 @@
 import Link from "next/link";
 
+import { getCheckInSummary } from "@/lib/benefits/config";
 import { cn } from "@/lib/utils";
 import { LogoutButton } from "@/components/auth/logout-button";
+import { CheckInButton } from "@/components/benefits/check-in-button";
 
 type SiteHeaderProps = {
   currentUser: {
+    id: string;
     credits: number;
     role: "user" | "admin";
   } | null;
   className?: string;
+  showCheckIn?: boolean;
 };
 
-export function SiteHeader({ currentUser, className }: SiteHeaderProps) {
+export async function SiteHeader({
+  currentUser,
+  className,
+  showCheckIn = true,
+}: SiteHeaderProps) {
   const links = [
     { href: "/", label: "首页" },
     { href: "/create", label: "创作台" },
@@ -20,6 +28,9 @@ export function SiteHeader({ currentUser, className }: SiteHeaderProps) {
       ? [{ href: "/admin", label: "管理后台" }]
       : []),
   ];
+  const checkInSummary = currentUser && showCheckIn
+    ? await getCheckInSummary(currentUser.id)
+    : null;
 
   return (
     <header
@@ -53,11 +64,18 @@ export function SiteHeader({ currentUser, className }: SiteHeaderProps) {
         <div className="flex items-center gap-3">
           {currentUser ? (
             <div className="flex items-center gap-2">
-              <div className="studio-card hidden rounded-full px-4 py-2 text-sm sm:block">
-                <span className="mr-2 text-[var(--ink-soft)]">剩余积分</span>
+              <div className="studio-card flex items-center gap-2 rounded-full px-3 py-2 text-sm sm:px-4">
+                <span className="text-[var(--ink-soft)]">剩余积分</span>
                 <span className="font-semibold text-[var(--accent)]">
                   {currentUser.credits}
                 </span>
+                {checkInSummary ? (
+                  <CheckInButton
+                    checkedInToday={checkInSummary.checkedInToday}
+                    rewardCredits={checkInSummary.checkInReward}
+                    variant="compact"
+                  />
+                ) : null}
               </div>
               <LogoutButton />
             </div>

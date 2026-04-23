@@ -10,6 +10,15 @@ async function main() {
   const bootstrapInviteCode =
     process.env.BOOTSTRAP_INVITE_CODE?.trim() || "FOUNDING-ACCESS";
 
+  await prisma.benefitConfig.upsert({
+    where: { scope: "default" },
+    update: {},
+    create: {
+      checkInReward: 50,
+      scope: "default",
+    },
+  });
+
   await prisma.inviteCode.upsert({
     where: { code: bootstrapInviteCode },
     update: {},

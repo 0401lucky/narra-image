@@ -22,6 +22,11 @@ enum GenerationStatus {
   FAILED
 }
 
+enum GenerationType {
+  TEXT_TO_IMAGE
+  IMAGE_TO_IMAGE
+}
+
 enum ShowcaseStatus {
   PRIVATE
   PENDING
@@ -40,9 +45,29 @@ model User {
   inviteUsed           InviteCode?           @relation("InviteUsedBy")
   createdInvites       InviteCode[]          @relation("InviteCreatedBy")
   customProviderConfig SavedProviderConfig?
+  checkInRecords       CheckInRecord[]
   generations          GenerationJob[]
   featuredGenerations  GenerationJob[]       @relation("FeaturedByAdmin")
   reviewedWorks        GenerationImage[]     @relation("ReviewedWorks")
+}
+
+model BenefitConfig {
+  id                 String   @id @default(cuid())
+  scope              String   @unique @default("default")
+  checkInReward      Int      @default(50)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}
+
+model CheckInRecord {
+  id            String   @id @default(cuid())
+  userId        String
+  dateKey       String
+  rewardCredits Int
+  createdAt     DateTime @default(now())
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, dateKey])
 }
 
 model BuiltInProviderConfig {
@@ -86,11 +111,13 @@ model SavedProviderConfig {
 model GenerationJob {
   id            String           @id @default(cuid())
   userId        String
+  generationType GenerationType  @default(TEXT_TO_IMAGE)
   providerMode  ProviderMode
   model         String
   prompt        String
   negativePrompt String?
   size          String
+  sourceImageUrl String?
   count         Int
   status        GenerationStatus @default(PENDING)
   errorMessage  String?

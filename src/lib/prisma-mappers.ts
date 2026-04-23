@@ -1,5 +1,6 @@
 import {
   GenerationStatus,
+  GenerationType,
   ProviderMode,
   Role,
   ShowcaseStatus,
@@ -9,6 +10,7 @@ import {
 } from "@prisma/client";
 
 import type { ProviderMode as UiProviderMode, UserRole } from "@/lib/types";
+import type { GenerationType as UiGenerationType } from "@/lib/types";
 import type { WorkShowcaseStatus } from "@/lib/work-showcase";
 
 export type SerializedGeneration = {
@@ -17,6 +19,7 @@ export type SerializedGeneration = {
   creditsSpent: number;
   errorMessage: string | null;
   featuredAt: string | null;
+  generationType: "text_to_image" | "image_to_image";
   id: string;
   images: Array<{
     id: string;
@@ -27,6 +30,7 @@ export type SerializedGeneration = {
   prompt: string;
   providerMode: UiProviderMode;
   size: string;
+  sourceImageUrl: string | null;
   status: "pending" | "succeeded" | "failed";
   updatedAt: string;
 };
@@ -96,8 +100,20 @@ export function toPrismaProviderMode(providerMode: UiProviderMode) {
     : ProviderMode.CUSTOM;
 }
 
+export function toPrismaGenerationType(generationType: UiGenerationType) {
+  return generationType === "image_to_image"
+    ? GenerationType.IMAGE_TO_IMAGE
+    : GenerationType.TEXT_TO_IMAGE;
+}
+
 export function fromPrismaProviderMode(providerMode: ProviderMode): UiProviderMode {
   return providerMode === ProviderMode.BUILT_IN ? "built_in" : "custom";
+}
+
+export function fromPrismaGenerationType(generationType: GenerationType): UiGenerationType {
+  return generationType === GenerationType.IMAGE_TO_IMAGE
+    ? "image_to_image"
+    : "text_to_image";
 }
 
 export function fromPrismaRole(role: Role): UserRole {
@@ -174,12 +190,23 @@ export function serializeFeaturedWork(work: WorkRecord): SerializedFeaturedWork 
 export function serializeGeneration(
   job: GenerationJob & { images: GenerationImage[] },
 ): SerializedGeneration {
+  const generationType = fromPrismaGenerationType(
+    "generationType" in job && job.generationType
+      ? (job.generationType as GenerationType)
+      : GenerationType.TEXT_TO_IMAGE,
+  );
+  const sourceImageUrl =
+    "sourceImageUrl" in job && typeof job.sourceImageUrl === "string"
+      ? job.sourceImageUrl
+      : null;
+
   return {
     count: job.count,
     createdAt: job.createdAt.toISOString(),
     creditsSpent: job.creditsSpent,
     errorMessage: job.errorMessage,
     featuredAt: job.featuredAt?.toISOString() ?? null,
+    generationType,
     id: job.id,
     images: job.images.map((image) => ({
       id: image.id,
@@ -190,6 +217,7 @@ export function serializeGeneration(
     prompt: job.prompt,
     providerMode: fromPrismaProviderMode(job.providerMode),
     size: job.size,
+    sourceImageUrl,
     status:
       job.status === GenerationStatus.SUCCEEDED
         ? "succeeded"

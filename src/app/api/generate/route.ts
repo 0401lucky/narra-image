@@ -2,21 +2,26 @@ import { GenerationStatus } from "@prisma/client";
 
 import { db } from "@/lib/db";
 import { getEnv } from "@/lib/env";
+import { parseGenerateRequest } from "@/lib/generation/parse-generate-request";
 import { calculateGenerationCost, hasEnoughCredits } from "@/lib/credits";
-import { serializeGeneration, toPrismaProviderMode } from "@/lib/prisma-mappers";
+import {
+  serializeGeneration,
+  toPrismaGenerationType,
+  toPrismaProviderMode,
+} from "@/lib/prisma-mappers";
 import { getBuiltInProviderConfig } from "@/lib/providers/built-in-provider";
 import { decryptProviderSecret, encryptProviderSecret } from "@/lib/providers/provider-secret";
 import { requireCurrentUserRecord } from "@/lib/server/current-user";
-import { getErrorMessage, jsonError, jsonOk, parseJsonBody } from "@/lib/server/http";
+import { getErrorMessage, jsonError, jsonOk } from "@/lib/server/http";
 import { generateImages } from "@/lib/providers/generate-images";
-import { generateSchema } from "@/lib/validators";
+import { persistGeneratedImage } from "@/lib/storage/persist-generated-image";
 
 export async function POST(request: Request) {
   let jobId: string | null = null;
 
   try {
     const user = await requireCurrentUserRecord();
-    const body = generateSchema.parse(await parseJsonBody(request));
+    const body = await parseGenerateRequest(request);
     const env = getEnv();
     const builtInProvider = await getBuiltInProviderConfig();
     const cost = calculateGenerationCost({
@@ -57,15 +62,34 @@ export async function POST(request: Request) {
       };
     }
 
+    const sourceImage =
+      body.image instanceof File
+        ? {
+            data: Buffer.from(await body.image.arrayBuffer()),
+            fileName: body.image.name || "source.png",
+            mimeType: body.image.type || "image/png",
+          }
+        : null;
+    const sourceImageUrl = sourceImage
+      ? await persistGeneratedImage({
+          buffer: sourceImage.data,
+          fileExtension: sourceImage.fileName.split(".").pop() || "png",
+          mimeType: sourceImage.mimeType,
+          userId: user.id,
+        })
+      : null;
+
     const job = await db.generationJob.create({
       data: {
         count: body.count,
         creditsSpent: 0,
+        generationType: toPrismaGenerationType(body.generationType),
         model: body.model,
         negativePrompt: body.negativePrompt,
         prompt: body.prompt,
         providerMode: toPrismaProviderMode(body.providerMode),
         size: body.size,
+        sourceImageUrl,
         status: GenerationStatus.PENDING,
         userId: user.id,
       },
@@ -79,17 +103,19 @@ export async function POST(request: Request) {
       count: body.count,
       customProvider: customProvider
         ? {
-            apiKey: customProvider.apiKey,
-            baseUrl: customProvider.baseUrl,
-            model: customProvider.model,
-          }
+          apiKey: customProvider.apiKey,
+          baseUrl: customProvider.baseUrl,
+          model: customProvider.model,
+        }
         : null,
+      generationType: body.generationType,
       model: body.model,
       negativePrompt: body.negativePrompt,
       prompt: body.prompt,
       providerMode: body.providerMode,
       seed: body.seed,
       size: body.size,
+      sourceImage,
       userId: user.id,
     });
 

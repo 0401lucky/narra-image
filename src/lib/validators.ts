@@ -28,12 +28,13 @@ export const providerConfigSchema = z.object({
 export const generateSchema = z.object({
   count: z.number().int().min(1).max(4).default(1),
   customProvider: providerConfigSchema.optional().nullable(),
+  generationType: z.enum(["text_to_image", "image_to_image"]).default("text_to_image"),
   model: z.string().trim().min(1, "请选择模型"),
   negativePrompt: z.string().trim().max(1000).optional().nullable(),
   prompt: z.string().trim().min(2, "提示词至少 2 个字符").max(2000),
   providerMode: z.enum(["built_in", "custom"]).default("built_in"),
   seed: z.number().int().positive().optional().nullable(),
-  size: z.enum(["1024x1024", "1024x1536", "1536x1024"]).default("1024x1024"),
+  size: z.string().trim().min(1).default("1024x1024"),
 });
 
 export const inviteCreateSchema = z.object({
@@ -67,4 +68,8 @@ export const workShowcaseUpdateSchema = z.object({
 export const adminWorkReviewSchema = z.object({
   action: z.enum(adminWorkReviewActions),
   reviewNote: z.string().trim().max(300, "审核备注最多 300 个字符").optional().nullable(),
+});
+
+export const benefitConfigSchema = z.object({
+  checkInReward: z.number().int().min(1).max(10000),
 });
