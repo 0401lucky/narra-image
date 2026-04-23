@@ -8,6 +8,7 @@ type BasicBuiltInProviderConfig = {
   baseUrl: string;
   creditCost: number;
   model: string;
+  models: string[];
   name: string;
 };
 
@@ -20,6 +21,7 @@ export async function getBuiltInProviderConfig() {
     baseUrl: env.BUILTIN_PROVIDER_BASE_URL || "",
     creditCost: env.BUILTIN_PROVIDER_CREDIT_COST,
     model: env.BUILTIN_PROVIDER_MODEL,
+    models: [],
     name: env.BUILTIN_PROVIDER_NAME,
   };
 
@@ -36,6 +38,7 @@ export async function getBuiltInProviderConfig() {
     baseUrl: stored.baseUrl,
     creditCost: stored.creditCost,
     model: stored.model,
+    models: stored.models,
     name: stored.name,
   });
 }
@@ -51,6 +54,7 @@ export async function getBuiltInProviderConfigForAdmin() {
     baseUrl: stored?.baseUrl || env.BUILTIN_PROVIDER_BASE_URL || "",
     creditCost: stored?.creditCost || env.BUILTIN_PROVIDER_CREDIT_COST,
     model: stored?.model || env.BUILTIN_PROVIDER_MODEL,
+    models: stored?.models || [],
     name: stored?.name || env.BUILTIN_PROVIDER_NAME,
     source: (stored ? "database" : "env") as "database" | "env",
   };

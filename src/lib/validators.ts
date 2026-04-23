@@ -44,6 +44,7 @@ export const builtInProviderConfigSchema = z.object({
   baseUrl: z.url("请输入正确的 Base URL"),
   creditCost: z.number().int().min(1).max(10000),
   model: z.string().trim().min(1, "请输入模型名"),
+  models: z.array(z.string()).default([]),
   name: z.string().trim().min(1, "请输入渠道名称").max(40),
 });
 

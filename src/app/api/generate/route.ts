@@ -134,6 +134,7 @@ export async function POST(request: Request) {
             baseUrl: customProvider.baseUrl,
             label: customProvider.label || null,
             model: customProvider.model,
+            models: body.customProvider?.models || [],
           },
           create: {
             apiKeyEncrypted: await encryptProviderSecret(
@@ -143,6 +144,7 @@ export async function POST(request: Request) {
             baseUrl: customProvider.baseUrl,
             label: customProvider.label || null,
             model: customProvider.model,
+            models: body.customProvider?.models || [],
             userId: user.id,
           },
         });

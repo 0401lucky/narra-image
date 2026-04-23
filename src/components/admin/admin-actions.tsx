@@ -163,6 +163,7 @@ type BuiltInProviderFormProps = {
     baseUrl: string;
     creditCost: number;
     model: string;
+    models: string[];
     name: string;
     source: "database" | "env";
   };
@@ -176,7 +177,7 @@ export function BuiltInProviderForm({
   const [isFetchingModels, startFetchingModels] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [modelError, setModelError] = useState<string | null>(null);
-  const [availableModels, setAvailableModels] = useState<string[]>([]);
+  const [availableModels, setAvailableModels] = useState<string[]>(initialConfig.models || []);
   const [baseUrl, setBaseUrl] = useState(initialConfig.baseUrl);
   const [model, setModel] = useState(initialConfig.model);
   const [name, setName] = useState(initialConfig.name);
@@ -193,6 +194,7 @@ export function BuiltInProviderForm({
         baseUrl,
         creditCost,
         model,
+        models: availableModels,
         name,
       }),
     });

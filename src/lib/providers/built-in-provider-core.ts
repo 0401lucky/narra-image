@@ -3,6 +3,7 @@ type BasicBuiltInProviderConfig = {
   baseUrl: string;
   creditCost: number;
   model: string;
+  models: string[];
   name: string;
 };
 
@@ -11,6 +12,7 @@ type StoredBuiltInProviderConfig = {
   baseUrl: string;
   creditCost: number;
   model: string;
+  models: string[];
   name: string;
 };
 
@@ -19,6 +21,7 @@ type BuiltInProviderInput = {
   baseUrl: string;
   creditCost: number;
   model: string;
+  models: string[];
   name: string;
 };
 
@@ -40,6 +43,7 @@ export function mergeBuiltInProviderConfigInput(
     baseUrl: input.baseUrl,
     creditCost: input.creditCost,
     model: input.model,
+    models: input.models,
     name: input.name,
   };
 }

@@ -7,6 +7,7 @@ import { db } from "@/lib/db";
 import { serializeUser } from "@/lib/prisma-mappers";
 import { getCurrentUserRecord } from "@/lib/server/current-user";
 import { SiteHeader } from "@/components/marketing/site-header";
+import { FeaturedGallery } from "@/components/marketing/featured-gallery";
 
 export const dynamic = "force-dynamic";
 
@@ -91,23 +92,7 @@ export default async function Home() {
           </Link>
         </div>
 
-        <div className="columns-1 gap-5 sm:columns-2 lg:columns-3 xl:columns-4 space-y-5">
-          {works.map((work, index) => (
-            <article
-              key={`${work.id}-${index}`}
-              className="studio-card group relative break-inside-avoid overflow-hidden rounded-[1.5rem]"
-            >
-              <img src={work.image} alt={work.title} className="w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]" />
-              <div className="absolute inset-0 bg-gradient-to-t from-[var(--ink)]/80 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-              <div className="absolute bottom-0 left-0 right-0 translate-y-4 p-5 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
-                <h3 className="font-semibold text-white">{work.title}</h3>
-                <p className="mt-1 line-clamp-3 text-xs leading-relaxed text-white/80">
-                  {work.prompt}
-                </p>
-              </div>
-            </article>
-          ))}
-        </div>
+        <FeaturedGallery works={works} />
       </section>
     </main>
   );

@@ -46,6 +46,7 @@ export async function PATCH(request: Request) {
         baseUrl: merged.baseUrl,
         creditCost: merged.creditCost,
         model: merged.model,
+        models: merged.models,
         name: merged.name,
       },
       create: {
@@ -59,6 +60,7 @@ export async function PATCH(request: Request) {
         baseUrl: merged.baseUrl,
         creditCost: merged.creditCost,
         model: merged.model,
+        models: merged.models,
         name: merged.name,
         scope: "default",
       },

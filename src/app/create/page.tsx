@@ -5,6 +5,7 @@ import { serializeGeneration, serializeUser } from "@/lib/prisma-mappers";
 import { getCurrentUserRecord } from "@/lib/server/current-user";
 import { GeneratorStudio } from "@/components/create/generator-studio";
 import { SiteHeader } from "@/components/marketing/site-header";
+import { getBuiltInProviderConfig } from "@/lib/providers/built-in-provider";
 
 export const dynamic = "force-dynamic";
 
@@ -14,13 +15,14 @@ export default async function CreatePage() {
     redirect("/login");
   }
 
-  const [savedProvider, jobs] = await Promise.all([
+  const [savedProvider, jobs, builtInConfig] = await Promise.all([
     db.savedProviderConfig.findUnique({
       where: { userId: user.id },
       select: {
         baseUrl: true,
         label: true,
         model: true,
+        models: true,
       },
     }),
     db.generationJob.findMany({
@@ -33,6 +35,7 @@ export default async function CreatePage() {
       orderBy: { createdAt: "desc" },
       take: 24,
     }),
+    getBuiltInProviderConfig(),
   ]);
 
   const currentUser = serializeUser(user);
@@ -55,6 +58,8 @@ export default async function CreatePage() {
           currentUser={currentUser}
           initialGenerations={jobs.map(serializeGeneration)}
           initialSavedProvider={savedProvider}
+          builtInModels={builtInConfig.models || []}
+          builtInDefaultModel={builtInConfig.model}
         />
       </section>
     </main>

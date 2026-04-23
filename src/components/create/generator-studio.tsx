@@ -40,7 +40,9 @@ type GeneratorStudioProps = {
   compact?: boolean;
   currentUser: ViewerUser;
   initialGenerations?: GenerationItem[];
-  initialSavedProvider?: SavedProvider;
+  initialSavedProvider?: (SavedProvider & { models?: string[] }) | null;
+  builtInModels?: string[];
+  builtInDefaultModel?: string;
 };
 
 const stylePresets = [
@@ -57,16 +59,22 @@ export function GeneratorStudio({
   currentUser,
   initialGenerations = [],
   initialSavedProvider = null,
+  builtInModels = [],
+  builtInDefaultModel = "",
 }: GeneratorStudioProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [isFetchingModels, startFetchingModels] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [modelProbeError, setModelProbeError] = useState<string | null>(null);
-  const [availableModels, setAvailableModels] = useState<string[]>([]);
   const [prompt, setPrompt] = useState("");
   const [negativePrompt, setNegativePrompt] = useState("");
-  const [model, setModel] = useState(initialSavedProvider?.model || "gpt-image-1");
+  const [model, setModel] = useState(
+    initialSavedProvider?.model || builtInDefaultModel || "dall-e-3",
+  );
+  const [availableModels, setAvailableModels] = useState<string[]>(
+    initialSavedProvider?.models || []
+  );
   const [size, setSize] = useState<"1024x1024" | "1024x1536" | "1536x1024">(
     "1024x1024",
   );
@@ -278,9 +286,11 @@ export function GeneratorStudio({
                   </button>
                 )}
               </div>
-              {availableModels.length > 0 && (
+              
+              {/* Show builtInModels if providerMode === 'built_in' and we have models, else show availableModels from custom provider */}
+              {(providerMode === "built_in" ? builtInModels : availableModels).length > 0 && (
                 <div className="mt-2 flex flex-wrap gap-2">
-                  {availableModels.slice(0, 5).map((item) => (
+                  {(providerMode === "built_in" ? builtInModels : availableModels).slice(0, 8).map((item) => (
                     <button
                       key={item}
                       type="button"
