@@ -13,7 +13,7 @@
   --shadow: 0 22px 70px rgba(94, 58, 33, 0.12);
 }
 
-@theme inline {
+@theme {
   --color-background: var(--surface);
   --color-foreground: var(--ink);
   --font-sans: var(--font-bricolage);
@@ -52,11 +52,6 @@ body::before {
   content: "";
   mask-image: radial-gradient(circle at center, black 20%, transparent 82%);
   pointer-events: none;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
 }
 
 button,
