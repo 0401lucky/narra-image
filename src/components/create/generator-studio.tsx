@@ -4,7 +4,7 @@
 
 import { formatDistanceToNow } from "date-fns";
 import { zhCN } from "date-fns/locale";
-import { Sparkles, WandSparkles } from "lucide-react";
+import { Sparkles, WandSparkles, Download, ZoomIn, X } from "lucide-react";
 import { useMemo, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 
@@ -80,10 +80,29 @@ export function GeneratorStudio({
   const [customApiKey, setCustomApiKey] = useState("");
   const [rememberProvider, setRememberProvider] = useState(false);
   const [generations, setGenerations] = useState(initialGenerations);
+  const [selectedGenerationId, setSelectedGenerationId] = useState<string | null>(null);
   const [credits, setCredits] = useState(currentUser?.credits ?? 0);
+  const [zoomedImage, setZoomedImage] = useState<string | null>(null);
 
-  const latestGeneration = generations[0] ?? null;
-  const gallery = latestGeneration?.images ?? [];
+  const displayedGeneration = generations.find(g => g.id === selectedGenerationId) ?? generations[0] ?? null;
+  const gallery = displayedGeneration?.images ?? [];
+
+  async function handleDownload(url: string) {
+    try {
+      const response = await fetch(url);
+      const blob = await response.blob();
+      const blobUrl = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = blobUrl;
+      a.download = `narra-image-${Date.now()}.png`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(blobUrl);
+    } catch (e) {
+      window.open(url, "_blank");
+    }
+  }
 
   const sizeOptions = useMemo(
     () => [
@@ -146,6 +165,7 @@ export function GeneratorStudio({
     }
 
     setGenerations((current) => [generation, ...current]);
+    setSelectedGenerationId(null);
     if (generation.providerMode === "built_in") {
       setCredits((current) => Math.max(0, current - generation.creditsSpent));
     }
@@ -425,10 +445,10 @@ export function GeneratorStudio({
         <div className="studio-card flex flex-col overflow-hidden rounded-[2rem] p-5">
           <div className="mb-4 flex items-center justify-between px-1">
             <h3 className="text-lg font-semibold tracking-tight">生成结果</h3>
-            {latestGeneration && (
+            {displayedGeneration && (
               <div className="flex gap-2 text-xs text-[var(--ink-soft)]">
-                <span className="rounded-full bg-[var(--surface-strong)] px-2 py-1">{latestGeneration.model}</span>
-                <span className="rounded-full bg-[var(--surface-strong)] px-2 py-1">{latestGeneration.size}</span>
+                <span className="rounded-full bg-[var(--surface-strong)] px-2 py-1">{displayedGeneration.model}</span>
+                <span className="rounded-full bg-[var(--surface-strong)] px-2 py-1">{displayedGeneration.size}</span>
               </div>
             )}
           </div>
@@ -446,7 +466,24 @@ export function GeneratorStudio({
                       alt="生成结果"
                       className="aspect-[4/5] h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                    <div className="absolute inset-0 bg-black/40 opacity-0 transition-opacity duration-300 group-hover:opacity-100 flex items-center justify-center gap-3">
+                      <button 
+                        type="button"
+                        onClick={() => setZoomedImage(image.url)}
+                        className="rounded-full bg-white/20 p-3 text-white backdrop-blur-sm transition hover:bg-white/40 hover:scale-110"
+                        title="放大查看"
+                      >
+                        <ZoomIn className="size-5" />
+                      </button>
+                      <button 
+                        type="button"
+                        onClick={() => handleDownload(image.url)}
+                        className="rounded-full bg-[var(--accent)] p-3 text-white shadow-lg transition hover:bg-[var(--accent-soft)] hover:scale-110"
+                        title="下载保存"
+                      >
+                        <Download className="size-5" />
+                      </button>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -469,28 +506,43 @@ export function GeneratorStudio({
           <div className="grid gap-3">
             {generations.length > 0 ? (
               generations.slice(0, compact ? 3 : 6).map((generation) => (
-                <div
+                <button
                   key={generation.id}
-                  className="group relative overflow-hidden rounded-[1.25rem] border border-[var(--line)] bg-[var(--surface-strong)]/30 p-4 transition-colors hover:bg-[var(--surface-strong)]/60"
+                  type="button"
+                  onClick={() => setSelectedGenerationId(generation.id)}
+                  className={`group relative text-left overflow-hidden rounded-[1.25rem] border p-4 transition-all ${
+                    displayedGeneration?.id === generation.id
+                      ? "border-[var(--accent)] bg-[var(--surface-strong)] shadow-sm"
+                      : "border-[var(--line)] bg-[var(--surface-strong)]/30 hover:bg-[var(--surface-strong)]/60"
+                  }`}
                 >
-                  <div className="mb-2 flex items-center justify-between gap-3 text-xs text-[var(--ink-soft)]">
-                    <span className="flex items-center gap-1.5 font-medium">
-                      <div className={`size-1.5 rounded-full ${generation.providerMode === "built_in" ? "bg-[var(--accent)]" : "bg-teal-400"}`} />
-                      {generation.providerMode === "built_in" ? "内置渠道" : "自填渠道"}
-                    </span>
-                    <span>
-                      {formatDistanceToNow(new Date(generation.createdAt), {
-                        addSuffix: true,
-                        locale: zhCN,
-                      })}
-                    </span>
+                  <div className="flex gap-3">
+                    {generation.images[0] && (
+                      <div className="shrink-0">
+                        <img 
+                          src={generation.images[0].url} 
+                          alt="Thumbnail" 
+                          className="size-16 rounded-xl object-cover border border-[var(--line)]" 
+                        />
+                      </div>
+                    )}
+                    <div className="flex-1 min-w-0 flex flex-col justify-between">
+                      <div className="mb-1 flex items-center justify-between gap-3 text-xs text-[var(--ink-soft)]">
+                        <span className="flex items-center gap-1.5 font-medium truncate">
+                          <div className={`size-1.5 shrink-0 rounded-full ${generation.providerMode === "built_in" ? "bg-[var(--accent)]" : "bg-teal-400"}`} />
+                          {generation.providerMode === "built_in" ? "内置渠道" : "自填渠道"}
+                        </span>
+                        <span className="shrink-0">
+                          {formatDistanceToNow(new Date(generation.createdAt), {
+                            addSuffix: true,
+                            locale: zhCN,
+                          })}
+                        </span>
+                      </div>
+                      <p className="line-clamp-2 text-sm text-[var(--ink)]/90">{generation.prompt}</p>
+                    </div>
                   </div>
-                  <p className="line-clamp-2 text-sm text-[var(--ink)]/90">{generation.prompt}</p>
-                  <div className="mt-3 flex items-center justify-between text-xs text-[var(--ink-soft)]">
-                    <span className="rounded-md bg-[var(--line)] px-2 py-0.5">{generation.model}</span>
-                    <span className="font-medium text-[var(--accent-soft)]">-{generation.creditsSpent} 积分</span>
-                  </div>
-                </div>
+                </button>
               ))
             ) : (
               <div className="rounded-[1.25rem] border border-dashed border-[var(--line)] bg-[var(--surface-strong)]/20 px-4 py-8 text-center text-sm text-[var(--ink-soft)]">
@@ -500,6 +552,39 @@ export function GeneratorStudio({
           </div>
         </div>
       </div>
+
+      {zoomedImage && (
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
+          onClick={() => setZoomedImage(null)}
+        >
+          <button 
+            type="button"
+            className="absolute top-6 right-6 text-white/70 transition hover:text-white hover:scale-110"
+            onClick={() => setZoomedImage(null)}
+            title="关闭"
+          >
+            <X className="size-8" />
+          </button>
+          <img 
+            src={zoomedImage} 
+            alt="Zoomed" 
+            className="max-h-[90vh] max-w-[90vw] rounded-xl object-contain shadow-2xl"
+            onClick={(e) => e.stopPropagation()} 
+          />
+          <button
+            type="button"
+            className="absolute bottom-8 flex items-center gap-2 rounded-full bg-white/20 px-6 py-3 text-white backdrop-blur-md shadow-lg transition-all hover:bg-[var(--accent)] hover:scale-105"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDownload(zoomedImage!);
+            }}
+          >
+            <Download className="size-5" />
+            <span className="font-medium">保存图片</span>
+          </button>
+        </div>
+      )}
     </section>
   );
 }

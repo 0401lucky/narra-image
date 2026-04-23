@@ -6,7 +6,6 @@ import { GenerationStatus } from "@prisma/client";
 import { db } from "@/lib/db";
 import { serializeUser } from "@/lib/prisma-mappers";
 import { getCurrentUserRecord } from "@/lib/server/current-user";
-import { GeneratorStudio } from "@/components/create/generator-studio";
 import { SiteHeader } from "@/components/marketing/site-header";
 
 export const dynamic = "force-dynamic";
@@ -74,51 +73,35 @@ export default async function Home() {
     <main className="pb-20">
       <SiteHeader currentUser={currentUser} />
 
-      <section className="mx-auto max-w-7xl px-5 pt-8 pb-12 md:px-8">
-        <div className="mb-6">
-          <h1 className="text-3xl font-semibold tracking-tight text-[var(--ink)] md:text-4xl">
-            工作台
-          </h1>
-          <p className="mt-2 text-sm text-[var(--ink-soft)]">
-            输入提示词即可开始创作，或切换自填渠道使用你的 API Key。
-          </p>
-        </div>
-        
-        <GeneratorStudio compact currentUser={currentUser} />
-      </section>
-
-      <section className="mx-auto mt-10 max-w-7xl px-5 md:px-8">
-        <div className="mb-8 flex items-end justify-between gap-4">
+      <section className="mx-auto mt-6 max-w-7xl px-5 md:px-8">
+        <div className="mb-8 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-semibold tracking-tight text-[var(--ink)]">
+            <h1 className="text-4xl font-semibold tracking-tight text-[var(--ink)]">
               社区精选
-            </h2>
-            <p className="mt-2 text-sm text-[var(--ink-soft)]">
-              探索其他创作者的灵感
+            </h1>
+            <p className="mt-3 text-base text-[var(--ink-soft)]">
+              探索其他创作者的绝妙灵感。
             </p>
           </div>
           <Link
             href="/create"
-            className="rounded-full bg-[var(--card-strong)] px-5 py-2.5 text-sm font-medium text-[var(--ink)] shadow-sm transition hover:bg-[var(--line)]"
+            className="rounded-full bg-[var(--ink)] px-6 py-3 text-sm font-semibold text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-[var(--accent)]"
           >
-            去工作台继续创作
+            开启我的创作
           </Link>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-3">
+        <div className="columns-1 gap-5 sm:columns-2 lg:columns-3 xl:columns-4 space-y-5">
           {works.map((work, index) => (
             <article
               key={`${work.id}-${index}`}
-              className="studio-card overflow-hidden rounded-[2rem]"
+              className="studio-card group relative break-inside-avoid overflow-hidden rounded-[1.5rem]"
             >
-              <img src={work.image} alt={work.title} className="aspect-[4/5] w-full object-cover" />
-              <div className="space-y-3 p-5">
-                <div className="flex items-center justify-between text-xs uppercase tracking-[0.24em] text-[var(--ink-soft)]">
-                  <span>精选作品</span>
-                  <span>{String(index + 1).padStart(2, "0")}</span>
-                </div>
-                <h3 className="text-xl font-medium text-[var(--ink)]">{work.title}</h3>
-                <p className="line-clamp-3 text-sm leading-7 text-[var(--ink-soft)]">
+              <img src={work.image} alt={work.title} className="w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[var(--ink)]/80 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+              <div className="absolute bottom-0 left-0 right-0 translate-y-4 p-5 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+                <h3 className="font-semibold text-white">{work.title}</h3>
+                <p className="mt-1 line-clamp-3 text-xs leading-relaxed text-white/80">
                   {work.prompt}
                 </p>
               </div>

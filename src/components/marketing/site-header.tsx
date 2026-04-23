@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { cn } from "@/lib/utils";
+import { LogoutButton } from "@/components/auth/logout-button";
 
 type SiteHeaderProps = {
   currentUser: {
@@ -49,11 +50,14 @@ export function SiteHeader({ currentUser, className }: SiteHeaderProps) {
 
       <div className="flex items-center gap-3">
         {currentUser ? (
-          <div className="studio-card rounded-full px-4 py-2 text-sm">
-            <span className="mr-2 text-[var(--ink-soft)]">剩余积分</span>
-            <span className="font-semibold text-[var(--accent)]">
-              {currentUser.credits}
-            </span>
+          <div className="flex items-center gap-2">
+            <div className="studio-card rounded-full px-4 py-2 text-sm hidden sm:block">
+              <span className="mr-2 text-[var(--ink-soft)]">剩余积分</span>
+              <span className="font-semibold text-[var(--accent)]">
+                {currentUser.credits}
+              </span>
+            </div>
+            <LogoutButton />
           </div>
         ) : null}
         <Link
