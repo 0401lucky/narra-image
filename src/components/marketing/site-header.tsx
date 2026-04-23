@@ -19,7 +19,7 @@ export function SiteHeader({ currentUser, className }: SiteHeaderProps) {
       )}
     >
       <Link href="/" className="flex items-center gap-3">
-        <span className="rounded-full border border-[var(--line)] bg-white/70 px-3 py-1 text-xs uppercase tracking-[0.35em] text-[var(--ink-soft)]">
+        <span className="rounded-full border border-[var(--line)] bg-[var(--surface-strong)]/50 px-3 py-1 text-xs uppercase tracking-[0.35em] text-[var(--ink-soft)]">
           Narra
         </span>
         <span className="editorial-title text-3xl font-semibold text-[var(--ink)]">
@@ -28,19 +28,19 @@ export function SiteHeader({ currentUser, className }: SiteHeaderProps) {
       </Link>
 
       <nav className="hidden items-center gap-2 md:flex">
-        <Link href="/" className="ring-link rounded-full px-4 py-2 text-sm text-[var(--ink-soft)]">
+        <Link href="/" className="ring-link rounded-full px-4 py-2 text-sm text-[var(--ink-soft)] hover:text-[var(--ink)]">
           首页
         </Link>
         <Link
           href="/create"
-          className="ring-link rounded-full px-4 py-2 text-sm text-[var(--ink-soft)]"
+          className="ring-link rounded-full px-4 py-2 text-sm text-[var(--ink-soft)] hover:text-[var(--ink)]"
         >
           创作台
         </Link>
         {currentUser?.role === "admin" ? (
           <Link
             href="/admin"
-            className="ring-link rounded-full px-4 py-2 text-sm text-[var(--ink-soft)]"
+            className="ring-link rounded-full px-4 py-2 text-sm text-[var(--ink-soft)] hover:text-[var(--ink)]"
           >
             管理后台
           </Link>
@@ -58,7 +58,7 @@ export function SiteHeader({ currentUser, className }: SiteHeaderProps) {
         ) : null}
         <Link
           href={currentUser ? "/create" : "/login"}
-          className="rounded-full bg-[var(--ink)] px-5 py-2.5 text-sm font-medium text-white transition hover:-translate-y-0.5"
+          className="rounded-full bg-[var(--ink)] px-5 py-2.5 text-sm font-semibold text-[var(--surface)] shadow-lg transition hover:-translate-y-0.5 hover:bg-[var(--accent)]"
         >
           {currentUser ? "继续创作" : "登录开启"}
         </Link>

@@ -74,74 +74,32 @@ export default async function Home() {
     <main className="pb-20">
       <SiteHeader currentUser={currentUser} />
 
-      <section className="mx-auto grid max-w-7xl gap-8 px-5 pb-8 pt-4 md:px-8">
-        <div className="grid gap-6 xl:grid-cols-[0.86fr_1.14fr] xl:items-end">
-          <div className="space-y-6">
-            <div className="inline-flex rounded-full border border-[var(--line)] bg-white/70 px-4 py-2 text-xs uppercase tracking-[0.3em] text-[var(--ink-soft)]">
-              生成器主导 · 潮流作品感
-            </div>
-            <div className="space-y-4">
-              <h1 className="editorial-title max-w-4xl text-6xl leading-none font-semibold md:text-7xl xl:text-[5.7rem]">
-                好看的 UI，应该让你一进来就想立刻出图。
-              </h1>
-              <p className="max-w-2xl text-base leading-8 text-[var(--ink-soft)] md:text-lg">
-                Narra Image 把首页做成第一块工作台。普通用户直接开写提示词，
-                高级用户再决定要不要切到自己的 OpenAI 兼容渠道。
-              </p>
-            </div>
-            <div className="grid gap-3 text-sm text-[var(--ink-soft)] md:grid-cols-3">
-              <div className="studio-card rounded-[1.5rem] px-4 py-4">
-                默认内置渠道
-                <div className="mt-2 text-2xl font-semibold text-[var(--ink)]">5 分 / 次</div>
-              </div>
-              <div className="studio-card rounded-[1.5rem] px-4 py-4">
-                新用户起始积分
-                <div className="mt-2 text-2xl font-semibold text-[var(--ink)]">500</div>
-              </div>
-              <div className="studio-card rounded-[1.5rem] px-4 py-4">
-                高级用户可选
-                <div className="mt-2 text-2xl font-semibold text-[var(--ink)]">自填渠道</div>
-              </div>
-            </div>
-          </div>
-
-          <div className="grid gap-3 sm:grid-cols-[1.2fr_0.8fr]">
-            {works.slice(0, 2).map((work) => (
-              <div
-                key={work.id}
-                className="studio-card overflow-hidden rounded-[2rem] border border-[var(--line)]"
-              >
-                <img src={work.image} alt={work.title} className="aspect-[4/5] w-full object-cover" />
-                <div className="p-5">
-                  <div className="text-xs uppercase tracking-[0.28em] text-[var(--ink-soft)]">
-                    Featured
-                  </div>
-                  <h3 className="mt-2 text-2xl font-medium">{work.title}</h3>
-                  <p className="mt-3 line-clamp-2 text-sm leading-7 text-[var(--ink-soft)]">
-                    {work.prompt}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
+      <section className="mx-auto max-w-7xl px-5 pt-8 pb-12 md:px-8">
+        <div className="mb-6">
+          <h1 className="text-3xl font-semibold tracking-tight text-[var(--ink)] md:text-4xl">
+            工作台
+          </h1>
+          <p className="mt-2 text-sm text-[var(--ink-soft)]">
+            输入提示词即可开始创作，或切换自填渠道使用你的 API Key。
+          </p>
         </div>
-
+        
         <GeneratorStudio compact currentUser={currentUser} />
       </section>
 
       <section className="mx-auto mt-10 max-w-7xl px-5 md:px-8">
-        <div className="mb-6 flex items-end justify-between gap-4">
+        <div className="mb-8 flex items-end justify-between gap-4">
           <div>
-            <p className="text-xs uppercase tracking-[0.32em] text-[var(--ink-soft)]">
-              Curated Gallery
-            </p>
-            <h2 className="editorial-title mt-2 text-5xl font-semibold">
-              灵感流存在，但它是为了推动创作，不是把你拦在门外。
+            <h2 className="text-2xl font-semibold tracking-tight text-[var(--ink)]">
+              社区精选
             </h2>
+            <p className="mt-2 text-sm text-[var(--ink-soft)]">
+              探索其他创作者的灵感
+            </p>
           </div>
           <Link
             href="/create"
-            className="rounded-full border border-[var(--line)] bg-white/70 px-5 py-3 text-sm text-[var(--ink-soft)]"
+            className="rounded-full bg-[var(--card-strong)] px-5 py-2.5 text-sm font-medium text-[var(--ink)] shadow-sm transition hover:bg-[var(--line)]"
           >
             去工作台继续创作
           </Link>

@@ -36,23 +36,17 @@ export default async function AdminPage() {
   return (
     <main className="pb-16">
       <SiteHeader currentUser={serializeUser(admin)} />
-      <section className="mx-auto grid max-w-7xl gap-6 px-5 pt-6 md:px-8">
-        <div className="space-y-4">
-          <p className="text-xs uppercase tracking-[0.32em] text-[var(--ink-soft)]">
-            Admin Console
-          </p>
-          <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
-            <div>
-              <h1 className="editorial-title text-5xl font-semibold md:text-6xl">
-                后台先做轻，但要一眼看得住全局。
-              </h1>
-              <p className="mt-3 max-w-3xl text-base leading-8 text-[var(--ink-soft)]">
-                这里不是复杂 SaaS 仪表盘，而是产品控制面板。
-                管邀请码、看用户、调积分、看全站图片，就够把第一版稳稳带起来。
-              </p>
-            </div>
-            <AdminNav currentPath="/admin" />
+      <section className="mx-auto grid max-w-7xl gap-6 px-5 pt-8 md:px-8">
+        <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between mb-2">
+          <div>
+            <h1 className="text-3xl font-semibold tracking-tight text-[var(--ink)] md:text-4xl">
+              管理后台
+            </h1>
+            <p className="mt-2 text-sm text-[var(--ink-soft)]">
+              全局数据概览与内置渠道配置。
+            </p>
           </div>
+          <AdminNav currentPath="/admin" />
         </div>
 
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
