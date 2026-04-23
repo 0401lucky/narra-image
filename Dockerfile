@@ -43,4 +43,4 @@ COPY --from=builder /app/node_modules ./node_modules
 
 EXPOSE 3000
 
-CMD ["sh", "-c", "pnpm exec prisma db push && pnpm exec prisma db seed && pnpm start"]
+CMD ["sh", "-c", "pnpm exec prisma db push --skip-generate && pnpm start"]
