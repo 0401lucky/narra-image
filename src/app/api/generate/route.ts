@@ -52,6 +52,7 @@ export async function POST(request: Request) {
         ),
         baseUrl: saved.baseUrl,
         model: saved.model,
+        models: saved.models,
         remember: true,
       };
     }

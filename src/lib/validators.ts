@@ -16,6 +16,7 @@ export const providerConfigSchema = z.object({
   baseUrl: z.url("请输入正确的 Base URL"),
   label: z.string().trim().max(40).optional().nullable(),
   model: z.string().trim().min(1, "请输入模型名"),
+  models: z.array(z.string()).default([]),
   remember: z.boolean().default(false),
 });
 
