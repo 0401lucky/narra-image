@@ -213,11 +213,12 @@ export function GeneratorStudio({
 
   return (
     <section
-      className={`grid gap-6 ${compact ? "xl:grid-cols-[1.2fr_0.8fr]" : "xl:grid-cols-[1fr_0.9fr]"}`}
+      className={`grid gap-6 md:gap-8 items-start ${compact ? "xl:grid-cols-[1.2fr_0.8fr]" : "xl:grid-cols-[1.05fr_0.95fr]"}`}
     >
-      <div className="studio-card noise-overlay relative flex flex-col overflow-hidden rounded-[2rem] p-6 md:p-8">
-        <div className="absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-[var(--accent)] to-transparent opacity-50" />
-        
+      <div className="flex min-w-0 flex-col gap-6 md:gap-8">
+        <div className="studio-card noise-overlay relative flex flex-col overflow-hidden rounded-[2rem] p-6 md:p-8">
+          <div className="absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-[var(--accent)] to-transparent opacity-50" />
+          
         <div className="mb-6 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <div className="flex size-10 items-center justify-center rounded-full bg-[var(--accent)]/10 text-[var(--accent)]">
@@ -441,7 +442,60 @@ export function GeneratorStudio({
         </div>
       </div>
 
-      <div className="flex flex-col gap-6">
+        <div className="studio-card flex flex-col rounded-[2rem] p-6 md:p-8">
+          <h3 className="mb-5 text-lg font-semibold tracking-tight">历史记录</h3>
+
+          <div className="grid gap-3">
+            {generations.length > 0 ? (
+              generations.slice(0, compact ? 4 : 8).map((generation) => (
+                <button
+                  key={generation.id}
+                  type="button"
+                  onClick={() => setSelectedGenerationId(generation.id)}
+                  className={`group relative text-left overflow-hidden rounded-[1.25rem] border p-4 transition-all ${
+                    displayedGeneration?.id === generation.id
+                      ? "border-[var(--accent)] bg-[var(--surface-strong)] shadow-sm"
+                      : "border-[var(--line)] bg-[var(--surface-strong)]/30 hover:bg-[var(--surface-strong)]/60"
+                  }`}
+                >
+                  <div className="flex gap-3">
+                    {generation.images[0] && (
+                      <div className="shrink-0">
+                        <img 
+                          src={generation.images[0].url} 
+                          alt="Thumbnail" 
+                          className="size-16 rounded-xl object-cover border border-[var(--line)]" 
+                        />
+                      </div>
+                    )}
+                    <div className="flex-1 min-w-0 flex flex-col justify-between">
+                      <div className="mb-1 flex items-center justify-between gap-3 text-xs text-[var(--ink-soft)]">
+                        <span className="flex items-center gap-1.5 font-medium truncate">
+                          <div className={`size-1.5 shrink-0 rounded-full ${generation.providerMode === "built_in" ? "bg-[var(--accent)]" : "bg-teal-400"}`} />
+                          {generation.providerMode === "built_in" ? "内置渠道" : "自填渠道"}
+                        </span>
+                        <span className="shrink-0">
+                          {formatDistanceToNow(new Date(generation.createdAt), {
+                            addSuffix: true,
+                            locale: zhCN,
+                          })}
+                        </span>
+                      </div>
+                      <p className="line-clamp-2 text-sm text-[var(--ink)]/90">{generation.prompt}</p>
+                    </div>
+                  </div>
+                </button>
+              ))
+            ) : (
+              <div className="rounded-[1.25rem] border border-dashed border-[var(--line)] bg-[var(--surface-strong)]/20 px-4 py-8 text-center text-sm text-[var(--ink-soft)]">
+                还没有生成记录。
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <div className="sticky top-6 flex min-w-0 flex-col">
         <div className="studio-card flex flex-col overflow-hidden rounded-[2rem] p-5">
           <div className="mb-4 flex items-center justify-between px-1">
             <h3 className="text-lg font-semibold tracking-tight">生成结果</h3>
@@ -495,58 +549,6 @@ export function GeneratorStudio({
                 <p className="text-sm text-[var(--ink-soft)]">
                   你的创意将在这里呈现。<br />输入提示词，点击生成即可开始。
                 </p>
-              </div>
-            )}
-          </div>
-        </div>
-
-        <div className="studio-card flex-1 rounded-[2rem] p-5">
-          <h3 className="mb-4 px-1 text-lg font-semibold tracking-tight">历史记录</h3>
-
-          <div className="grid gap-3">
-            {generations.length > 0 ? (
-              generations.slice(0, compact ? 3 : 6).map((generation) => (
-                <button
-                  key={generation.id}
-                  type="button"
-                  onClick={() => setSelectedGenerationId(generation.id)}
-                  className={`group relative text-left overflow-hidden rounded-[1.25rem] border p-4 transition-all ${
-                    displayedGeneration?.id === generation.id
-                      ? "border-[var(--accent)] bg-[var(--surface-strong)] shadow-sm"
-                      : "border-[var(--line)] bg-[var(--surface-strong)]/30 hover:bg-[var(--surface-strong)]/60"
-                  }`}
-                >
-                  <div className="flex gap-3">
-                    {generation.images[0] && (
-                      <div className="shrink-0">
-                        <img 
-                          src={generation.images[0].url} 
-                          alt="Thumbnail" 
-                          className="size-16 rounded-xl object-cover border border-[var(--line)]" 
-                        />
-                      </div>
-                    )}
-                    <div className="flex-1 min-w-0 flex flex-col justify-between">
-                      <div className="mb-1 flex items-center justify-between gap-3 text-xs text-[var(--ink-soft)]">
-                        <span className="flex items-center gap-1.5 font-medium truncate">
-                          <div className={`size-1.5 shrink-0 rounded-full ${generation.providerMode === "built_in" ? "bg-[var(--accent)]" : "bg-teal-400"}`} />
-                          {generation.providerMode === "built_in" ? "内置渠道" : "自填渠道"}
-                        </span>
-                        <span className="shrink-0">
-                          {formatDistanceToNow(new Date(generation.createdAt), {
-                            addSuffix: true,
-                            locale: zhCN,
-                          })}
-                        </span>
-                      </div>
-                      <p className="line-clamp-2 text-sm text-[var(--ink)]/90">{generation.prompt}</p>
-                    </div>
-                  </div>
-                </button>
-              ))
-            ) : (
-              <div className="rounded-[1.25rem] border border-dashed border-[var(--line)] bg-[var(--surface-strong)]/20 px-4 py-8 text-center text-sm text-[var(--ink-soft)]">
-                还没有生成记录。
               </div>
             )}
           </div>
