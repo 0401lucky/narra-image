@@ -23,10 +23,16 @@ export default function LoginPage() {
             如果你是进阶用户，登录后再切到自己的 OpenAI 兼容渠道即可。
           </p>
           <div className="studio-card rounded-[2rem] p-5 text-sm leading-7 text-[var(--ink-soft)]">
-            还没有账号？
-            <Link href="/register" className="ml-2 font-medium text-[var(--accent)]">
-              使用邀请码注册
-            </Link>
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+              <span>还没有账号？</span>
+              <Link href="/register" className="font-medium text-[var(--accent)]">
+                使用邀请码注册
+              </Link>
+              <span className="text-[var(--ink-soft)]/50">/</span>
+              <Link href="/invite-claim" className="font-medium text-[var(--accent)]">
+                前往邀请码领取平台
+              </Link>
+            </div>
           </div>
         </div>
 
