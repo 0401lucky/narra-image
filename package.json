@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "prisma generate && next build",
-    "start": "prisma db push --skip-generate && next start",
+    "start": "prisma db push && next start",
     "lint": "eslint .",
     "test": "vitest run",
     "test:watch": "vitest",
