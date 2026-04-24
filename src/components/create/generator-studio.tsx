@@ -57,6 +57,28 @@ type GeneratorStudioProps = {
   channels?: ChannelInfo[];
 };
 
+// --- Session helpers ---
+type SessionInfo = {
+  id: string;
+  title: string;
+  generationIds: string[];
+  createdAt: string;
+};
+
+function genSessionId() {
+  return `s_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+}
+
+function loadSessions(): SessionInfo[] {
+  if (typeof window === "undefined") return [];
+  try {
+    return JSON.parse(localStorage.getItem("narra_sessions") || "[]");
+  } catch { return []; }
+}
+
+function saveSessions(sessions: SessionInfo[]) {
+  localStorage.setItem("narra_sessions", JSON.stringify(sessions));
+}
 
 export function GeneratorStudio({
   compact = false,
@@ -96,7 +118,7 @@ export function GeneratorStudio({
   );
   const [customApiKey, setCustomApiKey] = useState("");
   const [rememberProvider, setRememberProvider] = useState(false);
-  const [generations, setGenerations] = useState(initialGenerations);
+  const [allGenerations] = useState(initialGenerations);
   const [credits, setCredits] = useState(currentUser?.credits ?? 0);
   const [zoomedImage, setZoomedImage] = useState<string | null>(null);
   const [referenceImage, setReferenceImage] = useState<{
@@ -105,11 +127,47 @@ export function GeneratorStudio({
   } | null>(null);
   const [showSettings, setShowSettings] = useState(false);
 
+  // Session state
+  const [sessions, setSessions] = useState<SessionInfo[]>([]);
+  const [activeSessionId, setActiveSessionId] = useState<string | null>(null);
+  const [sessionGenerations, setSessionGenerations] = useState<GenerationItem[]>([]);
+
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const scrollAreaRef = useRef<HTMLDivElement | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
-  // Auto-scroll to bottom when generations change or loading starts
+  // Initialize sessions from localStorage and backfill legacy generations
+  useEffect(() => {
+    let stored = loadSessions();
+    const knownIds = new Set(stored.flatMap((s) => s.generationIds));
+    const orphans = initialGenerations.filter((g) => !knownIds.has(g.id));
+
+    if (orphans.length > 0 && stored.length === 0) {
+      // First time — create a session for legacy data
+      const legacy: SessionInfo = {
+        id: genSessionId(),
+        title: orphans[0]?.prompt?.slice(0, 30) || "历史会话",
+        generationIds: orphans.map((g) => g.id),
+        createdAt: orphans[0]?.createdAt || new Date().toISOString(),
+      };
+      stored = [legacy];
+      saveSessions(stored);
+    }
+
+    setSessions(stored);
+    // Set active session to the last one, or create a new one
+    if (stored.length > 0) {
+      const last = stored[stored.length - 1];
+      setActiveSessionId(last.id);
+      setSessionGenerations(
+        initialGenerations.filter((g) => last.generationIds.includes(g.id))
+          .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
+      );
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Auto-scroll to bottom when generations change
   useEffect(() => {
     if (scrollAreaRef.current) {
       scrollAreaRef.current.scrollTo({
@@ -117,7 +175,7 @@ export function GeneratorStudio({
         behavior: "smooth",
       });
     }
-  }, [generations, isPending]);
+  }, [sessionGenerations, isPending]);
 
   // Adjust textarea height
   useEffect(() => {
@@ -127,9 +185,7 @@ export function GeneratorStudio({
     }
   }, [prompt]);
 
-  const sortedGenerations = [...generations].sort(
-    (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-  );
+  const sortedGenerations = sessionGenerations;
 
   async function handleDownload(url: string) {
     try {
@@ -243,7 +299,29 @@ export function GeneratorStudio({
       return;
     }
 
-    setGenerations((current) => [...current, generation]);
+    setSessionGenerations((current) => [...current, generation]);
+    // Update session in localStorage
+    setSessions((prev) => {
+      let updated = [...prev];
+      let session = updated.find((s) => s.id === activeSessionId);
+      if (!session) {
+        // Create session on first generation if none active
+        session = {
+          id: activeSessionId || genSessionId(),
+          title: generation.prompt.slice(0, 30),
+          generationIds: [],
+          createdAt: new Date().toISOString(),
+        };
+        updated.push(session);
+        if (!activeSessionId) setActiveSessionId(session.id);
+      }
+      session.generationIds.push(generation.id);
+      if (session.generationIds.length === 1) {
+        session.title = generation.prompt.slice(0, 30);
+      }
+      saveSessions(updated);
+      return updated;
+    });
     setPrompt("");
     if (generation.providerMode === "built_in") {
       setCredits((current) => Math.max(0, current - generation.creditsSpent));
@@ -337,30 +415,47 @@ export function GeneratorStudio({
   }
 
 
-
   function handleNewConversation() {
+    const newId = genSessionId();
+    setActiveSessionId(newId);
+    setSessionGenerations([]);
     setPrompt("");
     setNegativePrompt("");
     setReferenceImage(null);
     setGenerationType("text_to_image");
     setError(null);
     setShowSettings(false);
-    // Scroll to bottom
-    setTimeout(() => {
-      scrollAreaRef.current?.scrollTo({ top: scrollAreaRef.current.scrollHeight, behavior: "smooth" });
-    }, 100);
+    // Don't add to sessions yet — only add when first generation happens
   }
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const scrollToGeneration = useCallback((id: string) => {
-    const el = document.getElementById(`gen-${id}`);
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth", block: "center" });
+  function switchToSession(sessionId: string) {
+    setActiveSessionId(sessionId);
+    const session = sessions.find((s) => s.id === sessionId);
+    if (session) {
+      const gens = initialGenerations
+        .filter((g) => session.generationIds.includes(g.id))
+        .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+      setSessionGenerations(gens);
     }
-    // Close sidebar on mobile after click
+    setPrompt("");
+    setNegativePrompt("");
+    setReferenceImage(null);
+    setError(null);
     if (window.innerWidth < 768) setSidebarOpen(false);
-  }, []);
+  }
+
+  function deleteSession(sessionId: string) {
+    setSessions((prev) => {
+      const updated = prev.filter((s) => s.id !== sessionId);
+      saveSessions(updated);
+      return updated;
+    });
+    if (activeSessionId === sessionId) {
+      handleNewConversation();
+    }
+  }
 
   function formatTime(dateStr: string) {
     const d = new Date(dateStr);
@@ -402,29 +497,40 @@ export function GeneratorStudio({
         </div>
 
         {/* 会话列表 */}
-        <div className="flex-1 overflow-y-auto p-2 space-y-1" style={{ scrollbarWidth: "thin" }}>
-          {sortedGenerations.length === 0 ? (
+        <div className="flex-1 overflow-y-auto p-2 space-y-0.5" style={{ scrollbarWidth: "thin" }}>
+          {sessions.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-32 text-center">
               <MessageSquare className="size-6 text-[var(--ink-soft)] opacity-30 mb-2" />
               <p className="text-xs text-[var(--ink-soft)]">暂无会话记录</p>
             </div>
           ) : (
-            sortedGenerations.map((gen) => (
-              <button
-                key={gen.id}
-                type="button"
-                onClick={() => scrollToGeneration(gen.id)}
-                className="group flex w-full flex-col gap-1 rounded-xl px-3 py-2.5 text-left transition hover:bg-[var(--surface-strong)]"
+            [...sessions].reverse().map((session) => (
+              <div
+                key={session.id}
+                className={`group flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left transition cursor-pointer ${
+                  activeSessionId === session.id
+                    ? "bg-[var(--surface-strong)] ring-1 ring-[var(--line)]"
+                    : "hover:bg-[var(--surface-strong)]/60"
+                }`}
+                onClick={() => switchToSession(session.id)}
               >
-                <span className="text-xs font-medium text-[var(--ink)] truncate leading-tight">
-                  {gen.prompt.length > 30 ? gen.prompt.slice(0, 30) + "..." : gen.prompt}
-                </span>
-                <span className="flex items-center gap-2 text-[10px] text-[var(--ink-soft)]">
-                  <span>{gen.generationType === "image_to_image" ? "图生图" : "文生图"}</span>
-                  <span>·</span>
-                  <span>{formatTime(gen.createdAt)}</span>
-                </span>
-              </button>
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-medium text-[var(--ink)] truncate leading-tight">
+                    {session.title || "新对话"}
+                  </p>
+                  <p className="text-[10px] text-[var(--ink-soft)] mt-0.5">
+                    {session.generationIds.length} 轮 · {formatTime(session.createdAt)}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={(e) => { e.stopPropagation(); deleteSession(session.id); }}
+                  className="shrink-0 rounded-md p-1 text-[var(--ink-soft)] opacity-0 transition group-hover:opacity-100 hover:bg-rose-50 hover:text-rose-500"
+                  title="删除会话"
+                >
+                  <Trash2 className="size-3" />
+                </button>
+              </div>
             ))
           )}
         </div>
