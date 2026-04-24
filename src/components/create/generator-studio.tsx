@@ -141,7 +141,8 @@ export function GeneratorStudio({
 
   async function handleDownload(url: string) {
     try {
-      const response = await fetch(url);
+      const proxyUrl = `/api/proxy-image?url=${encodeURIComponent(url)}`;
+      const response = await fetch(proxyUrl);
       const blob = await response.blob();
       const blobUrl = URL.createObjectURL(blob);
       const a = document.createElement("a");
@@ -272,7 +273,10 @@ export function GeneratorStudio({
 
   async function handleUseImageForEdit(url: string) {
     try {
-      const response = await fetch(url);
+      // Use server-side proxy to avoid CORS issues with external storage (S3/R2)
+      const proxyUrl = `/api/proxy-image?url=${encodeURIComponent(url)}`;
+      const response = await fetch(proxyUrl);
+      if (!response.ok) throw new Error("fetch failed");
       const blob = await response.blob();
       const file = new File([blob], `edit-${Date.now()}.png`, {
         type: blob.type || "image/png",
