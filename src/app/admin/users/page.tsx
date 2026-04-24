@@ -4,12 +4,20 @@ import { db } from "@/lib/db";
 import { requireAdminRecord } from "@/lib/server/current-user";
 import { SiteHeader } from "@/components/marketing/site-header";
 import { AdminNav } from "@/components/admin/admin-nav";
-import { CreditAdjuster } from "@/components/admin/admin-actions";
-import { fromPrismaRole, serializeUser } from "@/lib/prisma-mappers";
+import { serializeUser, fromPrismaRole } from "@/lib/prisma-mappers";
+import { AdminPagination } from "@/components/admin/admin-pagination";
+import { UserAdminCard } from "@/components/admin/user-admin-card";
+import { UserSearchBar } from "@/components/admin/user-search-bar";
 
 export const dynamic = "force-dynamic";
 
-export default async function AdminUsersPage() {
+const PAGE_SIZE = 20;
+
+export default async function AdminUsersPage({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
   let admin;
   try {
     admin = await requireAdminRecord();
@@ -17,70 +25,83 @@ export default async function AdminUsersPage() {
     redirect("/login");
   }
 
-  const users = await db.user.findMany({
-    orderBy: { createdAt: "desc" },
-    select: {
-      _count: {
-        select: {
-          generations: true,
-        },
+  const params = await searchParams;
+  const page = Math.max(1, Number(params.page) || 1);
+  const search = typeof params.q === "string" ? params.q.trim() : "";
+
+  const where = search
+    ? { email: { contains: search, mode: "insensitive" as const } }
+    : {};
+
+  const [users, totalCount] = await Promise.all([
+    db.user.findMany({
+      where,
+      orderBy: { createdAt: "desc" },
+      select: {
+        _count: { select: { generations: true } },
+        createdAt: true,
+        credits: true,
+        email: true,
+        id: true,
+        role: true,
       },
-      createdAt: true,
-      credits: true,
-      email: true,
-      id: true,
-      role: true,
-    },
-    take: 100,
-  });
+      skip: (page - 1) * PAGE_SIZE,
+      take: PAGE_SIZE,
+    }),
+    db.user.count({ where }),
+  ]);
+
+  const totalPages = Math.ceil(totalCount / PAGE_SIZE);
+
+  const serializedUsers = users.map((user) => ({
+    createdAt: user.createdAt.toISOString(),
+    credits: user.credits,
+    email: user.email,
+    generationCount: user._count.generations,
+    id: user.id,
+    role: fromPrismaRole(user.role),
+  }));
 
   return (
     <main className="pb-16">
       <SiteHeader currentUser={serializeUser(admin)} />
-      <section className="mx-auto grid max-w-7xl gap-6 px-5 pt-6 md:px-8">
+      <section className="mx-auto grid max-w-7xl gap-6 px-5 pt-8 md:px-8">
         <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
           <div>
-            <p className="text-xs uppercase tracking-[0.32em] text-[var(--ink-soft)]">
-              Users
-            </p>
-            <h1 className="editorial-title mt-3 text-5xl font-semibold">
-              每个用户的积分与产出，都应该可追踪、可调整。
+            <h1 className="text-3xl font-semibold tracking-tight text-[var(--ink)] md:text-4xl">
+              用户管理
             </h1>
+            <p className="mt-2 text-sm text-[var(--ink-soft)]">
+              管理所有用户的积分、角色与产出数据。共 {totalCount} 名用户。
+            </p>
           </div>
           <AdminNav currentPath="/admin/users" />
         </div>
 
-        <div className="grid gap-4">
-          {users.map((user) => (
-            <article
-              key={user.id}
-              className="studio-card grid gap-4 rounded-[1.8rem] p-5 xl:grid-cols-[1.2fr_0.8fr_0.7fr_1fr]"
-            >
-              <div>
-                <div className="text-xs uppercase tracking-[0.28em] text-[var(--ink-soft)]">
-                  {fromPrismaRole(user.role)}
-                </div>
-                <h2 className="mt-2 text-xl font-medium">{user.email}</h2>
-                <p className="mt-2 text-sm text-[var(--ink-soft)]">
-                  注册于 {new Date(user.createdAt).toLocaleString("zh-CN")}
-                </p>
-              </div>
-              <div>
-                <div className="text-sm text-[var(--ink-soft)]">当前积分</div>
-                <div className="mt-3 text-3xl font-semibold text-[var(--accent)]">
-                  {user.credits}
-                </div>
-              </div>
-              <div>
-                <div className="text-sm text-[var(--ink-soft)]">生成次数</div>
-                <div className="mt-3 text-3xl font-semibold text-[var(--ink)]">
-                  {user._count.generations}
-                </div>
-              </div>
-              <CreditAdjuster userId={user.id} />
-            </article>
-          ))}
-        </div>
+        <UserSearchBar initialValue={search} />
+
+        {serializedUsers.length === 0 ? (
+          <div className="studio-card rounded-[1.8rem] border border-dashed border-[var(--line)] p-8 text-center text-sm text-[var(--ink-soft)]">
+            {search ? `没有找到包含 "${search}" 的用户。` : "暂无注册用户。"}
+          </div>
+        ) : (
+          <div className="grid gap-4">
+            {serializedUsers.map((user) => (
+              <UserAdminCard
+                key={user.id}
+                user={user}
+                isCurrentAdmin={user.id === admin.id}
+              />
+            ))}
+          </div>
+        )}
+
+        <AdminPagination
+          currentPage={page}
+          totalPages={totalPages}
+          basePath="/admin/users"
+          extraParams={search ? { q: search } : undefined}
+        />
       </section>
     </main>
   );

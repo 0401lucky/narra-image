@@ -6,6 +6,8 @@ import { SiteHeader } from "@/components/marketing/site-header";
 import { serializeUser } from "@/lib/prisma-mappers";
 import { requireAdminRecord } from "@/lib/server/current-user";
 import { listAdminWorks } from "@/lib/server/works";
+import { getBenefitConfig } from "@/lib/benefits/config";
+import { ShowcaseAutoApproveToggle } from "@/components/admin/showcase-auto-approve-toggle";
 
 export const dynamic = "force-dynamic";
 
@@ -17,7 +19,11 @@ export default async function AdminWorksPage() {
     redirect("/login");
   }
 
-  const works = await listAdminWorks();
+  const [works, benefitConfig] = await Promise.all([
+    listAdminWorks(),
+    getBenefitConfig(),
+  ]);
+
   const counts = {
     featured: works.filter((work) => work.showcaseStatus === "FEATURED").length,
     pending: works.filter((work) => work.showcaseStatus === "PENDING").length,
@@ -40,6 +46,10 @@ export default async function AdminWorksPage() {
           </div>
           <AdminNav currentPath="/admin/works" />
         </div>
+
+        <ShowcaseAutoApproveToggle
+          initialValue={benefitConfig.autoApproveShowcase}
+        />
 
         <div className="grid gap-4 md:grid-cols-3">
           {[

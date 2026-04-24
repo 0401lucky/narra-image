@@ -31,7 +31,6 @@ export function ChannelManager({ initialChannels }: ChannelManagerProps) {
   const [error, setError] = useState<string | null>(null);
   const [modelError, setModelError] = useState<string | null>(null);
 
-  // Form state
   const [formName, setFormName] = useState("");
   const [formSlug, setFormSlug] = useState("");
   const [formBaseUrl, setFormBaseUrl] = useState("");
@@ -200,7 +199,7 @@ export function ChannelManager({ initialChannels }: ChannelManagerProps) {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+
       <div className="flex items-center justify-between">
         <div>
           <h3 className="text-lg font-semibold text-[var(--ink)]">API 渠道管理</h3>
@@ -217,7 +216,7 @@ export function ChannelManager({ initialChannels }: ChannelManagerProps) {
         </button>
       </div>
 
-      {/* Channel List */}
+
       {channels.length === 0 ? (
         <div className="rounded-2xl border-2 border-dashed border-[var(--line)] p-12 text-center">
           <Server className="mx-auto size-10 text-[var(--ink-soft)] opacity-40" />
@@ -234,7 +233,7 @@ export function ChannelManager({ initialChannels }: ChannelManagerProps) {
                 !ch.isActive ? "opacity-60" : ""
               }`}
             >
-              {/* Top row */}
+
               <div className="mb-3 flex items-start justify-between">
                 <div className="flex items-center gap-2">
                   <div className={`flex size-8 items-center justify-center rounded-lg ${ch.isActive ? "bg-emerald-500/10 text-emerald-600" : "bg-[var(--surface-strong)] text-[var(--ink-soft)]"}`}>
@@ -258,7 +257,7 @@ export function ChannelManager({ initialChannels }: ChannelManagerProps) {
                 </button>
               </div>
 
-              {/* Details */}
+
               <div className="space-y-2 text-xs text-[var(--ink-soft)]">
                 <div className="flex items-center gap-2">
                   <Globe className="size-3.5 shrink-0" />
@@ -274,7 +273,7 @@ export function ChannelManager({ initialChannels }: ChannelManagerProps) {
                 </div>
               </div>
 
-              {/* Footer */}
+
               <div className="mt-4 flex items-center justify-between border-t border-[var(--line)]/50 pt-3">
                 <div className="flex items-center gap-2">
                   <span className="rounded-md bg-[var(--accent)]/10 px-2 py-0.5 text-xs font-medium text-[var(--accent)]">
@@ -306,7 +305,7 @@ export function ChannelManager({ initialChannels }: ChannelManagerProps) {
         </div>
       )}
 
-      {/* Create/Edit Modal */}
+
       {showCreateForm && (
         <div
           className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
@@ -410,7 +409,7 @@ export function ChannelManager({ initialChannels }: ChannelManagerProps) {
                 />
               </label>
 
-              {/* Available Models */}
+
               {formModels.length > 0 && (
                 <div className="md:col-span-2">
                   <span className="text-sm text-[var(--ink-soft)] mb-2 block">可用模型（点击选为默认）</span>

@@ -64,11 +64,12 @@ model InviteBatch {
 }
 
 model BenefitConfig {
-  id                 String   @id @default(cuid())
-  scope              String   @unique @default("default")
-  checkInReward      Int      @default(50)
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
+  id                   String   @id @default(cuid())
+  scope                String   @unique @default("default")
+  checkInReward        Int      @default(50)
+  autoApproveShowcase  Boolean  @default(false)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
 }
 
 model CheckInRecord {

@@ -12,19 +12,28 @@ export async function getBenefitConfig() {
   });
 
   return {
+    autoApproveShowcase: config?.autoApproveShowcase ?? false,
     checkInReward: config?.checkInReward ?? DEFAULT_CHECK_IN_REWARD,
   };
 }
 
-export async function updateBenefitConfig(checkInReward: number) {
+export async function updateBenefitConfig(data: {
+  autoApproveShowcase?: boolean;
+  checkInReward?: number;
+}) {
   return db.benefitConfig.upsert({
     where: { scope: DEFAULT_SCOPE },
-    update: { checkInReward },
+    update: data,
     create: {
-      checkInReward,
+      ...data,
       scope: DEFAULT_SCOPE,
     },
   });
+}
+
+export async function isAutoApproveShowcase() {
+  const config = await getBenefitConfig();
+  return config.autoApproveShowcase;
 }
 
 export async function getCheckInSummary(userId: string | null) {

@@ -4,6 +4,7 @@ import { requireCurrentUserRecord } from "@/lib/server/current-user";
 import { getErrorMessage, jsonError, jsonOk, parseJsonBody } from "@/lib/server/http";
 import { applyUserShowcaseAction } from "@/lib/work-showcase";
 import { workShowcaseUpdateSchema } from "@/lib/validators";
+import { isAutoApproveShowcase } from "@/lib/benefits/config";
 
 function resolveStatusCode(error: unknown) {
   if (error instanceof Error && error.message === "当前状态不允许执行该操作") {
@@ -27,11 +28,25 @@ export async function PATCH(
       return jsonError("作品不存在", 404);
     }
 
-    const data = applyUserShowcaseAction({
-      action: body.action,
-      currentStatus: work.showcaseStatus,
-      showPromptPublic: body.showPromptPublic,
-    });
+    let data;
+
+    if (body.action === "submit" && (await isAutoApproveShowcase())) {
+      data = {
+        featuredAt: new Date(),
+        reviewNote: null,
+        reviewedAt: new Date(),
+        reviewedById: null,
+        showcaseStatus: "FEATURED" as const,
+        showPromptPublic: Boolean(body.showPromptPublic),
+        submittedAt: new Date(),
+      };
+    } else {
+      data = applyUserShowcaseAction({
+        action: body.action,
+        currentStatus: work.showcaseStatus,
+        showPromptPublic: body.showPromptPublic,
+      });
+    }
 
     await db.generationImage.update({
       where: { id },
@@ -47,3 +62,4 @@ export async function PATCH(
     return jsonError(getErrorMessage(error), resolveStatusCode(error));
   }
 }
+
