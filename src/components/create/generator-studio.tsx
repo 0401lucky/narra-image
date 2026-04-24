@@ -57,14 +57,6 @@ type GeneratorStudioProps = {
   channels?: ChannelInfo[];
 };
 
-const stylePresets = [
-  "电影级海报",
-  "杂志封面",
-  "霓虹街拍",
-  "手作拼贴",
-  "柔光人像",
-  "未来建筑",
-];
 
 export function GeneratorStudio({
   compact = false,
@@ -344,9 +336,7 @@ export function GeneratorStudio({
     }
   }
 
-  function applyPreset(preset: string) {
-    setPrompt((current) => (current ? `${current}，${preset}` : preset));
-  }
+
 
   function handleNewConversation() {
     setPrompt("");
@@ -590,22 +580,6 @@ export function GeneratorStudio({
       <div className="absolute bottom-0 inset-x-0 z-20 bg-gradient-to-t from-[var(--surface)] via-[var(--surface)]/95 to-transparent pt-6 pb-4 px-4 md:px-8">
         <div className="mx-auto max-w-4xl">
           <div className="noise-overlay relative flex flex-col rounded-2xl border border-[var(--line)] bg-[var(--surface-strong)]/70 backdrop-blur-2xl shadow-xl transition-all duration-300 ring-1 ring-white/5">
-            
-            {/* 预设标签 */}
-            {prompt.length === 0 && !referenceImage && (
-              <div className="absolute -top-10 left-4 flex flex-wrap gap-2">
-                {stylePresets.map((preset) => (
-                  <button
-                    key={preset}
-                    type="button"
-                    onClick={() => applyPreset(preset)}
-                    className="rounded-full border border-[var(--line)] bg-[var(--surface)]/80 backdrop-blur-sm px-3 py-1.5 text-xs text-[var(--ink-soft)] transition-all hover:border-[var(--accent)]/50 hover:text-[var(--accent)] shadow-sm"
-                  >
-                    {preset}
-                  </button>
-                ))}
-              </div>
-            )}
 
             {/* 参考图区域 */}
             {referenceImage && (
