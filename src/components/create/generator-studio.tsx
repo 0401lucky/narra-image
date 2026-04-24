@@ -1,6 +1,6 @@
 "use client";
 
-import { Sparkles, WandSparkles, Download, ZoomIn, X, ImagePlus, Settings2, Send, ChevronDown, ImageIcon, Paperclip, XCircle } from "lucide-react";
+import { Sparkles, WandSparkles, Download, ZoomIn, X, ImagePlus, Settings2, Send, Paperclip, SquarePen } from "lucide-react";
 import { useMemo, useRef, useState, useTransition, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
@@ -330,30 +330,35 @@ export function GeneratorStudio({
     setPrompt((current) => (current ? `${current}，${preset}` : preset));
   }
 
+  function handleNewConversation() {
+    setGenerations([]);
+    setPrompt("");
+    setNegativePrompt("");
+    setReferenceImage(null);
+    setGenerationType("text_to_image");
+    setError(null);
+    setShowSettings(false);
+  }
+
   return (
     <div className="flex h-full w-full flex-col relative bg-gradient-to-b from-[var(--surface)] to-[var(--surface-strong)]/20">
-      {/* 顶部通栏（可选）：例如显示额度信息 */}
-      <div className="absolute top-0 inset-x-0 z-10 flex justify-center p-4 pointer-events-none">
-        <div className="pointer-events-auto flex items-center gap-2 rounded-full border border-[var(--line)] bg-[var(--surface)]/80 backdrop-blur-md px-4 py-2 text-sm shadow-sm">
-          <span className="text-[var(--ink-soft)]">剩余积分</span>
-          <span className="font-semibold text-[var(--accent)]">{currentUser ? credits : "--"}</span>
-          {currentUser && (
-            <div className="ml-2 pl-2 border-l border-[var(--line)]">
-              <CheckInButton
-                checkedInToday={checkInSummary.checkedInToday}
-                onCheckedIn={(latestCredits) => setCredits(latestCredits)}
-                rewardCredits={checkInSummary.checkInReward}
-                variant="compact"
-              />
-            </div>
-          )}
+      {/* 新建对话按钮 */}
+      {sortedGenerations.length > 0 && (
+        <div className="absolute top-3 right-4 z-10 md:right-8">
+          <button
+            onClick={handleNewConversation}
+            className="flex items-center gap-1.5 rounded-full border border-[var(--line)] bg-[var(--surface)]/80 backdrop-blur-md px-3.5 py-2 text-xs font-medium text-[var(--ink-soft)] shadow-sm transition-all hover:border-[var(--accent)] hover:text-[var(--accent)]"
+          >
+            <SquarePen className="size-3.5" />
+            新建对话
+          </button>
         </div>
-      </div>
+      )}
 
       {/* 对话流区域 */}
       <div 
         ref={scrollAreaRef}
-        className="flex-1 overflow-y-auto px-4 pb-48 pt-20 md:px-8 scroll-smooth"
+        className="flex-1 overflow-y-auto px-4 pb-40 pt-4 md:px-8 scroll-smooth"
         style={{ scrollbarWidth: "thin" }}
       >
         <div className="mx-auto max-w-4xl space-y-8">
@@ -482,9 +487,9 @@ export function GeneratorStudio({
       </div>
 
       {/* 底部输入悬浮区 */}
-      <div className="absolute bottom-0 inset-x-0 z-20 bg-gradient-to-t from-[var(--surface)] via-[var(--surface)] to-transparent pt-10 pb-6 px-4 md:px-8">
+      <div className="absolute bottom-0 inset-x-0 z-20 bg-gradient-to-t from-[var(--surface)] via-[var(--surface)]/95 to-transparent pt-6 pb-4 px-4 md:px-8">
         <div className="mx-auto max-w-4xl">
-          <div className="noise-overlay relative flex flex-col rounded-[2rem] border border-[var(--line)] bg-[var(--surface-strong)]/70 backdrop-blur-2xl shadow-2xl transition-all duration-300 ring-1 ring-white/5">
+          <div className="noise-overlay relative flex flex-col rounded-2xl border border-[var(--line)] bg-[var(--surface-strong)]/70 backdrop-blur-2xl shadow-xl transition-all duration-300 ring-1 ring-white/5">
             
             {/* 预设标签 */}
             {prompt.length === 0 && !referenceImage && (
@@ -532,7 +537,7 @@ export function GeneratorStudio({
             )}
 
             {/* 输入框主区域 */}
-            <div className="flex items-end gap-3 px-5 py-4">
+            <div className="flex items-end gap-3 px-4 py-3">
               <div className="flex-1 min-w-0">
                 <textarea
                   ref={textareaRef}
@@ -552,8 +557,9 @@ export function GeneratorStudio({
                       ? "描述你希望如何修改这张参考图..."
                       : "输入提示词生成图片，或直接粘贴图片进入图生图..."
                   }
-                  className="w-full resize-none bg-transparent py-2 text-base text-[var(--ink)] placeholder:text-[var(--ink-soft)]/50 outline-none max-h-[200px]"
-                  style={{ minHeight: "44px" }}
+                  className="w-full resize-none bg-transparent py-1 text-sm text-[var(--ink)] placeholder:text-[var(--ink-soft)]/50 outline-none max-h-[120px]"
+                  style={{ minHeight: "36px" }}
+                  rows={1}
                 />
               </div>
 
@@ -593,7 +599,7 @@ export function GeneratorStudio({
             </div>
 
             {/* 底部控制栏 */}
-            <div className="flex items-center justify-between border-t border-[var(--line)]/50 px-5 py-3">
+            <div className="flex items-center justify-between border-t border-[var(--line)]/50 px-4 py-2">
               <div className="flex flex-wrap items-center gap-2">
                 {/* 模式切换 */}
                 <div className="flex items-center rounded-lg bg-[var(--surface-strong)] p-0.5">
