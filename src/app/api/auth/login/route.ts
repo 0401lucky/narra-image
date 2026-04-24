@@ -13,9 +13,11 @@ export async function POST(request: Request) {
     const user = await db.user.findUnique({
       where: { email: body.email.toLowerCase() },
       select: {
+        avatarUrl: true,
         credits: true,
         email: true,
         id: true,
+        nickname: true,
         passwordHash: true,
         role: true,
       },

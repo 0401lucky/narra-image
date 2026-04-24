@@ -97,3 +97,14 @@ export const adminWorkReviewSchema = z.object({
 export const benefitConfigSchema = z.object({
   checkInReward: z.number().int().min(1).max(10000),
 });
+
+export const profileUpdateSchema = z.object({
+  avatarUrl: z.string().url("头像地址格式不正确").optional().nullable(),
+  nickname: z
+    .string()
+    .trim()
+    .min(2, "昵称至少 2 个字符")
+    .max(20, "昵称最多 20 个字符")
+    .optional()
+    .nullable(),
+});

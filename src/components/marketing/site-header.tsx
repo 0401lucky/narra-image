@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
 
 import { getCheckInSummary } from "@/lib/benefits/config";
@@ -10,6 +11,8 @@ type SiteHeaderProps = {
     id: string;
     credits: number;
     role: "user" | "admin";
+    nickname?: string | null;
+    avatarUrl?: string | null;
   } | null;
   className?: string;
   showCheckIn?: boolean;
@@ -31,6 +34,8 @@ export async function SiteHeader({
   const checkInSummary = currentUser && showCheckIn
     ? await getCheckInSummary(currentUser.id)
     : null;
+
+  const displayName = currentUser?.nickname || undefined;
 
   return (
     <header
@@ -77,6 +82,26 @@ export async function SiteHeader({
                   />
                 ) : null}
               </div>
+
+              {/* 用户头像 — 点击跳转设置页 */}
+              <Link
+                href="/settings"
+                className="group relative flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-[var(--line)] bg-[var(--surface-strong)] transition hover:border-[var(--accent)]"
+                title={displayName ?? "个人设置"}
+              >
+                {currentUser.avatarUrl ? (
+                  <img
+                    src={currentUser.avatarUrl}
+                    alt="头像"
+                    className="size-full object-cover"
+                  />
+                ) : (
+                  <span className="text-xs font-semibold text-[var(--ink-soft)] transition group-hover:text-[var(--accent)]">
+                    {(displayName ?? currentUser.id)[0]?.toUpperCase()}
+                  </span>
+                )}
+              </Link>
+
               <LogoutButton />
             </div>
           ) : null}

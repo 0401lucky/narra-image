@@ -7,6 +7,7 @@ import {
   serializeAdminWork,
   serializeFeaturedWork,
   serializeWork,
+  type FeaturedWorkRecord,
 } from "@/lib/prisma-mappers";
 
 const workBaseInclude = Prisma.validator<Prisma.GenerationImageInclude>()({
@@ -19,6 +20,11 @@ const workBaseInclude = Prisma.validator<Prisma.GenerationImageInclude>()({
       prompt: true,
       size: true,
       status: true,
+      user: {
+        select: {
+          nickname: true,
+        },
+      },
       userId: true,
     },
   },
@@ -44,6 +50,7 @@ const workAdminInclude = Prisma.validator<Prisma.GenerationImageInclude>()({
         select: {
           email: true,
           id: true,
+          nickname: true,
         },
       },
       userId: true,
@@ -79,14 +86,35 @@ export async function listFeaturedWorks(take = 6) {
     where: {
       showcaseStatus: ShowcaseStatus.FEATURED,
     },
-    include: workBaseInclude,
+    include: {
+      ...workBaseInclude,
+      job: {
+        select: {
+          createdAt: true,
+          id: true,
+          model: true,
+          negativePrompt: true,
+          prompt: true,
+          size: true,
+          status: true,
+          user: {
+            select: {
+              avatarUrl: true,
+              id: true,
+              nickname: true,
+            },
+          },
+          userId: true,
+        },
+      },
+    },
     orderBy: {
       featuredAt: "desc",
     },
     take,
   });
 
-  return works.map(serializeFeaturedWork);
+  return works.map((w) => serializeFeaturedWork(w as unknown as FeaturedWorkRecord));
 }
 
 export async function listAdminWorks(take = 120) {

@@ -15,6 +15,11 @@ describe("精选作品序列化", () => {
       prompt: "电影感夜景肖像",
       size: "1024x1536",
       status: GenerationStatus.SUCCEEDED,
+      user: {
+        avatarUrl: null,
+        id: "user_1",
+        nickname: "测试用户",
+      },
       userId: "user_1",
     },
     jobId: "job_1",

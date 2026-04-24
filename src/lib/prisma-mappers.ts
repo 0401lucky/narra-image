@@ -35,6 +35,8 @@ export type SerializedGeneration = {
   updatedAt: string;
 };
 
+type WorkAuthorFields = Pick<User, "avatarUrl" | "id" | "nickname">;
+
 type WorkJobFields = Pick<
   GenerationJob,
   "createdAt" | "id" | "model" | "negativePrompt" | "prompt" | "size" | "status" | "userId"
@@ -43,18 +45,21 @@ type WorkJobFields = Pick<
 type WorkReviewerFields = Pick<User, "email" | "id">;
 
 export type WorkRecord = GenerationImage & {
-  job: WorkJobFields;
+  job: WorkJobFields & {
+    user?: { nickname: string | null } | null;
+  };
   reviewedBy?: WorkReviewerFields | null;
 };
 
 export type AdminWorkRecord = GenerationImage & {
   job: WorkJobFields & {
-    user: WorkReviewerFields;
+    user: WorkReviewerFields & { nickname: string | null };
   };
   reviewedBy?: WorkReviewerFields | null;
 };
 
 export type SerializedWork = {
+  authorNickname: string | null;
   createdAt: string;
   featuredAt: string | null;
   generationCreatedAt: string;
@@ -87,6 +92,8 @@ export type SerializedAdminWork = SerializedWork & {
 };
 
 export type SerializedFeaturedWork = {
+  authorAvatar: string | null;
+  authorName: string;
   featuredAt: string | null;
   id: string;
   image: string;
@@ -124,17 +131,20 @@ export function fromPrismaShowcaseStatus(status: ShowcaseStatus): WorkShowcaseSt
   return status;
 }
 
-export function serializeUser(user: Pick<User, "id" | "email" | "role" | "credits">) {
+export function serializeUser(user: Pick<User, "id" | "email" | "role" | "credits" | "nickname" | "avatarUrl">) {
   return {
+    avatarUrl: user.avatarUrl,
     credits: user.credits,
     email: user.email,
     id: user.id,
+    nickname: user.nickname,
     role: fromPrismaRole(user.role),
   };
 }
 
 export function serializeWork(work: WorkRecord): SerializedWork {
   return {
+    authorNickname: work.job.user?.nickname ?? null,
     createdAt: work.createdAt.toISOString(),
     featuredAt: work.featuredAt?.toISOString() ?? null,
     generationCreatedAt: work.job.createdAt.toISOString(),
@@ -177,8 +187,17 @@ export function serializeAdminWork(work: AdminWorkRecord): SerializedAdminWork {
   };
 }
 
-export function serializeFeaturedWork(work: WorkRecord): SerializedFeaturedWork {
+export type FeaturedWorkRecord = WorkRecord & {
+  job: WorkJobFields & {
+    user: WorkAuthorFields;
+  };
+};
+
+export function serializeFeaturedWork(work: FeaturedWorkRecord): SerializedFeaturedWork {
+  const author = work.job.user;
   return {
+    authorAvatar: author.avatarUrl,
+    authorName: author.nickname || "匿名创作者",
     featuredAt: work.featuredAt?.toISOString() ?? null,
     id: work.id,
     image: work.url,

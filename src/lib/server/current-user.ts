@@ -14,9 +14,11 @@ export async function getCurrentUserRecord() {
   return db.user.findUnique({
     where: { id: session.userId },
     select: {
+      avatarUrl: true,
       credits: true,
       email: true,
       id: true,
+      nickname: true,
       role: true,
     },
   });

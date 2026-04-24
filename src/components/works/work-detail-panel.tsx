@@ -78,7 +78,9 @@ export function WorkDetailPanel({
             <div className="flex flex-wrap items-center gap-3">
               <WorkStatusBadge status={work.showcaseStatus} />
               {isFeaturedWork(work.showcaseStatus) ? (
-                <span className="text-sm text-[var(--ink-soft)]">匿名创作者</span>
+                <span className="text-sm text-[var(--ink-soft)]">
+                  {work.authorNickname || "匿名创作者"}
+                </span>
               ) : null}
             </div>
 
