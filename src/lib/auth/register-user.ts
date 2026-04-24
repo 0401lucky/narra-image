@@ -24,7 +24,7 @@ type RegisterUserDeps = {
   }) => Promise<{
     id: string;
     email: string;
-    passwordHash: string;
+    passwordHash: string | null;
     role: UserRole;
     credits: number;
   }>;

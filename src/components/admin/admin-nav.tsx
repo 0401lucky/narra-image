@@ -9,6 +9,7 @@ const adminLinks = [
   { href: "/admin/users", label: "用户" },
   { href: "/admin/works", label: "作品审核" },
   { href: "/admin/generations", label: "生成记录" },
+  { href: "/admin/oauth", label: "登录源" },
 ];
 
 export function AdminNav({ currentPath }: { currentPath: string }) {

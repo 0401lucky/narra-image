@@ -37,9 +37,11 @@ enum ShowcaseStatus {
 model User {
   id                   String                @id @default(cuid())
   email                String                @unique
-  passwordHash         String
+  passwordHash         String?
   nickname             String?
   avatarUrl            String?
+  oauthProvider        String?
+  oauthId              String?
   role                 Role                  @default(USER)
   credits              Int                   @default(500)
   createdAt            DateTime              @default(now())
@@ -52,6 +54,8 @@ model User {
   generations          GenerationJob[]
   featuredGenerations  GenerationJob[]       @relation("FeaturedByAdmin")
   reviewedWorks        GenerationImage[]     @relation("ReviewedWorks")
+
+  @@unique([oauthProvider, oauthId])
 }
 
 model InviteBatch {
@@ -72,6 +76,17 @@ model BenefitConfig {
   autoApproveShowcase  Boolean  @default(false)
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
+}
+
+model OAuthProvider {
+  id           String   @id @default(cuid())
+  type         String   @unique
+  displayName  String
+  clientId     String
+  clientSecret String
+  isEnabled    Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
 model CheckInRecord {

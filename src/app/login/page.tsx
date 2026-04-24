@@ -2,8 +2,19 @@ import Link from "next/link";
 
 import { AuthForm } from "@/components/marketing/auth-form";
 import { SiteHeader } from "@/components/marketing/site-header";
+import { getEnabledOAuthProviders } from "@/lib/auth/oauth-config";
 
-export default function LoginPage() {
+type LoginPageProps = {
+  searchParams?: Promise<{
+    error?: string;
+  }>;
+};
+
+export default async function LoginPage({ searchParams }: LoginPageProps) {
+  const resolvedParams = searchParams ? await searchParams : undefined;
+  const oauthError = typeof resolvedParams?.error === "string" ? resolvedParams.error : null;
+  const oauthProviders = await getEnabledOAuthProviders();
+
   return (
     <main className="pb-20">
       <SiteHeader currentUser={null} />
@@ -36,7 +47,7 @@ export default function LoginPage() {
           </div>
         </div>
 
-        <AuthForm mode="login" />
+        <AuthForm mode="login" oauthProviders={oauthProviders} oauthError={oauthError} />
       </section>
     </main>
   );

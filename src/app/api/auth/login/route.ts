@@ -27,6 +27,10 @@ export async function POST(request: Request) {
       return jsonError("邮箱或密码错误", 401);
     }
 
+    if (!user.passwordHash) {
+      return jsonError("该账号通过第三方登录创建，请使用对应的登录方式", 401);
+    }
+
     const isValid = await verifyPassword(body.password, user.passwordHash);
     if (!isValid) {
       return jsonError("邮箱或密码错误", 401);
