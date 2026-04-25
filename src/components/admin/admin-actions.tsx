@@ -16,7 +16,27 @@ export function InviteCreator() {
   const [note, setNote] = useState("");
   const [isPublic, setIsPublic] = useState(false);
   const [count, setCount] = useState(1);
+  const [downloadAfterCreate, setDownloadAfterCreate] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  async function downloadBatchTxt(batchId: string) {
+    const exportRes = await fetch(`/api/admin/invites/batches/${batchId}/export`);
+    if (!exportRes.ok) {
+      throw new Error("下载邀请码文件失败");
+    }
+    const dispo = exportRes.headers.get("Content-Disposition") ?? "";
+    const match = dispo.match(/filename="([^"]+)"/);
+    const filename = match?.[1] ?? `invite-codes-${batchId}.txt`;
+    const blob = await exportRes.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
 
   async function handleCreate() {
     setError(null);
@@ -25,11 +45,27 @@ export function InviteCreator() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ note, count, isPublic }),
     });
-    const result = (await response.json()) as { error?: string };
+    const result = (await response.json()) as {
+      data?: { batchId: string; claimPageUrl: string; message: string };
+      error?: string;
+    };
 
     if (!response.ok) {
       setError(result.error || "创建失败");
       return;
+    }
+
+    if (downloadAfterCreate && result.data?.batchId) {
+      try {
+        await downloadBatchTxt(result.data.batchId);
+      } catch (err) {
+        // 下载失败不阻断创建流程，提示用户后续可从批次卡片手动下载
+        setError(
+          err instanceof Error
+            ? `${err.message}，请稍后从批次卡片手动下载`
+            : "下载失败，请稍后从批次卡片手动下载",
+        );
+      }
     }
 
     setNote("");
@@ -53,7 +89,7 @@ export function InviteCreator() {
           placeholder="备注，例如：首批设计师"
           className="flex-1 rounded-2xl border border-[var(--line)] bg-white/70 px-4 py-3 outline-none transition-all focus:border-[var(--accent)]"
         />
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:flex-wrap">
           <label className="inline-flex items-center gap-2 rounded-2xl border border-[var(--line)] bg-white/70 px-4 py-3 text-sm text-[var(--ink-soft)]">
             <input
               type="checkbox"
@@ -61,6 +97,14 @@ export function InviteCreator() {
               onChange={(event) => setIsPublic(event.target.checked)}
             />
             开放领取
+          </label>
+          <label className="inline-flex items-center gap-2 rounded-2xl border border-[var(--line)] bg-white/70 px-4 py-3 text-sm text-[var(--ink-soft)]">
+            <input
+              type="checkbox"
+              checked={downloadAfterCreate}
+              onChange={(event) => setDownloadAfterCreate(event.target.checked)}
+            />
+            生成后下载 .txt
           </label>
           <input
             type="number"

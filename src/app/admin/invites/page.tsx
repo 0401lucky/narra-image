@@ -131,7 +131,24 @@ export default async function AdminInvitesPage({
                     {remainingCount}
                   </div>
                 </div>
-                <div className="flex items-end justify-start xl:justify-end">
+                <div className="flex flex-wrap items-end justify-start gap-2 xl:justify-end">
+                  {remainingCount > 0 ? (
+                    <a
+                      href={`/api/admin/invites/batches/${batch.id}/export`}
+                      download
+                      className="rounded-full border border-[var(--line)] px-3 py-2 text-xs font-medium text-[var(--ink-soft)] transition hover:border-[var(--accent)] hover:text-[var(--accent)]"
+                      title="下载本批次未发放的邀请码（每行一个）"
+                    >
+                      下载 .txt
+                    </a>
+                  ) : (
+                    <span
+                      className="rounded-full border border-[var(--line)] px-3 py-2 text-xs text-[var(--ink-soft)]/50"
+                      title="本批次没有可下载的邀请码"
+                    >
+                      下载 .txt
+                    </span>
+                  )}
                   <InviteBatchToggle batchId={batch.id} isPublic={batch.isPublic} />
                 </div>
               </article>
