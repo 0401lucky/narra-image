@@ -16,16 +16,7 @@ export default async function CreatePage() {
     redirect("/login");
   }
 
-  const [savedProvider, jobs, channels, checkInSummary] = await Promise.all([
-    db.savedProviderConfig.findUnique({
-      where: { userId: user.id },
-      select: {
-        baseUrl: true,
-        label: true,
-        model: true,
-        models: true,
-      },
-    }),
+  const [jobs, channels, checkInSummary] = await Promise.all([
     db.generationJob.findMany({
       where: { userId: user.id },
       include: {
@@ -58,7 +49,6 @@ export default async function CreatePage() {
           checkInSummary={checkInSummary}
           currentUser={currentUser}
           initialGenerations={jobs.map(serializeGeneration)}
-          initialSavedProvider={savedProvider}
           channels={serializedChannels}
         />
       </section>

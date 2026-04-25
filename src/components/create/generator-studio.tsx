@@ -34,12 +34,6 @@ type GenerationItem = {
   status: "pending" | "succeeded" | "failed";
 };
 
-type SavedProvider = {
-  baseUrl: string;
-  label?: string | null;
-  model: string;
-} | null;
-
 type ChannelInfo = {
   creditCost: number;
   defaultModel: string;
@@ -56,7 +50,6 @@ type GeneratorStudioProps = {
   };
   currentUser: ViewerUser;
   initialGenerations?: GenerationItem[];
-  initialSavedProvider?: (SavedProvider & { models?: string[] }) | null;
   channels?: ChannelInfo[];
 };
 
@@ -138,14 +131,11 @@ function saveSessions(sessions: SessionInfo[]) {
 export function GeneratorStudio({
   currentUser,
   initialGenerations = [],
-  initialSavedProvider = null,
   channels = [],
 }: GeneratorStudioProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
-  const [isFetchingModels, startFetchingModels] = useTransition();
   const [error, setError] = useState<string | null>(null);
-  const [modelProbeError, setModelProbeError] = useState<string | null>(null);
   const [generationType, setGenerationType] = useState<GenerationType>("text_to_image");
   const [prompt, setPrompt] = useState("");
   const [negativePrompt, setNegativePrompt] = useState("");
@@ -154,21 +144,10 @@ export function GeneratorStudio({
   );
   const selectedChannel = channels.find((c) => c.id === selectedChannelId) ?? channels[0] ?? null;
   const [model, setModel] = useState(
-    initialSavedProvider?.model || selectedChannel?.defaultModel || "gpt-image-1",
-  );
-  const [availableModels, setAvailableModels] = useState<string[]>(
-    initialSavedProvider?.models || []
+    selectedChannel?.defaultModel || "gpt-image-1",
   );
   const [size, setSize] = useState<GenerationSizeToken>("auto");
   const [count, setCount] = useState(1);
-  const [providerMode, setProviderMode] = useState<"built_in" | "custom">(
-    "built_in",
-  );
-  const [customBaseUrl, setCustomBaseUrl] = useState(
-    initialSavedProvider?.baseUrl || "",
-  );
-  const [customApiKey, setCustomApiKey] = useState("");
-  const [rememberProvider, setRememberProvider] = useState(false);
   const [zoomedImage, setZoomedImage] = useState<string | null>(null);
   const [referenceImage, setReferenceImage] = useState<{
     file: File;
@@ -278,19 +257,13 @@ export function GeneratorStudio({
               formData.append("generationType", "image_to_image");
               formData.append("model", model);
               formData.append("prompt", prompt);
-              formData.append("providerMode", providerMode);
+              formData.append("providerMode", "built_in");
               formData.append("size", size);
-              if (selectedChannelId && providerMode === "built_in") {
+              if (selectedChannelId) {
                 formData.append("channelId", selectedChannelId);
               }
               if (referenceImage) {
                 formData.append("image", referenceImage.file);
-              }
-              if (providerMode === "custom") {
-                formData.append("customApiKey", customApiKey);
-                formData.append("customBaseUrl", customBaseUrl);
-                formData.append("customModel", model);
-                formData.append("rememberProvider", rememberProvider ? "true" : "false");
               }
               return formData;
             })(),
@@ -301,23 +274,14 @@ export function GeneratorStudio({
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              channelId: providerMode === "built_in" ? selectedChannelId : undefined,
+              channelId: selectedChannelId,
               count,
-              customProvider:
-                providerMode === "custom"
-                  ? {
-                      apiKey: customApiKey,
-                      baseUrl: customBaseUrl,
-                      label: "我的渠道",
-                      model,
-                      remember: rememberProvider,
-                    }
-                  : null,
+              customProvider: null,
               generationType: "text_to_image",
               model,
               negativePrompt: negativePrompt || null,
               prompt,
-              providerMode,
+              providerMode: "built_in",
               size,
             }),
           });
@@ -415,43 +379,6 @@ export function GeneratorStudio({
       }
     }
   }
-
-  async function handleProbeModels() {
-    setModelProbeError(null);
-
-    const response = await fetch("/api/provider-models/probe", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        apiKey: customApiKey || null,
-        baseUrl: customBaseUrl,
-      }),
-    });
-
-    const result = (await response.json()) as {
-      data?: {
-        models: Array<{
-          id: string;
-          imageLikely: boolean;
-        }>;
-      };
-      error?: string;
-    };
-
-    if (!response.ok) {
-      setModelProbeError(result.error || "拉取模型失败");
-      return;
-    }
-
-    const models = result.data?.models ?? [];
-    setAvailableModels(models.map((item) => item.id));
-    if (models[0]?.id) {
-      setModel(models[0].id);
-    }
-  }
-
 
   function handleNewConversation() {
     const newId = genSessionId();
@@ -878,7 +805,7 @@ export function GeneratorStudio({
 
               {/* 右侧：渠道 + 模型选择 */}
               <div className="hidden md:flex items-center gap-3">
-                {providerMode === "built_in" && channels.length > 1 && (
+                {channels.length > 1 && (
                   <select
                     value={selectedChannelId ?? ""}
                     onChange={(e) => {
@@ -899,7 +826,7 @@ export function GeneratorStudio({
                   className="bg-transparent text-xs font-medium text-[var(--ink)] outline-none border-none cursor-pointer"
                 >
                   <option value={model}>{model}</option>
-                  {(providerMode === "built_in" ? (selectedChannel?.models ?? []) : availableModels).map((m: string) => (
+                  {(selectedChannel?.models ?? []).map((m: string) => (
                     m !== model && <option key={m} value={m}>{m}</option>
                   ))}
                 </select>
@@ -927,7 +854,10 @@ export function GeneratorStudio({
                         ))}
                       </div>
                     </div>
-                    {generationType === "text_to_image" && (
+                  </div>
+
+                  {generationType === "text_to_image" && (
+                    <div className="space-y-4">
                       <div>
                         <label className="mb-1.5 block text-xs font-medium text-[var(--ink-soft)]">负向提示词</label>
                         <textarea
@@ -938,70 +868,8 @@ export function GeneratorStudio({
                           rows={2}
                         />
                       </div>
-                    )}
-                  </div>
-
-                  <div className="space-y-4">
-                    <div>
-                      <label className="mb-1.5 flex items-center justify-between text-xs font-medium text-[var(--ink-soft)]">
-                        <span>渠道配置</span>
-                        <div className="flex bg-[var(--surface-strong)] rounded text-[10px]">
-                          <button
-                            onClick={() => setProviderMode("built_in")}
-                            className={`px-2 py-0.5 rounded ${providerMode === "built_in" ? "bg-[var(--ink)] text-white" : ""}`}
-                          >内置</button>
-                          <button
-                            onClick={() => setProviderMode("custom")}
-                            className={`px-2 py-0.5 rounded ${providerMode === "custom" ? "bg-[var(--ink)] text-white" : ""}`}
-                          >自填</button>
-                        </div>
-                      </label>
-
-                      {providerMode === "custom" ? (
-                        <div className="space-y-2">
-                          <input
-                            value={customBaseUrl}
-                            onChange={(e) => setCustomBaseUrl(e.target.value)}
-                            placeholder="Base URL（需兼容 chatgpt2api 六比例图片协议）"
-                            className="w-full rounded-lg border border-[var(--line)] bg-[var(--surface-strong)]/50 px-3 py-1.5 text-sm outline-none focus:border-[var(--accent)]"
-                          />
-                          <input
-                            value={customApiKey}
-                            onChange={(e) => setCustomApiKey(e.target.value)}
-                            placeholder="API Key"
-                            type="password"
-                            className="w-full rounded-lg border border-[var(--line)] bg-[var(--surface-strong)]/50 px-3 py-1.5 text-sm outline-none focus:border-[var(--accent)]"
-                          />
-                          <div className="flex items-center justify-between mt-2">
-                            <label className="flex items-center gap-2 text-xs text-[var(--ink-soft)] cursor-pointer">
-                              <input
-                                type="checkbox"
-                                checked={rememberProvider}
-                                onChange={(e) => setRememberProvider(e.target.checked)}
-                                className="rounded border-[var(--line)] text-[var(--accent)] focus:ring-[var(--accent)]"
-                              />
-                              记住配置
-                            </label>
-                            <button
-                              onClick={() => startFetchingModels(handleProbeModels)}
-                              disabled={isFetchingModels || !customBaseUrl}
-                              className="text-xs text-[var(--accent)] hover:underline disabled:opacity-50"
-                            >
-                              {isFetchingModels ? "拉取中..." : "拉取模型"}
-                            </button>
-                          </div>
-                          {modelProbeError && <p className="text-[10px] text-rose-500 mt-1">{modelProbeError}</p>}
-                          <p className="text-[10px] text-[var(--ink-soft)]">
-                            自填渠道需兼容 chatgpt2api 图片协议，并支持 `auto / 1:1 / 3:4 / 9:16 / 4:3 / 16:9`。
-                          </p>
-                        </div>
-                      ) : (
-                        <div className="rounded-lg border border-dashed border-[var(--line)] bg-[var(--surface-strong)]/30 p-3 text-xs text-[var(--ink-soft)]">
-                          当前使用站点内置通道，每次生成默认扣除 5 积分，并按兼容 chatgpt2api 的六比例图片协议接入。
-                        </div>
-                      )}
                     </div>
-                  </div>
+                  )}
                 </div>
               </div>
             )}
