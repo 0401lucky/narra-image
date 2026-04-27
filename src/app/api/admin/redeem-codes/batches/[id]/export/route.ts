@@ -26,17 +26,18 @@ export async function GET(
         batchId: id,
         ...(scope === "available"
           ? {
-              redeemedCount: {
-                lt: 1,
-              },
+              isActive: true,
             }
           : {}),
       },
       orderBy: { createdAt: "asc" },
-      select: { code: true },
+      select: { code: true, maxRedemptions: true, redeemedCount: true },
     });
 
-    const body = codes.map((code) => code.code).join("\n");
+    const exportCodes = scope === "available"
+      ? codes.filter((code) => code.redeemedCount < code.maxRedemptions)
+      : codes;
+    const body = exportCodes.map((code) => code.code).join("\n");
     const date = batch.createdAt.toISOString().slice(0, 10);
     const filename = `redeem-codes-${date}-${batch.id.slice(-6)}.txt`;
 

@@ -129,9 +129,7 @@ export default async function AdminRedeemCodesPage() {
                   <div className="mt-3 text-3xl font-semibold text-[var(--accent)]">{remaining}</div>
                 </div>
                 <div className="flex flex-wrap items-end justify-start gap-2 xl:justify-end">
-                  {batch.mode === RedeemCodeMode.SINGLE_USE ? (
-                    <RedeemBatchDownload batchId={batch.id} />
-                  ) : null}
+                  <RedeemBatchDownload batchId={batch.id} />
                   <RedeemBatchToggle batchId={batch.id} isActive={batch.isActive} />
                 </div>
               </article>
