@@ -65,6 +65,24 @@ export const inviteCreateSchema = z.object({
   isPublic: z.boolean().default(false),
 });
 
+export const redeemCodeCreateSchema = z.object({
+  code: z.string().trim().max(40).optional().nullable(),
+  count: z.number().int().min(1).max(100).default(1),
+  isActive: z.boolean().default(true),
+  maxRedemptions: z.number().int().min(1).max(100000).default(1),
+  mode: z.enum(["single_use", "shared"]).default("single_use"),
+  note: z.string().trim().max(120).optional().nullable(),
+  rewardCredits: z.number().int().min(1).max(100000),
+});
+
+export const redeemCodeToggleSchema = z.object({
+  isActive: z.boolean(),
+});
+
+export const redeemCodeClaimSchema = z.object({
+  code: z.string().trim().min(1, "请输入兑换码").max(40, "兑换码最多 40 个字符"),
+});
+
 export const creditUpdateSchema = z.object({
   amount: z.number().int().min(-10000).max(10000),
 });

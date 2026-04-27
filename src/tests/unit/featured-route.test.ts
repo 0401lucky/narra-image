@@ -8,6 +8,10 @@ vi.mock("@/lib/server/works", () => ({
   listFeaturedWorksPage: mockListFeaturedWorksPage,
 }));
 
+vi.mock("@/lib/server/current-user", () => ({
+  getCurrentUserRecord: vi.fn(async () => null),
+}));
+
 import { GET } from "@/app/api/works/featured/route";
 
 describe("首页精选接口", () => {
@@ -21,6 +25,8 @@ describe("首页精选接口", () => {
           featuredAt: "2026-04-25T10:00:00.000Z",
           id: "work_1",
           image: "https://example.com/work_1.png",
+          likeCount: 0,
+          likedByMe: false,
           prompt: "电影感夜景",
           title: "gpt-image-1",
         },
@@ -35,6 +41,7 @@ describe("首页精选接口", () => {
     expect(mockListFeaturedWorksPage).toHaveBeenCalledWith({
       cursor: "cursor_1",
       limit: 24,
+      viewerId: undefined,
     });
     expect(response.status).toBe(200);
     await expect(response.json()).resolves.toEqual({
@@ -46,6 +53,8 @@ describe("首页精选接口", () => {
           featuredAt: "2026-04-25T10:00:00.000Z",
           id: "work_1",
           image: "https://example.com/work_1.png",
+          likeCount: 0,
+          likedByMe: false,
           prompt: "电影感夜景",
           title: "gpt-image-1",
         },

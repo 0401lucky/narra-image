@@ -30,7 +30,8 @@ type GenerationItem = {
   prompt: string;
   providerMode: "built_in" | "custom";
   size: string;
-  sourceImageUrl: string | null;
+  sourceImageUrl?: string | null;
+  sourceImageUrls?: string[];
   status: "pending" | "succeeded" | "failed";
 };
 
@@ -105,6 +106,16 @@ function getAspectRatio(size: string) {
   return `${Number(match[1])} / ${Number(match[2])}`;
 }
 
+const MAX_REFERENCE_IMAGES = 16;
+
+function getGenerationSourceImageUrls(generation: GenerationItem) {
+  return generation.sourceImageUrls?.length
+    ? generation.sourceImageUrls
+    : generation.sourceImageUrl
+      ? [generation.sourceImageUrl]
+      : [];
+}
+
 // --- Session helpers ---
 type SessionInfo = {
   id: string;
@@ -149,10 +160,11 @@ export function GeneratorStudio({
   const [size, setSize] = useState<GenerationSizeToken>("auto");
   const [count, setCount] = useState(1);
   const [zoomedImage, setZoomedImage] = useState<string | null>(null);
-  const [referenceImage, setReferenceImage] = useState<{
+  const [referenceImages, setReferenceImages] = useState<Array<{
+    id: string;
     file: File;
     previewUrl: string;
-  } | null>(null);
+  }>>([]);
   const [showSettings, setShowSettings] = useState(false);
 
   // Session state
@@ -243,7 +255,7 @@ export function GeneratorStudio({
 
     setError(null);
 
-    if (generationType === "image_to_image" && !referenceImage) {
+    if (generationType === "image_to_image" && referenceImages.length === 0) {
       setError("请先上传参考图");
       return;
     }
@@ -262,9 +274,9 @@ export function GeneratorStudio({
               if (selectedChannelId) {
                 formData.append("channelId", selectedChannelId);
               }
-              if (referenceImage) {
-                formData.append("image", referenceImage.file);
-              }
+              referenceImages.forEach((referenceImage) => {
+                formData.append("referenceImages", referenceImage.file);
+              });
               return formData;
             })(),
           })
@@ -330,17 +342,43 @@ export function GeneratorStudio({
     setPrompt("");
   }
 
-  async function handleReferenceImageChange(file: File | null) {
-    if (!file) {
+  async function handleReferenceImageChange(files: File[] | FileList | null) {
+    const imageFiles = Array.from(files ?? []).filter((file) => file.type.startsWith("image/"));
+    if (imageFiles.length === 0) {
       return;
     }
 
-    setReferenceImage({
-      file,
-      previewUrl: URL.createObjectURL(file),
-    });
+    const remaining = Math.max(0, MAX_REFERENCE_IMAGES - referenceImages.length);
+    const acceptedFiles = imageFiles.slice(0, remaining);
+    if (acceptedFiles.length < imageFiles.length) {
+      setError(`最多上传 ${MAX_REFERENCE_IMAGES} 张参考图`);
+    } else {
+      setError(null);
+    }
+
+    if (acceptedFiles.length === 0) {
+      return;
+    }
+
+    setReferenceImages((current) => [
+      ...current,
+      ...acceptedFiles.map((file) => ({
+        file,
+        id: `${Date.now()}_${file.name}_${Math.random().toString(36).slice(2, 8)}`,
+        previewUrl: URL.createObjectURL(file),
+      })),
+    ]);
     setGenerationType("image_to_image");
-    setError(null);
+  }
+
+  function removeReferenceImage(id: string) {
+    setReferenceImages((current) => {
+      const target = current.find((item) => item.id === id);
+      if (target) URL.revokeObjectURL(target.previewUrl);
+      const next = current.filter((item) => item.id !== id);
+      if (next.length === 0 && prompt.trim() === "") setGenerationType("text_to_image");
+      return next;
+    });
   }
 
   async function handleUseImageForEdit(url: string) {
@@ -353,7 +391,7 @@ export function GeneratorStudio({
       const file = new File([blob], "edit-source.png", {
         type: blob.type || "image/png",
       });
-      await handleReferenceImageChange(file);
+      await handleReferenceImageChange([file]);
     } catch {
       setError("当前图片暂时无法加入编辑，请稍后再试");
       return;
@@ -372,7 +410,7 @@ export function GeneratorStudio({
       if (items[i].type.indexOf("image") !== -1) {
         const file = items[i].getAsFile();
         if (file) {
-          await handleReferenceImageChange(file);
+          await handleReferenceImageChange([file]);
           e.preventDefault();
           break;
         }
@@ -386,7 +424,8 @@ export function GeneratorStudio({
     setSessionGenerations([]);
     setPrompt("");
     setNegativePrompt("");
-    setReferenceImage(null);
+    referenceImages.forEach((image) => URL.revokeObjectURL(image.previewUrl));
+    setReferenceImages([]);
     setGenerationType("text_to_image");
     setError(null);
     setShowSettings(false);
@@ -406,7 +445,8 @@ export function GeneratorStudio({
     }
     setPrompt("");
     setNegativePrompt("");
-    setReferenceImage(null);
+    referenceImages.forEach((image) => URL.revokeObjectURL(image.previewUrl));
+    setReferenceImages([]);
     setError(null);
     if (window.innerWidth < 768) setSidebarOpen(false);
   }
@@ -546,13 +586,16 @@ export function GeneratorStudio({
                     </div>
                     <div className="rounded-2xl rounded-tl-none border border-[var(--line)] bg-[var(--surface-strong)]/30 px-5 py-3.5 text-sm leading-relaxed text-[var(--ink)] shadow-sm">
                       {generation.prompt}
-                      {generation.sourceImageUrl && (
-                        <div className="mt-3">
-                          <img 
-                            src={generation.sourceImageUrl} 
-                            alt="Reference" 
-                            className="h-24 w-auto rounded-lg border border-[var(--line)] object-cover shadow-sm"
-                          />
+                      {getGenerationSourceImageUrls(generation).length > 0 && (
+                        <div className="mt-3 flex flex-wrap gap-2">
+                          {getGenerationSourceImageUrls(generation).map((url, index) => (
+                            <img
+                              key={`${url}_${index}`}
+                              src={url}
+                              alt="Reference"
+                              className="h-24 w-auto rounded-lg border border-[var(--line)] object-cover shadow-sm"
+                            />
+                          ))}
                         </div>
                       )}
                     </div>
@@ -658,23 +701,23 @@ export function GeneratorStudio({
           <div className="noise-overlay relative flex flex-col rounded-2xl border border-[var(--line)] bg-[var(--surface-strong)]/70 backdrop-blur-2xl shadow-xl transition-all duration-300 ring-1 ring-white/5">
 
             {/* 参考图区域 */}
-            {referenceImage && (
-              <div className="px-5 pt-5 pb-1 flex items-start">
-                <div className="relative group rounded-xl overflow-hidden border border-[var(--line)]">
-                  <img src={referenceImage.previewUrl} alt="Reference" className="h-20 w-auto object-cover" />
-                  <button
-                    onClick={() => {
-                      setReferenceImage(null);
-                      if (prompt.trim() === "") setGenerationType("text_to_image");
-                    }}
-                    className="absolute top-1 right-1 rounded-full bg-black/60 p-1 text-white opacity-0 transition-opacity group-hover:opacity-100 hover:bg-rose-500"
-                  >
-                    <X className="size-3" />
-                  </button>
-                  <div className="absolute bottom-0 inset-x-0 bg-black/60 text-[10px] text-white text-center py-0.5">
-                    参考图
+            {referenceImages.length > 0 && (
+              <div className="flex flex-wrap items-start gap-2 px-5 pb-1 pt-5">
+                {referenceImages.map((referenceImage, index) => (
+                  <div key={referenceImage.id} className="group relative overflow-hidden rounded-xl border border-[var(--line)]">
+                    <img src={referenceImage.previewUrl} alt="Reference" className="h-20 w-auto object-cover" />
+                    <button
+                      type="button"
+                      onClick={() => removeReferenceImage(referenceImage.id)}
+                      className="absolute right-1 top-1 rounded-full bg-black/60 p-1 text-white opacity-0 transition-opacity hover:bg-rose-500 group-hover:opacity-100"
+                    >
+                      <X className="size-3" />
+                    </button>
+                    <div className="absolute inset-x-0 bottom-0 bg-black/60 py-0.5 text-center text-[10px] text-white">
+                      参考图 {index + 1}
+                    </div>
                   </div>
-                </div>
+                ))}
               </div>
             )}
 
@@ -703,8 +746,8 @@ export function GeneratorStudio({
                     }
                   }}
                   placeholder={
-                    generationType === "image_to_image" || referenceImage
-                      ? "描述你希望如何修改这张参考图..."
+                    generationType === "image_to_image" || referenceImages.length > 0
+                      ? "描述你希望如何修改这些参考图..."
                       : "输入提示词生成图片，或直接粘贴图片进入图生图..."
                   }
                   className="w-full resize-none bg-transparent py-1 text-sm text-[var(--ink)] placeholder:text-[var(--ink-soft)]/50 outline-none max-h-[120px]"
@@ -718,10 +761,11 @@ export function GeneratorStudio({
                   ref={fileInputRef}
                   type="file"
                   accept="image/*"
+                  multiple
                   className="hidden"
                   onChange={(event) => {
-                    void handleReferenceImageChange(event.target.files?.[0] ?? null);
-                    event.target.value = ''; // reset
+                    void handleReferenceImageChange(event.target.files ?? null);
+                    event.target.value = "";
                   }}
                 />
                 <button
@@ -736,7 +780,7 @@ export function GeneratorStudio({
                   type="button"
                   onClick={() => startTransition(handleGenerate)}
                   aria-label="发送"
-                  disabled={isPending || (!prompt.trim() && !referenceImage)}
+                  disabled={isPending || (!prompt.trim() && referenceImages.length === 0)}
                   className="group relative flex size-10 items-center justify-center overflow-hidden rounded-full bg-[var(--ink)] text-white shadow-md transition-all hover:scale-105 active:scale-95 disabled:opacity-50 disabled:hover:scale-100"
                 >
                   <div className="absolute inset-0 bg-gradient-to-tr from-[var(--accent)] to-[var(--accent-soft)] opacity-0 transition-opacity group-hover:opacity-100" />
@@ -765,7 +809,7 @@ export function GeneratorStudio({
                   <button
                     onClick={() => {
                       setGenerationType("image_to_image");
-                      if (!referenceImage) fileInputRef.current?.click();
+                      if (referenceImages.length === 0) fileInputRef.current?.click();
                     }}
                     className={`rounded-md px-3 py-1 text-xs font-medium transition-colors ${
                       generationType === "image_to_image" ? "bg-white text-black shadow-sm" : "text-[var(--ink-soft)] hover:text-[var(--ink)]"

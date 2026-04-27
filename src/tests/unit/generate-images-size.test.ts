@@ -95,7 +95,44 @@ describe("generateImages 的 size 透传", () => {
 
     expect(editMock).toHaveBeenCalledWith(
       expect.objectContaining({
+        image: ["mock-file"],
         size: "3:4",
+      }),
+    );
+  });
+
+  it("图生图支持多张参考图", async () => {
+    editMock.mockResolvedValue({
+      data: [{ url: "https://example.com/edited.png" }],
+    });
+
+    await generateImages({
+      count: 1,
+      customProvider: null,
+      generationType: "image_to_image",
+      model: "gpt-image-1",
+      prompt: "融合角色和背景",
+      providerMode: "built_in",
+      size: "auto",
+      sourceImages: [
+        {
+          data: Buffer.from("fake-image-a"),
+          fileName: "source-a.png",
+          mimeType: "image/png",
+        },
+        {
+          data: Buffer.from("fake-image-b"),
+          fileName: "source-b.png",
+          mimeType: "image/png",
+        },
+      ],
+      userId: "user-1",
+    });
+
+    expect(toFileMock).toHaveBeenCalledTimes(2);
+    expect(editMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        image: ["mock-file", "mock-file"],
       }),
     );
   });

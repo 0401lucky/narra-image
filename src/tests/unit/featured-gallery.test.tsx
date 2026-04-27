@@ -3,6 +3,12 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { FeaturedGallery } from "@/components/marketing/featured-gallery";
 
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({
+    push: vi.fn(),
+  }),
+}));
+
 function createWork(id: string) {
   return {
     authorAvatar: null,
@@ -10,6 +16,8 @@ function createWork(id: string) {
     featuredAt: "2026-04-25T10:00:00.000Z",
     id,
     image: `https://example.com/${id}.png`,
+    likeCount: 0,
+    likedByMe: false,
     prompt: `prompt-${id}`,
     title: `title-${id}`,
   };

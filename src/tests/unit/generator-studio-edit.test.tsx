@@ -128,7 +128,7 @@ describe("创作台连续编辑", () => {
     await user.click(screen.getByRole("button", { name: "加入编辑" }));
 
     expect(screen.getByRole("button", { name: "图生图" })).toHaveClass("bg-white", "text-black", "shadow-sm");
-    expect(screen.getByPlaceholderText("描述你希望如何修改这张参考图...")).toBeInTheDocument();
+    expect(screen.getByPlaceholderText("描述你希望如何修改这些参考图...")).toBeInTheDocument();
     expect(screen.getByAltText("Reference")).toBeInTheDocument();
   });
 });

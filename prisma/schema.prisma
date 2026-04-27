@@ -34,26 +34,35 @@ enum ShowcaseStatus {
   TAKEDOWN_PENDING
 }
 
+enum RedeemCodeMode {
+  SINGLE_USE
+  SHARED
+}
+
 model User {
-  id                   String                @id @default(cuid())
-  email                String                @unique
+  id                   String               @id @default(cuid())
+  email                String               @unique
   passwordHash         String?
   nickname             String?
   avatarUrl            String?
   oauthProvider        String?
   oauthId              String?
-  role                 Role                  @default(USER)
-  credits              Int                   @default(500)
-  createdAt            DateTime              @default(now())
-  updatedAt            DateTime              @updatedAt
-  inviteUsed           InviteCode?           @relation("InviteUsedBy")
-  inviteBatches        InviteBatch[]         @relation("InviteBatchCreatedBy")
-  createdInvites       InviteCode[]          @relation("InviteCreatedBy")
+  role                 Role                 @default(USER)
+  credits              Int                  @default(500)
+  createdAt            DateTime             @default(now())
+  updatedAt            DateTime             @updatedAt
+  inviteUsed           InviteCode?          @relation("InviteUsedBy")
+  inviteBatches        InviteBatch[]        @relation("InviteBatchCreatedBy")
+  createdInvites       InviteCode[]         @relation("InviteCreatedBy")
   customProviderConfig SavedProviderConfig?
   checkInRecords       CheckInRecord[]
   generations          GenerationJob[]
-  featuredGenerations  GenerationJob[]       @relation("FeaturedByAdmin")
-  reviewedWorks        GenerationImage[]     @relation("ReviewedWorks")
+  featuredGenerations  GenerationJob[]      @relation("FeaturedByAdmin")
+  reviewedWorks        GenerationImage[]    @relation("ReviewedWorks")
+  likedWorks           WorkLike[]
+  redeemBatches        RedeemCodeBatch[]    @relation("RedeemBatchCreatedBy")
+  createdRedeemCodes   RedeemCode[]         @relation("RedeemCodeCreatedBy")
+  redeemRedemptions    RedeemRedemption[]
 
   @@index([oauthProvider, oauthId])
 }
@@ -70,12 +79,12 @@ model InviteBatch {
 }
 
 model BenefitConfig {
-  id                   String   @id @default(cuid())
-  scope                String   @unique @default("default")
-  checkInReward        Int      @default(50)
-  autoApproveShowcase  Boolean  @default(false)
-  createdAt            DateTime @default(now())
-  updatedAt            DateTime @updatedAt
+  id                  String   @id @default(cuid())
+  scope               String   @unique @default("default")
+  checkInReward       Int      @default(50)
+  autoApproveShowcase Boolean  @default(false)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
 }
 
 model OAuthProvider {
@@ -130,18 +139,80 @@ model ProviderChannel {
 }
 
 model InviteCode {
-  id          String   @id @default(cuid())
-  code        String   @unique
+  id          String       @id @default(cuid())
+  code        String       @unique
   note        String?
   batchId     String?
   claimedAt   DateTime?
-  createdAt   DateTime @default(now())
+  createdAt   DateTime     @default(now())
   usedAt      DateTime?
   createdById String?
-  usedById    String?  @unique
+  usedById    String?      @unique
   batch       InviteBatch? @relation(fields: [batchId], references: [id], onDelete: SetNull)
-  createdBy   User?    @relation("InviteCreatedBy", fields: [createdById], references: [id])
-  usedBy      User?    @relation("InviteUsedBy", fields: [usedById], references: [id])
+  createdBy   User?        @relation("InviteCreatedBy", fields: [createdById], references: [id])
+  usedBy      User?        @relation("InviteUsedBy", fields: [usedById], references: [id])
+}
+
+model WorkLike {
+  id        String          @id @default(cuid())
+  workId    String
+  userId    String
+  createdAt DateTime        @default(now())
+  work      GenerationImage @relation(fields: [workId], references: [id], onDelete: Cascade)
+  user      User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([workId, userId])
+  @@index([userId])
+  @@index([workId])
+}
+
+model RedeemCodeBatch {
+  id             String         @id @default(cuid())
+  title          String?
+  mode           RedeemCodeMode @default(SINGLE_USE)
+  rewardCredits  Int
+  maxRedemptions Int?
+  isActive       Boolean        @default(true)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  createdById    String?
+  createdBy      User?          @relation("RedeemBatchCreatedBy", fields: [createdById], references: [id])
+  codes          RedeemCode[]
+}
+
+model RedeemCode {
+  id             String             @id @default(cuid())
+  code           String             @unique
+  note           String?
+  mode           RedeemCodeMode
+  rewardCredits  Int
+  maxRedemptions Int
+  redeemedCount  Int                @default(0)
+  isActive       Boolean            @default(true)
+  batchId        String?
+  createdById    String?
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+  batch          RedeemCodeBatch?   @relation(fields: [batchId], references: [id], onDelete: Cascade)
+  createdBy      User?              @relation("RedeemCodeCreatedBy", fields: [createdById], references: [id])
+  redemptions    RedeemRedemption[]
+
+  @@index([batchId])
+  @@index([isActive])
+}
+
+model RedeemRedemption {
+  id            String     @id @default(cuid())
+  codeId        String
+  userId        String
+  rewardCredits Int
+  createdAt     DateTime   @default(now())
+  code          RedeemCode @relation(fields: [codeId], references: [id], onDelete: Cascade)
+  user          User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([codeId, userId])
+  @@index([userId])
+  @@index([codeId])
 }
 
 model SavedProviderConfig {
@@ -158,31 +229,31 @@ model SavedProviderConfig {
 }
 
 model GenerationJob {
-  id            String           @id @default(cuid())
-  userId        String
-  generationType GenerationType  @default(TEXT_TO_IMAGE)
-  providerMode  ProviderMode
-  model         String
-  prompt        String
-  negativePrompt String?
-  size          String
-  sourceImageUrl String?
-  count         Int
-  status        GenerationStatus @default(PENDING)
-  errorMessage  String?
-  creditsSpent  Int              @default(0)
-  featuredAt    DateTime?
-  featuredById  String?
-  createdAt     DateTime         @default(now())
-  updatedAt     DateTime         @updatedAt
-  user          User             @relation(fields: [userId], references: [id], onDelete: Cascade)
-  featuredBy    User?            @relation("FeaturedByAdmin", fields: [featuredById], references: [id])
-  images        GenerationImage[]
+  id              String            @id @default(cuid())
+  userId          String
+  generationType  GenerationType    @default(TEXT_TO_IMAGE)
+  providerMode    ProviderMode
+  model           String
+  prompt          String
+  negativePrompt  String?
+  size            String
+  sourceImageUrls String[]          @default([])
+  count           Int
+  status          GenerationStatus  @default(PENDING)
+  errorMessage    String?
+  creditsSpent    Int               @default(0)
+  featuredAt      DateTime?
+  featuredById    String?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  featuredBy      User?             @relation("FeaturedByAdmin", fields: [featuredById], references: [id])
+  images          GenerationImage[]
 }
 
 model GenerationImage {
   id               String         @id @default(cuid())
-  jobId             String
+  jobId            String
   url              String
   showcaseStatus   ShowcaseStatus @default(PRIVATE)
   showPromptPublic Boolean        @default(false)
@@ -194,4 +265,5 @@ model GenerationImage {
   createdAt        DateTime       @default(now())
   job              GenerationJob  @relation(fields: [jobId], references: [id], onDelete: Cascade)
   reviewedBy       User?          @relation("ReviewedWorks", fields: [reviewedById], references: [id])
+  likes            WorkLike[]
 }

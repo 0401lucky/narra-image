@@ -33,13 +33,20 @@ describe("生成记录序列化", () => {
       prompt: "把这张图调成胶片质感",
       providerMode: ProviderMode.BUILT_IN,
       size: "参考图",
-      sourceImageUrl: "https://example.com/source.png",
+      sourceImageUrls: [
+        "https://example.com/source-a.png",
+        "https://example.com/source-b.png",
+      ],
       status: GenerationStatus.SUCCEEDED,
       updatedAt: new Date("2026-04-23T08:02:00.000Z"),
       userId: "user_1",
     } as never);
 
     expect(result.generationType).toBe("image_to_image");
-    expect(result.sourceImageUrl).toBe("https://example.com/source.png");
+    expect(result.sourceImageUrl).toBe("https://example.com/source-a.png");
+    expect(result.sourceImageUrls).toEqual([
+      "https://example.com/source-a.png",
+      "https://example.com/source-b.png",
+    ]);
   });
 });

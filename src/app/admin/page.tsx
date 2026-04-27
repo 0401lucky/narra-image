@@ -20,10 +20,11 @@ export default async function AdminPage() {
     redirect("/login");
   }
 
-  const [userCount, inviteCount, generationCount, featuredCount, channels] =
+  const [userCount, inviteCount, redeemCodeCount, generationCount, featuredCount, channels] =
     await Promise.all([
       db.user.count(),
       db.inviteCode.count(),
+      db.redeemCode.count(),
       db.generationJob.count(),
       db.generationImage.count({
         where: {
@@ -49,10 +50,11 @@ export default async function AdminPage() {
           <AdminNav currentPath="/admin" />
         </div>
 
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
           {[
             ["注册用户", userCount],
             ["邀请码总数", inviteCount],
+            ["兑换码总数", redeemCodeCount],
             ["生成记录", generationCount],
             ["公开作品", featuredCount],
           ].map(([label, value]) => (

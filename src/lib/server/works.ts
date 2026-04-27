@@ -97,6 +97,7 @@ type FeaturedWorksCursor = {
 type ListFeaturedWorksPageOptions = {
   cursor?: string | null;
   limit?: number;
+  viewerId?: string | null;
 };
 
 export type FeaturedWorksPage = {
@@ -158,6 +159,11 @@ export async function listFeaturedWorksPage(
     },
     include: {
       ...workBaseInclude,
+      _count: {
+        select: {
+          likes: true,
+        },
+      },
       job: {
         select: {
           createdAt: true,
@@ -177,6 +183,19 @@ export async function listFeaturedWorksPage(
           userId: true,
         },
       },
+      ...(options.viewerId
+        ? {
+            likes: {
+              where: {
+                userId: options.viewerId,
+              },
+              select: {
+                userId: true,
+              },
+              take: 1,
+            },
+          }
+        : {}),
     },
     orderBy: [
       {

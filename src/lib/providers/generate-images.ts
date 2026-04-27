@@ -28,6 +28,11 @@ type GenerateImagesInput = {
     fileName: string;
     mimeType: string;
   } | null;
+  sourceImages?: Array<{
+    data: Buffer;
+    fileName: string;
+    mimeType: string;
+  }>;
   userId: string;
 };
 
@@ -52,7 +57,9 @@ export async function generateImages(input: GenerateImagesInput) {
     baseURL: provider.baseUrl,
   });
 
-  if (input.generationType === "image_to_image" && !input.sourceImage) {
+  const sourceImages = input.sourceImages ?? (input.sourceImage ? [input.sourceImage] : []);
+
+  if (input.generationType === "image_to_image" && sourceImages.length === 0) {
     throw new Error("请先上传参考图");
   }
 
@@ -67,12 +74,16 @@ export async function generateImages(input: GenerateImagesInput) {
 
   const result = input.generationType === "image_to_image"
     ? await client.images.edit({
-        image: await toFile(
-          input.sourceImage?.data ?? Buffer.alloc(0),
-          input.sourceImage?.fileName ?? "source.png",
-          {
-            type: input.sourceImage?.mimeType ?? "image/png",
-          },
+        image: await Promise.all(
+          sourceImages.map((sourceImage, index) =>
+            toFile(
+              sourceImage.data,
+              sourceImage.fileName || `source-${index + 1}.png`,
+              {
+                type: sourceImage.mimeType || "image/png",
+              },
+            ),
+          ),
         ),
         model: input.model || provider.model,
         n: 1,

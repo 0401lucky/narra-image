@@ -78,22 +78,23 @@ export async function POST(request: Request) {
       };
     }
 
-    const sourceImage =
-      body.image instanceof File
-        ? {
-            data: Buffer.from(await body.image.arrayBuffer()),
-            fileName: body.image.name || "source.png",
-            mimeType: body.image.type || "image/png",
-          }
-        : null;
-    const sourceImageUrl = sourceImage
-      ? await persistGeneratedImage({
+    const sourceImages = await Promise.all(
+      body.images.map(async (image: File) => ({
+        data: Buffer.from(await image.arrayBuffer()),
+        fileName: image.name || "source.png",
+        mimeType: image.type || "image/png",
+      })),
+    );
+    const sourceImageUrls = await Promise.all(
+      sourceImages.map((sourceImage) =>
+        persistGeneratedImage({
           buffer: sourceImage.data,
           fileExtension: sourceImage.fileName.split(".").pop() || "png",
           mimeType: sourceImage.mimeType,
           userId: user.id,
-        })
-      : null;
+        }),
+      ),
+    );
 
     const job = await db.generationJob.create({
       data: {
@@ -105,7 +106,7 @@ export async function POST(request: Request) {
         prompt: body.prompt,
         providerMode: toPrismaProviderMode(body.providerMode),
         size: body.size,
-        sourceImageUrl,
+        sourceImageUrls,
         status: GenerationStatus.PENDING,
         userId: user.id,
       },
@@ -131,7 +132,7 @@ export async function POST(request: Request) {
       providerMode: body.providerMode,
       seed: body.seed,
       size: body.size,
-      sourceImage,
+      sourceImages,
       userId: user.id,
     });
 

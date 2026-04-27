@@ -3,6 +3,8 @@
 import { useState, useRef } from "react";
 import { Camera, Save, Loader2, User, Sparkles } from "lucide-react";
 
+import { RedeemCodeForm } from "@/components/settings/redeem-code-form";
+
 type ProfileFormProps = {
   user: {
     id: string;
@@ -17,6 +19,7 @@ type ProfileFormProps = {
 export function ProfileForm({ user }: ProfileFormProps) {
   const [nickname, setNickname] = useState(user.nickname ?? "");
   const [avatarUrl, setAvatarUrl] = useState(user.avatarUrl);
+  const [credits, setCredits] = useState(user.credits);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState<{
@@ -150,7 +153,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
               <div>
                 <p className="text-sm text-[var(--ink-soft)]">我的积分</p>
                 <p className="text-3xl font-bold tracking-tight text-[var(--accent)]">
-                  {user.credits}
+                  {credits}
                 </p>
               </div>
             </div>
@@ -159,6 +162,8 @@ export function ProfileForm({ user }: ProfileFormProps) {
             </p>
           </div>
         </div>
+
+        <RedeemCodeForm onRedeemed={setCredits} />
       </div>
 
       {/* 右侧 — 表单 */}

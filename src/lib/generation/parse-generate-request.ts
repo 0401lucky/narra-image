@@ -13,12 +13,30 @@ function toBoolean(value: FormDataEntryValue | null) {
   return value === "true";
 }
 
+function getReferenceImages(formData: FormData) {
+  const entries = [
+    ...formData.getAll("referenceImages"),
+    ...formData.getAll("images"),
+    ...formData.getAll("image"),
+  ];
+
+  return entries.filter((entry): entry is File => entry instanceof File && entry.size > 0);
+}
+
 export async function parseGenerateRequest(request: Request | FormData) {
   const parseFormData = (formData: FormData) => {
-    const image = formData.get("image");
+    const images = getReferenceImages(formData);
 
-    if (!(image instanceof File) || image.size === 0) {
+    if (images.length === 0) {
       throw new Error("请先上传参考图");
+    }
+
+    if (images.length > 16) {
+      throw new Error("参考图最多支持 16 张");
+    }
+
+    if (images.some((image) => !image.type.startsWith("image/"))) {
+      throw new Error("参考图必须是图片文件");
     }
 
     const body = generateSchema.parse({
@@ -47,7 +65,8 @@ export async function parseGenerateRequest(request: Request | FormData) {
       ...body,
       channelId: toNullableString(formData.get("channelId")) || undefined,
       count: 1,
-      image,
+      image: images[0] ?? null,
+      images,
     };
   };
 
@@ -68,5 +87,6 @@ export async function parseGenerateRequest(request: Request | FormData) {
     ...body,
     channelId: (json as Record<string, unknown>).channelId as string | undefined,
     image: null,
+    images: [],
   };
 }

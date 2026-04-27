@@ -80,8 +80,24 @@ describe("生成请求解析", () => {
 
     expect(result.generationType).toBe("image_to_image");
     expect(result.image?.name).toBe("source.png");
+    expect(result.images).toHaveLength(1);
     expect(result.count).toBe(1);
     expect(result.size).toBe("9:16");
+  });
+
+  it("解析 form-data 图生图请求时支持多张参考图", async () => {
+    const formData = new FormData();
+    formData.append("generationType", "image_to_image");
+    formData.append("model", "gpt-image-1");
+    formData.append("prompt", "融合两张参考图的角色和背景");
+    formData.append("providerMode", "built_in");
+    formData.append("referenceImages", new File(["fake-image-a"], "source-a.png", { type: "image/png" }));
+    formData.append("referenceImages", new File(["fake-image-b"], "source-b.png", { type: "image/png" }));
+
+    const result = await parseGenerateRequest(formData);
+
+    expect(result.images.map((image) => image.name)).toEqual(["source-a.png", "source-b.png"]);
+    expect(result.image?.name).toBe("source-a.png");
   });
 
   it("图生图 form-data 未传 size 时默认使用 auto", async () => {
@@ -105,5 +121,18 @@ describe("生成请求解析", () => {
     formData.append("providerMode", "built_in");
 
     await expect(parseGenerateRequest(formData)).rejects.toThrow("请先上传参考图");
+  });
+
+  it("图生图参考图超过 16 张时报错", async () => {
+    const formData = new FormData();
+    formData.append("generationType", "image_to_image");
+    formData.append("model", "gpt-image-1");
+    formData.append("prompt", "融合大量参考图");
+    formData.append("providerMode", "built_in");
+    Array.from({ length: 17 }, (_, index) => {
+      formData.append("referenceImages", new File(["fake-image"], `source-${index}.png`, { type: "image/png" }));
+    });
+
+    await expect(parseGenerateRequest(formData)).rejects.toThrow("参考图最多支持 16 张");
   });
 });

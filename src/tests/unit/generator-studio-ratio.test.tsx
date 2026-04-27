@@ -109,7 +109,7 @@ describe("创作台宽高比", () => {
     await user.click(screen.getByRole("button", { name: "加入编辑" }));
 
     expect(screen.getByRole("combobox", { name: "宽高比" })).toHaveValue("9:16");
-    expect(await screen.findByPlaceholderText("描述你希望如何修改这张参考图...")).toBeInTheDocument();
+    expect(await screen.findByPlaceholderText("描述你希望如何修改这些参考图...")).toBeInTheDocument();
   });
 
   it("历史结果会把旧尺寸值映射成正确比例展示", () => {

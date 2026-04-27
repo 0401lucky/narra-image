@@ -259,9 +259,9 @@ export function GenerationAdminCard({ job }: { job: GenerationAdminJob }) {
           <p className="line-clamp-2 text-sm text-[var(--ink)] leading-relaxed">
             {job.prompt}
           </p>
-          {job.sourceImageUrl ? (
+          {job.sourceImageUrls.length > 0 ? (
             <p className="mt-2 text-xs text-[var(--ink-soft)]">
-              本条记录包含参考图，支持追溯图生图来源。
+              本条记录包含 {job.sourceImageUrls.length} 张参考图，支持追溯图生图来源。
             </p>
           ) : null}
         </div>

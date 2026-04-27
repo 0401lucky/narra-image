@@ -31,6 +31,7 @@ export type SerializedGeneration = {
   providerMode: UiProviderMode;
   size: string;
   sourceImageUrl: string | null;
+  sourceImageUrls: string[];
   status: "pending" | "succeeded" | "failed";
   updatedAt: string;
 };
@@ -97,6 +98,8 @@ export type SerializedFeaturedWork = {
   featuredAt: string | null;
   id: string;
   image: string;
+  likeCount: number;
+  likedByMe: boolean;
   prompt: string;
   title: string;
 };
@@ -191,6 +194,12 @@ export type FeaturedWorkRecord = WorkRecord & {
   job: WorkJobFields & {
     user: WorkAuthorFields;
   };
+  _count?: {
+    likes: number;
+  };
+  likes?: Array<{
+    userId: string;
+  }>;
 };
 
 export function serializeFeaturedWork(work: FeaturedWorkRecord): SerializedFeaturedWork {
@@ -201,6 +210,8 @@ export function serializeFeaturedWork(work: FeaturedWorkRecord): SerializedFeatu
     featuredAt: work.featuredAt?.toISOString() ?? null,
     id: work.id,
     image: work.url,
+    likeCount: work._count?.likes ?? 0,
+    likedByMe: Boolean(work.likes?.length),
     prompt: work.showPromptPublic ? work.job.prompt : "作者未公开提示词",
     title: work.job.model,
   };
@@ -218,6 +229,12 @@ export function serializeGeneration(
     "sourceImageUrl" in job && typeof job.sourceImageUrl === "string"
       ? job.sourceImageUrl
       : null;
+  const sourceImageUrls =
+    "sourceImageUrls" in job && Array.isArray(job.sourceImageUrls)
+      ? job.sourceImageUrls.filter((url): url is string => typeof url === "string")
+      : sourceImageUrl
+        ? [sourceImageUrl]
+        : [];
 
   return {
     count: job.count,
@@ -236,7 +253,8 @@ export function serializeGeneration(
     prompt: job.prompt,
     providerMode: fromPrismaProviderMode(job.providerMode),
     size: job.size,
-    sourceImageUrl,
+    sourceImageUrl: sourceImageUrls[0] ?? null,
+    sourceImageUrls,
     status:
       job.status === GenerationStatus.SUCCEEDED
         ? "succeeded"

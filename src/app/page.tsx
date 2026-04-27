@@ -11,7 +11,7 @@ export const dynamic = "force-dynamic";
 export default async function Home() {
   const user = await getCurrentUserRecord();
   const currentUser = user ? serializeUser(user) : null;
-  const featuredPage = await listFeaturedWorksPage({ limit: 24 }).catch(() => ({
+  const featuredPage = await listFeaturedWorksPage({ limit: 24, viewerId: user?.id }).catch(() => ({
     hasMore: false,
     items: [],
     nextCursor: null,
