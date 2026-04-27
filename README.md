@@ -88,7 +88,7 @@ docker compose up --build -d
 - `app`: Narra Image 应用
 - `db`: PostgreSQL 17
 
-容器启动时会自动执行一次 `prisma db push`，这样首次启动也能把当前 schema 推到数据库。
+容器启动时会自动执行一次 `prisma migrate deploy`，这样部署时会应用仓库内的数据库迁移。
 当前生产启动流程不会主动执行 `seed`，避免在低内存环境里因为 `tsx prisma/seed.ts` 触发额外内存峰值。
 初始邀请码会在注册接口里自动补入数据库，管理员邮箱也支持首次免邀请码注册。
 
