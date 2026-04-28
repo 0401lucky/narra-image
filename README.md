@@ -10,6 +10,7 @@
 - 新用户默认 `500` 积分
 - 支持高级用户保存自填 OpenAI 兼容渠道
 - 支持根据 `Base URL + API Key` 拉取兼容渠道公开的模型列表
+- 创作台支持 `gpt-image-2` 的 1K / 2K / 4K / 自定义尺寸、质量和输出格式参数
 - 管理后台可管理邀请码、用户积分、生成记录和首页精选
 - 基于 `Next.js + Prisma + PostgreSQL`，支持 `Docker` 部署到 `Zeabur`
 
@@ -57,7 +58,7 @@ pnpm dev
 - `AUTH_SECRET`: 会话签名与自填渠道加密密钥
 - `BUILTIN_PROVIDER_BASE_URL`: 内置 OpenAI 兼容网关地址
 - `BUILTIN_PROVIDER_API_KEY`: 内置渠道密钥
-- `BUILTIN_PROVIDER_MODEL`: 内置渠道默认模型
+- `BUILTIN_PROVIDER_MODEL`: 内置渠道默认模型，默认推荐 `gpt-image-2`
 - `BUILTIN_PROVIDER_CREDIT_COST`: 内置渠道每次消耗积分
 - `S3_*`: 对象存储配置，可选
 - `BOOTSTRAP_ADMIN_EMAIL`: 需要自动提权为管理员的邮箱

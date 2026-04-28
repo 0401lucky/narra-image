@@ -237,6 +237,10 @@ model GenerationJob {
   prompt          String
   negativePrompt  String?
   size            String
+  quality         String            @default("auto")
+  outputFormat    String            @default("png")
+  outputCompression Int?
+  moderation      String            @default("auto")
   sourceImageUrls String[]          @default([])
   count           Int
   status          GenerationStatus  @default(PENDING)

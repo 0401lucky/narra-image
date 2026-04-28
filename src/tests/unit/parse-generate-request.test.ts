@@ -22,10 +22,10 @@ describe("生成请求解析", () => {
     expect(result.generationType).toBe("text_to_image");
     expect(result.image).toBeNull();
     expect(result.prompt).toBe("电影感夜景肖像");
-    expect(result.size).toBe("1:1");
+    expect(result.size).toBe("1024x1024");
   });
 
-  it("解析 JSON 文生图请求时保留新的比例 token", async () => {
+  it("解析 JSON 文生图请求时把比例 token 规整成像素尺寸", async () => {
     const request = new Request("https://example.com/api/generate", {
       body: JSON.stringify({
         count: 1,
@@ -43,7 +43,7 @@ describe("生成请求解析", () => {
 
     const result = await parseGenerateRequest(request);
 
-    expect(result.size).toBe("16:9");
+    expect(result.size).toBe("1824x1024");
   });
 
   it("解析 JSON 文生图请求时兼容旧像素值", async () => {
@@ -64,7 +64,7 @@ describe("生成请求解析", () => {
 
     const result = await parseGenerateRequest(request);
 
-    expect(result.size).toBe("4:3");
+    expect(result.size).toBe("1536x1024");
   });
 
   it("解析 form-data 图生图请求并提取参考图", async () => {
@@ -82,7 +82,37 @@ describe("生成请求解析", () => {
     expect(result.image?.name).toBe("source.png");
     expect(result.images).toHaveLength(1);
     expect(result.count).toBe(1);
-    expect(result.size).toBe("9:16");
+    expect(result.size).toBe("1024x1824");
+  });
+
+  it("解析 JSON 文生图请求时保留高分辨率与输出参数", async () => {
+    const request = new Request("https://example.com/api/generate", {
+      body: JSON.stringify({
+        count: 1,
+        generationType: "text_to_image",
+        model: "gpt-image-2",
+        moderation: "low",
+        outputCompression: 82,
+        outputFormat: "webp",
+        prompt: "电影感夜景肖像",
+        providerMode: "built_in",
+        quality: "high",
+        size: "3840x2160",
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+    });
+
+    const result = await parseGenerateRequest(request);
+
+    expect(result.model).toBe("gpt-image-2");
+    expect(result.size).toBe("3840x2160");
+    expect(result.quality).toBe("high");
+    expect(result.outputFormat).toBe("webp");
+    expect(result.outputCompression).toBe(82);
+    expect(result.moderation).toBe("low");
   });
 
   it("解析 form-data 图生图请求时支持多张参考图", async () => {

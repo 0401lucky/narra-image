@@ -41,7 +41,7 @@ vi.mock("@/lib/providers/resolve-provider", () => ({
 
 import { generateImages } from "@/lib/providers/generate-images";
 
-describe("generateImages 的 size 透传", () => {
+describe("generateImages 的图片参数透传", () => {
   beforeEach(() => {
     generateMock.mockReset();
     editMock.mockReset();
@@ -49,7 +49,7 @@ describe("generateImages 的 size 透传", () => {
     persistGeneratedImageMock.mockClear();
   });
 
-  it("文生图时原样透传新的比例 token", async () => {
+  it("文生图时原样透传高分辨率尺寸与输出参数", async () => {
     generateMock.mockResolvedValue({
       data: [{ url: "https://example.com/generated.png" }],
     });
@@ -58,21 +58,57 @@ describe("generateImages 的 size 透传", () => {
       count: 1,
       customProvider: null,
       generationType: "text_to_image",
-      model: "gpt-image-1",
+      model: "gpt-image-2",
+      moderation: "low",
+      outputCompression: 90,
+      outputFormat: "webp",
       prompt: "电影感夜景肖像",
       providerMode: "built_in",
-      size: "16:9",
+      quality: "high",
+      size: "3840x2160",
       userId: "user-1",
     });
 
     expect(generateMock).toHaveBeenCalledWith(
       expect.objectContaining({
-        size: "16:9",
+        moderation: "low",
+        output_compression: 90,
+        output_format: "webp",
+        quality: "high",
+        size: "3840x2160",
       }),
     );
   });
 
-  it("图生图时也原样透传新的比例 token", async () => {
+  it("文生图默认参数不额外打扰兼容渠道", async () => {
+    generateMock.mockResolvedValue({
+      data: [{ url: "https://example.com/generated.png" }],
+    });
+
+    await generateImages({
+      count: 1,
+      customProvider: null,
+      generationType: "text_to_image",
+      model: "gpt-image-2",
+      prompt: "电影感夜景肖像",
+      providerMode: "built_in",
+      size: "auto",
+      userId: "user-1",
+    });
+
+    const request = generateMock.mock.calls[0]?.[0];
+    expect(request).toEqual(
+      expect.objectContaining({
+        model: "gpt-image-2",
+        size: "auto",
+      }),
+    );
+    expect(request).not.toHaveProperty("moderation");
+    expect(request).not.toHaveProperty("output_format");
+    expect(request).not.toHaveProperty("quality");
+  });
+
+  it("图生图时也原样透传像素尺寸和输出参数", async () => {
     editMock.mockResolvedValue({
       data: [{ url: "https://example.com/edited.png" }],
     });
@@ -82,9 +118,11 @@ describe("generateImages 的 size 透传", () => {
       customProvider: null,
       generationType: "image_to_image",
       model: "gpt-image-1",
+      outputFormat: "jpeg",
       prompt: "把这张图调成胶片质感",
       providerMode: "built_in",
-      size: "3:4",
+      quality: "medium",
+      size: "2048x2048",
       sourceImage: {
         data: Buffer.from("fake-image"),
         fileName: "source.png",
@@ -96,7 +134,9 @@ describe("generateImages 的 size 透传", () => {
     expect(editMock).toHaveBeenCalledWith(
       expect.objectContaining({
         image: ["mock-file"],
-        size: "3:4",
+        output_format: "jpeg",
+        quality: "medium",
+        size: "2048x2048",
       }),
     );
   });

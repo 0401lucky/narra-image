@@ -10,7 +10,7 @@ const envSchema = z.object({
   BUILTIN_PROVIDER_API_KEY: z.string().optional().or(z.literal("")),
   BUILTIN_PROVIDER_BASE_URL: z.string().url().optional().or(z.literal("")),
   BUILTIN_PROVIDER_CREDIT_COST: z.coerce.number().int().positive().default(5),
-  BUILTIN_PROVIDER_MODEL: z.string().default("gpt-image-1"),
+  BUILTIN_PROVIDER_MODEL: z.string().default("gpt-image-2"),
   BUILTIN_PROVIDER_NAME: z.string().default("Studio"),
   ENABLE_LOCAL_IMAGE_FALLBACK: z
     .enum(["true", "false"])

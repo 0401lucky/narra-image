@@ -13,6 +13,24 @@ function toBoolean(value: FormDataEntryValue | null) {
   return value === "true";
 }
 
+function toNullableNumber(value: FormDataEntryValue | null) {
+  if (typeof value !== "string" || !value.trim()) {
+    return null;
+  }
+
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : null;
+}
+
+function firstString(...values: Array<FormDataEntryValue | null>) {
+  for (const value of values) {
+    const normalized = toNullableString(value);
+    if (normalized) return normalized;
+  }
+
+  return null;
+}
+
 function getReferenceImages(formData: FormData) {
   const entries = [
     ...formData.getAll("referenceImages"),
@@ -55,8 +73,13 @@ export async function parseGenerateRequest(request: Request | FormData) {
       generationType: toNullableString(formData.get("generationType")) || "image_to_image",
       model: toNullableString(formData.get("model")),
       negativePrompt: null,
+      outputCompression: toNullableNumber(formData.get("outputCompression"))
+        ?? toNullableNumber(formData.get("output_compression")),
+      outputFormat: firstString(formData.get("outputFormat"), formData.get("output_format")) || "png",
       prompt: toNullableString(formData.get("prompt")),
       providerMode: toNullableString(formData.get("providerMode")) || "built_in",
+      quality: toNullableString(formData.get("quality")) || "auto",
+      moderation: toNullableString(formData.get("moderation")) || "auto",
       seed: null,
       size: toNullableString(formData.get("size")) || "auto",
     });
@@ -80,12 +103,16 @@ export async function parseGenerateRequest(request: Request | FormData) {
     return parseFormData(await request.formData());
   }
 
-  const json = await request.json();
-  const body = generateSchema.parse(json);
+  const json = await request.json() as Record<string, unknown>;
+  const body = generateSchema.parse({
+    ...json,
+    outputCompression: json.outputCompression ?? json.output_compression,
+    outputFormat: json.outputFormat ?? json.output_format,
+  });
 
   return {
     ...body,
-    channelId: (json as Record<string, unknown>).channelId as string | undefined,
+    channelId: json.channelId as string | undefined,
     image: null,
     images: [],
   };

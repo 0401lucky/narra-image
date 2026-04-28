@@ -1,21 +1,19 @@
 import { z } from "zod";
 
 import type { GenerationSizeToken } from "@/lib/types";
-import { generationSizeTokens, legacyGenerationSizeMap } from "@/lib/types";
+import { normalizeGenerationSize as normalizeGenerationSizeValue } from "@/lib/generation/sizes";
 import { adminWorkReviewActions, userWorkShowcaseActions } from "@/lib/work-showcase";
 
-const generationSizeTokenSet = new Set<string>(generationSizeTokens);
-
 function normalizeGenerationSize(value: string, ctx: z.RefinementCtx): GenerationSizeToken {
-  const normalized = legacyGenerationSizeMap[value as keyof typeof legacyGenerationSizeMap] ?? value;
+  const normalized = normalizeGenerationSizeValue(value);
 
-  if (generationSizeTokenSet.has(normalized)) {
-    return normalized as GenerationSizeToken;
+  if (normalized) {
+    return normalized;
   }
 
   ctx.addIssue({
     code: "custom",
-    message: "尺寸仅支持 auto、1:1、3:4、9:16、4:3、16:9",
+    message: "尺寸仅支持 auto、比例或合法像素值",
   });
 
   return z.NEVER;
@@ -25,7 +23,12 @@ export const generationSizeSchema = z.string()
   .trim()
   .min(1)
   .transform((value, ctx) => normalizeGenerationSize(value, ctx))
-  .default("1:1");
+  .default("auto");
+
+export const generationQualitySchema = z.enum(["auto", "low", "medium", "high"]).default("auto");
+export const generationOutputFormatSchema = z.enum(["png", "jpeg", "webp"]).default("png");
+export const generationModerationSchema = z.enum(["auto", "low"]).default("auto");
+export const generationOutputCompressionSchema = z.number().int().min(0).max(100).optional().nullable();
 
 export const registerSchema = z.object({
   email: z.email("请输入正确的邮箱"),
@@ -53,11 +56,21 @@ export const generateSchema = z.object({
   generationType: z.enum(["text_to_image", "image_to_image"]).default("text_to_image"),
   model: z.string().trim().min(1, "请选择模型"),
   negativePrompt: z.string().trim().max(1000).optional().nullable(),
+  outputCompression: generationOutputCompressionSchema,
+  outputFormat: generationOutputFormatSchema,
   prompt: z.string().trim().min(2, "提示词至少 2 个字符").max(2000),
   providerMode: z.enum(["built_in", "custom"]).default("built_in"),
+  quality: generationQualitySchema,
+  moderation: generationModerationSchema,
   seed: z.number().int().positive().optional().nullable(),
   size: generationSizeSchema,
-});
+}).transform((value) => ({
+  ...value,
+  outputCompression:
+    value.outputFormat === "png"
+      ? null
+      : value.outputCompression ?? 100,
+}));
 
 export const inviteCreateSchema = z.object({
   note: z.string().trim().max(120).optional().nullable(),

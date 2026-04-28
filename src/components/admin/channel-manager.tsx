@@ -426,7 +426,7 @@ export function ChannelManager({ initialChannels }: ChannelManagerProps) {
                   <input
                     value={formDefaultModel}
                     onChange={(e) => setFormDefaultModel(e.target.value)}
-                    placeholder="gpt-image-1"
+                    placeholder="gpt-image-2"
                     className="flex-1 rounded-xl border border-[var(--line)] bg-white/70 px-4 py-2.5 text-sm outline-none transition focus:border-[var(--accent)]"
                   />
                   <button

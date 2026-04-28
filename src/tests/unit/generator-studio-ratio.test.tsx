@@ -73,7 +73,7 @@ function createSucceededGeneration(overrides: Partial<Generation> = {}) {
   };
 }
 
-describe("创作台宽高比", () => {
+describe("创作台尺寸", () => {
   beforeEach(() => {
     mockLocalStorage();
   });
@@ -84,7 +84,7 @@ describe("创作台宽高比", () => {
     vi.unstubAllGlobals();
   });
 
-  it("在模式切换后仍可选择宽高比", async () => {
+  it("在模式切换后仍可选择尺寸", async () => {
     const user = userEvent.setup();
     vi.stubGlobal(
       "fetch",
@@ -101,18 +101,18 @@ describe("创作台宽高比", () => {
       />,
     );
 
-    const sizeSelect = screen.getByRole("combobox", { name: "宽高比" });
-    await user.selectOptions(sizeSelect, "9:16");
+    const sizeSelect = screen.getByRole("combobox", { name: "尺寸" });
+    await user.selectOptions(sizeSelect, "2048x1152");
 
-    expect(sizeSelect).toHaveValue("9:16");
+    expect(sizeSelect).toHaveValue("2048x1152");
 
     await user.click(screen.getByRole("button", { name: "加入编辑" }));
 
-    expect(screen.getByRole("combobox", { name: "宽高比" })).toHaveValue("9:16");
+    expect(screen.getByRole("combobox", { name: "尺寸" })).toHaveValue("2048x1152");
     expect(await screen.findByPlaceholderText("描述你希望如何修改这些参考图...")).toBeInTheDocument();
   });
 
-  it("历史结果会把旧尺寸值映射成正确比例展示", () => {
+  it("历史结果会按像素尺寸展示正确比例", () => {
     render(
       <GeneratorStudio
         {...baseProps}
@@ -125,9 +125,9 @@ describe("创作台宽高比", () => {
       />,
     );
 
-    expect(screen.getByText("gpt-image-1 • 竖版 3:4")).toBeInTheDocument();
+    expect(screen.getByText("gpt-image-1 • 1.5K 竖图 2:3 • 质量自动 • PNG")).toBeInTheDocument();
 
     const resultImage = screen.getByAltText("生成结果");
-    expect(resultImage.parentElement).toHaveStyle({ aspectRatio: "3 / 4" });
+    expect(resultImage.parentElement).toHaveStyle({ aspectRatio: "1024 / 1536" });
   });
 });

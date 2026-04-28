@@ -26,9 +26,13 @@ export type SerializedGeneration = {
     url: string;
   }>;
   model: string;
+  moderation: string;
   negativePrompt: string | null;
+  outputCompression: number | null;
+  outputFormat: string;
   prompt: string;
   providerMode: UiProviderMode;
+  quality: string;
   size: string;
   sourceImageUrl: string | null;
   sourceImageUrls: string[];
@@ -249,9 +253,25 @@ export function serializeGeneration(
       url: image.url,
     })),
     model: job.model,
+    moderation:
+      "moderation" in job && typeof job.moderation === "string"
+        ? job.moderation
+        : "auto",
     negativePrompt: job.negativePrompt,
+    outputCompression:
+      "outputCompression" in job && typeof job.outputCompression === "number"
+        ? job.outputCompression
+        : null,
+    outputFormat:
+      "outputFormat" in job && typeof job.outputFormat === "string"
+        ? job.outputFormat
+        : "png",
     prompt: job.prompt,
     providerMode: fromPrismaProviderMode(job.providerMode),
+    quality:
+      "quality" in job && typeof job.quality === "string"
+        ? job.quality
+        : "auto",
     size: job.size,
     sourceImageUrl: sourceImageUrls[0] ?? null,
     sourceImageUrls,

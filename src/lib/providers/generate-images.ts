@@ -5,7 +5,14 @@ import OpenAI, { toFile } from "openai";
 import { persistGeneratedImage } from "@/lib/storage/persist-generated-image";
 import { getBuiltInProviderConfig } from "@/lib/providers/built-in-provider";
 import { resolveGenerationProvider } from "@/lib/providers/resolve-provider";
-import type { GenerationSizeToken, GenerationType, ProviderMode } from "@/lib/types";
+import type {
+  GenerationModeration,
+  GenerationOutputFormat,
+  GenerationQuality,
+  GenerationSizeToken,
+  GenerationType,
+  ProviderMode,
+} from "@/lib/types";
 
 type CustomProviderConfig = {
   apiKey: string;
@@ -19,8 +26,12 @@ type GenerateImagesInput = {
   generationType: GenerationType;
   model: string;
   negativePrompt?: string | null;
+  outputCompression?: number | null;
+  outputFormat?: GenerationOutputFormat;
   prompt: string;
   providerMode: ProviderMode;
+  quality?: GenerationQuality;
+  moderation?: GenerationModeration;
   seed?: number | null;
   size: GenerationSizeToken;
   sourceImage?: {
@@ -63,7 +74,7 @@ export async function generateImages(input: GenerateImagesInput) {
     throw new Error("请先上传参考图");
   }
 
-  // 站内统一接入兼容 chatgpt2api 的图片代理，SDK 的静态类型比代理实际支持的比例 token 更窄。
+  // SDK 类型暂时落后于 gpt-image-2 的灵活尺寸，运行时按官方参数透传。
   const compatibleSize = input.size as unknown as
     | "auto"
     | "1024x1024"
@@ -71,6 +82,14 @@ export async function generateImages(input: GenerateImagesInput) {
     | "1536x1024"
     | "256x256"
     | "512x512";
+  const outputFormat = input.outputFormat ?? "png";
+  const outputOptions = {
+    ...(outputFormat !== "png" ? { output_format: outputFormat } : {}),
+    ...(outputFormat !== "png" && input.outputCompression != null
+      ? { output_compression: input.outputCompression }
+      : {}),
+    ...(input.quality && input.quality !== "auto" ? { quality: input.quality } : {}),
+  } as const;
 
   const result = input.generationType === "image_to_image"
     ? await client.images.edit({
@@ -87,12 +106,17 @@ export async function generateImages(input: GenerateImagesInput) {
         ),
         model: input.model || provider.model,
         n: 1,
+        ...outputOptions,
         prompt: input.prompt,
         size: compatibleSize,
       })
     : await client.images.generate({
+        ...(input.moderation && input.moderation !== "auto"
+          ? { moderation: input.moderation }
+          : {}),
         model: input.model || provider.model,
         n: input.count,
+        ...outputOptions,
         prompt: input.prompt,
         size: compatibleSize,
         ...(input.negativePrompt || input.seed

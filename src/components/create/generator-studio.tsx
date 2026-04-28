@@ -5,10 +5,19 @@ import { useRef, useState, useTransition, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 import {
-  legacyGenerationSizeMap,
+  type GenerationModeration,
+  type GenerationOutputFormat,
+  type GenerationQuality,
   type GenerationSizeToken,
   type GenerationType,
 } from "@/lib/types";
+import {
+  getAspectRatio as getGenerationAspectRatio,
+  getGenerationSizeLabel,
+  imageSizeLimits,
+  normalizeGenerationSize,
+  parseImageSize,
+} from "@/lib/generation/sizes";
 
 type ViewerUser = {
   credits: number;
@@ -26,9 +35,13 @@ type GenerationItem = {
     url: string;
   }>;
   model: string;
+  moderation?: string;
   negativePrompt?: string | null;
+  outputCompression?: number | null;
+  outputFormat?: string;
   prompt: string;
   providerMode: "built_in" | "custom";
+  quality?: string;
   size: string;
   sourceImageUrl?: string | null;
   sourceImageUrls?: string[];
@@ -54,56 +67,66 @@ type GeneratorStudioProps = {
   channels?: ChannelInfo[];
 };
 
-type LegacyGenerationSize = keyof typeof legacyGenerationSizeMap;
-
 type SizeOption = {
-  aspectRatio?: string;
-  aliases?: string[];
+  detail?: string;
   label: string;
-  value: GenerationSizeToken;
+  value: GenerationSizeToken | "custom";
 };
 
 const SIZE_OPTIONS: SizeOption[] = [
-  { label: "自动", value: "auto" },
-  { aliases: ["方形", "square"], aspectRatio: "1 / 1", label: "方形 1:1", value: "1:1" },
-  { aliases: ["竖版", "portrait"], aspectRatio: "3 / 4", label: "竖版 3:4", value: "3:4" },
-  { aliases: ["故事", "story"], aspectRatio: "9 / 16", label: "故事 9:16", value: "9:16" },
-  { aliases: ["横屏"], aspectRatio: "4 / 3", label: "横屏 4:3", value: "4:3" },
-  { aliases: ["宽屏", "landscape"], aspectRatio: "16 / 9", label: "宽屏 16:9", value: "16:9" },
+  { detail: "模型决定", label: "自动", value: "auto" },
+  { detail: "1:1", label: "1K 方图", value: "1024x1024" },
+  { detail: "3:2", label: "1.5K 横图", value: "1536x1024" },
+  { detail: "2:3", label: "1.5K 竖图", value: "1024x1536" },
+  { detail: "1:1", label: "2K 方图", value: "2048x2048" },
+  { detail: "16:9", label: "2K 横屏", value: "2048x1152" },
+  { detail: "9:16", label: "2K 竖屏", value: "1152x2048" },
+  { detail: "16:9", label: "4K 横屏", value: "3840x2160" },
+  { detail: "9:16", label: "4K 竖屏", value: "2160x3840" },
+  { detail: "高级设置", label: "自定义", value: "custom" },
 ];
 
-const SIZE_OPTION_LOOKUP = new Map(
-  SIZE_OPTIONS.flatMap((option) => [
-    [option.value, option],
-    ...(option.aliases ?? []).map((alias) => [alias, option] as const),
-    ...Object.entries(legacyGenerationSizeMap)
-      .filter(([, value]) => value === option.value)
-      .map(([legacyValue]) => [legacyValue, option] as const),
-  ]),
-);
+const QUALITY_OPTIONS: Array<{ label: string; value: GenerationQuality }> = [
+  { label: "自动", value: "auto" },
+  { label: "低", value: "low" },
+  { label: "中", value: "medium" },
+  { label: "高", value: "high" },
+];
 
-function getSizeOption(size: string) {
-  const normalized =
-    legacyGenerationSizeMap[size as LegacyGenerationSize] ?? size;
-  return SIZE_OPTION_LOOKUP.get(normalized);
+const OUTPUT_FORMAT_OPTIONS: Array<{ label: string; value: GenerationOutputFormat }> = [
+  { label: "PNG", value: "png" },
+  { label: "JPEG", value: "jpeg" },
+  { label: "WebP", value: "webp" },
+];
+
+const MODERATION_OPTIONS: Array<{ label: string; value: GenerationModeration }> = [
+  { label: "自动", value: "auto" },
+  { label: "低限制", value: "low" },
+];
+
+function getSizeSelectValue(size: string) {
+  const normalized = normalizeGenerationSize(size);
+  if (!normalized) return "custom";
+  return SIZE_OPTIONS.some((option) => option.value === normalized)
+    ? normalized
+    : "custom";
 }
 
 function getSizeLabel(size: string) {
-  return getSizeOption(size)?.label ?? size;
+  const normalized = normalizeGenerationSize(size);
+  const option = SIZE_OPTIONS.find((item) => item.value === normalized);
+  return option && option.value !== "custom"
+    ? `${option.label}${option.detail ? ` ${option.detail}` : ""}`
+    : getGenerationSizeLabel(size);
 }
 
-function getAspectRatio(size: string) {
-  const mappedRatio = getSizeOption(size)?.aspectRatio;
-  if (mappedRatio) {
-    return mappedRatio;
-  }
+function getGenerationOptionSummary(generation: GenerationItem) {
+  const quality = generation.quality && generation.quality !== "auto"
+    ? `质量 ${generation.quality}`
+    : "质量自动";
+  const format = (generation.outputFormat ?? "png").toUpperCase();
 
-  const match = size.match(/^(\d+)x(\d+)$/);
-  if (!match) {
-    return undefined;
-  }
-
-  return `${Number(match[1])} / ${Number(match[2])}`;
+  return `${generation.model} • ${getSizeLabel(generation.size)} • ${quality} • ${format}`;
 }
 
 const MAX_REFERENCE_IMAGES = 16;
@@ -155,9 +178,16 @@ export function GeneratorStudio({
   );
   const selectedChannel = channels.find((c) => c.id === selectedChannelId) ?? channels[0] ?? null;
   const [model, setModel] = useState(
-    selectedChannel?.defaultModel || "gpt-image-1",
+    selectedChannel?.defaultModel || "gpt-image-2",
   );
   const [size, setSize] = useState<GenerationSizeToken>("auto");
+  const [customSizeMode, setCustomSizeMode] = useState(false);
+  const [customWidth, setCustomWidth] = useState("2048");
+  const [customHeight, setCustomHeight] = useState("2048");
+  const [quality, setQuality] = useState<GenerationQuality>("auto");
+  const [outputFormat, setOutputFormat] = useState<GenerationOutputFormat>("png");
+  const [outputCompression, setOutputCompression] = useState(100);
+  const [moderation, setModeration] = useState<GenerationModeration>("auto");
   const [count, setCount] = useState(1);
   const [zoomedImage, setZoomedImage] = useState<string | null>(null);
   const [referenceImages, setReferenceImages] = useState<Array<{
@@ -226,6 +256,38 @@ export function GeneratorStudio({
   }, [prompt]);
 
   const sortedGenerations = sessionGenerations;
+  const sizeSelectValue = customSizeMode ? "custom" : getSizeSelectValue(size);
+  const normalizedCustomSize = normalizeGenerationSize(`${customWidth}x${customHeight}`);
+
+  function handleSizeSelect(value: string) {
+    if (value === "custom") {
+      setCustomSizeMode(true);
+      const parsed = parseImageSize(size);
+      const nextWidth = parsed ? String(parsed.width) : customWidth;
+      const nextHeight = parsed ? String(parsed.height) : customHeight;
+      if (parsed) {
+        setCustomWidth(nextWidth);
+        setCustomHeight(nextHeight);
+      }
+
+      setSize((normalizeGenerationSize(`${nextWidth}x${nextHeight}`) ?? "2048x2048") as GenerationSizeToken);
+      setShowSettings(true);
+      return;
+    }
+
+    setCustomSizeMode(false);
+    setSize(value as GenerationSizeToken);
+  }
+
+  function updateCustomSize(width: string, height: string) {
+    setCustomWidth(width);
+    setCustomHeight(height);
+
+    const normalized = normalizeGenerationSize(`${width}x${height}`);
+    if (normalized && normalized !== "auto") {
+      setSize(normalized);
+    }
+  }
 
   async function handleDownload(url: string) {
     try {
@@ -268,8 +330,14 @@ export function GeneratorStudio({
               const formData = new FormData();
               formData.append("generationType", "image_to_image");
               formData.append("model", model);
+              formData.append("moderation", moderation);
+              if (outputFormat !== "png") {
+                formData.append("outputCompression", String(outputCompression));
+              }
+              formData.append("outputFormat", outputFormat);
               formData.append("prompt", prompt);
               formData.append("providerMode", "built_in");
+              formData.append("quality", quality);
               formData.append("size", size);
               if (selectedChannelId) {
                 formData.append("channelId", selectedChannelId);
@@ -290,10 +358,14 @@ export function GeneratorStudio({
               count,
               customProvider: null,
               generationType: "text_to_image",
+              moderation,
               model,
               negativePrompt: negativePrompt || null,
+              outputCompression: outputFormat === "png" ? null : outputCompression,
+              outputFormat,
               prompt,
               providerMode: "built_in",
+              quality,
               size,
             }),
           });
@@ -610,7 +682,7 @@ export function GeneratorStudio({
                   <div className="flex flex-col gap-2 max-w-[85%] w-full">
                     <div className="flex items-center gap-2">
                       <span className="text-sm font-medium text-[var(--ink)]">Narra AI</span>
-                      <span className="text-xs text-[var(--ink-soft)]">{generation.model} • {getSizeLabel(generation.size)}</span>
+                      <span className="text-xs text-[var(--ink-soft)]">{getGenerationOptionSummary(generation)}</span>
                     </div>
                     
                     {generation.images.length > 0 ? (
@@ -624,7 +696,7 @@ export function GeneratorStudio({
                             >
                               <div
                                 className="overflow-hidden bg-[var(--surface-strong)]/40"
-                                style={getAspectRatio(generation.size) ? { aspectRatio: getAspectRatio(generation.size) } : undefined}
+                                style={getGenerationAspectRatio(generation.size) ? { aspectRatio: getGenerationAspectRatio(generation.size) } : undefined}
                               >
                                 <img
                                   src={image.url}
@@ -820,16 +892,16 @@ export function GeneratorStudio({
                 </div>
 
                 <label className="flex items-center gap-2 rounded-lg border border-[var(--line)] bg-[var(--surface-strong)] px-3 py-1.5 text-xs text-[var(--ink-soft)]">
-                  <span className="shrink-0">宽高比</span>
+                  <span className="shrink-0">尺寸</span>
                   <select
-                    aria-label="宽高比"
-                    value={size}
-                    onChange={(event) => setSize(event.target.value as GenerationSizeToken)}
+                    aria-label="尺寸"
+                    value={sizeSelectValue}
+                    onChange={(event) => handleSizeSelect(event.target.value)}
                     className="min-w-0 bg-transparent text-xs font-medium text-[var(--ink)] outline-none"
                   >
                     {SIZE_OPTIONS.map((option) => (
                       <option key={option.value} value={option.value}>
-                        {option.label}
+                        {option.detail ? `${option.label} · ${option.detail}` : option.label}
                       </option>
                     ))}
                   </select>
@@ -882,6 +954,32 @@ export function GeneratorStudio({
               <div className="border-t border-[var(--line)]/50 bg-[var(--surface)]/50 p-5 rounded-b-[2rem] animate-in slide-in-from-top-2">
                 <div className="grid gap-6 md:grid-cols-2">
                   <div className="space-y-4">
+                    {sizeSelectValue === "custom" && (
+                      <div>
+                        <label className="mb-1.5 block text-xs font-medium text-[var(--ink-soft)]">自定义尺寸</label>
+                        <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
+                          <input
+                            aria-label="自定义宽度"
+                            inputMode="numeric"
+                            value={customWidth}
+                            onChange={(event) => updateCustomSize(event.target.value, customHeight)}
+                            className="min-w-0 rounded-xl border border-[var(--line)] bg-[var(--surface-strong)]/50 px-3 py-2 text-sm outline-none focus:border-[var(--accent)]"
+                          />
+                          <span className="text-xs text-[var(--ink-soft)]">x</span>
+                          <input
+                            aria-label="自定义高度"
+                            inputMode="numeric"
+                            value={customHeight}
+                            onChange={(event) => updateCustomSize(customWidth, event.target.value)}
+                            className="min-w-0 rounded-xl border border-[var(--line)] bg-[var(--surface-strong)]/50 px-3 py-2 text-sm outline-none focus:border-[var(--accent)]"
+                          />
+                        </div>
+                        <p className="mt-2 text-[11px] leading-relaxed text-[var(--ink-soft)]">
+                          将使用 {normalizedCustomSize ?? "有效尺寸"}，宽高会规整到 {imageSizeLimits.multiple}px 倍数，最大边 {imageSizeLimits.maxEdge}px。
+                        </p>
+                      </div>
+                    )}
+
                     <div>
                       <label className="mb-1.5 block text-xs font-medium text-[var(--ink-soft)]">生成张数</label>
                       <div className="flex gap-2">
@@ -900,8 +998,66 @@ export function GeneratorStudio({
                     </div>
                   </div>
 
-                  {generationType === "text_to_image" && (
-                    <div className="space-y-4">
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-2 gap-3">
+                      <label>
+                        <span className="mb-1.5 block text-xs font-medium text-[var(--ink-soft)]">质量</span>
+                        <select
+                          aria-label="质量"
+                          value={quality}
+                          onChange={(event) => setQuality(event.target.value as GenerationQuality)}
+                          className="w-full rounded-xl border border-[var(--line)] bg-[var(--surface-strong)]/50 px-3 py-2 text-sm outline-none focus:border-[var(--accent)]"
+                        >
+                          {QUALITY_OPTIONS.map((option) => (
+                            <option key={option.value} value={option.value}>{option.label}</option>
+                          ))}
+                        </select>
+                      </label>
+                      <label>
+                        <span className="mb-1.5 block text-xs font-medium text-[var(--ink-soft)]">格式</span>
+                        <select
+                          aria-label="格式"
+                          value={outputFormat}
+                          onChange={(event) => setOutputFormat(event.target.value as GenerationOutputFormat)}
+                          className="w-full rounded-xl border border-[var(--line)] bg-[var(--surface-strong)]/50 px-3 py-2 text-sm outline-none focus:border-[var(--accent)]"
+                        >
+                          {OUTPUT_FORMAT_OPTIONS.map((option) => (
+                            <option key={option.value} value={option.value}>{option.label}</option>
+                          ))}
+                        </select>
+                      </label>
+                    </div>
+
+                    {outputFormat !== "png" && (
+                      <label>
+                        <span className="mb-1.5 block text-xs font-medium text-[var(--ink-soft)]">压缩质量 {outputCompression}%</span>
+                        <input
+                          aria-label="压缩质量"
+                          type="range"
+                          min={0}
+                          max={100}
+                          value={outputCompression}
+                          onChange={(event) => setOutputCompression(Number(event.target.value))}
+                          className="w-full accent-[var(--accent)]"
+                        />
+                      </label>
+                    )}
+
+                    <label>
+                      <span className="mb-1.5 block text-xs font-medium text-[var(--ink-soft)]">审核策略</span>
+                      <select
+                        aria-label="审核策略"
+                        value={moderation}
+                        onChange={(event) => setModeration(event.target.value as GenerationModeration)}
+                        className="w-full rounded-xl border border-[var(--line)] bg-[var(--surface-strong)]/50 px-3 py-2 text-sm outline-none focus:border-[var(--accent)]"
+                      >
+                        {MODERATION_OPTIONS.map((option) => (
+                          <option key={option.value} value={option.value}>{option.label}</option>
+                        ))}
+                      </select>
+                    </label>
+
+                    {generationType === "text_to_image" && (
                       <div>
                         <label className="mb-1.5 block text-xs font-medium text-[var(--ink-soft)]">负向提示词</label>
                         <textarea
@@ -912,9 +1068,12 @@ export function GeneratorStudio({
                           rows={2}
                         />
                       </div>
-                    </div>
-                  )}
+                    )}
+                  </div>
                 </div>
+                <p className="mt-5 text-[11px] leading-relaxed text-[var(--ink-soft)]">
+                  2K/4K 属于高分辨率请求，真实生效情况由当前渠道和模型决定；超大尺寸会更慢，失败时可切回 1K 或自动。
+                </p>
               </div>
             )}
           </div>
