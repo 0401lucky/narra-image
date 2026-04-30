@@ -1,5 +1,7 @@
 import { redirect } from "next/navigation";
 
+import { GenerationStatus } from "@prisma/client";
+
 import { db } from "@/lib/db";
 import { requireAdminRecord } from "@/lib/server/current-user";
 import { SiteHeader } from "@/components/marketing/site-header";
@@ -7,6 +9,7 @@ import { AdminNav } from "@/components/admin/admin-nav";
 import { serializeUser } from "@/lib/prisma-mappers";
 import { GenerationAdminCard } from "@/components/admin/admin-actions";
 import { AdminPagination } from "@/components/admin/admin-pagination";
+import { CleanupFailedButton } from "@/components/admin/cleanup-failed-button";
 
 export const dynamic = "force-dynamic";
 
@@ -27,8 +30,13 @@ export default async function AdminGenerationsPage({
   const params = await searchParams;
   const page = Math.max(1, Number(params.page) || 1);
 
-  const [jobs, totalCount] = await Promise.all([
+  const visibleWhere = {
+    status: { not: GenerationStatus.FAILED },
+  };
+
+  const [jobs, totalCount, failedCount] = await Promise.all([
     db.generationJob.findMany({
+      where: visibleWhere,
       orderBy: { createdAt: "desc" },
       include: {
         images: {
@@ -43,7 +51,8 @@ export default async function AdminGenerationsPage({
       skip: (page - 1) * PAGE_SIZE,
       take: PAGE_SIZE,
     }),
-    db.generationJob.count(),
+    db.generationJob.count({ where: visibleWhere }),
+    db.generationJob.count({ where: { status: GenerationStatus.FAILED } }),
   ]);
 
   const totalPages = Math.ceil(totalCount / PAGE_SIZE);
@@ -58,11 +67,13 @@ export default async function AdminGenerationsPage({
               生成记录
             </h1>
             <p className="mt-2 text-sm text-[var(--ink-soft)]">
-              查看并管理所有用户生成的图片记录。共 {totalCount} 条记录。
+              查看并管理所有用户生成的图片记录。当前显示 {totalCount} 条有效记录（失败任务已隐藏）。
             </p>
           </div>
           <AdminNav currentPath="/admin/generations" />
         </div>
+
+        <CleanupFailedButton failedCount={failedCount} />
 
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-2">
           {jobs.map((job) => (

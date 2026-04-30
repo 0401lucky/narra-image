@@ -1,3 +1,5 @@
+import { GenerationStatus } from "@prisma/client";
+
 import { db } from "@/lib/db";
 import { serializeGeneration } from "@/lib/prisma-mappers";
 import { requireAdminRecord } from "@/lib/server/current-user";
@@ -8,6 +10,7 @@ export async function GET() {
     await requireAdminRecord();
 
     const jobs = await db.generationJob.findMany({
+      where: { status: { not: GenerationStatus.FAILED } },
       orderBy: { createdAt: "desc" },
       include: {
         images: {

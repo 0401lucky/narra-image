@@ -3,8 +3,9 @@
 /* eslint-disable @next/next/no-img-element */
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { Download, Expand, FileText } from "lucide-react";
+import { Download, Expand, FileText, Trash2 } from "lucide-react";
 
 import type { SerializedWork } from "@/lib/prisma-mappers";
 import { downloadImage } from "@/components/works/download-image";
@@ -25,8 +26,34 @@ function formatTime(value: string) {
 }
 
 export function MyWorksBoard({ works }: { works: SerializedWork[] }) {
+  const router = useRouter();
   const [zoomedWork, setZoomedWork] = useState<SerializedWork | null>(null);
   const [promptWork, setPromptWork] = useState<SerializedWork | null>(null);
+  const [deletingWork, setDeletingWork] = useState<SerializedWork | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+
+  async function handleConfirmDelete() {
+    if (!deletingWork) return;
+    setDeleteError(null);
+    setIsDeleting(true);
+    try {
+      const response = await fetch(`/api/me/works/${deletingWork.id}`, {
+        method: "DELETE",
+      });
+      const result = (await response.json().catch(() => ({}))) as {
+        error?: string;
+      };
+      if (!response.ok) {
+        setDeleteError(result.error || "删除失败，请稍后再试");
+        return;
+      }
+      setDeletingWork(null);
+      router.refresh();
+    } finally {
+      setIsDeleting(false);
+    }
+  }
 
   if (works.length === 0) {
     return (
@@ -106,6 +133,17 @@ export function MyWorksBoard({ works }: { works: SerializedWork[] }) {
                 <Download className="size-3.5" />
                 下载
               </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setDeleteError(null);
+                  setDeletingWork(work);
+                }}
+                className="inline-flex items-center gap-1.5 rounded-full border border-rose-200 px-3 py-2 text-xs text-rose-600 transition hover:border-rose-400 hover:text-rose-700"
+              >
+                <Trash2 className="size-3.5" />
+                删除
+              </button>
             </div>
 
             <div className="mt-3">
@@ -133,6 +171,46 @@ export function MyWorksBoard({ works }: { works: SerializedWork[] }) {
           negativePrompt={promptWork.negativePrompt}
           onClose={() => setPromptWork(null)}
         />
+      ) : null}
+
+      {deletingWork ? (
+        <div
+          className="fixed inset-0 z-[120] flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm"
+          onClick={() => {
+            if (!isDeleting) setDeletingWork(null);
+          }}
+        >
+          <div
+            className="studio-card w-full max-w-md rounded-[1.8rem] p-6"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <h3 className="text-lg font-semibold text-[var(--ink)]">删除作品</h3>
+            <p className="mt-2 text-sm leading-relaxed text-[var(--ink-soft)]">
+              删除后这张图片将不再出现在你的作品列表中，且无法恢复。是否继续？
+            </p>
+            {deleteError ? (
+              <p className="mt-3 text-sm text-rose-600">{deleteError}</p>
+            ) : null}
+            <div className="mt-6 flex flex-wrap justify-end gap-2">
+              <button
+                type="button"
+                disabled={isDeleting}
+                onClick={() => setDeletingWork(null)}
+                className="rounded-full border border-[var(--line)] px-4 py-2 text-sm text-[var(--ink-soft)] disabled:opacity-60"
+              >
+                取消
+              </button>
+              <button
+                type="button"
+                disabled={isDeleting}
+                onClick={() => void handleConfirmDelete()}
+                className="rounded-full bg-rose-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-rose-700 disabled:opacity-60"
+              >
+                {isDeleting ? "删除中..." : "确认删除"}
+              </button>
+            </div>
+          </div>
+        </div>
       ) : null}
     </>
   );
