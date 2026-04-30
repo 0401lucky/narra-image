@@ -309,7 +309,13 @@ export function GeneratorStudio({
     }
   }
 
-  async function handleGenerate() {
+  type GenerateSnapshot = {
+    prompt: string;
+    referenceImages: Array<{ id: string; file: File; previewUrl: string }>;
+    generationType: GenerationType;
+  };
+
+  function handleSubmit() {
     if (!currentUser) {
       router.push("/login");
       return;
@@ -322,96 +328,144 @@ export function GeneratorStudio({
       return;
     }
 
-    const response =
-      generationType === "image_to_image"
-        ? await fetch("/api/generate", {
-            method: "POST",
-            body: (() => {
-              const formData = new FormData();
-              formData.append("generationType", "image_to_image");
-              formData.append("model", model);
-              formData.append("moderation", moderation);
-              if (outputFormat !== "png") {
-                formData.append("outputCompression", String(outputCompression));
-              }
-              formData.append("outputFormat", outputFormat);
-              formData.append("prompt", prompt);
-              formData.append("providerMode", "built_in");
-              formData.append("quality", quality);
-              formData.append("size", size);
-              if (selectedChannelId) {
-                formData.append("channelId", selectedChannelId);
-              }
-              referenceImages.forEach((referenceImage) => {
-                formData.append("referenceImages", referenceImage.file);
-              });
-              return formData;
-            })(),
-          })
-        : await fetch("/api/generate", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              channelId: selectedChannelId,
-              count,
-              customProvider: null,
-              generationType: "text_to_image",
-              moderation,
-              model,
-              negativePrompt: negativePrompt || null,
-              outputCompression: outputFormat === "png" ? null : outputCompression,
-              outputFormat,
-              prompt,
-              providerMode: "built_in",
-              quality,
-              size,
-            }),
-          });
+    if (!prompt.trim() && referenceImages.length === 0) {
+      return;
+    }
 
-    const result = (await response.json()) as {
-      data?: {
-        generation: GenerationItem;
-      };
-      error?: string;
+    // 快照本次发送的内容，并立即清空输入区。
+    // 这一步必须在 startTransition 之外执行：transition 内的 setState 是低优先级，
+    // 会被推迟到 await 完成后才提交，导致输入框看起来"被卡住"。
+    const snapshot: GenerateSnapshot = {
+      prompt,
+      referenceImages: referenceImages.slice(),
+      generationType,
     };
 
-    if (!response.ok) {
-      setError(result.error || "生成失败，请稍后再试");
-      return;
-    }
-
-    const generation = result.data?.generation;
-    if (!generation) {
-      setError("服务端没有返回图片");
-      return;
-    }
-
-    setSessionGenerations((current) => [...current, generation]);
-    // Update session in localStorage
-    setSessions((prev) => {
-      const updated = [...prev];
-      let session = updated.find((s) => s.id === activeSessionId);
-      if (!session) {
-        // Create session on first generation if none active
-        session = {
-          id: activeSessionId || genSessionId(),
-          title: generation.prompt.slice(0, 30),
-          generationIds: [],
-          createdAt: new Date().toISOString(),
-        };
-        updated.push(session);
-        if (!activeSessionId) setActiveSessionId(session.id);
-      }
-      session.generationIds.push(generation.id);
-      if (session.generationIds.length === 1) {
-        session.title = generation.prompt.slice(0, 30);
-      }
-      saveSessions(updated);
-      return updated;
-    });
     setPrompt("");
+    setReferenceImages([]);
+    if (snapshot.generationType === "image_to_image") {
+      setGenerationType("text_to_image");
+    }
+
+    startTransition(() => {
+      void handleGenerate(snapshot);
+    });
+  }
+
+  async function handleGenerate(snapshot: GenerateSnapshot) {
+    function restoreSnapshot(message: string) {
+      setError(message);
+      // 用户在等待期间可能已开始新的输入，避免覆盖。
+      setPrompt((current) => (current ? current : snapshot.prompt));
+      setReferenceImages((current) => {
+        if (current.length > 0) {
+          // 已有新参考图，丢弃旧的预览以避免内存泄漏。
+          snapshot.referenceImages.forEach((image) => URL.revokeObjectURL(image.previewUrl));
+          return current;
+        }
+        return snapshot.referenceImages;
+      });
+      if (snapshot.generationType === "image_to_image") {
+        setGenerationType("image_to_image");
+      }
+    }
+
+    try {
+      const response =
+        snapshot.generationType === "image_to_image"
+          ? await fetch("/api/generate", {
+              method: "POST",
+              body: (() => {
+                const formData = new FormData();
+                formData.append("generationType", "image_to_image");
+                formData.append("model", model);
+                formData.append("moderation", moderation);
+                if (outputFormat !== "png") {
+                  formData.append("outputCompression", String(outputCompression));
+                }
+                formData.append("outputFormat", outputFormat);
+                formData.append("prompt", snapshot.prompt);
+                formData.append("providerMode", "built_in");
+                formData.append("quality", quality);
+                formData.append("size", size);
+                if (selectedChannelId) {
+                  formData.append("channelId", selectedChannelId);
+                }
+                snapshot.referenceImages.forEach((referenceImage) => {
+                  formData.append("referenceImages", referenceImage.file);
+                });
+                return formData;
+              })(),
+            })
+          : await fetch("/api/generate", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                channelId: selectedChannelId,
+                count,
+                customProvider: null,
+                generationType: "text_to_image",
+                moderation,
+                model,
+                negativePrompt: negativePrompt || null,
+                outputCompression: outputFormat === "png" ? null : outputCompression,
+                outputFormat,
+                prompt: snapshot.prompt,
+                providerMode: "built_in",
+                quality,
+                size,
+              }),
+            });
+
+      const result = (await response.json()) as {
+        data?: {
+          generation: GenerationItem;
+        };
+        error?: string;
+      };
+
+      if (!response.ok) {
+        restoreSnapshot(result.error || "生成失败，请稍后再试");
+        return;
+      }
+
+      const generation = result.data?.generation;
+      if (!generation) {
+        restoreSnapshot("服务端没有返回图片");
+        return;
+      }
+
+      // 成功后再释放快照中的参考图预览 URL。
+      snapshot.referenceImages.forEach((image) => URL.revokeObjectURL(image.previewUrl));
+
+      setSessionGenerations((current) => [...current, generation]);
+      // Update session in localStorage
+      setSessions((prev) => {
+        const updated = [...prev];
+        let session = updated.find((s) => s.id === activeSessionId);
+        if (!session) {
+          // Create session on first generation if none active
+          session = {
+            id: activeSessionId || genSessionId(),
+            title: generation.prompt.slice(0, 30),
+            generationIds: [],
+            createdAt: new Date().toISOString(),
+          };
+          updated.push(session);
+          if (!activeSessionId) setActiveSessionId(session.id);
+        }
+        session.generationIds.push(generation.id);
+        if (session.generationIds.length === 1) {
+          session.title = generation.prompt.slice(0, 30);
+        }
+        saveSessions(updated);
+        return updated;
+      });
+    } catch (err) {
+      restoreSnapshot(err instanceof Error ? err.message : "生成失败，请稍后再试");
+    }
   }
 
   async function handleReferenceImageChange(files: File[] | FileList | null) {
@@ -812,8 +866,8 @@ export function GeneratorStudio({
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' && !e.shiftKey) {
                       e.preventDefault();
-                      if (!isPending && prompt.trim()) {
-                        startTransition(handleGenerate);
+                      if (!isPending && (prompt.trim() || referenceImages.length > 0)) {
+                        handleSubmit();
                       }
                     }
                   }}
@@ -850,7 +904,7 @@ export function GeneratorStudio({
                 </button>
                 <button
                   type="button"
-                  onClick={() => startTransition(handleGenerate)}
+                  onClick={handleSubmit}
                   aria-label="发送"
                   disabled={isPending || (!prompt.trim() && referenceImages.length === 0)}
                   className="group relative flex size-10 items-center justify-center overflow-hidden rounded-full bg-[var(--ink)] text-white shadow-md transition-all hover:scale-105 active:scale-95 disabled:opacity-50 disabled:hover:scale-100"
