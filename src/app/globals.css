@@ -138,3 +138,220 @@ textarea {
 ::-webkit-scrollbar-track {
   background: transparent;
 }
+
+/* ===== Auth shell（登录/注册页专用） ===== */
+.auth-page {
+  background-color: var(--surface);
+  background-image:
+    radial-gradient(rgba(217, 100, 58, 0.16) 1px, transparent 1px),
+    radial-gradient(circle at 18% 16%, rgba(255, 255, 255, 0.55), transparent 26%),
+    radial-gradient(circle at 78% 20%, rgba(255, 255, 255, 0.4), transparent 24%),
+    radial-gradient(circle at 24% 82%, rgba(255, 255, 255, 0.3), transparent 24%),
+    radial-gradient(circle at 84% 74%, rgba(154, 119, 199, 0.14), transparent 22%),
+    linear-gradient(145deg, #f8f4ee 0%, #ffffff 48%, #f0e8dc 100%);
+  background-size: 12px 12px, cover, cover, cover, cover, cover;
+  background-position: 0 0, center, center, center, center, center;
+}
+
+.auth-card {
+  border-radius: 2rem;
+  border: 1px solid var(--line);
+  background: var(--card-strong);
+  box-shadow:
+    0 28px 80px rgba(94, 58, 33, 0.16),
+    0 12px 28px rgba(94, 58, 33, 0.08);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+}
+
+.auth-blob {
+  position: absolute;
+  z-index: 0;
+  border-radius: 9999px;
+  filter: blur(64px);
+  pointer-events: none;
+}
+.auth-blob--rose {
+  top: 10%;
+  left: 8%;
+  width: 11rem;
+  height: 11rem;
+  background: rgba(217, 100, 58, 0.18);
+}
+.auth-blob--amber {
+  bottom: 14%;
+  left: 18%;
+  width: 9rem;
+  height: 9rem;
+  background: rgba(241, 185, 154, 0.22);
+}
+.auth-blob--sky {
+  top: 18%;
+  right: 12%;
+  width: 10rem;
+  height: 10rem;
+  background: rgba(180, 200, 230, 0.16);
+}
+.auth-blob--violet {
+  right: 18%;
+  bottom: 10%;
+  width: 12rem;
+  height: 12rem;
+  background: rgba(154, 119, 199, 0.18);
+}
+
+.auth-eyebrow {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 9999px;
+  background: rgba(255, 252, 247, 0.5);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.auth-input {
+  height: 2.75rem;
+  padding: 0 0.875rem;
+  border-radius: 0.85rem;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.7);
+  color: var(--ink);
+  outline: none;
+  transition:
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    background-color 180ms ease;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.auth-input::placeholder {
+  color: rgba(99, 83, 71, 0.55);
+}
+.auth-input:focus {
+  border-color: var(--accent);
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 0 0 4px rgba(217, 100, 58, 0.12);
+}
+.auth-input[aria-invalid="true"] {
+  border-color: rgb(244 114 114);
+  box-shadow: 0 0 0 4px rgba(244, 114, 114, 0.14);
+}
+
+.auth-submit-btn {
+  position: relative;
+  height: 3rem;
+  width: 88%;
+  margin: 0 auto;
+  border-radius: 1.45rem;
+  border: 1px solid rgba(47, 30, 16, 0.18);
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--ink);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  box-shadow: 0 12px 28px rgba(148, 100, 60, 0.18);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition:
+    transform 200ms ease,
+    box-shadow 200ms ease,
+    background-color 200ms ease;
+  cursor: pointer;
+}
+.auth-submit-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.84);
+  box-shadow: 0 16px 34px rgba(148, 100, 60, 0.24);
+}
+.auth-submit-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.auth-submit-btn::before {
+  content: "";
+  position: absolute;
+  left: 1rem;
+  right: 1rem;
+  top: 4px;
+  height: 12px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.78);
+  filter: blur(4px);
+  pointer-events: none;
+}
+.auth-submit-btn::after {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  border-radius: 1.35rem;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  pointer-events: none;
+}
+.auth-submit-btn > span {
+  position: relative;
+  z-index: 1;
+}
+
+.auth-oauth-btn {
+  position: relative;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
+  padding: 0.85rem 1rem;
+  border-radius: 1.25rem;
+  border: 1px solid var(--line);
+  background: rgba(255, 252, 247, 0.7);
+  color: var(--ink);
+  font-size: 0.875rem;
+  font-weight: 500;
+  box-shadow: 0 8px 22px rgba(94, 58, 33, 0.08);
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    background-color 180ms ease,
+    box-shadow 180ms ease;
+}
+.auth-oauth-btn:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 14px 28px rgba(94, 58, 33, 0.12);
+}
+
+.auth-collapse {
+  border: 1px dashed var(--line);
+  border-radius: 1.1rem;
+  padding: 0.75rem 1rem;
+  background: rgba(255, 252, 247, 0.45);
+}
+.auth-collapse[open] {
+  background: rgba(255, 252, 247, 0.7);
+}
+.auth-collapse > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  list-style: none;
+  cursor: pointer;
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+}
+.auth-collapse > summary::-webkit-details-marker {
+  display: none;
+}
+.auth-collapse > summary::after {
+  content: "+";
+  font-size: 1rem;
+  color: var(--ink-soft);
+  transition: transform 180ms ease;
+}
+.auth-collapse[open] > summary::after {
+  transform: rotate(45deg);
+}

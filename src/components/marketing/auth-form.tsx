@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { ExternalLink } from "lucide-react";
+import { ArrowRight, Sparkles } from "lucide-react";
 
 type OAuthProvider = {
   type: string;
@@ -79,96 +79,114 @@ export function AuthForm({
     return `/api/auth/oauth/${providerType}?inviteCode=${encodeURIComponent(trimmed)}`;
   }
 
+  const hasOAuth = mode === "login" && oauthProviders.length > 0;
+
   return (
-    <div className="grid gap-4">
-      {/* OAuth 登录按钮 */}
-      {oauthProviders.length > 0 && mode === "login" && (
-        <div className="grid gap-3">
-          <div className="grid gap-2">
-            <label className="text-sm text-[var(--ink-soft)]">
-              邀请码
-              <span className="ml-2 text-xs text-[var(--ink-soft)]/70">
-                首次使用第三方登录时必填，老用户登录可留空
-              </span>
-            </label>
-            <input
-              value={oauthInviteCode}
-              onChange={(e) => setOauthInviteCode(e.target.value)}
-              placeholder="FOUNDING-ACCESS"
-              className="rounded-2xl border border-[var(--line)] bg-white/70 px-4 py-3 uppercase outline-none transition focus:border-[var(--accent)]"
-            />
-          </div>
-
-          {oauthProviders.map((provider) => (
-            <a
-              key={provider.type}
-              href={buildOAuthHref(provider.type)}
-              className="studio-card group flex items-center justify-center gap-3 rounded-[2rem] px-5 py-3.5 text-sm font-medium text-[var(--ink)] transition hover:-translate-y-0.5 hover:shadow-lg"
-            >
-              <ExternalLink className="size-4 text-[var(--accent)]" />
-              使用 {provider.displayName} 账号登录
-            </a>
-          ))}
-
-          <div className="flex items-center gap-4 px-2 py-2">
-            <div className="h-px flex-1 bg-[var(--line)]" />
-            <span className="text-xs text-[var(--ink-soft)]">或使用邮箱密码</span>
-            <div className="h-px flex-1 bg-[var(--line)]" />
-          </div>
-        </div>
-      )}
-
-      {/* 邮箱密码表单 */}
-      <form
-        action={handleSubmit}
-        className="studio-card noise-overlay relative grid gap-4 rounded-[2rem] p-6 md:p-8"
-      >
+    <div className="grid gap-5">
+      <form action={handleSubmit} className="grid gap-4">
         <div className="grid gap-2">
-          <label className="text-sm text-[var(--ink-soft)]">邮箱</label>
+          <label htmlFor="auth-email" className="text-xs font-medium uppercase tracking-[0.2em] text-[var(--ink-soft)]">
+            邮箱
+          </label>
           <input
+            id="auth-email"
             name="email"
             type="email"
+            autoComplete={mode === "register" ? "email" : "username"}
+            required
             placeholder="you@example.com"
-            className="rounded-2xl border border-[var(--line)] bg-white/70 px-4 py-3 outline-none transition focus:border-[var(--accent)]"
+            className="auth-input"
           />
         </div>
 
         {mode === "register" ? (
           <div className="grid gap-2">
-            <label className="text-sm text-[var(--ink-soft)]">邀请码</label>
+            <label htmlFor="auth-invite" className="text-xs font-medium uppercase tracking-[0.2em] text-[var(--ink-soft)]">
+              邀请码
+            </label>
             <input
+              id="auth-invite"
               name="inviteCode"
               defaultValue={initialInviteCode}
               placeholder="FOUNDING-ACCESS"
-              className="rounded-2xl border border-[var(--line)] bg-white/70 px-4 py-3 uppercase outline-none transition focus:border-[var(--accent)]"
+              className="auth-input uppercase"
             />
           </div>
         ) : null}
 
         <div className="grid gap-2">
-          <label className="text-sm text-[var(--ink-soft)]">密码</label>
+          <label htmlFor="auth-password" className="text-xs font-medium uppercase tracking-[0.2em] text-[var(--ink-soft)]">
+            密码
+          </label>
           <input
+            id="auth-password"
             name="password"
             type="password"
+            autoComplete={mode === "register" ? "new-password" : "current-password"}
+            required
             placeholder="至少 8 位"
-            className="rounded-2xl border border-[var(--line)] bg-white/70 px-4 py-3 outline-none transition focus:border-[var(--accent)]"
+            className="auth-input"
           />
         </div>
 
         {error ? (
-          <div className="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-600">
+          <div
+            role="alert"
+            className="rounded-2xl border border-rose-200/80 bg-rose-50/80 px-4 py-3 text-sm text-rose-600 backdrop-blur"
+          >
             {error}
           </div>
         ) : null}
 
-        <button
-          type="submit"
-          disabled={isPending}
-          className="rounded-full bg-[var(--ink)] px-5 py-3 text-sm font-medium text-white transition hover:-translate-y-0.5 disabled:opacity-60"
-        >
-          {isPending ? "处理中..." : mode === "register" ? "注册并进入创作台" : "登录进入创作台"}
+        <button type="submit" disabled={isPending} className="auth-submit-btn mt-2">
+          <span className="flex items-center justify-center gap-2">
+            {isPending
+              ? "处理中..."
+              : mode === "register"
+                ? "注册并进入创作台"
+                : "登录进入创作台"}
+            {!isPending ? <ArrowRight className="size-4" /> : null}
+          </span>
         </button>
       </form>
+
+      {hasOAuth ? (
+        <>
+          <div className="flex items-center gap-3 px-1 py-2 text-[11px] uppercase tracking-[0.28em] text-[var(--ink-soft)]/80">
+            <span className="h-px flex-1 bg-[var(--line)]" />
+            或使用第三方登录
+            <span className="h-px flex-1 bg-[var(--line)]" />
+          </div>
+
+          <div className="grid gap-3">
+            {oauthProviders.map((provider) => (
+              <a
+                key={provider.type}
+                href={buildOAuthHref(provider.type)}
+                className="auth-oauth-btn"
+              >
+                <Sparkles className="size-4 text-[var(--accent)]" />
+                <span>使用 {provider.displayName} 登录</span>
+              </a>
+            ))}
+
+            <details className="auth-collapse">
+              <summary>
+                <span>需要邀请码？首次第三方登录请填写</span>
+              </summary>
+              <input
+                value={oauthInviteCode}
+                onChange={(event) => setOauthInviteCode(event.target.value)}
+                placeholder="FOUNDING-ACCESS"
+                className="auth-input mt-3 w-full uppercase"
+              />
+              <p className="mt-2 text-[11px] leading-5 text-[var(--ink-soft)]/80">
+                老用户登录可留空；首次绑定第三方账号时邀请码用于消耗名额。
+              </p>
+            </details>
+          </div>
+        </>
+      ) : null}
     </div>
   );
 }

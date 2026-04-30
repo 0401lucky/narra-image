@@ -1,7 +1,11 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 import { AuthForm } from "@/components/marketing/auth-form";
-import { SiteHeader } from "@/components/marketing/site-header";
+import { AuthShell } from "@/components/marketing/auth-shell";
+import { fromPrismaRole } from "@/lib/prisma-mappers";
+import { getCurrentUserRecord } from "@/lib/server/current-user";
+import { listFeaturedWorksPage } from "@/lib/server/works";
 
 export const dynamic = "force-dynamic";
 
@@ -12,40 +16,52 @@ type RegisterPageProps = {
 };
 
 export default async function RegisterPage({ searchParams }: RegisterPageProps) {
+  const user = await getCurrentUserRecord();
+  if (user) {
+    redirect(fromPrismaRole(user.role) === "admin" ? "/admin" : "/create");
+  }
+
   const resolvedSearchParams = searchParams ? await searchParams : undefined;
-  const initialInviteCode = typeof resolvedSearchParams?.inviteCode === "string"
-    ? resolvedSearchParams.inviteCode
-    : "";
+  const initialInviteCode =
+    typeof resolvedSearchParams?.inviteCode === "string"
+      ? resolvedSearchParams.inviteCode
+      : "";
+
+  const featuredPage = await listFeaturedWorksPage({ limit: 1 }).catch(() => ({
+    hasMore: false,
+    items: [] as Array<{ authorName: string; image: string; title: string }>,
+    nextCursor: null,
+  }));
+  const featured = featuredPage.items[0] ?? null;
+  const cover = featured
+    ? {
+        authorName: featured.authorName,
+        image: featured.image,
+        title: featured.title,
+      }
+    : null;
 
   return (
-    <main className="pb-20">
-      <SiteHeader currentUser={null} />
-
-      <section className="mx-auto grid max-w-6xl gap-8 px-5 pt-10 md:px-8 xl:grid-cols-[0.94fr_1.06fr]">
-        <div className="space-y-5">
-          <p className="text-xs uppercase tracking-[0.3em] text-[var(--ink-soft)]">
-            Invitation Only
-          </p>
-          <h1 className="editorial-title text-6xl leading-none font-semibold">
-            第一批用户，
-            <br />
-            值得被认真对待。
-          </h1>
-          <p className="max-w-xl text-base leading-8 text-[var(--ink-soft)]">
-            注册成功会默认拿到 500 积分。邀请码由后台生成，
-            这让你能控制产品节奏，也便于后续做精细化用户运营。
-            如果你使用的是管理员引导邮箱，首次注册时邀请码也可以留空。
-          </p>
-          <div className="studio-card rounded-[2rem] p-5 text-sm leading-7 text-[var(--ink-soft)]">
-            已经有账号？
-            <Link href="/login" className="ml-2 font-medium text-[var(--accent)]">
-              直接登录
-            </Link>
-          </div>
-        </div>
-
-        <AuthForm initialInviteCode={initialInviteCode} mode="register" />
-      </section>
-    </main>
+    <AuthShell
+      eyebrow="Join Narra"
+      title="First in line."
+      description="第一批用户值得被认真对待。注册成功默认 500 积分；邀请码由后台生成，可前往邀请码领取页申领。"
+      cover={cover}
+      coverCaption="Welcome Aboard"
+      footnote={
+        <span className="inline-flex flex-wrap items-center justify-center gap-x-2 gap-y-1">
+          <span>已经有账号？</span>
+          <Link href="/login" className="font-medium text-[var(--accent)]">
+            直接登录
+          </Link>
+          <span className="text-[var(--ink-soft)]/50">/</span>
+          <Link href="/invite-claim" className="font-medium text-[var(--accent)]">
+            申领邀请码
+          </Link>
+        </span>
+      }
+    >
+      <AuthForm mode="register" initialInviteCode={initialInviteCode} />
+    </AuthShell>
   );
 }
