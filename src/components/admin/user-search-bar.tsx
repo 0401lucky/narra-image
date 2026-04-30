@@ -30,7 +30,7 @@ export function UserSearchBar({ initialValue }: { initialValue: string }) {
         <input
           value={value}
           onChange={(e) => setValue(e.target.value)}
-          placeholder="搜索用户邮箱…"
+          placeholder="搜索用户邮箱或昵称…"
           className="w-full rounded-2xl border border-[var(--line)] bg-white/70 py-3 pl-11 pr-10 outline-none transition-all focus:border-[var(--accent)]"
         />
         {value && (

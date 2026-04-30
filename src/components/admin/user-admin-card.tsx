@@ -12,6 +12,7 @@ type UserData = {
   email: string;
   generationCount: number;
   id: string;
+  nickname: string | null;
   role: "admin" | "user";
 };
 
@@ -64,7 +65,12 @@ export function UserAdminCard({
             <span className="text-[10px] text-[var(--ink-soft)]">（当前登录）</span>
           )}
         </div>
-        <h2 className="mt-2 text-lg font-medium truncate">{user.email}</h2>
+        <h2 className="mt-2 text-lg font-medium truncate">
+          {user.nickname?.trim() || user.email}
+        </h2>
+        {user.nickname?.trim() && (
+          <p className="mt-0.5 text-xs text-[var(--ink-soft)] truncate">{user.email}</p>
+        )}
         <p className="mt-1 text-xs text-[var(--ink-soft)]">
           注册于 {new Date(user.createdAt).toLocaleString("zh-CN")}
         </p>

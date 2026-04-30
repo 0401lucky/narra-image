@@ -30,7 +30,12 @@ export default async function AdminUsersPage({
   const search = typeof params.q === "string" ? params.q.trim() : "";
 
   const where = search
-    ? { email: { contains: search, mode: "insensitive" as const } }
+    ? {
+        OR: [
+          { email: { contains: search, mode: "insensitive" as const } },
+          { nickname: { contains: search, mode: "insensitive" as const } },
+        ],
+      }
     : {};
 
   const [users, totalCount] = await Promise.all([
@@ -43,6 +48,7 @@ export default async function AdminUsersPage({
         credits: true,
         email: true,
         id: true,
+        nickname: true,
         role: true,
       },
       skip: (page - 1) * PAGE_SIZE,
@@ -59,6 +65,7 @@ export default async function AdminUsersPage({
     email: user.email,
     generationCount: user._count.generations,
     id: user.id,
+    nickname: user.nickname,
     role: fromPrismaRole(user.role),
   }));
 
