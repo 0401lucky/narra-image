@@ -4,6 +4,8 @@ import { AuthForm } from "@/components/marketing/auth-form";
 import { SiteHeader } from "@/components/marketing/site-header";
 import { getEnabledOAuthProviders } from "@/lib/auth/oauth-config";
 
+export const dynamic = "force-dynamic";
+
 type LoginPageProps = {
   searchParams?: Promise<{
     error?: string;

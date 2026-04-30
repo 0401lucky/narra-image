@@ -3,6 +3,8 @@ import Link from "next/link";
 import { AuthForm } from "@/components/marketing/auth-form";
 import { SiteHeader } from "@/components/marketing/site-header";
 
+export const dynamic = "force-dynamic";
+
 type RegisterPageProps = {
   searchParams?: Promise<{
     inviteCode?: string;
