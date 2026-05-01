@@ -3,7 +3,7 @@
 /* eslint-disable @next/next/no-img-element */
 
 import { Sparkles, WandSparkles, Download, ZoomIn, X, ImagePlus, Settings2, Send, Paperclip, SquarePen, PanelLeftClose, PanelLeftOpen, Trash2, MessageSquare } from "lucide-react";
-import { useRef, useState, useTransition, useEffect } from "react";
+import { useMemo, useRef, useState, useTransition, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 import {
@@ -316,6 +316,29 @@ export function GeneratorStudio({
       pollers.clear();
     };
   }, []);
+
+  // 右侧历史图片栏数据：合并初始历史 + 当前会话新生成的图，按 id 去重，按 generation 时间倒序。
+  // 数据来源直接复用 page.tsx 已加载的 initialGenerations，无需额外接口。
+  const historyImages = useMemo(() => {
+    const seen = new Set<string>();
+    const merged: Array<{ id: string; url: string; createdAt: string }> = [];
+    for (const generation of [...initialGenerations, ...sessionGenerations]) {
+      if (generation.status !== "succeeded") continue;
+      for (const image of generation.images) {
+        if (seen.has(image.id)) continue;
+        seen.add(image.id);
+        merged.push({
+          createdAt: generation.createdAt,
+          id: image.id,
+          url: image.url,
+        });
+      }
+    }
+    merged.sort(
+      (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    );
+    return merged;
+  }, [initialGenerations, sessionGenerations]);
 
   const sortedGenerations = sessionGenerations;
   const sizeSelectValue = customSizeMode ? "custom" : getSizeSelectValue(size);
@@ -1239,6 +1262,52 @@ export function GeneratorStudio({
         </div>
       )}
       </div>
+
+      {/* 右侧历史图片栏：自动向上滚动，悬停暂停，点击复用 zoomedImage 放大遮罩 */}
+      <aside className="hidden md:flex h-full w-60 shrink-0 flex-col border-l border-[var(--line)] bg-[var(--surface)] overflow-hidden">
+        <div className="flex items-center justify-between border-b border-[var(--line)] px-4 py-3">
+          <h3 className="text-xs font-medium text-[var(--ink)]">历史图片</h3>
+          <span className="text-[10px] text-[var(--ink-soft)]/70">悬停暂停</span>
+        </div>
+        {historyImages.length === 0 ? (
+          <div className="flex flex-1 items-center justify-center px-4 text-center">
+            <p className="text-xs leading-relaxed text-[var(--ink-soft)]/70">
+              还没有作品
+              <br />
+              先生成一张吧
+            </p>
+          </div>
+        ) : (
+          <div
+            className="history-rail flex-1 overflow-hidden"
+            style={
+              {
+                "--history-rail-duration": `${Math.max(40, historyImages.length * 3)}s`,
+              } as React.CSSProperties
+            }
+          >
+            <div className="history-rail-track flex flex-col gap-2 px-3 py-3">
+              {[...historyImages, ...historyImages].map((image, index) => (
+                <button
+                  key={`${image.id}_${index}`}
+                  type="button"
+                  onClick={() => setZoomedImage(image.url)}
+                  className="group block w-full overflow-hidden rounded-xl border border-[var(--line)] bg-[var(--surface-strong)]/40 transition hover:border-[var(--accent)]"
+                  title="点击放大查看"
+                >
+                  <img
+                    src={getThumbUrl(image.url, 256)}
+                    alt="历史图片"
+                    loading="lazy"
+                    decoding="async"
+                    className="block h-auto w-full object-cover transition duration-300 group-hover:scale-[1.03]"
+                  />
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+      </aside>
     </div>
   );
 }
