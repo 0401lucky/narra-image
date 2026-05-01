@@ -6,6 +6,7 @@ import { useEffect, useEffectEvent, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowUpRight, Heart, User } from "lucide-react";
+import { motion } from "motion/react";
 
 import { getThumbUrl } from "@/lib/image-url";
 
@@ -146,9 +147,16 @@ export function FeaturedGallery({
   return (
     <>
       <div className="columns-1 space-y-5 gap-5 sm:columns-2 lg:columns-3 xl:columns-4">
-        {items.map((work) => (
-          <article
+        {items.map((work, index) => (
+          <motion.article
             key={work.id}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{
+              duration: 0.28,
+              ease: "easeOut",
+              delay: Math.min((index % 24) * 0.025, 0.3),
+            }}
             className="studio-card group relative block break-inside-avoid overflow-hidden rounded-[1.5rem]"
           >
             <Link href={`/works/${work.id}`} className="block">
@@ -205,7 +213,7 @@ export function FeaturedGallery({
               <Heart className={`size-4 ${work.likedByMe ? "fill-current" : ""}`} />
               {work.likeCount}
             </button>
-          </article>
+          </motion.article>
         ))}
       </div>
 

@@ -5,6 +5,7 @@ import { getCheckInSummary } from "@/lib/benefits/config";
 import { cn } from "@/lib/utils";
 import { LogoutButton } from "@/components/auth/logout-button";
 import { CheckInButton } from "@/components/benefits/check-in-button";
+import { HeaderShell } from "@/components/marketing/header-shell";
 import { getThumbUrl } from "@/lib/image-url";
 
 type SiteHeaderProps = {
@@ -39,12 +40,13 @@ export async function SiteHeader({
   const displayName = currentUser?.nickname || undefined;
 
   return (
-    <header
-      className={cn(
-        "mx-auto w-full max-w-7xl px-5 py-5 md:px-8",
-        className,
-      )}
-    >
+    <HeaderShell>
+      <header
+        className={cn(
+          "mx-auto w-full max-w-7xl px-5 py-5 md:px-8",
+          className,
+        )}
+      >
       <div className="flex items-center justify-between gap-4">
         <Link href="/" className="flex items-center gap-3">
           <span className="rounded-full border border-[var(--line)] bg-[var(--surface-strong)]/50 px-3 py-1 text-xs uppercase tracking-[0.35em] text-[var(--ink-soft)]">
@@ -128,6 +130,7 @@ export async function SiteHeader({
           </Link>
         ))}
       </nav>
-    </header>
+      </header>
+    </HeaderShell>
   );
 }

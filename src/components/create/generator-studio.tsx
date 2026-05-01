@@ -5,6 +5,7 @@
 import { Sparkles, WandSparkles, Download, ZoomIn, X, ImagePlus, Settings2, Send, Paperclip, SquarePen, PanelLeftClose, PanelLeftOpen, Trash2, MessageSquare } from "lucide-react";
 import { useMemo, useRef, useState, useTransition, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { AnimatePresence, motion } from "motion/react";
 
 import {
   type GenerationModeration,
@@ -21,6 +22,7 @@ import {
   parseImageSize,
 } from "@/lib/generation/sizes";
 import { getThumbUrl } from "@/lib/image-url";
+import { Alert } from "@/components/ui/alert";
 
 type ViewerUser = {
   credits: number;
@@ -744,7 +746,7 @@ export function GeneratorStudio({
                   className="shrink-0 rounded-md p-1 text-[var(--ink-soft)] opacity-0 transition group-hover:opacity-100 hover:bg-rose-50 hover:text-rose-500"
                   title="删除会话"
                 >
-                  <Trash2 className="size-3" />
+                  <Trash2 className="size-3.5" />
                 </button>
               </div>
             ))
@@ -783,7 +785,14 @@ export function GeneratorStudio({
               </div>
             ) : (
               sortedGenerations.map((generation) => (
-                <div key={generation.id} id={`gen-${generation.id}`} className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <motion.div
+                  key={generation.id}
+                  id={`gen-${generation.id}`}
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4, ease: "easeOut" }}
+                  className="space-y-6"
+                >
                 <div className="flex gap-4">
                   <div className="shrink-0 flex size-9 items-center justify-center rounded-full bg-[var(--surface-strong)] border border-[var(--line)] text-sm font-semibold">
                     You
@@ -861,7 +870,7 @@ export function GeneratorStudio({
                                   onClick={() => void handleUseImageForEdit(image.url)}
                                   className="flex items-center gap-1.5 rounded-full bg-[var(--surface-strong)] px-3 py-1.5 text-xs font-medium text-[var(--ink)] border border-[var(--line)] transition hover:border-[var(--accent)] hover:text-[var(--accent)]"
                                 >
-                                  <ImagePlus className="size-3" />
+                                  <ImagePlus className="size-3.5" />
                                   加入编辑
                                 </button>
                                 <div className="flex items-center gap-1">
@@ -894,7 +903,7 @@ export function GeneratorStudio({
                     )}
                   </div>
                 </div>
-              </div>
+              </motion.div>
             ))
           )}
           
@@ -919,7 +928,7 @@ export function GeneratorStudio({
                       onClick={() => removeReferenceImage(referenceImage.id)}
                       className="absolute right-1 top-1 rounded-full bg-black/60 p-1 text-white opacity-0 transition-opacity hover:bg-rose-500 group-hover:opacity-100"
                     >
-                      <X className="size-3" />
+                      <X className="size-3.5" />
                     </button>
                     <div className="absolute inset-x-0 bottom-0 bg-black/60 py-0.5 text-center text-[10px] text-white">
                       参考图 {index + 1}
@@ -931,9 +940,10 @@ export function GeneratorStudio({
 
             {/* 错误提示 */}
             {error && (
-              <div className="mx-5 mt-4 rounded-xl border border-rose-500/20 bg-rose-500/10 px-4 py-2 text-sm text-rose-400 flex items-center justify-between">
-                <span>{error}</span>
-                <button onClick={() => setError(null)}><X className="size-4" /></button>
+              <div className="mx-5 mt-4">
+                <Alert variant="error" onDismiss={() => setError(null)}>
+                  {error}
+                </Alert>
               </div>
             )}
 
@@ -989,7 +999,7 @@ export function GeneratorStudio({
                   onClick={handleSubmit}
                   aria-label="发送"
                   disabled={isPending || (!prompt.trim() && referenceImages.length === 0)}
-                  className="group relative flex size-10 items-center justify-center overflow-hidden rounded-full bg-[var(--ink)] text-white shadow-md transition-all hover:scale-105 active:scale-95 disabled:opacity-50 disabled:hover:scale-100"
+                  className="group relative flex size-10 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-[var(--ink)] text-white shadow-md transition-all duration-200 ease-out hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-md"
                 >
                   <div className="absolute inset-0 bg-gradient-to-tr from-[var(--accent)] to-[var(--accent-soft)] opacity-0 transition-opacity group-hover:opacity-100" />
                   {isPending ? (
@@ -1086,8 +1096,16 @@ export function GeneratorStudio({
             </div>
 
             {/* 高级设置面板 (展开) */}
-            {showSettings && (
-              <div className="border-t border-[var(--line)]/50 bg-[var(--surface)]/50 p-5 rounded-b-[2rem] animate-in slide-in-from-top-2">
+            <AnimatePresence>
+              {showSettings && (
+                <motion.div
+                  key="advanced-settings"
+                  initial={{ opacity: 0, y: -8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.2, ease: "easeOut" }}
+                  className="overflow-hidden rounded-b-[2rem] border-t border-[var(--line)]/50 bg-[var(--surface)]/50 p-5"
+                >
                 <div className="grid gap-6 md:grid-cols-2">
                   <div className="space-y-4">
                     {sizeSelectValue === "custom" && (
@@ -1210,57 +1228,70 @@ export function GeneratorStudio({
                 <p className="mt-5 text-[11px] leading-relaxed text-[var(--ink-soft)]">
                   2K/4K 属于高分辨率请求，真实生效情况由当前渠道和模型决定；超大尺寸会更慢，失败时可切回 1K 或自动。
                 </p>
-              </div>
-            )}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </div>
       </div>
 
       {/* 图片放大预览遮罩 */}
-      {zoomedImage && (
-        <div 
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4 animate-in fade-in"
-          onClick={() => setZoomedImage(null)}
-        >
-          <button 
-            type="button"
-            className="absolute top-6 right-6 text-white/70 transition hover:text-white hover:scale-110"
+      <AnimatePresence>
+        {zoomedImage && (
+          <motion.div
+            key="zoomed-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-md"
             onClick={() => setZoomedImage(null)}
           >
-            <X className="size-8" />
-          </button>
-          <img
-            src={zoomedImage}
-            alt="Zoomed"
-            decoding="async"
-            className="max-h-[90vh] max-w-[90vw] rounded-xl object-contain shadow-2xl animate-in zoom-in-95"
-            onClick={(e) => e.stopPropagation()}
-          />
-          <div className="absolute bottom-8 flex items-center gap-4">
             <button
-              onClick={(e) => {
-                e.stopPropagation();
-                handleDownload(zoomedImage);
-              }}
-              className="flex items-center gap-2 rounded-full bg-white/20 px-6 py-3 text-sm font-medium text-white backdrop-blur-md shadow-lg transition hover:bg-[var(--accent)] hover:scale-105"
+              type="button"
+              className="absolute right-6 top-6 cursor-pointer text-white/70 transition hover:text-white"
+              onClick={() => setZoomedImage(null)}
+              aria-label="关闭"
             >
-              <Download className="size-4" />
-              保存高清原图
+              <X className="size-8" />
             </button>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                handleUseImageForEdit(zoomedImage);
-                setZoomedImage(null);
-              }}
-              className="flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-medium text-black shadow-lg transition hover:bg-[var(--accent)] hover:text-white hover:scale-105"
-            >
-              <ImagePlus className="size-4" />
-              加入编辑
-            </button>
-          </div>
-        </div>
-      )}
+            <motion.img
+              initial={{ scale: 0.96, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.96, opacity: 0 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+              src={zoomedImage}
+              alt="放大查看"
+              decoding="async"
+              className="max-h-[90vh] max-w-[90vw] rounded-xl object-contain shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            />
+            <div className="absolute bottom-8 flex items-center gap-4">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDownload(zoomedImage);
+                }}
+                className="inline-flex cursor-pointer items-center gap-2 rounded-full bg-white/20 px-6 py-3 text-sm font-medium text-white shadow-lg backdrop-blur-md transition-all duration-200 ease-out hover:bg-[var(--accent)] hover:shadow-xl"
+              >
+                <Download className="size-4" />
+                保存高清原图
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleUseImageForEdit(zoomedImage);
+                  setZoomedImage(null);
+                }}
+                className="inline-flex cursor-pointer items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-medium text-black shadow-lg transition-all duration-200 ease-out hover:bg-[var(--accent)] hover:text-white hover:shadow-xl"
+              >
+                <ImagePlus className="size-4" />
+                加入编辑
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
       </div>
 
       {/* 右侧历史图片栏：自动向上滚动，悬停暂停，点击复用 zoomedImage 放大遮罩 */}
