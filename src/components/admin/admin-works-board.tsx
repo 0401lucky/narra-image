@@ -13,6 +13,7 @@ import { getWorkShowcaseStatusLabel } from "@/lib/work-showcase";
 import { ImageLightbox } from "@/components/works/image-lightbox";
 import { PromptModal } from "@/components/works/prompt-modal";
 import { WorkStatusBadge } from "@/components/works/work-showcase-controls";
+import { getThumbUrl } from "@/lib/image-url";
 
 type SectionConfig = {
   empty: string;
@@ -158,8 +159,10 @@ export function AdminWorksBoard({ works }: { works: SerializedAdminWork[] }) {
                         className="group relative shrink-0 overflow-hidden rounded-[1.3rem] border border-[var(--line)]"
                       >
                         <img
-                          src={work.url}
+                          src={getThumbUrl(work.url, 256)}
                           alt="作品缩略图"
+                          loading="lazy"
+                          decoding="async"
                           className="size-32 object-cover transition duration-500 group-hover:scale-[1.04]"
                         />
                         <span className="absolute right-2 top-2 rounded-full bg-black/55 p-1.5 text-white opacity-0 transition group-hover:opacity-100">

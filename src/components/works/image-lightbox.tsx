@@ -38,6 +38,7 @@ export function ImageLightbox({
         <img
           src={src}
           alt={alt}
+          decoding="async"
           className="max-h-[82vh] max-w-[90vw] rounded-[1.5rem] object-contain shadow-2xl"
         />
         {children ? <div>{children}</div> : null}

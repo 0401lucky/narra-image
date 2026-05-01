@@ -1,5 +1,7 @@
 "use client";
 
+/* eslint-disable @next/next/no-img-element */
+
 import { Sparkles, WandSparkles, Download, ZoomIn, X, ImagePlus, Settings2, Send, Paperclip, SquarePen, PanelLeftClose, PanelLeftOpen, Trash2, MessageSquare } from "lucide-react";
 import { useRef, useState, useTransition, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -18,6 +20,7 @@ import {
   normalizeGenerationSize,
   parseImageSize,
 } from "@/lib/generation/sizes";
+import { getThumbUrl } from "@/lib/image-url";
 
 type ViewerUser = {
   credits: number;
@@ -776,8 +779,10 @@ export function GeneratorStudio({
                           {getGenerationSourceImageUrls(generation).map((url, index) => (
                             <img
                               key={`${url}_${index}`}
-                              src={url}
+                              src={getThumbUrl(url, 192)}
                               alt="Reference"
+                              loading="lazy"
+                              decoding="async"
                               className="h-24 w-auto rounded-lg border border-[var(--line)] object-cover shadow-sm"
                             />
                           ))}
@@ -818,8 +823,10 @@ export function GeneratorStudio({
                                 style={getGenerationAspectRatio(generation.size) ? { aspectRatio: getGenerationAspectRatio(generation.size) } : undefined}
                               >
                                 <img
-                                  src={image.url}
+                                  src={getThumbUrl(image.url, 640)}
                                   alt="生成结果"
+                                  loading="lazy"
+                                  decoding="async"
                                   className="size-full object-cover cursor-pointer transition-transform duration-300 hover:scale-[1.02]"
                                   onClick={() => setZoomedImage(image.url)}
                                 />
@@ -1199,11 +1206,12 @@ export function GeneratorStudio({
           >
             <X className="size-8" />
           </button>
-          <img 
-            src={zoomedImage} 
-            alt="Zoomed" 
+          <img
+            src={zoomedImage}
+            alt="Zoomed"
+            decoding="async"
             className="max-h-[90vh] max-w-[90vw] rounded-xl object-contain shadow-2xl animate-in zoom-in-95"
-            onClick={(e) => e.stopPropagation()} 
+            onClick={(e) => e.stopPropagation()}
           />
           <div className="absolute bottom-8 flex items-center gap-4">
             <button

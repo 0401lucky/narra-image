@@ -65,6 +65,7 @@ export function WorkDetailPanel({
             <img
               src={work.url}
               alt="作品图片"
+              decoding="async"
               className="mx-auto max-h-[56vh] w-auto max-w-full object-contain transition duration-500 group-hover:scale-[1.01] md:max-h-[62vh]"
             />
             <span className="absolute right-4 top-4 rounded-full bg-black/55 p-2 text-white opacity-0 transition group-hover:opacity-100">

@@ -11,6 +11,7 @@ import type { SerializedWork } from "@/lib/prisma-mappers";
 import { downloadImage } from "@/components/works/download-image";
 import { ImageLightbox } from "@/components/works/image-lightbox";
 import { PromptModal } from "@/components/works/prompt-modal";
+import { getThumbUrl } from "@/lib/image-url";
 import {
   WorkShowcaseControls,
   WorkStatusBadge,
@@ -85,8 +86,10 @@ export function MyWorksBoard({ works }: { works: SerializedWork[] }) {
               className="group relative overflow-hidden rounded-[1.25rem] border border-[var(--line)] bg-[var(--surface-strong)]/40"
             >
               <img
-                src={work.url}
+                src={getThumbUrl(work.url, 640)}
                 alt="作品预览"
+                loading="lazy"
+                decoding="async"
                 className="aspect-[3/4] w-full object-cover transition duration-500 group-hover:scale-[1.03]"
               />
               <div className="absolute inset-0 bg-black/0 transition group-hover:bg-black/20" />

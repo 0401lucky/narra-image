@@ -1,9 +1,13 @@
 "use client";
 
+/* eslint-disable @next/next/no-img-element */
+
 import type { GenerationImage, GenerationJob, User } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { X } from "lucide-react";
+
+import { getThumbUrl } from "@/lib/image-url";
 
 type GenerationAdminJob = GenerationJob & {
   images: GenerationImage[];
@@ -230,10 +234,12 @@ export function GenerationAdminCard({ job }: { job: GenerationAdminJob }) {
     <article className="studio-card flex flex-col xl:flex-row gap-5 p-5 rounded-[1.8rem]">
       {job.images && job.images[0] ? (
         <div className="shrink-0 flex justify-center">
-          <img 
-            src={job.images[0].url} 
-            alt="Thumbnail" 
-            className="size-32 xl:size-40 rounded-xl object-cover cursor-pointer hover:scale-105 transition border border-[var(--line)] shadow-sm" 
+          <img
+            src={getThumbUrl(job.images[0].url, 384)}
+            alt="Thumbnail"
+            loading="lazy"
+            decoding="async"
+            className="size-32 xl:size-40 rounded-xl object-cover cursor-pointer hover:scale-105 transition border border-[var(--line)] shadow-sm"
             onClick={() => setZoomedImage(job.images[0].url)}
           />
         </div>
@@ -294,11 +300,12 @@ export function GenerationAdminCard({ job }: { job: GenerationAdminJob }) {
           >
             <X className="size-8" />
           </button>
-          <img 
-            src={zoomedImage} 
-            alt="Zoomed" 
+          <img
+            src={zoomedImage}
+            alt="Zoomed"
+            decoding="async"
             className="max-h-[90vh] max-w-[90vw] rounded-xl object-contain shadow-2xl"
-            onClick={(e) => e.stopPropagation()} 
+            onClick={(e) => e.stopPropagation()}
           />
         </div>
       )}

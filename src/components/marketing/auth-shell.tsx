@@ -41,7 +41,9 @@ export function AuthShell({
       </Link>
 
       <div className="relative z-10 flex min-h-svh items-center justify-center px-4 py-12 sm:px-6 md:py-16 lg:px-8">
-        <div className="auth-card relative grid w-full max-w-[58rem] overflow-hidden lg:min-h-[39rem] lg:grid-cols-[minmax(0,28rem)_minmax(0,1fr)]">
+        <div className="auth-card relative grid w-full max-w-[58rem] overflow-hidden lg:min-h-[39rem] lg:grid-cols-[minmax(0,1fr)_minmax(0,28rem)]">
+          <AuthCover work={cover} caption={coverCaption} placement="left" />
+
           <section className="flex flex-col gap-6 px-6 py-7 sm:px-10 sm:py-9">
             <div className="flex items-center gap-3">
               <span className="flex size-10 items-center justify-center rounded-2xl border border-[var(--line)] bg-[var(--surface-strong)]/70 text-[var(--accent)]">
@@ -87,8 +89,6 @@ export function AuthShell({
               </p>
             ) : null}
           </section>
-
-          <AuthCover work={cover} caption={coverCaption} />
         </div>
       </div>
     </main>

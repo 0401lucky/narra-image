@@ -7,6 +7,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowUpRight, Heart, User } from "lucide-react";
 
+import { getThumbUrl } from "@/lib/image-url";
+
 type Work = {
   authorAvatar: string | null;
   authorName: string;
@@ -151,8 +153,10 @@ export function FeaturedGallery({
           >
             <Link href={`/works/${work.id}`} className="block">
               <img
-                src={work.image}
+                src={getThumbUrl(work.image, 640)}
                 alt={work.title}
+                loading="lazy"
+                decoding="async"
                 className="w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[var(--ink)]/85 via-[var(--ink)]/20 to-transparent opacity-70 transition-opacity duration-300 group-hover:opacity-100" />
@@ -162,8 +166,10 @@ export function FeaturedGallery({
                     <div className="size-6 shrink-0 overflow-hidden rounded-full border border-white/30 bg-white/15">
                       {work.authorAvatar ? (
                         <img
-                          src={work.authorAvatar}
+                          src={getThumbUrl(work.authorAvatar, 48)}
                           alt={work.authorName}
+                          loading="lazy"
+                          decoding="async"
                           className="size-full object-cover"
                         />
                       ) : (

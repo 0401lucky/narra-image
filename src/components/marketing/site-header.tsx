@@ -5,6 +5,7 @@ import { getCheckInSummary } from "@/lib/benefits/config";
 import { cn } from "@/lib/utils";
 import { LogoutButton } from "@/components/auth/logout-button";
 import { CheckInButton } from "@/components/benefits/check-in-button";
+import { getThumbUrl } from "@/lib/image-url";
 
 type SiteHeaderProps = {
   currentUser: {
@@ -91,8 +92,10 @@ export async function SiteHeader({
               >
                 {currentUser.avatarUrl ? (
                   <img
-                    src={currentUser.avatarUrl}
+                    src={getThumbUrl(currentUser.avatarUrl, 64)}
                     alt="头像"
+                    loading="lazy"
+                    decoding="async"
                     className="size-full object-cover"
                   />
                 ) : (

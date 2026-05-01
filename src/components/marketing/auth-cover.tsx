@@ -1,5 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 
+import { getThumbUrl } from "@/lib/image-url";
+
 type AuthCoverWork = {
   authorName: string;
   image: string;
@@ -8,16 +10,26 @@ type AuthCoverWork = {
 
 type AuthCoverProps = {
   caption?: string;
+  placement?: "left" | "right";
   work: AuthCoverWork | null;
 };
 
-export function AuthCover({ caption, work }: AuthCoverProps) {
+export function AuthCover({
+  caption,
+  placement = "right",
+  work,
+}: AuthCoverProps) {
+  const dividerClass = placement === "left" ? "border-r" : "border-l";
+
   return (
-    <section className="relative hidden overflow-hidden border-l border-[var(--line)] bg-[var(--surface-strong)] lg:flex">
+    <section
+      className={`relative hidden overflow-hidden ${dividerClass} border-[var(--line)] bg-[var(--surface-strong)] lg:flex`}
+    >
       {work?.image ? (
         <img
-          src={work.image}
+          src={getThumbUrl(work.image, 1080)}
           alt={work.title}
+          decoding="async"
           className="absolute inset-0 size-full object-cover"
         />
       ) : (
