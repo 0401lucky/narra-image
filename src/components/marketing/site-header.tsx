@@ -50,7 +50,7 @@ export async function SiteHeader({
       >
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <Link href="/" className="flex items-center gap-3">
+          <Link href="/" prefetch={false} className="flex items-center gap-3">
             <span className="rounded-full border border-[var(--line)] bg-[var(--surface-strong)]/50 px-3 py-1 text-xs uppercase tracking-[0.35em] text-[var(--ink-soft)]">
               Narra
             </span>
@@ -82,6 +82,7 @@ export async function SiteHeader({
             <Link
               key={link.href}
               href={link.href}
+              prefetch={false}
               className="ring-link rounded-full px-4 py-2 text-sm text-[var(--ink-soft)] hover:text-[var(--ink)]"
             >
               {link.label}
@@ -111,6 +112,7 @@ export async function SiteHeader({
               {/* 用户头像 — 点击跳转设置页 */}
               <Link
                 href="/settings"
+                prefetch={false}
                 className="group relative flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-[var(--line)] bg-[var(--surface-strong)] transition hover:border-[var(--accent)]"
                 title={displayName ?? "个人设置"}
               >
@@ -134,6 +136,7 @@ export async function SiteHeader({
           ) : null}
           <Link
             href={currentUser ? "/create" : "/login"}
+            prefetch={false}
             className="rounded-full bg-[var(--ink)] px-5 py-2.5 text-sm font-semibold text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-[var(--accent)]"
           >
             {currentUser ? "继续创作" : "登录开启"}
@@ -146,6 +149,7 @@ export async function SiteHeader({
           <Link
             key={link.href}
             href={link.href}
+            prefetch={false}
             className="ring-link rounded-full px-4 py-2 text-sm text-[var(--ink-soft)] hover:text-[var(--ink)]"
           >
             {link.label}

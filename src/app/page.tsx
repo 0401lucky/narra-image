@@ -8,10 +8,15 @@ import { FeaturedGallery } from "@/components/marketing/featured-gallery";
 
 export const dynamic = "force-dynamic";
 
+const FEATURED_HOME_PAGE_SIZE = 16;
+
 export default async function Home() {
   const user = await getCurrentUserRecord();
   const currentUser = user ? serializeUser(user) : null;
-  const featuredPage = await listFeaturedWorksPage({ limit: 24, viewerId: user?.id }).catch(() => ({
+  const featuredPage = await listFeaturedWorksPage({
+    limit: FEATURED_HOME_PAGE_SIZE,
+    viewerId: user?.id,
+  }).catch(() => ({
     hasMore: false,
     items: [],
     nextCursor: null,
@@ -34,6 +39,7 @@ export default async function Home() {
           </div>
           <Link
             href="/create"
+            prefetch={false}
             className="rounded-full bg-[var(--ink)] px-6 py-3 text-sm font-semibold text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-[var(--accent)]"
           >
             开启我的创作

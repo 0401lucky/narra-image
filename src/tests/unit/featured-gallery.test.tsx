@@ -81,7 +81,7 @@ describe("首页精选瀑布流", () => {
     });
 
     await waitFor(() => {
-      expect(fetchMock).toHaveBeenCalledWith("/api/works/featured?cursor=cursor_1&limit=24");
+      expect(fetchMock).toHaveBeenCalledWith("/api/works/featured?cursor=cursor_1&limit=16");
     });
 
     expect(screen.getAllByRole("link")).toHaveLength(25);

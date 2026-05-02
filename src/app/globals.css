@@ -89,7 +89,9 @@ textarea {
 .gallery-card {
   background: var(--card);
   border: 1px solid var(--line);
-  box-shadow: var(--shadow);
+  box-shadow: 0 10px 28px rgba(94, 58, 33, 0.08);
+  content-visibility: auto;
+  contain-intrinsic-size: auto 460px;
 }
 
 .noise-overlay {

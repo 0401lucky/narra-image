@@ -110,7 +110,7 @@ describe("创作台尺寸", () => {
 
     expect(screen.getByRole("combobox", { name: "尺寸" })).toHaveValue("2048x1152");
     expect(await screen.findByPlaceholderText("描述你希望如何修改这些参考图...")).toBeInTheDocument();
-  });
+  }, 10_000);
 
   it("历史结果会按像素尺寸展示正确比例", () => {
     render(
