@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { LogoutButton } from "@/components/auth/logout-button";
 import { CheckInButton } from "@/components/benefits/check-in-button";
 import { HeaderShell } from "@/components/marketing/header-shell";
+import { PetToggle } from "@/components/pet/pet-toggle";
 import { getThumbUrl } from "@/lib/image-url";
 
 type SiteHeaderProps = {
@@ -103,6 +104,8 @@ export async function SiteHeader({
                     variant="compact"
                   />
                 ) : null}
+                {/* 桌面宠物开关：紧邻签到按钮，登录用户可控 */}
+                <PetToggle />
               </div>
 
               {/* 用户头像 — 点击跳转设置页 */}
