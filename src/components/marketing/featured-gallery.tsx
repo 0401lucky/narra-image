@@ -171,7 +171,7 @@ export function FeaturedGallery({
               ease: "easeOut",
               delay: Math.min((index % 24) * 0.025, 0.3),
             }}
-            className="studio-card group relative block break-inside-avoid overflow-hidden rounded-[1.5rem]"
+            className="gallery-card group relative block break-inside-avoid overflow-hidden rounded-[1.5rem]"
           >
             <Link href={`/works/${work.id}`} prefetch={false} className="block">
               <img

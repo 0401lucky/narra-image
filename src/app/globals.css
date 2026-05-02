@@ -82,6 +82,16 @@ textarea {
   -webkit-backdrop-filter: blur(24px);
 }
 
+/* 与 .studio-card 视觉等效，但去掉 backdrop-filter。
+   专供首页精选画廊这种"大量并排卡片 + 不透明 <img> 完全遮挡卡背景"
+   的场景：blur 在这里 0 视觉收益，却会让浏览器在每帧滚动时给视口里
+   每张卡都做一次 24px 高斯模糊，叠加上百卡足以拖死合成器线程。 */
+.gallery-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+
 .noise-overlay {
   position: relative;
 }
