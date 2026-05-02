@@ -6,6 +6,7 @@ import { getEnv } from "@/lib/env";
 import { DEFAULT_INITIAL_CREDITS } from "@/lib/constants";
 import { attachSessionCookie } from "@/lib/auth/session";
 import { hashPassword } from "@/lib/auth/password";
+import { requireTurnstile } from "@/lib/auth/turnstile";
 import { fromPrismaRole } from "@/lib/prisma-mappers";
 import { parseJsonBody, getErrorMessage, jsonError } from "@/lib/server/http";
 import { registerUser } from "@/lib/auth/register-user";
@@ -14,6 +15,7 @@ import { registerSchema } from "@/lib/validators";
 export async function POST(request: Request) {
   try {
     const body = registerSchema.parse(await parseJsonBody(request));
+    await requireTurnstile("register", body.turnstileToken);
     const bootstrapInviteCode =
       process.env.BOOTSTRAP_INVITE_CODE?.trim() || "FOUNDING-ACCESS";
 

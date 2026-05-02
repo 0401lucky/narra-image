@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { verifyPassword } from "@/lib/auth/password";
 import { attachSessionCookie } from "@/lib/auth/session";
+import { requireTurnstile } from "@/lib/auth/turnstile";
 import { serializeUser } from "@/lib/prisma-mappers";
 import { parseJsonBody, getErrorMessage, jsonError } from "@/lib/server/http";
 import { loginSchema } from "@/lib/validators";
@@ -10,6 +11,7 @@ import { loginSchema } from "@/lib/validators";
 export async function POST(request: Request) {
   try {
     const body = loginSchema.parse(await parseJsonBody(request));
+    await requireTurnstile("login", body.turnstileToken);
     const user = await db.user.findUnique({
       where: { email: body.email.toLowerCase() },
       select: {

@@ -1,4 +1,5 @@
 import { db } from "@/lib/db";
+import { getPublicTurnstileConfig } from "@/lib/auth/turnstile";
 import { getCurrentUserRecord } from "@/lib/server/current-user";
 import { serializeUser } from "@/lib/prisma-mappers";
 import { SiteHeader } from "@/components/marketing/site-header";
@@ -7,25 +8,28 @@ import { InviteClaimBoard } from "@/components/invites/invite-claim-board";
 export const dynamic = "force-dynamic";
 
 export default async function InviteClaimPage() {
-  const user = await getCurrentUserRecord();
-  const batches = await db.inviteBatch.findMany({
-    where: {
-      isPublic: true,
-    },
-    include: {
-      inviteCodes: {
-        select: {
-          claimedAt: true,
-          id: true,
-          usedAt: true,
+  const [user, batches, turnstile] = await Promise.all([
+    getCurrentUserRecord(),
+    db.inviteBatch.findMany({
+      where: {
+        isPublic: true,
+      },
+      include: {
+        inviteCodes: {
+          select: {
+            claimedAt: true,
+            id: true,
+            usedAt: true,
+          },
         },
       },
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-    take: 20,
-  });
+      orderBy: {
+        createdAt: "desc",
+      },
+      take: 20,
+    }),
+    getPublicTurnstileConfig(),
+  ]);
 
   const openBatches = batches
     .map((batch) => ({
@@ -57,7 +61,14 @@ export default async function InviteClaimPage() {
         </div>
 
         {openBatches.length > 0 ? (
-          <InviteClaimBoard batches={openBatches} />
+          <InviteClaimBoard
+            batches={openBatches}
+            turnstile={{
+              isEnabled: turnstile.isEnabled,
+              siteKey: turnstile.siteKey,
+              protectInviteRedeem: turnstile.protectInviteRedeem,
+            }}
+          />
         ) : (
           <div className="studio-card rounded-[1.8rem] border border-dashed border-[var(--line)] p-8 text-center md:p-10">
             <h2 className="text-2xl font-semibold text-[var(--ink)]">当前没有开放领取的邀请码</h2>

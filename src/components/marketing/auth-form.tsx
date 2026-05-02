@@ -1,12 +1,24 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowRight, Sparkles } from "lucide-react";
+
+import {
+  TurnstileWidget,
+  type TurnstileWidgetHandle,
+} from "@/components/auth/turnstile-widget";
 
 type OAuthProvider = {
   type: string;
   displayName: string;
+};
+
+export type AuthFormTurnstile = {
+  isEnabled: boolean;
+  siteKey: string | null;
+  protectLogin: boolean;
+  protectRegister: boolean;
 };
 
 type AuthFormProps = {
@@ -14,6 +26,7 @@ type AuthFormProps = {
   mode: "login" | "register";
   oauthError?: string | null;
   oauthProviders?: OAuthProvider[];
+  turnstile?: AuthFormTurnstile | null;
 };
 
 export function AuthForm({
@@ -21,14 +34,26 @@ export function AuthForm({
   initialInviteCode = "",
   oauthProviders = [],
   oauthError = null,
+  turnstile = null,
 }: AuthFormProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(oauthError);
   const [oauthInviteCode, setOauthInviteCode] = useState("");
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const turnstileRef = useRef<TurnstileWidgetHandle>(null);
+
+  const requireTurnstile =
+    Boolean(turnstile?.isEnabled && turnstile?.siteKey) &&
+    (mode === "login" ? !!turnstile?.protectLogin : !!turnstile?.protectRegister);
 
   async function handleSubmit(formData: FormData) {
     setError(null);
+
+    if (requireTurnstile && !turnstileToken) {
+      setError("请先完成人机验证");
+      return;
+    }
 
     const payload =
       mode === "register"
@@ -36,10 +61,12 @@ export function AuthForm({
             email: String(formData.get("email") || ""),
             inviteCode: String(formData.get("inviteCode") || ""),
             password: String(formData.get("password") || ""),
+            ...(turnstileToken ? { turnstileToken } : {}),
           }
         : {
             email: String(formData.get("email") || ""),
             password: String(formData.get("password") || ""),
+            ...(turnstileToken ? { turnstileToken } : {}),
           };
 
     const response = await fetch(
@@ -64,6 +91,11 @@ export function AuthForm({
 
     if (!response.ok) {
       setError(result.error || "请求失败，请稍后再试");
+      // token 一次性，失败后要重置
+      if (requireTurnstile) {
+        setTurnstileToken(null);
+        turnstileRef.current?.reset();
+      }
       return;
     }
 
@@ -129,6 +161,18 @@ export function AuthForm({
           />
         </div>
 
+        {requireTurnstile && turnstile?.siteKey ? (
+          <div className="flex justify-center">
+            <TurnstileWidget
+              ref={turnstileRef}
+              siteKey={turnstile.siteKey}
+              onVerify={(token) => setTurnstileToken(token)}
+              onExpire={() => setTurnstileToken(null)}
+              onError={() => setTurnstileToken(null)}
+            />
+          </div>
+        ) : null}
+
         {error ? (
           <div
             role="alert"
@@ -138,7 +182,11 @@ export function AuthForm({
           </div>
         ) : null}
 
-        <button type="submit" disabled={isPending} className="auth-submit-btn mt-2">
+        <button
+          type="submit"
+          disabled={isPending || (requireTurnstile && !turnstileToken)}
+          className="auth-submit-btn mt-2"
+        >
           <span className="flex items-center justify-center gap-2">
             {isPending
               ? "处理中..."

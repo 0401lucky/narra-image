@@ -34,11 +34,17 @@ export const registerSchema = z.object({
   email: z.email("请输入正确的邮箱"),
   inviteCode: z.string().trim().default(""),
   password: z.string().min(8, "密码至少 8 位"),
+  turnstileToken: z.string().optional(),
 });
 
 export const loginSchema = z.object({
   email: z.email("请输入正确的邮箱"),
   password: z.string().min(8, "密码至少 8 位"),
+  turnstileToken: z.string().optional(),
+});
+
+export const inviteClaimSchema = z.object({
+  turnstileToken: z.string().optional(),
 });
 
 export const providerConfigSchema = z.object({

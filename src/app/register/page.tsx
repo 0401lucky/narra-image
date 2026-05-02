@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 
 import { AuthForm } from "@/components/marketing/auth-form";
 import { AuthShell } from "@/components/marketing/auth-shell";
+import { getPublicTurnstileConfig } from "@/lib/auth/turnstile";
 import { fromPrismaRole } from "@/lib/prisma-mappers";
 import { getCurrentUserRecord } from "@/lib/server/current-user";
 import { listFeaturedWorksPage } from "@/lib/server/works";
@@ -27,11 +28,14 @@ export default async function RegisterPage({ searchParams }: RegisterPageProps) 
       ? resolvedSearchParams.inviteCode
       : "";
 
-  const featuredPage = await listFeaturedWorksPage({ limit: 1 }).catch(() => ({
-    hasMore: false,
-    items: [] as Array<{ authorName: string; image: string; title: string }>,
-    nextCursor: null,
-  }));
+  const [featuredPage, turnstile] = await Promise.all([
+    listFeaturedWorksPage({ limit: 1 }).catch(() => ({
+      hasMore: false,
+      items: [] as Array<{ authorName: string; image: string; title: string }>,
+      nextCursor: null,
+    })),
+    getPublicTurnstileConfig(),
+  ]);
   const featured = featuredPage.items[0] ?? null;
   const cover = featured
     ? {
@@ -61,7 +65,16 @@ export default async function RegisterPage({ searchParams }: RegisterPageProps) 
         </span>
       }
     >
-      <AuthForm mode="register" initialInviteCode={initialInviteCode} />
+      <AuthForm
+        mode="register"
+        initialInviteCode={initialInviteCode}
+        turnstile={{
+          isEnabled: turnstile.isEnabled,
+          siteKey: turnstile.siteKey,
+          protectLogin: turnstile.protectLogin,
+          protectRegister: turnstile.protectRegister,
+        }}
+      />
     </AuthShell>
   );
 }

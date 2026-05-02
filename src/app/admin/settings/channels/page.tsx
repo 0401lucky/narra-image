@@ -1,19 +1,20 @@
 import { redirect } from "next/navigation";
 
-import { requireAdminRecord } from "@/lib/server/current-user";
-import { getAllOAuthProviders } from "@/lib/auth/oauth-config";
-import { SiteHeader } from "@/components/marketing/site-header";
 import { AdminNav } from "@/components/admin/admin-nav";
-import { OAuthProviderManager } from "@/components/admin/oauth-provider-manager";
+import { ChannelManager } from "@/components/admin/channel-manager";
+import { SettingsSubNav } from "@/components/admin/settings-sub-nav";
+import { SiteHeader } from "@/components/marketing/site-header";
 import { serializeUser } from "@/lib/prisma-mappers";
+import { getChannelsForAdmin } from "@/lib/providers/built-in-provider";
+import { requireAdminRecord } from "@/lib/server/current-user";
 
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "登录源管理 — Narra Image",
+  title: "生图渠道 — Narra Image",
 };
 
-export default async function AdminOAuthPage() {
+export default async function AdminChannelsPage() {
   let admin;
   try {
     admin = await requireAdminRecord();
@@ -21,13 +22,7 @@ export default async function AdminOAuthPage() {
     redirect("/login");
   }
 
-  const providers = await getAllOAuthProviders();
-
-  const serialized = providers.map((p) => ({
-    ...p,
-    createdAt: p.createdAt.toISOString(),
-    updatedAt: p.updatedAt.toISOString(),
-  }));
+  const channels = await getChannelsForAdmin();
 
   return (
     <main className="pb-16">
@@ -36,16 +31,20 @@ export default async function AdminOAuthPage() {
         <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between mb-2">
           <div>
             <h1 className="text-3xl font-semibold tracking-tight text-[var(--ink)] md:text-4xl">
-              登录源管理
+              生图渠道
             </h1>
             <p className="mt-2 text-sm text-[var(--ink-soft)]">
-              配置第三方 OAuth 登录源，启用后用户可在登录页使用第三方账号快捷登录。
+              配置多个生图 API 渠道，支持 OpenAI / Grok / 国内中转等并存与切换。
             </p>
           </div>
-          <AdminNav currentPath="/admin/oauth" />
+          <AdminNav currentPath="/admin/settings" />
         </div>
 
-        <OAuthProviderManager initialProviders={serialized} />
+        <SettingsSubNav currentPath="/admin/settings/channels" />
+
+        <div className="studio-card rounded-[1.8rem] p-5 md:p-6">
+          <ChannelManager initialChannels={channels} />
+        </div>
       </section>
     </main>
   );

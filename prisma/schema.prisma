@@ -87,6 +87,20 @@ model BenefitConfig {
   updatedAt           DateTime @updatedAt
 }
 
+model TurnstileConfig {
+  id                  String   @id @default(cuid())
+  scope               String   @unique @default("default")
+  isEnabled           Boolean  @default(false)
+  siteKey             String?
+  secretEncrypted     String?
+  protectLogin        Boolean  @default(true)
+  protectRegister     Boolean  @default(true)
+  protectInviteRedeem Boolean  @default(true)
+  protectGenerate     Boolean  @default(false)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+}
+
 model OAuthProvider {
   id           String   @id @default(cuid())
   type         String   @unique

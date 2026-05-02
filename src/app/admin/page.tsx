@@ -3,11 +3,9 @@ import { redirect } from "next/navigation";
 import { ShowcaseStatus } from "@prisma/client";
 
 import { db } from "@/lib/db";
-import { getChannelsForAdmin } from "@/lib/providers/built-in-provider";
 import { requireAdminRecord } from "@/lib/server/current-user";
 import { SiteHeader } from "@/components/marketing/site-header";
 import { AdminNav } from "@/components/admin/admin-nav";
-import { ChannelManager } from "@/components/admin/channel-manager";
 import { serializeUser } from "@/lib/prisma-mappers";
 
 export const dynamic = "force-dynamic";
@@ -20,7 +18,7 @@ export default async function AdminPage() {
     redirect("/login");
   }
 
-  const [userCount, inviteCount, redeemCodeCount, generationCount, featuredCount, channels] =
+  const [userCount, inviteCount, redeemCodeCount, generationCount, featuredCount] =
     await Promise.all([
       db.user.count(),
       db.inviteCode.count(),
@@ -31,7 +29,6 @@ export default async function AdminPage() {
           showcaseStatus: ShowcaseStatus.FEATURED,
         },
       }),
-      getChannelsForAdmin(),
     ]);
 
   return (
@@ -44,7 +41,7 @@ export default async function AdminPage() {
               管理后台
             </h1>
             <p className="mt-2 text-sm text-[var(--ink-soft)]">
-              全局数据概览与多渠道配置管理。
+              全局数据概览。系统级配置（登录源、人机验证、生图渠道）已迁至「系统设置」。
             </p>
           </div>
           <AdminNav currentPath="/admin" />
@@ -63,10 +60,6 @@ export default async function AdminPage() {
               <div className="mt-3 text-4xl font-semibold text-[var(--ink)]">{value}</div>
             </div>
           ))}
-        </div>
-
-        <div className="studio-card rounded-[1.8rem] p-5 md:p-6">
-          <ChannelManager initialChannels={channels} />
         </div>
       </section>
     </main>

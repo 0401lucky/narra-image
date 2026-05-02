@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { AuthForm } from "@/components/marketing/auth-form";
 import { AuthShell } from "@/components/marketing/auth-shell";
 import { getEnabledOAuthProviders } from "@/lib/auth/oauth-config";
+import { getPublicTurnstileConfig } from "@/lib/auth/turnstile";
 import { fromPrismaRole } from "@/lib/prisma-mappers";
 import { getCurrentUserRecord } from "@/lib/server/current-user";
 import { listFeaturedWorksPage } from "@/lib/server/works";
@@ -26,13 +27,14 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
   const oauthError =
     typeof resolvedParams?.error === "string" ? resolvedParams.error : null;
 
-  const [oauthProviders, featuredPage] = await Promise.all([
+  const [oauthProviders, featuredPage, turnstile] = await Promise.all([
     getEnabledOAuthProviders(),
     listFeaturedWorksPage({ limit: 1 }).catch(() => ({
       hasMore: false,
       items: [] as Array<{ authorName: string; image: string; title: string }>,
       nextCursor: null,
     })),
+    getPublicTurnstileConfig(),
   ]);
   const featured = featuredPage.items[0] ?? null;
   const cover = featured
@@ -67,6 +69,12 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
         mode="login"
         oauthProviders={oauthProviders}
         oauthError={oauthError}
+        turnstile={{
+          isEnabled: turnstile.isEnabled,
+          siteKey: turnstile.siteKey,
+          protectLogin: turnstile.protectLogin,
+          protectRegister: turnstile.protectRegister,
+        }}
       />
     </AuthShell>
   );
