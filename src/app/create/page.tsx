@@ -7,6 +7,7 @@ import { getCurrentUserRecord } from "@/lib/server/current-user";
 import { GeneratorStudio } from "@/components/create/generator-studio";
 import { SiteHeader } from "@/components/marketing/site-header";
 import { getActiveChannels } from "@/lib/providers/built-in-provider";
+import { failStalePendingGenerationJobs } from "@/lib/generation/job-refund";
 
 export const dynamic = "force-dynamic";
 
@@ -15,6 +16,8 @@ export default async function CreatePage() {
   if (!user) {
     redirect("/login");
   }
+
+  await failStalePendingGenerationJobs({ userId: user.id });
 
   const [jobs, channels, checkInSummary, conversations] = await Promise.all([
     db.generationJob.findMany({

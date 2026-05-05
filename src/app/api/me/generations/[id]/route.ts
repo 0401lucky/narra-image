@@ -1,4 +1,5 @@
 import { db } from "@/lib/db";
+import { failStalePendingGenerationJobs } from "@/lib/generation/job-refund";
 import { serializeGeneration } from "@/lib/prisma-mappers";
 import { getCurrentUserRecord } from "@/lib/server/current-user";
 import { jsonError, jsonOk } from "@/lib/server/http";
@@ -13,6 +14,8 @@ export async function GET(
   }
 
   const { id } = await context.params;
+
+  await failStalePendingGenerationJobs({ userId: user.id });
 
   const job = await db.generationJob.findFirst({
     where: { id, userId: user.id },

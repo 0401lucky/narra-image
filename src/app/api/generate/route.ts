@@ -16,6 +16,7 @@ import { requireCurrentUserRecord } from "@/lib/server/current-user";
 import { getErrorMessage, jsonError, jsonOk } from "@/lib/server/http";
 import { generateImages } from "@/lib/providers/generate-images";
 import { persistGeneratedImage } from "@/lib/storage/persist-generated-image";
+import { failGenerationJobAndRefund } from "@/lib/generation/job-refund";
 
 export async function POST(request: Request) {
   let jobId: string | null = null;
@@ -203,7 +204,6 @@ export async function POST(request: Request) {
           }
         : null;
     const providerMode = body.providerMode;
-    const builtInCost = providerMode === "built_in" ? cost : 0;
 
     // 响应返回后再调模型；任意耗时（5 分钟、十分钟）都不会再被前置网关切断。
     after(async () => {
@@ -211,6 +211,20 @@ export async function POST(request: Request) {
         const images = await generateImages(generationParams);
 
         await db.$transaction(async (tx) => {
+          const updated = await tx.generationJob.updateMany({
+            where: {
+              id: job.id,
+              status: GenerationStatus.PENDING,
+            },
+            data: {
+              status: GenerationStatus.SUCCEEDED,
+            },
+          });
+
+          if (updated.count === 0) {
+            return;
+          }
+
           await tx.generationImage.createMany({
             data: images.map((image) => ({
               height: image.actualHeight,
@@ -218,13 +232,6 @@ export async function POST(request: Request) {
               url: image.url,
               width: image.actualWidth,
             })),
-          });
-
-          await tx.generationJob.update({
-            where: { id: job.id },
-            data: {
-              status: GenerationStatus.SUCCEEDED,
-            },
           });
 
           if (providerMode === "custom" && customProviderForRemember) {
@@ -257,26 +264,9 @@ export async function POST(request: Request) {
       } catch (error) {
         // 模型生成失败：标记 FAILED + 退还预扣积分。
         try {
-          await db.$transaction(async (tx) => {
-            await tx.generationJob.update({
-              where: { id: job.id },
-              data: {
-                creditsSpent: 0,
-                errorMessage: getErrorMessage(error),
-                status: GenerationStatus.FAILED,
-              },
-            });
-
-            if (builtInCost > 0) {
-              await tx.user.update({
-                where: { id: userId },
-                data: {
-                  credits: {
-                    increment: builtInCost,
-                  },
-                },
-              });
-            }
+          await failGenerationJobAndRefund({
+            errorMessage: getErrorMessage(error),
+            jobId: job.id,
           });
         } catch {
           // 退还失败时只能记录在 stderr，前端轮询仍能看到 FAILED。
@@ -290,12 +280,9 @@ export async function POST(request: Request) {
     });
   } catch (error) {
     if (jobId) {
-      await db.generationJob.update({
-        where: { id: jobId },
-        data: {
-          errorMessage: getErrorMessage(error),
-          status: GenerationStatus.FAILED,
-        },
+      await failGenerationJobAndRefund({
+        errorMessage: getErrorMessage(error),
+        jobId,
       });
     }
 
