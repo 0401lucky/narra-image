@@ -64,6 +64,10 @@ function getGenerationTypeLabel(job: GenerationAdminJob) {
   return job.generationType === "IMAGE_TO_IMAGE" ? "图生图" : "文生图";
 }
 
+function getClientSourceLabel(job: GenerationAdminJob) {
+  return job.clientSource === "API" ? "API 调用" : "网页";
+}
+
 function SourceImageThumbs({
   compact = false,
   onZoom,
@@ -344,6 +348,9 @@ export function GenerationAdminList({ jobs }: { jobs: GenerationAdminJob[] }) {
                         </span>
                         <span className="rounded-full border border-[var(--line)] bg-white/60 px-2 py-1">
                           {getGenerationTypeLabel(job)}
+                        </span>
+                        <span className="rounded-full border border-[var(--line)] bg-white/60 px-2 py-1">
+                          {getClientSourceLabel(job)}
                         </span>
                         {job.sourceImageUrls.length > 0 ? (
                           <span className="rounded-full border border-[var(--line)] bg-white/60 px-2 py-1">
@@ -787,6 +794,9 @@ export function GenerationAdminCard({ job }: { job: GenerationAdminJob }) {
               </span>
               <span className="shrink-0 rounded-full bg-[var(--surface-strong)] border border-[var(--line)] px-2 py-0.5">
                 {job.generationType === "IMAGE_TO_IMAGE" ? "图生图" : "文生图"}
+              </span>
+              <span className="shrink-0 rounded-full bg-[var(--surface-strong)] border border-[var(--line)] px-2 py-0.5">
+                {getClientSourceLabel(job)}
               </span>
               <span className="shrink-0 rounded-full bg-[var(--surface-strong)] border border-[var(--line)] px-2 py-0.5">
                 {job.providerMode === "BUILT_IN" ? "内置渠道" : "自填渠道"}

@@ -27,6 +27,8 @@ vi.mock("next/navigation", () => ({
 function createJob(input: Partial<GenerationAdminJob> = {}): GenerationAdminJob {
   const now = new Date("2026-05-05T12:00:00.000Z");
   return {
+    apiKeyId: null,
+    clientSource: "WEB",
     conversationId: null,
     count: 1,
     createdAt: now,
