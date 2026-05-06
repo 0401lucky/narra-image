@@ -40,15 +40,18 @@ export function SessionSidebar({
       <aside
         className={`${
           open ? "translate-x-0" : "-translate-x-full md:translate-x-0"
-        } fixed md:relative z-40 md:z-0 flex h-full w-64 shrink-0 flex-col border-r border-[var(--line)] bg-[var(--surface)] transition-transform duration-200 ease-out`}
+        } fixed md:relative z-40 md:z-0 flex h-full w-72 shrink-0 flex-col bg-[#f6efe6]/82 transition-transform duration-200 ease-out backdrop-blur-xl xl:w-80`}
       >
-        <div className="flex items-center gap-2 p-3 border-b border-[var(--line)]">
+        <div className="flex items-center gap-2 p-4">
           <button
             onClick={onNewConversation}
-            className="flex flex-1 items-center gap-2 rounded-xl bg-[var(--ink)] px-4 py-2.5 text-xs font-medium text-white shadow-sm transition hover:bg-[var(--accent)]"
+            className="flex flex-1 items-center justify-between rounded-[1.15rem] bg-[#24170f] px-5 py-4 text-sm font-semibold text-white shadow-[0_16px_34px_rgba(36,23,15,0.2)] transition hover:-translate-y-0.5 hover:bg-[var(--accent)]"
           >
-            <SquarePen className="size-3.5" />
-            新建对话
+            <span className="inline-flex items-center gap-2">
+              <SquarePen className="size-4" />
+              新建对话
+            </span>
+            <span aria-hidden className="text-lg leading-none text-[#f1b99a]">✦</span>
           </button>
           <button
             onClick={onClose}
@@ -58,23 +61,28 @@ export function SessionSidebar({
           </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-2 space-y-0.5" style={{ scrollbarWidth: "thin" }}>
+        <div className="px-4 pb-2 text-sm font-semibold text-[#3a281d]">对话历史</div>
+        <div className="flex-1 overflow-y-auto px-4 pb-4" style={{ scrollbarWidth: "thin" }}>
           {sessions.length === 0 ? (
-            <div className="flex flex-col items-center justify-center h-32 text-center">
+            <div className="flex h-32 flex-col items-center justify-center rounded-2xl border border-dashed border-[var(--line)] bg-[#fffaf2]/42 text-center">
               <MessageSquare className="size-6 text-[var(--ink-soft)] opacity-30 mb-2" />
               <p className="text-xs text-[var(--ink-soft)]">暂无会话记录</p>
             </div>
           ) : (
-            displaySessions.map((session) => (
+            <div className="space-y-2">
+            {displaySessions.map((session) => (
               <div
                 key={session.id}
-                className={`group flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left transition cursor-pointer ${
+                className={`group flex w-full cursor-pointer items-center gap-3 rounded-2xl border px-3 py-3 text-left shadow-sm transition ${
                   activeSessionId === session.id
-                    ? "bg-[var(--surface-strong)] ring-1 ring-[var(--line)]"
-                    : "hover:bg-[var(--surface-strong)]/60"
+                    ? "border-[#c78f55] bg-[#fff5e6] shadow-[0_12px_26px_rgba(84,52,29,0.1)]"
+                    : "border-transparent bg-[#fffaf2]/48 hover:border-[var(--line)] hover:bg-[#fffaf2]/80"
                 }`}
                 onClick={() => onSwitchSession(session.id)}
               >
+                <div className="grid size-10 shrink-0 place-items-center overflow-hidden rounded-xl border border-[var(--line)] bg-[linear-gradient(135deg,#f1b99a,#fffaf2_45%,#9a77c7)] text-xs font-semibold text-[#24170f]">
+                  {session.title?.trim()?.[0] ?? "图"}
+                </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-xs font-medium text-[var(--ink)] truncate leading-tight">
                     {session.title || "新对话"}
@@ -96,7 +104,8 @@ export function SessionSidebar({
                   <Trash2 className="size-3.5" />
                 </button>
               </div>
-            ))
+            ))}
+            </div>
           )}
         </div>
       </aside>

@@ -43,8 +43,8 @@ export function GenerationBubble({
       transition={{ duration: 0.4, ease: "easeOut" }}
       className="space-y-6"
     >
-      <div className="flex gap-2 sm:gap-4">
-        <div className="flex size-8 shrink-0 items-center justify-center rounded-full border border-[var(--line)] bg-[var(--surface-strong)] text-xs font-semibold sm:size-9 sm:text-sm">
+      <div className="flex gap-3 sm:gap-4">
+        <div className="flex size-9 shrink-0 items-center justify-center rounded-full border border-[var(--line)] bg-[#efe4d4] text-xs font-semibold text-[#3a281d] shadow-sm sm:size-10 sm:text-sm">
           You
         </div>
         <div className="flex max-w-[calc(100%-2.5rem)] flex-col gap-2 sm:max-w-[85%]">
@@ -54,7 +54,7 @@ export function GenerationBubble({
               {generation.generationType === "image_to_image" ? "图生图" : "文生图"}
             </span>
           </div>
-          <div className="whitespace-pre-wrap break-words rounded-2xl rounded-tl-none border border-[var(--line)] bg-[var(--surface-strong)]/30 px-4 py-3 text-sm leading-relaxed text-[var(--ink)] shadow-sm sm:px-5 sm:py-3.5">
+          <div className="whitespace-pre-wrap break-words rounded-[1.15rem] rounded-tl-md border border-[var(--line)] bg-[#fffaf2]/82 px-4 py-3 text-sm leading-relaxed text-[var(--ink)] shadow-[0_10px_24px_rgba(84,52,29,0.08)] sm:px-5 sm:py-3.5">
             {generation.prompt}
             {sourceUrls.length > 0 && (
               <div className="mt-3 flex flex-wrap gap-2">
@@ -74,8 +74,8 @@ export function GenerationBubble({
         </div>
       </div>
 
-      <div className="flex gap-2 sm:gap-4">
-        <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[var(--accent)] to-purple-500 text-white shadow-md sm:size-9">
+      <div className="flex gap-3 sm:gap-4">
+        <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#e06b47] via-[#cc5aa5] to-[#9a77c7] text-white shadow-[0_12px_24px_rgba(154,79,139,0.25)] sm:size-10">
           <Sparkles className={`size-4 sm:size-5 ${generation.status === "pending" ? "animate-pulse" : ""}`} />
         </div>
         <div className="flex w-full max-w-[calc(100%-2.5rem)] flex-col gap-2 sm:max-w-[85%]">
@@ -107,15 +107,15 @@ export function GenerationBubble({
             <div className="space-y-3">
               <p className="text-xs text-[var(--ink-soft)]">结果 {generation.images.length}</p>
               <div
-                className={`grid w-full gap-3 ${generation.images.length > 1 ? "grid-cols-1 min-[420px]:grid-cols-2" : "grid-cols-1"}`}
-                style={{ maxWidth: generation.images.length === 1 ? "min(100%, 320px)" : "min(100%, 420px)" }}
+                className={`grid w-full gap-3 ${generation.images.length > 1 ? "grid-cols-1 min-[520px]:grid-cols-2" : "grid-cols-1"}`}
+                style={{ maxWidth: generation.images.length === 1 ? "min(100%, 360px)" : "min(100%, 740px)" }}
               >
                 {generation.images.map((image) => {
                   const downgrade = describeSizeDowngrade(generation, image);
                   return (
                     <div
                       key={image.id}
-                      className="group relative overflow-hidden rounded-2xl border border-[var(--line)] bg-[var(--surface-strong)]/50 shadow-sm"
+                      className="group relative overflow-hidden rounded-[1.15rem] border border-[var(--line)] bg-[#fffaf2]/90 shadow-[0_16px_34px_rgba(84,52,29,0.12)]"
                     >
                       <div
                         className="overflow-hidden bg-[var(--surface-strong)]/40"
@@ -141,11 +141,11 @@ export function GenerationBubble({
                           </span>
                         </div>
                       )}
-                      <div className="flex flex-wrap items-center justify-between gap-2 border-t border-[var(--line)]/50 bg-[var(--surface)]/80 px-3 py-2">
+                      <div className="flex flex-wrap items-center justify-between gap-2 border-t border-[var(--line)]/50 bg-[#fffaf2]/88 px-3 py-2.5">
                         <button
                           type="button"
                           onClick={() => onUseForEdit(image.url)}
-                          className="flex items-center gap-1.5 rounded-full bg-[var(--surface-strong)] px-3 py-1.5 text-xs font-medium text-[var(--ink)] border border-[var(--line)] transition hover:border-[var(--accent)] hover:text-[var(--accent)]"
+                          className="flex items-center gap-1.5 rounded-full border border-[var(--line)] bg-[#f3eadc] px-3 py-1.5 text-xs font-medium text-[var(--ink)] transition hover:border-[var(--accent)] hover:text-[var(--accent)]"
                         >
                           <ImagePlus className="size-3.5" />
                           加入编辑

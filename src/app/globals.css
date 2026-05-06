@@ -82,6 +82,42 @@ textarea {
   -webkit-backdrop-filter: blur(24px);
 }
 
+/* 创作台底部输入器：柔和丝绸光带背景，呼应画布工具台的聚焦感。 */
+.composer-silk {
+  isolation: isolate;
+  background:
+    radial-gradient(circle at 18% 8%, rgba(255, 255, 255, 0.92), transparent 28%),
+    linear-gradient(180deg, rgba(255, 252, 247, 0.92), rgba(246, 237, 224, 0.9));
+}
+
+.composer-silk::before,
+.composer-silk::after {
+  position: absolute;
+  content: "";
+  pointer-events: none;
+  z-index: -1;
+}
+
+.composer-silk::before {
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 78% 74%, rgba(255, 255, 255, 0.82), transparent 34%),
+    linear-gradient(138deg, transparent 0 54%, rgba(232, 198, 160, 0.36) 55%, rgba(255, 251, 245, 0.92) 76%, rgba(225, 178, 131, 0.22) 100%);
+  clip-path: polygon(38% 100%, 100% 28%, 100% 100%);
+}
+
+.composer-silk::after {
+  right: -12%;
+  bottom: -74%;
+  width: 68%;
+  height: 160%;
+  border-radius: 999px;
+  background:
+    radial-gradient(ellipse at 50% 48%, rgba(255, 255, 255, 0.9), rgba(241, 185, 154, 0.3) 46%, transparent 70%);
+  filter: blur(0.2px);
+  transform: rotate(-16deg);
+}
+
 /* 与 .studio-card 视觉等效，但去掉 backdrop-filter。
    专供首页精选画廊这种"大量并排卡片 + 不透明 <img> 完全遮挡卡背景"
    的场景：blur 在这里 0 视觉收益，却会让浏览器在每帧滚动时给视口里

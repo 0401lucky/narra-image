@@ -55,8 +55,8 @@ export default async function CreatePage() {
   }));
 
   return (
-    <main className="flex h-[100dvh] flex-col overflow-hidden bg-[var(--surface)]">
-      <SiteHeader currentUser={currentUser} showCheckIn={false} />
+    <main className="flex h-[100dvh] flex-col overflow-hidden bg-[#f5efe6]">
+      <SiteHeader currentUser={currentUser} showCheckIn={false} activeHref="/create" />
 
       <section className="relative flex flex-1 flex-col overflow-hidden">
         <GeneratorStudio

@@ -58,7 +58,7 @@ export function HeaderShell({ children }: { children: React.ReactNode }) {
   return (
     <div
       className={
-        "sticky top-0 z-30 border-b border-[var(--line)] bg-[var(--surface)]/95 transition-transform duration-200 ease-out " +
+        "sticky top-0 z-30 border-b border-[var(--line)] bg-[#f5efe6]/92 shadow-[0_10px_35px_rgba(84,52,29,0.06)] backdrop-blur-2xl transition-transform duration-200 ease-out " +
         (hidden ? "-translate-y-full" : "translate-y-0")
       }
     >

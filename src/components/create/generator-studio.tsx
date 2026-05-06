@@ -566,7 +566,7 @@ export function GeneratorStudio({
   }
 
   return (
-    <div className="flex h-full w-full relative">
+    <div className="relative flex h-full w-full overflow-hidden bg-[radial-gradient(circle_at_52%_18%,rgba(255,255,255,0.92),transparent_32%),linear-gradient(180deg,#faf6ef_0%,#f2e9dc_100%)]">
       <SessionSidebar
         sessions={sessions}
         activeSessionId={activeSessionId}
@@ -577,11 +577,12 @@ export function GeneratorStudio({
         onDeleteSession={deleteSession}
       />
 
-      <div className="flex flex-1 flex-col relative bg-gradient-to-b from-[var(--surface)] to-[var(--surface-strong)]/20 min-w-0">
-        <div className="flex items-center gap-2 px-4 py-2 md:px-6">
+      <div className="relative flex min-w-0 flex-1 flex-col border-x border-[var(--line)]/80 bg-[linear-gradient(180deg,rgba(255,251,246,0.62)_0%,rgba(247,241,232,0.36)_100%)]">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_72%_16%,rgba(217,100,58,0.08),transparent_28%),radial-gradient(circle_at_28%_86%,rgba(255,255,255,0.58),transparent_34%)]" />
+        <div className="relative z-10 flex items-center gap-2 px-4 py-2 md:hidden">
           <button
             onClick={() => setSidebarOpen(true)}
-            className="rounded-lg p-2 text-[var(--ink-soft)] transition hover:bg-[var(--surface-strong)] md:hidden"
+            className="rounded-xl border border-[var(--line)] bg-[#fffaf2]/80 p-2 text-[var(--ink-soft)] shadow-sm transition hover:bg-white hover:text-[var(--ink)]"
           >
             <PanelLeftOpen className="size-4" />
           </button>

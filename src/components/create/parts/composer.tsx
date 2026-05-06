@@ -93,12 +93,12 @@ export const Composer = forwardRef<HTMLTextAreaElement, ComposerProps>(function 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   return (
-    <div className="absolute inset-x-0 bottom-0 z-20 bg-gradient-to-t from-[var(--surface)] via-[var(--surface)]/95 to-transparent px-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] pt-5 sm:px-4 sm:pb-4 md:px-8 md:pt-6">
-      <div className="mx-auto max-w-4xl">
-        <div className="noise-overlay relative flex max-h-[min(86dvh,42rem)] flex-col overflow-hidden rounded-[1.25rem] border border-[var(--line)] bg-[var(--surface-strong)]/80 shadow-xl ring-1 ring-white/5 backdrop-blur-2xl transition-all duration-300 sm:rounded-2xl">
+    <div className="absolute inset-x-0 bottom-0 z-20 bg-gradient-to-t from-[#f5efe6] via-[#f5efe6]/92 to-transparent px-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] pt-8 sm:px-4 sm:pb-5 md:px-10 md:pt-10">
+      <div className="mx-auto max-w-5xl">
+        <div className="composer-silk relative flex max-h-[min(86dvh,42rem)] flex-col overflow-hidden rounded-[1.35rem] border border-white/70 shadow-[0_22px_60px_rgba(84,52,29,0.14)] ring-1 ring-[#d8c7b2]/50 backdrop-blur-2xl transition-all duration-300 sm:rounded-[1.55rem]">
 
           {referenceImages.length > 0 && (
-            <div className="flex max-h-28 flex-wrap items-start gap-2 overflow-y-auto px-3 pb-1 pt-3 sm:max-h-none sm:px-5 sm:pt-5">
+            <div className="relative z-10 flex max-h-28 flex-wrap items-start gap-2 overflow-y-auto px-4 pb-1 pt-4 sm:max-h-none sm:px-6 sm:pt-5">
               {referenceImages.map((referenceImage, index) => (
                 <div key={referenceImage.id} className="group relative overflow-hidden rounded-xl border border-[var(--line)]">
                   <img src={referenceImage.previewUrl} alt="Reference" className="h-16 w-auto object-cover sm:h-20" />
@@ -118,14 +118,14 @@ export const Composer = forwardRef<HTMLTextAreaElement, ComposerProps>(function 
           )}
 
           {error && (
-            <div className="mx-3 mt-3 sm:mx-5 sm:mt-4">
+            <div className="relative z-10 mx-3 mt-3 sm:mx-5 sm:mt-4">
               <Alert variant="error" onDismiss={onDismissError}>
                 {error}
               </Alert>
             </div>
           )}
 
-          <div className="flex items-end gap-2 px-3 py-2.5 sm:gap-3 sm:px-4 sm:py-3">
+          <div className="relative z-10 flex items-end gap-2 px-4 pb-3 pt-4 sm:gap-3 sm:px-6 sm:pb-4 sm:pt-5">
             <div className="flex-1 min-w-0">
               <textarea
                 ref={ref}
@@ -148,13 +148,13 @@ export const Composer = forwardRef<HTMLTextAreaElement, ComposerProps>(function 
                     ? "描述你希望如何修改这些参考图..."
                     : "输入提示词生成图片，或直接粘贴图片进入图生图..."
                 }
-                className="max-h-24 w-full resize-none bg-transparent py-1 text-sm text-[var(--ink)] outline-none placeholder:text-[var(--ink-soft)]/50 sm:max-h-[120px]"
-                style={{ minHeight: "36px" }}
+                className="max-h-28 w-full resize-none bg-transparent py-1 text-base leading-7 text-[var(--ink)] outline-none placeholder:text-[#8d7d6f]/70 sm:max-h-[132px]"
+                style={{ minHeight: "54px" }}
                 rows={1}
               />
             </div>
 
-            <div className="mb-1 flex shrink-0 items-center gap-1.5 sm:gap-2">
+            <div className="mb-1.5 flex shrink-0 items-center gap-2">
               <input
                 ref={fileInputRef}
                 type="file"
@@ -169,7 +169,7 @@ export const Composer = forwardRef<HTMLTextAreaElement, ComposerProps>(function 
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="rounded-full p-2 text-[var(--ink-soft)] transition hover:bg-[var(--line)] hover:text-[var(--ink)] sm:p-2.5"
+                className="rounded-full p-2.5 text-[#6f6257] transition hover:bg-white/60 hover:text-[var(--ink)]"
                 title="上传参考图"
               >
                 <Paperclip className="size-5" />
@@ -179,26 +179,26 @@ export const Composer = forwardRef<HTMLTextAreaElement, ComposerProps>(function 
                 onClick={onSubmit}
                 aria-label="发送"
                 disabled={isPending || !canSubmit}
-                className="group relative flex size-9 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-[var(--ink)] text-white shadow-md transition-all duration-200 ease-out hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-md sm:size-10"
+                className="group relative flex size-12 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-[#5a4a3b] text-white shadow-[0_14px_28px_rgba(84,52,29,0.22)] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-[0_18px_34px_rgba(84,52,29,0.26)] disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-md"
               >
-                <div className="absolute inset-0 bg-gradient-to-tr from-[var(--accent)] to-[var(--accent-soft)] opacity-0 transition-opacity group-hover:opacity-100" />
+                <div className="absolute inset-0 bg-gradient-to-tr from-[#d9643a] to-[#9b6b3f] opacity-0 transition-opacity group-hover:opacity-100" />
                 {isPending ? (
                   <Sparkles className="relative z-10 size-4 animate-spin" />
                 ) : (
-                  <Send className="relative z-10 size-4 -ml-0.5 mt-0.5" />
+                  <Send className="relative z-10 size-5 -ml-0.5 mt-0.5" />
                 )}
               </button>
             </div>
           </div>
 
-          <div className="flex flex-col gap-2 border-t border-[var(--line)]/50 px-3 py-2 sm:flex-row sm:items-center sm:justify-between sm:px-4">
+          <div className="relative z-10 flex flex-col gap-2 border-t border-[#dfd0bf]/60 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-5">
             <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
-              <div role="group" aria-label="生成模式" className="flex items-center rounded-lg bg-[var(--surface-strong)] p-0.5">
+              <div role="group" aria-label="生成模式" className="flex items-center rounded-xl border border-[var(--line)] bg-[#f7efe4]/78 p-1 shadow-sm">
                 <button
                   type="button"
                   aria-pressed={generationType === "text_to_image"}
                   onClick={() => onChangeGenerationType("text_to_image")}
-                  className={`rounded-md px-2.5 py-1 text-xs font-medium transition-colors sm:px-3 ${
+                  className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors sm:px-4 ${
                     generationType === "text_to_image" ? "bg-white text-black shadow-sm" : "text-[var(--ink-soft)] hover:text-[var(--ink)]"
                   }`}
                 >
@@ -214,7 +214,7 @@ export const Composer = forwardRef<HTMLTextAreaElement, ComposerProps>(function 
                       fileInputRef.current?.click();
                     }
                   }}
-                  className={`rounded-md px-2.5 py-1 text-xs font-medium transition-colors sm:px-3 ${
+                  className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors sm:px-4 ${
                     generationType === "image_to_image" ? "bg-white text-black shadow-sm" : "text-[var(--ink-soft)] hover:text-[var(--ink)]"
                   }`}
                 >
@@ -222,7 +222,7 @@ export const Composer = forwardRef<HTMLTextAreaElement, ComposerProps>(function 
                 </button>
               </div>
 
-              <label className="flex min-w-0 max-w-full items-center gap-2 rounded-lg border border-[var(--line)] bg-[var(--surface-strong)] px-2.5 py-1.5 text-xs text-[var(--ink-soft)] sm:px-3">
+              <label className="flex min-w-0 max-w-full items-center gap-2 rounded-xl border border-[var(--line)] bg-[#f7efe4]/72 px-3 py-2 text-xs text-[var(--ink-soft)] shadow-sm">
                 <span className="shrink-0">尺寸</span>
                 <select
                   aria-label="尺寸"
@@ -241,8 +241,8 @@ export const Composer = forwardRef<HTMLTextAreaElement, ComposerProps>(function 
               <button
                 type="button"
                 onClick={onToggleSettings}
-                className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${
-                  showSettings ? "bg-[var(--accent)]/10 text-[var(--accent)]" : "text-[var(--ink-soft)] hover:bg-[var(--surface-strong)]"
+                className={`flex items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-semibold transition-colors ${
+                  showSettings ? "bg-[var(--accent)]/10 text-[var(--accent)]" : "text-[var(--ink-soft)] hover:bg-[#fffaf2]/78"
                 }`}
               >
                 <Settings2 className="size-3.5" />
@@ -250,12 +250,12 @@ export const Composer = forwardRef<HTMLTextAreaElement, ComposerProps>(function 
               </button>
             </div>
 
-            <div className="hidden md:flex items-center gap-3">
+            <div className="hidden items-center gap-3 md:flex">
               {channels.length > 1 && (
                 <select
                   value={selectedChannelId ?? ""}
                   onChange={(e) => onChangeChannel(e.target.value)}
-                  className="bg-transparent text-xs font-medium text-[var(--ink)] outline-none border-none cursor-pointer"
+                  className="cursor-pointer rounded-xl border border-[var(--line)] bg-[#f7efe4]/72 px-3 py-2 text-xs font-semibold text-[var(--ink)] shadow-sm outline-none"
                 >
                   {channels.map((ch) => (
                     <option key={ch.id} value={ch.id}>{ch.name}</option>
@@ -265,7 +265,7 @@ export const Composer = forwardRef<HTMLTextAreaElement, ComposerProps>(function 
               <select
                 value={model}
                 onChange={(e) => onChangeModel(e.target.value)}
-                className="bg-transparent text-xs font-medium text-[var(--ink)] outline-none border-none cursor-pointer"
+                className="cursor-pointer rounded-xl border border-[var(--line)] bg-[#fffaf2]/72 px-4 py-2 text-sm font-medium text-[var(--ink)] shadow-sm outline-none"
               >
                 {modelOptions.map((m) => (
                   <option key={m} value={m}>{m}</option>

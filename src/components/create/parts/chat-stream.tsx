@@ -23,13 +23,13 @@ export const ChatStream = forwardRef<HTMLDivElement, ChatStreamProps>(function C
   return (
     <div
       ref={ref}
-      className="flex-1 overflow-y-auto px-3 pb-56 scroll-smooth sm:px-4 sm:pb-48 md:px-8 md:pb-40"
+      className="relative z-10 flex-1 overflow-y-auto px-3 pb-64 pt-6 scroll-smooth sm:px-4 sm:pb-56 md:px-8 md:pb-48 md:pt-8"
       style={{ scrollbarWidth: "thin" }}
     >
-      <div className="mx-auto max-w-3xl space-y-6 sm:space-y-8">
+      <div className="mx-auto max-w-4xl space-y-7 sm:space-y-9">
         {generations.length === 0 ? (
-          <div className="flex h-[36vh] min-h-64 flex-col items-center justify-center text-center sm:h-[40vh]">
-            <div className="mb-4 rounded-full bg-gradient-to-br from-[var(--accent)]/20 to-purple-500/20 p-4 ring-1 ring-[var(--line)] sm:mb-6 sm:p-5">
+          <div className="flex h-[42vh] min-h-72 flex-col items-center justify-center text-center sm:h-[46vh]">
+            <div className="mb-4 rounded-full bg-gradient-to-br from-[var(--accent)]/20 to-[#9a77c7]/20 p-4 ring-1 ring-[var(--line)] sm:mb-6 sm:p-5">
               <WandSparkles className="size-7 text-[var(--accent)] sm:size-8" />
             </div>
             <h2 className="text-xl font-semibold tracking-tight text-[var(--ink)] sm:text-2xl">你好，你想创作什么？</h2>

@@ -17,11 +17,13 @@ type SiteHeaderProps = {
     nickname?: string | null;
     avatarUrl?: string | null;
   } | null;
+  activeHref?: string;
   className?: string;
   showCheckIn?: boolean;
 };
 
 export async function SiteHeader({
+  activeHref,
   currentUser,
   className,
   showCheckIn = true,
@@ -45,17 +47,17 @@ export async function SiteHeader({
     <HeaderShell>
       <header
         className={cn(
-          "mx-auto w-full max-w-7xl px-4 py-3 sm:px-5 md:px-8 md:py-5",
+          "mx-auto w-full max-w-[104rem] px-4 py-3 sm:px-6 md:px-10 md:py-4",
           className,
         )}
       >
-      <div className="flex flex-wrap items-center gap-3 md:flex-nowrap md:justify-between">
-        <div className="flex min-w-0 flex-1 items-center gap-2 md:flex-none md:gap-3">
+      <div className="grid items-center gap-3 md:grid-cols-[minmax(14rem,1fr)_auto_minmax(18rem,1fr)]">
+        <div className="flex min-w-0 items-center gap-2 md:gap-3">
           <Link href="/" prefetch={false} className="flex min-w-0 items-center gap-2 md:gap-3">
-            <span className="shrink-0 rounded-full border border-[var(--line)] bg-[var(--surface-strong)]/50 px-2.5 py-1 text-[10px] uppercase tracking-[0.22em] text-[var(--ink-soft)] sm:px-3 sm:text-xs sm:tracking-[0.35em]">
+            <span className="editorial-title shrink-0 text-xl font-semibold uppercase tracking-[0.26em] text-[#9b5a20] sm:text-2xl">
               Narra
             </span>
-            <span className="editorial-title truncate text-2xl font-semibold text-[var(--ink)] sm:text-3xl">
+            <span className="editorial-title truncate text-2xl font-semibold text-[#21170f] sm:text-3xl">
               Image
             </span>
           </Link>
@@ -78,23 +80,28 @@ export async function SiteHeader({
           </a>
         </div>
 
-        <nav className="hidden items-center gap-2 md:flex">
+        <nav className="hidden items-center gap-1 rounded-full border border-[var(--line)] bg-[#eee5d8]/75 p-1 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)] md:flex">
           {links.map((link) => (
             <Link
               key={link.href}
               href={link.href}
               prefetch={false}
-              className="ring-link rounded-full px-4 py-2 text-sm text-[var(--ink-soft)] hover:text-[var(--ink)]"
+              className={cn(
+                "rounded-full px-5 py-2 text-sm font-medium transition",
+                activeHref === link.href
+                  ? "bg-[#fffaf2] text-[#21170f] shadow-sm ring-1 ring-[var(--line)]"
+                  : "text-[var(--ink-soft)] hover:bg-[#fffaf2]/60 hover:text-[#21170f]",
+              )}
             >
               {link.label}
             </Link>
           ))}
         </nav>
 
-        <div className="flex min-w-0 flex-1 items-center justify-end gap-2 md:flex-none md:gap-3">
+        <div className="flex min-w-0 items-center justify-end gap-2 md:gap-3">
           {currentUser ? (
             <div className="flex min-w-0 items-center gap-1.5 sm:gap-2">
-              <div className="studio-card flex min-w-0 items-center gap-1.5 rounded-full px-2.5 py-1.5 text-xs sm:gap-2 sm:px-4 sm:py-2 sm:text-sm">
+              <div className="flex min-w-0 items-center gap-1.5 rounded-full border border-[var(--line)] bg-[#fffaf2]/80 px-2.5 py-1.5 text-xs shadow-[0_12px_30px_rgba(84,52,29,0.08)] backdrop-blur-xl sm:gap-2 sm:px-4 sm:py-2 sm:text-sm">
                 <span className="text-[var(--ink-soft)] sm:hidden">积分</span>
                 <span className="hidden text-[var(--ink-soft)] sm:inline">剩余积分</span>
                 <span className="font-semibold text-[var(--accent)]">
@@ -118,7 +125,7 @@ export async function SiteHeader({
               <Link
                 href="/settings"
                 prefetch={false}
-                className="group relative flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-[var(--line)] bg-[var(--surface-strong)] transition hover:border-[var(--accent)]"
+                className="group relative flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-[#fffaf2] bg-[var(--surface-strong)] shadow-[0_12px_28px_rgba(84,52,29,0.14)] transition hover:border-[var(--accent)]"
                 title={displayName ?? "个人设置"}
               >
                 {currentUser.avatarUrl ? (
@@ -143,7 +150,7 @@ export async function SiteHeader({
             href={currentUser ? "/create" : "/login"}
             prefetch={false}
             className={cn(
-              "rounded-full bg-[var(--ink)] px-4 py-2 text-sm font-semibold text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-[var(--accent)] sm:px-5 sm:py-2.5",
+              "rounded-full bg-[#21170f] px-4 py-2 text-sm font-semibold text-white shadow-[0_14px_30px_rgba(33,23,15,0.22)] transition hover:-translate-y-0.5 hover:bg-[var(--accent)] sm:px-5 sm:py-2.5",
               currentUser ? "hidden sm:inline-flex" : "inline-flex",
             )}
           >
