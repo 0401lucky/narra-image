@@ -51,7 +51,7 @@ export async function SiteHeader({
           className,
         )}
       >
-      <div className="flex flex-wrap items-center gap-3 lg:flex-nowrap">
+      <div className="relative flex flex-wrap items-center gap-3 lg:flex-nowrap lg:justify-between">
         <div className="flex min-w-0 shrink-0 items-center gap-2 md:min-w-56 md:gap-3">
           <Link href="/" prefetch={false} className="flex min-w-0 items-center gap-2 whitespace-nowrap md:gap-3">
             <span className="editorial-title shrink-0 text-xl font-semibold uppercase tracking-[0.26em] text-[#9b5a20] sm:text-2xl">
@@ -80,7 +80,7 @@ export async function SiteHeader({
           </a>
         </div>
 
-        <nav className="hidden shrink-0 items-center gap-1 rounded-full border border-[var(--line)] bg-[#eee5d8]/75 p-1 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)] lg:flex">
+        <nav className="absolute left-1/2 hidden shrink-0 -translate-x-1/2 items-center gap-1 rounded-full border border-[var(--line)] bg-[#eee5d8]/75 p-1 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)] lg:flex">
           {links.map((link) => (
             <Link
               key={link.href}
