@@ -69,6 +69,7 @@ function createJob(input: Partial<GenerationAdminJob> = {}): GenerationAdminJob 
     updatedAt: now,
     user: {
       email: "admin-target@example.com",
+      nickname: null,
     },
     userId: "user_1",
     ...input,
@@ -95,7 +96,7 @@ describe("后台生成记录列表视图", () => {
     const user = userEvent.setup();
     render(<GenerationAdminList jobs={[createJob()]} />);
 
-    await user.click(screen.getByLabelText("选择生成记录 job_1"));
+    await user.click(screen.getAllByLabelText("选择生成记录 job_1")[0]);
     await user.click(screen.getByRole("button", { name: "批量删除" }));
     await user.click(screen.getByRole("button", { name: "确认删除" }));
 
@@ -124,7 +125,7 @@ describe("后台生成记录列表视图", () => {
     );
 
     expect(screen.getByRole("columnheader", { name: "参考图" })).toBeInTheDocument();
-    await user.click(screen.getByRole("button", { name: "查看参考图 1" }));
+    await user.click(screen.getAllByRole("button", { name: "查看参考图 1" })[0]);
 
     const zoomedImage = screen.getByAltText("参考图大图");
     expect(zoomedImage).toHaveAttribute("src", "https://example.com/source.png");
@@ -135,7 +136,7 @@ describe("后台生成记录列表视图", () => {
     const user = userEvent.setup();
     render(<GenerationAdminList jobs={[createJob()]} />);
 
-    await user.click(screen.getByRole("button", { name: "查看生成图片 job_1" }));
+    await user.click(screen.getAllByRole("button", { name: "查看生成图片 job_1" })[0]);
 
     expect(screen.getByAltText("生成图片大图")).toHaveAttribute(
       "src",

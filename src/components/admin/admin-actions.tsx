@@ -23,8 +23,12 @@ import { getThumbUrl } from "@/lib/image-url";
 
 export type GenerationAdminJob = GenerationJob & {
   images: GenerationImage[];
-  user: Pick<User, "email">;
+  user: Pick<User, "email" | "nickname">;
 };
+
+function getUserDisplayName(user: GenerationAdminJob["user"] | null | undefined) {
+  return user?.nickname?.trim() || user?.email || "未知用户";
+}
 
 function getGenerationStatusLabel(status: GenerationAdminJob["status"]) {
   if (status === "PENDING") return "生成中";
@@ -294,8 +298,13 @@ export function GenerationAdminList({ jobs }: { jobs: GenerationAdminJob[] }) {
                   )}
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-sm font-medium text-[var(--ink)]">
-                      {job.user?.email || "未知用户"}
+                      {getUserDisplayName(job.user)}
                     </p>
+                    {job.user?.nickname?.trim() && job.user.email ? (
+                      <p className="mt-0.5 truncate text-[11px] text-[var(--ink-soft)]/75">
+                        {job.user.email}
+                      </p>
+                    ) : null}
                     <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-[var(--ink-soft)]">
                       {job.prompt}
                     </p>
@@ -452,8 +461,13 @@ export function GenerationAdminList({ jobs }: { jobs: GenerationAdminJob[] }) {
                     </td>
                     <td className="max-w-[360px] px-4 py-4 align-middle">
                       <p className="truncate font-medium text-[var(--ink)]">
-                        {job.user?.email || "未知用户"}
+                        {getUserDisplayName(job.user)}
                       </p>
+                      {job.user?.nickname?.trim() && job.user.email ? (
+                        <p className="mt-0.5 truncate text-[11px] text-[var(--ink-soft)]/75">
+                          {job.user.email}
+                        </p>
+                      ) : null}
                       <p className="mt-1 line-clamp-1 text-xs text-[var(--ink-soft)]">
                         {job.prompt}
                       </p>
@@ -919,7 +933,12 @@ export function GenerationAdminCard({ job }: { job: GenerationAdminJob }) {
       <div className="flex-1 min-w-0 flex flex-col justify-between">
         <div className="mb-3">
           <div className="flex items-center justify-between text-xs text-[var(--ink-soft)] mb-2">
-            <span className="truncate max-w-[150px]" title={job.user?.email}>{job.user?.email || "未知用户"}</span>
+            <span
+              className="truncate max-w-[150px]"
+              title={job.user?.nickname?.trim() ? `${job.user.nickname} / ${job.user.email}` : job.user?.email}
+            >
+              {getUserDisplayName(job.user)}
+            </span>
             <div className="flex items-center gap-2">
               <span className="shrink-0 rounded-full bg-[var(--surface-strong)] border border-[var(--line)] px-2 py-0.5">
                 {getGenerationStatusLabel(job.status)}

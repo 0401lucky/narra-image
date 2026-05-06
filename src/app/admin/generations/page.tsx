@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-import { GenerationStatus } from "@prisma/client";
+import { GenerationStatus, type Prisma } from "@prisma/client";
 import { Grid2X2, List } from "lucide-react";
 
 import { db } from "@/lib/db";
@@ -15,6 +15,7 @@ import {
 } from "@/components/admin/admin-actions";
 import { AdminPagination } from "@/components/admin/admin-pagination";
 import { CleanupFailedButton } from "@/components/admin/cleanup-failed-button";
+import { GenerationSearchBar } from "@/components/admin/generation-search-bar";
 import { failStalePendingGenerationJobs } from "@/lib/generation/job-refund";
 
 export const dynamic = "force-dynamic";
@@ -28,11 +29,24 @@ function getParamValue(value: string | string[] | undefined) {
 
 function ViewModeSwitch({
   currentPage,
+  search,
   view,
 }: {
   currentPage: number;
+  search: string;
   view: GenerationViewMode;
 }) {
+  function buildHref(nextView: GenerationViewMode) {
+    const params = new URLSearchParams({
+      page: String(currentPage),
+      view: nextView,
+    });
+    if (search) {
+      params.set("q", search);
+    }
+    return `/admin/generations?${params.toString()}`;
+  }
+
   const modes: Array<{
     href: string;
     icon: typeof Grid2X2;
@@ -40,13 +54,13 @@ function ViewModeSwitch({
     value: GenerationViewMode;
   }> = [
     {
-      href: `/admin/generations?page=${currentPage}&view=card`,
+      href: buildHref("card"),
       icon: Grid2X2,
       label: "卡片",
       value: "card",
     },
     {
-      href: `/admin/generations?page=${currentPage}&view=list`,
+      href: buildHref("list"),
       icon: List,
       label: "列表",
       value: "list",
@@ -91,16 +105,41 @@ export default async function AdminGenerationsPage({
   }
 
   const params = await searchParams;
-  const page = Math.max(1, Number(params.page) || 1);
+  const page = Math.max(1, Number(getParamValue(params.page)) || 1);
   const viewParam = getParamValue(params.view);
   const view: GenerationViewMode = viewParam === "list" ? "list" : "card";
+  const search = (getParamValue(params.q) ?? "").trim();
 
   await failStalePendingGenerationJobs();
 
-  const visibleWhere = {
+  const searchWhere: Prisma.GenerationJobWhereInput = search
+    ? {
+        OR: [
+          { id: { contains: search, mode: "insensitive" } },
+          { model: { contains: search, mode: "insensitive" } },
+          { prompt: { contains: search, mode: "insensitive" } },
+          { userId: { contains: search, mode: "insensitive" } },
+          {
+            user: {
+              is: {
+                OR: [
+                  { email: { contains: search, mode: "insensitive" } },
+                  { nickname: { contains: search, mode: "insensitive" } },
+                ],
+              },
+            },
+          },
+        ],
+      }
+    : {};
+  const visibleWhere: Prisma.GenerationJobWhereInput = {
+    ...searchWhere,
     status: { in: [GenerationStatus.SUCCEEDED, GenerationStatus.PENDING] },
   };
-
+  const pendingWhere: Prisma.GenerationJobWhereInput = {
+    ...searchWhere,
+    status: GenerationStatus.PENDING,
+  };
   const [jobs, totalCount, failedCount, pendingCount] = await Promise.all([
     db.generationJob.findMany({
       where: visibleWhere,
@@ -112,6 +151,7 @@ export default async function AdminGenerationsPage({
         user: {
           select: {
             email: true,
+            nickname: true,
           },
         },
       },
@@ -120,7 +160,7 @@ export default async function AdminGenerationsPage({
     }),
     db.generationJob.count({ where: visibleWhere }),
     db.generationJob.count({ where: { status: GenerationStatus.FAILED } }),
-    db.generationJob.count({ where: { status: GenerationStatus.PENDING } }),
+    db.generationJob.count({ where: pendingWhere }),
   ]);
 
   const totalPages = Math.ceil(totalCount / PAGE_SIZE);
@@ -139,10 +179,12 @@ export default async function AdminGenerationsPage({
             </p>
           </div>
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center xl:justify-end">
-            <ViewModeSwitch currentPage={page} view={view} />
+            <ViewModeSwitch currentPage={page} search={search} view={view} />
             <AdminNav currentPath="/admin/generations" />
           </div>
         </div>
+
+        <GenerationSearchBar initialValue={search} view={view} />
 
         <CleanupFailedButton failedCount={failedCount} />
 
@@ -160,7 +202,7 @@ export default async function AdminGenerationsPage({
 
         {jobs.length === 0 && (
           <div className="studio-card rounded-[1.8rem] border border-dashed border-[var(--line)] p-8 text-center text-sm text-[var(--ink-soft)]">
-            暂无生成记录。
+            {search ? `没有找到包含 "${search}" 的生成记录。` : "暂无生成记录。"}
           </div>
         )}
 
@@ -168,7 +210,7 @@ export default async function AdminGenerationsPage({
           currentPage={page}
           totalPages={totalPages}
           basePath="/admin/generations"
-          extraParams={{ view }}
+          extraParams={{ view, ...(search ? { q: search } : {}) }}
         />
       </section>
     </main>
