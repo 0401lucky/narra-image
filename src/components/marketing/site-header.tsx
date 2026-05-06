@@ -51,9 +51,9 @@ export async function SiteHeader({
           className,
         )}
       >
-      <div className="grid items-center gap-3 md:grid-cols-[minmax(14rem,1fr)_auto_minmax(18rem,1fr)]">
-        <div className="flex min-w-0 items-center gap-2 md:gap-3">
-          <Link href="/" prefetch={false} className="flex min-w-0 items-center gap-2 md:gap-3">
+      <div className="flex flex-wrap items-center gap-3 lg:flex-nowrap">
+        <div className="flex min-w-0 shrink-0 items-center gap-2 md:min-w-56 md:gap-3">
+          <Link href="/" prefetch={false} className="flex min-w-0 items-center gap-2 whitespace-nowrap md:gap-3">
             <span className="editorial-title shrink-0 text-xl font-semibold uppercase tracking-[0.26em] text-[#9b5a20] sm:text-2xl">
               Narra
             </span>
@@ -80,14 +80,14 @@ export async function SiteHeader({
           </a>
         </div>
 
-        <nav className="hidden items-center gap-1 rounded-full border border-[var(--line)] bg-[#eee5d8]/75 p-1 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)] md:flex">
+        <nav className="hidden shrink-0 items-center gap-1 rounded-full border border-[var(--line)] bg-[#eee5d8]/75 p-1 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)] lg:flex">
           {links.map((link) => (
             <Link
               key={link.href}
               href={link.href}
               prefetch={false}
               className={cn(
-                "rounded-full px-5 py-2 text-sm font-medium transition",
+                "whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium transition xl:px-5",
                 activeHref === link.href
                   ? "bg-[#fffaf2] text-[#21170f] shadow-sm ring-1 ring-[var(--line)]"
                   : "text-[var(--ink-soft)] hover:bg-[#fffaf2]/60 hover:text-[#21170f]",
@@ -98,17 +98,17 @@ export async function SiteHeader({
           ))}
         </nav>
 
-        <div className="flex min-w-0 items-center justify-end gap-2 md:gap-3">
+        <div className="ml-auto flex min-w-0 shrink-0 items-center justify-end gap-2 md:gap-3">
           {currentUser ? (
-            <div className="flex min-w-0 items-center gap-1.5 sm:gap-2">
-              <div className="flex min-w-0 items-center gap-1.5 rounded-full border border-[var(--line)] bg-[#fffaf2]/80 px-2.5 py-1.5 text-xs shadow-[0_12px_30px_rgba(84,52,29,0.08)] backdrop-blur-xl sm:gap-2 sm:px-4 sm:py-2 sm:text-sm">
+            <div className="flex min-w-0 shrink-0 items-center gap-1.5 sm:gap-2">
+              <div className="flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border border-[var(--line)] bg-[#fffaf2]/80 px-2.5 py-1.5 text-xs shadow-[0_12px_30px_rgba(84,52,29,0.08)] backdrop-blur-xl sm:gap-2 sm:px-4 sm:py-2 sm:text-sm">
                 <span className="text-[var(--ink-soft)] sm:hidden">积分</span>
                 <span className="hidden text-[var(--ink-soft)] sm:inline">剩余积分</span>
                 <span className="font-semibold text-[var(--accent)]">
                   {currentUser.credits}
                 </span>
                 {checkInSummary ? (
-                  <span className="hidden min-[430px]:inline-flex">
+                  <span className="hidden shrink-0 xl:inline-flex">
                     <CheckInButton
                       checkedInToday={checkInSummary.checkedInToday}
                       rewardCredits={checkInSummary.checkInReward}
@@ -116,7 +116,7 @@ export async function SiteHeader({
                     />
                   </span>
                 ) : null}
-                <span className="hidden lg:inline-flex">
+                <span className="hidden shrink-0 min-[1500px]:inline-flex">
                   <PetToggle />
                 </span>
               </div>
@@ -150,7 +150,7 @@ export async function SiteHeader({
             href={currentUser ? "/create" : "/login"}
             prefetch={false}
             className={cn(
-              "rounded-full bg-[#21170f] px-4 py-2 text-sm font-semibold text-white shadow-[0_14px_30px_rgba(33,23,15,0.22)] transition hover:-translate-y-0.5 hover:bg-[var(--accent)] sm:px-5 sm:py-2.5",
+              "shrink-0 whitespace-nowrap rounded-full bg-[#21170f] px-4 py-2 text-sm font-semibold text-white shadow-[0_14px_30px_rgba(33,23,15,0.22)] transition hover:-translate-y-0.5 hover:bg-[var(--accent)] sm:px-5 sm:py-2.5",
               currentUser ? "hidden sm:inline-flex" : "inline-flex",
             )}
           >

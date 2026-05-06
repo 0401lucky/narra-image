@@ -93,7 +93,7 @@ export function PetToggle() {
         title={title}
         aria-pressed={enabled}
         className={
-          "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs transition " +
+          "inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border px-3 py-1.5 text-xs transition " +
           (enabled
             ? "border-[var(--accent)] text-[var(--accent)]"
             : "border-[var(--line)] text-[var(--ink-soft)] hover:border-[var(--accent)] hover:text-[var(--accent)]")

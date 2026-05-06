@@ -15,11 +15,11 @@ export function LogoutButton() {
     <button
       type="button"
       onClick={handleLogout}
-      className="flex items-center gap-1.5 rounded-full px-3 py-2 text-sm text-[var(--ink-soft)] transition hover:text-[var(--accent)]"
+      className="flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-2 text-sm text-[var(--ink-soft)] transition hover:text-[var(--accent)]"
       title="退出登录"
     >
       <LogOut className="size-4" />
-      <span className="hidden sm:inline">退出</span>
+      <span className="hidden xl:inline">退出</span>
     </button>
   );
 }
