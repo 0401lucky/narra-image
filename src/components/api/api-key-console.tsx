@@ -118,9 +118,9 @@ export function ApiKeyConsole({ apiBaseUrl, apiKeys, apiConfig }: ApiKeyConsoleP
   }
 
   return (
-    <div className="grid gap-5 lg:grid-cols-[360px_1fr]">
+    <div className="grid gap-4 sm:gap-5 lg:grid-cols-[minmax(0,360px)_minmax(0,1fr)]">
       <div className="grid gap-5 self-start">
-        <div className="studio-card rounded-[1.8rem] p-6">
+        <div className="studio-card rounded-[1.4rem] p-4 sm:rounded-[1.8rem] sm:p-6">
           <div className="flex items-center gap-3">
             <div className="flex size-12 items-center justify-center rounded-2xl bg-[var(--accent)]/15 text-[var(--accent)]">
               <KeyRound className="size-6" />
@@ -156,7 +156,7 @@ export function ApiKeyConsole({ apiBaseUrl, apiKeys, apiConfig }: ApiKeyConsoleP
           </div>
         </div>
 
-        <div className="studio-card rounded-[1.8rem] p-6">
+        <div className="studio-card rounded-[1.4rem] p-4 sm:rounded-[1.8rem] sm:p-6">
           <h3 className="font-semibold text-[var(--ink)]">统一速率限制</h3>
           <p className="mt-2 text-sm text-[var(--ink-soft)]">
             管理员为全站 API Key 设置统一限制。
@@ -202,7 +202,7 @@ export function ApiKeyConsole({ apiBaseUrl, apiKeys, apiConfig }: ApiKeyConsoleP
         {message ? <Alert variant="success">{message}</Alert> : null}
         {error ? <Alert variant="error">{error}</Alert> : null}
 
-        <div className="studio-card overflow-hidden rounded-[1.8rem]">
+        <div className="studio-card overflow-hidden rounded-[1.4rem] sm:rounded-[1.8rem]">
           <div className="border-b border-[var(--line)] px-5 py-4">
             <h2 className="font-semibold text-[var(--ink)]">我的 Key</h2>
           </div>
@@ -215,7 +215,7 @@ export function ApiKeyConsole({ apiBaseUrl, apiKeys, apiConfig }: ApiKeyConsoleP
               items.map((item) => (
                 <div
                   key={item.id}
-                  className="grid gap-3 px-5 py-4 md:grid-cols-[1fr_auto] md:items-center"
+                  className="grid gap-3 px-4 py-4 md:grid-cols-[1fr_auto] md:items-center md:px-5"
                 >
                   <div className="min-w-0">
                     <div className="flex flex-wrap items-center gap-2">
@@ -250,7 +250,7 @@ export function ApiKeyConsole({ apiBaseUrl, apiKeys, apiConfig }: ApiKeyConsoleP
           </div>
         </div>
 
-        <div className="studio-card rounded-[1.8rem] p-6">
+        <div className="studio-card rounded-[1.4rem] p-4 sm:rounded-[1.8rem] sm:p-6">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
             <div>
               <h2 className="font-semibold text-[var(--ink)]">调用示例</h2>

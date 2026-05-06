@@ -55,7 +55,7 @@ export default async function CreatePage() {
   }));
 
   return (
-    <main className="flex h-screen flex-col overflow-hidden bg-[var(--surface)]">
+    <main className="flex h-[100dvh] flex-col overflow-hidden bg-[var(--surface)]">
       <SiteHeader currentUser={currentUser} showCheckIn={false} />
 
       <section className="relative flex flex-1 flex-col overflow-hidden">

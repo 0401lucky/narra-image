@@ -93,15 +93,15 @@ export const Composer = forwardRef<HTMLTextAreaElement, ComposerProps>(function 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   return (
-    <div className="absolute bottom-0 inset-x-0 z-20 bg-gradient-to-t from-[var(--surface)] via-[var(--surface)]/95 to-transparent pt-6 pb-4 px-4 md:px-8">
+    <div className="absolute inset-x-0 bottom-0 z-20 bg-gradient-to-t from-[var(--surface)] via-[var(--surface)]/95 to-transparent px-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] pt-5 sm:px-4 sm:pb-4 md:px-8 md:pt-6">
       <div className="mx-auto max-w-4xl">
-        <div className="noise-overlay relative flex flex-col rounded-2xl border border-[var(--line)] bg-[var(--surface-strong)]/70 backdrop-blur-2xl shadow-xl transition-all duration-300 ring-1 ring-white/5">
+        <div className="noise-overlay relative flex max-h-[min(86dvh,42rem)] flex-col overflow-hidden rounded-[1.25rem] border border-[var(--line)] bg-[var(--surface-strong)]/80 shadow-xl ring-1 ring-white/5 backdrop-blur-2xl transition-all duration-300 sm:rounded-2xl">
 
           {referenceImages.length > 0 && (
-            <div className="flex flex-wrap items-start gap-2 px-5 pb-1 pt-5">
+            <div className="flex max-h-28 flex-wrap items-start gap-2 overflow-y-auto px-3 pb-1 pt-3 sm:max-h-none sm:px-5 sm:pt-5">
               {referenceImages.map((referenceImage, index) => (
                 <div key={referenceImage.id} className="group relative overflow-hidden rounded-xl border border-[var(--line)]">
-                  <img src={referenceImage.previewUrl} alt="Reference" className="h-20 w-auto object-cover" />
+                  <img src={referenceImage.previewUrl} alt="Reference" className="h-16 w-auto object-cover sm:h-20" />
                   <button
                     type="button"
                     onClick={() => onRemoveReference(referenceImage.id)}
@@ -118,14 +118,14 @@ export const Composer = forwardRef<HTMLTextAreaElement, ComposerProps>(function 
           )}
 
           {error && (
-            <div className="mx-5 mt-4">
+            <div className="mx-3 mt-3 sm:mx-5 sm:mt-4">
               <Alert variant="error" onDismiss={onDismissError}>
                 {error}
               </Alert>
             </div>
           )}
 
-          <div className="flex items-end gap-3 px-4 py-3">
+          <div className="flex items-end gap-2 px-3 py-2.5 sm:gap-3 sm:px-4 sm:py-3">
             <div className="flex-1 min-w-0">
               <textarea
                 ref={ref}
@@ -148,13 +148,13 @@ export const Composer = forwardRef<HTMLTextAreaElement, ComposerProps>(function 
                     ? "描述你希望如何修改这些参考图..."
                     : "输入提示词生成图片，或直接粘贴图片进入图生图..."
                 }
-                className="w-full resize-none bg-transparent py-1 text-sm text-[var(--ink)] placeholder:text-[var(--ink-soft)]/50 outline-none max-h-[120px]"
+                className="max-h-24 w-full resize-none bg-transparent py-1 text-sm text-[var(--ink)] outline-none placeholder:text-[var(--ink-soft)]/50 sm:max-h-[120px]"
                 style={{ minHeight: "36px" }}
                 rows={1}
               />
             </div>
 
-            <div className="flex shrink-0 items-center gap-2 mb-1">
+            <div className="mb-1 flex shrink-0 items-center gap-1.5 sm:gap-2">
               <input
                 ref={fileInputRef}
                 type="file"
@@ -169,7 +169,7 @@ export const Composer = forwardRef<HTMLTextAreaElement, ComposerProps>(function 
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="rounded-full p-2.5 text-[var(--ink-soft)] transition hover:bg-[var(--line)] hover:text-[var(--ink)]"
+                className="rounded-full p-2 text-[var(--ink-soft)] transition hover:bg-[var(--line)] hover:text-[var(--ink)] sm:p-2.5"
                 title="上传参考图"
               >
                 <Paperclip className="size-5" />
@@ -179,7 +179,7 @@ export const Composer = forwardRef<HTMLTextAreaElement, ComposerProps>(function 
                 onClick={onSubmit}
                 aria-label="发送"
                 disabled={isPending || !canSubmit}
-                className="group relative flex size-10 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-[var(--ink)] text-white shadow-md transition-all duration-200 ease-out hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-md"
+                className="group relative flex size-9 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-[var(--ink)] text-white shadow-md transition-all duration-200 ease-out hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-md sm:size-10"
               >
                 <div className="absolute inset-0 bg-gradient-to-tr from-[var(--accent)] to-[var(--accent-soft)] opacity-0 transition-opacity group-hover:opacity-100" />
                 {isPending ? (
@@ -191,14 +191,14 @@ export const Composer = forwardRef<HTMLTextAreaElement, ComposerProps>(function 
             </div>
           </div>
 
-          <div className="flex items-center justify-between border-t border-[var(--line)]/50 px-4 py-2">
-            <div className="flex flex-wrap items-center gap-2">
+          <div className="flex flex-col gap-2 border-t border-[var(--line)]/50 px-3 py-2 sm:flex-row sm:items-center sm:justify-between sm:px-4">
+            <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
               <div role="group" aria-label="生成模式" className="flex items-center rounded-lg bg-[var(--surface-strong)] p-0.5">
                 <button
                   type="button"
                   aria-pressed={generationType === "text_to_image"}
                   onClick={() => onChangeGenerationType("text_to_image")}
-                  className={`rounded-md px-3 py-1 text-xs font-medium transition-colors ${
+                  className={`rounded-md px-2.5 py-1 text-xs font-medium transition-colors sm:px-3 ${
                     generationType === "text_to_image" ? "bg-white text-black shadow-sm" : "text-[var(--ink-soft)] hover:text-[var(--ink)]"
                   }`}
                 >
@@ -214,7 +214,7 @@ export const Composer = forwardRef<HTMLTextAreaElement, ComposerProps>(function 
                       fileInputRef.current?.click();
                     }
                   }}
-                  className={`rounded-md px-3 py-1 text-xs font-medium transition-colors ${
+                  className={`rounded-md px-2.5 py-1 text-xs font-medium transition-colors sm:px-3 ${
                     generationType === "image_to_image" ? "bg-white text-black shadow-sm" : "text-[var(--ink-soft)] hover:text-[var(--ink)]"
                   }`}
                 >
@@ -222,13 +222,13 @@ export const Composer = forwardRef<HTMLTextAreaElement, ComposerProps>(function 
                 </button>
               </div>
 
-              <label className="flex items-center gap-2 rounded-lg border border-[var(--line)] bg-[var(--surface-strong)] px-3 py-1.5 text-xs text-[var(--ink-soft)]">
+              <label className="flex min-w-0 max-w-full items-center gap-2 rounded-lg border border-[var(--line)] bg-[var(--surface-strong)] px-2.5 py-1.5 text-xs text-[var(--ink-soft)] sm:px-3">
                 <span className="shrink-0">尺寸</span>
                 <select
                   aria-label="尺寸"
                   value={sizeSelectValue}
                   onChange={(event) => onSizeSelect(event.target.value)}
-                  className="min-w-0 bg-transparent text-xs font-medium text-[var(--ink)] outline-none"
+                  className="min-w-0 max-w-[9.5rem] bg-transparent text-xs font-medium text-[var(--ink)] outline-none sm:max-w-none"
                 >
                   {SIZE_OPTIONS.map((option) => (
                     <option key={option.value} value={option.value}>
@@ -239,6 +239,7 @@ export const Composer = forwardRef<HTMLTextAreaElement, ComposerProps>(function 
               </label>
 
               <button
+                type="button"
                 onClick={onToggleSettings}
                 className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${
                   showSettings ? "bg-[var(--accent)]/10 text-[var(--accent)]" : "text-[var(--ink-soft)] hover:bg-[var(--surface-strong)]"

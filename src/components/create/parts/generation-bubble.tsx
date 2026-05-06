@@ -43,18 +43,18 @@ export function GenerationBubble({
       transition={{ duration: 0.4, ease: "easeOut" }}
       className="space-y-6"
     >
-      <div className="flex gap-4">
-        <div className="shrink-0 flex size-9 items-center justify-center rounded-full bg-[var(--surface-strong)] border border-[var(--line)] text-sm font-semibold">
+      <div className="flex gap-2 sm:gap-4">
+        <div className="flex size-8 shrink-0 items-center justify-center rounded-full border border-[var(--line)] bg-[var(--surface-strong)] text-xs font-semibold sm:size-9 sm:text-sm">
           You
         </div>
-        <div className="flex flex-col gap-2 max-w-[85%]">
+        <div className="flex max-w-[calc(100%-2.5rem)] flex-col gap-2 sm:max-w-[85%]">
           <div className="flex items-center gap-2">
             <span className="text-sm font-medium text-[var(--ink)]">You</span>
             <span className="text-xs text-[var(--ink-soft)] bg-[var(--surface-strong)] px-2 py-0.5 rounded-full">
               {generation.generationType === "image_to_image" ? "图生图" : "文生图"}
             </span>
           </div>
-          <div className="rounded-2xl rounded-tl-none border border-[var(--line)] bg-[var(--surface-strong)]/30 px-5 py-3.5 text-sm leading-relaxed text-[var(--ink)] shadow-sm">
+          <div className="whitespace-pre-wrap break-words rounded-2xl rounded-tl-none border border-[var(--line)] bg-[var(--surface-strong)]/30 px-4 py-3 text-sm leading-relaxed text-[var(--ink)] shadow-sm sm:px-5 sm:py-3.5">
             {generation.prompt}
             {sourceUrls.length > 0 && (
               <div className="mt-3 flex flex-wrap gap-2">
@@ -65,7 +65,7 @@ export function GenerationBubble({
                     alt="Reference"
                     loading="lazy"
                     decoding="async"
-                    className="h-24 w-auto rounded-lg border border-[var(--line)] object-cover shadow-sm"
+                    className="h-20 w-auto rounded-lg border border-[var(--line)] object-cover shadow-sm sm:h-24"
                   />
                 ))}
               </div>
@@ -74,12 +74,12 @@ export function GenerationBubble({
         </div>
       </div>
 
-      <div className="flex gap-4">
-        <div className="shrink-0 flex size-9 items-center justify-center rounded-full bg-gradient-to-br from-[var(--accent)] to-purple-500 text-white shadow-md">
-          <Sparkles className={`size-5 ${generation.status === "pending" ? "animate-pulse" : ""}`} />
+      <div className="flex gap-2 sm:gap-4">
+        <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[var(--accent)] to-purple-500 text-white shadow-md sm:size-9">
+          <Sparkles className={`size-4 sm:size-5 ${generation.status === "pending" ? "animate-pulse" : ""}`} />
         </div>
-        <div className="flex flex-col gap-2 max-w-[85%] w-full">
-          <div className="flex items-center gap-2">
+        <div className="flex w-full max-w-[calc(100%-2.5rem)] flex-col gap-2 sm:max-w-[85%]">
+          <div className="flex flex-wrap items-center gap-2">
             <span className="text-sm font-medium text-[var(--ink)]">Narra AI</span>
             {generation.status === "pending" ? (
               <span className="text-xs text-[var(--ink-soft)] animate-pulse">正在生成中...</span>
@@ -90,7 +90,7 @@ export function GenerationBubble({
 
           {generation.status === "pending" ? (
             <div className="flex flex-col gap-2">
-              <div className="h-48 w-64 rounded-2xl border border-[var(--line)] bg-[var(--surface-strong)]/30 animate-pulse" />
+              <div className="h-44 w-full max-w-64 animate-pulse rounded-2xl border border-[var(--line)] bg-[var(--surface-strong)]/30 sm:h-48" />
               {onCancel && (
                 <button
                   type="button"
@@ -107,8 +107,8 @@ export function GenerationBubble({
             <div className="space-y-3">
               <p className="text-xs text-[var(--ink-soft)]">结果 {generation.images.length}</p>
               <div
-                className={`grid gap-3 ${generation.images.length > 1 ? "grid-cols-2" : "grid-cols-1"}`}
-                style={{ maxWidth: generation.images.length === 1 ? "280px" : "400px" }}
+                className={`grid w-full gap-3 ${generation.images.length > 1 ? "grid-cols-1 min-[420px]:grid-cols-2" : "grid-cols-1"}`}
+                style={{ maxWidth: generation.images.length === 1 ? "min(100%, 320px)" : "min(100%, 420px)" }}
               >
                 {generation.images.map((image) => {
                   const downgrade = describeSizeDowngrade(generation, image);
@@ -141,7 +141,7 @@ export function GenerationBubble({
                           </span>
                         </div>
                       )}
-                      <div className="flex items-center justify-between gap-2 px-3 py-2 border-t border-[var(--line)]/50 bg-[var(--surface)]/80">
+                      <div className="flex flex-wrap items-center justify-between gap-2 border-t border-[var(--line)]/50 bg-[var(--surface)]/80 px-3 py-2">
                         <button
                           type="button"
                           onClick={() => onUseForEdit(image.url)}

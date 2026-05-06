@@ -16,13 +16,13 @@ const adminLinks = [
 
 export function AdminNav({ currentPath }: { currentPath: string }) {
   return (
-    <nav className="flex flex-wrap gap-2">
+    <nav className="-mx-5 flex gap-2 overflow-x-auto px-5 pb-1 [scrollbar-width:none] md:mx-0 md:flex-wrap md:overflow-visible md:px-0 md:pb-0 [&::-webkit-scrollbar]:hidden">
       {adminLinks.map((link) => (
         <Link
           key={link.href}
           href={link.href}
           className={cn(
-            "rounded-full px-4 py-2 text-sm transition",
+            "shrink-0 rounded-full px-3.5 py-2 text-sm transition md:px-4",
             currentPath === link.href
               ? "bg-[var(--ink)] text-white"
               : "ring-link text-[var(--ink-soft)]",

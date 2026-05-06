@@ -252,7 +252,125 @@ export function GenerationAdminList({ jobs }: { jobs: GenerationAdminJob[] }) {
           </div>
         </div>
 
-        <div className="overflow-x-auto">
+        <div className="grid gap-3 p-3 lg:hidden">
+          {visibleJobs.map((job) => {
+            const image = job.images[0];
+            const checked = selectedIds.has(job.id);
+            return (
+              <article
+                key={job.id}
+                className={`rounded-[1.2rem] border border-[var(--line)] bg-white/45 p-3 transition ${
+                  checked ? "ring-2 ring-[var(--accent)]/30" : ""
+                }`}
+              >
+                <div className="flex items-start gap-3">
+                  <input
+                    type="checkbox"
+                    aria-label={`选择生成记录 ${job.id}`}
+                    checked={checked}
+                    onChange={() => toggleOne(job.id)}
+                    className="mt-5 size-4 shrink-0 rounded border-[var(--line)]"
+                  />
+                  {image ? (
+                    <button
+                      type="button"
+                      onClick={() => setZoomedGeneratedImage(image.url)}
+                      className="shrink-0 overflow-hidden rounded-xl border border-[var(--line)] bg-[var(--surface-strong)]"
+                      title="查看生成图片"
+                      aria-label={`查看生成图片 ${job.id}`}
+                    >
+                      <img
+                        src={getThumbUrl(image.url, 128)}
+                        alt="生成预览"
+                        loading="lazy"
+                        decoding="async"
+                        className="size-16 object-cover"
+                      />
+                    </button>
+                  ) : (
+                    <div className="flex size-16 shrink-0 items-center justify-center rounded-xl border border-[var(--line)] bg-[var(--surface-strong)]/60 text-[var(--ink-soft)]">
+                      <ImageIcon className="size-5" />
+                    </div>
+                  )}
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-medium text-[var(--ink)]">
+                      {job.user?.email || "未知用户"}
+                    </p>
+                    <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-[var(--ink-soft)]">
+                      {job.prompt}
+                    </p>
+                    <div className="mt-2 flex flex-wrap gap-1.5 text-[11px] text-[var(--ink-soft)]">
+                      <span className="rounded-full border border-[var(--line)] bg-white/60 px-2 py-0.5">
+                        {getGenerationStatusLabel(job.status)}
+                      </span>
+                      <span className="rounded-full border border-[var(--line)] bg-white/60 px-2 py-0.5">
+                        {getGenerationTypeLabel(job)}
+                      </span>
+                      <span className="rounded-full border border-[var(--line)] bg-white/60 px-2 py-0.5">
+                        {getClientSourceLabel(job)}
+                      </span>
+                      <span className="rounded-full border border-[var(--line)] bg-white/60 px-2 py-0.5">
+                        {getCreditLabel(job)}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {job.sourceImageUrls.length > 0 ? (
+                  <div className="mt-3 rounded-xl border border-amber-200 bg-amber-50/55 p-2">
+                    <div className="mb-2 flex items-center justify-between text-[11px] text-amber-800">
+                      <span className="font-medium">上传参考图</span>
+                      <span>{job.sourceImageUrls.length} 张</span>
+                    </div>
+                    <SourceImageThumbs
+                      compact
+                      urls={job.sourceImageUrls}
+                      onZoom={setZoomedSourceImage}
+                    />
+                  </div>
+                ) : null}
+
+                <div className="mt-3 flex flex-wrap items-center justify-between gap-2 border-t border-[var(--line)]/60 pt-3">
+                  <span
+                    className="max-w-full truncate rounded-lg bg-[var(--surface-strong)] px-2.5 py-1 text-[11px] text-[var(--ink-soft)]"
+                    title={job.model}
+                  >
+                    {job.model}
+                  </span>
+                  <div className="flex items-center gap-1.5">
+                    <button
+                      type="button"
+                      onClick={() => setPromptJob(job)}
+                      className="inline-flex size-9 items-center justify-center rounded-xl bg-[var(--surface-strong)] text-[var(--ink-soft)]"
+                      title="完整提示词"
+                    >
+                      <FileText className="size-4" />
+                    </button>
+                    <button
+                      type="button"
+                      disabled={!image}
+                      onClick={() => void handleCopyImageUrl(job)}
+                      className="inline-flex size-9 items-center justify-center rounded-xl bg-[var(--surface-strong)] text-[var(--ink-soft)] disabled:opacity-35"
+                      title="复制图片地址"
+                    >
+                      <Copy className="size-4" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setDeleteTargetIds([job.id])}
+                      className="inline-flex size-9 items-center justify-center rounded-xl bg-rose-50 text-rose-600"
+                      title="删除记录"
+                    >
+                      <Trash2 className="size-4" />
+                    </button>
+                  </div>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+
+        <div className="hidden overflow-x-auto lg:block">
           <table className="w-full min-w-[1280px] border-collapse text-left text-sm">
             <thead className="bg-[var(--surface-strong)]/55 text-xs text-[var(--ink-soft)]">
               <tr>

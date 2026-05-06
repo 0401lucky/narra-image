@@ -35,7 +35,7 @@ export function AdminPagination({
   }
 
   return (
-    <nav className="flex items-center justify-center gap-1.5 pt-2">
+    <nav className="-mx-2 flex max-w-full items-center justify-start gap-1.5 overflow-x-auto px-2 pt-2 [scrollbar-width:none] sm:mx-0 sm:justify-center sm:px-0 [&::-webkit-scrollbar]:hidden">
       {currentPage > 1 ? (
         <Link
           href={buildUrl(basePath, currentPage - 1, extraParams)}

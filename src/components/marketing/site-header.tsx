@@ -45,17 +45,17 @@ export async function SiteHeader({
     <HeaderShell>
       <header
         className={cn(
-          "mx-auto w-full max-w-7xl px-5 py-5 md:px-8",
+          "mx-auto w-full max-w-7xl px-4 py-3 sm:px-5 md:px-8 md:py-5",
           className,
         )}
       >
-      <div className="flex items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <Link href="/" prefetch={false} className="flex items-center gap-3">
-            <span className="rounded-full border border-[var(--line)] bg-[var(--surface-strong)]/50 px-3 py-1 text-xs uppercase tracking-[0.35em] text-[var(--ink-soft)]">
+      <div className="flex flex-wrap items-center gap-3 md:flex-nowrap md:justify-between">
+        <div className="flex min-w-0 flex-1 items-center gap-2 md:flex-none md:gap-3">
+          <Link href="/" prefetch={false} className="flex min-w-0 items-center gap-2 md:gap-3">
+            <span className="shrink-0 rounded-full border border-[var(--line)] bg-[var(--surface-strong)]/50 px-2.5 py-1 text-[10px] uppercase tracking-[0.22em] text-[var(--ink-soft)] sm:px-3 sm:text-xs sm:tracking-[0.35em]">
               Narra
             </span>
-            <span className="editorial-title text-3xl font-semibold text-[var(--ink)]">
+            <span className="editorial-title truncate text-2xl font-semibold text-[var(--ink)] sm:text-3xl">
               Image
             </span>
           </Link>
@@ -65,7 +65,7 @@ export async function SiteHeader({
             rel="noopener noreferrer"
             aria-label="GitHub 仓库"
             title="GitHub 仓库"
-            className="flex size-9 shrink-0 items-center justify-center rounded-full text-[var(--ink-soft)] transition hover:bg-[var(--surface-strong)] hover:text-[var(--ink)]"
+            className="hidden size-9 shrink-0 items-center justify-center rounded-full text-[var(--ink-soft)] transition hover:bg-[var(--surface-strong)] hover:text-[var(--ink)] sm:flex"
           >
             <svg
               viewBox="0 0 16 16"
@@ -91,23 +91,27 @@ export async function SiteHeader({
           ))}
         </nav>
 
-        <div className="flex items-center gap-3">
+        <div className="flex min-w-0 flex-1 items-center justify-end gap-2 md:flex-none md:gap-3">
           {currentUser ? (
-            <div className="flex items-center gap-2">
-              <div className="studio-card flex items-center gap-2 rounded-full px-3 py-2 text-sm sm:px-4">
-                <span className="text-[var(--ink-soft)]">剩余积分</span>
+            <div className="flex min-w-0 items-center gap-1.5 sm:gap-2">
+              <div className="studio-card flex min-w-0 items-center gap-1.5 rounded-full px-2.5 py-1.5 text-xs sm:gap-2 sm:px-4 sm:py-2 sm:text-sm">
+                <span className="text-[var(--ink-soft)] sm:hidden">积分</span>
+                <span className="hidden text-[var(--ink-soft)] sm:inline">剩余积分</span>
                 <span className="font-semibold text-[var(--accent)]">
                   {currentUser.credits}
                 </span>
                 {checkInSummary ? (
-                  <CheckInButton
-                    checkedInToday={checkInSummary.checkedInToday}
-                    rewardCredits={checkInSummary.checkInReward}
-                    variant="compact"
-                  />
+                  <span className="hidden min-[430px]:inline-flex">
+                    <CheckInButton
+                      checkedInToday={checkInSummary.checkedInToday}
+                      rewardCredits={checkInSummary.checkInReward}
+                      variant="compact"
+                    />
+                  </span>
                 ) : null}
-                {/* 桌面宠物开关：紧邻签到按钮，登录用户可控 */}
-                <PetToggle />
+                <span className="hidden lg:inline-flex">
+                  <PetToggle />
+                </span>
               </div>
 
               {/* 用户头像 — 点击跳转设置页 */}
@@ -138,20 +142,23 @@ export async function SiteHeader({
           <Link
             href={currentUser ? "/create" : "/login"}
             prefetch={false}
-            className="rounded-full bg-[var(--ink)] px-5 py-2.5 text-sm font-semibold text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-[var(--accent)]"
+            className={cn(
+              "rounded-full bg-[var(--ink)] px-4 py-2 text-sm font-semibold text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-[var(--accent)] sm:px-5 sm:py-2.5",
+              currentUser ? "hidden sm:inline-flex" : "inline-flex",
+            )}
           >
             {currentUser ? "继续创作" : "登录开启"}
           </Link>
         </div>
       </div>
 
-      <nav className="mt-4 flex flex-wrap gap-2 md:hidden">
+      <nav className="-mx-4 mt-3 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] md:hidden [&::-webkit-scrollbar]:hidden">
         {links.map((link) => (
           <Link
             key={link.href}
             href={link.href}
             prefetch={false}
-            className="ring-link rounded-full px-4 py-2 text-sm text-[var(--ink-soft)] hover:text-[var(--ink)]"
+            className="ring-link shrink-0 rounded-full px-3.5 py-2 text-sm text-[var(--ink-soft)] hover:text-[var(--ink)]"
           >
             {link.label}
           </Link>

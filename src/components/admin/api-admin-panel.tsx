@@ -116,23 +116,23 @@ export function ApiAdminPanel({ apiConfig, apiKeys }: ApiAdminPanelProps) {
       {message ? <Alert variant="success">{message}</Alert> : null}
       {error ? <Alert variant="error">{error}</Alert> : null}
 
-      <div className="studio-card grid gap-5 rounded-[1.8rem] p-6 lg:grid-cols-[1fr_auto] lg:items-end">
+      <div className="studio-card grid gap-5 rounded-[1.4rem] p-4 sm:rounded-[1.8rem] sm:p-6 lg:grid-cols-[1fr_auto] lg:items-end">
         <div>
           <div className="flex items-center gap-3">
-            <div className={`flex size-11 items-center justify-center rounded-2xl ${
+            <div className={`flex size-10 shrink-0 items-center justify-center rounded-2xl sm:size-11 ${
               isEnabled ? "bg-emerald-50 text-emerald-700" : "bg-rose-50 text-rose-600"
             }`}>
               <Power className="size-5" />
             </div>
             <div>
-              <h2 className="text-xl font-semibold text-[var(--ink)]">统一 API 限制</h2>
+              <h2 className="text-lg font-semibold text-[var(--ink)] sm:text-xl">统一 API 限制</h2>
               <p className="text-sm text-[var(--ink-soft)]">
                 全站 API Key 共用这套限制，按每个 Key 分别统计。
               </p>
             </div>
           </div>
 
-          <div className="mt-5 grid gap-4 md:grid-cols-3">
+          <div className="mt-5 grid gap-3 sm:gap-4 md:grid-cols-3">
             <label className="flex items-center gap-2 rounded-2xl border border-[var(--line)] bg-white/65 px-4 py-3 text-sm text-[var(--ink)]">
               <input
                 type="checkbox"
@@ -170,18 +170,70 @@ export function ApiAdminPanel({ apiConfig, apiKeys }: ApiAdminPanelProps) {
           type="button"
           disabled={saving || isPending}
           onClick={() => void saveConfig()}
-          className="inline-flex items-center justify-center gap-2 rounded-full bg-[var(--ink)] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[var(--accent)] disabled:opacity-60"
+          className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[var(--ink)] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[var(--accent)] disabled:opacity-60 sm:w-auto"
         >
           {saving ? <Loader2 className="size-4 animate-spin" /> : <Save className="size-4" />}
           保存限制
         </button>
       </div>
 
-      <div className="studio-card overflow-hidden rounded-[1.8rem]">
+      <div className="studio-card overflow-hidden rounded-[1.4rem] sm:rounded-[1.8rem]">
         <div className="border-b border-[var(--line)] px-5 py-4">
           <h2 className="font-semibold text-[var(--ink)]">全站 API Key</h2>
         </div>
-        <div className="overflow-x-auto">
+        <div className="grid gap-3 p-3 lg:hidden">
+          {items.map((item) => (
+            <article
+              key={item.id}
+              className="rounded-[1.2rem] border border-[var(--line)] bg-white/40 p-4"
+            >
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="truncate font-medium text-[var(--ink)]">{item.name}</p>
+                  <p className="mt-1 font-mono text-xs text-[var(--ink-soft)]">
+                    {item.keyPrefix}...
+                  </p>
+                </div>
+                <span className={`shrink-0 rounded-full px-2.5 py-1 text-xs ${
+                  item.status === "active"
+                    ? "bg-emerald-50 text-emerald-700"
+                    : "bg-rose-50 text-rose-600"
+                }`}>
+                  {item.status === "active" ? "启用" : "已停用"}
+                </span>
+              </div>
+              <div className="mt-3 grid gap-2 rounded-xl bg-[var(--surface-strong)]/45 p-3 text-xs text-[var(--ink-soft)]">
+                <div className="flex justify-between gap-3">
+                  <span>用户</span>
+                  <span className="min-w-0 truncate text-right text-[var(--ink)]">{item.user.email}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>调用</span>
+                  <span className="text-[var(--ink)]">{item.generationCount}</span>
+                </div>
+                <div className="flex justify-between gap-3">
+                  <span>最近使用</span>
+                  <span className="text-right text-[var(--ink)]">{formatDate(item.lastUsedAt)}</span>
+                </div>
+              </div>
+              <button
+                type="button"
+                disabled={item.status !== "active" || revokingId === item.id}
+                onClick={() => void revokeKey(item.id)}
+                className="mt-3 inline-flex w-full items-center justify-center gap-1.5 rounded-full border border-rose-200 px-3 py-2 text-xs font-medium text-rose-600 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {revokingId === item.id ? <Loader2 className="size-3.5 animate-spin" /> : <ShieldOff className="size-3.5" />}
+                停用
+              </button>
+            </article>
+          ))}
+          {items.length === 0 ? (
+            <div className="px-5 py-10 text-center text-sm text-[var(--ink-soft)]">
+              暂无 API Key。
+            </div>
+          ) : null}
+        </div>
+        <div className="hidden overflow-x-auto lg:block">
           <table className="w-full min-w-[880px] text-left text-sm">
             <thead className="bg-[var(--surface-strong)]/60 text-xs text-[var(--ink-soft)]">
               <tr>

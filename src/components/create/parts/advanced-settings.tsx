@@ -82,10 +82,10 @@ export function AdvancedSettings({
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -8 }}
           transition={{ duration: 0.2, ease: "easeOut" }}
-          className="overflow-hidden rounded-b-[2rem] border-t border-[var(--line)]/50 bg-[var(--surface)]/50 p-5"
+          className="max-h-[42vh] overflow-y-auto rounded-b-[1.25rem] border-t border-[var(--line)]/50 bg-[var(--surface)]/50 p-3 sm:max-h-[52vh] sm:rounded-b-[2rem] sm:p-5"
         >
-          <div className="grid gap-6 md:grid-cols-2">
-            <div className="space-y-4">
+          <div className="grid gap-4 md:grid-cols-2 md:gap-6">
+            <div className="space-y-3 sm:space-y-4">
               {showCustomSize && (
                 <div>
                   <label className="mb-1.5 block text-xs font-medium text-[var(--ink-soft)]">自定义尺寸</label>
@@ -144,8 +144,8 @@ export function AdvancedSettings({
               </div>
             </div>
 
-            <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-3 sm:space-y-4">
+              <div className="grid grid-cols-1 gap-3 min-[420px]:grid-cols-2">
                 <label>
                   <span className="mb-1.5 block text-xs font-medium text-[var(--ink-soft)]">质量</span>
                   <select
@@ -222,7 +222,7 @@ export function AdvancedSettings({
           </p>
 
           {/* 移动端：渠道/模型选择（桌面端在 Composer 底部栏，故只在 md 以下显示） */}
-          <div className="md:hidden mt-4 grid grid-cols-2 gap-3 border-t border-[var(--line)]/50 pt-4">
+          <div className="mt-4 grid grid-cols-1 gap-3 border-t border-[var(--line)]/50 pt-4 min-[420px]:grid-cols-2 md:hidden">
             {channels.length > 1 && (
               <label>
                 <span className="mb-1.5 block text-xs font-medium text-[var(--ink-soft)]">渠道</span>
@@ -238,7 +238,7 @@ export function AdvancedSettings({
                 </select>
               </label>
             )}
-            <label className={channels.length > 1 ? "" : "col-span-2"}>
+            <label className={channels.length > 1 ? "" : "min-[420px]:col-span-2"}>
               <span className="mb-1.5 block text-xs font-medium text-[var(--ink-soft)]">模型</span>
               <select
                 aria-label="模型"
