@@ -4,8 +4,18 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { Download, Expand, FileText, Loader2, Trash2 } from "lucide-react";
+import { useMemo, useState } from "react";
+import {
+  Download,
+  Expand,
+  ExternalLink,
+  FileText,
+  Filter,
+  Loader2,
+  Search,
+  Share2,
+  Trash2,
+} from "lucide-react";
 import { motion } from "motion/react";
 
 import type { SerializedWork } from "@/lib/prisma-mappers";
@@ -20,6 +30,11 @@ import {
 } from "@/components/works/work-showcase-controls";
 
 type MyWorksBoardProps = {
+  counts: {
+    featured: number;
+    pending: number;
+    total: number;
+  };
   initialItems: SerializedWork[];
   initialHasMore: boolean;
   initialCursor: string | null;
@@ -34,6 +49,15 @@ type LoadMoreResponse = {
   error?: string;
 };
 
+type WorkFilter = "all" | "private" | "pending" | "featured";
+
+const filterLabels: Record<WorkFilter, string> = {
+  all: "全部",
+  featured: "已精选",
+  pending: "待审核",
+  private: "私有",
+};
+
 function formatTime(value: string) {
   return new Intl.DateTimeFormat("zh-CN", {
     day: "numeric",
@@ -43,7 +67,47 @@ function formatTime(value: string) {
   }).format(new Date(value));
 }
 
+function getRatioLabel(size: string) {
+  const match = size.match(/(\d+)\s*x\s*(\d+)/i);
+  if (!match) return size;
+  const width = Number(match[1]);
+  const height = Number(match[2]);
+  if (!width || !height) return size;
+  const divisor = gcd(width, height);
+  return `${width / divisor}:${height / divisor}`;
+}
+
+function getAspectRatio(size: string) {
+  const match = size.match(/(\d+)\s*x\s*(\d+)/i);
+  if (!match) return "3 / 4";
+  return `${Number(match[1])} / ${Number(match[2])}`;
+}
+
+function gcd(a: number, b: number): number {
+  return b === 0 ? a : gcd(b, a % b);
+}
+
+function matchesFilter(work: SerializedWork, filter: WorkFilter) {
+  if (filter === "private") return work.showcaseStatus === "PRIVATE";
+  if (filter === "pending") return work.showcaseStatus === "PENDING";
+  if (filter === "featured") return work.showcaseStatus === "FEATURED";
+  return true;
+}
+
+function matchesSearch(work: SerializedWork, search: string) {
+  if (!search.trim()) return true;
+  const keyword = search.trim().toLowerCase();
+  return [
+    work.prompt,
+    work.negativePrompt ?? "",
+    work.model,
+    work.size,
+    work.id,
+  ].some((value) => value.toLowerCase().includes(keyword));
+}
+
 export function MyWorksBoard({
+  counts,
   initialItems,
   initialHasMore,
   initialCursor,
@@ -55,11 +119,40 @@ export function MyWorksBoard({
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [loadMoreError, setLoadMoreError] = useState<string | null>(null);
 
+  const [activeFilter, setActiveFilter] = useState<WorkFilter>("all");
+  const [search, setSearch] = useState("");
+  const [selectedWorkId, setSelectedWorkId] = useState<string | null>(
+    initialItems[0]?.id ?? null,
+  );
+  const [shareMessage, setShareMessage] = useState<string | null>(null);
+
   const [zoomedWork, setZoomedWork] = useState<SerializedWork | null>(null);
   const [promptWork, setPromptWork] = useState<SerializedWork | null>(null);
   const [deletingWork, setDeletingWork] = useState<SerializedWork | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
+
+  const filterCounts: Record<WorkFilter, number> = {
+    all: counts.total,
+    featured: counts.featured,
+    pending: counts.pending,
+    private: Math.max(counts.total - counts.pending - counts.featured, 0),
+  };
+
+  const filteredItems = useMemo(
+    () =>
+      items.filter(
+        (work) =>
+          matchesFilter(work, activeFilter) && matchesSearch(work, search),
+      ),
+    [activeFilter, items, search],
+  );
+
+  const selectedWork =
+    filteredItems.find((work) => work.id === selectedWorkId) ??
+    filteredItems[0] ??
+    items.find((work) => work.id === selectedWorkId) ??
+    null;
 
   async function handleLoadMore() {
     if (!hasMore || !cursor || isLoadingMore) return;
@@ -86,12 +179,39 @@ export function MyWorksBoard({
     }
   }
 
+  async function handleShare(work: SerializedWork) {
+    const url = new URL(`/works/${work.id}`, window.location.origin).toString();
+    setShareMessage(null);
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          text: "来看看这张作品",
+          title: "Narra Image 作品",
+          url,
+        });
+        return;
+      } catch {
+        // 取消系统分享时回落到复制链接，避免用户没有任何反馈。
+      }
+    }
+
+    if (!navigator.clipboard?.writeText) {
+      setShareMessage("当前浏览器不支持自动复制，请手动复制详情页地址");
+      return;
+    }
+    await navigator.clipboard.writeText(url);
+    setShareMessage("链接已复制");
+  }
+
   async function handleConfirmDelete() {
     if (!deletingWork) return;
+    const deletedId = deletingWork.id;
+    const nextSelected = items.find((item) => item.id !== deletedId) ?? null;
     setDeleteError(null);
     setIsDeleting(true);
     try {
-      const response = await fetch(`/api/me/works/${deletingWork.id}`, {
+      const response = await fetch(`/api/me/works/${deletedId}`, {
         method: "DELETE",
       });
       const result = (await response.json().catch(() => ({}))) as {
@@ -101,10 +221,11 @@ export function MyWorksBoard({
         setDeleteError(result.error || "删除失败，请稍后再试");
         return;
       }
-      // 客户端立即移除该项，避免等 server refresh 的视觉延迟
-      setItems((prev) => prev.filter((item) => item.id !== deletingWork.id));
+      setItems((prev) => prev.filter((item) => item.id !== deletedId));
+      setSelectedWorkId((current) =>
+        current === deletedId ? nextSelected?.id ?? null : current,
+      );
       setDeletingWork(null);
-      // 触发顶部 counts 卡片重新计算
       router.refresh();
     } finally {
       setIsDeleting(false);
@@ -113,17 +234,19 @@ export function MyWorksBoard({
 
   if (items.length === 0) {
     return (
-      <div className="studio-card rounded-[2rem] border border-dashed border-[var(--line)] p-10 text-center">
-        <h2 className="text-xl font-semibold text-[var(--ink)]">还没有作品</h2>
-        <p className="mt-3 text-sm leading-relaxed text-[var(--ink-soft)]">
-          先去创作台生成图片。生成成功后，每一张图都会自动进入这里，默认仅自己可见。
-        </p>
-        <div className="mt-6">
+      <div className="studio-card grid gap-6 p-8 text-center md:p-10">
+        <div>
+          <h2 className="text-xl font-semibold text-[var(--ink)]">还没有作品</h2>
+          <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-[var(--ink-soft)]">
+            先去创作台生成图片。生成成功后，每一张图都会自动进入这里，默认仅自己可见。
+          </p>
+        </div>
+        <div>
           <Link
             href="/create"
-            className="rounded-full bg-[var(--ink)] px-5 py-3 text-sm font-medium text-white transition hover:bg-[var(--accent)]"
+            className="inline-flex items-center gap-2 rounded-lg bg-[var(--ink)] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[var(--accent)]"
           >
-            去生成作品
+            去创作台
           </Link>
         </div>
       </div>
@@ -132,150 +255,370 @@ export function MyWorksBoard({
 
   return (
     <>
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        {items.map((work, index) => (
-          <motion.article
-            key={work.id}
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{
-              duration: 0.28,
-              ease: "easeOut",
-              delay: Math.min((index % 24) * 0.025, 0.3),
-            }}
-            className="studio-card flex flex-col rounded-[1.6rem] p-4"
-          >
-            <button
-              type="button"
-              onClick={() => setZoomedWork(work)}
-              className="group relative overflow-hidden rounded-[1.25rem] border border-[var(--line)] bg-[var(--surface-strong)]/40 cursor-pointer"
-            >
-              <img
-                src={getThumbUrl(work.url, 640)}
-                alt="作品预览"
-                loading="lazy"
-                decoding="async"
-                className="aspect-[3/4] w-full object-cover transition duration-500 group-hover:scale-[1.03]"
-              />
-              <div className="absolute inset-0 bg-black/0 transition group-hover:bg-black/20" />
-              <span className="absolute right-3 top-3 rounded-full bg-black/55 p-2 text-white opacity-0 transition group-hover:opacity-100">
-                <Expand className="size-4" />
-              </span>
-            </button>
+      <div className="grid gap-5 xl:grid-cols-[15rem_minmax(0,1fr)_22rem]">
+        <aside className="studio-card h-fit p-4 xl:sticky xl:top-24">
+          <h2 className="text-sm font-semibold text-[var(--ink)]">我的作品</h2>
+          <div className="mt-4 grid gap-1.5">
+            {(["all", "private", "pending", "featured"] as WorkFilter[]).map(
+              (filter) => (
+                <button
+                  key={filter}
+                  type="button"
+                  onClick={() => setActiveFilter(filter)}
+                  className={`flex items-center justify-between rounded-lg px-3 py-2 text-sm transition ${
+                    activeFilter === filter
+                      ? "bg-[#eadfce] text-[var(--ink)] shadow-sm"
+                      : "text-[var(--ink-soft)] hover:bg-white/60 hover:text-[var(--ink)]"
+                  }`}
+                >
+                  <span>{filterLabels[filter]}</span>
+                  <span className="text-xs tabular-nums">
+                    {filterCounts[filter]}
+                  </span>
+                </button>
+              ),
+            )}
+          </div>
 
-            <div className="mt-3 flex items-start justify-between gap-3">
-              <div className="min-w-0">
-                <p className="text-xs text-[var(--ink-soft)]">创建于 {formatTime(work.createdAt)}</p>
-                <p className="mt-1.5 line-clamp-2 text-sm leading-relaxed text-[var(--ink)]">
-                  {work.prompt}
+          <div className="mt-5 border-t border-[var(--line)] pt-5">
+            <div className="flex items-center gap-2 text-sm font-semibold text-[var(--ink)]">
+              <Filter className="size-4 text-[var(--accent)]" />
+              筛选
+            </div>
+            <div className="mt-4 grid gap-3 text-sm">
+              <label className="grid gap-1.5">
+                <span className="text-xs text-[var(--ink-soft)]">状态</span>
+                <select
+                  value={activeFilter}
+                  onChange={(event) =>
+                    setActiveFilter(event.target.value as WorkFilter)
+                  }
+                  className="rounded-lg border border-[var(--line)] bg-white/70 px-3 py-2 text-[var(--ink)] outline-none"
+                >
+                  <option value="all">全部</option>
+                  <option value="private">私有</option>
+                  <option value="pending">待审核</option>
+                  <option value="featured">已精选</option>
+                </select>
+              </label>
+              <div className="grid grid-cols-2 gap-2 text-xs text-[var(--ink-soft)]">
+                <span className="rounded-lg border border-[var(--line)] bg-white/55 px-3 py-2">
+                  已加载 {items.length}
+                </span>
+                <span className="rounded-lg border border-[var(--line)] bg-white/55 px-3 py-2">
+                  命中 {filteredItems.length}
+                </span>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        <section className="studio-card min-w-0 overflow-hidden p-3 md:p-4">
+          <div className="flex flex-col gap-3 border-b border-[var(--line)] pb-4 lg:flex-row lg:items-center lg:justify-between">
+            <div className="flex rounded-lg border border-[var(--line)] bg-[#f4eadc] p-1">
+              {(["all", "private", "pending", "featured"] as WorkFilter[]).map(
+                (filter) => (
+                  <button
+                    key={filter}
+                    type="button"
+                    onClick={() => setActiveFilter(filter)}
+                    className={`rounded-md px-3 py-1.5 text-sm font-medium transition ${
+                      activeFilter === filter
+                        ? "bg-[#fffaf2] text-[var(--ink)] shadow-sm"
+                        : "text-[var(--ink-soft)] hover:text-[var(--ink)]"
+                    }`}
+                  >
+                    {filterLabels[filter]}
+                  </button>
+                ),
+              )}
+            </div>
+
+            <label className="relative min-w-0 flex-1 lg:max-w-md">
+              <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-[var(--ink-soft)]" />
+              <input
+                value={search}
+                onChange={(event) => setSearch(event.target.value)}
+                placeholder="搜索作品或提示词"
+                className="h-11 w-full rounded-lg border border-[var(--line)] bg-[#fffaf2]/76 pl-10 pr-4 text-sm text-[var(--ink)] outline-none transition focus:border-[var(--accent)] focus:bg-white"
+              />
+            </label>
+          </div>
+
+          {filteredItems.length > 0 ? (
+            <div className="mt-4 grid gap-4 sm:grid-cols-2 2xl:grid-cols-3">
+              {filteredItems.map((work, index) => (
+                <motion.article
+                  key={work.id}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{
+                    delay: Math.min((index % 18) * 0.018, 0.22),
+                    duration: 0.22,
+                    ease: "easeOut",
+                  }}
+                  onClick={() => setSelectedWorkId(work.id)}
+                  className={`group cursor-pointer overflow-hidden rounded-xl border bg-[#fffaf2]/80 p-2 shadow-[0_12px_30px_rgba(94,58,33,0.08)] transition hover:-translate-y-0.5 hover:shadow-[0_18px_38px_rgba(94,58,33,0.12)] ${
+                    selectedWork?.id === work.id
+                      ? "border-[var(--accent)]"
+                      : "border-[var(--line)]"
+                  }`}
+                >
+                  <div
+                    className="relative overflow-hidden rounded-lg bg-[var(--surface-strong)]"
+                    style={{ aspectRatio: getAspectRatio(work.size) }}
+                  >
+                    <img
+                      src={getThumbUrl(work.url, 640)}
+                      alt="作品预览"
+                      loading="lazy"
+                      decoding="async"
+                      className="size-full object-cover transition duration-500 group-hover:scale-[1.03]"
+                    />
+                    <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/72 via-black/22 to-transparent p-3 text-white">
+                      <p className="line-clamp-1 text-sm font-semibold">
+                        {work.prompt}
+                      </p>
+                      <p className="mt-1 text-xs text-white/72">
+                        {work.model} · {getRatioLabel(work.size)}
+                      </p>
+                    </div>
+                    <div className="absolute left-3 top-3">
+                      <WorkStatusBadge status={work.showcaseStatus} />
+                    </div>
+                    <div className="absolute right-3 top-3 flex gap-1.5">
+                      <button
+                        type="button"
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          setZoomedWork(work);
+                        }}
+                        className="grid size-8 place-items-center rounded-full bg-black/45 text-white backdrop-blur-md transition hover:bg-black/65"
+                        aria-label="放大预览"
+                      >
+                        <Expand className="size-4" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          void downloadImage(work.url);
+                        }}
+                        className="grid size-8 place-items-center rounded-full bg-black/45 text-white backdrop-blur-md transition hover:bg-black/65"
+                        aria-label="下载作品"
+                      >
+                        <Download className="size-4" />
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="grid gap-3 px-1 pb-1 pt-3">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0">
+                        <p className="text-xs text-[var(--ink-soft)]">
+                          创建于 {formatTime(work.createdAt)}
+                        </p>
+                        <p className="mt-1 line-clamp-2 text-sm leading-relaxed text-[var(--ink)]">
+                          {work.prompt}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </motion.article>
+              ))}
+            </div>
+          ) : (
+            <div className="mt-4 rounded-xl border border-dashed border-[var(--line)] bg-white/45 px-5 py-12 text-center text-sm text-[var(--ink-soft)]">
+              没有匹配的作品。
+            </div>
+          )}
+
+          {isLoadingMore &&
+            Array.from({ length: 4 }).map((_, index) => (
+              <div
+                key={`skeleton_${index}`}
+                className="mt-4 h-72 animate-pulse rounded-xl bg-[var(--surface-strong)]/60"
+                aria-hidden
+              />
+            ))}
+
+          {hasMore ? (
+            <div className="mt-6 flex flex-col items-center gap-3">
+              {loadMoreError ? (
+                <Alert variant="error" className="rounded-full px-4 py-2 text-xs">
+                  {loadMoreError}
+                </Alert>
+              ) : null}
+              <button
+                type="button"
+                onClick={() => void handleLoadMore()}
+                disabled={isLoadingMore}
+                className="inline-flex items-center gap-2 rounded-lg bg-[var(--ink)] px-6 py-3 text-sm font-semibold text-white shadow-md transition hover:bg-[var(--accent)] disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {isLoadingMore ? (
+                  <>
+                    <Loader2 className="size-4 animate-spin" />
+                    加载中
+                  </>
+                ) : loadMoreError ? (
+                  "重试"
+                ) : (
+                  "加载更多"
+                )}
+              </button>
+            </div>
+          ) : items.length >= 24 ? (
+            <div className="mt-6 text-center text-xs text-[var(--ink-soft)]/70">
+              没有更多作品了
+            </div>
+          ) : null}
+        </section>
+
+        <aside className="studio-card h-fit p-4 xl:sticky xl:top-24">
+          {selectedWork ? (
+            <div className="grid gap-4">
+              <div className="flex items-center justify-between gap-3">
+                <h2 className="text-base font-semibold text-[var(--ink)]">
+                  作品详情
+                </h2>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setZoomedWork(selectedWork)}
+                className="overflow-hidden rounded-xl border border-[var(--line)] bg-[var(--surface-strong)]"
+              >
+                <img
+                  src={getThumbUrl(selectedWork.url, 900)}
+                  alt="选中作品预览"
+                  className="max-h-[28rem] w-full object-cover"
+                />
+              </button>
+
+              <div>
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <h3 className="line-clamp-2 text-lg font-semibold text-[var(--ink)]">
+                      {selectedWork.prompt}
+                    </h3>
+                    <p className="mt-1 text-xs text-[var(--ink-soft)]">
+                      创建于 {formatTime(selectedWork.createdAt)}
+                    </p>
+                  </div>
+                  <WorkStatusBadge status={selectedWork.showcaseStatus} />
+                </div>
+
+                <dl className="mt-4 grid gap-3 text-sm">
+                  <div className="flex justify-between gap-3 border-b border-[var(--line)] pb-2">
+                    <dt className="text-[var(--ink-soft)]">模型</dt>
+                    <dd className="font-medium text-[var(--ink)]">
+                      {selectedWork.model}
+                    </dd>
+                  </div>
+                  <div className="flex justify-between gap-3 border-b border-[var(--line)] pb-2">
+                    <dt className="text-[var(--ink-soft)]">尺寸</dt>
+                    <dd className="font-medium text-[var(--ink)]">
+                      {selectedWork.size} ({getRatioLabel(selectedWork.size)})
+                    </dd>
+                  </div>
+                  <div className="flex justify-between gap-3 border-b border-[var(--line)] pb-2">
+                    <dt className="text-[var(--ink-soft)]">公开范围</dt>
+                    <dd className="font-medium text-[var(--ink)]">
+                      {selectedWork.showcaseStatus === "FEATURED"
+                        ? "首页精选"
+                        : "仅自己可见"}
+                    </dd>
+                  </div>
+                </dl>
+              </div>
+
+              <div className="rounded-lg border border-[var(--line)] bg-white/58 p-3">
+                <div className="mb-2 flex items-center justify-between gap-2">
+                  <span className="text-sm font-semibold text-[var(--ink)]">
+                    提示词
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setPromptWork(selectedWork)}
+                    className="text-xs font-medium text-[var(--accent)]"
+                  >
+                    查看完整
+                  </button>
+                </div>
+                <p className="line-clamp-4 text-sm leading-relaxed text-[var(--ink-soft)]">
+                  {selectedWork.showPromptPublic ||
+                  selectedWork.showcaseStatus !== "FEATURED"
+                    ? selectedWork.prompt
+                    : "作者未公开提示词"}
                 </p>
               </div>
-              <WorkStatusBadge status={work.showcaseStatus} />
-            </div>
 
-            <div className="mt-3 flex flex-wrap gap-2 text-[11px] text-[var(--ink-soft)]">
-              <span className="rounded-full bg-[var(--surface-strong)] px-2.5 py-1">{work.model}</span>
-              <span className="rounded-full bg-[var(--surface-strong)] px-2.5 py-1">{work.size}</span>
-            </div>
+              <div className="grid grid-cols-2 gap-2">
+                <button
+                  type="button"
+                  onClick={() => void downloadImage(selectedWork.url)}
+                  className="inline-flex items-center justify-center gap-2 rounded-lg border border-[var(--line)] bg-white/60 px-4 py-2.5 text-sm font-semibold text-[var(--ink)] transition hover:border-[var(--accent)]"
+                >
+                  <Download className="size-4" />
+                  下载
+                </button>
+                <button
+                  type="button"
+                  onClick={() => void handleShare(selectedWork)}
+                  className="inline-flex items-center justify-center gap-2 rounded-lg border border-[var(--line)] bg-white/60 px-4 py-2.5 text-sm font-semibold text-[var(--ink)] transition hover:border-[var(--accent)]"
+                >
+                  <Share2 className="size-4" />
+                  分享
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setPromptWork(selectedWork)}
+                  className="inline-flex items-center justify-center gap-2 rounded-lg border border-[var(--line)] bg-white/60 px-4 py-2.5 text-sm font-semibold text-[var(--ink)] transition hover:border-[var(--accent)]"
+                >
+                  <FileText className="size-4" />
+                  提示词
+                </button>
+                <Link
+                  href={`/works/${selectedWork.id}`}
+                  className="inline-flex items-center justify-center gap-2 rounded-lg border border-[var(--line)] bg-white/60 px-4 py-2.5 text-sm font-semibold text-[var(--ink)] transition hover:border-[var(--accent)]"
+                >
+                  <ExternalLink className="size-4" />
+                  详情
+                </Link>
+              </div>
 
-            <div className="mt-3 flex flex-wrap gap-2">
-              <Link
-                href={`/works/${work.id}`}
-                className="rounded-full bg-[var(--ink)] px-3 py-2 text-xs font-medium text-white transition hover:bg-[var(--accent)]"
-              >
-                查看详情
-              </Link>
-              <button
-                type="button"
-                onClick={() => setPromptWork(work)}
-                className="inline-flex items-center gap-1.5 rounded-full border border-[var(--line)] px-3 py-2 text-xs text-[var(--ink)] transition hover:border-[var(--accent)] hover:text-[var(--accent)] cursor-pointer"
-              >
-                <FileText className="size-3.5" />
-                提示词
-              </button>
-              <button
-                type="button"
-                onClick={() => void downloadImage(work.url)}
-                className="inline-flex items-center gap-1.5 rounded-full border border-[var(--line)] px-3 py-2 text-xs text-[var(--ink)] transition hover:border-[var(--accent)] hover:text-[var(--accent)] cursor-pointer"
-              >
-                <Download className="size-3.5" />
-                下载
-              </button>
+              {shareMessage ? (
+                <p className="text-xs text-[var(--ink-soft)]">{shareMessage}</p>
+              ) : null}
+
+              <WorkShowcaseControls work={selectedWork} />
+
               <button
                 type="button"
                 onClick={() => {
                   setDeleteError(null);
-                  setDeletingWork(work);
+                  setDeletingWork(selectedWork);
                 }}
-                className="inline-flex items-center gap-1.5 rounded-full border border-rose-200 px-3 py-2 text-xs text-rose-600 transition hover:border-rose-400 hover:text-rose-700 cursor-pointer"
+                className="inline-flex items-center justify-center gap-2 rounded-lg border border-rose-200 bg-rose-50/60 px-4 py-2.5 text-sm font-semibold text-rose-600 transition hover:border-rose-400"
               >
-                <Trash2 className="size-3.5" />
+                <Trash2 className="size-4" />
                 删除
               </button>
             </div>
-
-            <div className="mt-3">
-              <WorkShowcaseControls work={work} compact />
+          ) : (
+            <div className="rounded-xl border border-dashed border-[var(--line)] p-8 text-center text-sm text-[var(--ink-soft)]">
+              选择一张作品查看详情。
             </div>
-          </motion.article>
-        ))}
-
-        {/* 加载中骨架占位（只在追加加载时出现，首屏由 SSR 直出真实内容） */}
-        {isLoadingMore &&
-          Array.from({ length: 4 }).map((_, index) => (
-            <div
-              key={`skeleton_${index}`}
-              className="studio-card flex flex-col rounded-[1.6rem] p-4"
-              aria-hidden
-            >
-              <div className="aspect-[3/4] w-full animate-pulse rounded-[1.25rem] bg-[var(--surface-strong)]/60" />
-              <div className="mt-3 space-y-2">
-                <div className="h-3 w-1/3 animate-pulse rounded-full bg-[var(--surface-strong)]/60" />
-                <div className="h-3 w-full animate-pulse rounded-full bg-[var(--surface-strong)]/60" />
-                <div className="h-3 w-4/5 animate-pulse rounded-full bg-[var(--surface-strong)]/60" />
-              </div>
-            </div>
-          ))}
+          )}
+        </aside>
       </div>
-
-      {/* 加载更多按钮 / 错误重试 / 触底提示 */}
-      {hasMore ? (
-        <div className="mt-8 flex flex-col items-center gap-3">
-          {loadMoreError ? (
-            <Alert variant="error" className="rounded-full px-4 py-2 text-xs">
-              {loadMoreError}
-            </Alert>
-          ) : null}
-          <button
-            type="button"
-            onClick={() => void handleLoadMore()}
-            disabled={isLoadingMore}
-            className="inline-flex items-center gap-2 rounded-full bg-[var(--ink)] px-6 py-3 text-sm font-medium text-white shadow-md transition hover:bg-[var(--accent)] disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer"
-          >
-            {isLoadingMore ? (
-              <>
-                <Loader2 className="size-4 animate-spin" />
-                加载中
-              </>
-            ) : loadMoreError ? (
-              "重试"
-            ) : (
-              "加载更多"
-            )}
-          </button>
-        </div>
-      ) : items.length >= 24 ? (
-        <div className="mt-8 text-center text-xs text-[var(--ink-soft)]/70">
-          没有更多作品了
-        </div>
-      ) : null}
 
       {zoomedWork ? (
         <ImageLightbox src={zoomedWork.url} onClose={() => setZoomedWork(null)}>
           <button
             type="button"
             onClick={() => void downloadImage(zoomedWork.url)}
-            className="rounded-full bg-white/20 px-5 py-3 text-sm font-medium text-white backdrop-blur-md transition hover:bg-[var(--accent)] cursor-pointer"
+            className="rounded-full bg-white/20 px-5 py-3 text-sm font-medium text-white backdrop-blur-md transition hover:bg-[var(--accent)]"
           >
             下载这张图
           </button>
@@ -298,7 +641,7 @@ export function MyWorksBoard({
           }}
         >
           <div
-            className="studio-card w-full max-w-md rounded-[1.8rem] p-6"
+            className="studio-card w-full max-w-md p-6"
             onClick={(event) => event.stopPropagation()}
           >
             <h3 className="text-lg font-semibold text-[var(--ink)]">删除作品</h3>
@@ -315,7 +658,7 @@ export function MyWorksBoard({
                 type="button"
                 disabled={isDeleting}
                 onClick={() => setDeletingWork(null)}
-                className="rounded-full border border-[var(--line)] px-4 py-2 text-sm text-[var(--ink-soft)] disabled:opacity-60 cursor-pointer"
+                className="rounded-lg border border-[var(--line)] px-4 py-2 text-sm text-[var(--ink-soft)] disabled:opacity-60"
               >
                 取消
               </button>
@@ -323,7 +666,7 @@ export function MyWorksBoard({
                 type="button"
                 disabled={isDeleting}
                 onClick={() => void handleConfirmDelete()}
-                className="inline-flex items-center gap-2 rounded-full bg-rose-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-rose-700 disabled:opacity-60 cursor-pointer"
+                className="inline-flex items-center gap-2 rounded-lg bg-rose-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-rose-700 disabled:opacity-60"
               >
                 {isDeleting ? <Loader2 className="size-4 animate-spin" /> : null}
                 {isDeleting ? "删除中" : "确认删除"}
