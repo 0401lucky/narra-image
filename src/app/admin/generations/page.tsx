@@ -6,9 +6,6 @@ import { Grid2X2, List } from "lucide-react";
 
 import { db } from "@/lib/db";
 import { requireAdminRecord } from "@/lib/server/current-user";
-import { SiteHeader } from "@/components/marketing/site-header";
-import { AdminNav } from "@/components/admin/admin-nav";
-import { serializeUser } from "@/lib/prisma-mappers";
 import {
   GenerationAdminCard,
   GenerationAdminList,
@@ -97,9 +94,8 @@ export default async function AdminGenerationsPage({
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  let admin;
   try {
-    admin = await requireAdminRecord();
+    await requireAdminRecord();
   } catch {
     redirect("/login");
   }
@@ -167,10 +163,10 @@ export default async function AdminGenerationsPage({
 
   return (
     <main className="pb-16">
-      <SiteHeader currentUser={serializeUser(admin)} />
       <section className={`mx-auto grid gap-6 px-5 pt-8 md:px-8 ${view === "list" ? "max-w-[92rem]" : "max-w-7xl"}`}>
         <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
           <div>
+            <p className="admin-eyebrow">Generations</p>
             <h1 className="text-3xl font-semibold tracking-tight text-[var(--ink)] md:text-4xl">
               生成记录
             </h1>
@@ -180,7 +176,6 @@ export default async function AdminGenerationsPage({
           </div>
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center xl:justify-end">
             <ViewModeSwitch currentPage={page} search={search} view={view} />
-            <AdminNav currentPath="/admin/generations" />
           </div>
         </div>
 

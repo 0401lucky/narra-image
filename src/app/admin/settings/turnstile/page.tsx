@@ -1,11 +1,8 @@
 import { redirect } from "next/navigation";
 
-import { AdminNav } from "@/components/admin/admin-nav";
 import { SettingsSubNav } from "@/components/admin/settings-sub-nav";
 import { TurnstileConfigForm } from "@/components/admin/turnstile-config-form";
-import { SiteHeader } from "@/components/marketing/site-header";
 import { getTurnstileConfig } from "@/lib/auth/turnstile";
-import { serializeUser } from "@/lib/prisma-mappers";
 import { requireAdminRecord } from "@/lib/server/current-user";
 
 export const dynamic = "force-dynamic";
@@ -15,9 +12,8 @@ export const metadata = {
 };
 
 export default async function AdminTurnstilePage() {
-  let admin;
   try {
-    admin = await requireAdminRecord();
+    await requireAdminRecord();
   } catch {
     redirect("/login");
   }
@@ -26,10 +22,10 @@ export default async function AdminTurnstilePage() {
 
   return (
     <main className="pb-16">
-      <SiteHeader currentUser={serializeUser(admin)} />
       <section className="mx-auto grid max-w-3xl gap-6 px-5 pt-8 md:px-8">
         <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between mb-2">
           <div>
+            <p className="admin-eyebrow">Security</p>
             <h1 className="text-3xl font-semibold tracking-tight text-[var(--ink)] md:text-4xl">
               人机验证
             </h1>
@@ -37,7 +33,6 @@ export default async function AdminTurnstilePage() {
               配置 Cloudflare Turnstile，防止表单被自动化脚本批量调用。
             </p>
           </div>
-          <AdminNav currentPath="/admin/settings" />
         </div>
 
         <SettingsSubNav currentPath="/admin/settings/turnstile" />

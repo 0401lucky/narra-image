@@ -2,10 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Cog, KeyRound, Server, ShieldCheck } from "lucide-react";
 
-import { AdminNav } from "@/components/admin/admin-nav";
 import { SettingsSubNav } from "@/components/admin/settings-sub-nav";
-import { SiteHeader } from "@/components/marketing/site-header";
-import { serializeUser } from "@/lib/prisma-mappers";
 import { requireAdminRecord } from "@/lib/server/current-user";
 
 export const dynamic = "force-dynamic";
@@ -36,19 +33,18 @@ const cards = [
 ];
 
 export default async function AdminSettingsPage() {
-  let admin;
   try {
-    admin = await requireAdminRecord();
+    await requireAdminRecord();
   } catch {
     redirect("/login");
   }
 
   return (
     <main className="pb-16">
-      <SiteHeader currentUser={serializeUser(admin)} />
       <section className="mx-auto grid max-w-7xl gap-6 px-5 pt-8 md:px-8">
         <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between mb-2">
           <div>
+            <p className="admin-eyebrow">Settings</p>
             <h1 className="text-3xl font-semibold tracking-tight text-[var(--ink)] md:text-4xl">
               <Cog className="mr-2 inline-block size-7 text-[var(--ink-soft)]" />
               系统设置
@@ -57,7 +53,6 @@ export default async function AdminSettingsPage() {
               低频但关键的系统级配置都收纳在这里。
             </p>
           </div>
-          <AdminNav currentPath="/admin/settings" />
         </div>
 
         <SettingsSubNav currentPath="/admin/settings" />

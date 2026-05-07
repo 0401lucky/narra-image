@@ -3,11 +3,8 @@ import { redirect } from "next/navigation";
 import { RedeemCodeMode } from "@prisma/client";
 
 import { db } from "@/lib/db";
-import { serializeUser } from "@/lib/prisma-mappers";
 import { requireAdminRecord } from "@/lib/server/current-user";
-import { AdminNav } from "@/components/admin/admin-nav";
 import { RedeemBatchDelete, RedeemBatchDownload, RedeemBatchToggle, RedeemCodeCreator } from "@/components/admin/redeem-code-manager";
-import { SiteHeader } from "@/components/marketing/site-header";
 
 export const dynamic = "force-dynamic";
 
@@ -25,9 +22,8 @@ function formatTime(value: Date) {
 }
 
 export default async function AdminRedeemCodesPage() {
-  let admin;
   try {
-    admin = await requireAdminRecord();
+    await requireAdminRecord();
   } catch {
     redirect("/login");
   }
@@ -71,10 +67,10 @@ export default async function AdminRedeemCodesPage() {
 
   return (
     <main className="pb-16">
-      <SiteHeader currentUser={serializeUser(admin)} />
       <section className="mx-auto grid max-w-7xl gap-5 px-5 pt-8 md:px-8">
         <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
           <div>
+            <p className="admin-eyebrow">Redeem</p>
             <h1 className="text-3xl font-semibold tracking-tight text-[var(--ink)] md:text-4xl">
               兑换码管理
             </h1>
@@ -82,7 +78,6 @@ export default async function AdminRedeemCodesPage() {
               创建可兑换积分的活动码，支持批量单次发放和共享限次领取。
             </p>
           </div>
-          <AdminNav currentPath="/admin/redeem-codes" />
         </div>
 
         <div className="grid gap-4 md:grid-cols-3">

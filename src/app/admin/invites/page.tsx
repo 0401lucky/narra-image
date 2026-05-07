@@ -2,10 +2,7 @@ import { redirect } from "next/navigation";
 
 import { db } from "@/lib/db";
 import { requireAdminRecord } from "@/lib/server/current-user";
-import { SiteHeader } from "@/components/marketing/site-header";
-import { AdminNav } from "@/components/admin/admin-nav";
 import { InviteBatchDelete, InviteBatchToggle, InviteCreator } from "@/components/admin/admin-actions";
-import { serializeUser } from "@/lib/prisma-mappers";
 import { AdminPagination } from "@/components/admin/admin-pagination";
 import { InviteDeleteBtn, InviteTableActions } from "@/components/admin/invite-table-actions";
 import Link from "next/link";
@@ -19,9 +16,8 @@ export default async function AdminInvitesPage({
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  let admin;
   try {
-    admin = await requireAdminRecord();
+    await requireAdminRecord();
   } catch {
     redirect("/login");
   }
@@ -56,10 +52,10 @@ export default async function AdminInvitesPage({
 
   return (
     <main className="pb-16">
-      <SiteHeader currentUser={serializeUser(admin)} />
       <section className="mx-auto grid max-w-7xl gap-5 px-5 pt-8 md:px-8">
         <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
           <div>
+            <p className="admin-eyebrow">Invites</p>
             <h1 className="text-3xl font-semibold tracking-tight text-[var(--ink)] md:text-4xl">
               邀请码管理
             </h1>
@@ -67,7 +63,6 @@ export default async function AdminInvitesPage({
               批量生成和管理系统的准入邀请码。共 {totalCount} 个邀请码，{usedCount} 个已使用。
             </p>
           </div>
-          <AdminNav currentPath="/admin/invites" />
         </div>
 
         <InviteCreator />
@@ -289,4 +284,3 @@ function InviteTableRow({
     </tr>
   );
 }
-

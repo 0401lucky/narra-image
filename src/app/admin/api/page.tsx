@@ -1,12 +1,9 @@
 import { redirect } from "next/navigation";
 
-import { AdminNav } from "@/components/admin/admin-nav";
 import { ApiAdminPanel } from "@/components/admin/api-admin-panel";
-import { SiteHeader } from "@/components/marketing/site-header";
 import { getApiConfig, serializeApiConfig } from "@/lib/api-config";
 import { serializeApiKey } from "@/lib/api-keys";
 import { db } from "@/lib/db";
-import { serializeUser } from "@/lib/prisma-mappers";
 import { requireAdminRecord } from "@/lib/server/current-user";
 
 export const dynamic = "force-dynamic";
@@ -17,9 +14,8 @@ export const metadata = {
 };
 
 export default async function AdminApiPage() {
-  let admin;
   try {
-    admin = await requireAdminRecord();
+    await requireAdminRecord();
   } catch {
     redirect("/login");
   }
@@ -45,10 +41,10 @@ export default async function AdminApiPage() {
 
   return (
     <main className="pb-16">
-      <SiteHeader currentUser={serializeUser(admin)} />
       <section className="mx-auto grid max-w-7xl gap-6 px-5 pt-8 md:px-8">
         <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
           <div>
+            <p className="admin-eyebrow">API</p>
             <h1 className="text-3xl font-semibold tracking-tight text-[var(--ink)] md:text-4xl">
               API 管理
             </h1>
@@ -56,7 +52,6 @@ export default async function AdminApiPage() {
               设置外部 API 的统一速率限制，查看全站 API Key 使用情况，并停用异常调用来源。
             </p>
           </div>
-          <AdminNav currentPath="/admin/api" />
         </div>
 
         <ApiAdminPanel

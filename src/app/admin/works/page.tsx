@@ -1,9 +1,6 @@
 import { redirect } from "next/navigation";
 
-import { AdminNav } from "@/components/admin/admin-nav";
 import { AdminWorksBoard } from "@/components/admin/admin-works-board";
-import { SiteHeader } from "@/components/marketing/site-header";
-import { serializeUser } from "@/lib/prisma-mappers";
 import { requireAdminRecord } from "@/lib/server/current-user";
 import { listAdminWorks } from "@/lib/server/works";
 import { getBenefitConfig } from "@/lib/benefits/config";
@@ -12,9 +9,8 @@ import { ShowcaseAutoApproveToggle } from "@/components/admin/showcase-auto-appr
 export const dynamic = "force-dynamic";
 
 export default async function AdminWorksPage() {
-  let admin;
   try {
-    admin = await requireAdminRecord();
+    await requireAdminRecord();
   } catch {
     redirect("/login");
   }
@@ -32,11 +28,10 @@ export default async function AdminWorksPage() {
 
   return (
     <main className="pb-16">
-      <SiteHeader currentUser={serializeUser(admin)} />
-
       <section className="mx-auto grid max-w-7xl gap-6 px-5 pt-8 md:px-8">
         <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
           <div>
+            <p className="admin-eyebrow">Review</p>
             <h1 className="text-3xl font-semibold tracking-tight text-[var(--ink)] md:text-4xl">
               作品审核
             </h1>
@@ -44,7 +39,6 @@ export default async function AdminWorksPage() {
               审核投稿、处理下架申请，并查看当前公开中的单图作品。
             </p>
           </div>
-          <AdminNav currentPath="/admin/works" />
         </div>
 
         <ShowcaseAutoApproveToggle

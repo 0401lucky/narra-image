@@ -1,36 +1,57 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import {
+  BadgePercent,
+  ClipboardList,
+  Gift,
+  ImageIcon,
+  KeyRound,
+  LayoutDashboard,
+  Settings,
+  Ticket,
+  Users,
+} from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
 const adminLinks = [
-  { href: "/admin", label: "概览" },
-  { href: "/admin/benefits", label: "福利" },
-  { href: "/admin/invites", label: "邀请码" },
-  { href: "/admin/redeem-codes", label: "兑换码" },
-  { href: "/admin/users", label: "用户" },
-  { href: "/admin/works", label: "作品审核" },
-  { href: "/admin/generations", label: "生成记录" },
-  { href: "/admin/api", label: "API 管理" },
-  { href: "/admin/settings", label: "系统设置" },
+  { href: "/admin", icon: LayoutDashboard, label: "概览" },
+  { href: "/admin/users", icon: Users, label: "用户" },
+  { href: "/admin/invites", icon: Ticket, label: "邀请码" },
+  { href: "/admin/redeem-codes", icon: BadgePercent, label: "兑换码" },
+  { href: "/admin/generations", icon: ClipboardList, label: "生成记录" },
+  { href: "/admin/works", icon: ImageIcon, label: "作品审核" },
+  { href: "/admin/benefits", icon: Gift, label: "福利" },
+  { href: "/admin/settings", icon: Settings, label: "系统设置" },
+  { href: "/admin/api", icon: KeyRound, label: "API" },
 ];
 
-export function AdminNav({ currentPath }: { currentPath: string }) {
+export function AdminNav({ currentPath }: { currentPath?: string }) {
+  const pathname = usePathname();
+  const activePath = currentPath ?? pathname;
+
   return (
-    <nav className="-mx-5 flex gap-2 overflow-x-auto px-5 pb-1 [scrollbar-width:none] md:mx-0 md:flex-wrap md:overflow-visible md:px-0 md:pb-0 [&::-webkit-scrollbar]:hidden">
-      {adminLinks.map((link) => (
-        <Link
-          key={link.href}
-          href={link.href}
-          className={cn(
-            "shrink-0 rounded-full px-3.5 py-2 text-sm transition md:px-4",
-            currentPath === link.href
-              ? "bg-[var(--ink)] text-white"
-              : "ring-link text-[var(--ink-soft)]",
-          )}
-        >
-          {link.label}
-        </Link>
-      ))}
+    <nav className="admin-nav -mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] lg:mx-0 lg:grid lg:gap-1.5 lg:overflow-visible lg:px-0 lg:pb-0 [&::-webkit-scrollbar]:hidden">
+      {adminLinks.map((link) => {
+        const Icon = link.icon;
+        const isActive =
+          activePath === link.href ||
+          (link.href !== "/admin" && activePath.startsWith(`${link.href}/`));
+
+        return (
+          <Link
+            key={link.href}
+            href={link.href}
+            className={cn("admin-nav-link", isActive && "admin-nav-link-active")}
+            aria-current={isActive ? "page" : undefined}
+          >
+            <Icon className="size-4" />
+            <span>{link.label}</span>
+          </Link>
+        );
+      })}
     </nav>
   );
 }

@@ -166,6 +166,178 @@ textarea {
   background: var(--card-strong);
 }
 
+/* 后台管理：按生图稿落地的暖纸质运营控制台。 */
+.admin-console {
+  --admin-paper: #f6efe5;
+  --admin-paper-strong: #fffaf2;
+  --admin-line: rgba(73, 48, 27, 0.12);
+  min-height: 100vh;
+  background-color: var(--admin-paper);
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      rgba(73, 48, 27, 0.025) 0 1px,
+      transparent 1px 96px
+    ),
+    repeating-linear-gradient(
+      0deg,
+      rgba(73, 48, 27, 0.02) 0 1px,
+      transparent 1px 96px
+    ),
+    linear-gradient(135deg, #fbf7f0 0%, #f2e8d9 52%, #faf5ed 100%);
+}
+
+.admin-console h1,
+.admin-console h2,
+.admin-console h3 {
+  letter-spacing: 0;
+}
+
+.admin-console .studio-card {
+  border: 1px solid var(--admin-line);
+  border-radius: 0.75rem;
+  background:
+    linear-gradient(180deg, rgba(255, 253, 248, 0.94), rgba(250, 243, 233, 0.9));
+  box-shadow:
+    0 16px 42px rgba(92, 59, 31, 0.07),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.admin-sidebar-panel {
+  background:
+    linear-gradient(180deg, rgba(35, 25, 17, 0.98), rgba(17, 13, 10, 0.98));
+  box-shadow:
+    0 24px 60px rgba(35, 25, 17, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.admin-nav-link {
+  display: inline-flex;
+  min-width: max-content;
+  align-items: center;
+  gap: 0.65rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0.65rem;
+  padding: 0.72rem 0.85rem;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.92rem;
+  font-weight: 600;
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    background-color 180ms ease,
+    color 180ms ease;
+}
+
+.admin-nav-link:hover {
+  transform: translateY(-1px);
+  border-color: rgba(216, 123, 55, 0.35);
+  background: rgba(255, 255, 255, 0.07);
+  color: #fff;
+}
+
+.admin-nav-link-active {
+  border-color: rgba(216, 123, 55, 0.42);
+  background:
+    linear-gradient(90deg, rgba(216, 123, 55, 0.28), rgba(216, 123, 55, 0.1));
+  color: #fff;
+  box-shadow: inset 3px 0 0 #d87b37;
+}
+
+.admin-topbar {
+  border-bottom: 1px solid var(--admin-line);
+  background: rgba(246, 239, 229, 0.78);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.admin-topbar-link,
+.admin-topbar-status,
+.admin-topbar-user {
+  display: inline-flex;
+  min-height: 2.45rem;
+  align-items: center;
+  gap: 0.45rem;
+  border: 1px solid var(--admin-line);
+  border-radius: 999px;
+  background: rgba(255, 250, 242, 0.72);
+  padding: 0.48rem 0.8rem;
+  color: var(--ink);
+  box-shadow: 0 8px 22px rgba(92, 59, 31, 0.06);
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    background-color 180ms ease;
+}
+
+.admin-topbar-link:hover {
+  transform: translateY(-1px);
+  border-color: rgba(216, 123, 55, 0.42);
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.admin-topbar-status {
+  color: #3d7d4f;
+}
+
+.admin-topbar-user {
+  padding-left: 0.35rem;
+  color: var(--ink);
+}
+
+.admin-eyebrow {
+  width: fit-content;
+  border: 1px solid var(--admin-line);
+  border-radius: 999px;
+  background: rgba(255, 250, 242, 0.66);
+  padding: 0.28rem 0.7rem;
+  color: #a65f2c;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.admin-metric-icon {
+  display: grid;
+  width: 2.8rem;
+  height: 2.8rem;
+  place-items: center;
+  border: 1px solid rgba(166, 95, 44, 0.16);
+  border-radius: 999px;
+  background: rgba(166, 95, 44, 0.08);
+  color: #a65f2c;
+}
+
+.admin-console table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.admin-console thead {
+  background: rgba(255, 250, 242, 0.82);
+}
+
+.admin-console input,
+.admin-console select,
+.admin-console textarea {
+  border-color: var(--admin-line);
+  background: rgba(255, 250, 242, 0.82);
+}
+
+@media (max-width: 1023px) {
+  .admin-sidebar-panel {
+    position: sticky;
+    top: 0;
+    z-index: 35;
+  }
+
+  .admin-nav-link {
+    background: rgba(255, 255, 255, 0.05);
+  }
+}
+
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
