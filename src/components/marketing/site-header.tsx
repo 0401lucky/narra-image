@@ -80,7 +80,7 @@ export async function SiteHeader({
           </a>
         </div>
 
-        <nav className="absolute left-1/2 hidden shrink-0 -translate-x-1/2 items-center gap-1 rounded-full border border-[var(--line)] bg-[#eee5d8]/75 p-1 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)] lg:flex">
+        <nav className="absolute left-1/2 hidden shrink-0 -translate-x-1/2 items-center gap-1 rounded-full border border-[var(--line)] bg-[#eee5d8]/75 p-1 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)] lg:flex xl:left-[46%] 2xl:left-[45%]">
           {links.map((link) => (
             <Link
               key={link.href}
@@ -102,7 +102,7 @@ export async function SiteHeader({
           {currentUser ? (
             <div className="flex min-w-0 shrink-0 items-center gap-1.5 sm:gap-2">
               <div className="flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border border-[var(--line)] bg-[#fffaf2]/80 px-2.5 py-1.5 text-xs shadow-[0_12px_30px_rgba(84,52,29,0.08)] backdrop-blur-xl sm:gap-2 sm:px-4 sm:py-2 sm:text-sm">
-                <span className="text-[var(--ink-soft)] sm:hidden">积分</span>
+                <span className="text-[var(--ink-soft)] max-[420px]:hidden sm:hidden">积分</span>
                 <span className="hidden text-[var(--ink-soft)] sm:inline">剩余积分</span>
                 <span className="font-semibold text-[var(--accent)]">
                   {currentUser.credits}
@@ -120,6 +120,16 @@ export async function SiteHeader({
                   <PetToggle />
                 </span>
               </div>
+
+              {checkInSummary ? (
+                <span className="hidden shrink-0 min-[480px]:inline-flex xl:hidden">
+                  <CheckInButton
+                    checkedInToday={checkInSummary.checkedInToday}
+                    rewardCredits={checkInSummary.checkInReward}
+                    variant="compact"
+                  />
+                </span>
+              ) : null}
 
               {/* 用户头像 — 点击跳转设置页 */}
               <Link
@@ -158,6 +168,16 @@ export async function SiteHeader({
           </Link>
         </div>
       </div>
+
+      {checkInSummary ? (
+        <div className="-mx-4 mt-3 flex min-[480px]:hidden px-4 md:hidden">
+          <CheckInButton
+            checkedInToday={checkInSummary.checkedInToday}
+            rewardCredits={checkInSummary.checkInReward}
+            variant="compact"
+          />
+        </div>
+      ) : null}
 
       <nav className="-mx-4 mt-3 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] md:hidden [&::-webkit-scrollbar]:hidden">
         {links.map((link) => (
