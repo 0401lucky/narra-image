@@ -489,7 +489,7 @@ export function MyWorksBoard({
                 className="overflow-hidden rounded-xl border border-[var(--line)] bg-[var(--surface-strong)]"
               >
                 <img
-                  src={getThumbUrl(selectedWork.url, 900)}
+                  src={getThumbUrl(selectedWork.url, 1080)}
                   alt="选中作品预览"
                   className="max-h-[28rem] w-full object-cover"
                 />
