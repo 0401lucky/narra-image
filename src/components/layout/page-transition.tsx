@@ -5,6 +5,11 @@ import { usePathname } from "next/navigation";
 
 export function PageTransition({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+
+  if (pathname.startsWith("/admin")) {
+    return <div className="flex min-h-screen flex-col">{children}</div>;
+  }
+
   return (
     <AnimatePresence mode="wait" initial={false}>
       <motion.div
