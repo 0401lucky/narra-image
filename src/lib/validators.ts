@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { GENERATION_PROMPT_MAX_LENGTH } from "@/lib/generation/limits";
+
 import type { GenerationSizeToken } from "@/lib/types";
 import { normalizeGenerationSize as normalizeGenerationSizeValue } from "@/lib/generation/sizes";
 import { adminWorkReviewActions, userWorkShowcaseActions } from "@/lib/work-showcase";
@@ -64,7 +66,7 @@ export const generateSchema = z.object({
   negativePrompt: z.string().trim().max(1000).optional().nullable(),
   outputCompression: generationOutputCompressionSchema,
   outputFormat: generationOutputFormatSchema,
-  prompt: z.string().trim().min(2, "提示词至少 2 个字符").max(2000),
+  prompt: z.string().trim().min(2, "提示词至少 2 个字符").max(GENERATION_PROMPT_MAX_LENGTH),
   providerMode: z.enum(["built_in", "custom"]).default("built_in"),
   quality: generationQualitySchema,
   moderation: generationModerationSchema,
@@ -193,7 +195,7 @@ export const externalImageGenerationSchema = z.object({
   output_format: generationOutputFormatSchema.optional(),
   outputCompression: generationOutputCompressionSchema,
   outputFormat: generationOutputFormatSchema.optional(),
-  prompt: z.string().trim().min(2, "提示词至少 2 个字符").max(2000),
+  prompt: z.string().trim().min(2, "提示词至少 2 个字符").max(GENERATION_PROMPT_MAX_LENGTH),
   quality: generationQualitySchema.optional(),
   response_format: z.enum(["url", "b64_json"]).optional(),
   seed: z.number().int().positive().optional().nullable(),
@@ -221,7 +223,7 @@ export const externalImageGenerationSchema = z.object({
 export const externalImageEditSchema = externalImageGenerationSchema;
 
 const chatTextPartSchema = z.object({
-  text: z.string().max(2000),
+  text: z.string().max(GENERATION_PROMPT_MAX_LENGTH),
   type: z.literal("text"),
 });
 
@@ -238,7 +240,7 @@ const chatImagePartSchema = z.object({
 export const externalChatCompletionSchema = z.object({
   messages: z.array(z.object({
     content: z.union([
-      z.string().max(2000),
+      z.string().max(GENERATION_PROMPT_MAX_LENGTH),
       z.array(z.union([chatTextPartSchema, chatImagePartSchema])).max(12),
     ]),
     role: z.string(),

@@ -1,13 +1,13 @@
 import "server-only";
 
 import { downloadExternalImage } from "@/lib/external-api/source-images";
+import { GENERATION_PROMPT_MAX_LENGTH } from "@/lib/generation/limits";
 import type { externalChatCompletionSchema } from "@/lib/validators";
 import type { z } from "zod";
 
 type ChatBody = z.infer<typeof externalChatCompletionSchema>;
 
 const MAX_CHAT_REFERENCE_IMAGES = 4;
-const MAX_CHAT_PROMPT_LENGTH = 2000;
 
 function readImageUrl(value: string | { url: string }) {
   return typeof value === "string" ? value : value.url;
@@ -49,8 +49,8 @@ export async function parseChatGenerationInput(body: ChatBody) {
   if (!prompt) {
     throw new Error("user message 中必须包含文本提示词");
   }
-  if (prompt.length > MAX_CHAT_PROMPT_LENGTH) {
-    throw new Error(`提示词最多 ${MAX_CHAT_PROMPT_LENGTH} 个字符`);
+  if (prompt.length > GENERATION_PROMPT_MAX_LENGTH) {
+    throw new Error(`提示词最多 ${GENERATION_PROMPT_MAX_LENGTH} 个字符`);
   }
   if (imageUrls.length > MAX_CHAT_REFERENCE_IMAGES) {
     throw new Error(`参考图最多支持 ${MAX_CHAT_REFERENCE_IMAGES} 张`);

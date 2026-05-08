@@ -7,6 +7,7 @@ import { Paperclip, Send, Settings2, Sparkles, X } from "lucide-react";
 import { forwardRef, useRef, type ReactNode } from "react";
 
 import { Alert } from "@/components/ui/alert";
+import { GENERATION_PROMPT_MAX_LENGTH } from "@/lib/generation/limits";
 import type { GenerationSizeToken, GenerationType } from "@/lib/types";
 
 import { SIZE_OPTIONS } from "../constants";
@@ -130,6 +131,7 @@ export const Composer = forwardRef<HTMLTextAreaElement, ComposerProps>(function 
               <textarea
                 ref={ref}
                 value={prompt}
+                maxLength={GENERATION_PROMPT_MAX_LENGTH}
                 onChange={(event) => onChangePrompt(event.target.value)}
                 onPaste={onPaste}
                 onCompositionStart={onCompositionStart}
