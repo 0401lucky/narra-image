@@ -52,17 +52,15 @@ describe("首页精选分页查询", () => {
     mockFindMany.mockReset();
   });
 
-  it("首屏查询限制为 24 条，并且只在最近 100 条精选内翻页", async () => {
-    mockFindMany
-      .mockResolvedValueOnce(
-        Array.from({ length: 100 }, (_, index) =>
-          createFeaturedRecord(
-            `work_${String(index + 1).padStart(3, "0")}`,
-            `2026-04-${String(24 - Math.floor(index / 4)).padStart(2, "0")}T12:00:00.000Z`,
-          ),
+  it("首屏查询按页大小下推 SQL，take 为 limit+1", async () => {
+    mockFindMany.mockResolvedValueOnce(
+      Array.from({ length: 24 }, (_, index) =>
+        createFeaturedRecord(
+          `work_${String(index + 1).padStart(3, "0")}`,
+          `2026-04-${String(24 - Math.floor(index / 4)).padStart(2, "0")}T12:00:00.000Z`,
         ),
-      )
-      .mockResolvedValueOnce([]);
+      ),
+    );
 
     await listFeaturedWorksPage();
 
@@ -70,7 +68,7 @@ describe("首页精选分页查询", () => {
       1,
       expect.objectContaining({
         orderBy: [{ featuredAt: "desc" }, { id: "desc" }],
-        take: 100,
+        take: 25,
         where: {
           featuredAt: {
             not: null,
@@ -81,29 +79,53 @@ describe("首页精选分页查询", () => {
     );
   });
 
-  it("带 cursor 时按 featuredAt desc, id desc 继续取下一页", async () => {
-    mockFindMany
-      .mockResolvedValueOnce([
-        createFeaturedRecord("work_110", "2026-04-25T10:00:00.000Z"),
-        createFeaturedRecord("work_109", "2026-04-25T10:00:00.000Z"),
-        createFeaturedRecord("work_108", "2026-04-24T10:00:00.000Z"),
-      ])
-      .mockResolvedValueOnce([
-        createFeaturedRecord("work_108", "2026-04-24T10:00:00.000Z"),
-      ]);
+  it("带 cursor 时把 (featuredAt, id) 条件下推到 where", async () => {
+    mockFindMany.mockResolvedValueOnce([
+      createFeaturedRecord("work_108", "2026-04-24T10:00:00.000Z"),
+    ]);
 
+    const cursorFeaturedAt = "2026-04-25T10:00:00.000Z";
     const result = await listFeaturedWorksPage({
       cursor: Buffer.from(
         JSON.stringify({
-          featuredAt: "2026-04-25T10:00:00.000Z",
+          featuredAt: cursorFeaturedAt,
           id: "work_109",
         }),
       ).toString("base64url"),
       limit: 24,
     });
 
+    expect(mockFindMany).toHaveBeenCalledTimes(1);
+    const call = mockFindMany.mock.calls[0][0];
+    expect(call.take).toBe(25);
+    expect(call.where).toMatchObject({
+      showcaseStatus: ShowcaseStatus.FEATURED,
+      featuredAt: { not: null },
+      OR: [
+        { featuredAt: { lt: new Date(cursorFeaturedAt) } },
+        { featuredAt: new Date(cursorFeaturedAt), id: { lt: "work_109" } },
+      ],
+    });
+
     expect(result.items).toHaveLength(1);
     expect(result.items[0]?.id).toBe("work_108");
     expect(result.hasMore).toBe(false);
+  });
+
+  it("hasMore 为 true 时返回 nextCursor", async () => {
+    mockFindMany.mockResolvedValueOnce(
+      Array.from({ length: 25 }, (_, index) =>
+        createFeaturedRecord(
+          `work_${String(index + 1).padStart(3, "0")}`,
+          `2026-04-${String(25 - index).padStart(2, "0")}T12:00:00.000Z`,
+        ),
+      ),
+    );
+
+    const result = await listFeaturedWorksPage({ limit: 24 });
+
+    expect(result.items).toHaveLength(24);
+    expect(result.hasMore).toBe(true);
+    expect(result.nextCursor).toBeTruthy();
   });
 });

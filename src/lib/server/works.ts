@@ -12,7 +12,6 @@ import {
 } from "@/lib/prisma-mappers";
 
 const FEATURED_WORKS_PAGE_SIZE = 24;
-const FEATURED_WORKS_MAX = 100;
 const USER_WORKS_PAGE_SIZE = 24;
 const USER_WORKS_MAX_LIMIT = 60;
 
@@ -230,21 +229,6 @@ function decodeFeaturedWorksCursor(cursor?: string | null) {
   }
 }
 
-function isAfterCursor(record: { featuredAt: Date | null; id: string }, cursor: FeaturedWorksCursor) {
-  if (!record.featuredAt) {
-    return false;
-  }
-
-  const recordFeaturedAt = record.featuredAt.toISOString();
-  if (recordFeaturedAt < cursor.featuredAt) {
-    return true;
-  }
-  if (recordFeaturedAt > cursor.featuredAt) {
-    return false;
-  }
-  return record.id < cursor.id;
-}
-
 export async function listFeaturedWorksPage(
   options: ListFeaturedWorksPageOptions = {},
 ): Promise<FeaturedWorksPage> {
@@ -253,6 +237,9 @@ export async function listFeaturedWorksPage(
     FEATURED_WORKS_PAGE_SIZE,
   );
   const cursor = decodeFeaturedWorksCursor(options.cursor);
+  const cursorFeaturedAt = cursor ? new Date(cursor.featuredAt) : null;
+  const hasValidCursor =
+    cursor && cursorFeaturedAt && !Number.isNaN(cursorFeaturedAt.getTime());
 
   const works = await db.generationImage.findMany({
     where: {
@@ -260,6 +247,17 @@ export async function listFeaturedWorksPage(
       featuredAt: {
         not: null,
       },
+      ...(hasValidCursor
+        ? {
+            OR: [
+              { featuredAt: { lt: cursorFeaturedAt } },
+              {
+                featuredAt: cursorFeaturedAt,
+                id: { lt: cursor.id },
+              },
+            ],
+          }
+        : {}),
     },
     include: {
       ...workBaseInclude,
@@ -309,19 +307,17 @@ export async function listFeaturedWorksPage(
         id: "desc",
       },
     ],
-    take: FEATURED_WORKS_MAX,
+    take: limit + 1,
   });
 
-  const visibleWorks = cursor
-    ? works.filter((work) => isAfterCursor(work, cursor))
-    : works;
-  const pageItems = visibleWorks.slice(0, limit);
-  const hasMore = visibleWorks.length > limit;
+  const hasMore = works.length > limit;
+  const pageItems = hasMore ? works.slice(0, limit) : works;
+  const last = pageItems[pageItems.length - 1];
   const nextCursor =
-    hasMore && pageItems.length > 0 && pageItems[pageItems.length - 1]?.featuredAt
+    hasMore && last && last.featuredAt
       ? encodeFeaturedWorksCursor({
-          featuredAt: pageItems[pageItems.length - 1].featuredAt!.toISOString(),
-          id: pageItems[pageItems.length - 1].id,
+          featuredAt: last.featuredAt.toISOString(),
+          id: last.id,
         })
       : null;
 
