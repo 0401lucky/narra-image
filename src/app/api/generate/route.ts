@@ -155,14 +155,13 @@ export async function POST(request: Request) {
       }
 
       if (body.providerMode === "built_in" && cost > 0) {
-        await tx.user.update({
-          where: { id: user.id },
-          data: {
-            credits: {
-              decrement: cost,
-            },
-          },
+        const charged = await tx.user.updateMany({
+          where: { id: user.id, credits: { gte: cost } },
+          data: { credits: { decrement: cost } },
         });
+        if (charged.count === 0) {
+          throw new Error("积分不足，请联系管理员补充");
+        }
       }
 
       return created;
@@ -171,6 +170,11 @@ export async function POST(request: Request) {
 
     const userId = user.id;
     const generationParams = {
+      builtInProvider: {
+        apiKey: builtInProvider.apiKey,
+        baseUrl: builtInProvider.baseUrl,
+        model: builtInProvider.model,
+      },
       count: body.count,
       customProvider: customProvider
         ? {
