@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { unstable_cache } from "next/cache";
 
 import { serializeUser } from "@/lib/prisma-mappers";
 import { getCurrentUserRecord } from "@/lib/server/current-user";
@@ -6,17 +7,25 @@ import { listFeaturedWorksPage } from "@/lib/server/works";
 import { SiteHeader } from "@/components/marketing/site-header";
 import { FeaturedGallery } from "@/components/marketing/featured-gallery";
 
-export const dynamic = "force-dynamic";
-
 const FEATURED_HOME_PAGE_SIZE = 16;
+
+// 匿名首屏：渠道一致，可按页大小作 key 缓存，管理员改动 60 秒内生效。
+const getAnonymousFeaturedPage = unstable_cache(
+  async (limit: number) => listFeaturedWorksPage({ limit }),
+  ["featured-home-anonymous"],
+  { revalidate: 60, tags: ["featured-works"] },
+);
 
 export default async function Home() {
   const user = await getCurrentUserRecord();
   const currentUser = user ? serializeUser(user) : null;
-  const featuredPage = await listFeaturedWorksPage({
-    limit: FEATURED_HOME_PAGE_SIZE,
-    viewerId: user?.id,
-  }).catch(() => ({
+  const featuredPage = await (user
+    ? listFeaturedWorksPage({
+        limit: FEATURED_HOME_PAGE_SIZE,
+        viewerId: user.id,
+      })
+    : getAnonymousFeaturedPage(FEATURED_HOME_PAGE_SIZE)
+  ).catch(() => ({
     hasMore: false,
     items: [],
     nextCursor: null,

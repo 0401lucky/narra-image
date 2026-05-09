@@ -4,6 +4,11 @@ const { mockListFeaturedWorksPage } = vi.hoisted(() => ({
   mockListFeaturedWorksPage: vi.fn(),
 }));
 
+vi.mock("next/cache", () => ({
+  unstable_cache: <T extends (...args: unknown[]) => unknown>(fn: T) => fn,
+  revalidateTag: vi.fn(),
+}));
+
 vi.mock("@/lib/server/works", () => ({
   listFeaturedWorksPage: mockListFeaturedWorksPage,
 }));
@@ -15,7 +20,7 @@ vi.mock("@/lib/server/current-user", () => ({
 import { GET } from "@/app/api/works/featured/route";
 
 describe("首页精选接口", () => {
-  it("返回 items、nextCursor 和 hasMore，并透传 cursor 与 limit", async () => {
+  it("匿名访问时不带 viewerId，透传 cursor 与 limit", async () => {
     mockListFeaturedWorksPage.mockResolvedValue({
       hasMore: true,
       items: [
@@ -41,9 +46,11 @@ describe("首页精选接口", () => {
     expect(mockListFeaturedWorksPage).toHaveBeenCalledWith({
       cursor: "cursor_1",
       limit: 24,
-      viewerId: undefined,
     });
     expect(response.status).toBe(200);
+    expect(response.headers.get("Cache-Control")).toBe(
+      "public, s-maxage=60, stale-while-revalidate=120",
+    );
     await expect(response.json()).resolves.toEqual({
       hasMore: true,
       items: [

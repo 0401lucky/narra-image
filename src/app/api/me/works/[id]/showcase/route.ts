@@ -1,3 +1,5 @@
+import { revalidateTag } from "next/cache";
+
 import { db } from "@/lib/db";
 import { getWorkById, getWorkMutationTarget } from "@/lib/server/works";
 import { requireCurrentUserRecord } from "@/lib/server/current-user";
@@ -52,6 +54,8 @@ export async function PATCH(
       where: { id },
       data,
     });
+
+    revalidateTag("featured-works", "max");
 
     const updatedWork = await getWorkById(id);
 

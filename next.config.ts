@@ -1,6 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  experimental: {
+    optimizePackageImports: ["lucide-react", "motion", "date-fns"],
+  },
   images: {
     // 后端 S3_PUBLIC_BASE_URL、第三方 OAuth 头像（LinuxDo 等）域名都是
     // 运行时配置，构建期不可知，所以这里放开通配。

@@ -79,6 +79,7 @@ export async function generateImages(input: GenerateImagesInput) {
   const client = new OpenAI({
     apiKey: provider.apiKey,
     baseURL: provider.baseUrl,
+    timeout: 180_000,
   });
 
   const sourceImages = input.sourceImages ?? (input.sourceImage ? [input.sourceImage] : []);

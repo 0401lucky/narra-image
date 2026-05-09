@@ -5,6 +5,7 @@
 import { PanelLeftOpen } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
 
 import {
   type GenerationModeration,
@@ -22,14 +23,21 @@ import {
 import { useImagePoller } from "./hooks/use-image-poller";
 import { useReferenceImages } from "./hooks/use-reference-images";
 import { useSessions } from "./hooks/use-sessions";
-import { AdvancedSettings } from "./parts/advanced-settings";
 import { ChatStream } from "./parts/chat-stream";
 import { Composer } from "./parts/composer";
 import { HistoryRail } from "./parts/history-rail";
-import { ImageZoomModal } from "./parts/image-zoom-modal";
 import { SessionSidebar } from "./parts/session-sidebar";
 import { getSizeSelectValue } from "./utils";
 import type { ChannelInfo, GenerationItem, SessionInfo, ViewerUser } from "./types";
+
+const AdvancedSettings = dynamic(
+  () => import("./parts/advanced-settings").then((mod) => mod.AdvancedSettings),
+  { ssr: false },
+);
+const ImageZoomModal = dynamic(
+  () => import("./parts/image-zoom-modal").then((mod) => mod.ImageZoomModal),
+  { ssr: false },
+);
 
 type GeneratorStudioProps = {
   compact?: boolean;

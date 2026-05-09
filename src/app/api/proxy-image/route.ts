@@ -1,5 +1,7 @@
-import { requireCurrentUserRecord } from "@/lib/server/current-user";
+import { getCurrentSession } from "@/lib/server/current-user";
 import { getErrorMessage } from "@/lib/server/http";
+
+const PROXY_FETCH_TIMEOUT_MS = 15_000;
 
 /**
  * GET /api/proxy-image?url=...
@@ -8,7 +10,10 @@ import { getErrorMessage } from "@/lib/server/http";
  */
 export async function GET(request: Request) {
   try {
-    await requireCurrentUserRecord();
+    const session = await getCurrentSession();
+    if (!session) {
+      return new Response("请先登录", { status: 403 });
+    }
 
     const { searchParams } = new URL(request.url);
     const imageUrl = searchParams.get("url");
@@ -17,21 +22,25 @@ export async function GET(request: Request) {
       return new Response("Missing url parameter", { status: 400 });
     }
 
-    const upstream = await fetch(imageUrl);
+    const upstream = await fetch(imageUrl, {
+      signal: AbortSignal.timeout(PROXY_FETCH_TIMEOUT_MS),
+    });
 
-    if (!upstream.ok) {
+    if (!upstream.ok || !upstream.body) {
       return new Response("Failed to fetch image", { status: upstream.status });
     }
 
     const contentType = upstream.headers.get("content-type") || "image/png";
-    const buffer = await upstream.arrayBuffer();
+    const contentLength = upstream.headers.get("content-length");
+    const headers: Record<string, string> = {
+      "Content-Type": contentType,
+      "Cache-Control": "private, max-age=86400, immutable",
+    };
+    if (contentLength) {
+      headers["Content-Length"] = contentLength;
+    }
 
-    return new Response(buffer, {
-      headers: {
-        "Content-Type": contentType,
-        "Cache-Control": "public, max-age=86400",
-      },
-    });
+    return new Response(upstream.body, { headers });
   } catch (error) {
     return new Response(getErrorMessage(error), { status: 403 });
   }

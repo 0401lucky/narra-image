@@ -5,6 +5,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
+import dynamic from "next/dynamic";
 import {
   Download,
   Expand,
@@ -20,14 +21,21 @@ import { motion } from "motion/react";
 
 import type { SerializedWork } from "@/lib/prisma-mappers";
 import { downloadImage } from "@/components/works/download-image";
-import { ImageLightbox } from "@/components/works/image-lightbox";
-import { PromptModal } from "@/components/works/prompt-modal";
 import { Alert } from "@/components/ui/alert";
 import { getThumbUrl } from "@/lib/image-url";
 import {
   WorkShowcaseControls,
   WorkStatusBadge,
 } from "@/components/works/work-showcase-controls";
+
+const ImageLightbox = dynamic(
+  () => import("@/components/works/image-lightbox").then((mod) => mod.ImageLightbox),
+  { ssr: false },
+);
+const PromptModal = dynamic(
+  () => import("@/components/works/prompt-modal").then((mod) => mod.PromptModal),
+  { ssr: false },
+);
 
 type MyWorksBoardProps = {
   counts: {

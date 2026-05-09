@@ -1,3 +1,5 @@
+import { revalidateTag } from "next/cache";
+
 import { db } from "@/lib/db";
 import { requireAdminRecord } from "@/lib/server/current-user";
 import { getErrorMessage, jsonError, jsonOk, parseJsonBody } from "@/lib/server/http";
@@ -23,6 +25,8 @@ export async function PATCH(
         },
       },
     });
+
+    revalidateTag("featured-works", "max");
 
     return jsonOk({
       generation: updatedJob,
