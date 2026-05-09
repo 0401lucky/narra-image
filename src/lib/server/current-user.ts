@@ -1,11 +1,12 @@
 import "server-only";
 
+import { cache } from "react";
 import { Role } from "@prisma/client";
 
 import { db } from "@/lib/db";
 import { readSession } from "@/lib/auth/session";
 
-export async function getCurrentUserRecord() {
+export const getCurrentUserRecord = cache(async () => {
   const session = await readSession();
   if (!session) {
     return null;
@@ -22,6 +23,18 @@ export async function getCurrentUserRecord() {
       role: true,
     },
   });
+});
+
+export const getCurrentSession = cache(async () => {
+  return readSession();
+});
+
+export async function requireCurrentSession() {
+  const session = await getCurrentSession();
+  if (!session) {
+    throw new Error("请先登录");
+  }
+  return session;
 }
 
 export async function requireCurrentUserRecord() {
