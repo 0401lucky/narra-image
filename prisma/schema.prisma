@@ -311,6 +311,8 @@ model GenerationJob {
   @@index([apiKeyId, clientSource, createdAt])
   @@index([clientSource])
   @@index([conversationId])
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([status, createdAt])
 }
 
 /// 对话会话：把多次生成 (GenerationJob) 归到一个用户可视会话内。
@@ -344,4 +346,8 @@ model GenerationImage {
   job              GenerationJob  @relation(fields: [jobId], references: [id], onDelete: Cascade)
   reviewedBy       User?          @relation("ReviewedWorks", fields: [reviewedById], references: [id])
   likes            WorkLike[]
+
+  @@index([showcaseStatus, featuredAt(sort: Desc), id(sort: Desc)])
+  @@index([jobId, createdAt])
+  @@index([createdAt(sort: Desc), id(sort: Desc)])
 }
