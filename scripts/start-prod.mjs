@@ -5,7 +5,7 @@ import { spawnSync } from "node:child_process";
 import pg from "pg";
 
 const BASELINE_MIGRATIONS = ["20260423165000_single_image_works"];
-const DATABASE_READY_ATTEMPTS = Number(process.env.DATABASE_READY_ATTEMPTS ?? 60);
+const DATABASE_READY_ATTEMPTS = Number(process.env.DATABASE_READY_ATTEMPTS ?? 180);
 const DATABASE_READY_DELAY_MS = Number(process.env.DATABASE_READY_DELAY_MS ?? 2_000);
 
 function sleep(ms) {
@@ -22,6 +22,36 @@ function describeDatabaseError(error) {
     "message" in error && error.message ? error.message : String(error);
 
   return `${message}${code}`;
+}
+
+function isTransientDatabaseError(value) {
+  const message =
+    typeof value === "string" ? value : describeDatabaseError(value);
+
+  return /57P03|P1001|P1002|P1017|DatabaseNotReachable|Connection terminated|terminating connection|not yet accepting connections|in recovery mode|ECONNREFUSED|ETIMEDOUT|ENOTFOUND|EAI_AGAIN/i.test(
+    message,
+  );
+}
+
+function createDatabaseClient() {
+  const client = new pg.Client({
+    connectionString: process.env.DATABASE_URL,
+  });
+
+  client.on("error", () => {
+    // PostgreSQL 恢复期间可能在 connect/query 前后抛 error 事件。
+    // 监听后让调用处通过 Promise 拒绝进入重试，而不是让 Node 进程直接退出。
+  });
+
+  return client;
+}
+
+async function closeDatabaseClient(client) {
+  try {
+    await client.end();
+  } catch {
+    // 连接未建立或已被服务端关闭时，关闭连接可能也会失败。
+  }
 }
 
 function run(command, args) {
@@ -42,6 +72,30 @@ function run(command, args) {
 
 function runPrisma(args) {
   return run("pnpm", ["exec", "prisma", ...args]);
+}
+
+async function runPrismaWithDatabaseRetry(args) {
+  let lastResult = null;
+
+  for (let attempt = 1; attempt <= DATABASE_READY_ATTEMPTS; attempt++) {
+    const result = runPrisma(args);
+    lastResult = result;
+
+    if (result.ok || !isTransientDatabaseError(result.output)) {
+      return result;
+    }
+
+    if (attempt >= DATABASE_READY_ATTEMPTS) {
+      return result;
+    }
+
+    console.warn(
+      `Database is not ready for prisma ${args.join(" ")} (${attempt}/${DATABASE_READY_ATTEMPTS}).`,
+    );
+    await sleep(DATABASE_READY_DELAY_MS);
+  }
+
+  return lastResult ?? { ok: false, output: "", status: 1 };
 }
 
 function runRequired(command, args) {
@@ -73,22 +127,16 @@ async function waitForDatabase() {
   if (!process.env.DATABASE_URL) return;
 
   for (let attempt = 1; attempt <= DATABASE_READY_ATTEMPTS; attempt++) {
-    const client = new pg.Client({
-      connectionString: process.env.DATABASE_URL,
-    });
+    const client = createDatabaseClient();
 
     try {
       await client.connect();
       await client.query("SELECT 1");
-      await client.end();
+      await closeDatabaseClient(client);
       console.log("Database is accepting connections.");
       return;
     } catch (error) {
-      try {
-        await client.end();
-      } catch {
-        // 连接尚未建立或已被服务端关闭时，结束连接可能也会失败。
-      }
+      await closeDatabaseClient(client);
 
       if (attempt >= DATABASE_READY_ATTEMPTS) {
         throw error;
@@ -107,9 +155,7 @@ async function waitForDatabase() {
 async function isDatabaseSchemaEmpty() {
   if (!process.env.DATABASE_URL) return false;
 
-  const client = new pg.Client({
-    connectionString: process.env.DATABASE_URL,
-  });
+  const client = createDatabaseClient();
 
   await client.connect();
   try {
@@ -127,12 +173,17 @@ async function isDatabaseSchemaEmpty() {
 
     return result.rowCount === 0;
   } finally {
-    await client.end();
+    await closeDatabaseClient(client);
   }
 }
 
-function resolveApplied(migrationName) {
-  const result = runPrisma(["migrate", "resolve", "--applied", migrationName]);
+async function resolveApplied(migrationName) {
+  const result = await runPrismaWithDatabaseRetry([
+    "migrate",
+    "resolve",
+    "--applied",
+    migrationName,
+  ]);
   if (!result.ok && !result.output.includes("already recorded as applied")) {
     process.exit(result.status);
   }
@@ -142,16 +193,16 @@ async function prepareDatabase() {
   await waitForDatabase();
 
   if (await isDatabaseSchemaEmpty()) {
-    const push = runPrisma(["db", "push", "--skip-generate"]);
+    const push = await runPrismaWithDatabaseRetry(["db", "push", "--skip-generate"]);
     if (!push.ok) process.exit(push.status);
 
     for (const migrationName of getPrismaMigrations()) {
-      resolveApplied(migrationName);
+      await resolveApplied(migrationName);
     }
     return;
   }
 
-  const deploy = runPrisma(["migrate", "deploy"]);
+  const deploy = await runPrismaWithDatabaseRetry(["migrate", "deploy"]);
   if (deploy.ok) return;
 
   if (!deploy.output.includes("P3005")) {
@@ -159,12 +210,18 @@ async function prepareDatabase() {
   }
 
   for (const migrationName of BASELINE_MIGRATIONS) {
-    resolveApplied(migrationName);
+    await resolveApplied(migrationName);
   }
 
-  const retry = runPrisma(["migrate", "deploy"]);
+  const retry = await runPrismaWithDatabaseRetry(["migrate", "deploy"]);
   if (!retry.ok) process.exit(retry.status);
 }
 
-await prepareDatabase();
+try {
+  await prepareDatabase();
+} catch (error) {
+  console.error(`Failed to prepare database: ${describeDatabaseError(error)}`);
+  process.exit(1);
+}
+
 runRequired("next", ["start"]);
