@@ -2,34 +2,68 @@ import Link from "next/link";
 import { unstable_cache } from "next/cache";
 
 import { serializeUser } from "@/lib/prisma-mappers";
-import { getCurrentUserRecord } from "@/lib/server/current-user";
-import { listFeaturedWorksPage } from "@/lib/server/works";
 import { SiteHeader } from "@/components/marketing/site-header";
 import { FeaturedGallery } from "@/components/marketing/featured-gallery";
 
 const FEATURED_HOME_PAGE_SIZE = 16;
 
+// 首页依赖登录态与精选作品运行时数据，不在构建阶段预渲染。
+export const dynamic = "force-dynamic";
+
+type FeaturedPage = Awaited<
+  ReturnType<typeof import("@/lib/server/works").listFeaturedWorksPage>
+>;
+
+const EMPTY_FEATURED_PAGE: FeaturedPage = {
+  hasMore: false,
+  items: [],
+  nextCursor: null,
+};
+
 // 匿名首屏：渠道一致，可按页大小作 key 缓存，管理员改动 60 秒内生效。
 const getAnonymousFeaturedPage = unstable_cache(
-  async (limit: number) => listFeaturedWorksPage({ limit }),
+  async (limit: number) => {
+    const { listFeaturedWorksPage } = await import("@/lib/server/works");
+
+    return listFeaturedWorksPage({ limit });
+  },
   ["featured-home-anonymous"],
   { revalidate: 60, tags: ["featured-works"] },
 );
 
+async function getHomeUserRecord() {
+  try {
+    const { getCurrentUserRecord } = await import("@/lib/server/current-user");
+
+    return await getCurrentUserRecord();
+  } catch (error) {
+    console.error("[Home] Failed to load current user", error);
+    return null;
+  }
+}
+
+async function getHomeFeaturedPage(userId?: string | null): Promise<FeaturedPage> {
+  try {
+    if (!userId) {
+      return await getAnonymousFeaturedPage(FEATURED_HOME_PAGE_SIZE);
+    }
+
+    const { listFeaturedWorksPage } = await import("@/lib/server/works");
+
+    return await listFeaturedWorksPage({
+      limit: FEATURED_HOME_PAGE_SIZE,
+      viewerId: userId,
+    });
+  } catch (error) {
+    console.error("[Home] Failed to load featured works", error);
+    return EMPTY_FEATURED_PAGE;
+  }
+}
+
 export default async function Home() {
-  const user = await getCurrentUserRecord();
+  const user = await getHomeUserRecord();
   const currentUser = user ? serializeUser(user) : null;
-  const featuredPage = await (user
-    ? listFeaturedWorksPage({
-        limit: FEATURED_HOME_PAGE_SIZE,
-        viewerId: user.id,
-      })
-    : getAnonymousFeaturedPage(FEATURED_HOME_PAGE_SIZE)
-  ).catch(() => ({
-    hasMore: false,
-    items: [],
-    nextCursor: null,
-  }));
+  const featuredPage = await getHomeFeaturedPage(user?.id);
   const works = featuredPage.items;
 
   return (

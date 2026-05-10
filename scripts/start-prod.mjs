@@ -5,6 +5,24 @@ import { spawnSync } from "node:child_process";
 import pg from "pg";
 
 const BASELINE_MIGRATIONS = ["20260423165000_single_image_works"];
+const DATABASE_READY_ATTEMPTS = Number(process.env.DATABASE_READY_ATTEMPTS ?? 60);
+const DATABASE_READY_DELAY_MS = Number(process.env.DATABASE_READY_DELAY_MS ?? 2_000);
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function describeDatabaseError(error) {
+  if (!error || typeof error !== "object") {
+    return String(error);
+  }
+
+  const code = "code" in error && error.code ? ` ${error.code}` : "";
+  const message =
+    "message" in error && error.message ? error.message : String(error);
+
+  return `${message}${code}`;
+}
 
 function run(command, args) {
   const result = spawnSync(command, args, {
@@ -51,6 +69,41 @@ function getDatabaseSchemaName() {
   }
 }
 
+async function waitForDatabase() {
+  if (!process.env.DATABASE_URL) return;
+
+  for (let attempt = 1; attempt <= DATABASE_READY_ATTEMPTS; attempt++) {
+    const client = new pg.Client({
+      connectionString: process.env.DATABASE_URL,
+    });
+
+    try {
+      await client.connect();
+      await client.query("SELECT 1");
+      await client.end();
+      console.log("Database is accepting connections.");
+      return;
+    } catch (error) {
+      try {
+        await client.end();
+      } catch {
+        // 连接尚未建立或已被服务端关闭时，结束连接可能也会失败。
+      }
+
+      if (attempt >= DATABASE_READY_ATTEMPTS) {
+        throw error;
+      }
+
+      console.warn(
+        `Database is not ready yet (${attempt}/${DATABASE_READY_ATTEMPTS}): ${describeDatabaseError(
+          error,
+        )}`,
+      );
+      await sleep(DATABASE_READY_DELAY_MS);
+    }
+  }
+}
+
 async function isDatabaseSchemaEmpty() {
   if (!process.env.DATABASE_URL) return false;
 
@@ -86,6 +139,8 @@ function resolveApplied(migrationName) {
 }
 
 async function prepareDatabase() {
+  await waitForDatabase();
+
   if (await isDatabaseSchemaEmpty()) {
     const push = runPrisma(["db", "push", "--skip-generate"]);
     if (!push.ok) process.exit(push.status);
