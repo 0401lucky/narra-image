@@ -6,6 +6,7 @@ import { AuthShell } from "@/components/marketing/auth-shell";
 import { getPublicTurnstileConfig } from "@/lib/auth/turnstile";
 import { fromPrismaRole } from "@/lib/prisma-mappers";
 import { getCurrentUserRecord } from "@/lib/server/current-user";
+import { getLoginCoverConfig } from "@/lib/server/login-cover";
 import { listFeaturedWorksPage } from "@/lib/server/works";
 
 export const dynamic = "force-dynamic";
@@ -28,22 +29,26 @@ export default async function RegisterPage({ searchParams }: RegisterPageProps) 
       ? resolvedSearchParams.inviteCode
       : "";
 
-  const [featuredPage, turnstile] = await Promise.all([
+  const [featuredPage, turnstile, loginCoverConfig] = await Promise.all([
     listFeaturedWorksPage({ limit: 1 }).catch(() => ({
       hasMore: false,
       items: [] as Array<{ authorName: string; image: string; title: string }>,
       nextCursor: null,
     })),
     getPublicTurnstileConfig(),
+    getLoginCoverConfig(),
   ]);
   const featured = featuredPage.items[0] ?? null;
-  const cover = featured
-    ? {
-        authorName: featured.authorName,
-        image: featured.image,
-        title: featured.title,
-      }
-    : null;
+  const cover = loginCoverConfig.mode === "custom"
+    ? null
+    : featured
+      ? {
+          authorName: featured.authorName,
+          image: featured.image,
+          title: featured.title,
+        }
+      : null;
+  const coverImageUrl = loginCoverConfig.mode === "custom" ? loginCoverConfig.customUrl : null;
 
   return (
     <AuthShell
@@ -51,6 +56,7 @@ export default async function RegisterPage({ searchParams }: RegisterPageProps) 
       title="First in line."
       description="第一批用户值得被认真对待。注册成功默认 500 积分；邀请码由后台生成，可前往邀请码领取页申领。"
       cover={cover}
+      coverImageUrl={coverImageUrl}
       coverCaption="Welcome Aboard"
       footnote={
         <span className="inline-flex flex-wrap items-center justify-center gap-x-2 gap-y-1">

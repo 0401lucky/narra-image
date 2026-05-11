@@ -10,6 +10,7 @@ type AuthShellProps = {
     title: string;
   } | null;
   coverCaption?: string;
+  coverImageUrl?: string | null;
   description: React.ReactNode;
   eyebrow: string;
   footnote?: React.ReactNode;
@@ -20,6 +21,7 @@ export function AuthShell({
   children,
   cover,
   coverCaption,
+  coverImageUrl,
   description,
   eyebrow,
   footnote,
@@ -42,7 +44,7 @@ export function AuthShell({
 
       <div className="relative z-10 flex min-h-svh items-center justify-center px-4 py-12 sm:px-6 md:py-16 lg:px-8">
         <div className="auth-card relative grid w-full max-w-[58rem] overflow-hidden lg:min-h-[39rem] lg:grid-cols-[minmax(0,1fr)_minmax(0,28rem)]">
-          <AuthCover work={cover} caption={coverCaption} placement="left" />
+          <AuthCover work={cover} imageUrl={coverImageUrl} caption={coverCaption} placement="left" />
 
           <section className="flex flex-col gap-6 px-6 py-7 sm:px-10 sm:py-9">
             <div className="flex items-center gap-3">

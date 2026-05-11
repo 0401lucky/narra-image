@@ -10,25 +10,29 @@ type AuthCoverWork = {
 
 type AuthCoverProps = {
   caption?: string;
+  imageUrl?: string | null;
   placement?: "left" | "right";
   work: AuthCoverWork | null;
 };
 
 export function AuthCover({
   caption,
+  imageUrl,
   placement = "right",
   work,
 }: AuthCoverProps) {
   const dividerClass = placement === "left" ? "border-r" : "border-l";
+  const resolvedImage = imageUrl || (work?.image ? getThumbUrl(work.image, 1080) : null);
+  const resolvedTitle = work?.title ?? "Narra Image";
 
   return (
     <section
       className={`relative hidden overflow-hidden ${dividerClass} border-[var(--line)] bg-[var(--surface-strong)] lg:flex`}
     >
-      {work?.image ? (
+      {resolvedImage ? (
         <img
-          src={getThumbUrl(work.image, 1080)}
-          alt={work.title}
+          src={resolvedImage}
+          alt={resolvedTitle}
           decoding="async"
           className="absolute inset-0 size-full object-cover"
         />
@@ -68,6 +72,14 @@ export function AuthCover({
             {work.title}
           </p>
           <p className="mt-1 text-xs text-white/75">@{work.authorName}</p>
+        </div>
+      ) : imageUrl ? (
+        <div className="absolute inset-x-0 bottom-0 z-10 bg-gradient-to-t from-[var(--ink)]/85 via-[var(--ink)]/35 to-transparent p-6 text-white">
+          {caption ? (
+            <span className="text-[11px] uppercase tracking-[0.32em] text-white/80">
+              {caption}
+            </span>
+          ) : null}
         </div>
       ) : null}
     </section>

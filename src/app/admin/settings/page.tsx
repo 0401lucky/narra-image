@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { Cog, KeyRound, Server, ShieldCheck } from "lucide-react";
+import { Cog, ImageIcon, KeyRound, Server, ShieldCheck } from "lucide-react";
 
 import { SettingsSubNav } from "@/components/admin/settings-sub-nav";
 import { requireAdminRecord } from "@/lib/server/current-user";
@@ -29,6 +29,12 @@ const cards = [
     icon: Server,
     title: "生图渠道",
     description: "管理 OpenAI / Grok / 中转等生图 API 渠道，支持多渠道并存与切换。",
+  },
+  {
+    href: "/admin/settings/login-cover",
+    icon: ImageIcon,
+    title: "登录封面",
+    description: "配置登录/注册页面左侧展示的封面图片，支持精选随机或指定图片。",
   },
 ];
 
