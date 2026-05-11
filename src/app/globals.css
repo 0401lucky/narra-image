@@ -593,6 +593,75 @@ textarea {
   transform: rotate(45deg);
 }
 
+/* 页面加载 Logo 动画 */
+@keyframes loading-breathe {
+  0%, 100% {
+    opacity: 0.85;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+}
+
+@keyframes loading-glow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(217, 100, 58, 0);
+  }
+  50% {
+    box-shadow: 0 0 32px 8px rgba(217, 100, 58, 0.12);
+  }
+}
+
+@keyframes loading-dot-bounce {
+  0%, 80%, 100% {
+    opacity: 0.3;
+    transform: scale(0.8);
+  }
+  40% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.loading-logo-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 140px;
+  height: 140px;
+  border-radius: 2rem;
+  animation: loading-glow 2.4s ease-in-out infinite;
+}
+
+.loading-logo {
+  border-radius: 1.5rem;
+  animation: loading-breathe 2.4s ease-in-out infinite;
+}
+
+.loading-dots {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.loading-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: loading-dot-bounce 1.4s ease-in-out infinite;
+}
+
+.loading-dot:nth-child(2) {
+  animation-delay: 0.16s;
+}
+
+.loading-dot:nth-child(3) {
+  animation-delay: 0.32s;
+}
+
 /* 骨架屏闪光扫过动画 */
 @keyframes skeleton-shimmer {
   0% {
