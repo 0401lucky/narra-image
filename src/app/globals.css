@@ -593,6 +593,46 @@ textarea {
   transform: rotate(45deg);
 }
 
+/* 骨架屏闪光扫过动画 */
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--surface-strong) 0%,
+    rgba(255, 252, 247, 0.7) 40%,
+    rgba(255, 252, 247, 0.9) 50%,
+    rgba(255, 252, 247, 0.7) 60%,
+    var(--surface-strong) 100%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.8s ease-in-out infinite;
+}
+
+/* 骨架屏交错入场 */
+@keyframes skeleton-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.skeleton-stagger {
+  opacity: 0;
+  animation: skeleton-fade-in 0.4s ease-out forwards;
+}
+
 /* 创作台右侧历史图片栏：纯 CSS 无缝向上滚动，悬停暂停 */
 @keyframes history-rail-scroll {
   0% {
