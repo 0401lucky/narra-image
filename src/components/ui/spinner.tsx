@@ -1,5 +1,3 @@
-import { Loader2 } from "lucide-react";
-
 import { cn } from "@/lib/utils";
 
 type SpinnerSize = "sm" | "md" | "lg";
@@ -18,10 +16,12 @@ const sizeClass: Record<SpinnerSize, string> = {
 
 export function Spinner({ size = "md", className, label = "加载中" }: SpinnerProps) {
   return (
-    <Loader2
-      className={cn("animate-spin", sizeClass[size], className)}
+    <span
+      className={cn("narra-spinner", sizeClass[size], className)}
       role="status"
       aria-label={label}
-    />
+    >
+      <span className="sr-only">{label}</span>
+    </span>
   );
 }

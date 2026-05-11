@@ -90,7 +90,15 @@ export function GenerationBubble({
 
           {generation.status === "pending" ? (
             <div className="flex flex-col gap-2">
-              <div className="h-44 w-full max-w-64 animate-pulse rounded-2xl border border-[var(--line)] bg-[var(--surface-strong)]/30 sm:h-48" />
+              <div className="generation-developing-card" role="status" aria-label="图片生成中">
+                <span className="generation-developing-card__beam" aria-hidden />
+                <span className="generation-developing-card__frame generation-developing-card__frame-a" aria-hidden />
+                <span className="generation-developing-card__frame generation-developing-card__frame-b" aria-hidden />
+                <span className="generation-developing-card__aperture" aria-hidden>
+                  <Sparkles className="size-5" />
+                </span>
+                <span className="generation-developing-card__text">正在显影中</span>
+              </div>
               {onCancel && (
                 <button
                   type="button"

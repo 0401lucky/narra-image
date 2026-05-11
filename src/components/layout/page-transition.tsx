@@ -11,17 +11,32 @@ export function PageTransition({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <AnimatePresence mode="wait" initial={false}>
+    <div className="page-transition-shell">
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.div
+          key={pathname}
+          initial={{ opacity: 0, y: 18, scale: 0.985, filter: "blur(10px) saturate(1.18)" }}
+          animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px) saturate(1)" }}
+          exit={{ opacity: 0, y: -12, scale: 1.01, filter: "blur(8px) saturate(1.28)" }}
+          transition={{ duration: 0.42, ease: [0.2, 0.82, 0.18, 1] }}
+          className="flex min-h-screen flex-col"
+        >
+          {children}
+        </motion.div>
+      </AnimatePresence>
+
       <motion.div
-        key={pathname}
-        initial={{ opacity: 0, y: 10, filter: "blur(4px)" }}
-        animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-        exit={{ opacity: 0, y: -4, filter: "blur(2px)" }}
-        transition={{ duration: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
-        className="flex min-h-screen flex-col"
+        key={`gate-${pathname}`}
+        aria-hidden
+        className="route-transition-gate"
+        initial={{ opacity: 1, clipPath: "inset(0% 0% 0% 0%)" }}
+        animate={{ opacity: 0, clipPath: "inset(0% 48% 0% 48%)" }}
+        transition={{ duration: 0.58, ease: [0.76, 0, 0.24, 1] }}
       >
-        {children}
+        <span className="route-transition-gate-line" />
+        <span className="route-transition-gate-scan route-transition-gate-scan-left" />
+        <span className="route-transition-gate-scan route-transition-gate-scan-right" />
       </motion.div>
-    </AnimatePresence>
+    </div>
   );
 }
