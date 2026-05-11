@@ -98,6 +98,7 @@ export async function POST(request: Request) {
       {
         batchId: batch.id,
         claimPageUrl: "/invite-claim",
+        codes: data.map((d) => d.code),
         message: `成功生成 ${count} 个邀请码`,
       },
       { status: 201 },

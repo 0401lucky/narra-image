@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 
 import { db } from "@/lib/db";
 import { requireAdminRecord } from "@/lib/server/current-user";
-import { InviteBatchDelete, InviteBatchToggle, InviteCreator } from "@/components/admin/admin-actions";
+import { InviteBatchCopy, InviteBatchDelete, InviteBatchToggle, InviteCreator } from "@/components/admin/admin-actions";
 import { AdminPagination } from "@/components/admin/admin-pagination";
 import { InviteDeleteBtn, InviteTableActions } from "@/components/admin/invite-table-actions";
 import Link from "next/link";
@@ -127,6 +127,7 @@ export default async function AdminInvitesPage({
                   </div>
                 </div>
                 <div className="flex flex-wrap items-end justify-start gap-2 xl:justify-end">
+                  <InviteBatchCopy batchId={batch.id} />
                   {remainingCount > 0 ? (
                     <a
                       href={`/api/admin/invites/batches/${batch.id}/export`}

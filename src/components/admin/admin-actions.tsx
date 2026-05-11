@@ -652,8 +652,10 @@ export function InviteCreator() {
   const [note, setNote] = useState("");
   const [isPublic, setIsPublic] = useState(false);
   const [count, setCount] = useState(1);
-  const [downloadAfterCreate, setDownloadAfterCreate] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [createdCodes, setCreatedCodes] = useState<string[]>([]);
+  const [createdBatchId, setCreatedBatchId] = useState<string | null>(null);
+  const [copySuccess, setCopySuccess] = useState(false);
 
   async function downloadBatchTxt(batchId: string) {
     const exportRes = await fetch(`/api/admin/invites/batches/${batchId}/export`);
@@ -674,15 +676,23 @@ export function InviteCreator() {
     URL.revokeObjectURL(url);
   }
 
+  async function handleCopy(codes: string[]) {
+    await navigator.clipboard.writeText(codes.join("\n"));
+    setCopySuccess(true);
+    setTimeout(() => setCopySuccess(false), 2000);
+  }
+
   async function handleCreate() {
     setError(null);
+    setCreatedCodes([]);
+    setCreatedBatchId(null);
     const response = await fetch("/api/admin/invites", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ note, count, isPublic }),
     });
     const result = (await response.json()) as {
-      data?: { batchId: string; claimPageUrl: string; message: string };
+      data?: { batchId: string; claimPageUrl: string; codes: string[]; message: string };
       error?: string;
     };
 
@@ -691,17 +701,9 @@ export function InviteCreator() {
       return;
     }
 
-    if (downloadAfterCreate && result.data?.batchId) {
-      try {
-        await downloadBatchTxt(result.data.batchId);
-      } catch (err) {
-        // 下载失败不阻断创建流程，提示用户后续可从批次卡片手动下载
-        setError(
-          err instanceof Error
-            ? `${err.message}，请稍后从批次卡片手动下载`
-            : "下载失败，请稍后从批次卡片手动下载",
-        );
-      }
+    if (result.data?.codes) {
+      setCreatedCodes(result.data.codes);
+      setCreatedBatchId(result.data.batchId);
     }
 
     setNote("");
@@ -734,14 +736,6 @@ export function InviteCreator() {
             />
             开放领取
           </label>
-          <label className="inline-flex items-center gap-2 rounded-2xl border border-[var(--line)] bg-white/70 px-4 py-3 text-sm text-[var(--ink-soft)]">
-            <input
-              type="checkbox"
-              checked={downloadAfterCreate}
-              onChange={(event) => setDownloadAfterCreate(event.target.checked)}
-            />
-            生成后下载 .txt
-          </label>
           <input
             type="number"
             min={1}
@@ -762,6 +756,47 @@ export function InviteCreator() {
         </div>
       </div>
       {error ? <p className="mt-3 text-sm text-rose-600">{error}</p> : null}
+      {createdCodes.length > 0 && (
+        <div className="mt-4 rounded-2xl border border-[var(--line)] bg-[var(--surface-strong)]/60 p-4">
+          <div className="flex items-center justify-between gap-3">
+            <p className="text-sm font-medium text-[var(--ink)]">
+              已生成 {createdCodes.length} 个邀请码
+            </p>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => handleCopy(createdCodes)}
+                className="inline-flex items-center gap-1.5 rounded-full border border-[var(--line)] px-3 py-1.5 text-xs font-medium text-[var(--ink-soft)] transition hover:border-[var(--accent)] hover:text-[var(--accent)]"
+              >
+                <Copy className="size-3.5" />
+                {copySuccess ? "已复制" : "复制全部"}
+              </button>
+              {createdBatchId && (
+                <button
+                  type="button"
+                  onClick={() => downloadBatchTxt(createdBatchId)}
+                  className="inline-flex items-center gap-1.5 rounded-full border border-[var(--line)] px-3 py-1.5 text-xs font-medium text-[var(--ink-soft)] transition hover:border-[var(--accent)] hover:text-[var(--accent)]"
+                >
+                  <Download className="size-3.5" />
+                  下载 .txt
+                </button>
+              )}
+            </div>
+          </div>
+          <div className="mt-2 flex flex-wrap gap-2">
+            {createdCodes.slice(0, 12).map((code) => (
+              <span key={code} className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-[var(--ink)]">
+                {code}
+              </span>
+            ))}
+            {createdCodes.length > 12 && (
+              <span className="rounded-full border border-[var(--line)] px-3 py-1 text-xs text-[var(--ink-soft)]">
+                另有 {createdCodes.length - 12} 个
+              </span>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -853,6 +888,36 @@ export function InviteBatchDelete({
     >
       <Trash2 className="size-3.5" />
       {isPending ? "删除中..." : "删除批次"}
+    </button>
+  );
+}
+
+export function InviteBatchCopy({ batchId }: { batchId: string }) {
+  const [copied, setCopied] = useState(false);
+  const [isPending, startTransition] = useTransition();
+
+  async function handleCopy() {
+    const res = await fetch(`/api/admin/invites/batches/${batchId}/export`);
+    if (!res.ok) {
+      alert("获取邀请码失败");
+      return;
+    }
+    const text = await res.text();
+    await navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }
+
+  return (
+    <button
+      type="button"
+      disabled={isPending || copied}
+      onClick={() => startTransition(handleCopy)}
+      className="inline-flex items-center gap-1.5 rounded-full border border-[var(--line)] px-3 py-2 text-xs font-medium text-[var(--ink-soft)] transition hover:border-[var(--accent)] hover:text-[var(--accent)] disabled:opacity-60"
+      title="复制本批次所有可用邀请码"
+    >
+      <Copy className="size-3.5" />
+      {copied ? "已复制" : isPending ? "复制中..." : "复制批次"}
     </button>
   );
 }

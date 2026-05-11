@@ -4,7 +4,7 @@ import { RedeemCodeMode } from "@prisma/client";
 
 import { db } from "@/lib/db";
 import { requireAdminRecord } from "@/lib/server/current-user";
-import { RedeemBatchDelete, RedeemBatchDownload, RedeemBatchToggle, RedeemCodeCreator } from "@/components/admin/redeem-code-manager";
+import { RedeemBatchCopy, RedeemBatchDelete, RedeemBatchDownload, RedeemBatchToggle, RedeemCodeCreator } from "@/components/admin/redeem-code-manager";
 
 export const dynamic = "force-dynamic";
 
@@ -124,6 +124,7 @@ export default async function AdminRedeemCodesPage() {
                   <div className="mt-3 text-3xl font-semibold text-[var(--accent)]">{remaining}</div>
                 </div>
                 <div className="flex flex-wrap items-end justify-start gap-2 xl:justify-end">
+                  <RedeemBatchCopy batchId={batch.id} />
                   <RedeemBatchDownload batchId={batch.id} />
                   <RedeemBatchToggle batchId={batch.id} isActive={batch.isActive} />
                   <RedeemBatchDelete

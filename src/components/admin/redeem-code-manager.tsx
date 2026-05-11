@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
-import { Download, Gift, Power, Trash2 } from "lucide-react";
+import { Copy, Download, Gift, Power, Trash2 } from "lucide-react";
 
 type RedeemMode = "single_use" | "shared";
 
@@ -18,6 +18,26 @@ export function RedeemCodeCreator() {
   const [isActive, setIsActive] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [createdCodes, setCreatedCodes] = useState<Array<{ code: string; id: string }>>([]);
+  const [copySuccess, setCopySuccess] = useState(false);
+
+  async function handleCopy(codes: Array<{ code: string }>) {
+    await navigator.clipboard.writeText(codes.map((c) => c.code).join("\n"));
+    setCopySuccess(true);
+    setTimeout(() => setCopySuccess(false), 2000);
+  }
+
+  function handleDownload(codes: Array<{ code: string }>) {
+    const text = codes.map((c) => c.code).join("\n");
+    const blob = new Blob([text], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `redeem-codes-${new Date().toISOString().slice(0, 10)}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
 
   async function handleCreate() {
     setError(null);
@@ -150,7 +170,29 @@ export function RedeemCodeCreator() {
       {error ? <p className="mt-3 text-sm text-rose-600">{error}</p> : null}
       {createdCodes.length > 0 ? (
         <div className="mt-4 rounded-2xl border border-[var(--line)] bg-[var(--surface-strong)]/60 p-4">
-          <p className="text-sm font-medium text-[var(--ink)]">刚创建的兑换码</p>
+          <div className="flex items-center justify-between gap-3">
+            <p className="text-sm font-medium text-[var(--ink)]">
+              已创建 {createdCodes.length} 个兑换码
+            </p>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => handleCopy(createdCodes)}
+                className="inline-flex items-center gap-1.5 rounded-full border border-[var(--line)] px-3 py-1.5 text-xs font-medium text-[var(--ink-soft)] transition hover:border-[var(--accent)] hover:text-[var(--accent)]"
+              >
+                <Copy className="size-3.5" />
+                {copySuccess ? "已复制" : "复制全部"}
+              </button>
+              <button
+                type="button"
+                onClick={() => handleDownload(createdCodes)}
+                className="inline-flex items-center gap-1.5 rounded-full border border-[var(--line)] px-3 py-1.5 text-xs font-medium text-[var(--ink-soft)] transition hover:border-[var(--accent)] hover:text-[var(--accent)]"
+              >
+                <Download className="size-3.5" />
+                下载 .txt
+              </button>
+            </div>
+          </div>
           <div className="mt-2 flex flex-wrap gap-2">
             {createdCodes.slice(0, 12).map((item) => (
               <span key={item.id} className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-[var(--ink)]">
@@ -215,6 +257,36 @@ export function RedeemBatchDownload({ batchId }: { batchId: string }) {
       <Download className="size-3.5" />
       下载 .txt
     </a>
+  );
+}
+
+export function RedeemBatchCopy({ batchId }: { batchId: string }) {
+  const [copied, setCopied] = useState(false);
+  const [isPending, startTransition] = useTransition();
+
+  async function handleCopy() {
+    const res = await fetch(`/api/admin/redeem-codes/batches/${batchId}/export`);
+    if (!res.ok) {
+      alert("获取兑换码失败");
+      return;
+    }
+    const text = await res.text();
+    await navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }
+
+  return (
+    <button
+      type="button"
+      disabled={isPending || copied}
+      onClick={() => startTransition(handleCopy)}
+      className="inline-flex items-center gap-1.5 rounded-full border border-[var(--line)] px-3 py-2 text-xs font-medium text-[var(--ink-soft)] transition hover:border-[var(--accent)] hover:text-[var(--accent)] disabled:opacity-60"
+      title="复制本批次所有兑换码"
+    >
+      <Copy className="size-3.5" />
+      {copied ? "已复制" : isPending ? "复制中..." : "复制批次"}
+    </button>
   );
 }
 

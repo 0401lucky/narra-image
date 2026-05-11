@@ -6,6 +6,7 @@ import {
   BadgePercent,
   ClipboardList,
   ImageIcon,
+  Sparkles,
   Ticket,
   Users,
 } from "lucide-react";
@@ -22,7 +23,10 @@ export default async function AdminPage() {
     redirect("/login");
   }
 
-  const [userCount, inviteCount, redeemCodeCount, generationCount, featuredCount] =
+  const todayStart = new Date();
+  todayStart.setHours(0, 0, 0, 0);
+
+  const [userCount, inviteCount, redeemCodeCount, generationCount, featuredCount, todayGenerationCount] =
     await Promise.all([
       db.user.count(),
       db.inviteCode.count(),
@@ -31,6 +35,11 @@ export default async function AdminPage() {
       db.generationImage.count({
         where: {
           showcaseStatus: ShowcaseStatus.FEATURED,
+        },
+      }),
+      db.generationImage.count({
+        where: {
+          createdAt: { gte: todayStart },
         },
       }),
     ]);
@@ -49,6 +58,7 @@ export default async function AdminPage() {
       label: "生成记录",
       value: generationCount,
     },
+    { caption: "今日产出", icon: Sparkles, label: "今日生成", value: todayGenerationCount },
     { caption: "社区精选", icon: ImageIcon, label: "公开作品", value: featuredCount },
   ];
 
@@ -67,7 +77,7 @@ export default async function AdminPage() {
           </div>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-6">
           {metrics.map((metric) => {
             const Icon = metric.icon;
             return (
