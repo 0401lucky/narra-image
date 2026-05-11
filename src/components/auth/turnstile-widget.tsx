@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useImperativeHandle, useRef, type Ref } from "react";
+import { useEffect, useImperativeHandle, useRef, useState, type Ref } from "react";
+import { CheckCircle2, Loader2, ShieldAlert } from "lucide-react";
 
 declare global {
   interface Window {
@@ -36,6 +37,10 @@ function loadScript(): Promise<void> {
       `script[src^="https://challenges.cloudflare.com/turnstile/v0/api.js"]`,
     );
     if (existing) {
+      if (window.turnstile) {
+        resolve();
+        return;
+      }
       existing.addEventListener("load", () => resolve(), { once: true });
       existing.addEventListener("error", () => reject(new Error("脚本加载失败")), { once: true });
       return;
@@ -55,6 +60,8 @@ function loadScript(): Promise<void> {
 export type TurnstileWidgetHandle = {
   reset: () => void;
 };
+
+type TurnstileStatus = "loading" | "ready" | "verified" | "expired" | "error";
 
 type TurnstileWidgetProps = {
   siteKey: string;
@@ -79,12 +86,14 @@ export function TurnstileWidget({
 }: TurnstileWidgetProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const widgetIdRef = useRef<string | null>(null);
+  const [status, setStatus] = useState<TurnstileStatus>("loading");
 
   useImperativeHandle(ref, () => ({
     reset() {
       if (widgetIdRef.current && window.turnstile) {
         window.turnstile.reset(widgetIdRef.current);
       }
+      setStatus("ready");
     },
   }), []);
 
@@ -92,21 +101,36 @@ export function TurnstileWidget({
     let cancelled = false;
     let widgetId: string | null = null;
 
+    setStatus("loading");
+
     loadScript()
       .then(() => {
         if (cancelled || !containerRef.current || !window.turnstile) return;
+        setStatus("ready");
         widgetId = window.turnstile.render(containerRef.current, {
           sitekey: siteKey,
           theme,
           size,
-          callback: (token) => onVerify(token),
-          "expired-callback": () => onExpire?.(),
-          "error-callback": () => onError?.(),
+          callback: (token) => {
+            setStatus("verified");
+            onVerify(token);
+          },
+          "expired-callback": () => {
+            setStatus("expired");
+            onExpire?.();
+          },
+          "error-callback": () => {
+            setStatus("error");
+            onError?.();
+          },
         });
         widgetIdRef.current = widgetId;
       })
       .catch(() => {
-        onError?.();
+        if (!cancelled) {
+          setStatus("error");
+          onError?.();
+        }
       });
 
     return () => {
@@ -122,5 +146,36 @@ export function TurnstileWidget({
     };
   }, [siteKey, theme, size, onVerify, onExpire, onError]);
 
-  return <div ref={containerRef} className={className} />;
+  return (
+    <div className={className}>
+      {status === "loading" && (
+        <div className="flex items-center gap-2 rounded-xl border border-[var(--line)] bg-white/60 px-4 py-3 text-sm text-[var(--ink-soft)]">
+          <Loader2 className="size-4 animate-spin" />
+          <span>正在加载人机验证...</span>
+        </div>
+      )}
+      {status === "verified" && (
+        <div className="flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50/80 px-4 py-3 text-sm text-emerald-700">
+          <CheckCircle2 className="size-4" />
+          <span>验证通过</span>
+        </div>
+      )}
+      {status === "error" && (
+        <div className="flex items-center gap-2 rounded-xl border border-rose-200 bg-rose-50/80 px-4 py-3 text-sm text-rose-600">
+          <ShieldAlert className="size-4" />
+          <span>验证加载失败，请刷新页面重试</span>
+        </div>
+      )}
+      {status === "expired" && (
+        <div className="flex items-center gap-2 rounded-xl border border-amber-200 bg-amber-50/80 px-4 py-3 text-sm text-amber-700">
+          <ShieldAlert className="size-4" />
+          <span>验证已过期，请重新验证</span>
+        </div>
+      )}
+      <div
+        ref={containerRef}
+        className={status === "verified" ? "hidden" : undefined}
+      />
+    </div>
+  );
 }
