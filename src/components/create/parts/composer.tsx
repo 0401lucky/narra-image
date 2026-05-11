@@ -94,7 +94,7 @@ export const Composer = forwardRef<HTMLTextAreaElement, ComposerProps>(function 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   return (
-    <div className="absolute inset-x-0 bottom-0 z-20 bg-gradient-to-t from-[#f5efe6] via-[#f5efe6]/92 to-transparent px-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] pt-8 sm:px-4 sm:pb-5 md:px-10 md:pt-10">
+    <div className="absolute inset-x-0 bottom-0 z-20 bg-gradient-to-t from-[#f5efe6] via-[#f5efe6]/92 to-transparent px-2.5 pb-[calc(0.5rem+env(safe-area-inset-bottom))] pt-5 sm:px-4 sm:pb-5 sm:pt-8 md:px-10 md:pt-10">
       <div className="mx-auto max-w-5xl">
         <div className="composer-silk relative flex max-h-[min(86dvh,42rem)] flex-col overflow-hidden rounded-[1.35rem] border border-white/70 shadow-[0_22px_60px_rgba(84,52,29,0.14)] ring-1 ring-[#d8c7b2]/50 backdrop-blur-2xl transition-all duration-300 sm:rounded-[1.55rem]">
 

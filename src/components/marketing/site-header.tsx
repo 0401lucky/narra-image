@@ -170,7 +170,7 @@ export async function SiteHeader({
       </div>
 
       {checkInSummary ? (
-        <div className="-mx-4 mt-3 flex min-[480px]:hidden px-4 md:hidden">
+        <div className="-mx-4 mt-2.5 flex min-[480px]:hidden px-4 md:hidden">
           <CheckInButton
             checkedInToday={checkInSummary.checkedInToday}
             rewardCredits={checkInSummary.checkInReward}
