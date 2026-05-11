@@ -1,0 +1,115 @@
+{
+  "results": [
+    {
+      "id": "navy",
+      "exists": true,
+      "dataPetId": "navy",
+      "mood": "idle",
+      "frame": "idle-04",
+      "src": "/pet/navy.png",
+      "imageLoaded": true,
+      "rect": {
+        "x": 573,
+        "y": 425,
+        "w": 112,
+        "h": 128
+      }
+    },
+    {
+      "id": "silver",
+      "exists": true,
+      "dataPetId": "silver",
+      "mood": "idle",
+      "frame": "idle-03",
+      "src": "/pet/silver.png",
+      "imageLoaded": true,
+      "rect": {
+        "x": 573,
+        "y": 425,
+        "w": 112,
+        "h": 128
+      }
+    },
+    {
+      "id": "lilac",
+      "exists": true,
+      "dataPetId": "lilac",
+      "mood": "idle",
+      "frame": "idle-04",
+      "src": "/pet/lilac.png",
+      "imageLoaded": true,
+      "rect": {
+        "x": 573,
+        "y": 425,
+        "w": 112,
+        "h": 128
+      }
+    },
+    {
+      "id": "rose",
+      "exists": true,
+      "dataPetId": "rose",
+      "mood": "idle",
+      "frame": "idle-04",
+      "src": "/pet/rose.png",
+      "imageLoaded": true,
+      "rect": {
+        "x": 573,
+        "y": 425,
+        "w": 112,
+        "h": 128
+      }
+    },
+    {
+      "id": "violet",
+      "exists": true,
+      "dataPetId": "violet",
+      "mood": "idle",
+      "frame": "idle-05",
+      "src": "/pet/violet.png",
+      "imageLoaded": true,
+      "rect": {
+        "x": 573,
+        "y": 425,
+        "w": 112,
+        "h": 128
+      }
+    },
+    {
+      "id": "cocoa",
+      "exists": true,
+      "dataPetId": "cocoa",
+      "mood": "idle",
+      "frame": "idle-04",
+      "src": "/pet/cocoa.png",
+      "imageLoaded": true,
+      "rect": {
+        "x": 573,
+        "y": 425,
+        "w": 112,
+        "h": 128
+      }
+    },
+    {
+      "id": "mono",
+      "exists": true,
+      "dataPetId": "mono",
+      "mood": "idle",
+      "frame": "idle-06",
+      "src": "/pet/mono.png",
+      "imageLoaded": true,
+      "rect": {
+        "x": 573,
+        "y": 425,
+        "w": 112,
+        "h": 128
+      }
+    }
+  ],
+  "hoverReaction": {
+    "petId": "mono",
+    "mood": "idle",
+    "frame": "idle-06",
+    "bubbleVisible": false
+  }
+}

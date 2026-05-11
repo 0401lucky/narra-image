@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>Narra Image Promo</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html,
+      body {
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: #f8f4ee;
+        color: #21170f;
+        font-family:
+          "Avenir Next", "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      }
+
+      .scene {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+      }
+
+      .progress-shell {
+        position: absolute;
+        z-index: 20;
+        left: 56px;
+        right: 56px;
+        bottom: 42px;
+        height: 3px;
+        overflow: hidden;
+        border-radius: 999px;
+        background: rgba(33, 23, 15, 0.08);
+      }
+
+      .progress-line {
+        width: 100%;
+        height: 100%;
+        transform: scaleX(0);
+        transform-origin: left center;
+        border-radius: inherit;
+        background: linear-gradient(90deg, #d9643a, #9a77c7);
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="20"
+      data-width="1920"
+      data-height="1080"
+    >
+      <div
+        id="scene-1"
+        class="scene clip"
+        data-composition-id="scene1-logo-intro"
+        data-composition-src="compositions/scene1-logo-intro.html"
+        data-start="0"
+        data-duration="3.6"
+        data-track-index="1"
+        data-width="1920"
+        data-height="1080"
+      ></div>
+
+      <div
+        id="scene-2-4"
+        class="scene clip"
+        data-composition-id="scene2-4-canvas"
+        data-composition-src="compositions/scene2-4-canvas.html"
+        data-start="3.6"
+        data-duration="10.4"
+        data-track-index="1"
+        data-width="1920"
+        data-height="1080"
+      ></div>
+
+      <div
+        id="scene-5"
+        class="scene clip"
+        data-composition-id="scene5-logo-outro"
+        data-composition-src="compositions/scene5-logo-outro.html"
+        data-start="13.72"
+        data-duration="6.28"
+        data-track-index="2"
+        data-width="1920"
+        data-height="1080"
+      ></div>
+
+      <div class="progress-shell" data-layout-ignore>
+        <div class="progress-line"></div>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const mainTl = gsap.timeline({ paused: true });
+      mainTl.to(".progress-line", { scaleX: 1, duration: 20, ease: "none" }, 0);
+      window.__timelines["main"] = mainTl;
+    </script>
+  </body>
+</html>

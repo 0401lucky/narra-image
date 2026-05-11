@@ -90,14 +90,14 @@ export function GenerationBubble({
 
           {generation.status === "pending" ? (
             <div className="flex flex-col gap-2">
-              <div className="generation-developing-card" role="status" aria-label="图片生成中">
-                <span className="generation-developing-card__beam" aria-hidden />
-                <span className="generation-developing-card__frame generation-developing-card__frame-a" aria-hidden />
-                <span className="generation-developing-card__frame generation-developing-card__frame-b" aria-hidden />
-                <span className="generation-developing-card__aperture" aria-hidden>
-                  <Sparkles className="size-5" />
-                </span>
-                <span className="generation-developing-card__text">正在显影中</span>
+              <div className="relative flex w-full max-w-[18rem] items-center gap-3.5 overflow-hidden rounded-[1.15rem] border border-[var(--line)] bg-gradient-to-r from-[#fffaf2]/90 to-[#fdf6e9]/90 px-4 py-3.5 shadow-sm backdrop-blur-xl skeleton-shimmer" role="status" aria-label="图片生成中">
+                <div className="relative z-10 flex size-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-rose-400 via-amber-300 to-sky-400 shadow-[0_4px_12px_rgba(217,100,58,0.25)] animate-pulse">
+                  <Sparkles className="size-4 text-white" />
+                </div>
+                <div className="relative z-10 flex flex-col gap-0.5">
+                  <span className="text-sm font-bold text-[var(--ink)] tracking-tight">正在显影中<span className="animate-pulse">...</span></span>
+                  <span className="text-xs font-medium text-[var(--ink-soft)]">Narra 正在挥动魔杖</span>
+                </div>
               </div>
               {onCancel && (
                 <button

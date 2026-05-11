@@ -1,0 +1,29 @@
+▲ Next.js 16.2.4
+- Local:         http://localhost:3030
+- Network:       http://198.18.0.1:3030
+✓ Ready in 4.6s
+prisma:error 
+Invalid `prisma.generationImage.findMany()` invocation:
+
+
+Can't reach database server at service-69e8fab84bdf5ec1ab0a6f43
+prisma:error 
+Invalid `prisma.generationImage.findMany()` invocation:
+
+
+Can't reach database server at service-69e8fab84bdf5ec1ab0a6f43
+prisma:error 
+Invalid `prisma.generationImage.findMany()` invocation:
+
+
+Can't reach database server at service-69e8fab84bdf5ec1ab0a6f43
+prisma:error 
+Invalid `prisma.generationImage.findMany()` invocation:
+
+
+Can't reach database server at service-69e8fab84bdf5ec1ab0a6f43
+prisma:error 
+Invalid `prisma.generationImage.findMany()` invocation:
+
+
+Can't reach database server at service-69e8fab84bdf5ec1ab0a6f43

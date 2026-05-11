@@ -1,0 +1,805 @@
+<template id="scene2-4-canvas-template">
+  <div
+    id="scene2-4-canvas"
+    data-composition-id="scene2-4-canvas"
+    data-width="1920"
+    data-height="1080"
+    data-duration="10.4"
+  >
+    <div class="canvas" data-layout-allow-overflow>
+      <div class="paper-grid" data-layout-ignore></div>
+      <div class="glow glow-a" data-layout-ignore></div>
+      <div class="glow glow-b" data-layout-ignore></div>
+
+      <section class="shot shot-create">
+        <div class="studio-shell">
+          <div class="topbar">
+            <div class="brand">
+              <span>Narra</span>
+              <strong>Image</strong>
+            </div>
+            <div class="nav">
+              <span>首页</span>
+              <span class="active">创作台</span>
+              <span>作品</span>
+            </div>
+            <button>继续创作</button>
+          </div>
+
+          <div class="workbench">
+            <aside class="sessions">
+              <h3>会话</h3>
+              <div class="session active">
+                <strong>雨夜角色</strong>
+                <span>正在生成</span>
+              </div>
+              <div class="session">
+                <strong>温室封面</strong>
+                <span>已完成</span>
+              </div>
+            </aside>
+
+            <main class="generation">
+              <div class="prompt-card">
+                <span>Prompt</span>
+                <p class="typed-line">雨夜城市、暖光、幻想角色、电影感构图</p>
+                <div class="cursor-dot" data-layout-ignore></div>
+              </div>
+
+              <div class="result-stage">
+                <div class="result-card primary">
+                  <img src="../assets/generated-city-artist.png" alt="" />
+                  <div class="scan" data-layout-ignore></div>
+                </div>
+                <div class="result-card secondary">
+                  <img src="../assets/generated-inventor-portrait.png" alt="" />
+                  <div class="scan" data-layout-ignore></div>
+                </div>
+              </div>
+
+              <div class="composer">
+                <span>描述你想生成的画面...</span>
+                <strong>生成</strong>
+              </div>
+            </main>
+
+            <aside class="settings">
+              <h3>高级参数</h3>
+              <div><span>模型</span><strong>gpt-image-2</strong></div>
+              <div><span>尺寸</span><strong>4K</strong></div>
+              <div><span>格式</span><strong>PNG</strong></div>
+              <div><span>质量</span><strong>auto</strong></div>
+            </aside>
+          </div>
+        </div>
+
+        <div class="scene-caption create-caption">
+          <span>创作台优先</span>
+          <h2>不是展示功能，<br />是拍下生成发生。</h2>
+        </div>
+      </section>
+
+      <section class="shot shot-flow">
+        <div class="flow-caption">
+          <span>渠道与积分</span>
+          <h2>一句灵感，穿过可配置的生成链路。</h2>
+        </div>
+
+        <div class="pipeline">
+          <div class="node prompt-node">
+            <span>01</span>
+            <strong>写下灵感</strong>
+            <img src="../assets/rose-thumb.png" alt="" />
+          </div>
+          <div class="connector" data-layout-ignore>
+            <i class="packet packet-a"></i>
+            <i class="packet packet-b"></i>
+          </div>
+          <div class="model-stack">
+            <div class="model-card main">
+              <span>内置渠道</span>
+              <strong>5 积分 / 次</strong>
+            </div>
+            <div class="model-card">
+              <span>OpenAI 兼容</span>
+              <strong>Base URL + API Key</strong>
+            </div>
+            <div class="model-card">
+              <span>模型探测</span>
+              <strong>/models 自动拉取</strong>
+            </div>
+          </div>
+          <div class="node output-node">
+            <span>03</span>
+            <strong>图片入库</strong>
+            <img src="../assets/generated-greenhouse-library.png" alt="" />
+          </div>
+        </div>
+
+        <div class="benefit-track" data-layout-allow-overflow>
+          <div><strong>每日签到</strong><span>持续激励</span></div>
+          <div><strong>兑换码</strong><span>批量发放</span></div>
+          <div><strong>邀请注册</strong><span>控制开放节奏</span></div>
+          <div><strong>Turnstile</strong><span>关键动作保护</span></div>
+        </div>
+      </section>
+
+      <section class="shot shot-gallery">
+        <div class="gallery-copy">
+          <span>作品广场 + 管理后台</span>
+          <h2>作品不是摆上去，<br />它会流动、被审核、被喜欢。</h2>
+        </div>
+
+        <div class="gallery-rail" data-layout-allow-overflow>
+          <article class="rail-card big">
+            <img src="../assets/generated-city-artist.png" alt="" />
+            <span>投稿精选</span>
+          </article>
+          <article class="rail-card">
+            <img src="../assets/generated-greenhouse-library.png" alt="" />
+            <span>点赞 128</span>
+          </article>
+          <article class="rail-card wide">
+            <img src="../assets/pet-thumbs-sheet.png" alt="" />
+            <span>角色素材</span>
+          </article>
+          <article class="rail-card">
+            <img src="../assets/generated-inventor-portrait.png" alt="" />
+            <span>审核通过</span>
+          </article>
+          <article class="rail-card">
+            <img src="../assets/generated-greenhouse-library.png" alt="" />
+            <span>精选展示</span>
+          </article>
+        </div>
+
+        <div class="review-panel">
+          <div class="review-title">
+            <strong>Admin</strong>
+            <span>审核队列</span>
+          </div>
+          <div class="review-row hot">
+            <span>作品审核</span>
+            <strong>通过</strong>
+          </div>
+          <div class="review-row">
+            <span>用户积分</span>
+            <strong>调整</strong>
+          </div>
+          <div class="review-row">
+            <span>渠道设置</span>
+            <strong>启停</strong>
+          </div>
+        </div>
+
+        <div class="approve-stamp">精选通过</div>
+      </section>
+    </div>
+
+    <style>
+      [data-composition-id="scene2-4-canvas"] {
+        overflow: hidden;
+        color: #21170f;
+        font-family:
+          "Avenir Next", "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      }
+
+      [data-composition-id="scene2-4-canvas"] .canvas {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background:
+          radial-gradient(circle at 16% 18%, rgba(255, 255, 255, 0.74), transparent 24%),
+          radial-gradient(circle at 82% 74%, rgba(217, 100, 58, 0.12), transparent 28%),
+          linear-gradient(180deg, #f8f4ee 0%, #efe6d8 100%);
+      }
+
+      [data-composition-id="scene2-4-canvas"] .paper-grid {
+        position: absolute;
+        inset: 0;
+        opacity: 0.42;
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.52) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.52) 1px, transparent 1px);
+        background-size: 112px 112px;
+        mask-image: radial-gradient(circle at center, black 24%, transparent 88%);
+      }
+
+      [data-composition-id="scene2-4-canvas"] .glow {
+        position: absolute;
+        border-radius: 999px;
+        filter: blur(62px);
+      }
+
+      [data-composition-id="scene2-4-canvas"] .glow-a {
+        left: 100px;
+        bottom: 120px;
+        width: 430px;
+        height: 430px;
+        background: rgba(217, 100, 58, 0.15);
+      }
+
+      [data-composition-id="scene2-4-canvas"] .glow-b {
+        right: 110px;
+        top: 110px;
+        width: 480px;
+        height: 480px;
+        background: rgba(154, 119, 199, 0.14);
+      }
+
+      [data-composition-id="scene2-4-canvas"] .shot {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+      }
+
+      [data-composition-id="scene2-4-canvas"] .studio-shell {
+        position: absolute;
+        left: 96px;
+        top: 88px;
+        width: 1328px;
+        height: 844px;
+        overflow: hidden;
+        border: 1px solid rgba(47, 30, 16, 0.12);
+        border-radius: 38px;
+        background: rgba(255, 250, 242, 0.88);
+        box-shadow: 0 38px 120px rgba(94, 58, 33, 0.18);
+      }
+
+      [data-composition-id="scene2-4-canvas"] .topbar {
+        display: flex;
+        height: 82px;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        border-bottom: 1px solid rgba(47, 30, 16, 0.1);
+        padding: 0 28px;
+      }
+
+      [data-composition-id="scene2-4-canvas"] .brand {
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+        color: #635347;
+        font-size: 17px;
+        letter-spacing: 0.25em;
+        text-transform: uppercase;
+      }
+
+      [data-composition-id="scene2-4-canvas"] .brand strong {
+        color: #21170f;
+        font-family: "Iowan Old Style", "Palatino Linotype", "Songti SC", serif;
+        font-size: 30px;
+        letter-spacing: 0;
+        text-transform: none;
+      }
+
+      [data-composition-id="scene2-4-canvas"] .nav {
+        display: flex;
+        gap: 10px;
+      }
+
+      [data-composition-id="scene2-4-canvas"] .nav span,
+      [data-composition-id="scene2-4-canvas"] .topbar button {
+        border: 1px solid rgba(47, 30, 16, 0.12);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.44);
+        padding: 10px 18px;
+        color: #635347;
+        font-size: 16px;
+      }
+
+      [data-composition-id="scene2-4-canvas"] .nav .active,
+      [data-composition-id="scene2-4-canvas"] .topbar button {
+        border: 0;
+        background: #21170f;
+        color: white;
+        font-weight: 800;
+      }
+
+      [data-composition-id="scene2-4-canvas"] .workbench {
+        display: grid;
+        grid-template-columns: 240px 1fr 270px;
+        gap: 20px;
+        height: calc(100% - 82px);
+        padding: 22px;
+      }
+
+      [data-composition-id="scene2-4-canvas"] .sessions,
+      [data-composition-id="scene2-4-canvas"] .settings,
+      [data-composition-id="scene2-4-canvas"] .prompt-card,
+      [data-composition-id="scene2-4-canvas"] .composer,
+      [data-composition-id="scene2-4-canvas"] .result-card {
+        border: 1px solid rgba(47, 30, 16, 0.1);
+        border-radius: 26px;
+        background: rgba(255, 255, 255, 0.54);
+      }
+
+      [data-composition-id="scene2-4-canvas"] h3 {
+        color: #21170f;
+        font-size: 22px;
+      }
+
+      [data-composition-id="scene2-4-canvas"] .sessions,
+      [data-composition-id="scene2-4-canvas"] .settings {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        padding: 22px;
+      }
+
+      [data-composition-id="scene2-4-canvas"] .session,
+      [data-composition-id="scene2-4-canvas"] .settings div {
+        border-radius: 18px;
+        background: rgba(255, 250, 242, 0.72);
+        padding: 16px;
+      }
+
+      [data-composition-id="scene2-4-canvas"] .session.active {
+        background: #21170f;
+        color: white;
+      }
+
+      [data-composition-id="scene2-4-canvas"] .session strong,
+      [data-composition-id="scene2-4-canvas"] .session span,
+      [data-composition-id="scene2-4-canvas"] .settings span,
+      [data-composition-id="scene2-4-canvas"] .settings strong {
+        display: block;
+      }
+
+      [data-composition-id="scene2-4-canvas"] .session span,
+      [data-composition-id="scene2-4-canvas"] .settings span {
+        margin-bottom: 7px;
+        color: #635347;
+        font-size: 14px;
+      }
+
+      [data-composition-id="scene2-4-canvas"] .session.active span {
+        color: rgba(255, 250, 242, 0.72);
+      }
+
+      [data-composition-id="scene2-4-canvas"] .generation {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+      }
+
+      [data-composition-id="scene2-4-canvas"] .prompt-card {
+        position: relative;
+        padding: 22px 24px;
+      }
+
+      [data-composition-id="scene2-4-canvas"] .prompt-card span {
+        color: #d9643a;
+        font-family: "JetBrains Mono", "Cascadia Code", monospace;
+        font-size: 15px;
+        font-weight: 800;
+      }
+
+      [data-composition-id="scene2-4-canvas"] .typed-line {
+        margin-top: 10px;
+        max-width: 590px;
+        color: #21170f;
+        font-size: 22px;
+        line-height: 1.45;
+        transform-origin: left center;
+      }
+
+      [data-composition-id="scene2-4-canvas"] .cursor-dot {
+        position: absolute;
+        right: 26px;
+        bottom: 26px;
+        width: 18px;
+        height: 18px;
+        border-radius: 999px;
+        background: #d9643a;
+        box-shadow: 0 0 0 10px rgba(217, 100, 58, 0.12);
+      }
+
+      [data-composition-id="scene2-4-canvas"] .result-stage {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+        flex: 1;
+        min-height: 405px;
+      }
+
+      [data-composition-id="scene2-4-canvas"] .result-card {
+        position: relative;
+        overflow: hidden;
+        padding: 12px;
+        transform-origin: center center;
+      }
+
+      [data-composition-id="scene2-4-canvas"] .result-card img {
+        width: 100%;
+        height: 100%;
+        border-radius: 20px;
+        object-fit: cover;
+        object-position: top center;
+      }
+
+      [data-composition-id="scene2-4-canvas"] .scan {
+        position: absolute;
+        left: 12px;
+        right: 12px;
+        top: -40%;
+        height: 38%;
+        border-radius: 20px;
+        background: linear-gradient(180deg, rgba(255, 250, 242, 0), rgba(255, 250, 242, 0.7), rgba(255, 250, 242, 0));
+        mix-blend-mode: screen;
+      }
+
+      [data-composition-id="scene2-4-canvas"] .composer {
+        display: flex;
+        min-height: 78px;
+        align-items: center;
+        justify-content: space-between;
+        padding: 18px 20px 18px 26px;
+      }
+
+      [data-composition-id="scene2-4-canvas"] .composer span {
+        color: #635347;
+        font-size: 20px;
+      }
+
+      [data-composition-id="scene2-4-canvas"] .composer strong {
+        border-radius: 999px;
+        background: #d9643a;
+        padding: 13px 23px;
+        color: white;
+      }
+
+      [data-composition-id="scene2-4-canvas"] .scene-caption {
+        position: absolute;
+        right: 104px;
+        bottom: 146px;
+        z-index: 4;
+        width: 390px;
+      }
+
+      [data-composition-id="scene2-4-canvas"] .scene-caption span,
+      [data-composition-id="scene2-4-canvas"] .flow-caption span,
+      [data-composition-id="scene2-4-canvas"] .gallery-copy span {
+        display: inline-flex;
+        width: fit-content;
+        border: 1px solid rgba(47, 30, 16, 0.12);
+        border-radius: 999px;
+        background: rgba(255, 250, 242, 0.78);
+        padding: 10px 16px;
+        color: #d9643a;
+        font-size: 17px;
+        font-weight: 800;
+      }
+
+      [data-composition-id="scene2-4-canvas"] h2 {
+        margin-top: 18px;
+        color: #21170f;
+        font-family: "Iowan Old Style", "Palatino Linotype", "Songti SC", serif;
+        font-size: 60px;
+        font-weight: 700;
+        line-height: 1.04;
+        letter-spacing: 0;
+      }
+
+      [data-composition-id="scene2-4-canvas"] .flow-caption {
+        position: absolute;
+        left: 118px;
+        top: 110px;
+        width: 760px;
+      }
+
+      [data-composition-id="scene2-4-canvas"] .pipeline {
+        position: absolute;
+        left: 110px;
+        right: 110px;
+        top: 340px;
+        display: grid;
+        grid-template-columns: 290px 1fr 360px;
+        gap: 56px;
+        align-items: center;
+      }
+
+      [data-composition-id="scene2-4-canvas"] .node,
+      [data-composition-id="scene2-4-canvas"] .model-card,
+      [data-composition-id="scene2-4-canvas"] .benefit-track div,
+      [data-composition-id="scene2-4-canvas"] .review-panel,
+      [data-composition-id="scene2-4-canvas"] .rail-card {
+        border: 1px solid rgba(47, 30, 16, 0.12);
+        background: rgba(255, 250, 242, 0.84);
+        box-shadow: 0 24px 80px rgba(94, 58, 33, 0.12);
+      }
+
+      [data-composition-id="scene2-4-canvas"] .node {
+        display: flex;
+        min-height: 300px;
+        flex-direction: column;
+        justify-content: space-between;
+        border-radius: 30px;
+        padding: 26px;
+      }
+
+      [data-composition-id="scene2-4-canvas"] .node span,
+      [data-composition-id="scene2-4-canvas"] .model-card span {
+        color: #635347;
+        font-family: "JetBrains Mono", "Cascadia Code", monospace;
+        font-size: 16px;
+      }
+
+      [data-composition-id="scene2-4-canvas"] .node strong,
+      [data-composition-id="scene2-4-canvas"] .model-card strong {
+        color: #21170f;
+        font-size: 28px;
+      }
+
+      [data-composition-id="scene2-4-canvas"] .node img {
+        width: 132px;
+        height: 132px;
+        align-self: flex-end;
+        border-radius: 24px;
+        object-fit: cover;
+      }
+
+      [data-composition-id="scene2-4-canvas"] .connector {
+        position: absolute;
+        left: 250px;
+        right: 340px;
+        top: 50%;
+        height: 3px;
+        border-radius: 999px;
+        background: linear-gradient(90deg, rgba(217, 100, 58, 0.08), rgba(217, 100, 58, 0.9), rgba(154, 119, 199, 0.72));
+      }
+
+      [data-composition-id="scene2-4-canvas"] .packet {
+        position: absolute;
+        top: -9px;
+        left: 0;
+        width: 22px;
+        height: 22px;
+        border-radius: 999px;
+        background: #d9643a;
+        box-shadow: 0 0 0 12px rgba(217, 100, 58, 0.14);
+      }
+
+      [data-composition-id="scene2-4-canvas"] .packet-b {
+        background: #9a77c7;
+        box-shadow: 0 0 0 12px rgba(154, 119, 199, 0.14);
+      }
+
+      [data-composition-id="scene2-4-canvas"] .model-stack {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        z-index: 2;
+      }
+
+      [data-composition-id="scene2-4-canvas"] .model-card {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 28px;
+        border-radius: 24px;
+        padding: 24px 28px;
+      }
+
+      [data-composition-id="scene2-4-canvas"] .model-card.main {
+        background: #21170f;
+      }
+
+      [data-composition-id="scene2-4-canvas"] .model-card.main span,
+      [data-composition-id="scene2-4-canvas"] .model-card.main strong {
+        color: white;
+      }
+
+      [data-composition-id="scene2-4-canvas"] .benefit-track {
+        position: absolute;
+        left: 110px;
+        right: 110px;
+        bottom: 98px;
+        display: flex;
+        gap: 18px;
+      }
+
+      [data-composition-id="scene2-4-canvas"] .benefit-track div {
+        min-width: 320px;
+        border-radius: 24px;
+        padding: 22px 24px;
+      }
+
+      [data-composition-id="scene2-4-canvas"] .benefit-track strong {
+        display: block;
+        color: #21170f;
+        font-size: 28px;
+      }
+
+      [data-composition-id="scene2-4-canvas"] .benefit-track span {
+        display: block;
+        margin-top: 7px;
+        color: #635347;
+        font-size: 17px;
+      }
+
+      [data-composition-id="scene2-4-canvas"] .gallery-copy {
+        position: absolute;
+        left: 104px;
+        top: 112px;
+        z-index: 5;
+        width: 560px;
+      }
+
+      [data-composition-id="scene2-4-canvas"] .gallery-rail {
+        position: absolute;
+        left: 160px;
+        right: auto;
+        bottom: 112px;
+        display: flex;
+        width: max-content;
+        align-items: flex-end;
+        gap: 22px;
+      }
+
+      [data-composition-id="scene2-4-canvas"] .rail-card {
+        position: relative;
+        width: 260px;
+        height: 330px;
+        overflow: hidden;
+        flex: 0 0 auto;
+        border-radius: 30px;
+        padding: 14px;
+      }
+
+      [data-composition-id="scene2-4-canvas"] .rail-card.big {
+        width: 310px;
+        height: 460px;
+      }
+
+      [data-composition-id="scene2-4-canvas"] .rail-card.wide {
+        width: 420px;
+        height: 230px;
+      }
+
+      [data-composition-id="scene2-4-canvas"] .rail-card img {
+        width: 100%;
+        height: 100%;
+        border-radius: 22px;
+        object-fit: cover;
+        object-position: top center;
+      }
+
+      [data-composition-id="scene2-4-canvas"] .rail-card span {
+        position: absolute;
+        left: 26px;
+        bottom: 24px;
+        border-radius: 999px;
+        background: rgba(33, 23, 15, 0.84);
+        padding: 8px 14px;
+        color: white;
+        font-size: 16px;
+        font-weight: 800;
+      }
+
+      [data-composition-id="scene2-4-canvas"] .review-panel {
+        position: absolute;
+        right: 108px;
+        top: 132px;
+        z-index: 6;
+        width: 350px;
+        border-radius: 30px;
+        padding: 24px;
+      }
+
+      [data-composition-id="scene2-4-canvas"] .review-title,
+      [data-composition-id="scene2-4-canvas"] .review-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+      }
+
+      [data-composition-id="scene2-4-canvas"] .review-title {
+        margin-bottom: 18px;
+      }
+
+      [data-composition-id="scene2-4-canvas"] .review-title strong {
+        font-size: 32px;
+      }
+
+      [data-composition-id="scene2-4-canvas"] .review-title span {
+        color: #d9643a;
+        font-weight: 800;
+      }
+
+      [data-composition-id="scene2-4-canvas"] .review-row {
+        margin-top: 12px;
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.48);
+        padding: 16px 18px;
+      }
+
+      [data-composition-id="scene2-4-canvas"] .review-row span {
+        color: #635347;
+        font-size: 17px;
+      }
+
+      [data-composition-id="scene2-4-canvas"] .review-row strong {
+        color: #21170f;
+        font-size: 18px;
+      }
+
+      [data-composition-id="scene2-4-canvas"] .review-row.hot {
+        background: #21170f;
+      }
+
+      [data-composition-id="scene2-4-canvas"] .review-row.hot span,
+      [data-composition-id="scene2-4-canvas"] .review-row.hot strong {
+        color: white;
+      }
+
+      [data-composition-id="scene2-4-canvas"] .approve-stamp {
+        position: absolute;
+        z-index: 8;
+        right: 472px;
+        bottom: 378px;
+        border: 4px solid #d9643a;
+        border-radius: 18px;
+        padding: 14px 22px;
+        color: #d9643a;
+        font-size: 34px;
+        font-weight: 900;
+        transform: rotate(-9deg);
+      }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script>
+      (function () {
+        const scope = '[data-composition-id="scene2-4-canvas"]';
+        const tl = gsap.timeline({ paused: true });
+
+        tl.to(`${scope} .glow-a`, { scale: 1.1, opacity: 0.72, duration: 2.4, repeat: 3, yoyo: true, ease: "sine.inOut" }, 0);
+        tl.to(`${scope} .glow-b`, { scale: 1.12, opacity: 0.82, duration: 2.6, repeat: 3, yoyo: true, ease: "sine.inOut" }, 0.2);
+
+        tl.to(`${scope} .shot-create`, { opacity: 1, duration: 0.12, ease: "none" }, 0);
+        tl.from(`${scope} .studio-shell`, { y: 90, scale: 0.92, opacity: 0, duration: 0.72, ease: "power3.out" }, 0.12);
+        tl.from(`${scope} .scene-caption > *`, { y: 34, opacity: 0, duration: 0.48, stagger: 0.08, ease: "power2.out" }, 0.46);
+        tl.from(`${scope} .typed-line`, { scaleX: 0, opacity: 0.2, duration: 0.64, ease: "steps(16)" }, 0.82);
+        tl.to(`${scope} .cursor-dot`, { x: 510, y: 610, duration: 0.82, ease: "power2.inOut" }, 1.18);
+        tl.to(`${scope} .composer strong`, { scale: 0.92, duration: 0.1, ease: "power2.in" }, 1.96);
+        tl.to(`${scope} .composer strong`, { scale: 1, duration: 0.14, ease: "power2.out" }, 2.06);
+        tl.from(`${scope} .result-card`, { y: 80, scale: 0.86, opacity: 0, duration: 0.56, stagger: 0.14, ease: "back.out(1.35)" }, 2.04);
+        tl.to(`${scope} .scan`, { y: 620, duration: 0.78, stagger: 0.08, ease: "power2.inOut" }, 2.18);
+        tl.to(`${scope} .studio-shell`, { x: -54, scale: 1.02, duration: 1.2, ease: "sine.inOut" }, 2.18);
+        tl.to(`${scope} .shot-create`, { opacity: 0, duration: 0.42, ease: "power2.in" }, 3.12);
+
+        tl.to(`${scope} .shot-flow`, { opacity: 1, duration: 0.12, ease: "none" }, 3.42);
+        tl.from(`${scope} .flow-caption > *`, { y: 34, opacity: 0, duration: 0.48, stagger: 0.08, ease: "power2.out" }, 3.5);
+        tl.from(`${scope} .node`, { y: 56, opacity: 0, duration: 0.5, stagger: 0.1, ease: "power3.out" }, 3.82);
+        tl.from(`${scope} .model-card`, { x: -36, opacity: 0, duration: 0.42, stagger: 0.08, ease: "power2.out" }, 4.08);
+        tl.from(`${scope} .connector`, { scaleX: 0, opacity: 0, duration: 0.52, ease: "power2.out" }, 4.18);
+        tl.to(`${scope} .packet-a`, { x: 930, duration: 1.5, ease: "power2.inOut" }, 4.35);
+        tl.to(`${scope} .packet-b`, { x: 930, duration: 1.5, ease: "power2.inOut" }, 4.72);
+        tl.from(`${scope} .benefit-track div`, { y: 90, opacity: 0, duration: 0.46, stagger: 0.08, ease: "power2.out" }, 5.0);
+        tl.to(`${scope} .benefit-track`, { x: -170, duration: 1.7, ease: "sine.inOut" }, 5.44);
+        tl.to(`${scope} .model-stack`, { y: -18, duration: 1.1, ease: "sine.inOut" }, 5.74);
+        tl.to(`${scope} .shot-flow`, { opacity: 0, duration: 0.42, ease: "power2.in" }, 6.78);
+
+        tl.to(`${scope} .shot-gallery`, { opacity: 1, duration: 0.12, ease: "none" }, 7.08);
+        tl.from(`${scope} .gallery-copy > *`, { y: 34, opacity: 0, duration: 0.48, stagger: 0.08, ease: "power2.out" }, 7.18);
+        tl.from(`${scope} .gallery-rail`, { x: 250, opacity: 0, duration: 0.58, ease: "power3.out" }, 7.32);
+        tl.to(`${scope} .gallery-rail`, { x: -88, duration: 2.4, ease: "sine.inOut" }, 7.88);
+        tl.from(`${scope} .review-panel`, { x: 92, opacity: 0, duration: 0.56, ease: "power3.out" }, 7.9);
+        tl.from(`${scope} .review-row`, { x: 34, opacity: 0, duration: 0.34, stagger: 0.06, ease: "power2.out" }, 8.2);
+        tl.from(`${scope} .approve-stamp`, { scale: 1.5, rotation: 8, opacity: 0, duration: 0.34, ease: "back.out(1.6)" }, 8.74);
+        tl.to(`${scope} .approve-stamp`, { scale: 1.05, duration: 0.16, ease: "power2.out" }, 9.12);
+        tl.to(`${scope} .approve-stamp`, { scale: 1, duration: 0.18, ease: "power2.inOut" }, 9.28);
+        tl.to(`${scope} .shot-gallery`, { opacity: 0, duration: 0.36, ease: "power2.in" }, 10.02);
+
+        window.__timelines = window.__timelines || {};
+        window.__timelines["scene2-4-canvas"] = tl;
+      })();
+    </script>
+  </div>
+</template>

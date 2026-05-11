@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "Bash(npx tsc *)",
+      "Bash(pnpm lint *)",
+      "Bash(pnpm vitest *)",
+      "Bash(pnpm test *)",
+      "Bash(git commit -m 'refactor\\(create\\): 拆分创作台 + 6 项 Bug 修复 + 会话上服务端 *)"
+    ]
+  }
+}

@@ -1,0 +1,499 @@
+<template id="scene5-logo-outro-template">
+  <div
+    id="scene5-logo-outro"
+    data-composition-id="scene5-logo-outro"
+    data-width="1920"
+    data-height="1080"
+    data-duration="6.28"
+  >
+    <div class="scene-bg" data-layout-allow-overflow>
+      <div class="deep-panel" data-layout-ignore></div>
+      <div class="paper-grid" data-layout-ignore></div>
+      <div class="motion-ribbon ribbon-a" data-layout-ignore></div>
+      <div class="motion-ribbon ribbon-b" data-layout-ignore></div>
+      <div class="motion-ribbon ribbon-c" data-layout-ignore></div>
+      <div class="glow glow-warm" data-layout-ignore></div>
+      <div class="glow glow-violet" data-layout-ignore></div>
+      <div class="camera-vignette" data-layout-ignore></div>
+
+      <div class="scene-content">
+        <div class="final-copy">
+          <div class="brand-line">
+            <span>Narra</span>
+            <strong>Image</strong>
+          </div>
+          <h2>一个可以直接部署的<br />高颜值生图站</h2>
+          <p>创作、展示、积分、渠道、后台管理，开源项目一次配齐。</p>
+          <div class="cta-row">
+            <span>narra.c0ffee.space</span>
+            <span>github.com/0401lucky/narra-image</span>
+          </div>
+        </div>
+
+        <div class="launch-card">
+          <div class="card-scan" data-layout-ignore></div>
+          <div class="pet-orbit">
+            <div class="orbit-ring ring-a" data-layout-ignore></div>
+            <div class="orbit-ring ring-b" data-layout-ignore></div>
+            <div class="orbit-spark spark-a" data-layout-ignore></div>
+            <div class="orbit-spark spark-b" data-layout-ignore></div>
+            <img class="pet pet-a" src="../assets/navy-thumb.png" alt="" />
+            <img class="pet pet-b" src="../assets/violet-thumb.png" alt="" />
+            <img class="pet pet-c" src="../assets/silver-thumb.png" alt="" />
+            <img class="pet pet-d" src="../assets/cocoa-thumb.png" alt="" />
+          </div>
+          <div class="repo-badge">
+            <span>AGPL-3.0</span>
+            <strong>Open Source</strong>
+          </div>
+          <div class="deploy-list">
+            <div>
+              <span>Next.js</span>
+              <strong>应用层</strong>
+            </div>
+            <div>
+              <span>Prisma + PostgreSQL</span>
+              <strong>数据层</strong>
+            </div>
+            <div>
+              <span>Docker / Zeabur</span>
+              <strong>部署</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <style>
+      [data-composition-id="scene5-logo-outro"] {
+        overflow: hidden;
+        color: #fffaf2;
+        font-family:
+          "Avenir Next", "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      }
+
+      [data-composition-id="scene5-logo-outro"] .scene-bg {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        transform-origin: center;
+        background:
+          radial-gradient(circle at 72% 28%, rgba(154, 119, 199, 0.24), transparent 25%),
+          radial-gradient(circle at 16% 78%, rgba(217, 100, 58, 0.22), transparent 26%),
+          linear-gradient(145deg, #102033 0%, #21170f 58%, #2b1b13 100%);
+      }
+
+      [data-composition-id="scene5-logo-outro"] .deep-panel {
+        position: absolute;
+        inset: 70px;
+        border: 1px solid rgba(255, 250, 242, 0.1);
+        border-radius: 44px;
+        background: rgba(255, 250, 242, 0.035);
+        box-shadow: inset 0 1px 0 rgba(255, 250, 242, 0.08);
+      }
+
+      [data-composition-id="scene5-logo-outro"] .paper-grid {
+        position: absolute;
+        inset: 0;
+        opacity: 0.14;
+        background-image:
+          linear-gradient(rgba(255, 250, 242, 0.34) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 250, 242, 0.34) 1px, transparent 1px);
+        background-size: 118px 118px;
+        mask-image: radial-gradient(circle at center, black 26%, transparent 86%);
+      }
+
+      [data-composition-id="scene5-logo-outro"] .motion-ribbon {
+        position: absolute;
+        left: -640px;
+        width: 780px;
+        height: 18px;
+        border-radius: 999px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 250, 242, 0.06),
+          rgba(217, 100, 58, 0.46),
+          rgba(154, 119, 199, 0.38),
+          transparent
+        );
+        filter: blur(1px);
+        opacity: 0;
+        transform: skewX(-24deg);
+      }
+
+      [data-composition-id="scene5-logo-outro"] .ribbon-a {
+        top: 196px;
+      }
+
+      [data-composition-id="scene5-logo-outro"] .ribbon-b {
+        top: 512px;
+        height: 12px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 250, 242, 0.06),
+          rgba(154, 119, 199, 0.44),
+          rgba(217, 100, 58, 0.24),
+          transparent
+        );
+      }
+
+      [data-composition-id="scene5-logo-outro"] .ribbon-c {
+        top: 820px;
+        height: 14px;
+      }
+
+      [data-composition-id="scene5-logo-outro"] .camera-vignette {
+        position: absolute;
+        inset: 0;
+        z-index: 8;
+        pointer-events: none;
+        background:
+          linear-gradient(90deg, rgba(16, 32, 51, 0.3), transparent 18%, transparent 82%, rgba(16, 32, 51, 0.26)),
+          radial-gradient(circle at center, transparent 45%, rgba(0, 0, 0, 0.2) 100%);
+        opacity: 0.58;
+      }
+
+      [data-composition-id="scene5-logo-outro"] .glow {
+        position: absolute;
+        border-radius: 999px;
+        filter: blur(64px);
+        will-change: transform, opacity;
+      }
+
+      [data-composition-id="scene5-logo-outro"] .glow-warm {
+        left: 120px;
+        bottom: 120px;
+        width: 420px;
+        height: 420px;
+        background: rgba(217, 100, 58, 0.22);
+      }
+
+      [data-composition-id="scene5-logo-outro"] .glow-violet {
+        right: 150px;
+        top: 110px;
+        width: 460px;
+        height: 460px;
+        background: rgba(154, 119, 199, 0.22);
+      }
+
+      [data-composition-id="scene5-logo-outro"] .scene-content {
+        position: relative;
+        z-index: 9;
+        display: flex;
+        width: 100%;
+        height: 100%;
+        align-items: center;
+        justify-content: space-between;
+        gap: 90px;
+        padding: 128px 150px 148px;
+      }
+
+      [data-composition-id="scene5-logo-outro"] .final-copy {
+        display: flex;
+        width: 880px;
+        flex-direction: column;
+        gap: 26px;
+      }
+
+      [data-composition-id="scene5-logo-outro"] .brand-line {
+        display: flex;
+        width: fit-content;
+        align-items: baseline;
+        gap: 14px;
+        border: 1px solid rgba(255, 250, 242, 0.12);
+        border-radius: 999px;
+        background: rgba(255, 250, 242, 0.08);
+        padding: 12px 20px;
+        color: rgba(255, 250, 242, 0.72);
+        font-size: 20px;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+      }
+
+      [data-composition-id="scene5-logo-outro"] .brand-line strong {
+        color: #fffaf2;
+        font-family: "Iowan Old Style", "Palatino Linotype", "Songti SC", serif;
+        font-size: 34px;
+        letter-spacing: 0;
+        text-transform: none;
+      }
+
+      [data-composition-id="scene5-logo-outro"] h2 {
+        font-family: "Iowan Old Style", "Palatino Linotype", "Songti SC", serif;
+        font-size: 86px;
+        font-weight: 700;
+        line-height: 1.02;
+        letter-spacing: 0;
+      }
+
+      [data-composition-id="scene5-logo-outro"] p {
+        max-width: 730px;
+        color: rgba(255, 250, 242, 0.74);
+        font-size: 30px;
+        line-height: 1.45;
+      }
+
+      [data-composition-id="scene5-logo-outro"] .cta-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+        margin-top: 12px;
+      }
+
+      [data-composition-id="scene5-logo-outro"] .cta-row span {
+        border: 1px solid rgba(255, 250, 242, 0.12);
+        border-radius: 999px;
+        background: rgba(255, 250, 242, 0.08);
+        padding: 16px 22px;
+        color: #fffaf2;
+        font-family: "JetBrains Mono", "Cascadia Code", monospace;
+        font-size: 18px;
+        will-change: transform, background-color;
+      }
+
+      [data-composition-id="scene5-logo-outro"] .launch-card {
+        position: relative;
+        width: 620px;
+        height: 690px;
+        overflow: hidden;
+        border: 1px solid rgba(255, 250, 242, 0.12);
+        border-radius: 42px;
+        background: rgba(255, 250, 242, 0.08);
+        box-shadow: 0 36px 120px rgba(0, 0, 0, 0.28);
+        padding: 40px;
+        will-change: transform, opacity;
+      }
+
+      [data-composition-id="scene5-logo-outro"] .launch-card > * {
+        position: relative;
+        z-index: 2;
+      }
+
+      [data-composition-id="scene5-logo-outro"] .card-scan {
+        position: absolute;
+        top: -36%;
+        left: -58%;
+        z-index: 1;
+        width: 220px;
+        height: 170%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 250, 242, 0.18),
+          rgba(255, 250, 242, 0.04),
+          transparent
+        );
+        opacity: 0;
+        transform: rotate(18deg);
+        will-change: transform, opacity;
+      }
+
+      [data-composition-id="scene5-logo-outro"] .pet-orbit {
+        position: relative;
+        height: 270px;
+        overflow: hidden;
+        border-radius: 34px;
+        background:
+          radial-gradient(circle at 50% 45%, rgba(255, 250, 242, 0.12), transparent 44%),
+          rgba(255, 250, 242, 0.05);
+        will-change: transform;
+      }
+
+      [data-composition-id="scene5-logo-outro"] .orbit-ring {
+        position: absolute;
+        inset: 36px 52px;
+        border: 1px solid rgba(255, 250, 242, 0.11);
+        border-radius: 999px;
+        transform: rotate(-8deg);
+      }
+
+      [data-composition-id="scene5-logo-outro"] .ring-b {
+        inset: 68px 98px;
+        border-color: rgba(154, 119, 199, 0.2);
+        transform: rotate(12deg);
+      }
+
+      [data-composition-id="scene5-logo-outro"] .orbit-spark {
+        position: absolute;
+        width: 12px;
+        height: 12px;
+        border-radius: 999px;
+        background: #d9643a;
+        box-shadow: 0 0 22px rgba(217, 100, 58, 0.82);
+      }
+
+      [data-composition-id="scene5-logo-outro"] .spark-a {
+        left: 114px;
+        top: 92px;
+      }
+
+      [data-composition-id="scene5-logo-outro"] .spark-b {
+        right: 132px;
+        bottom: 72px;
+        background: #9a77c7;
+        box-shadow: 0 0 24px rgba(154, 119, 199, 0.82);
+      }
+
+      [data-composition-id="scene5-logo-outro"] .pet {
+        position: absolute;
+        width: 120px;
+        height: 120px;
+        filter: drop-shadow(0 18px 28px rgba(0, 0, 0, 0.18));
+        will-change: transform, opacity;
+      }
+
+      [data-composition-id="scene5-logo-outro"] .pet-a {
+        left: 84px;
+        top: 48px;
+      }
+
+      [data-composition-id="scene5-logo-outro"] .pet-b {
+        left: 238px;
+        top: 22px;
+        width: 142px;
+        height: 142px;
+      }
+
+      [data-composition-id="scene5-logo-outro"] .pet-c {
+        right: 68px;
+        top: 62px;
+      }
+
+      [data-composition-id="scene5-logo-outro"] .pet-d {
+        left: 218px;
+        bottom: 22px;
+      }
+
+      [data-composition-id="scene5-logo-outro"] .repo-badge {
+        display: flex;
+        position: relative;
+        align-items: center;
+        justify-content: space-between;
+        margin: 28px 0;
+        overflow: hidden;
+        border-radius: 26px;
+        background: #d9643a;
+        padding: 24px 26px;
+        will-change: transform, box-shadow;
+      }
+
+      [data-composition-id="scene5-logo-outro"] .repo-badge::after {
+        position: absolute;
+        inset: 0;
+        content: "";
+        background: linear-gradient(105deg, transparent 20%, rgba(255, 250, 242, 0.24), transparent 58%);
+        opacity: 0.55;
+        transform: translateX(-100%);
+      }
+
+      [data-composition-id="scene5-logo-outro"] .repo-badge span {
+        color: rgba(255, 250, 242, 0.8);
+        font-family: "JetBrains Mono", "Cascadia Code", monospace;
+        font-size: 18px;
+      }
+
+      [data-composition-id="scene5-logo-outro"] .repo-badge strong {
+        color: white;
+        font-size: 28px;
+      }
+
+      [data-composition-id="scene5-logo-outro"] .deploy-list {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+
+      [data-composition-id="scene5-logo-outro"] .deploy-list div {
+        display: flex;
+        position: relative;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+        border: 1px solid rgba(255, 250, 242, 0.1);
+        border-radius: 20px;
+        background: rgba(255, 250, 242, 0.06);
+        padding: 18px 20px;
+        will-change: transform, background-color;
+      }
+
+      [data-composition-id="scene5-logo-outro"] .deploy-list div::before {
+        width: 8px;
+        height: 8px;
+        flex: 0 0 auto;
+        border-radius: 999px;
+        background: rgba(255, 250, 242, 0.64);
+        content: "";
+      }
+
+      [data-composition-id="scene5-logo-outro"] .deploy-list span {
+        color: rgba(255, 250, 242, 0.72);
+        font-size: 18px;
+      }
+
+      [data-composition-id="scene5-logo-outro"] .deploy-list strong {
+        color: #fffaf2;
+        font-size: 20px;
+      }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script>
+      (function () {
+        const scope = '[data-composition-id="scene5-logo-outro"]';
+        const tl = gsap.timeline({ paused: true });
+
+        tl.set(`${scope} .scene-bg`, { scale: 1.01, transformOrigin: "center" });
+        tl.set(`${scope} .motion-ribbon`, { opacity: 0 });
+        tl.set(`${scope} .launch-card`, { transformOrigin: "center" });
+        tl.set(`${scope} .pet`, { transformOrigin: "center" });
+
+        tl.to(`${scope} .scene-bg`, { scale: 1.045, duration: 5.9, ease: "none" }, 0);
+        tl.to(`${scope} .paper-grid`, { x: -74, y: -44, duration: 5.9, ease: "none" }, 0);
+        tl.from(`${scope} .deep-panel`, { scale: 0.96, opacity: 0, duration: 0.48, ease: "power3.out" }, 0);
+        tl.from(`${scope} .brand-line`, { y: -24, opacity: 0, duration: 0.44, ease: "power3.out" }, 0.08);
+        tl.from(`${scope} h2`, { y: 46, opacity: 0, duration: 0.64, ease: "power3.out" }, 0.2);
+        tl.from(`${scope} p`, { y: 28, opacity: 0, duration: 0.5, ease: "power2.out" }, 0.48);
+        tl.from(`${scope} .cta-row span`, { y: 22, opacity: 0, duration: 0.4, stagger: 0.08, ease: "power2.out" }, 0.72);
+        tl.from(`${scope} .launch-card`, { x: 90, scale: 0.94, opacity: 0, duration: 0.66, ease: "power3.out" }, 0.22);
+        tl.from(`${scope} .pet`, { y: 28, scale: 0.86, opacity: 0, duration: 0.42, stagger: 0.08, ease: "back.out(1.45)" }, 0.62);
+        tl.from(`${scope} .repo-badge`, { y: 24, opacity: 0, duration: 0.4, ease: "power2.out" }, 0.94);
+        tl.from(`${scope} .deploy-list div`, { x: 28, opacity: 0, duration: 0.38, stagger: 0.08, ease: "power2.out" }, 1.12);
+
+        tl.fromTo(`${scope} .ribbon-a`, { x: 0, opacity: 0 }, { x: 2580, opacity: 0.58, duration: 2.55, ease: "power1.inOut" }, 0.76);
+        tl.to(`${scope} .ribbon-a`, { opacity: 0, duration: 0.32, ease: "power1.out" }, 3.0);
+        tl.fromTo(`${scope} .ribbon-b`, { x: -140, opacity: 0 }, { x: 2700, opacity: 0.48, duration: 2.75, ease: "power1.inOut" }, 1.86);
+        tl.to(`${scope} .ribbon-b`, { opacity: 0, duration: 0.34, ease: "power1.out" }, 4.34);
+        tl.fromTo(`${scope} .ribbon-c`, { x: -280, opacity: 0 }, { x: 2560, opacity: 0.46, duration: 2.7, ease: "power1.inOut" }, 2.7);
+        tl.to(`${scope} .ribbon-c`, { opacity: 0, duration: 0.34, ease: "power1.out" }, 5.14);
+
+        tl.fromTo(`${scope} .card-scan`, { x: 0, opacity: 0 }, { x: 900, opacity: 0.8, duration: 1.24, ease: "power2.inOut" }, 2.12);
+        tl.to(`${scope} .card-scan`, { opacity: 0, duration: 0.22, ease: "power1.out" }, 3.14);
+        tl.to(`${scope} .launch-card`, { x: -14, y: -8, rotation: -0.8, scale: 1.025, duration: 3.7, ease: "sine.inOut" }, 1.82);
+        tl.to(`${scope} .repo-badge`, { y: -8, boxShadow: "0 24px 72px rgba(217, 100, 58, 0.32)", duration: 1.15, repeat: 2, yoyo: true, ease: "sine.inOut" }, 2.22);
+        tl.to(`${scope} .deploy-list div`, { x: -10, backgroundColor: "rgba(255, 250, 242, 0.1)", duration: 0.9, stagger: 0.14, repeat: 1, yoyo: true, ease: "sine.inOut" }, 2.52);
+
+        tl.to(`${scope} .glow-warm`, { scale: 1.08, opacity: 0.82, duration: 1.8, repeat: 1, yoyo: true, ease: "sine.inOut" }, 0.5);
+        tl.to(`${scope} .glow-violet`, { scale: 1.1, opacity: 0.86, duration: 2, repeat: 1, yoyo: true, ease: "sine.inOut" }, 0.65);
+        tl.to(`${scope} .glow-warm`, { x: 38, y: -24, scale: 1.2, duration: 3.2, ease: "sine.inOut" }, 2.2);
+        tl.to(`${scope} .glow-violet`, { x: -42, y: 36, scale: 1.22, duration: 3.1, ease: "sine.inOut" }, 2.28);
+        tl.to(`${scope} .pet-orbit`, { y: -12, duration: 1.18, repeat: 2, yoyo: true, ease: "sine.inOut" }, 2.06);
+        tl.to(`${scope} .ring-a`, { rotation: 18, duration: 3.4, ease: "sine.inOut" }, 1.72);
+        tl.to(`${scope} .ring-b`, { rotation: -16, duration: 3.35, ease: "sine.inOut" }, 1.82);
+        tl.to(`${scope} .spark-a`, { x: 238, y: -12, scale: 1.35, duration: 1.6, repeat: 1, yoyo: true, ease: "sine.inOut" }, 2.18);
+        tl.to(`${scope} .spark-b`, { x: -222, y: 16, scale: 1.25, duration: 1.7, repeat: 1, yoyo: true, ease: "sine.inOut" }, 2.38);
+        tl.to(`${scope} .pet-a`, { x: 16, y: -18, rotation: -7, duration: 1.18, repeat: 2, yoyo: true, ease: "sine.inOut" }, 1.92);
+        tl.to(`${scope} .pet-b`, { x: -10, y: 16, rotation: 5, scale: 1.04, duration: 1.28, repeat: 2, yoyo: true, ease: "sine.inOut" }, 2.02);
+        tl.to(`${scope} .pet-c`, { x: -18, y: -12, rotation: 7, duration: 1.22, repeat: 2, yoyo: true, ease: "sine.inOut" }, 2.12);
+        tl.to(`${scope} .pet-d`, { x: 12, y: 18, rotation: -5, scale: 0.98, duration: 1.26, repeat: 2, yoyo: true, ease: "sine.inOut" }, 2.22);
+        tl.to(`${scope} .cta-row span`, { x: 8, backgroundColor: "rgba(255, 250, 242, 0.14)", duration: 0.7, stagger: 0.16, repeat: 1, yoyo: true, ease: "sine.inOut" }, 3.02);
+        tl.to(`${scope} .scene-content`, { y: -10, duration: 2.3, ease: "sine.inOut" }, 3.4);
+
+        window.__timelines = window.__timelines || {};
+        window.__timelines["scene5-logo-outro"] = tl;
+      })();
+    </script>
+  </div>
+</template>
