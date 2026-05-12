@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { createPortal } from "react-dom";
 
 import type { SerializedWork } from "@/lib/prisma-mappers";
 import {
@@ -164,7 +165,7 @@ export function WorkShowcaseControls({
         {error ? <p className="text-sm text-rose-600">{error}</p> : null}
       </div>
 
-      {showSubmitModal ? (
+      {showSubmitModal ? createPortal(
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm"
           onClick={() => setShowSubmitModal(false)}
@@ -210,7 +211,8 @@ export function WorkShowcaseControls({
               </button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body,
       ) : null}
     </>
   );
