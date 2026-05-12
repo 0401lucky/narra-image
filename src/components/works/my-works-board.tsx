@@ -482,7 +482,7 @@ export function MyWorksBoard({
           ) : null}
         </section>
 
-        <aside className="studio-card h-fit p-4 xl:sticky xl:top-24">
+        <aside className="studio-card h-fit p-4 xl:sticky xl:top-24 xl:max-h-[calc(100vh-7rem)] xl:overflow-y-auto">
           {selectedWork ? (
             <div className="grid gap-4">
               <div className="flex items-center justify-between gap-3">
