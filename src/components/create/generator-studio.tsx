@@ -28,7 +28,7 @@ import { Composer } from "./parts/composer";
 import { HistoryRail } from "./parts/history-rail";
 import { SessionSidebar } from "./parts/session-sidebar";
 import { getSizeSelectValue } from "./utils";
-import type { ChannelInfo, GenerationItem, SessionInfo, ViewerUser } from "./types";
+import type { ChannelInfo, GenerationItem, ReferenceImage, SessionInfo, ViewerUser } from "./types";
 
 const AdvancedSettings = dynamic(
   () => import("./parts/advanced-settings").then((mod) => mod.AdvancedSettings),
@@ -284,7 +284,7 @@ export function GeneratorStudio({
 
   type GenerateSnapshot = {
     prompt: string;
-    referenceImages: Array<{ id: string; file: File; previewUrl: string }>;
+    referenceImages: Array<{ id: string; file: File | null; previewUrl: string; sourceUrl?: string }>;
     generationType: GenerationType;
   };
 
@@ -372,7 +372,11 @@ export function GeneratorStudio({
                   formData.append("conversationId", conversationId);
                 }
                 snapshot.referenceImages.forEach((referenceImage) => {
-                  formData.append("referenceImages", referenceImage.file);
+                  if (referenceImage.sourceUrl) {
+                    formData.append("referenceImageUrls", referenceImage.sourceUrl);
+                  } else if (referenceImage.file) {
+                    formData.append("referenceImages", referenceImage.file);
+                  }
                 });
                 return formData;
               })(),
@@ -456,22 +460,16 @@ export function GeneratorStudio({
     }
   }
 
-  async function handleUseImageForEdit(url: string) {
-    try {
-      const proxyUrl = `/api/proxy-image?url=${encodeURIComponent(url)}`;
-      const response = await fetch(proxyUrl);
-      if (!response.ok) throw new Error("fetch failed");
-      const blob = await response.blob();
-      const file = new File([blob], "edit-source.png", {
-        type: blob.type || "image/png",
-      });
-      handleReferenceFiles([file]);
-    } catch {
-      setError("当前图片暂时无法加入编辑，请稍后再试");
-      return;
-    }
-
+  function handleUseImageForEdit(url: string) {
+    const image: ReferenceImage = {
+      id: `${Date.now()}_url_${Math.random().toString(36).slice(2, 8)}`,
+      file: null,
+      previewUrl: url,
+      sourceUrl: url,
+    };
+    setReferenceImages((current) => [...current, image]);
     setGenerationType("image_to_image");
+    setCount(1);
     setPrompt("");
     textareaRef.current?.focus();
   }

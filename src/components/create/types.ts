@@ -52,8 +52,9 @@ export type ChannelInfo = {
 
 export type ReferenceImage = {
   id: string;
-  file: File;
+  file: File | null;
   previewUrl: string;
+  sourceUrl?: string;
 };
 
 export type SessionInfo = {

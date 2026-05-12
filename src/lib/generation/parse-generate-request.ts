@@ -41,15 +41,22 @@ function getReferenceImages(formData: FormData) {
   return entries.filter((entry): entry is File => entry instanceof File && entry.size > 0);
 }
 
+function getReferenceImageUrls(formData: FormData): string[] {
+  return formData
+    .getAll("referenceImageUrls")
+    .filter((entry): entry is string => typeof entry === "string" && entry.trim().length > 0);
+}
+
 export async function parseGenerateRequest(request: Request | FormData) {
   const parseFormData = (formData: FormData) => {
     const images = getReferenceImages(formData);
+    const imageUrls = getReferenceImageUrls(formData);
 
-    if (images.length === 0) {
+    if (images.length === 0 && imageUrls.length === 0) {
       throw new Error("请先上传参考图");
     }
 
-    if (images.length > 16) {
+    if (images.length + imageUrls.length > 16) {
       throw new Error("参考图最多支持 16 张");
     }
 
@@ -90,6 +97,7 @@ export async function parseGenerateRequest(request: Request | FormData) {
       conversationId: toNullableString(formData.get("conversationId")) || undefined,
       count: 1,
       image: images[0] ?? null,
+      imageUrls,
       images,
     };
   };
@@ -116,6 +124,7 @@ export async function parseGenerateRequest(request: Request | FormData) {
     channelId: json.channelId as string | undefined,
     conversationId: typeof json.conversationId === "string" ? json.conversationId : undefined,
     image: null,
+    imageUrls: [] as string[],
     images: [],
   };
 }

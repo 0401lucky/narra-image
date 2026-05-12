@@ -80,15 +80,15 @@ export async function POST(request: Request) {
       };
     }
 
-    const sourceImages = await Promise.all(
+    const fileSourceImages = await Promise.all(
       body.images.map(async (image: File) => ({
         data: Buffer.from(await image.arrayBuffer()),
         fileName: image.name || "source.png",
         mimeType: image.type || "image/png",
       })),
     );
-    const sourceImageUrls = await Promise.all(
-      sourceImages.map((sourceImage) =>
+    const uploadedUrls = await Promise.all(
+      fileSourceImages.map((sourceImage) =>
         persistGeneratedImage({
           buffer: sourceImage.data,
           fileExtension: sourceImage.fileName.split(".").pop() || "png",
@@ -97,6 +97,24 @@ export async function POST(request: Request) {
         }),
       ),
     );
+
+    const urlSourceImages = await Promise.all(
+      body.imageUrls.map(async (url: string) => {
+        const res = await fetch(url, { signal: AbortSignal.timeout(15_000) });
+        if (!res.ok) throw new Error("参考图下载失败");
+        const buffer = Buffer.from(await res.arrayBuffer());
+        const contentType = res.headers.get("content-type") || "image/png";
+        const ext = contentType.includes("jpeg") || contentType.includes("jpg") ? "jpg" : "png";
+        return {
+          data: buffer,
+          fileName: `source.${ext}`,
+          mimeType: contentType,
+        };
+      }),
+    );
+
+    const sourceImages = [...fileSourceImages, ...urlSourceImages];
+    const sourceImageUrls = [...uploadedUrls, ...body.imageUrls];
 
     // 创建 PENDING 任务并预扣积分。预扣可避免连续点击造成的并发越扣，
     // 失败时在 after() 内退还。
