@@ -13,6 +13,7 @@ import {
   GenerationAdminList,
   type GenerationAdminJob,
 } from "@/components/admin/admin-actions";
+import { getThumbUrl } from "@/lib/image-url";
 
 const { mockRefresh } = vi.hoisted(() => ({
   mockRefresh: vi.fn(),
@@ -128,7 +129,10 @@ describe("后台生成记录列表视图", () => {
     await user.click(screen.getAllByRole("button", { name: "查看参考图 1" })[0]);
 
     const zoomedImage = screen.getByAltText("参考图大图");
-    expect(zoomedImage).toHaveAttribute("src", "https://example.com/source.png");
+    expect(zoomedImage).toHaveAttribute(
+      "src",
+      getThumbUrl("https://example.com/source.png", 1920, 90),
+    );
     expect(screen.getByText("图生图上传参考图")).toBeInTheDocument();
   });
 
@@ -140,7 +144,7 @@ describe("后台生成记录列表视图", () => {
 
     expect(screen.getByAltText("生成图片大图")).toHaveAttribute(
       "src",
-      "https://example.com/image.png",
+      getThumbUrl("https://example.com/image.png", 1920, 90),
     );
     expect(screen.getByText("生成图片")).toBeInTheDocument();
     expect(screen.queryByText("完整提示词")).not.toBeInTheDocument();

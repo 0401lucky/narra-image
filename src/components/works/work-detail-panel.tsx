@@ -8,6 +8,7 @@ import { Download, Expand, FileText } from "lucide-react";
 
 import type { SerializedWork } from "@/lib/prisma-mappers";
 import { buildPromptPreview } from "@/lib/prompt-preview";
+import { getThumbUrl } from "@/lib/image-url";
 import { canShowWorkPrompt, isFeaturedWork } from "@/lib/work-showcase";
 import { downloadImage } from "@/components/works/download-image";
 import { ImageLightbox } from "@/components/works/image-lightbox";
@@ -52,6 +53,7 @@ export function WorkDetailPanel({
     showPromptPublic: work.showPromptPublic,
   });
   const promptPreview = buildPromptPreview(work.prompt, 150);
+  const displayImageUrl = getThumbUrl(work.url, 1920, 90);
 
   return (
     <>
@@ -63,7 +65,7 @@ export function WorkDetailPanel({
             className="group relative block w-full overflow-hidden rounded-[1.4rem] border border-[var(--line)] bg-[var(--surface-strong)]/40"
           >
             <img
-              src={work.url}
+              src={displayImageUrl}
               alt="作品图片"
               decoding="async"
               className="mx-auto max-h-[56vh] w-auto max-w-full object-contain transition duration-500 group-hover:scale-[1.01] md:max-h-[62vh]"

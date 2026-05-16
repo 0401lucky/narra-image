@@ -5,6 +5,8 @@
 import type { ReactNode } from "react";
 import { X } from "lucide-react";
 
+import { getThumbUrl } from "@/lib/image-url";
+
 type ImageLightboxProps = {
   alt?: string;
   children?: ReactNode;
@@ -18,6 +20,8 @@ export function ImageLightbox({
   onClose,
   src,
 }: ImageLightboxProps) {
+  const displaySrc = getThumbUrl(src, 1920, 90);
+
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
@@ -36,7 +40,7 @@ export function ImageLightbox({
         onClick={(event) => event.stopPropagation()}
       >
         <img
-          src={src}
+          src={displaySrc}
           alt={alt}
           decoding="async"
           className="max-h-[82vh] max-w-[90vw] rounded-[1.5rem] object-contain shadow-2xl"

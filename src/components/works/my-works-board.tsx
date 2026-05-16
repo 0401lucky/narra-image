@@ -554,10 +554,7 @@ export function MyWorksBoard({
                   </button>
                 </div>
                 <p className="line-clamp-4 text-sm leading-relaxed text-[var(--ink-soft)]">
-                  {selectedWork.showPromptPublic ||
-                  selectedWork.showcaseStatus !== "FEATURED"
-                    ? selectedWork.prompt
-                    : "作者未公开提示词"}
+                  {selectedWork.prompt}
                 </p>
               </div>
 
