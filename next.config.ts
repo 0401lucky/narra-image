@@ -16,6 +16,9 @@ const nextConfig: NextConfig = {
     // 调用 /_next/image?w=xxx 时，xxx 必须落在这两个集合的并集里。
     imageSizes: [16, 32, 48, 64, 96, 128, 192, 256, 384],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    // Next.js 16 起，q 参数必须落在 qualities 列表里（默认仅允许 75），
+    // 详情页和 lightbox 用 q=90 输出更清晰的大图，需在此放开。
+    qualities: [75, 90],
   },
 };
 
