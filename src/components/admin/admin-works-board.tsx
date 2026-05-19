@@ -55,15 +55,23 @@ function formatTime(value: string | null) {
 function getActionButtons(status: WorkShowcaseStatus) {
   if (status === "PENDING") {
     return [
-      { action: "approve_feature" as const, label: "通过投稿" },
-      { action: "reject_feature" as const, label: "拒绝投稿" },
+      { action: "approve_feature" as const, label: "通过投稿", variant: "primary" as const },
+      { action: "reject_feature" as const, label: "拒绝投稿", variant: "secondary" as const },
+      { action: "force_takedown" as const, label: "强制下架", variant: "danger" as const },
     ];
   }
 
   if (status === "TAKEDOWN_PENDING") {
     return [
-      { action: "approve_unfeature" as const, label: "确认下架" },
-      { action: "reject_unfeature" as const, label: "拒绝下架" },
+      { action: "approve_unfeature" as const, label: "确认下架", variant: "primary" as const },
+      { action: "reject_unfeature" as const, label: "拒绝下架", variant: "secondary" as const },
+      { action: "force_takedown" as const, label: "强制下架", variant: "danger" as const },
+    ];
+  }
+
+  if (status === "FEATURED") {
+    return [
+      { action: "force_takedown" as const, label: "强制下架", variant: "danger" as const },
     ];
   }
 
@@ -77,6 +85,7 @@ export function AdminWorksBoard({ works }: { works: SerializedAdminWork[] }) {
   const [draftNotes, setDraftNotes] = useState<Record<string, string>>({});
   const [pendingWorkId, setPendingWorkId] = useState<string | null>(null);
   const [errors, setErrors] = useState<Record<string, string | null>>({});
+  const [confirmTakedownWork, setConfirmTakedownWork] = useState<SerializedAdminWork | null>(null);
 
   const groupedWorks = useMemo(
     () =>
@@ -241,21 +250,33 @@ export function AdminWorksBoard({ works }: { works: SerializedAdminWork[] }) {
                         </label>
 
                         <div className="flex flex-wrap gap-2">
-                          {getActionButtons(work.showcaseStatus).map((button) => (
-                            <button
-                              key={button.action}
-                              type="button"
-                              disabled={pendingWorkId === work.id}
-                              onClick={() => void handleReview(work.id, button.action)}
-                              className={`rounded-full px-4 py-2 text-sm font-medium transition ${
-                                button.action.startsWith("approve")
-                                  ? "bg-[var(--ink)] text-white hover:bg-[var(--accent)]"
-                                  : "border border-[var(--line)] text-[var(--ink)] hover:border-[var(--accent)] hover:text-[var(--accent)]"
-                              } disabled:opacity-60`}
-                            >
-                              {pendingWorkId === work.id ? "处理中..." : button.label}
-                            </button>
-                          ))}
+                          {getActionButtons(work.showcaseStatus).map((button) => {
+                            const isDanger = button.variant === "danger";
+                            const isPrimary = button.variant === "primary";
+                            const baseClass = isDanger
+                              ? "border border-rose-300 text-rose-600 hover:bg-rose-50"
+                              : isPrimary
+                                ? "bg-[var(--ink)] text-white hover:bg-[var(--accent)]"
+                                : "border border-[var(--line)] text-[var(--ink)] hover:border-[var(--accent)] hover:text-[var(--accent)]";
+
+                            return (
+                              <button
+                                key={button.action}
+                                type="button"
+                                disabled={pendingWorkId === work.id}
+                                onClick={() => {
+                                  if (isDanger) {
+                                    setConfirmTakedownWork(work);
+                                  } else {
+                                    void handleReview(work.id, button.action);
+                                  }
+                                }}
+                                className={`rounded-full px-4 py-2 text-sm font-medium transition ${baseClass} disabled:opacity-60`}
+                              >
+                                {pendingWorkId === work.id ? "处理中..." : button.label}
+                              </button>
+                            );
+                          })}
                         </div>
 
                         {errors[work.id] ? (
@@ -286,6 +307,55 @@ export function AdminWorksBoard({ works }: { works: SerializedAdminWork[] }) {
           negativePrompt={promptWork.negativePrompt}
           onClose={() => setPromptWork(null)}
         />
+      ) : null}
+
+      {confirmTakedownWork ? (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm"
+          onClick={() => {
+            if (pendingWorkId !== confirmTakedownWork.id) setConfirmTakedownWork(null);
+          }}
+        >
+          <div
+            className="studio-card w-full max-w-md rounded-[1.8rem] p-6"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <h3 className="text-lg font-semibold text-[var(--ink)]">强制下架作品</h3>
+            <p className="mt-2 text-sm leading-relaxed text-[var(--ink-soft)]">
+              作品将被下架至 PRIVATE，不再公开展示。作者后续仍可重新投稿。下架理由会写入审核备注。
+            </p>
+            <div className="mt-4 grid gap-2 rounded-[1.2rem] border border-[var(--line)] bg-[var(--surface-strong)]/40 p-3 text-xs text-[var(--ink-soft)]">
+              <div>作者：{confirmTakedownWork.author.email}</div>
+              <div>当前状态：{getWorkShowcaseStatusLabel(confirmTakedownWork.showcaseStatus)}</div>
+              <div className="line-clamp-2 text-[var(--ink)]">提示词：{confirmTakedownWork.prompt}</div>
+            </div>
+            {errors[confirmTakedownWork.id] ? (
+              <p className="mt-3 text-sm text-rose-600">{errors[confirmTakedownWork.id]}</p>
+            ) : null}
+            <div className="mt-6 flex flex-wrap justify-end gap-2">
+              <button
+                type="button"
+                disabled={pendingWorkId === confirmTakedownWork.id}
+                onClick={() => setConfirmTakedownWork(null)}
+                className="rounded-full border border-[var(--line)] px-4 py-2 text-sm text-[var(--ink-soft)] disabled:opacity-60"
+              >
+                取消
+              </button>
+              <button
+                type="button"
+                disabled={pendingWorkId === confirmTakedownWork.id}
+                onClick={async () => {
+                  const id = confirmTakedownWork.id;
+                  await handleReview(id, "force_takedown");
+                  setConfirmTakedownWork((current) => (current?.id === id ? null : current));
+                }}
+                className="rounded-full bg-rose-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-rose-700 disabled:opacity-60"
+              >
+                {pendingWorkId === confirmTakedownWork.id ? "下架中..." : "确认下架"}
+              </button>
+            </div>
+          </div>
+        </div>
       ) : null}
     </>
   );
