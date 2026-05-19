@@ -131,6 +131,64 @@ describe("作品状态流转", () => {
     });
   });
 
+  it("管理员强制下架待审核作品时回到私有状态并清空投稿时间", () => {
+    const result = applyAdminWorkReview({
+      action: "force_takedown",
+      currentStatus: "PENDING",
+      now,
+      reviewNote: "违规内容",
+      reviewerId: "admin_5",
+    });
+
+    expect(result).toEqual({
+      featuredAt: null,
+      reviewNote: "违规内容",
+      reviewedAt: now,
+      reviewedById: "admin_5",
+      showcaseStatus: "PRIVATE",
+      submittedAt: null,
+    });
+  });
+
+  it("管理员强制下架公开作品时清空 featuredAt 和 submittedAt", () => {
+    const result = applyAdminWorkReview({
+      action: "force_takedown",
+      currentFeaturedAt: new Date("2026-04-20T09:00:00.000Z"),
+      currentStatus: "FEATURED",
+      now,
+      reviewNote: null,
+      reviewerId: "admin_6",
+    });
+
+    expect(result).toEqual({
+      featuredAt: null,
+      reviewNote: null,
+      reviewedAt: now,
+      reviewedById: "admin_6",
+      showcaseStatus: "PRIVATE",
+      submittedAt: null,
+    });
+  });
+
+  it("管理员强制下架待下架申请的作品也能执行", () => {
+    const result = applyAdminWorkReview({
+      action: "force_takedown",
+      currentStatus: "TAKEDOWN_PENDING",
+      now,
+      reviewNote: "",
+      reviewerId: "admin_7",
+    });
+
+    expect(result).toEqual({
+      featuredAt: null,
+      reviewNote: null,
+      reviewedAt: now,
+      reviewedById: "admin_7",
+      showcaseStatus: "PRIVATE",
+      submittedAt: null,
+    });
+  });
+
   it.each([
     ["submit", "PENDING"],
     ["withdraw", "FEATURED"],
@@ -152,6 +210,7 @@ describe("作品状态流转", () => {
     ["reject_feature", "PRIVATE"],
     ["approve_unfeature", "PENDING"],
     ["reject_unfeature", "PRIVATE"],
+    ["force_takedown", "PRIVATE"],
   ] as const)(
     "非法管理员审核会抛错: %s / %s",
     (action, currentStatus) => {
