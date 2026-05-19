@@ -20,6 +20,7 @@ export const adminWorkReviewActions = [
   "reject_feature",
   "approve_unfeature",
   "reject_unfeature",
+  "force_takedown",
 ] as const;
 
 export type AdminWorkReviewAction = (typeof adminWorkReviewActions)[number];
@@ -68,7 +69,11 @@ function assertAdminActionAllowed(
     ((action === "approve_feature" || action === "reject_feature") &&
       currentStatus === "PENDING") ||
     ((action === "approve_unfeature" || action === "reject_unfeature") &&
-      currentStatus === "TAKEDOWN_PENDING");
+      currentStatus === "TAKEDOWN_PENDING") ||
+    (action === "force_takedown" &&
+      (currentStatus === "PENDING" ||
+        currentStatus === "FEATURED" ||
+        currentStatus === "TAKEDOWN_PENDING"));
 
   if (!allowed) {
     throw new Error("当前状态不允许执行该审核操作");
@@ -151,6 +156,17 @@ export function applyAdminWorkReview(input: {
   }
 
   if (action === "approve_unfeature") {
+    return {
+      featuredAt: null,
+      reviewNote: normalizeReviewNote(reviewNote),
+      reviewedAt: now,
+      reviewedById: reviewerId,
+      showcaseStatus: "PRIVATE",
+      submittedAt: null,
+    };
+  }
+
+  if (action === "force_takedown") {
     return {
       featuredAt: null,
       reviewNote: normalizeReviewNote(reviewNote),
