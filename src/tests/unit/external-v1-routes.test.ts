@@ -88,13 +88,15 @@ function jsonRequest(path: string, body: unknown) {
 }
 
 function multipartRequest(path: string, formData: FormData) {
-  return new Request(`http://localhost${path}`, {
+  const req = new Request(`http://localhost${path}`, {
     body: formData,
     headers: {
       Authorization: "Bearer narra_sk_test",
     },
     method: "POST",
   });
+  req.formData = async () => formData;
+  return req;
 }
 
 describe("OpenAI 兼容外部 API", () => {

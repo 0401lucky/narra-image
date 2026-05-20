@@ -39,12 +39,12 @@ export function AdminPagination({
       {currentPage > 1 ? (
         <Link
           href={buildUrl(basePath, currentPage - 1, extraParams)}
-          className="inline-flex size-9 items-center justify-center rounded-xl border border-[var(--line)] text-[var(--ink-soft)] transition hover:border-[var(--accent)] hover:text-[var(--accent)]"
+          className="inline-flex size-9 items-center justify-center rounded-xl border border-[var(--admin-line)] text-[var(--ink-soft)] transition-all duration-200 hover:border-[#d87b37]/30 hover:bg-white/50 hover:text-[#d87b37] backdrop-blur-xs"
         >
           <ChevronLeft className="size-4" />
         </Link>
       ) : (
-        <span className="inline-flex size-9 items-center justify-center rounded-xl border border-[var(--line)] text-[var(--ink-soft)]/40">
+        <span className="inline-flex size-9 items-center justify-center rounded-xl border border-[var(--admin-line)]/40 text-[var(--ink-soft)]/30 bg-white/10 backdrop-blur-xs">
           <ChevronLeft className="size-4" />
         </span>
       )}
@@ -53,7 +53,7 @@ export function AdminPagination({
         p === "..." ? (
           <span
             key={`dots-${i}`}
-            className="inline-flex size-9 items-center justify-center text-xs text-[var(--ink-soft)]"
+            className="inline-flex size-9 items-center justify-center text-xs text-[var(--ink-soft)] font-medium"
           >
             …
           </span>
@@ -61,10 +61,10 @@ export function AdminPagination({
           <Link
             key={p}
             href={buildUrl(basePath, p, extraParams)}
-            className={`inline-flex size-9 items-center justify-center rounded-xl text-sm font-medium transition ${
+            className={`inline-flex size-9 items-center justify-center rounded-xl text-xs sm:text-sm font-medium transition-all duration-200 ${
               p === currentPage
-                ? "bg-[var(--ink)] text-white shadow-sm"
-                : "border border-[var(--line)] text-[var(--ink-soft)] hover:border-[var(--accent)] hover:text-[var(--accent)]"
+                ? "bg-[#2c1d11] text-[#fcf9f4] shadow-md shadow-[#2c1d11]/15 border border-[#2c1d11] backdrop-blur-xs"
+                : "border border-[var(--admin-line)] text-[var(--ink-soft)] hover:border-[#d87b37]/30 hover:bg-white/50 hover:text-[#d87b37] backdrop-blur-xs"
             }`}
           >
             {p}
@@ -75,12 +75,12 @@ export function AdminPagination({
       {currentPage < totalPages ? (
         <Link
           href={buildUrl(basePath, currentPage + 1, extraParams)}
-          className="inline-flex size-9 items-center justify-center rounded-xl border border-[var(--line)] text-[var(--ink-soft)] transition hover:border-[var(--accent)] hover:text-[var(--accent)]"
+          className="inline-flex size-9 items-center justify-center rounded-xl border border-[var(--admin-line)] text-[var(--ink-soft)] transition-all duration-200 hover:border-[#d87b37]/30 hover:bg-white/50 hover:text-[#d87b37] backdrop-blur-xs"
         >
           <ChevronRight className="size-4" />
         </Link>
       ) : (
-        <span className="inline-flex size-9 items-center justify-center rounded-xl border border-[var(--line)] text-[var(--ink-soft)]/40">
+        <span className="inline-flex size-9 items-center justify-center rounded-xl border border-[var(--admin-line)]/40 text-[var(--ink-soft)]/30 bg-white/10 backdrop-blur-xs">
           <ChevronRight className="size-4" />
         </span>
       )}

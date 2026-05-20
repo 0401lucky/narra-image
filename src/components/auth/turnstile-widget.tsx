@@ -101,7 +101,9 @@ export function TurnstileWidget({
     let cancelled = false;
     let widgetId: string | null = null;
 
-    setStatus("loading");
+    Promise.resolve().then(() => {
+      if (!cancelled) setStatus("loading");
+    });
 
     loadScript()
       .then(() => {

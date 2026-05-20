@@ -28,7 +28,13 @@ const adminLinks = [
   { href: "/admin/api", icon: KeyRound, label: "API" },
 ];
 
-export function AdminNav({ currentPath }: { currentPath?: string }) {
+export function AdminNav({
+  currentPath,
+  onItemClick,
+}: {
+  currentPath?: string;
+  onItemClick?: () => void;
+}) {
   const pathname = usePathname();
   const activePath = currentPath ?? pathname;
 
@@ -44,10 +50,11 @@ export function AdminNav({ currentPath }: { currentPath?: string }) {
           <Link
             key={link.href}
             href={link.href}
+            onClick={onItemClick}
             className={cn("admin-nav-link", isActive && "admin-nav-link-active")}
             aria-current={isActive ? "page" : undefined}
           >
-            <Icon className="size-4" />
+            <Icon className={cn("size-4 transition-transform duration-200", isActive && "scale-110 text-[#d87b37]")} />
             <span>{link.label}</span>
           </Link>
         );

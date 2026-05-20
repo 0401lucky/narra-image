@@ -168,151 +168,172 @@ textarea {
 
 /* 后台管理：按生图稿落地的暖纸质运营控制台。 */
 .admin-console {
-  --admin-paper: #f6efe5;
-  --admin-paper-strong: #fffaf2;
-  --admin-line: rgba(73, 48, 27, 0.12);
+  --admin-paper: #fcf9f4;
+  --admin-paper-strong: #ffffff;
+  --admin-line: rgba(73, 48, 27, 0.08);
   min-height: 100vh;
   background-color: var(--admin-paper);
   background-image:
     repeating-linear-gradient(
       90deg,
-      rgba(73, 48, 27, 0.025) 0 1px,
-      transparent 1px 96px
+      rgba(73, 48, 27, 0.012) 0 1px,
+      transparent 1px 80px
     ),
     repeating-linear-gradient(
       0deg,
-      rgba(73, 48, 27, 0.02) 0 1px,
-      transparent 1px 96px
+      rgba(73, 48, 27, 0.008) 0 1px,
+      transparent 1px 80px
     ),
-    linear-gradient(135deg, #fbf7f0 0%, #f2e8d9 52%, #faf5ed 100%);
+    radial-gradient(circle at 85% 15%, rgba(217, 100, 58, 0.05), transparent 35%),
+    radial-gradient(circle at 15% 85%, rgba(154, 119, 199, 0.04), transparent 30%),
+    linear-gradient(135deg, #fdfbfa 0%, #f5ecd9 60%, #faf7f0 100%);
 }
 
 .admin-console h1,
 .admin-console h2,
 .admin-console h3 {
-  letter-spacing: 0;
+  letter-spacing: -0.01em;
 }
 
 .admin-console .studio-card {
   border: 1px solid var(--admin-line);
-  border-radius: 0.75rem;
+  border-radius: 1.25rem;
   background:
-    linear-gradient(180deg, rgba(255, 253, 248, 0.94), rgba(250, 243, 233, 0.9));
+    linear-gradient(180deg, rgba(255, 255, 255, 0.94) 0%, rgba(251, 246, 237, 0.88) 100%);
   box-shadow:
-    0 16px 42px rgba(92, 59, 31, 0.07),
-    inset 0 1px 0 rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
+    0 10px 30px rgba(92, 59, 31, 0.03),
+    0 1px 3px rgba(92, 59, 31, 0.01),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.admin-console .studio-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(217, 100, 58, 0.22);
+  box-shadow:
+    0 20px 40px rgba(92, 59, 31, 0.06),
+    0 2px 8px rgba(92, 59, 31, 0.02),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
 }
 
 .admin-sidebar-panel {
   background:
-    linear-gradient(180deg, rgba(35, 25, 17, 0.98), rgba(17, 13, 10, 0.98));
+    linear-gradient(180deg, rgba(29, 21, 14, 0.98) 0%, rgba(14, 10, 7, 0.99) 100%);
   box-shadow:
-    0 24px 60px rgba(35, 25, 17, 0.28),
-    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    0 24px 60px rgba(14, 10, 7, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
 }
 
 .admin-nav-link {
   display: inline-flex;
   min-width: max-content;
   align-items: center;
-  gap: 0.65rem;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 0.65rem;
-  padding: 0.72rem 0.85rem;
-  color: rgba(255, 255, 255, 0.72);
+  gap: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 0.75rem;
+  padding: 0.75rem 1rem;
+  color: rgba(255, 255, 255, 0.65);
   font-size: 0.92rem;
-  font-weight: 600;
+  font-weight: 500;
   transition:
-    transform 180ms ease,
+    transform 180ms cubic-bezier(0.16, 1, 0.3, 1),
     border-color 180ms ease,
     background-color 180ms ease,
     color 180ms ease;
 }
 
 .admin-nav-link:hover {
-  transform: translateY(-1px);
-  border-color: rgba(216, 123, 55, 0.35);
-  background: rgba(255, 255, 255, 0.07);
+  transform: translateX(2px);
+  border-color: rgba(216, 123, 55, 0.25);
+  background: rgba(255, 255, 255, 0.05);
   color: #fff;
 }
 
 .admin-nav-link-active {
-  border-color: rgba(216, 123, 55, 0.42);
+  border-color: rgba(216, 123, 55, 0.3);
   background:
-    linear-gradient(90deg, rgba(216, 123, 55, 0.28), rgba(216, 123, 55, 0.1));
+    linear-gradient(90deg, rgba(216, 123, 55, 0.2), rgba(216, 123, 55, 0.05));
   color: #fff;
   box-shadow: inset 3px 0 0 #d87b37;
 }
 
 .admin-topbar {
   border-bottom: 1px solid var(--admin-line);
-  background: rgba(246, 239, 229, 0.78);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
+  background: rgba(252, 249, 244, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 
 .admin-topbar-link,
 .admin-topbar-status,
 .admin-topbar-user {
   display: inline-flex;
-  min-height: 2.45rem;
+  min-height: 2.35rem;
   align-items: center;
   gap: 0.45rem;
   border: 1px solid var(--admin-line);
   border-radius: 999px;
-  background: rgba(255, 250, 242, 0.72);
-  padding: 0.48rem 0.8rem;
+  background: rgba(255, 255, 255, 0.75);
+  padding: 0.4rem 0.85rem;
   color: var(--ink);
-  box-shadow: 0 8px 22px rgba(92, 59, 31, 0.06);
+  box-shadow: 0 4px 12px rgba(92, 59, 31, 0.03);
   transition:
     transform 180ms ease,
     border-color 180ms ease,
-    background-color 180ms ease;
+    background-color 180ms ease,
+    box-shadow 180ms ease;
 }
 
 .admin-topbar-link:hover {
   transform: translateY(-1px);
-  border-color: rgba(216, 123, 55, 0.42);
-  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(216, 123, 55, 0.35);
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 6px 18px rgba(92, 59, 31, 0.06);
 }
 
 .admin-topbar-status {
-  color: #3d7d4f;
+  color: #2e7d32;
+  border-color: rgba(46, 125, 50, 0.15);
+  background: rgba(244, 253, 245, 0.75);
 }
 
 .admin-topbar-user {
-  padding-left: 0.35rem;
-  color: var(--ink);
+  padding-left: 0.3rem;
+  background: rgba(255, 255, 255, 0.85);
 }
 
 .admin-eyebrow {
   width: fit-content;
-  border: 1px solid var(--admin-line);
+  border: 1px solid rgba(166, 95, 44, 0.12);
   border-radius: 999px;
-  background: rgba(255, 250, 242, 0.66);
-  padding: 0.28rem 0.7rem;
+  background: rgba(255, 250, 242, 0.85);
+  padding: 0.25rem 0.65rem;
   color: #a65f2c;
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   font-weight: 700;
   text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .admin-metric-icon {
   display: grid;
-  width: 2.8rem;
-  height: 2.8rem;
+  width: 2.6rem;
+  height: 2.6rem;
   place-items: center;
-  border: 1px solid rgba(166, 95, 44, 0.16);
+  border: 1px solid rgba(166, 95, 44, 0.12);
   border-radius: 999px;
-  background: rgba(166, 95, 44, 0.08);
+  background: rgba(166, 95, 44, 0.06);
   color: #a65f2c;
 }
 
 .admin-console table {
   border-collapse: separate;
   border-spacing: 0;
+  width: 100%;
 }
 
 .admin-console thead {
@@ -324,6 +345,16 @@ textarea {
 .admin-console textarea {
   border-color: var(--admin-line);
   background: rgba(255, 250, 242, 0.82);
+  transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.admin-console input:focus,
+.admin-console select:focus,
+.admin-console textarea:focus {
+  border-color: #d87b37;
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(217, 100, 58, 0.12);
+  outline: none;
 }
 
 /* 作品页：贴近生图稿的创作资产管理台。 */
