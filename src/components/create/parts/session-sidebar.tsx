@@ -62,7 +62,7 @@ export function SessionSidebar({
         </div>
 
         <div className="px-4 pb-2 text-sm font-semibold text-[#3a281d]">对话历史</div>
-        <div className="flex-1 overflow-y-auto px-4 pb-4" style={{ scrollbarWidth: "thin" }}>
+        <div className="premium-scrollbar flex-1 overflow-y-auto px-4 pb-4">
           {sessions.length === 0 ? (
             <div className="flex h-32 flex-col items-center justify-center rounded-2xl border border-dashed border-[var(--line)] bg-[#fffaf2]/42 text-center">
               <MessageSquare className="size-6 text-[var(--ink-soft)] opacity-30 mb-2" />

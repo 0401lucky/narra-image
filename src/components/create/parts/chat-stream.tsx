@@ -23,8 +23,7 @@ export const ChatStream = forwardRef<HTMLDivElement, ChatStreamProps>(function C
   return (
     <div
       ref={ref}
-      className="relative z-10 flex-1 overflow-y-auto px-3 pb-48 pt-4 scroll-smooth sm:px-4 sm:pb-56 sm:pt-6 md:px-8 md:pb-48 md:pt-8"
-      style={{ scrollbarWidth: "thin" }}
+      className="premium-scrollbar relative z-10 flex-1 overflow-y-auto px-3 pb-48 pt-4 scroll-smooth sm:px-4 sm:pb-56 sm:pt-6 md:px-8 md:pb-48 md:pt-8"
     >
       <div className="mx-auto max-w-4xl space-y-7 sm:space-y-9">
         {generations.length === 0 ? (

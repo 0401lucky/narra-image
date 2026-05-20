@@ -10,6 +10,8 @@ export function PageTransition({ children }: { children: React.ReactNode }) {
     return <div className="flex min-h-screen flex-col">{children}</div>;
   }
 
+  const isCreatePage = pathname === "/create";
+
   return (
     <div className="page-transition-shell">
       <AnimatePresence mode="wait" initial={false}>
@@ -19,7 +21,11 @@ export function PageTransition({ children }: { children: React.ReactNode }) {
           animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px) saturate(1)" }}
           exit={{ opacity: 0, y: -12, scale: 1.01, filter: "blur(8px) saturate(1.28)" }}
           transition={{ duration: 0.42, ease: [0.2, 0.82, 0.18, 1] }}
-          className="flex min-h-screen flex-col"
+          className={
+            isCreatePage
+              ? "flex h-[100dvh] flex-col overflow-hidden"
+              : "flex min-h-screen flex-col"
+          }
         >
           {children}
         </motion.div>

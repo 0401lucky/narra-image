@@ -407,6 +407,30 @@ textarea {
   background: transparent;
 }
 
+/* ===== Premium Scrollbar for Content Panels (Warm Ink style) ===== */
+.premium-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(36, 23, 15, 0.15) transparent;
+}
+
+.premium-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.premium-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.premium-scrollbar::-webkit-scrollbar-thumb {
+  border-radius: 99px;
+  background: rgba(36, 23, 15, 0.12);
+}
+
+.premium-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(36, 23, 15, 0.28);
+}
+
 /* ===== Auth shell（登录/注册页专用） ===== */
 .auth-page {
   background-color: var(--surface);

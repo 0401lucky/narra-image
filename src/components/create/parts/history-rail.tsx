@@ -33,7 +33,7 @@ export function HistoryRail({ images, onPickImage }: HistoryRailProps) {
           </p>
         </div>
       ) : (
-        <div className="flex-1 overflow-y-auto pb-3" style={{ scrollbarWidth: "thin" }}>
+        <div className="premium-scrollbar flex-1 overflow-y-auto pb-3">
           <div className="flex flex-col gap-3">
             {images.map((image) => (
               <button
