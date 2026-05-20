@@ -32,16 +32,19 @@ export function ImageZoomModal({ src, onClose, onDownload, onUseForEdit }: Image
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-md"
+          className="fixed inset-0 z-50 flex select-none items-center justify-center bg-black/80 p-4 backdrop-blur-md"
           onClick={onClose}
         >
           <button
             type="button"
-            className="absolute right-6 top-6 cursor-pointer text-white/70 transition hover:text-white"
-            onClick={onClose}
+            className="absolute right-5 top-5 inline-flex size-11 cursor-pointer items-center justify-center rounded-full border border-white/35 bg-black/65 text-white shadow-[0_12px_30px_rgba(0,0,0,0.35)] backdrop-blur-md transition hover:scale-105 hover:bg-white hover:text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            onClick={(event) => {
+              event.stopPropagation();
+              onClose();
+            }}
             aria-label="关闭"
           >
-            <X className="size-8" />
+            <X className="size-6" strokeWidth={2.6} />
           </button>
           <motion.img
             initial={{ scale: 0.96, opacity: 0 }}
@@ -51,7 +54,9 @@ export function ImageZoomModal({ src, onClose, onDownload, onUseForEdit }: Image
             src={src}
             alt="放大查看"
             decoding="async"
-            className="max-h-[90vh] max-w-[90vw] rounded-xl object-contain shadow-2xl"
+            draggable={false}
+            onDragStart={(event) => event.preventDefault()}
+            className="max-h-[90vh] max-w-[90vw] select-none rounded-xl object-contain shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           />
           <div className="absolute bottom-8 flex items-center gap-4">

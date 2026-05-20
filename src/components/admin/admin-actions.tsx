@@ -1053,22 +1053,28 @@ export function GenerationAdminCard({ job }: { job: GenerationAdminJob }) {
 
       {zoomedImage && (
         <div 
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
+          className="fixed inset-0 z-50 flex select-none items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
           onClick={() => setZoomedImage(null)}
         >
           <button 
             type="button"
-            className="absolute top-6 right-6 text-white/70 transition hover:text-white hover:scale-110"
-            onClick={() => setZoomedImage(null)}
+            className="absolute right-5 top-5 inline-flex size-11 items-center justify-center rounded-full border border-white/35 bg-black/65 text-white shadow-[0_12px_30px_rgba(0,0,0,0.35)] backdrop-blur-md transition hover:scale-105 hover:bg-white hover:text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            onClick={(event) => {
+              event.stopPropagation();
+              setZoomedImage(null);
+            }}
+            aria-label="关闭大图"
             title="关闭"
           >
-            <X className="size-8" />
+            <X className="size-6" strokeWidth={2.6} />
           </button>
           <img
             src={zoomedImage}
             alt="Zoomed"
             decoding="async"
-            className="max-h-[90vh] max-w-[90vw] rounded-xl object-contain shadow-2xl"
+            draggable={false}
+            onDragStart={(event) => event.preventDefault()}
+            className="max-h-[90vh] max-w-[90vw] select-none rounded-xl object-contain shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           />
         </div>

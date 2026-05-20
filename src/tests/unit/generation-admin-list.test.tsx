@@ -168,5 +168,10 @@ describe("后台生成记录列表视图", () => {
       "src",
       "https://example.com/source-card.png",
     );
+    expect(screen.getByAltText("Zoomed")).toHaveAttribute("draggable", "false");
+    expect(screen.getByRole("button", { name: "关闭大图" })).toHaveClass(
+      "bg-black/65",
+      "text-white",
+    );
   });
 });
