@@ -31,15 +31,17 @@ const adminLinks = [
 export function AdminNav({
   currentPath,
   onItemClick,
+  className,
 }: {
   currentPath?: string;
   onItemClick?: () => void;
+  className?: string;
 }) {
   const pathname = usePathname();
   const activePath = currentPath ?? pathname;
 
   return (
-    <nav className="admin-nav -mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] lg:mx-0 lg:grid lg:gap-1.5 lg:overflow-visible lg:px-0 lg:pb-0 [&::-webkit-scrollbar]:hidden">
+    <nav className={cn("admin-nav flex flex-col gap-1.5", className)}>
       {adminLinks.map((link) => {
         const Icon = link.icon;
         const isActive =
@@ -51,7 +53,7 @@ export function AdminNav({
             key={link.href}
             href={link.href}
             onClick={onItemClick}
-            className={cn("admin-nav-link", isActive && "admin-nav-link-active")}
+            className={cn("admin-nav-link w-full", isActive && "admin-nav-link-active")}
             aria-current={isActive ? "page" : undefined}
           >
             <Icon className={cn("size-4 transition-transform duration-200", isActive && "scale-110 text-[#d87b37]")} />
