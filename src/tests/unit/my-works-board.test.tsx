@@ -12,6 +12,7 @@ vi.mock("next/navigation", () => ({
 }));
 
 vi.mock("motion/react", () => ({
+  AnimatePresence: ({ children }: { children: ReactNode }) => <>{children}</>,
   motion: {
     article: ({
       animate: _animate,
@@ -26,6 +27,19 @@ vi.mock("motion/react", () => ({
       transition?: unknown;
       [key: string]: unknown;
     }) => <article {...props}>{children}</article>,
+    div: ({
+      animate: _animate,
+      children,
+      initial: _initial,
+      transition: _transition,
+      ...props
+    }: {
+      animate?: unknown;
+      children?: ReactNode;
+      initial?: unknown;
+      transition?: unknown;
+      [key: string]: unknown;
+    }) => <div {...props}>{children}</div>,
   },
 }));
 

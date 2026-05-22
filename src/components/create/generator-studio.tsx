@@ -4,6 +4,7 @@
 // 各子组件、hooks 与工具函数已拆分到同目录的 hooks / parts / utils / constants / types 下。
 import { PanelLeftOpen } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState, useTransition } from "react";
+import { AnimatePresence, motion } from "motion/react";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 
@@ -581,17 +582,36 @@ export function GeneratorStudio({
         onNewConversation={handleNewConversation}
         onSwitchSession={switchToSession}
         onDeleteSession={deleteSession}
+        historyImages={historyImages}
+        onPickImage={(url) => {
+          setZoomedImage(url);
+          setSidebarOpen(false);
+        }}
       />
 
       <div className="relative flex min-w-0 flex-1 flex-col border-x border-[var(--line)]/80 bg-[linear-gradient(180deg,rgba(255,251,246,0.62)_0%,rgba(247,241,232,0.36)_100%)]">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_72%_16%,rgba(217,100,58,0.08),transparent_28%),radial-gradient(circle_at_28%_86%,rgba(255,255,255,0.58),transparent_34%)]" />
-        <div className="relative z-10 flex items-center gap-2 px-4 py-2 md:hidden">
-          <button
-            onClick={() => setSidebarOpen(true)}
-            className="rounded-xl border border-[var(--line)] bg-[#fffaf2]/80 p-2 text-[var(--ink-soft)] shadow-sm transition hover:bg-white hover:text-[var(--ink)]"
-          >
-            <PanelLeftOpen className="size-4" />
-          </button>
+        <div className="relative z-10 flex items-center justify-between border-b border-[var(--line)]/50 bg-[#fffaf2]/70 px-4 py-2.5 backdrop-blur-md md:hidden shrink-0">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setSidebarOpen(true)}
+              className="rounded-xl border border-[var(--line)] bg-white/80 p-2 text-[var(--ink-soft)] shadow-sm transition hover:bg-white hover:text-[var(--ink)] active:scale-95"
+            >
+              <PanelLeftOpen className="size-5" />
+            </button>
+            <div className="flex flex-col">
+              <span className="text-[10px] uppercase tracking-wider text-[var(--ink-soft)]/70 font-semibold leading-tight">当前会话</span>
+              <span className="text-sm font-bold text-[var(--ink)] line-clamp-1 max-w-[150px] leading-tight mt-0.5">
+                {activeSessionId ? (sessions.find((s) => s.id === activeSessionId)?.title ?? "新对话") : "新对话"}
+              </span>
+            </div>
+          </div>
+          {currentUser && (
+            <div className="flex items-center gap-1.5 rounded-full border border-amber-200/80 bg-amber-50/60 px-3 py-1.5 shadow-xs text-xs font-semibold text-amber-800">
+              <span className="size-2 rounded-full bg-amber-500 animate-pulse" />
+              <span>{currentUser.credits} 积分</span>
+            </div>
+          )}
         </div>
 
         <ChatStream
@@ -672,6 +692,75 @@ export function GeneratorStudio({
           onDownload={handleDownload}
           onUseForEdit={(url) => void handleUseImageForEdit(url)}
         />
+
+        {/* Mobile Advanced Settings Bottom Sheet */}
+        <AnimatePresence>
+          {showSettings && (
+            <>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setShowSettings(false)}
+                className="fixed inset-0 z-40 bg-black/60 backdrop-blur-xs md:hidden"
+              />
+              <motion.div
+                initial={{ y: "100%" }}
+                animate={{ y: 0 }}
+                exit={{ y: "100%" }}
+                transition={{ type: "spring", damping: 25, stiffness: 250 }}
+                className="fixed inset-x-0 bottom-0 z-50 max-h-[85vh] rounded-t-[2rem] bg-[#fffaf2]/96 border-t border-[var(--line)] shadow-[0_-10px_35px_rgba(94,58,33,0.15)] overflow-y-auto pb-8 backdrop-blur-md md:hidden"
+              >
+                <div className="sticky top-0 bg-[#fffaf2]/96 backdrop-blur-md pt-3 pb-1 px-6 border-b border-[var(--line)]/50 z-10">
+                  <div className="flex justify-center mb-2">
+                    <div className="w-12 h-1.5 rounded-full bg-[var(--line)]" />
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-base font-semibold text-[var(--ink)]">高级设置</h3>
+                    <button
+                      type="button"
+                      onClick={() => setShowSettings(false)}
+                      className="rounded-full bg-white/60 p-1 px-3 text-xs font-semibold text-[var(--ink-soft)] hover:bg-white border border-[var(--line)] transition"
+                    >
+                      完成
+                    </button>
+                  </div>
+                </div>
+
+                <div className="p-4">
+                  <AdvancedSettings
+                    open={true}
+                    showCustomSize={sizeSelectValue === "custom"}
+                    customWidth={customWidth}
+                    customHeight={customHeight}
+                    normalizedCustomSize={normalizedCustomSize}
+                    customSizeWarning={customSizeWarning}
+                    count={count}
+                    quality={quality}
+                    outputFormat={outputFormat}
+                    outputCompression={outputCompression}
+                    moderation={moderation}
+                    negativePrompt={negativePrompt}
+                    generationType={generationType}
+                    channels={channels}
+                    selectedChannelId={selectedChannelId}
+                    onChangeChannel={handleChannelChange}
+                    modelOptions={modelOptions}
+                    model={model}
+                    onChangeModel={setModel}
+                    onChangeCustomSize={updateCustomSize}
+                    onChangeCount={setCount}
+                    onChangeQuality={setQuality}
+                    onChangeOutputFormat={setOutputFormat}
+                    onChangeOutputCompression={setOutputCompression}
+                    onChangeModeration={setModeration}
+                    onChangeNegativePrompt={setNegativePrompt}
+                  />
+                </div>
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>
       </div>
 
       <HistoryRail images={historyImages} onPickImage={(url) => setZoomedImage(url)} />

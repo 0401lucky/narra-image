@@ -82,7 +82,7 @@ export function AdvancedSettings({
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -8 }}
           transition={{ duration: 0.2, ease: "easeOut" }}
-          className="max-h-[42vh] overflow-y-auto rounded-b-[1.25rem] border-t border-[var(--line)]/50 bg-[var(--surface)]/50 p-3 sm:max-h-[52vh] sm:rounded-b-[2rem] sm:p-5"
+          className="max-h-[42vh] overflow-y-auto md:max-h-[42vh] max-md:max-h-none max-md:overflow-visible rounded-b-[1.25rem] border-t border-[var(--line)]/50 bg-[var(--surface)]/50 p-3 sm:max-h-[52vh] sm:rounded-b-[2rem] sm:p-5"
         >
           <div className="grid gap-4 md:grid-cols-2 md:gap-6">
             <div className="space-y-3 sm:space-y-4">

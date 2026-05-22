@@ -17,7 +17,7 @@ import {
   Share2,
   Trash2,
 } from "lucide-react";
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 
 import type { SerializedWork } from "@/lib/prisma-mappers";
 import { downloadImage } from "@/components/works/download-image";
@@ -133,6 +133,9 @@ export function MyWorksBoard({
     initialItems[0]?.id ?? null,
   );
   const [shareMessage, setShareMessage] = useState<string | null>(null);
+
+  const [isMobileDetailOpen, setIsMobileDetailOpen] = useState(false);
+  const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
 
   const [zoomedWork, setZoomedWork] = useState<SerializedWork | null>(null);
   const [promptWork, setPromptWork] = useState<SerializedWork | null>(null);
@@ -264,7 +267,7 @@ export function MyWorksBoard({
   return (
     <>
       <div className="grid gap-5 xl:grid-cols-[15rem_minmax(0,1fr)_22rem]">
-        <aside className="studio-card h-fit p-4 xl:sticky xl:top-24">
+        <aside className="studio-card h-fit p-4 xl:sticky xl:top-24 hidden xl:block">
           <h2 className="text-sm font-semibold text-[var(--ink)]">我的作品</h2>
           <div className="mt-4 grid gap-1.5">
             {(["all", "private", "pending", "featured"] as WorkFilter[]).map(
@@ -323,14 +326,14 @@ export function MyWorksBoard({
 
         <section className="studio-card min-w-0 overflow-hidden p-3 md:p-4">
           <div className="flex flex-col gap-3 border-b border-[var(--line)] pb-4 lg:flex-row lg:items-center lg:justify-between">
-            <div className="flex rounded-lg border border-[var(--line)] bg-[#f4eadc] p-1">
+            <div className="flex xl:hidden overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden rounded-lg border border-[var(--line)] bg-[#f4eadc] p-1 gap-1">
               {(["all", "private", "pending", "featured"] as WorkFilter[]).map(
                 (filter) => (
                   <button
                     key={filter}
                     type="button"
                     onClick={() => setActiveFilter(filter)}
-                    className={`rounded-md px-3 py-1.5 text-sm font-medium transition ${
+                    className={`shrink-0 rounded-md px-3 py-1.5 text-sm font-medium transition ${
                       activeFilter === filter
                         ? "bg-[#fffaf2] text-[var(--ink)] shadow-sm"
                         : "text-[var(--ink-soft)] hover:text-[var(--ink)]"
@@ -342,15 +345,25 @@ export function MyWorksBoard({
               )}
             </div>
 
-            <label className="relative min-w-0 flex-1 lg:max-w-md">
-              <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-[var(--ink-soft)]" />
-              <input
-                value={search}
-                onChange={(event) => setSearch(event.target.value)}
-                placeholder="搜索作品或提示词"
-                className="h-11 w-full rounded-lg border border-[var(--line)] bg-[#fffaf2]/76 pl-10 pr-4 text-sm text-[var(--ink)] outline-none transition focus:border-[var(--accent)] focus:bg-white"
-              />
-            </label>
+            <div className="flex items-center gap-2 w-full lg:max-w-md">
+              <label className="relative min-w-0 flex-1">
+                <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-[var(--ink-soft)]" />
+                <input
+                  value={search}
+                  onChange={(event) => setSearch(event.target.value)}
+                  placeholder="搜索作品或提示词"
+                  className="h-11 w-full rounded-lg border border-[var(--line)] bg-[#fffaf2]/76 pl-10 pr-4 text-sm text-[var(--ink)] outline-none transition focus:border-[var(--accent)] focus:bg-white"
+                />
+              </label>
+              <button
+                type="button"
+                onClick={() => setIsMobileFilterOpen(true)}
+                className="xl:hidden flex items-center justify-center size-11 shrink-0 rounded-lg border border-[var(--line)] bg-[#fffaf2]/76 text-[var(--ink-soft)] hover:text-[var(--ink)] hover:border-[var(--accent)] transition"
+                aria-label="高级筛选"
+              >
+                <Filter className="size-5" />
+              </button>
+            </div>
           </div>
 
           {filteredItems.length > 0 ? (
@@ -365,7 +378,10 @@ export function MyWorksBoard({
                     duration: 0.22,
                     ease: "easeOut",
                   }}
-                  onClick={() => setSelectedWorkId(work.id)}
+                  onClick={() => {
+                    setSelectedWorkId(work.id);
+                    setIsMobileDetailOpen(true);
+                  }}
                   className={`group cursor-pointer overflow-hidden rounded-xl border bg-[#fffaf2]/80 p-2 shadow-[0_12px_30px_rgba(94,58,33,0.08)] transition hover:-translate-y-0.5 hover:shadow-[0_18px_38px_rgba(94,58,33,0.12)] ${
                     selectedWork?.id === work.id
                       ? "border-[var(--accent)]"
@@ -482,7 +498,7 @@ export function MyWorksBoard({
           ) : null}
         </section>
 
-        <aside className="studio-card h-fit p-4 xl:sticky xl:top-24 xl:max-h-[calc(100vh-7rem)] xl:overflow-y-auto">
+        <aside className="studio-card h-fit p-4 xl:sticky xl:top-24 xl:max-h-[calc(100vh-7rem)] xl:overflow-y-auto hidden xl:block">
           {selectedWork ? (
             <div className="grid gap-4">
               <div className="flex items-center justify-between gap-3">
@@ -680,6 +696,258 @@ export function MyWorksBoard({
           </div>
         </div>
       ) : null}
+
+      {/* Mobile Detail Bottom Sheet */}
+      <AnimatePresence>
+        {isMobileDetailOpen && selectedWork && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsMobileDetailOpen(false)}
+              className="fixed inset-0 z-40 bg-black/60 backdrop-blur-xs xl:hidden"
+            />
+            <motion.div
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              exit={{ y: "100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 250 }}
+              className="fixed inset-x-0 bottom-0 z-50 max-h-[85vh] rounded-t-[2rem] bg-[#fffaf2]/96 border-t border-[var(--line)] shadow-[0_-10px_35px_rgba(94,58,33,0.15)] overflow-y-auto pb-8 backdrop-blur-md xl:hidden"
+            >
+              <div className="sticky top-0 bg-[#fffaf2]/96 backdrop-blur-md pt-3 pb-1 px-6 border-b border-[var(--line)]/50 z-10">
+                <div className="flex justify-center mb-2">
+                  <div className="w-12 h-1.5 rounded-full bg-[var(--line)]" />
+                </div>
+                <div className="flex items-center justify-between">
+                  <h3 className="text-base font-semibold text-[var(--ink)]">作品详情</h3>
+                  <button
+                    type="button"
+                    onClick={() => setIsMobileDetailOpen(false)}
+                    className="rounded-full bg-white/60 p-1 px-3 text-xs font-semibold text-[var(--ink-soft)] hover:bg-white border border-[var(--line)] transition"
+                  >
+                    关闭
+                  </button>
+                </div>
+              </div>
+
+              <div className="p-6 grid gap-5">
+                <button
+                  type="button"
+                  onClick={() => setZoomedWork(selectedWork)}
+                  className="overflow-hidden rounded-xl border border-[var(--line)] bg-[var(--surface-strong)] shadow-sm"
+                >
+                  <img
+                    src={getThumbUrl(selectedWork.url, 1080)}
+                    alt="选中作品预览"
+                    className="max-h-[50vh] w-full object-contain mx-auto"
+                  />
+                </button>
+
+                <div>
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <h4 className="line-clamp-2 text-lg font-semibold text-[var(--ink)]">
+                        {selectedWork.prompt}
+                      </h4>
+                      <p className="mt-1 text-xs text-[var(--ink-soft)]">
+                        创建于 {formatTime(selectedWork.createdAt)}
+                      </p>
+                    </div>
+                    <div className="shrink-0">
+                      <WorkStatusBadge status={selectedWork.showcaseStatus} />
+                    </div>
+                  </div>
+
+                  <dl className="mt-4 grid gap-3 text-sm">
+                    <div className="flex justify-between gap-3 border-b border-[var(--line)] pb-2">
+                      <dt className="text-[var(--ink-soft)]">模型</dt>
+                      <dd className="font-medium text-[var(--ink)]">
+                        {selectedWork.model}
+                      </dd>
+                    </div>
+                    <div className="flex justify-between gap-3 border-b border-[var(--line)] pb-2">
+                      <dt className="text-[var(--ink-soft)]">尺寸</dt>
+                      <dd className="font-medium text-[var(--ink)]">
+                        {selectedWork.size} ({getRatioLabel(selectedWork.size)})
+                      </dd>
+                    </div>
+                    <div className="flex justify-between gap-3 border-b border-[var(--line)] pb-2">
+                      <dt className="text-[var(--ink-soft)]">公开范围</dt>
+                      <dd className="font-medium text-[var(--ink)]">
+                        {selectedWork.showcaseStatus === "FEATURED"
+                          ? "首页精选"
+                          : "仅自己可见"}
+                      </dd>
+                    </div>
+                  </dl>
+                </div>
+
+                <div className="rounded-lg border border-[var(--line)] bg-white/58 p-3">
+                  <div className="mb-2 flex items-center justify-between gap-2">
+                    <span className="text-sm font-semibold text-[var(--ink)]">
+                      提示词
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setPromptWork(selectedWork)}
+                      className="text-xs font-medium text-[var(--accent)]"
+                    >
+                      查看完整
+                    </button>
+                  </div>
+                  <p className="line-clamp-4 text-sm leading-relaxed text-[var(--ink-soft)]">
+                    {selectedWork.prompt}
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => void downloadImage(selectedWork.url)}
+                    className="inline-flex items-center justify-center gap-2 rounded-lg border border-[var(--line)] bg-white/60 px-4 py-2.5 text-sm font-semibold text-[var(--ink)] transition hover:border-[var(--accent)]"
+                  >
+                    <Download className="size-4" />
+                    下载
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => void handleShare(selectedWork)}
+                    className="inline-flex items-center justify-center gap-2 rounded-lg border border-[var(--line)] bg-white/60 px-4 py-2.5 text-sm font-semibold text-[var(--ink)] transition hover:border-[var(--accent)]"
+                  >
+                    <Share2 className="size-4" />
+                    分享
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setPromptWork(selectedWork)}
+                    className="inline-flex items-center justify-center gap-2 rounded-lg border border-[var(--line)] bg-white/60 px-4 py-2.5 text-sm font-semibold text-[var(--ink)] transition hover:border-[var(--accent)]"
+                  >
+                    <FileText className="size-4" />
+                    提示词
+                  </button>
+                  <Link
+                    href={`/works/${selectedWork.id}`}
+                    className="inline-flex items-center justify-center gap-2 rounded-lg border border-[var(--line)] bg-white/60 px-4 py-2.5 text-sm font-semibold text-[var(--ink)] transition hover:border-[var(--accent)]"
+                  >
+                    <ExternalLink className="size-4" />
+                    详情
+                  </Link>
+                </div>
+
+                {shareMessage ? (
+                  <p className="text-xs text-[var(--ink-soft)] text-center">{shareMessage}</p>
+                ) : null}
+
+                <WorkShowcaseControls work={selectedWork} />
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setDeleteError(null);
+                    setDeletingWork(selectedWork);
+                    setIsMobileDetailOpen(false);
+                  }}
+                  className="inline-flex items-center justify-center gap-2 rounded-lg border border-rose-200 bg-rose-50/60 px-4 py-2.5 text-sm font-semibold text-rose-600 transition hover:border-rose-400 font-medium"
+                >
+                  <Trash2 className="size-4" />
+                  删除作品
+                </button>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* Mobile Filter Bottom Sheet */}
+      <AnimatePresence>
+        {isMobileFilterOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsMobileFilterOpen(false)}
+              className="fixed inset-0 z-40 bg-black/60 backdrop-blur-xs xl:hidden"
+            />
+            <motion.div
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              exit={{ y: "100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 250 }}
+              className="fixed inset-x-0 bottom-0 z-50 rounded-t-[2rem] bg-[#fffaf2]/96 border-t border-[var(--line)] shadow-[0_-10px_35px_rgba(94,58,33,0.15)] overflow-y-auto pb-8 backdrop-blur-md xl:hidden"
+            >
+              <div className="sticky top-0 bg-[#fffaf2]/96 backdrop-blur-md pt-3 pb-1 px-6 border-b border-[var(--line)]/50 z-10">
+                <div className="flex justify-center mb-2">
+                  <div className="w-12 h-1.5 rounded-full bg-[var(--line)]" />
+                </div>
+                <div className="flex items-center justify-between">
+                  <h3 className="text-base font-semibold text-[var(--ink)] flex items-center gap-2">
+                    <Filter className="size-4 text-[var(--accent)]" />
+                    作品筛选
+                  </h3>
+                  <button
+                    type="button"
+                    onClick={() => setIsMobileFilterOpen(false)}
+                    className="rounded-full bg-white/60 p-1 px-3 text-xs font-semibold text-[var(--ink-soft)] hover:bg-white border border-[var(--line)] transition"
+                  >
+                    完成
+                  </button>
+                </div>
+              </div>
+
+              <div className="p-6 grid gap-6">
+                <div>
+                  <span className="text-xs text-[var(--ink-soft)] block mb-3 font-medium">按作品类型过滤</span>
+                  <div className="grid grid-cols-2 gap-2">
+                    {(["all", "private", "pending", "featured"] as WorkFilter[]).map(
+                      (filter) => (
+                        <button
+                          key={filter}
+                          type="button"
+                          onClick={() => setActiveFilter(filter)}
+                          className={`flex items-center justify-between rounded-xl px-4 py-3 text-sm transition border ${
+                            activeFilter === filter
+                              ? "bg-[#eadfce] text-[var(--ink)] border-[var(--accent)] shadow-sm"
+                              : "bg-white/60 text-[var(--ink-soft)] border-[var(--line)] hover:bg-white hover:text-[var(--ink)]"
+                          }`}
+                        >
+                          <span className="font-medium">{filterLabels[filter]}</span>
+                          <span className="text-xs tabular-nums rounded-full bg-white/70 px-2 py-0.5 border border-[var(--line)]/50">
+                            {filterCounts[filter]}
+                          </span>
+                        </button>
+                      ),
+                    )}
+                  </div>
+                </div>
+
+                <div className="border-t border-[var(--line)]/50 pt-5">
+                  <span className="text-xs text-[var(--ink-soft)] block mb-3 font-medium">数据统计</span>
+                  <div className="grid grid-cols-2 gap-2 text-xs text-[var(--ink-soft)]">
+                    <div className="rounded-lg border border-[var(--line)] bg-white/55 px-3 py-2 flex justify-between">
+                      <span>已加载</span>
+                      <span className="font-semibold text-[var(--ink)]">{items.length} 张</span>
+                    </div>
+                    <div className="rounded-lg border border-[var(--line)] bg-white/55 px-3 py-2 flex justify-between">
+                      <span>筛选命中</span>
+                      <span className="font-semibold text-[var(--ink)]">{filteredItems.length} 张</span>
+                    </div>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setIsMobileFilterOpen(false)}
+                  className="w-full mt-4 rounded-xl bg-[var(--ink)] py-3.5 text-sm font-semibold text-white shadow-md transition hover:bg-[var(--accent)]"
+                >
+                  确定
+                </button>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </>
   );
 }

@@ -277,7 +277,9 @@ export const Composer = forwardRef<HTMLTextAreaElement, ComposerProps>(function 
           </div>
 
           {/* 高级设置面板由父组件渲染并传入，避免在此处反向耦合所有设置字段。 */}
-          {props.children}
+          <div className="hidden md:block w-full">
+            {props.children}
+          </div>
         </div>
       </div>
     </div>

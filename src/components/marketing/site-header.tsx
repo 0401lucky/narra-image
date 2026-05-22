@@ -8,6 +8,7 @@ import { CheckInButton } from "@/components/benefits/check-in-button";
 import { HeaderShell } from "@/components/marketing/header-shell";
 import { PetToggle } from "@/components/pet/pet-toggle";
 import { getThumbUrl } from "@/lib/image-url";
+import { MobileNav } from "@/components/marketing/mobile-nav";
 
 type SiteHeaderProps = {
   currentUser: {
@@ -153,7 +154,9 @@ export async function SiteHeader({
                 )}
               </Link>
 
-              <LogoutButton />
+              <span className="hidden sm:inline-flex shrink-0">
+                <LogoutButton />
+              </span>
             </div>
           ) : null}
           <Link
@@ -166,31 +169,16 @@ export async function SiteHeader({
           >
             {currentUser ? "继续创作" : "登录开启"}
           </Link>
-        </div>
-      </div>
 
-      {checkInSummary ? (
-        <div className="-mx-4 mt-2.5 flex min-[480px]:hidden px-4 md:hidden">
-          <CheckInButton
-            checkedInToday={checkInSummary.checkedInToday}
-            rewardCredits={checkInSummary.checkInReward}
-            variant="compact"
+          {/* 移动端汉堡包菜单抽屉 */}
+          <MobileNav
+            currentUser={currentUser}
+            links={links}
+            activeHref={activeHref}
+            checkInSummary={checkInSummary}
           />
         </div>
-      ) : null}
-
-      <nav className="-mx-4 mt-3 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] md:hidden [&::-webkit-scrollbar]:hidden">
-        {links.map((link) => (
-          <Link
-            key={link.href}
-            href={link.href}
-            prefetch={false}
-            className="ring-link shrink-0 rounded-full px-3.5 py-2 text-sm text-[var(--ink-soft)] hover:text-[var(--ink)]"
-          >
-            {link.label}
-          </Link>
-        ))}
-      </nav>
+      </div>
       </header>
     </HeaderShell>
   );
