@@ -4,7 +4,8 @@
 
 import type { GenerationImage, GenerationJob, User } from "@prisma/client";
 import { useRouter } from "next/navigation";
-import { useMemo, useState, useTransition } from "react";
+import { useEffect, useMemo, useState, useTransition } from "react";
+import { createPortal } from "react-dom";
 import {
   Copy,
   Download,
@@ -13,6 +14,8 @@ import {
   Loader2,
   Trash2,
   X,
+  Eye,
+  Check,
 } from "lucide-react";
 
 import { downloadImage } from "@/components/works/download-image";
@@ -922,6 +925,273 @@ export function InviteBatchCopy({ batchId }: { batchId: string }) {
   );
 }
 
+type InviteCodeData = {
+  id: string;
+  code: string;
+  claimedAt: string | null;
+  usedAt: string | null;
+  usedBy: { email: string } | null;
+};
+
+export function InviteBatchViewButton({
+  batchId,
+  title,
+}: {
+  batchId: string;
+  title: string | null;
+}) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => setIsOpen(true)}
+        className="inline-flex items-center gap-1.5 rounded-full border border-[var(--line)] px-3 py-2 text-xs font-medium text-[var(--ink-soft)] transition hover:border-[var(--accent)] hover:text-[var(--accent)] bg-white"
+        title="查看批次内的邀请码详情"
+      >
+        <Eye className="size-3.5" />
+        查看
+      </button>
+
+      {isOpen && (
+        <InviteBatchViewModal
+          batchId={batchId}
+          batchTitle={title}
+          onClose={() => setIsOpen(false)}
+        />
+      )}
+    </>
+  );
+}
+
+function InviteBatchViewModal({
+  batchId,
+  batchTitle,
+  onClose,
+}: {
+  batchId: string;
+  batchTitle: string | null;
+  onClose: () => void;
+}) {
+  const [codes, setCodes] = useState<InviteCodeData[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [copiedCode, setCopiedCode] = useState<string | null>(null);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsMounted(true), 0);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    async function fetchCodes() {
+      setIsLoading(true);
+      setError(null);
+      try {
+        const response = await fetch(`/api/admin/invites/batches/${batchId}`);
+        if (!response.ok) {
+          throw new Error("获取邀请码失败");
+        }
+        const resData = await response.json();
+        if (resData.success && resData.data) {
+          setCodes(resData.data.codes || []);
+        } else {
+          throw new Error(resData.error || "获取邀请码失败");
+        }
+      } catch (err) {
+        const errMsg = err instanceof Error ? err.message : "网络请求出错";
+        setError(errMsg);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    fetchCodes();
+  }, [batchId]);
+
+  const unusedCodes = useMemo(
+    () => codes.filter((c) => !c.usedAt),
+    [codes]
+  );
+  
+  const usedCodes = useMemo(
+    () => codes.filter((c) => c.usedAt),
+    [codes]
+  );
+
+  async function handleCopyCode(code: string) {
+    try {
+      await navigator.clipboard.writeText(code);
+      setCopiedCode(code);
+      setTimeout(() => setCopiedCode(null), 1500);
+    } catch {
+      alert("复制失败，请手动复制");
+    }
+  }
+
+  if (!isMounted) return null;
+
+  return createPortal(
+    <div
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
+      onClick={onClose}
+    >
+      <div
+        className="studio-card relative flex h-full max-h-[85vh] w-full max-w-4xl flex-col overflow-hidden rounded-[2rem] bg-white/95 p-0 shadow-2xl backdrop-blur-md"
+        onClick={(event) => event.stopPropagation()}
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between border-b border-[var(--line)] px-6 py-5 bg-white/50">
+          <div>
+            <div className="text-xs uppercase tracking-[0.2em] text-[var(--ink-soft)]">
+              邀请批次详情
+            </div>
+            <h3 className="mt-1 text-xl font-semibold text-[var(--ink)]">
+              {batchTitle || "未命名批次"}
+            </h3>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-full p-2 text-[var(--ink-soft)] transition hover:bg-[var(--surface-strong)] hover:text-[var(--ink)]"
+            aria-label="关闭"
+          >
+            <X className="size-5" />
+          </button>
+        </div>
+
+        {/* Content */}
+        <div className="flex-1 overflow-hidden">
+          {isLoading ? (
+            <div className="flex h-full items-center justify-center py-12">
+              <div className="flex flex-col items-center gap-3">
+                <Loader2 className="size-8 animate-spin text-[var(--accent)]" />
+                <span className="text-sm text-[var(--ink-soft)]">加载邀请码中...</span>
+              </div>
+            </div>
+          ) : error ? (
+            <div className="flex h-full items-center justify-center p-6 text-center">
+              <div className="text-rose-600">
+                <p className="font-semibold">加载出错</p>
+                <p className="mt-1 text-sm">{error}</p>
+              </div>
+            </div>
+          ) : (
+            <div className="grid h-full grid-cols-1 divide-[var(--line)] md:grid-cols-2 md:divide-x">
+              {/* Left Column: Unused */}
+              <div className="flex flex-col overflow-hidden p-6">
+                <div className="mb-4 flex items-center justify-between">
+                  <h4 className="font-medium text-[var(--ink)]">
+                    未使用邀请码 ({unusedCodes.length})
+                  </h4>
+                  <span className="text-xs text-[var(--ink-soft)] bg-[var(--surface-strong)] px-2 py-0.5 rounded-full">
+                    点击邀请码复制
+                  </span>
+                </div>
+                {unusedCodes.length === 0 ? (
+                  <div className="flex flex-1 items-center justify-center rounded-2xl border border-dashed border-[var(--line)] bg-[var(--surface-strong)]/30 py-8 text-center text-sm text-[var(--ink-soft)]">
+                    没有未使用的邀请码
+                  </div>
+                ) : (
+                  <div className="flex-1 overflow-y-auto pr-1">
+                    <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3">
+                      {unusedCodes.map((c) => {
+                        const isCopied = copiedCode === c.code;
+                        return (
+                          <button
+                            key={c.id}
+                            type="button"
+                            onClick={() => void handleCopyCode(c.code)}
+                            className={`group relative flex flex-col items-center justify-center rounded-2xl border p-3.5 text-center transition-all ${
+                              isCopied
+                                ? "border-emerald-300 bg-emerald-50 text-emerald-700 shadow-sm"
+                                : "border-[var(--line)] bg-white hover:border-[var(--accent)] hover:bg-[var(--surface-strong)]/30 hover:shadow-xs"
+                            }`}
+                          >
+                            <span className={`font-mono text-sm font-semibold tracking-wide ${
+                              isCopied ? "text-emerald-700" : "text-[var(--ink)]"
+                            }`}>
+                              {c.code}
+                            </span>
+                            <span className="mt-1 inline-flex items-center gap-1 text-[10px]">
+                              {isCopied ? (
+                                <>
+                                  <Check className="size-3 text-emerald-600" />
+                                  <span className="text-emerald-600 font-medium">已复制</span>
+                                </>
+                              ) : (
+                                <>
+                                  <Copy className="size-3 text-[var(--ink-soft)]/50 transition-colors group-hover:text-[var(--accent)]" />
+                                  <span className="text-[var(--ink-soft)]">未使用</span>
+                                </>
+                              )}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Right Column: Used */}
+              <div className="flex flex-col overflow-hidden p-6 bg-[var(--surface-strong)]/15">
+                <div className="mb-4">
+                  <h4 className="font-medium text-[var(--ink)]">
+                    已使用邀请码 ({usedCodes.length})
+                  </h4>
+                </div>
+                {usedCodes.length === 0 ? (
+                  <div className="flex flex-1 items-center justify-center rounded-2xl border border-dashed border-[var(--line)] bg-white/60 py-8 text-center text-sm text-[var(--ink-soft)]">
+                    还没有已使用的邀请码
+                  </div>
+                ) : (
+                  <div className="flex-1 overflow-y-auto pr-1">
+                    <div className="space-y-2">
+                      {usedCodes.map((c) => (
+                        <div
+                          key={c.id}
+                          className="flex items-center justify-between rounded-2xl border border-[var(--line)] bg-white/80 p-3 shadow-xs"
+                        >
+                          <div className="flex items-center gap-2.5">
+                            <span className="font-mono text-sm font-semibold text-[var(--ink)]/75">
+                              {c.code}
+                            </span>
+                            <span className="rounded-full bg-zinc-950 px-2 py-0.5 text-[10px] text-white">
+                              已使用
+                            </span>
+                          </div>
+                          <div className="text-right min-w-0">
+                            <p className="truncate text-xs font-medium text-[var(--ink)]" title={c.usedBy?.email}>
+                              {c.usedBy?.email || "未知用户"}
+                            </p>
+                            {c.usedAt && (
+                              <p className="mt-0.5 text-[9px] text-[var(--ink-soft)]">
+                                {new Date(c.usedAt).toLocaleString("zh-CN", {
+                                  month: "numeric",
+                                  day: "numeric",
+                                  hour: "2-digit",
+                                  minute: "2-digit",
+                                })}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>,
+    document.body
+  );
+}
+
 export function CreditAdjuster({ userId }: { userId: string }) {
   const router = useRouter();
   const [amount, setAmount] = useState(50);
@@ -975,6 +1245,12 @@ export function CreditAdjuster({ userId }: { userId: string }) {
 export function GenerationAdminCard({ job }: { job: GenerationAdminJob }) {
   const [zoomedImage, setZoomedImage] = useState<string | null>(null);
   const [showPrompt, setShowPrompt] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsMounted(true), 0);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <article className="studio-card flex flex-col xl:flex-row gap-5 p-5 rounded-[1.8rem]">
@@ -1051,9 +1327,9 @@ export function GenerationAdminCard({ job }: { job: GenerationAdminJob }) {
         </div>
       </div>
 
-      {zoomedImage && (
+      {isMounted && zoomedImage && createPortal(
         <div 
-          className="fixed inset-0 z-50 flex select-none items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
+          className="fixed inset-0 z-[100] flex select-none items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
           onClick={() => setZoomedImage(null)}
         >
           <button 
@@ -1077,12 +1353,13 @@ export function GenerationAdminCard({ job }: { job: GenerationAdminJob }) {
             className="max-h-[90vh] max-w-[90vw] select-none rounded-xl object-contain shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           />
-        </div>
+        </div>,
+        document.body
       )}
 
-      {showPrompt && (
+      {isMounted && showPrompt && createPortal(
         <div 
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
           onClick={() => setShowPrompt(false)}
         >
           <div 
@@ -1109,7 +1386,8 @@ export function GenerationAdminCard({ job }: { job: GenerationAdminJob }) {
               </div>
             )}
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </article>
   );

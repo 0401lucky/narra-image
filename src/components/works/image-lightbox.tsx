@@ -2,7 +2,8 @@
 
 /* eslint-disable @next/next/no-img-element */
 
-import type { ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 
 import { getThumbUrl } from "@/lib/image-url";
@@ -21,10 +22,18 @@ export function ImageLightbox({
   src,
 }: ImageLightboxProps) {
   const displaySrc = getThumbUrl(src, 1920, 90);
+  const [isMounted, setIsMounted] = useState(false);
 
-  return (
+  useEffect(() => {
+    const timer = setTimeout(() => setIsMounted(true), 0);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (!isMounted) return null;
+
+  return createPortal(
     <div
-      className="fixed inset-0 z-50 flex select-none items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-[100] flex select-none items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
       onClick={onClose}
     >
       <button
@@ -53,6 +62,7 @@ export function ImageLightbox({
         />
         {children ? <div>{children}</div> : null}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
