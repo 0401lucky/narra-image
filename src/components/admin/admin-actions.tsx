@@ -994,8 +994,8 @@ function InviteBatchViewModal({
         if (!response.ok) {
           throw new Error("获取邀请码失败");
         }
-        const resData = await response.json();
-        if (resData.success && resData.data) {
+        const resData = (await response.json()) as { data?: { codes: InviteCodeData[] }; error?: string };
+        if (resData.data) {
           setCodes(resData.data.codes || []);
         } else {
           throw new Error(resData.error || "获取邀请码失败");
