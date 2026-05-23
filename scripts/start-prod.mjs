@@ -193,7 +193,7 @@ async function prepareDatabase() {
   await waitForDatabase();
 
   if (await isDatabaseSchemaEmpty()) {
-    const push = await runPrismaWithDatabaseRetry(["db", "push", "--skip-generate"]);
+    const push = await runPrismaWithDatabaseRetry(["db", "push"]);
     if (!push.ok) process.exit(push.status);
 
     for (const migrationName of getPrismaMigrations()) {
