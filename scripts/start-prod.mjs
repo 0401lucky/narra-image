@@ -5,6 +5,9 @@ import { spawnSync } from "node:child_process";
 import pg from "pg";
 
 const BASELINE_MIGRATIONS = ["20260423165000_single_image_works"];
+const RECOVERABLE_FAILED_MIGRATIONS = new Set([
+  "20260428083000_generation_image_options",
+]);
 const DATABASE_READY_ATTEMPTS = Number(process.env.DATABASE_READY_ATTEMPTS ?? 180);
 const DATABASE_READY_DELAY_MS = Number(process.env.DATABASE_READY_DELAY_MS ?? 2_000);
 
@@ -123,6 +126,25 @@ function getDatabaseSchemaName() {
   }
 }
 
+function quoteIdentifier(identifier) {
+  return `"${identifier.replaceAll('"', '""')}"`;
+}
+
+function getQualifiedTableName(tableName) {
+  return `${quoteIdentifier(getDatabaseSchemaName())}.${quoteIdentifier(tableName)}`;
+}
+
+async function withDatabaseClient(callback) {
+  const client = createDatabaseClient();
+
+  await client.connect();
+  try {
+    return await callback(client);
+  } finally {
+    await closeDatabaseClient(client);
+  }
+}
+
 async function waitForDatabase() {
   if (!process.env.DATABASE_URL) return;
 
@@ -155,10 +177,7 @@ async function waitForDatabase() {
 async function isDatabaseSchemaEmpty() {
   if (!process.env.DATABASE_URL) return false;
 
-  const client = createDatabaseClient();
-
-  await client.connect();
-  try {
+  return withDatabaseClient(async (client) => {
     const result = await client.query(
       `
         SELECT table_name
@@ -172,9 +191,7 @@ async function isDatabaseSchemaEmpty() {
     );
 
     return result.rowCount === 0;
-  } finally {
-    await closeDatabaseClient(client);
-  }
+  });
 }
 
 async function resolveApplied(migrationName) {
@@ -187,6 +204,181 @@ async function resolveApplied(migrationName) {
   if (!result.ok && !result.output.includes("already recorded as applied")) {
     process.exit(result.status);
   }
+}
+
+async function getFailedMigrations() {
+  if (!process.env.DATABASE_URL) return [];
+
+  return withDatabaseClient(async (client) => {
+    const existsResult = await client.query(
+      `
+        SELECT EXISTS (
+          SELECT 1
+          FROM information_schema.tables
+          WHERE table_schema = $1
+            AND table_name = '_prisma_migrations'
+        ) AS exists
+      `,
+      [getDatabaseSchemaName()],
+    );
+
+    if (!existsResult.rows[0]?.exists) return [];
+
+    const result = await client.query(
+      `
+        SELECT migration_name
+        FROM ${getQualifiedTableName("_prisma_migrations")}
+        WHERE finished_at IS NULL
+          AND rolled_back_at IS NULL
+        ORDER BY started_at ASC
+      `,
+    );
+
+    return result.rows.map((row) => row.migration_name);
+  });
+}
+
+async function isDatabaseSchemaInSync() {
+  const result = await runPrismaWithDatabaseRetry([
+    "migrate",
+    "diff",
+    "--from-config-datasource",
+    "--to-schema",
+    "prisma/schema.prisma",
+    "--exit-code",
+  ]);
+
+  if (result.ok) return true;
+
+  if (result.status === 2) {
+    return false;
+  }
+
+  console.warn("Unable to compare database schema with Prisma schema.");
+  return false;
+}
+
+async function resolveAllMigrationsAsApplied() {
+  for (const migrationName of getPrismaMigrations()) {
+    await resolveApplied(migrationName);
+  }
+}
+
+async function repairGenerationImageOptionsMigration() {
+  await withDatabaseClient(async (client) => {
+    const tableName = getQualifiedTableName("GenerationJob");
+
+    await client.query("BEGIN");
+    try {
+      await client.query(
+        `ALTER TABLE ${tableName} ADD COLUMN IF NOT EXISTS "quality" TEXT NOT NULL DEFAULT 'auto'`,
+      );
+      await client.query(
+        `ALTER TABLE ${tableName} ADD COLUMN IF NOT EXISTS "outputFormat" TEXT NOT NULL DEFAULT 'png'`,
+      );
+      await client.query(
+        `ALTER TABLE ${tableName} ADD COLUMN IF NOT EXISTS "outputCompression" INTEGER`,
+      );
+      await client.query(
+        `ALTER TABLE ${tableName} ADD COLUMN IF NOT EXISTS "moderation" TEXT NOT NULL DEFAULT 'auto'`,
+      );
+
+      await client.query(
+        `ALTER TABLE ${tableName} ALTER COLUMN "quality" SET DEFAULT 'auto'`,
+      );
+      await client.query(
+        `UPDATE ${tableName} SET "quality" = 'auto' WHERE "quality" IS NULL`,
+      );
+      await client.query(
+        `ALTER TABLE ${tableName} ALTER COLUMN "quality" SET NOT NULL`,
+      );
+
+      await client.query(
+        `ALTER TABLE ${tableName} ALTER COLUMN "outputFormat" SET DEFAULT 'png'`,
+      );
+      await client.query(
+        `UPDATE ${tableName} SET "outputFormat" = 'png' WHERE "outputFormat" IS NULL`,
+      );
+      await client.query(
+        `ALTER TABLE ${tableName} ALTER COLUMN "outputFormat" SET NOT NULL`,
+      );
+
+      await client.query(
+        `ALTER TABLE ${tableName} ALTER COLUMN "moderation" SET DEFAULT 'auto'`,
+      );
+      await client.query(
+        `UPDATE ${tableName} SET "moderation" = 'auto' WHERE "moderation" IS NULL`,
+      );
+      await client.query(
+        `ALTER TABLE ${tableName} ALTER COLUMN "moderation" SET NOT NULL`,
+      );
+
+      await client.query("COMMIT");
+    } catch (error) {
+      await client.query("ROLLBACK");
+      throw error;
+    }
+  });
+}
+
+async function repairFailedMigration(migrationName) {
+  if (migrationName === "20260428083000_generation_image_options") {
+    await repairGenerationImageOptionsMigration();
+    await resolveApplied(migrationName);
+    return true;
+  }
+
+  return false;
+}
+
+async function reconcileMigrationHistory() {
+  if (await isDatabaseSchemaInSync()) {
+    console.warn(
+      "Database schema already matches Prisma schema. Marking migrations as applied.",
+    );
+    await resolveAllMigrationsAsApplied();
+    return true;
+  }
+
+  const failedMigrations = await getFailedMigrations();
+  let repairedAny = false;
+
+  for (const migrationName of failedMigrations) {
+    if (!RECOVERABLE_FAILED_MIGRATIONS.has(migrationName)) {
+      console.warn(`Migration ${migrationName} is not auto-recoverable.`);
+      continue;
+    }
+
+    console.warn(`Repairing failed migration ${migrationName}.`);
+    repairedAny = (await repairFailedMigration(migrationName)) || repairedAny;
+  }
+
+  return repairedAny;
+}
+
+async function deployMigrationsWithRecovery() {
+  const maxAttempts = getPrismaMigrations().length + 2;
+
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    const deploy = await runPrismaWithDatabaseRetry(["migrate", "deploy"]);
+    if (deploy.ok) return;
+
+    if (deploy.output.includes("P3005")) {
+      for (const migrationName of BASELINE_MIGRATIONS) {
+        await resolveApplied(migrationName);
+      }
+      continue;
+    }
+
+    if (await reconcileMigrationHistory()) {
+      continue;
+    }
+
+    process.exit(deploy.status);
+  }
+
+  console.error("Failed to deploy migrations after recovery attempts.");
+  process.exit(1);
 }
 
 async function prepareDatabase() {
@@ -202,19 +394,7 @@ async function prepareDatabase() {
     return;
   }
 
-  const deploy = await runPrismaWithDatabaseRetry(["migrate", "deploy"]);
-  if (deploy.ok) return;
-
-  if (!deploy.output.includes("P3005")) {
-    process.exit(deploy.status);
-  }
-
-  for (const migrationName of BASELINE_MIGRATIONS) {
-    await resolveApplied(migrationName);
-  }
-
-  const retry = await runPrismaWithDatabaseRetry(["migrate", "deploy"]);
-  if (!retry.ok) process.exit(retry.status);
+  await deployMigrationsWithRecovery();
 }
 
 try {
