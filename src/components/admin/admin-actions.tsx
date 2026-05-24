@@ -933,6 +933,27 @@ type InviteCodeData = {
   usedBy: { email: string } | null;
 };
 
+type InviteBatchDetailResponse = {
+  data?: {
+    codes?: InviteCodeData[];
+  };
+  error?: string;
+};
+
+async function readInviteBatchCodes(response: Response) {
+  const payload = (await response.json().catch(() => null)) as InviteBatchDetailResponse | null;
+
+  if (!response.ok) {
+    throw new Error(payload?.error || "获取邀请码失败");
+  }
+
+  if (!payload?.data) {
+    throw new Error(payload?.error || "获取邀请码失败");
+  }
+
+  return payload.data.codes || [];
+}
+
 export function InviteBatchViewButton({
   batchId,
   title,
@@ -990,16 +1011,10 @@ function InviteBatchViewModal({
       setIsLoading(true);
       setError(null);
       try {
-        const response = await fetch(`/api/admin/invites/batches/${batchId}`);
-        if (!response.ok) {
-          throw new Error("获取邀请码失败");
-        }
-        const resData = (await response.json()) as { data?: { codes: InviteCodeData[] }; error?: string };
-        if (resData.data) {
-          setCodes(resData.data.codes || []);
-        } else {
-          throw new Error(resData.error || "获取邀请码失败");
-        }
+        const response = await fetch(`/api/admin/invites/batches/${batchId}`, {
+          credentials: "same-origin",
+        });
+        setCodes(await readInviteBatchCodes(response));
       } catch (err) {
         const errMsg = err instanceof Error ? err.message : "网络请求出错";
         setError(errMsg);
@@ -1010,13 +1025,13 @@ function InviteBatchViewModal({
     fetchCodes();
   }, [batchId]);
 
-  const unusedCodes = useMemo(
-    () => codes.filter((c) => !c.usedAt),
+  const availableCodes = useMemo(
+    () => codes.filter((c) => !c.usedAt && !c.claimedAt),
     [codes]
   );
-  
-  const usedCodes = useMemo(
-    () => codes.filter((c) => c.usedAt),
+
+  const unavailableCodes = useMemo(
+    () => codes.filter((c) => c.usedAt || c.claimedAt),
     [codes]
   );
 
@@ -1083,20 +1098,20 @@ function InviteBatchViewModal({
               <div className="flex flex-col overflow-hidden p-6">
                 <div className="mb-4 flex items-center justify-between">
                   <h4 className="font-medium text-[var(--ink)]">
-                    未使用邀请码 ({unusedCodes.length})
+                    可用邀请码 ({availableCodes.length})
                   </h4>
                   <span className="text-xs text-[var(--ink-soft)] bg-[var(--surface-strong)] px-2 py-0.5 rounded-full">
                     点击邀请码复制
                   </span>
                 </div>
-                {unusedCodes.length === 0 ? (
+                {availableCodes.length === 0 ? (
                   <div className="flex flex-1 items-center justify-center rounded-2xl border border-dashed border-[var(--line)] bg-[var(--surface-strong)]/30 py-8 text-center text-sm text-[var(--ink-soft)]">
-                    没有未使用的邀请码
+                    没有可用的邀请码
                   </div>
                 ) : (
                   <div className="flex-1 overflow-y-auto pr-1">
                     <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3">
-                      {unusedCodes.map((c) => {
+                      {availableCodes.map((c) => {
                         const isCopied = copiedCode === c.code;
                         return (
                           <button
@@ -1139,46 +1154,55 @@ function InviteBatchViewModal({
               <div className="flex flex-col overflow-hidden p-6 bg-[var(--surface-strong)]/15">
                 <div className="mb-4">
                   <h4 className="font-medium text-[var(--ink)]">
-                    已使用邀请码 ({usedCodes.length})
+                    已发放 / 已使用邀请码 ({unavailableCodes.length})
                   </h4>
                 </div>
-                {usedCodes.length === 0 ? (
+                {unavailableCodes.length === 0 ? (
                   <div className="flex flex-1 items-center justify-center rounded-2xl border border-dashed border-[var(--line)] bg-white/60 py-8 text-center text-sm text-[var(--ink-soft)]">
-                    还没有已使用的邀请码
+                    还没有已发放或已使用的邀请码
                   </div>
                 ) : (
                   <div className="flex-1 overflow-y-auto pr-1">
                     <div className="space-y-2">
-                      {usedCodes.map((c) => (
-                        <div
-                          key={c.id}
-                          className="flex items-center justify-between rounded-2xl border border-[var(--line)] bg-white/80 p-3 shadow-xs"
-                        >
-                          <div className="flex items-center gap-2.5">
-                            <span className="font-mono text-sm font-semibold text-[var(--ink)]/75">
-                              {c.code}
-                            </span>
-                            <span className="rounded-full bg-zinc-950 px-2 py-0.5 text-[10px] text-white">
-                              已使用
-                            </span>
-                          </div>
-                          <div className="text-right min-w-0">
-                            <p className="truncate text-xs font-medium text-[var(--ink)]" title={c.usedBy?.email}>
-                              {c.usedBy?.email || "未知用户"}
-                            </p>
-                            {c.usedAt && (
-                              <p className="mt-0.5 text-[9px] text-[var(--ink-soft)]">
-                                {new Date(c.usedAt).toLocaleString("zh-CN", {
-                                  month: "numeric",
-                                  day: "numeric",
-                                  hour: "2-digit",
-                                  minute: "2-digit",
-                                })}
+                      {unavailableCodes.map((c) => {
+                        const isUsed = Boolean(c.usedAt);
+                        const statusTime = c.usedAt || c.claimedAt;
+
+                        return (
+                          <div
+                            key={c.id}
+                            className="flex items-center justify-between rounded-2xl border border-[var(--line)] bg-white/80 p-3 shadow-xs"
+                          >
+                            <div className="flex items-center gap-2.5">
+                              <span className="font-mono text-sm font-semibold text-[var(--ink)]/75">
+                                {c.code}
+                              </span>
+                              <span
+                                className={`rounded-full px-2 py-0.5 text-[10px] text-white ${
+                                  isUsed ? "bg-zinc-950" : "bg-amber-500"
+                                }`}
+                              >
+                                {isUsed ? "已使用" : "已发放"}
+                              </span>
+                            </div>
+                            <div className="min-w-0 text-right">
+                              <p className="truncate text-xs font-medium text-[var(--ink)]" title={c.usedBy?.email}>
+                                {isUsed ? c.usedBy?.email || "未知用户" : "等待注册"}
                               </p>
-                            )}
+                              {statusTime && (
+                                <p className="mt-0.5 text-[9px] text-[var(--ink-soft)]">
+                                  {new Date(statusTime).toLocaleString("zh-CN", {
+                                    month: "numeric",
+                                    day: "numeric",
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                  })}
+                                </p>
+                              )}
+                            </div>
                           </div>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   </div>
                 )}
