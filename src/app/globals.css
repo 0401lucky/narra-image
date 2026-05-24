@@ -771,3 +771,74 @@ textarea {
     scroll-behavior: auto !important;
   }
 }
+
+/* ===== 页面路由切换动效组件（Gate Transition） ===== */
+.page-transition-shell {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+}
+
+.route-transition-gate {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  background-color: var(--surface);
+  background-image: 
+    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.4), transparent 60%),
+    linear-gradient(180deg, #faf6ef 0%, #f2e9dc 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 0 120px rgba(94, 58, 33, 0.08);
+}
+
+/* 垂直扫描中线 */
+.route-transition-gate-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 2px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(217, 100, 58, 0.3) 15%,
+    var(--accent) 50%,
+    rgba(217, 100, 58, 0.3) 85%,
+    transparent
+  );
+  transform: translateX(-50%);
+  box-shadow: 
+    0 0 12px var(--accent),
+    0 0 24px var(--accent);
+}
+
+/* 左右扫描遮罩 */
+.route-transition-gate-scan {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(255, 255, 255, 0.02) 100%
+  );
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  pointer-events: none;
+}
+
+.route-transition-gate-scan-left {
+  left: 0;
+  border-right: 1px solid rgba(217, 100, 58, 0.2);
+  box-shadow: inset -30px 0 60px rgba(94, 58, 33, 0.03);
+}
+
+.route-transition-gate-scan-right {
+  right: 0;
+  border-left: 1px solid rgba(217, 100, 58, 0.2);
+  box-shadow: inset 30px 0 60px rgba(94, 58, 33, 0.03);
+}
