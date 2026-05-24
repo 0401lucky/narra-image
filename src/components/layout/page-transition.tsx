@@ -2,9 +2,15 @@
 
 import { AnimatePresence, motion } from "motion/react";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export function PageTransition({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   if (pathname.startsWith("/admin")) {
     return <div className="flex min-h-screen flex-col">{children}</div>;
@@ -31,18 +37,20 @@ export function PageTransition({ children }: { children: React.ReactNode }) {
         </motion.div>
       </AnimatePresence>
 
-      <motion.div
-        key={`gate-${pathname}`}
-        aria-hidden
-        className="route-transition-gate"
-        initial={{ opacity: 1, clipPath: "inset(0% 0% 0% 0%)" }}
-        animate={{ opacity: 0, clipPath: "inset(0% 48% 0% 48%)" }}
-        transition={{ duration: 0.58, ease: [0.76, 0, 0.24, 1] }}
-      >
-        <span className="route-transition-gate-line" />
-        <span className="route-transition-gate-scan route-transition-gate-scan-left" />
-        <span className="route-transition-gate-scan route-transition-gate-scan-right" />
-      </motion.div>
+      {mounted && (
+        <motion.div
+          key={`gate-${pathname}`}
+          aria-hidden
+          className="route-transition-gate"
+          initial={{ opacity: 1, clipPath: "inset(0% 0% 0% 0%)" }}
+          animate={{ opacity: 0, clipPath: "inset(0% 48% 0% 48%)" }}
+          transition={{ duration: 0.58, ease: [0.76, 0, 0.24, 1] }}
+        >
+          <span className="route-transition-gate-line" />
+          <span className="route-transition-gate-scan route-transition-gate-scan-left" />
+          <span className="route-transition-gate-scan route-transition-gate-scan-right" />
+        </motion.div>
+      )}
     </div>
   );
 }
