@@ -1,8 +1,6 @@
-import { NextResponse } from "next/server";
-
 import { parseExternalImageEditRequest } from "@/lib/external-api/image-edits";
 import { formatImageGenerationData } from "@/lib/external-api/images";
-import { openAiError, unixSeconds } from "@/lib/external-api/http";
+import { openAiError, openAiImageJsonResponse, unixSeconds } from "@/lib/external-api/http";
 import { runExternalGeneration } from "@/lib/generation/external-api";
 import { requireApiUser } from "@/lib/server/api-auth";
 
@@ -10,30 +8,33 @@ export async function POST(request: Request) {
   try {
     const auth = await requireApiUser(request);
     const { body, sourceImages } = await parseExternalImageEditRequest(request);
-    const job = await runExternalGeneration({
-      apiKeyId: auth.apiKey.id,
-      input: {
-        count: body.count,
-        generationType: "image_to_image",
-        model: body.model,
-        moderation: body.moderation,
-        negativePrompt: body.negativePrompt,
-        outputCompression: body.outputCompression,
-        outputFormat: body.outputFormat,
-        prompt: body.prompt,
-        quality: body.quality,
-        seed: body.seed,
-        size: body.size,
-        sourceImages,
-      },
-      user: auth.user,
-    });
-    const data = await formatImageGenerationData(job.images, body.responseFormat);
 
-    return NextResponse.json({
-      created: unixSeconds(job.createdAt),
-      data,
-      generation_id: job.id,
+    return await openAiImageJsonResponse(request, async () => {
+      const job = await runExternalGeneration({
+        apiKeyId: auth.apiKey.id,
+        input: {
+          count: body.count,
+          generationType: "image_to_image",
+          model: body.model,
+          moderation: body.moderation,
+          negativePrompt: body.negativePrompt,
+          outputCompression: body.outputCompression,
+          outputFormat: body.outputFormat,
+          prompt: body.prompt,
+          quality: body.quality,
+          seed: body.seed,
+          size: body.size,
+          sourceImages,
+        },
+        user: auth.user,
+      });
+      const data = await formatImageGenerationData(job.images, body.responseFormat);
+
+      return {
+        created: unixSeconds(job.createdAt),
+        data,
+        generation_id: job.id,
+      };
     });
   } catch (error) {
     return openAiError(error);

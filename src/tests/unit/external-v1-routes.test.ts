@@ -87,6 +87,18 @@ function jsonRequest(path: string, body: unknown) {
   });
 }
 
+function kelivoJsonRequest(path: string, body: unknown) {
+  return new Request(`http://localhost${path}`, {
+    body: JSON.stringify(body),
+    headers: {
+      Authorization: "Bearer narra_sk_test",
+      "Content-Type": "application/json",
+      "User-Agent": "Kelivo",
+    },
+    method: "POST",
+  });
+}
+
 function multipartRequest(path: string, formData: FormData) {
   const req = new Request(`http://localhost${path}`, {
     body: formData,
@@ -227,6 +239,54 @@ describe("OpenAI 兼容外部 API", () => {
         }),
       }),
     );
+  });
+
+  it("/v1/images/edits 对 Kelivo 请求提前发送 JSON 保活", async () => {
+    let finishGeneration: (job: typeof completedJob) => void = () => {};
+    mockRunExternalGeneration.mockReturnValue(
+      new Promise<typeof completedJob>((resolve) => {
+        finishGeneration = resolve;
+      }),
+    );
+
+    const response = await imageEditPost(
+      kelivoJsonRequest("/v1/images/edits", {
+        images: [{ image_url: "https://example.com/source.png" }],
+        model: "gpt-image-2",
+        prompt: "改成赛博朋克色调",
+        response_format: "url",
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    expect(response.headers.get("content-type")).toContain("application/json");
+
+    const reader = response.body?.getReader();
+    expect(reader).toBeTruthy();
+    const decoder = new TextDecoder();
+    const firstChunk = await reader!.read();
+    expect(decoder.decode(firstChunk.value)).toBe(" \n");
+
+    finishGeneration(completedJob);
+
+    let rest = "";
+    while (true) {
+      const chunk = await reader!.read();
+      if (chunk.done) break;
+      rest += decoder.decode(chunk.value);
+    }
+
+    expect(JSON.parse(rest.trim())).toEqual({
+      created: 1777982400,
+      data: [
+        {
+          height: 1024,
+          url: "https://example.com/out.png",
+          width: 1024,
+        },
+      ],
+      generation_id: "job_1",
+    });
   });
 
   it("/v1/images/edits 支持 Kelivo 的 multipart image[] 上传", async () => {

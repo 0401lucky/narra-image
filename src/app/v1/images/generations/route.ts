@@ -1,7 +1,5 @@
-import { NextResponse } from "next/server";
-
 import { formatImageGenerationData } from "@/lib/external-api/images";
-import { openAiError, unixSeconds } from "@/lib/external-api/http";
+import { openAiError, openAiImageJsonResponse, unixSeconds } from "@/lib/external-api/http";
 import { runExternalGeneration } from "@/lib/generation/external-api";
 import { requireApiUser } from "@/lib/server/api-auth";
 import { parseJsonBody } from "@/lib/server/http";
@@ -12,29 +10,31 @@ export async function POST(request: Request) {
     const auth = await requireApiUser(request);
     const body = externalImageGenerationSchema.parse(await parseJsonBody(request));
 
-    const job = await runExternalGeneration({
-      apiKeyId: auth.apiKey.id,
-      input: {
-        count: body.count,
-        generationType: "text_to_image",
-        model: body.model,
-        moderation: body.moderation,
-        negativePrompt: body.negativePrompt,
-        outputCompression: body.outputCompression,
-        outputFormat: body.outputFormat,
-        prompt: body.prompt,
-        quality: body.quality,
-        seed: body.seed,
-        size: body.size,
-      },
-      user: auth.user,
-    });
-    const data = await formatImageGenerationData(job.images, body.responseFormat);
+    return await openAiImageJsonResponse(request, async () => {
+      const job = await runExternalGeneration({
+        apiKeyId: auth.apiKey.id,
+        input: {
+          count: body.count,
+          generationType: "text_to_image",
+          model: body.model,
+          moderation: body.moderation,
+          negativePrompt: body.negativePrompt,
+          outputCompression: body.outputCompression,
+          outputFormat: body.outputFormat,
+          prompt: body.prompt,
+          quality: body.quality,
+          seed: body.seed,
+          size: body.size,
+        },
+        user: auth.user,
+      });
+      const data = await formatImageGenerationData(job.images, body.responseFormat);
 
-    return NextResponse.json({
-      created: unixSeconds(job.createdAt),
-      data,
-      generation_id: job.id,
+      return {
+        created: unixSeconds(job.createdAt),
+        data,
+        generation_id: job.id,
+      };
     });
   } catch (error) {
     return openAiError(error);

@@ -3,7 +3,9 @@ import { NextResponse } from "next/server";
 import { ApiAuthError, ApiRateLimitError } from "@/lib/api-errors";
 import { getErrorMessage } from "@/lib/server/http";
 
-export function openAiError(error: unknown) {
+const IMAGE_JSON_KEEP_ALIVE_INTERVAL_MS = 10_000;
+
+function openAiErrorPayload(error: unknown) {
   const status =
     error instanceof ApiAuthError || error instanceof ApiRateLimitError
       ? error.status
@@ -12,8 +14,8 @@ export function openAiError(error: unknown) {
   const isRateLimitError = error instanceof ApiRateLimitError;
   const message = getErrorMessage(error);
 
-  return NextResponse.json(
-    {
+  return {
+    body: {
       error: {
         code: isRateLimitError
           ? "rate_limit_exceeded"
@@ -28,8 +30,90 @@ export function openAiError(error: unknown) {
             : "invalid_request_error",
       },
     },
-    { status },
+    status,
+  };
+}
+
+export function openAiError(error: unknown) {
+  const payload = openAiErrorPayload(error);
+
+  return NextResponse.json(
+    payload.body,
+    { status: payload.status },
   );
+}
+
+function shouldUseImageJsonKeepAlive(request: Request) {
+  const userAgent = request.headers.get("user-agent")?.toLowerCase() ?? "";
+  return userAgent.includes("kelivo");
+}
+
+export async function openAiImageJsonResponse(
+  request: Request,
+  createPayload: () => Promise<unknown>,
+) {
+  if (!shouldUseImageJsonKeepAlive(request)) {
+    return NextResponse.json(await createPayload());
+  }
+
+  const encoder = new TextEncoder();
+  let isClosed = false;
+  let keepAlive: ReturnType<typeof setInterval> | null = null;
+  const clearKeepAlive = () => {
+    if (keepAlive) {
+      clearInterval(keepAlive);
+      keepAlive = null;
+    }
+  };
+  const stream = new ReadableStream<Uint8Array>({
+    start(controller) {
+      const write = (value: string) => {
+        if (isClosed) return;
+        try {
+          controller.enqueue(encoder.encode(value));
+        } catch {
+          isClosed = true;
+          clearKeepAlive();
+        }
+      };
+      const close = () => {
+        if (isClosed) return;
+        isClosed = true;
+        clearKeepAlive();
+        controller.close();
+      };
+      keepAlive = setInterval(
+        () => write(" \n"),
+        IMAGE_JSON_KEEP_ALIVE_INTERVAL_MS,
+      );
+
+      write(" \n");
+
+      void createPayload()
+        .then((payload) => {
+          write(JSON.stringify(payload));
+        })
+        .catch((error) => {
+          write(JSON.stringify(openAiErrorPayload(error).body));
+        })
+        .finally(() => {
+          close();
+        });
+    },
+    cancel() {
+      isClosed = true;
+      clearKeepAlive();
+    },
+  });
+
+  return new Response(stream, {
+    headers: {
+      "Cache-Control": "no-cache, no-transform",
+      Connection: "keep-alive",
+      "Content-Type": "application/json; charset=utf-8",
+      "X-Accel-Buffering": "no",
+    },
+  });
 }
 
 export function unixSeconds(date = new Date()) {
