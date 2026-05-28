@@ -4,7 +4,6 @@
 
 // 单条生成消息气泡（用户提示 + Narra 结果）。
 import { AlertTriangle, Download, ImagePlus, RotateCcw, Sparkles, X, ZoomIn } from "lucide-react";
-import { motion } from "motion/react";
 
 import { getAspectRatio as getGenerationAspectRatio } from "@/lib/generation/sizes";
 import { getThumbUrl } from "@/lib/image-url";
@@ -35,13 +34,9 @@ export function GenerationBubble({
 }: GenerationBubbleProps) {
   const sourceUrls = getGenerationSourceImageUrls(generation);
   return (
-    <motion.div
-      key={generation.id}
+    <div
       id={`gen-${generation.id}`}
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, ease: "easeOut" }}
-      className="space-y-6"
+      className="generation-bubble space-y-6"
     >
       <div className="flex gap-3 sm:gap-4">
         <div className="flex size-9 shrink-0 items-center justify-center rounded-full border border-[var(--line)] bg-[#efe4d4] text-xs font-semibold text-[#3a281d] shadow-sm sm:size-10 sm:text-sm">
@@ -134,7 +129,7 @@ export function GenerationBubble({
                           alt="生成结果"
                           loading="lazy"
                           decoding="async"
-                          className="size-full object-cover cursor-pointer transition-transform duration-300 hover:scale-[1.02]"
+                          className="size-full cursor-pointer object-cover transition-transform duration-200 ease-out hover:scale-[1.015]"
                           onClick={() => onZoom(image.url)}
                         />
                       </div>
@@ -153,7 +148,7 @@ export function GenerationBubble({
                         <button
                           type="button"
                           onClick={() => onUseForEdit(image.url)}
-                          className="flex items-center gap-1.5 rounded-full border border-[var(--line)] bg-[#f3eadc] px-3 py-1.5 text-xs font-medium text-[var(--ink)] transition hover:border-[var(--accent)] hover:text-[var(--accent)]"
+                          className="relative z-10 inline-flex min-h-9 cursor-pointer touch-manipulation items-center gap-1.5 rounded-full border border-[var(--line)] bg-[#f3eadc] px-3.5 py-1.5 text-xs font-medium text-[var(--ink)] transition-colors duration-150 hover:border-[var(--accent)] hover:bg-[#fff6e8] hover:text-[var(--accent)] active:scale-[0.98] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
                         >
                           <ImagePlus className="size-3.5" />
                           加入编辑
@@ -202,6 +197,6 @@ export function GenerationBubble({
           )}
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }

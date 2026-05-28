@@ -9,7 +9,8 @@ export function PageTransition({ children }: { children: React.ReactNode }) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
+    const frame = requestAnimationFrame(() => setMounted(true));
+    return () => cancelAnimationFrame(frame);
   }, []);
 
   if (pathname.startsWith("/admin")) {
@@ -17,16 +18,29 @@ export function PageTransition({ children }: { children: React.ReactNode }) {
   }
 
   const isCreatePage = pathname === "/create";
+  const shellMotion = isCreatePage
+    ? ({
+        animate: { opacity: 1, y: 0 },
+        exit: { opacity: 0, y: -4 },
+        initial: { opacity: 0, y: 6 },
+        transition: { duration: 0.18, ease: "easeOut" },
+      } as const)
+    : ({
+        animate: { opacity: 1, y: 0 },
+        exit: { opacity: 0, y: -8 },
+        initial: { opacity: 0, y: 10 },
+        transition: { duration: 0.24, ease: "easeOut" },
+      } as const);
 
   return (
     <div className="page-transition-shell">
       <AnimatePresence mode="wait" initial={false}>
         <motion.div
           key={pathname}
-          initial={{ opacity: 0, y: 18, scale: 0.985, filter: "blur(10px) saturate(1.18)" }}
-          animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px) saturate(1)" }}
-          exit={{ opacity: 0, y: -12, scale: 1.01, filter: "blur(8px) saturate(1.28)" }}
-          transition={{ duration: 0.42, ease: [0.2, 0.82, 0.18, 1] }}
+          initial={shellMotion.initial}
+          animate={shellMotion.animate}
+          exit={shellMotion.exit}
+          transition={shellMotion.transition}
           className={
             isCreatePage
               ? "flex h-[100dvh] flex-col overflow-hidden"
@@ -37,14 +51,14 @@ export function PageTransition({ children }: { children: React.ReactNode }) {
         </motion.div>
       </AnimatePresence>
 
-      {mounted && (
+      {mounted && !isCreatePage && (
         <motion.div
           key={`gate-${pathname}`}
           aria-hidden
           className="route-transition-gate"
           initial={{ opacity: 1, clipPath: "inset(0% 0% 0% 0%)" }}
           animate={{ opacity: 0, clipPath: "inset(0% 48% 0% 48%)" }}
-          transition={{ duration: 0.58, ease: [0.76, 0, 0.24, 1] }}
+          transition={{ duration: 0.32, ease: "easeInOut" }}
         >
           <span className="route-transition-gate-line" />
           <span className="route-transition-gate-scan route-transition-gate-scan-left" />

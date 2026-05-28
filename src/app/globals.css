@@ -118,6 +118,11 @@ textarea {
   transform: rotate(-16deg);
 }
 
+.generation-bubble {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 720px;
+}
+
 /* 与 .studio-card 视觉等效，但去掉 backdrop-filter。
    专供首页精选画廊这种"大量并排卡片 + 不透明 <img> 完全遮挡卡背景"
    的场景：blur 在这里 0 视觉收益，却会让浏览器在每帧滚动时给视口里
@@ -826,8 +831,6 @@ textarea {
     rgba(255, 255, 255, 0.08) 0%,
     rgba(255, 255, 255, 0.02) 100%
   );
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
   pointer-events: none;
 }
 

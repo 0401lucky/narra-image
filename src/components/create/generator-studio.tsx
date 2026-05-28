@@ -472,7 +472,9 @@ export function GeneratorStudio({
     setGenerationType("image_to_image");
     setCount(1);
     setPrompt("");
-    textareaRef.current?.focus();
+    requestAnimationFrame(() => {
+      textareaRef.current?.focus({ preventScroll: true });
+    });
   }
 
   function handlePaste(e: React.ClipboardEvent) {
