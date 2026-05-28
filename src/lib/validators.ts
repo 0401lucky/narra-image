@@ -251,3 +251,12 @@ export const externalChatCompletionSchema = z.object({
   size: generationSizeSchema.optional(),
   stream: z.boolean().optional(),
 });
+
+export const externalResponsesSchema = z.object({
+  input: z.unknown(),
+  model: z.string().trim().min(1).max(100).optional(),
+  previous_response_id: z.string().trim().optional().nullable(),
+  stream: z.boolean().optional(),
+  tool_choice: z.unknown().optional(),
+  tools: z.unknown().optional(),
+});

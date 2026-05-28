@@ -9,6 +9,7 @@ import {
 } from "@/lib/generation/image-dimensions";
 import { persistGeneratedImage } from "@/lib/storage/persist-generated-image";
 import { getBuiltInProviderConfig } from "@/lib/providers/built-in-provider";
+import { supportsResponsesImageGeneration } from "@/lib/providers/model-catalog";
 import { resolveGenerationProvider } from "@/lib/providers/resolve-provider";
 import type {
   GenerationModeration,
@@ -60,6 +61,25 @@ type GenerateImagesInput = {
   userId: string;
 };
 
+type RawGeneratedImageItem = {
+  actualHeight?: unknown;
+  actualWidth?: unknown;
+  actual_height?: unknown;
+  actual_width?: unknown;
+  b64_json?: string | null;
+  height?: unknown;
+  size?: unknown;
+  url?: string | null;
+  width?: unknown;
+};
+
+type ResponsesImageGenerationOutput = {
+  output?: Array<{
+    result?: string | null;
+    type?: string;
+  }>;
+};
+
 export async function generateImages(input: GenerateImagesInput) {
   const builtInConfig = input.builtInProvider ?? await getBuiltInProviderConfig();
   const provider = resolveGenerationProvider({
@@ -104,8 +124,18 @@ export async function generateImages(input: GenerateImagesInput) {
       : {}),
     ...(input.quality && input.quality !== "auto" ? { quality: input.quality } : {}),
   } as const;
+  const model = input.model || provider.model;
 
-  const result = input.generationType === "image_to_image"
+  const result = supportsResponsesImageGeneration(model)
+    ? await generateWithResponsesImageTool({
+        client,
+        compatibleSize,
+        input,
+        model,
+        outputOptions,
+        sourceImages,
+      })
+    : input.generationType === "image_to_image"
     ? await client.images.edit({
         image: await Promise.all(
           sourceImages.map((sourceImage, index) =>
@@ -118,7 +148,7 @@ export async function generateImages(input: GenerateImagesInput) {
             ),
           ),
         ),
-        model: input.model || provider.model,
+        model,
         n: 1,
         ...outputOptions,
         prompt: input.prompt,
@@ -128,7 +158,7 @@ export async function generateImages(input: GenerateImagesInput) {
         ...(input.moderation && input.moderation !== "auto"
           ? { moderation: input.moderation }
           : {}),
-        model: input.model || provider.model,
+        model,
         n: input.count,
         ...outputOptions,
         prompt: input.prompt,
@@ -143,7 +173,7 @@ export async function generateImages(input: GenerateImagesInput) {
           : {}),
       });
 
-  const items = result.data ?? [];
+  const items = ((result as { data?: RawGeneratedImageItem[] }).data ?? []);
 
   if (items.length === 0) {
     throw new Error("渠道没有返回图片结果");
@@ -176,6 +206,80 @@ export async function generateImages(input: GenerateImagesInput) {
       throw new Error("返回结果里没有可用图片");
     }),
   );
+}
+
+async function generateWithResponsesImageTool(input: {
+  client: OpenAI;
+  compatibleSize: string;
+  input: GenerateImagesInput;
+  model: string;
+  outputOptions: Record<string, unknown>;
+  sourceImages: Array<{
+    data: Buffer;
+    fileName: string;
+    mimeType: string;
+  }>;
+}) {
+  const count = input.input.generationType === "image_to_image" ? 1 : input.input.count;
+  const responses = await Promise.all(
+    Array.from({ length: count }, async (): Promise<ResponsesImageGenerationOutput> =>
+      await input.client.responses.create({
+        input: buildResponsesInput(input.input.prompt, input.sourceImages),
+        model: input.model,
+        stream: false,
+        tools: [
+          {
+            action: input.sourceImages.length > 0 ? "edit" : "generate",
+            ...(input.input.moderation && input.input.moderation !== "auto"
+              ? { moderation: input.input.moderation }
+              : {}),
+            ...input.outputOptions,
+            size: input.compatibleSize,
+            type: "image_generation",
+          },
+        ],
+      } as Parameters<OpenAI["responses"]["create"]>[0]) as ResponsesImageGenerationOutput,
+    ),
+  );
+
+  return {
+    data: responses.flatMap((response) =>
+      (response.output ?? [])
+        .filter((output) => output.type === "image_generation_call")
+        .map((output) => ({
+          b64_json: output.result,
+        }))
+        .filter((item): item is { b64_json: string } => Boolean(item.b64_json)),
+    ),
+  };
+}
+
+function buildResponsesInput(
+  prompt: string,
+  sourceImages: Array<{
+    data: Buffer;
+    mimeType: string;
+  }>,
+) {
+  if (sourceImages.length === 0) {
+    return prompt;
+  }
+
+  return [
+    {
+      content: [
+        {
+          text: prompt,
+          type: "input_text",
+        },
+        ...sourceImages.map((sourceImage) => ({
+          image_url: `data:${sourceImage.mimeType || "image/png"};base64,${sourceImage.data.toString("base64")}`,
+          type: "input_image",
+        })),
+      ],
+      role: "user",
+    },
+  ];
 }
 
 function toRecord(

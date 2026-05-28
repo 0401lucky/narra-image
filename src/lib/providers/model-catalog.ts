@@ -15,9 +15,15 @@ const IMAGE_HINTS = [
 
 const PRIORITY_HINTS = ["image", "imagen", "dall-e", "grok"];
 
+export function supportsResponsesImageGeneration(modelId: string) {
+  const id = modelId.toLowerCase();
+  return /^gpt-5(?:[.\-_]|$)/.test(id);
+}
+
 export function looksLikeImageModel(modelId: string) {
   const id = modelId.toLowerCase();
-  return IMAGE_HINTS.some((hint) => id.includes(hint));
+  return supportsResponsesImageGeneration(id) ||
+    IMAGE_HINTS.some((hint) => id.includes(hint));
 }
 
 function getPriorityScore(modelId: string) {

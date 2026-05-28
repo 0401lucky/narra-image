@@ -4,11 +4,13 @@ const {
   editMock,
   generateMock,
   persistGeneratedImageMock,
+  responsesCreateMock,
   toFileMock,
 } = vi.hoisted(() => ({
   editMock: vi.fn(),
   generateMock: vi.fn(),
   persistGeneratedImageMock: vi.fn(async ({ url }: { url?: string }) => url ?? "persisted-image"),
+  responsesCreateMock: vi.fn(),
   toFileMock: vi.fn(async () => "mock-file"),
 }));
 
@@ -18,6 +20,9 @@ vi.mock("openai", () => ({
     images = {
       edit: editMock,
       generate: generateMock,
+    };
+    responses = {
+      create: responsesCreateMock,
     };
   },
   toFile: toFileMock,
@@ -45,6 +50,7 @@ describe("generateImages 的图片参数透传", () => {
   beforeEach(() => {
     generateMock.mockReset();
     editMock.mockReset();
+    responsesCreateMock.mockReset();
     toFileMock.mockClear();
     persistGeneratedImageMock.mockClear();
   });
@@ -265,5 +271,63 @@ describe("generateImages 的图片参数透传", () => {
     } finally {
       fetchSpy.mockRestore();
     }
+  });
+
+  it("gpt-5 系列主线模型通过 Responses image_generation 工具生图", async () => {
+    const png = Buffer.concat([
+      Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]),
+      Buffer.from([0x00, 0x00, 0x00, 0x0d]),
+      Buffer.from("IHDR"),
+      (() => {
+        const data = Buffer.alloc(13);
+        data.writeUInt32BE(1024, 0);
+        data.writeUInt32BE(1024, 4);
+        data.writeUInt8(8, 8);
+        return data;
+      })(),
+      Buffer.alloc(4),
+    ]);
+    responsesCreateMock.mockResolvedValue({
+      output: [
+        {
+          result: png.toString("base64"),
+          type: "image_generation_call",
+        },
+      ],
+    });
+
+    const records = await generateImages({
+      count: 2,
+      customProvider: null,
+      generationType: "text_to_image",
+      model: "gpt-5.5",
+      outputCompression: 80,
+      outputFormat: "webp",
+      prompt: "日漫风格晴天街景",
+      providerMode: "built_in",
+      quality: "high",
+      size: "1024x1024",
+      userId: "user-1",
+    });
+
+    expect(generateMock).not.toHaveBeenCalled();
+    expect(responsesCreateMock).toHaveBeenCalledTimes(2);
+    expect(responsesCreateMock).toHaveBeenCalledWith({
+      input: "日漫风格晴天街景",
+      model: "gpt-5.5",
+      stream: false,
+      tools: [
+        {
+          action: "generate",
+          output_compression: 80,
+          output_format: "webp",
+          quality: "high",
+          size: "1024x1024",
+          type: "image_generation",
+        },
+      ],
+    });
+    expect(records).toHaveLength(2);
+    expect(records[0]?.actualSize).toBe("1024x1024");
   });
 });

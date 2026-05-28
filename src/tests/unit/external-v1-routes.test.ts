@@ -43,8 +43,10 @@ import { GET as generationGet } from "@/app/v1/generations/[id]/route";
 import { POST as imageEditPost } from "@/app/v1/images/edits/route";
 import { POST as imagePost } from "@/app/v1/images/generations/route";
 import { GET as modelsGet } from "@/app/v1/models/route";
+import { POST as responsesPost } from "@/app/v1/responses/route";
 import { GET as rootModelsGet } from "@/app/models/route";
 import { POST as rootImagePost } from "@/app/images/generations/route";
+import { POST as rootResponsesPost } from "@/app/responses/route";
 
 const auth = {
   apiKey: {
@@ -438,6 +440,70 @@ describe("OpenAI 兼容外部 API", () => {
         }),
       }),
     );
+  });
+
+  it("/v1/responses 支持 OpenAI image_generation 工具生图", async () => {
+    const response = await responsesPost(
+      jsonRequest("/v1/responses", {
+        input: "创建一个风和日丽的日漫街景",
+        model: "gpt-5.5",
+        tools: [
+          {
+            output_format: "jpeg",
+            quality: "high",
+            size: "1024x1024",
+            type: "image_generation",
+          },
+        ],
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    const json = await response.json();
+    expect(json).toMatchObject({
+      created_at: 1777982400,
+      id: "resp_job_1",
+      model: "gpt-5.5",
+      object: "response",
+      output_text: "",
+      status: "completed",
+    });
+    expect(json.output).toEqual([
+      {
+        id: "ig_job_1_1",
+        result: imageBytes.toString("base64"),
+        status: "completed",
+        type: "image_generation_call",
+      },
+    ]);
+    expect(mockRunExternalGeneration).toHaveBeenCalledWith(
+      expect.objectContaining({
+        input: expect.objectContaining({
+          generationType: "text_to_image",
+          model: "gpt-5.5",
+          outputCompression: 100,
+          outputFormat: "jpeg",
+          prompt: "创建一个风和日丽的日漫街景",
+          quality: "high",
+          size: "1024x1024",
+        }),
+      }),
+    );
+  });
+
+  it("根路径 /responses 兼容未填写 /v1 的客户端", async () => {
+    const response = await rootResponsesPost(
+      jsonRequest("/responses", {
+        input: "根路径 responses 生图",
+        model: "gpt-5.4",
+        tools: [{ type: "image_generation" }],
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    const json = await response.json();
+    expect(json.model).toBe("gpt-5.4");
+    expect(json.output[0].type).toBe("image_generation_call");
   });
 
   it("/v1/models 返回内置渠道模型列表", async () => {
