@@ -231,25 +231,10 @@ async function generateWithResponsesImageTool(input: {
   }>;
 }) {
   const count = input.input.generationType === "image_to_image" ? 1 : input.input.count;
+  const request = buildResponsesImageToolRequest(input);
   const responses = await Promise.all(
     Array.from({ length: count }, async (): Promise<ResponsesImageGenerationOutput> =>
-      await collectResponsesImageGenerationStream(await input.client.responses.create({
-        input: buildResponsesInput(input.input.prompt, input.sourceImages),
-        model: input.model,
-        stream: true,
-        tool_choice: { type: "image_generation" },
-        tools: [
-          {
-            action: input.sourceImages.length > 0 ? "edit" : "generate",
-            ...(input.input.moderation && input.input.moderation !== "auto"
-              ? { moderation: input.input.moderation }
-              : {}),
-            ...input.outputOptions,
-            size: input.compatibleSize,
-            type: "image_generation",
-          },
-        ],
-      } as Parameters<OpenAI["responses"]["create"]>[0])),
+      await createResponsesImageGeneration(input.client, request),
     ),
   );
 
@@ -263,6 +248,60 @@ async function generateWithResponsesImageTool(input: {
         .filter((item): item is { b64_json: string } => Boolean(item.b64_json)),
     ),
   };
+}
+
+function buildResponsesImageToolRequest(input: {
+  compatibleSize: string;
+  input: GenerateImagesInput;
+  model: string;
+  outputOptions: Record<string, unknown>;
+  sourceImages: Array<{
+    data: Buffer;
+    fileName: string;
+    mimeType: string;
+  }>;
+}) {
+  const tool = {
+    ...(input.input.moderation && input.input.moderation !== "auto"
+      ? { moderation: input.input.moderation }
+      : {}),
+    ...input.outputOptions,
+    ...(input.compatibleSize !== "auto" ? { size: input.compatibleSize } : {}),
+    type: "image_generation",
+  };
+
+  return {
+    input: buildResponsesInput(input.input.prompt, input.sourceImages),
+    model: input.model,
+    tools: [tool],
+  } as Parameters<OpenAI["responses"]["create"]>[0];
+}
+
+async function createResponsesImageGeneration(
+  client: OpenAI,
+  request: Parameters<OpenAI["responses"]["create"]>[0],
+) {
+  try {
+    return await collectResponsesImageGenerationStream(
+      await client.responses.create(request),
+    );
+  } catch (error) {
+    if (!isMustStreamRequestError(error)) {
+      throw error;
+    }
+
+    return await collectResponsesImageGenerationStream(
+      await client.responses.create({
+        ...request,
+        stream: true,
+      } as Parameters<OpenAI["responses"]["create"]>[0]),
+    );
+  }
+}
+
+function isMustStreamRequestError(error: unknown) {
+  const message = error instanceof Error ? error.message : String(error);
+  return /must be stream request/i.test(message);
 }
 
 async function collectResponsesImageGenerationStream(

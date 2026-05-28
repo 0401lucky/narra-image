@@ -33,6 +33,7 @@ describe("模型列表整理", () => {
     expect(supportsResponsesImageGeneration("gpt-5.5")).toBe(true);
     expect(supportsResponsesImageGeneration("gpt-5.4")).toBe(true);
     expect(supportsResponsesImageGeneration("gpt-5")).toBe(true);
+    expect(supportsResponsesImageGeneration("openai/gpt-5.4")).toBe(true);
     expect(supportsResponsesImageGeneration("gpt-image-2")).toBe(false);
     expect(supportsResponsesImageGeneration("gpt-4.1-mini")).toBe(false);
   });

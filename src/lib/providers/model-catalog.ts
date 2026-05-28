@@ -17,7 +17,7 @@ const PRIORITY_HINTS = ["image", "imagen", "dall-e", "grok"];
 
 export function supportsResponsesImageGeneration(modelId: string) {
   const id = modelId.toLowerCase();
-  return /^gpt-5(?:[.\-_]|$)/.test(id);
+  return /(?:^|\/)gpt-5(?:[.\-_]|$)/.test(id);
 }
 
 export function looksLikeImageModel(modelId: string) {

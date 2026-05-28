@@ -305,14 +305,14 @@ describe("generateImages 的图片参数透传", () => {
       })(),
       Buffer.alloc(4),
     ]);
-    responsesCreateMock.mockImplementation(() =>
-      responseStream([
+    responsesCreateMock.mockResolvedValue({
+      output: [
         {
           result: png.toString("base64"),
           type: "image_generation_call",
         },
-      ]),
-    );
+      ],
+    });
 
     const records = await generateImages({
       count: 2,
@@ -333,11 +333,8 @@ describe("generateImages 的图片参数透传", () => {
     expect(responsesCreateMock).toHaveBeenCalledWith({
       input: "日漫风格晴天街景",
       model: "gpt-5.5",
-      stream: true,
-      tool_choice: { type: "image_generation" },
       tools: [
         {
-          action: "generate",
           output_compression: 80,
           output_format: "webp",
           quality: "high",
@@ -348,5 +345,106 @@ describe("generateImages 的图片参数透传", () => {
     });
     expect(records).toHaveLength(2);
     expect(records[0]?.actualSize).toBe("1024x1024");
+  });
+
+  it("Responses 非流式被渠道拒绝时自动用流式请求重试", async () => {
+    const png = Buffer.concat([
+      Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]),
+      Buffer.from([0x00, 0x00, 0x00, 0x0d]),
+      Buffer.from("IHDR"),
+      (() => {
+        const data = Buffer.alloc(13);
+        data.writeUInt32BE(512, 0);
+        data.writeUInt32BE(512, 4);
+        data.writeUInt8(8, 8);
+        return data;
+      })(),
+      Buffer.alloc(4),
+    ]);
+    responsesCreateMock
+      .mockRejectedValueOnce(new Error("400 must be stream request"))
+      .mockImplementationOnce(() =>
+        responseStream([
+          {
+            result: png.toString("base64"),
+            type: "image_generation_call",
+          },
+        ]),
+      );
+
+    const records = await generateImages({
+      count: 1,
+      customProvider: null,
+      generationType: "text_to_image",
+      model: "gpt-5.4",
+      prompt: "风和日丽的日漫场景",
+      providerMode: "built_in",
+      size: "1024x1024",
+      userId: "user-1",
+    });
+
+    expect(responsesCreateMock).toHaveBeenNthCalledWith(1, {
+      input: "风和日丽的日漫场景",
+      model: "gpt-5.4",
+      tools: [
+        {
+          size: "1024x1024",
+          type: "image_generation",
+        },
+      ],
+    });
+    expect(responsesCreateMock).toHaveBeenNthCalledWith(2, {
+      input: "风和日丽的日漫场景",
+      model: "gpt-5.4",
+      stream: true,
+      tools: [
+        {
+          size: "1024x1024",
+          type: "image_generation",
+        },
+      ],
+    });
+    expect(records[0]?.actualSize).toBe("512x512");
+  });
+
+  it("Responses 默认参数保持和官方最小示例一致", async () => {
+    const png = Buffer.concat([
+      Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]),
+      Buffer.from([0x00, 0x00, 0x00, 0x0d]),
+      Buffer.from("IHDR"),
+      (() => {
+        const data = Buffer.alloc(13);
+        data.writeUInt32BE(1024, 0);
+        data.writeUInt32BE(1024, 4);
+        data.writeUInt8(8, 8);
+        return data;
+      })(),
+      Buffer.alloc(4),
+    ]);
+    responsesCreateMock.mockResolvedValue({
+      output: [
+        {
+          result: png.toString("base64"),
+          type: "image_generation_call",
+        },
+      ],
+    });
+
+    await generateImages({
+      count: 1,
+      customProvider: null,
+      generationType: "text_to_image",
+      model: "gpt-5.4",
+      prompt: "创建一个风和日丽的场景",
+      providerMode: "built_in",
+      size: "auto",
+      userId: "user-1",
+    });
+
+    expect(responsesCreateMock).toHaveBeenCalledWith({
+      input: "创建一个风和日丽的场景",
+      model: "gpt-5.4",
+      tools: [{ type: "image_generation" }],
+    });
   });
 });
