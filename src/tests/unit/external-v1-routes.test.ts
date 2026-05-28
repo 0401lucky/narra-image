@@ -491,6 +491,39 @@ describe("OpenAI 兼容外部 API", () => {
     );
   });
 
+  it("/v1/responses 兼容 stream=true 的 Responses 生图客户端", async () => {
+    const response = await responsesPost(
+      jsonRequest("/v1/responses", {
+        input: [
+          {
+            content: "请生成以下描述的图片：流式测试图",
+            role: "user",
+          },
+        ],
+        model: "gpt-5.4",
+        stream: true,
+        tools: [{ output_format: "png", type: "image_generation" }],
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    expect(response.headers.get("content-type")).toContain("text/event-stream");
+    const text = await response.text();
+    expect(text).toContain("event: response.output_item.done");
+    expect(text).toContain("event: response.completed");
+    expect(text).toContain(imageBytes.toString("base64"));
+    expect(text).toContain("data: [DONE]");
+    expect(mockRunExternalGeneration).toHaveBeenCalledWith(
+      expect.objectContaining({
+        input: expect.objectContaining({
+          model: "gpt-5.4",
+          outputFormat: "png",
+          prompt: "请生成以下描述的图片：流式测试图",
+        }),
+      }),
+    );
+  });
+
   it("根路径 /responses 兼容未填写 /v1 的客户端", async () => {
     const response = await rootResponsesPost(
       jsonRequest("/responses", {

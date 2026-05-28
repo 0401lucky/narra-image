@@ -190,10 +190,6 @@ async function downloadResponsesImage(url: string, index: number) {
 export async function parseResponsesGenerationInput(
   body: ExternalResponsesBody,
 ): Promise<ResponsesGenerationInput> {
-  if (body.stream) {
-    throw new Error("responses 生图暂不支持 stream=true，请使用非流式请求");
-  }
-
   if (body.previous_response_id) {
     throw new Error("responses 生图暂不支持 previous_response_id，请通过 input_image 传入参考图");
   }

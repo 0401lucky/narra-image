@@ -41,7 +41,9 @@ vi.mock("@/lib/providers/built-in-provider", () => ({
 }));
 
 vi.mock("@/lib/providers/resolve-provider", () => ({
-  resolveGenerationProvider: vi.fn(({ builtIn }) => builtIn),
+  resolveGenerationProvider: vi.fn(({ builtIn, custom, providerMode }) =>
+    providerMode === "custom" && custom ? custom : builtIn,
+  ),
 }));
 
 import { generateImages } from "@/lib/providers/generate-images";
@@ -405,6 +407,78 @@ describe("generateImages 的图片参数透传", () => {
       ],
     });
     expect(records[0]?.actualSize).toBe("512x512");
+  });
+
+  it("anyrouter 的 Responses 生图按 Codex 流式兼容形态请求", async () => {
+    const png = Buffer.concat([
+      Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]),
+      Buffer.from([0x00, 0x00, 0x00, 0x0d]),
+      Buffer.from("IHDR"),
+      (() => {
+        const data = Buffer.alloc(13);
+        data.writeUInt32BE(768, 0);
+        data.writeUInt32BE(768, 4);
+        data.writeUInt8(8, 8);
+        return data;
+      })(),
+      Buffer.alloc(4),
+    ]);
+    responsesCreateMock.mockImplementationOnce(() =>
+      responseStream([
+        {
+          result: png.toString("base64"),
+          type: "image_generation_call",
+        },
+      ]),
+    );
+
+    const records = await generateImages({
+      count: 1,
+      customProvider: {
+        apiKey: "anyrouter-key",
+        baseUrl: "https://anyrouter.top/v1",
+        model: "gpt-5.4",
+      },
+      generationType: "text_to_image",
+      model: "gpt-5.4",
+      prompt: "风和日丽的日漫场景",
+      providerMode: "custom",
+      size: "1024x1024",
+      userId: "user-1",
+    });
+
+    const [request, options] = responsesCreateMock.mock.calls[0] ?? [];
+    expect(request).toMatchObject({
+      input: [
+        {
+          content: expect.stringContaining("必须调用 image_generation 工具"),
+          role: "system",
+        },
+        {
+          content: "请生成以下描述的图片：风和日丽的日漫场景",
+          role: "user",
+        },
+      ],
+      model: "gpt-5.4",
+      stream: true,
+      tools: [
+        {
+          output_format: "png",
+          size: "1024x1024",
+          type: "image_generation",
+        },
+      ],
+    });
+    expect(options).toMatchObject({
+      headers: {
+        accept: "text/event-stream",
+        "chatgpt-account-id": "",
+        originator: "codex_cli_rs",
+        version: "0.122.0",
+      },
+    });
+    expect(options?.headers?.session_id).toMatch(/^narra-image-/);
+    expect(records[0]?.actualSize).toBe("768x768");
   });
 
   it("Responses 默认参数保持和官方最小示例一致", async () => {

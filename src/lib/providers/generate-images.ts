@@ -90,6 +90,9 @@ type ResponsesStreamEvent = {
   type?: string;
 };
 
+type ResponsesCreateRequest = Parameters<OpenAI["responses"]["create"]>[0];
+type ResponsesCreateOptions = NonNullable<Parameters<OpenAI["responses"]["create"]>[1]>;
+
 export async function generateImages(input: GenerateImagesInput) {
   const builtInConfig = input.builtInProvider ?? await getBuiltInProviderConfig();
   const provider = resolveGenerationProvider({
@@ -143,6 +146,7 @@ export async function generateImages(input: GenerateImagesInput) {
         input,
         model,
         outputOptions,
+        providerBaseUrl: provider.baseUrl,
         sourceImages,
       })
     : input.generationType === "image_to_image"
@@ -224,6 +228,7 @@ async function generateWithResponsesImageTool(input: {
   input: GenerateImagesInput;
   model: string;
   outputOptions: Record<string, unknown>;
+  providerBaseUrl: string;
   sourceImages: Array<{
     data: Buffer;
     fileName: string;
@@ -231,10 +236,11 @@ async function generateWithResponsesImageTool(input: {
   }>;
 }) {
   const count = input.input.generationType === "image_to_image" ? 1 : input.input.count;
+  const requestOptions = buildResponsesCreateOptions(input.providerBaseUrl);
   const request = buildResponsesImageToolRequest(input);
   const responses = await Promise.all(
     Array.from({ length: count }, async (): Promise<ResponsesImageGenerationOutput> =>
-      await createResponsesImageGeneration(input.client, request),
+      await createResponsesImageGeneration(input.client, request, requestOptions),
     ),
   );
 
@@ -255,35 +261,46 @@ function buildResponsesImageToolRequest(input: {
   input: GenerateImagesInput;
   model: string;
   outputOptions: Record<string, unknown>;
+  providerBaseUrl: string;
   sourceImages: Array<{
     data: Buffer;
     fileName: string;
     mimeType: string;
   }>;
 }) {
+  const useAnyrouterCompat = shouldUseAnyrouterResponsesCompat(input.providerBaseUrl);
   const tool = {
     ...(input.input.moderation && input.input.moderation !== "auto"
       ? { moderation: input.input.moderation }
       : {}),
     ...input.outputOptions,
+    ...(useAnyrouterCompat
+      ? { output_format: input.input.outputFormat ?? "png" }
+      : {}),
     ...(input.compatibleSize !== "auto" ? { size: input.compatibleSize } : {}),
     type: "image_generation",
   };
 
   return {
-    input: buildResponsesInput(input.input.prompt, input.sourceImages),
+    input: buildResponsesInput(
+      input.input.prompt,
+      input.sourceImages,
+      useAnyrouterCompat,
+    ),
     model: input.model,
+    ...(useAnyrouterCompat ? { stream: true } : {}),
     tools: [tool],
-  } as Parameters<OpenAI["responses"]["create"]>[0];
+  } as ResponsesCreateRequest;
 }
 
 async function createResponsesImageGeneration(
   client: OpenAI,
-  request: Parameters<OpenAI["responses"]["create"]>[0],
+  request: ResponsesCreateRequest,
+  options?: ResponsesCreateOptions,
 ) {
   try {
     return await collectResponsesImageGenerationStream(
-      await client.responses.create(request),
+      await createResponses(client, request, options),
     );
   } catch (error) {
     if (!isMustStreamRequestError(error)) {
@@ -291,12 +308,22 @@ async function createResponsesImageGeneration(
     }
 
     return await collectResponsesImageGenerationStream(
-      await client.responses.create({
+      await createResponses(client, {
         ...request,
         stream: true,
-      } as Parameters<OpenAI["responses"]["create"]>[0]),
+      } as ResponsesCreateRequest, options),
     );
   }
+}
+
+function createResponses(
+  client: OpenAI,
+  request: ResponsesCreateRequest,
+  options?: ResponsesCreateOptions,
+) {
+  return options
+    ? client.responses.create(request, options)
+    : client.responses.create(request);
 }
 
 function isMustStreamRequestError(error: unknown) {
@@ -313,6 +340,15 @@ async function collectResponsesImageGenerationStream(
 
   const streamedOutput: NonNullable<ResponsesImageGenerationOutput["output"]> = [];
   let completedResponse: ResponsesImageGenerationOutput | null = null;
+  const seenResults = new Set<string>();
+
+  const pushStreamedItems = (items: ResponsesImageGenerationItem[]) => {
+    for (const item of items) {
+      if (!item.result || seenResults.has(item.result)) continue;
+      seenResults.add(item.result);
+      streamedOutput.push(item);
+    }
+  };
 
   for await (const event of payload) {
     if (!isRecord(event)) continue;
@@ -324,8 +360,10 @@ async function collectResponsesImageGenerationStream(
     }
 
     if (streamEvent.type === "response.output_item.done" && isRecord(streamEvent.item)) {
-      streamedOutput.push(streamEvent.item);
+      pushStreamedItems([streamEvent.item]);
     }
+
+    pushStreamedItems(collectResponsesImageItems(event));
   }
 
   const completedOutput = completedResponse?.output ?? [];
@@ -350,7 +388,39 @@ function buildResponsesInput(
     data: Buffer;
     mimeType: string;
   }>,
+  useAnyrouterCompat: boolean,
 ) {
+  if (useAnyrouterCompat) {
+    if (sourceImages.length === 0) {
+      return [
+        {
+          content: "你是一个图片生成助手。用户要求你生成图片时，你必须调用 image_generation 工具来生成图片，不要用文字描述图片内容。直接生成图片，不要多说任何话。",
+          role: "system",
+        },
+        {
+          content: `请生成以下描述的图片：${prompt}`,
+          role: "user",
+        },
+      ];
+    }
+
+    return [
+      {
+        content: [
+          ...sourceImages.map((sourceImage) => ({
+            image_url: `data:${sourceImage.mimeType || "image/png"};base64,${sourceImage.data.toString("base64")}`,
+            type: "input_image",
+          })),
+          {
+            text: `请根据以下要求，对我提供的参考图片进行编辑修改，直接生成修改后的新图片。要求：${prompt}`,
+            type: "input_text",
+          },
+        ],
+        role: "user",
+      },
+    ];
+  }
+
   if (sourceImages.length === 0) {
     return prompt;
   }
@@ -370,6 +440,68 @@ function buildResponsesInput(
       role: "user",
     },
   ];
+}
+
+function buildResponsesCreateOptions(baseUrl: string): ResponsesCreateOptions | undefined {
+  if (!shouldUseAnyrouterResponsesCompat(baseUrl)) return undefined;
+
+  return {
+    headers: {
+      "chatgpt-account-id": "",
+      "originator": "codex_cli_rs",
+      "session_id": `narra-image-${Date.now()}`,
+      "version": "0.122.0",
+      "accept": "text/event-stream",
+    },
+  };
+}
+
+function shouldUseAnyrouterResponsesCompat(baseUrl: string) {
+  try {
+    const hostname = new URL(baseUrl).hostname.toLowerCase();
+    return hostname === "anyrouter.top" || hostname.endsWith(".anyrouter.top");
+  } catch {
+    return baseUrl.toLowerCase().includes("anyrouter");
+  }
+}
+
+function collectResponsesImageItems(value: unknown): ResponsesImageGenerationItem[] {
+  const items: ResponsesImageGenerationItem[] = [];
+  const seenObjects = new Set<object>();
+
+  const visit = (current: unknown) => {
+    if (!current) return;
+    if (Array.isArray(current)) {
+      current.forEach(visit);
+      return;
+    }
+    if (!isRecord(current)) return;
+    if (seenObjects.has(current)) return;
+    seenObjects.add(current);
+
+    const result = current.result;
+    if (typeof result === "string" && looksLikeImageBase64Result(result)) {
+      items.push({
+        id: typeof current.id === "string" ? current.id : undefined,
+        result,
+        status: typeof current.status === "string" ? current.status : undefined,
+        type: "image_generation_call",
+      });
+    }
+
+    Object.values(current).forEach(visit);
+  };
+
+  visit(value);
+  return items;
+}
+
+function looksLikeImageBase64Result(value: string) {
+  return value.length > 1000 ||
+    value.startsWith("iVBOR") ||
+    value.startsWith("/9j/") ||
+    value.startsWith("UklGR") ||
+    value.startsWith("R0lG");
 }
 
 function toRecord(
