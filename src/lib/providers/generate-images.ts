@@ -73,11 +73,21 @@ type RawGeneratedImageItem = {
   width?: unknown;
 };
 
+type ResponsesImageGenerationItem = {
+  id?: string;
+  result?: string | null;
+  status?: string;
+  type?: string;
+};
+
 type ResponsesImageGenerationOutput = {
-  output?: Array<{
-    result?: string | null;
-    type?: string;
-  }>;
+  output?: ResponsesImageGenerationItem[];
+};
+
+type ResponsesStreamEvent = {
+  item?: ResponsesImageGenerationItem;
+  response?: ResponsesImageGenerationOutput;
+  type?: string;
 };
 
 export async function generateImages(input: GenerateImagesInput) {
@@ -223,10 +233,11 @@ async function generateWithResponsesImageTool(input: {
   const count = input.input.generationType === "image_to_image" ? 1 : input.input.count;
   const responses = await Promise.all(
     Array.from({ length: count }, async (): Promise<ResponsesImageGenerationOutput> =>
-      await input.client.responses.create({
+      await collectResponsesImageGenerationStream(await input.client.responses.create({
         input: buildResponsesInput(input.input.prompt, input.sourceImages),
         model: input.model,
-        stream: false,
+        stream: true,
+        tool_choice: { type: "image_generation" },
         tools: [
           {
             action: input.sourceImages.length > 0 ? "edit" : "generate",
@@ -238,7 +249,7 @@ async function generateWithResponsesImageTool(input: {
             type: "image_generation",
           },
         ],
-      } as Parameters<OpenAI["responses"]["create"]>[0]) as ResponsesImageGenerationOutput,
+      } as Parameters<OpenAI["responses"]["create"]>[0])),
     ),
   );
 
@@ -252,6 +263,46 @@ async function generateWithResponsesImageTool(input: {
         .filter((item): item is { b64_json: string } => Boolean(item.b64_json)),
     ),
   };
+}
+
+async function collectResponsesImageGenerationStream(
+  payload: unknown,
+): Promise<ResponsesImageGenerationOutput> {
+  if (!isAsyncIterable(payload)) {
+    return payload as ResponsesImageGenerationOutput;
+  }
+
+  const streamedOutput: NonNullable<ResponsesImageGenerationOutput["output"]> = [];
+  let completedResponse: ResponsesImageGenerationOutput | null = null;
+
+  for await (const event of payload) {
+    if (!isRecord(event)) continue;
+    const streamEvent = event as ResponsesStreamEvent;
+
+    if (streamEvent.type === "response.completed" && isRecord(streamEvent.response)) {
+      completedResponse = streamEvent.response as ResponsesImageGenerationOutput;
+      continue;
+    }
+
+    if (streamEvent.type === "response.output_item.done" && isRecord(streamEvent.item)) {
+      streamedOutput.push(streamEvent.item);
+    }
+  }
+
+  const completedOutput = completedResponse?.output ?? [];
+  return {
+    output: completedOutput.length > 0 ? completedOutput : streamedOutput,
+  };
+}
+
+function isAsyncIterable(value: unknown): value is AsyncIterable<unknown> {
+  return Boolean(value) &&
+    typeof value === "object" &&
+    typeof (value as { [Symbol.asyncIterator]?: unknown })[Symbol.asyncIterator] === "function";
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return Boolean(value) && typeof value === "object" && !Array.isArray(value);
 }
 
 function buildResponsesInput(

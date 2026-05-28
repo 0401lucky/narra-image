@@ -46,6 +46,24 @@ vi.mock("@/lib/providers/resolve-provider", () => ({
 
 import { generateImages } from "@/lib/providers/generate-images";
 
+function responseStream(output: Array<{ result: string; type: string }>) {
+  return (async function* () {
+    for (const [index, item] of output.entries()) {
+      yield {
+        item,
+        output_index: index,
+        sequence_number: index + 1,
+        type: "response.output_item.done",
+      };
+    }
+    yield {
+      response: { output },
+      sequence_number: output.length + 1,
+      type: "response.completed",
+    };
+  })();
+}
+
 describe("generateImages 的图片参数透传", () => {
   beforeEach(() => {
     generateMock.mockReset();
@@ -287,14 +305,14 @@ describe("generateImages 的图片参数透传", () => {
       })(),
       Buffer.alloc(4),
     ]);
-    responsesCreateMock.mockResolvedValue({
-      output: [
+    responsesCreateMock.mockImplementation(() =>
+      responseStream([
         {
           result: png.toString("base64"),
           type: "image_generation_call",
         },
-      ],
-    });
+      ]),
+    );
 
     const records = await generateImages({
       count: 2,
@@ -315,7 +333,8 @@ describe("generateImages 的图片参数透传", () => {
     expect(responsesCreateMock).toHaveBeenCalledWith({
       input: "日漫风格晴天街景",
       model: "gpt-5.5",
-      stream: false,
+      stream: true,
+      tool_choice: { type: "image_generation" },
       tools: [
         {
           action: "generate",
