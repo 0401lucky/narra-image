@@ -89,10 +89,20 @@ export async function failStalePendingGenerationJobs({
   const cutoff = new Date(now.getTime() - olderThanMs);
   const staleJobs = await db.generationJob.findMany({
     where: {
-      createdAt: {
-        lt: cutoff,
-      },
-      status: GenerationStatus.PENDING,
+      OR: [
+        {
+          createdAt: {
+            lt: cutoff,
+          },
+          status: GenerationStatus.PENDING,
+        },
+        {
+          lockedAt: {
+            lt: cutoff,
+          },
+          status: GenerationStatus.PROCESSING,
+        },
+      ],
       ...(userId ? { userId } : {}),
     },
     select: {

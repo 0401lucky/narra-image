@@ -15,10 +15,12 @@ import type { GenerationType as UiGenerationType } from "@/lib/types";
 import type { WorkShowcaseStatus } from "@/lib/work-showcase";
 
 export type SerializedGeneration = {
+  completedAt: string | null;
   conversationId: string | null;
   count: number;
   createdAt: string;
   creditsSpent: number;
+  durationMs: number | null;
   errorMessage: string | null;
   featuredAt: string | null;
   generationType: "text_to_image" | "image_to_image";
@@ -41,6 +43,7 @@ export type SerializedGeneration = {
   size: string;
   sourceImageUrl: string | null;
   sourceImageUrls: string[];
+  startedAt: string | null;
   status: "pending" | "succeeded" | "failed";
   updatedAt: string;
 };
@@ -268,8 +271,20 @@ export function serializeGeneration(
       : sourceImageUrl
         ? [sourceImageUrl]
         : [];
+  const startedAt =
+    "startedAt" in job && job.startedAt instanceof Date
+      ? job.startedAt
+      : null;
+  const completedAt =
+    "completedAt" in job && job.completedAt instanceof Date
+      ? job.completedAt
+      : null;
+  const durationMs = completedAt
+    ? Math.max(0, completedAt.getTime() - job.createdAt.getTime())
+    : null;
 
   return {
+    completedAt: completedAt?.toISOString() ?? null,
     conversationId:
       "conversationId" in job && typeof job.conversationId === "string"
         ? job.conversationId
@@ -277,6 +292,7 @@ export function serializeGeneration(
     count: job.count,
     createdAt: job.createdAt.toISOString(),
     creditsSpent: job.creditsSpent,
+    durationMs,
     errorMessage: job.errorMessage,
     featuredAt: job.featuredAt?.toISOString() ?? null,
     generationType,
@@ -316,6 +332,7 @@ export function serializeGeneration(
     size: job.size,
     sourceImageUrl: sourceImageUrls[0] ?? null,
     sourceImageUrls,
+    startedAt: startedAt?.toISOString() ?? null,
     status:
       job.status === GenerationStatus.SUCCEEDED
         ? "succeeded"

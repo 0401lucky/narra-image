@@ -52,8 +52,10 @@ type Generation = NonNullable<StudioProps["initialGenerations"]>[number];
 function createSucceededGeneration(overrides: Partial<Generation> = {}) {
   return {
     count: 1,
+    completedAt: "2026-04-23T08:01:15.000Z",
     createdAt: "2026-04-23T08:00:00.000Z",
     creditsSpent: 5,
+    durationMs: 75_000,
     generationType: "text_to_image" as const,
     id: "job_1",
     images: [
@@ -68,6 +70,7 @@ function createSucceededGeneration(overrides: Partial<Generation> = {}) {
     providerMode: "built_in" as const,
     size: "1024x1024",
     sourceImageUrl: null,
+    startedAt: "2026-04-23T08:00:02.000Z",
     status: "succeeded" as const,
     ...overrides,
   };
@@ -126,6 +129,7 @@ describe("创作台尺寸", () => {
     );
 
     expect(screen.getByText("gpt-image-1 • 1.5K 竖图 2:3 • 质量自动 • PNG")).toBeInTheDocument();
+    expect(screen.getByText("用时 1分15秒")).toBeInTheDocument();
 
     const resultImage = screen.getByAltText("生成结果");
     expect(resultImage.parentElement).toHaveStyle({ aspectRatio: "1024 / 1536" });

@@ -137,10 +137,20 @@ describe("生成任务失败退款", () => {
     });
     expect(mockFindMany).toHaveBeenCalledWith({
       where: {
-        createdAt: {
-          lt: new Date("2026-05-05T11:59:00.000Z"),
-        },
-        status: GenerationStatus.PENDING,
+        OR: [
+          {
+            createdAt: {
+              lt: new Date("2026-05-05T11:59:00.000Z"),
+            },
+            status: GenerationStatus.PENDING,
+          },
+          {
+            lockedAt: {
+              lt: new Date("2026-05-05T11:59:00.000Z"),
+            },
+            status: GenerationStatus.PROCESSING,
+          },
+        ],
         userId: "user_1",
       },
       select: {

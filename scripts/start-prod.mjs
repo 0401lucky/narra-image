@@ -1,5 +1,5 @@
 import { readdirSync } from "node:fs";
-import { join } from "node:path";
+import { delimiter, join } from "node:path";
 import { spawnSync } from "node:child_process";
 
 import pg from "pg";
@@ -58,8 +58,16 @@ async function closeDatabaseClient(client) {
 }
 
 function run(command, args) {
+  const env = { ...process.env };
+  const pathKey =
+    Object.keys(env).find((key) => key.toLowerCase() === "path") ?? "PATH";
+  env[pathKey] = `${join(process.cwd(), "node_modules", ".bin")}${delimiter}${
+    env[pathKey] ?? ""
+  }`;
+
   const result = spawnSync(command, args, {
     encoding: "utf8",
+    env,
     shell: process.platform === "win32",
   });
 
@@ -74,7 +82,7 @@ function run(command, args) {
 }
 
 function runPrisma(args) {
-  return run("pnpm", ["exec", "prisma", ...args]);
+  return run("prisma", args);
 }
 
 async function runPrismaWithDatabaseRetry(args) {

@@ -94,7 +94,11 @@ describe("后台生成记录页面", () => {
             },
           ],
           status: {
-            in: [GenerationStatus.SUCCEEDED, GenerationStatus.PENDING],
+            in: [
+              GenerationStatus.SUCCEEDED,
+              GenerationStatus.PENDING,
+              GenerationStatus.PROCESSING,
+            ],
           },
         },
       }),

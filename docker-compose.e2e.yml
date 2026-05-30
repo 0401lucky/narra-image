@@ -1,18 +1,22 @@
 services:
   db:
     image: postgres:17-alpine
-    container_name: narra-image-db
+    container_name: narra-image-e2e-db
     restart: unless-stopped
     environment:
-      POSTGRES_DB: ${POSTGRES_DB:-narra_image}
-      POSTGRES_USER: ${POSTGRES_USER:-narra}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-narra_password}
+      POSTGRES_DB: ${E2E_POSTGRES_DB:-narra_image_e2e}
+      POSTGRES_USER: ${E2E_POSTGRES_USER:-narra_e2e}
+      POSTGRES_PASSWORD: ${E2E_POSTGRES_PASSWORD:-narra_e2e_password}
     ports:
-      - "${POSTGRES_PORT:-5432}:5432"
+      - "${E2E_POSTGRES_PORT:-55432}:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_e2e_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-narra} -d ${POSTGRES_DB:-narra_image}"]
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${E2E_POSTGRES_USER:-narra_e2e} -d ${E2E_POSTGRES_DB:-narra_image_e2e}",
+        ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -21,7 +25,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: narra-image-app
+    container_name: narra-image-e2e-app
     restart: unless-stopped
     depends_on:
       db:
@@ -29,9 +33,9 @@ services:
     environment:
       NODE_ENV: production
       PORT: 3000
-      DATABASE_URL: postgresql://${POSTGRES_USER:-narra}:${POSTGRES_PASSWORD:-narra_password}@db:5432/${POSTGRES_DB:-narra_image}?schema=public
+      DATABASE_URL: postgresql://${E2E_POSTGRES_USER:-narra_e2e}:${E2E_POSTGRES_PASSWORD:-narra_e2e_password}@db:5432/${E2E_POSTGRES_DB:-narra_image_e2e}?schema=public
       AUTH_SECRET: ${AUTH_SECRET:-replace-this-secret}
-      APP_URL: ${APP_URL:-http://localhost:3000}
+      APP_URL: ${E2E_APP_URL:-http://localhost:3100}
       BUILTIN_PROVIDER_BASE_URL: ${BUILTIN_PROVIDER_BASE_URL:-}
       BUILTIN_PROVIDER_API_KEY: ${BUILTIN_PROVIDER_API_KEY:-}
       BUILTIN_PROVIDER_MODEL: ${BUILTIN_PROVIDER_MODEL:-gpt-image-2}
@@ -48,21 +52,21 @@ services:
       BOOTSTRAP_INVITE_CODE: ${BOOTSTRAP_INVITE_CODE:-FOUNDING-ACCESS}
       BOOTSTRAP_ADMIN_PASSWORD_HASH: ${BOOTSTRAP_ADMIN_PASSWORD_HASH:-}
     ports:
-      - "${APP_PORT:-3000}:3000"
+      - "${E2E_APP_PORT:-3100}:3000"
 
   worker:
     build:
       context: .
       dockerfile: worker/Dockerfile
-    container_name: narra-image-worker
+    container_name: narra-image-e2e-worker
     restart: unless-stopped
     depends_on:
       db:
         condition: service_healthy
     environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER:-narra}:${POSTGRES_PASSWORD:-narra_password}@db:5432/${POSTGRES_DB:-narra_image}?schema=public
+      DATABASE_URL: postgresql://${E2E_POSTGRES_USER:-narra_e2e}:${E2E_POSTGRES_PASSWORD:-narra_e2e_password}@db:5432/${E2E_POSTGRES_DB:-narra_image_e2e}?schema=public
       AUTH_SECRET: ${AUTH_SECRET:-replace-this-secret}
-      APP_URL: ${APP_URL:-http://localhost:3000}
+      APP_URL: ${E2E_APP_URL:-http://localhost:3100}
       BUILTIN_PROVIDER_BASE_URL: ${BUILTIN_PROVIDER_BASE_URL:-}
       BUILTIN_PROVIDER_API_KEY: ${BUILTIN_PROVIDER_API_KEY:-}
       BUILTIN_PROVIDER_MODEL: ${BUILTIN_PROVIDER_MODEL:-gpt-image-2}
@@ -81,4 +85,4 @@ services:
       WORKER_MAX_ATTEMPTS: ${WORKER_MAX_ATTEMPTS:-2}
 
 volumes:
-  postgres_data:
+  postgres_e2e_data:

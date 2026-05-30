@@ -6,6 +6,7 @@ describe("生成记录序列化", () => {
   it("返回生成类型和来源图信息，供前后台统一展示", () => {
     const result = serializeGeneration({
       count: 1,
+      completedAt: new Date("2026-04-23T08:01:15.000Z"),
       createdAt: new Date("2026-04-23T08:00:00.000Z"),
       creditsSpent: 5,
       errorMessage: null,
@@ -37,6 +38,7 @@ describe("生成记录序列化", () => {
         "https://example.com/source-a.png",
         "https://example.com/source-b.png",
       ],
+      startedAt: new Date("2026-04-23T08:00:02.000Z"),
       status: GenerationStatus.SUCCEEDED,
       updatedAt: new Date("2026-04-23T08:02:00.000Z"),
       userId: "user_1",
@@ -48,5 +50,8 @@ describe("生成记录序列化", () => {
       "https://example.com/source-a.png",
       "https://example.com/source-b.png",
     ]);
+    expect(result.startedAt).toBe("2026-04-23T08:00:02.000Z");
+    expect(result.completedAt).toBe("2026-04-23T08:01:15.000Z");
+    expect(result.durationMs).toBe(75_000);
   });
 });

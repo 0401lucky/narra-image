@@ -34,20 +34,20 @@ function getUserDisplayName(user: GenerationAdminJob["user"] | null | undefined)
 }
 
 function getGenerationStatusLabel(status: GenerationAdminJob["status"]) {
-  if (status === "PENDING") return "生成中";
+  if (status === "PENDING" || status === "PROCESSING") return "生成中";
   if (status === "FAILED") return "已失败";
   return "已完成";
 }
 
 function getMissingImageLabel(status: GenerationAdminJob["status"]) {
-  if (status === "PENDING") return "生成中";
+  if (status === "PENDING" || status === "PROCESSING") return "生成中";
   if (status === "FAILED") return "生成失败";
   return "图片缺失";
 }
 
 function getCreditLabel(job: GenerationAdminJob) {
   if (job.status === "FAILED") return "已退还";
-  if (job.status === "PENDING" && job.creditsSpent > 0) {
+  if ((job.status === "PENDING" || job.status === "PROCESSING") && job.creditsSpent > 0) {
     return `预扣 -${job.creditsSpent}`;
   }
   return `-${job.creditsSpent}`;

@@ -130,11 +130,17 @@ export default async function AdminGenerationsPage({
     : {};
   const visibleWhere: Prisma.GenerationJobWhereInput = {
     ...searchWhere,
-    status: { in: [GenerationStatus.SUCCEEDED, GenerationStatus.PENDING] },
+    status: {
+      in: [
+        GenerationStatus.SUCCEEDED,
+        GenerationStatus.PENDING,
+        GenerationStatus.PROCESSING,
+      ],
+    },
   };
   const pendingWhere: Prisma.GenerationJobWhereInput = {
     ...searchWhere,
-    status: GenerationStatus.PENDING,
+    status: { in: [GenerationStatus.PENDING, GenerationStatus.PROCESSING] },
   };
   const [jobs, totalCount, failedCount, pendingCount] = await Promise.all([
     db.generationJob.findMany({

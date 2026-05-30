@@ -8,6 +8,28 @@
  * @param width   目标宽度，必须命中 next.config 的 imageSizes/deviceSizes
  * @param quality 0-100，默认 75
  */
+const DEFAULT_OPTIMIZER_BYPASS_HOSTS = ["image.204152.xyz"];
+
+function getOptimizerBypassHosts() {
+  const configured = process.env.NEXT_PUBLIC_IMAGE_OPTIMIZER_BYPASS_HOSTS
+    ?.split(",")
+    .map((host) => host.trim().toLowerCase())
+    .filter(Boolean);
+
+  return configured && configured.length > 0
+    ? configured
+    : DEFAULT_OPTIMIZER_BYPASS_HOSTS;
+}
+
+function shouldBypassOptimizer(src: string) {
+  try {
+    const url = new URL(src);
+    return getOptimizerBypassHosts().includes(url.hostname.toLowerCase());
+  } catch {
+    return false;
+  }
+}
+
 export function getThumbUrl(
   src: string | null | undefined,
   width: number,
@@ -18,6 +40,9 @@ export function getThumbUrl(
   if (src.startsWith("data:") || src.startsWith("blob:")) return src;
   // 已经是 /_next/image 的不要重复包
   if (src.startsWith("/_next/image")) return src;
+  // 部分自建 CDN 域名会解析到内网或保留地址，Next Image 会拒绝代理。
+  // 对这些域名直接使用原图 URL，避免创作台结果图变成破图。
+  if (shouldBypassOptimizer(src)) return src;
 
   const params = new URLSearchParams({
     url: src,
@@ -40,5 +65,6 @@ export function getThumbSrcSet(
 ): string {
   if (!src) return "";
   if (src.startsWith("data:") || src.startsWith("blob:")) return "";
+  if (shouldBypassOptimizer(src)) return "";
   return widths.map((w) => `${getThumbUrl(src, w, quality)} ${w}w`).join(", ");
 }

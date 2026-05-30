@@ -1,4 +1,3 @@
-import { after } from "next/server";
 import { GenerationStatus } from "@prisma/client";
 
 import { db } from "@/lib/db";
@@ -14,7 +13,6 @@ import { getBuiltInProviderConfig, getChannelById } from "@/lib/providers/built-
 import { decryptProviderSecret, encryptProviderSecret } from "@/lib/providers/provider-secret";
 import { requireCurrentUserRecord } from "@/lib/server/current-user";
 import { getErrorMessage, jsonError, jsonOk } from "@/lib/server/http";
-import { generateImages } from "@/lib/providers/generate-images";
 import { persistGeneratedImage } from "@/lib/storage/persist-generated-image";
 import { failGenerationJobAndRefund } from "@/lib/generation/job-refund";
 
@@ -25,7 +23,7 @@ export async function POST(request: Request) {
     const user = await requireCurrentUserRecord();
     const body = await parseGenerateRequest(request);
     const env = getEnv();
-    // Resolve channel: use channelId if given, else fall back to first active channel
+
     const channelId = body.channelId as string | undefined;
     let builtInProvider;
     if (channelId) {
@@ -35,6 +33,7 @@ export async function POST(request: Request) {
         apiKey: channel.apiKey,
         baseUrl: channel.baseUrl,
         creditCost: channel.creditCost,
+        id: channel.id,
         model: channel.defaultModel,
         models: channel.models,
         name: channel.name,
@@ -42,6 +41,7 @@ export async function POST(request: Request) {
     } else {
       builtInProvider = await getBuiltInProviderConfig();
     }
+
     const cost = calculateGenerationCost({
       builtInCreditCost: builtInProvider.creditCost,
       providerMode: body.providerMode,
@@ -80,6 +80,10 @@ export async function POST(request: Request) {
       };
     }
 
+    const customProviderApiKeyEncrypted = customProvider
+      ? await encryptProviderSecret(customProvider.apiKey, env.AUTH_SECRET)
+      : null;
+
     const fileSourceImages = await Promise.all(
       body.images.map(async (image: File) => ({
         data: Buffer.from(await image.arrayBuffer()),
@@ -97,28 +101,10 @@ export async function POST(request: Request) {
         }),
       ),
     );
-
-    const urlSourceImages = await Promise.all(
-      body.imageUrls.map(async (url: string) => {
-        const res = await fetch(url, { signal: AbortSignal.timeout(15_000) });
-        if (!res.ok) throw new Error("参考图下载失败");
-        const buffer = Buffer.from(await res.arrayBuffer());
-        const contentType = res.headers.get("content-type") || "image/png";
-        const ext = contentType.includes("jpeg") || contentType.includes("jpg") ? "jpg" : "png";
-        return {
-          data: buffer,
-          fileName: `source.${ext}`,
-          mimeType: contentType,
-        };
-      }),
-    );
-
-    const sourceImages = [...fileSourceImages, ...urlSourceImages];
     const sourceImageUrls = [...uploadedUrls, ...body.imageUrls];
 
-    // 创建 PENDING 任务并预扣积分。预扣可避免连续点击造成的并发越扣，
-    // 失败时在 after() 内退还。
-    // 若提供 conversationId，先校验所有权防止跨用户写入；自动续推该会话的 updatedAt（首条 generation 还会刷新 title）。
+    // 创建 PENDING 任务并预扣积分。模型调用转交给 Go Worker，
+    // 让请求链路保持短平快，也避免 Next 进程重启导致后台生成丢失。
     const inputConversationId = body.conversationId as string | undefined;
     let conversationToBind: string | null = null;
     if (inputConversationId) {
@@ -144,13 +130,27 @@ export async function POST(request: Request) {
           outputCompression: body.outputCompression,
           outputFormat: body.outputFormat,
           prompt: body.prompt,
+          providerApiKeyEncrypted:
+            body.providerMode === "custom" ? customProviderApiKeyEncrypted : null,
+          providerBaseUrl:
+            body.providerMode === "custom" ? customProvider?.baseUrl ?? null : null,
+          providerChannelId:
+            body.providerMode === "built_in" ? builtInProvider.id ?? null : null,
+          providerLabel:
+            body.providerMode === "custom" ? customProvider?.label ?? null : null,
+          providerModels:
+            body.providerMode === "custom" ? body.customProvider?.models ?? [] : [],
           providerMode: toPrismaProviderMode(body.providerMode),
+          providerRemember:
+            body.providerMode === "custom" ? body.customProvider?.remember ?? false : false,
           quality: body.quality,
           moderation: body.moderation,
+          seed: body.seed,
           size: body.size,
           sourceImageUrls,
           status: GenerationStatus.PENDING,
           userId: user.id,
+          workerManaged: true,
         },
         include: {
           images: true,
@@ -185,117 +185,6 @@ export async function POST(request: Request) {
       return created;
     });
     jobId = job.id;
-
-    const userId = user.id;
-    const generationParams = {
-      builtInProvider: {
-        apiKey: builtInProvider.apiKey,
-        baseUrl: builtInProvider.baseUrl,
-        model: builtInProvider.model,
-      },
-      count: body.count,
-      customProvider: customProvider
-        ? {
-            apiKey: customProvider.apiKey,
-            baseUrl: customProvider.baseUrl,
-            model: customProvider.model,
-          }
-        : null,
-      generationType: body.generationType,
-      model: body.model,
-      negativePrompt: body.negativePrompt,
-      outputCompression: body.outputCompression,
-      outputFormat: body.outputFormat,
-      prompt: body.prompt,
-      providerMode: body.providerMode,
-      quality: body.quality,
-      moderation: body.moderation,
-      seed: body.seed,
-      size: body.size,
-      sourceImages,
-      userId,
-    };
-    const customProviderForRemember =
-      customProvider && body.customProvider?.remember
-        ? {
-            apiKey: customProvider.apiKey,
-            baseUrl: customProvider.baseUrl,
-            label: customProvider.label || null,
-            model: customProvider.model,
-            models: body.customProvider?.models || [],
-          }
-        : null;
-    const providerMode = body.providerMode;
-
-    // 响应返回后再调模型；任意耗时（5 分钟、十分钟）都不会再被前置网关切断。
-    after(async () => {
-      try {
-        const images = await generateImages(generationParams);
-
-        await db.$transaction(async (tx) => {
-          const updated = await tx.generationJob.updateMany({
-            where: {
-              id: job.id,
-              status: GenerationStatus.PENDING,
-            },
-            data: {
-              status: GenerationStatus.SUCCEEDED,
-            },
-          });
-
-          if (updated.count === 0) {
-            return;
-          }
-
-          await tx.generationImage.createMany({
-            data: images.map((image) => ({
-              height: image.actualHeight,
-              jobId: job.id,
-              url: image.url,
-              width: image.actualWidth,
-            })),
-          });
-
-          if (providerMode === "custom" && customProviderForRemember) {
-            await tx.savedProviderConfig.upsert({
-              where: { userId },
-              update: {
-                apiKeyEncrypted: await encryptProviderSecret(
-                  customProviderForRemember.apiKey,
-                  env.AUTH_SECRET,
-                ),
-                baseUrl: customProviderForRemember.baseUrl,
-                label: customProviderForRemember.label,
-                model: customProviderForRemember.model,
-                models: customProviderForRemember.models,
-              },
-              create: {
-                apiKeyEncrypted: await encryptProviderSecret(
-                  customProviderForRemember.apiKey,
-                  env.AUTH_SECRET,
-                ),
-                baseUrl: customProviderForRemember.baseUrl,
-                label: customProviderForRemember.label,
-                model: customProviderForRemember.model,
-                models: customProviderForRemember.models,
-                userId,
-              },
-            });
-          }
-        });
-      } catch (error) {
-        // 模型生成失败：标记 FAILED + 退还预扣积分。
-        try {
-          await failGenerationJobAndRefund({
-            errorMessage: getErrorMessage(error),
-            jobId: job.id,
-          });
-        } catch {
-          // 退还失败时只能记录在 stderr，前端轮询仍能看到 FAILED。
-          console.error(`[generate] failed to mark job ${job.id} as FAILED`);
-        }
-      }
-    });
 
     return jsonOk({
       generation: serializeGeneration(job),

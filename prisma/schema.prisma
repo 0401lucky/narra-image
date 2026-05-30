@@ -18,6 +18,7 @@ enum ProviderMode {
 
 enum GenerationStatus {
   PENDING
+  PROCESSING
   SUCCEEDED
   FAILED
 }
@@ -286,42 +287,57 @@ model ApiKey {
 }
 
 model GenerationJob {
-  id                String                 @id @default(cuid())
-  userId            String
-  apiKeyId          String?
-  conversationId    String?
-  clientSource      GenerationClientSource @default(WEB)
-  generationType    GenerationType         @default(TEXT_TO_IMAGE)
-  providerMode      ProviderMode
-  model             String
-  prompt            String
-  negativePrompt    String?
-  size              String
-  quality           String                 @default("auto")
-  outputFormat      String                 @default("png")
-  outputCompression Int?
-  moderation        String                 @default("auto")
-  sourceImageUrls   String[]               @default([])
-  count             Int
-  status            GenerationStatus       @default(PENDING)
-  errorMessage      String?
-  creditsSpent      Int                    @default(0)
-  featuredAt        DateTime?
-  featuredById      String?
-  createdAt         DateTime               @default(now())
-  updatedAt         DateTime               @updatedAt
-  user              User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  apiKey            ApiKey?                @relation(fields: [apiKeyId], references: [id], onDelete: SetNull)
-  featuredBy        User?                  @relation("FeaturedByAdmin", fields: [featuredById], references: [id], onDelete: SetNull)
-  conversation      Conversation?          @relation(fields: [conversationId], references: [id], onDelete: SetNull)
-  images            GenerationImage[]
+  id                      String                 @id @default(cuid())
+  userId                  String
+  apiKeyId                String?
+  workerManaged           Boolean                @default(false)
+  workerId                String?
+  lockedAt                DateTime?
+  startedAt               DateTime?
+  completedAt             DateTime?
+  attemptCount            Int                    @default(0)
+  conversationId          String?
+  clientSource            GenerationClientSource @default(WEB)
+  generationType          GenerationType         @default(TEXT_TO_IMAGE)
+  providerMode            ProviderMode
+  providerChannelId       String?
+  providerBaseUrl         String?
+  providerApiKeyEncrypted String?
+  providerRemember        Boolean                @default(false)
+  providerLabel           String?
+  providerModels          String[]               @default([])
+  model                   String
+  prompt                  String
+  negativePrompt          String?
+  size                    String
+  quality                 String                 @default("auto")
+  outputFormat            String                 @default("png")
+  outputCompression       Int?
+  moderation              String                 @default("auto")
+  seed                    Int?
+  sourceImageUrls         String[]               @default([])
+  count                   Int
+  status                  GenerationStatus       @default(PENDING)
+  errorMessage            String?
+  creditsSpent            Int                    @default(0)
+  featuredAt              DateTime?
+  featuredById            String?
+  createdAt               DateTime               @default(now())
+  updatedAt               DateTime               @updatedAt
+  user                    User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  apiKey                  ApiKey?                @relation(fields: [apiKeyId], references: [id], onDelete: SetNull)
+  featuredBy              User?                  @relation("FeaturedByAdmin", fields: [featuredById], references: [id], onDelete: SetNull)
+  conversation            Conversation?          @relation(fields: [conversationId], references: [id], onDelete: SetNull)
+  images                  GenerationImage[]
 
   @@index([apiKeyId])
   @@index([apiKeyId, clientSource, createdAt])
   @@index([clientSource])
   @@index([conversationId])
+  @@index([providerChannelId])
   @@index([userId, createdAt(sort: Desc)])
   @@index([status, createdAt])
+  @@index([workerManaged, status, lockedAt, createdAt])
 }
 
 /// 对话会话：把多次生成 (GenerationJob) 归到一个用户可视会话内。

@@ -20,10 +20,12 @@ export type GenerationImage = {
 };
 
 export type GenerationItem = {
+  completedAt?: string | null;
   conversationId?: string | null;
   count: number;
   createdAt: string;
   creditsSpent: number;
+  durationMs?: number | null;
   errorMessage?: string | null;
   generationType: GenerationType;
   id: string;
@@ -39,6 +41,7 @@ export type GenerationItem = {
   size: string;
   sourceImageUrl?: string | null;
   sourceImageUrls?: string[];
+  startedAt?: string | null;
   status: "pending" | "succeeded" | "failed";
 };
 

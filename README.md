@@ -19,6 +19,8 @@
 - 作品广场：用户提交、管理员审核、点赞精选
 - 管理后台：用户、邀请码、兑换码、生成记录、福利、作品审核 + 系统设置（登录源 / 人机验证 / 生图渠道）
 - 基于 `Next.js + Prisma + PostgreSQL`，支持 `Docker` 部署到 `Zeabur`
+- 生图任务由独立 `Go Worker` 消费，Next.js 负责提交任务与页面/API
+- Go 后端渐进迁移规划见 [`docs/go-backend-migration-plan.md`](docs/go-backend-migration-plan.md)
 
 ## 本地开发
 
@@ -67,6 +69,8 @@ pnpm dev
 - `BUILTIN_PROVIDER_MODEL`: 内置渠道默认模型，默认推荐 `gpt-image-2`
 - `BUILTIN_PROVIDER_CREDIT_COST`: 内置渠道每次消耗积分
 - `S3_*`: 对象存储配置，可选
+- `NEXT_PUBLIC_IMAGE_OPTIMIZER_BYPASS_HOSTS`: 不走 Next Image 优化的图片域名列表，适合自建 CDN 解析到内网/保留地址的情况
+- `WORKER_*`: Go 生图 Worker 的并发、轮询间隔、任务超时与最大重试配置
 - `BOOTSTRAP_ADMIN_EMAIL`: 需要自动提权为管理员的邮箱
 - `BOOTSTRAP_INVITE_CODE`: 初始邀请码
 
@@ -93,6 +97,7 @@ docker compose up --build -d
 如果你本地直接用 `docker compose`，默认会同时启动：
 
 - `app`: Narra Image 应用
+- `worker`: Go 生图 Worker，消费数据库中的待生成任务
 - `db`: PostgreSQL 17
 
 容器启动时会自动准备数据库：新空库会先创建当前 schema，旧库会接管迁移历史，然后应用仓库内的新增迁移。

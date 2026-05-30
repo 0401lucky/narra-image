@@ -3,7 +3,7 @@
 /* eslint-disable @next/next/no-img-element */
 
 // 单条生成消息气泡（用户提示 + Narra 结果）。
-import { AlertTriangle, Download, ImagePlus, RotateCcw, Sparkles, X, ZoomIn } from "lucide-react";
+import { AlertTriangle, Clock3, Download, ImagePlus, RotateCcw, Sparkles, X, ZoomIn } from "lucide-react";
 
 import { getAspectRatio as getGenerationAspectRatio } from "@/lib/generation/sizes";
 import { getThumbUrl } from "@/lib/image-url";
@@ -24,6 +24,24 @@ type GenerationBubbleProps = {
   onCancel?: (generation: GenerationItem) => void;
 };
 
+function formatDuration(ms: number | null | undefined) {
+  if (typeof ms !== "number" || !Number.isFinite(ms) || ms < 0) {
+    return null;
+  }
+
+  const totalSeconds = Math.max(1, Math.round(ms / 1000));
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+
+  if (minutes === 0) {
+    return `${seconds}秒`;
+  }
+  if (seconds === 0) {
+    return `${minutes}分钟`;
+  }
+  return `${minutes}分${seconds}秒`;
+}
+
 export function GenerationBubble({
   generation,
   onZoom,
@@ -33,6 +51,7 @@ export function GenerationBubble({
   onCancel,
 }: GenerationBubbleProps) {
   const sourceUrls = getGenerationSourceImageUrls(generation);
+  const durationLabel = formatDuration(generation.durationMs);
   return (
     <div
       id={`gen-${generation.id}`}
@@ -108,7 +127,18 @@ export function GenerationBubble({
             </div>
           ) : generation.images.length > 0 ? (
             <div className="space-y-3">
-              <p className="text-xs text-[var(--ink-soft)]">结果 {generation.images.length}</p>
+              <div className="flex flex-wrap items-center gap-2 text-xs text-[var(--ink-soft)]">
+                <span>结果 {generation.images.length}</span>
+                {durationLabel && (
+                  <span
+                    className="inline-flex items-center gap-1 rounded-full border border-[var(--line)]/70 bg-[#fffaf2]/70 px-2 py-0.5"
+                    title="从提交任务到结果写入完成的总耗时"
+                  >
+                    <Clock3 className="size-3" />
+                    用时 {durationLabel}
+                  </span>
+                )}
+              </div>
               <div
                 className={`grid w-full gap-3 ${generation.images.length > 1 ? "grid-cols-1 min-[520px]:grid-cols-2" : "grid-cols-1"}`}
                 style={{ maxWidth: generation.images.length === 1 ? "min(100%, 360px)" : "min(100%, 740px)" }}
