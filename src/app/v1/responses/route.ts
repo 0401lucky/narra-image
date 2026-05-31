@@ -31,6 +31,7 @@ export async function POST(request: Request) {
           size: parsed.size,
           sourceImages: parsed.sourceImages,
         },
+        signal: request.signal,
         user: auth.user,
       });
 

@@ -1,17 +1,20 @@
 import { NextResponse } from "next/server";
 
-import { ApiAuthError, ApiRateLimitError } from "@/lib/api-errors";
+import { ApiAuthError, ApiRateLimitError, ApiTimeoutError } from "@/lib/api-errors";
 import { getErrorMessage } from "@/lib/server/http";
 
 const IMAGE_JSON_KEEP_ALIVE_INTERVAL_MS = 10_000;
 
 function openAiErrorPayload(error: unknown) {
   const status =
-    error instanceof ApiAuthError || error instanceof ApiRateLimitError
+    error instanceof ApiAuthError ||
+    error instanceof ApiRateLimitError ||
+    error instanceof ApiTimeoutError
       ? error.status
       : 400;
   const isAuthError = error instanceof ApiAuthError;
   const isRateLimitError = error instanceof ApiRateLimitError;
+  const isTimeoutError = error instanceof ApiTimeoutError;
   const message = getErrorMessage(error);
 
   return {
@@ -21,13 +24,17 @@ function openAiErrorPayload(error: unknown) {
           ? "rate_limit_exceeded"
           : isAuthError
             ? "invalid_api_key"
-            : "invalid_request_error",
+            : isTimeoutError
+              ? "timeout"
+              : "invalid_request_error",
         message,
         type: isRateLimitError
           ? "rate_limit_error"
           : isAuthError
             ? "authentication_error"
-            : "invalid_request_error",
+            : isTimeoutError
+              ? "server_error"
+              : "invalid_request_error",
       },
     },
     status,

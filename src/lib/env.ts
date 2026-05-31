@@ -16,6 +16,8 @@ const envSchema = z.object({
     .enum(["true", "false"])
     .default("true")
     .transform((value) => value === "true"),
+  EXTERNAL_GENERATION_POLL_INTERVAL_MS: z.coerce.number().int().positive().default(1000),
+  EXTERNAL_GENERATION_WAIT_TIMEOUT_SECONDS: z.coerce.number().int().positive().default(900),
   S3_ACCESS_KEY_ID: z.string().optional().or(z.literal("")),
   S3_BUCKET: z.string().optional().or(z.literal("")),
   S3_ENDPOINT: z.string().optional().or(z.literal("")),

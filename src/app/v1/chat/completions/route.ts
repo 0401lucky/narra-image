@@ -27,6 +27,7 @@ export async function POST(request: Request) {
         size: body.size ?? "auto",
         sourceImages: parsed.sourceImages,
       },
+      signal: request.signal,
       user: auth.user,
     });
 

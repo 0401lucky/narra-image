@@ -26,6 +26,7 @@ export async function POST(request: Request) {
           size: body.size,
           sourceImages,
         },
+        signal: request.signal,
         user: auth.user,
       });
       const data = await formatImageGenerationData(job.images, body.responseFormat);

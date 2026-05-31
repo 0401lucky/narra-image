@@ -13,3 +13,11 @@ export class ApiRateLimitError extends Error {
     super(message);
   }
 }
+
+export class ApiTimeoutError extends Error {
+  status = 504;
+
+  constructor(message: string) {
+    super(message);
+  }
+}

@@ -4,10 +4,11 @@ import { GenerationClientSource, GenerationStatus } from "@prisma/client";
 
 import { calculateGenerationCost } from "@/lib/credits";
 import { db } from "@/lib/db";
+import { getEnv } from "@/lib/env";
 import { assertApiRateLimit } from "@/lib/api-config";
+import { ApiTimeoutError } from "@/lib/api-errors";
 import { persistGeneratedImage } from "@/lib/storage/persist-generated-image";
 import { failGenerationJobAndRefund } from "@/lib/generation/job-refund";
-import { generateImages } from "@/lib/providers/generate-images";
 import {
   getActiveChannels,
   type ResolvedChannel,
@@ -47,8 +48,22 @@ type ExternalGenerationUser = {
 type RunExternalGenerationInput = {
   apiKeyId: string;
   input: ExternalGenerationRequest;
+  signal?: AbortSignal;
   user: ExternalGenerationUser;
 };
+
+type WaitForExternalGenerationInput = {
+  apiKeyId: string;
+  jobId: string;
+  signal?: AbortSignal;
+};
+
+class ExternalGenerationTimeoutError extends ApiTimeoutError {
+  constructor(jobId: string) {
+    super(`生成任务 ${jobId} 等待超时，请稍后通过 /v1/generations/${jobId} 查询结果`);
+    this.name = "ExternalGenerationTimeoutError";
+  }
+}
 
 async function resolveApiChannel(model?: string | null): Promise<ResolvedChannel> {
   const channels = await getActiveChannels();
@@ -70,12 +85,85 @@ async function resolveApiChannel(model?: string | null): Promise<ResolvedChannel
   return matched;
 }
 
+function externalGenerationWaitConfig() {
+  const env = getEnv();
+  return {
+    pollIntervalMs: env.EXTERNAL_GENERATION_POLL_INTERVAL_MS,
+    timeoutMs: env.EXTERNAL_GENERATION_WAIT_TIMEOUT_SECONDS * 1000,
+  };
+}
+
+function wait(ms: number, signal?: AbortSignal) {
+  if (signal?.aborted) {
+    return Promise.reject(new Error("请求已取消"));
+  }
+
+  return new Promise<void>((resolve, reject) => {
+    const timer = setTimeout(() => {
+      signal?.removeEventListener("abort", onAbort);
+      resolve();
+    }, ms);
+
+    const onAbort = () => {
+      clearTimeout(timer);
+      reject(new Error("请求已取消"));
+    };
+
+    signal?.addEventListener("abort", onAbort, { once: true });
+  });
+}
+
+async function waitForExternalGeneration({
+  apiKeyId,
+  jobId,
+  signal,
+}: WaitForExternalGenerationInput) {
+  const { pollIntervalMs, timeoutMs } = externalGenerationWaitConfig();
+  const deadline = Date.now() + timeoutMs;
+
+  while (true) {
+    if (signal?.aborted) {
+      throw new Error("请求已取消");
+    }
+
+    const job = await db.generationJob.findFirst({
+      where: {
+        apiKeyId,
+        clientSource: GenerationClientSource.API,
+        id: jobId,
+      },
+      include: {
+        images: {
+          orderBy: { createdAt: "asc" },
+        },
+      },
+    });
+
+    if (!job) {
+      throw new Error("生成任务不存在");
+    }
+    if (job.status === GenerationStatus.SUCCEEDED) {
+      return job;
+    }
+    if (job.status === GenerationStatus.FAILED) {
+      throw new Error(job.errorMessage || "生成失败");
+    }
+    if (Date.now() >= deadline) {
+      throw new ExternalGenerationTimeoutError(jobId);
+    }
+
+    await wait(Math.min(pollIntervalMs, Math.max(1, deadline - Date.now())), signal);
+  }
+}
+
 export async function runExternalGeneration({
   apiKeyId,
   input,
+  signal,
   user,
 }: RunExternalGenerationInput) {
   let jobId: string | null = null;
+  let handedToWorker = false;
   await assertApiRateLimit(apiKeyId);
 
   const builtInProvider = await resolveApiChannel(input.model);
@@ -104,13 +192,16 @@ export async function runExternalGeneration({
           outputCompression: input.outputCompression ?? null,
           outputFormat: input.outputFormat,
           prompt: input.prompt,
+          providerChannelId: builtInProvider.id,
           providerMode: "BUILT_IN",
           quality: input.quality,
           moderation: input.moderation,
+          seed: input.seed ?? null,
           size: input.size,
           sourceImageUrls: [],
           status: GenerationStatus.PENDING,
           userId: user.id,
+          workerManaged: false,
         },
         include: { images: true },
       });
@@ -152,63 +243,26 @@ export async function runExternalGeneration({
     if (sourceImageUrls.length > 0) {
       await db.generationJob.update({
         where: { id: job.id },
-        data: { sourceImageUrls },
+        data: {
+          sourceImageUrls,
+          workerManaged: true,
+        },
+      });
+    } else {
+      await db.generationJob.update({
+        where: { id: job.id },
+        data: { workerManaged: true },
       });
     }
+    handedToWorker = true;
 
-    const images = await generateImages({
-      builtInProvider: {
-        apiKey: builtInProvider.apiKey,
-        baseUrl: builtInProvider.baseUrl,
-        model: builtInProvider.defaultModel,
-      },
-      count,
-      customProvider: null,
-      generationType: input.generationType,
-      model,
-      moderation: input.moderation,
-      negativePrompt: input.negativePrompt ?? null,
-      outputCompression: input.outputCompression ?? null,
-      outputFormat: input.outputFormat,
-      prompt: input.prompt,
-      providerMode: "built_in",
-      quality: input.quality,
-      seed: input.seed ?? null,
-      size: input.size,
-      sourceImages,
-      userId: user.id,
+    return await waitForExternalGeneration({
+      apiKeyId,
+      jobId: job.id,
+      signal,
     });
-
-    await db.$transaction(async (tx) => {
-      await tx.generationImage.createMany({
-        data: images.map((image) => ({
-          height: image.actualHeight,
-          jobId: job.id,
-          url: image.url,
-          width: image.actualWidth,
-        })),
-      });
-
-      await tx.generationJob.update({
-        where: { id: job.id },
-        data: {
-          status: GenerationStatus.SUCCEEDED,
-        },
-      });
-    });
-
-    const completed = await db.generationJob.findUniqueOrThrow({
-      where: { id: job.id },
-      include: {
-        images: {
-          orderBy: { createdAt: "asc" },
-        },
-      },
-    });
-
-    return completed;
   } catch (error) {
-    if (jobId) {
+    if (jobId && !handedToWorker) {
       await failGenerationJobAndRefund({
         errorMessage: error instanceof Error ? error.message : "生成失败",
         jobId,
