@@ -20,8 +20,10 @@ type Config struct {
 	Concurrency               int
 	DatabaseURL               string
 	EnableLocalImageFallback  bool
+	HTTPAddr                  string
 	JobTimeout                time.Duration
 	MaxAttempts               int
+	MetricsWindow             time.Duration
 	PollInterval              time.Duration
 	S3AccessKeyID             string
 	S3Bucket                  string
@@ -58,8 +60,10 @@ func LoadConfig() (Config, error) {
 		Concurrency:               getenvInt("WORKER_CONCURRENCY", 2),
 		DatabaseURL:               databaseURL,
 		EnableLocalImageFallback:  getenvBool("ENABLE_LOCAL_IMAGE_FALLBACK", true),
+		HTTPAddr:                  getenv("WORKER_HTTP_ADDR", ":8081"),
 		JobTimeout:                time.Duration(getenvInt("WORKER_JOB_TIMEOUT_SECONDS", 900)) * time.Second,
 		MaxAttempts:               getenvInt("WORKER_MAX_ATTEMPTS", 2),
+		MetricsWindow:             time.Duration(getenvInt("WORKER_METRICS_WINDOW_MINUTES", 1440)) * time.Minute,
 		PollInterval:              time.Duration(getenvInt("WORKER_POLL_INTERVAL_MS", 1000)) * time.Millisecond,
 		S3AccessKeyID:             os.Getenv("S3_ACCESS_KEY_ID"),
 		S3Bucket:                  os.Getenv("S3_BUCKET"),

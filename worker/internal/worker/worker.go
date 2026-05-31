@@ -70,11 +70,22 @@ func (w *Worker) Run(ctx context.Context) error {
 		"Go Worker 已启动",
 		"workerId", w.cfg.WorkerID,
 		"concurrency", w.cfg.Concurrency,
+		"httpAddr", w.cfg.HTTPAddr,
 		"pollInterval", w.cfg.PollInterval,
 		"jobTimeout", w.cfg.JobTimeout,
 	)
 
 	var waitGroup sync.WaitGroup
+	if strings.TrimSpace(w.cfg.HTTPAddr) != "" {
+		waitGroup.Add(1)
+		go func() {
+			defer waitGroup.Done()
+			if err := w.runHTTPServer(ctx); err != nil {
+				w.logger.Error("Worker HTTP 服务退出", "error", err)
+			}
+		}()
+	}
+
 	for index := 0; index < w.cfg.Concurrency; index++ {
 		waitGroup.Add(1)
 		go func(slot int) {

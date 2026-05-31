@@ -4,6 +4,8 @@
 
 第一阶段已经完成：Next.js 负责接收用户请求、鉴权、扣积分和创建生成任务；Go Worker 负责消费 `PENDING` 任务、调用图片渠道、保存图片、回写任务状态并处理失败退款。
 
+第二阶段正在推进：外部 OpenAI 兼容 API 仍由 Next.js 负责鉴权、限流、参数解析和响应格式化，但 `/v1/images/generations`、`/v1/images/edits`、`/v1/responses`、`/v1/chat/completions` 的模型调用改为创建 `workerManaged` 任务并等待 Go Worker 完成。
+
 这个阶段的目标不是全量重写，而是先把最慢、最容易阻塞页面体验的生图链路移出 Next.js 请求进程。
 
 ## 已落地能力
@@ -14,6 +16,8 @@
 - 支持 S3/R2 图片持久化，本地 data URL fallback 用于非生产兜底。
 - Docker Compose 已包含 `worker` 服务。
 - 前端生成结果展示任务总耗时，便于观察真实生成速度。
+- 外部 OpenAI 兼容 API 的生图执行链路已开始切到 Go Worker，Next.js 不再在请求进程内直接调用图片模型。
+- Go Worker 暴露 `/healthz` 和 `/metrics`，可检查数据库健康、队列积压、最近成功率和 P95/P99 总耗时。
 
 ## 后续迁移 Todo
 
@@ -23,9 +27,10 @@
    - 将任务耗时拆成排队耗时、模型耗时、存储耗时，方便定位慢点。
 
 2. 外部 API 迁移到 Go
-   - 逐步迁移 `/v1/images/generations`、`/v1/images/edits`。
-   - 迁移 `/v1/responses` 图片工具相关链路。
-   - 保持 OpenAI 兼容响应格式，先双写/灰度，再切主流量。
+   - 已开始迁移 `/v1/images/generations`、`/v1/images/edits`。
+   - 已开始迁移 `/v1/responses` 图片工具相关链路。
+   - 当前策略是 Next.js 保持外层 OpenAI 兼容响应格式，Go Worker 承接模型调用和结果落库。
+   - 后续再评估是否引入 Go HTTP API Gateway，让 Go 直接对外提供 `/v1` 接口。
 
 3. 图片存储服务化
    - 把上传、下载代理、缩略图 URL 规则沉到 Go 服务。
@@ -38,7 +43,7 @@
    - 页面可直接显示排队位置和预计等待时间。
 
 5. 管理与观测
-   - 增加 Worker 健康检查、队列积压数、成功率、P95/P99 耗时。
+   - 已增加 Worker 健康检查、队列积压数、成功率、P95/P99 耗时。
    - 管理后台展示慢任务、失败原因分布和渠道健康度。
    - 记录 provider 请求 ID，方便和上游号池日志对账。
 
