@@ -94,6 +94,32 @@ func (s *Storage) PersistImage(ctx context.Context, userID string, data []byte, 
 	return "", errors.New("当前没有可用的图片存储配置")
 }
 
+func (s *Storage) PersistVideo(ctx context.Context, userID string, data []byte) (string, error) {
+	if s.client != nil && s.cfg.S3Bucket != "" {
+		fileName := fmt.Sprintf("%s/%s.mp4", userID, randomHex(16))
+		_, err := s.client.PutObject(ctx, &s3.PutObjectInput{
+			Body:        bytes.NewReader(data),
+			Bucket:      aws.String(s.cfg.S3Bucket),
+			ContentType: aws.String("video/mp4"),
+			Key:         aws.String(fileName),
+		})
+		if err != nil {
+			return "", err
+		}
+
+		if s.cfg.S3PublicBaseURL != "" {
+			return strings.TrimRight(s.cfg.S3PublicBaseURL, "/") + "/" + fileName, nil
+		}
+		return strings.TrimRight(s.cfg.S3Endpoint, "/") + "/" + s.cfg.S3Bucket + "/" + fileName, nil
+	}
+
+	if s.cfg.EnableLocalImageFallback {
+		return fmt.Sprintf("data:video/mp4;base64,%s", base64.StdEncoding.EncodeToString(data)), nil
+	}
+
+	return "", errors.New("当前没有可用的视频存储配置")
+}
+
 func loadSourceImages(ctx context.Context, urls []string) ([]SourceImage, error) {
 	images := make([]SourceImage, 0, len(urls))
 	for index, rawURL := range urls {
