@@ -1,7 +1,9 @@
 import { redirect } from "next/navigation";
 
+import { db } from "@/lib/db";
 import { SiteHeader } from "@/components/marketing/site-header";
 import { MyWorksBoard } from "@/components/works/my-works-board";
+import { VideoWorksSection } from "@/components/works/video-works-section";
 import { serializeUser } from "@/lib/prisma-mappers";
 import { getCurrentUserRecord } from "@/lib/server/current-user";
 import { getUserWorksCounts, listUserWorksPage } from "@/lib/server/works";
@@ -14,9 +16,15 @@ export default async function WorksPage() {
     redirect("/login");
   }
 
-  const [initialPage, counts] = await Promise.all([
+  const [initialPage, counts, myVideos] = await Promise.all([
     listUserWorksPage({ userId: user.id, limit: 24 }),
     getUserWorksCounts(user.id),
+    db.generatedVideo.findMany({
+      where: { job: { userId: user.id } },
+      select: { id: true, posterUrl: true, showcaseStatus: true, url: true },
+      orderBy: { createdAt: "desc" },
+      take: 48,
+    }),
   ]);
   const currentUser = serializeUser(user);
 
@@ -70,6 +78,11 @@ export default async function WorksPage() {
           initialHasMore={initialPage.hasMore}
           initialCursor={initialPage.nextCursor}
         />
+
+        <div className="mt-10">
+          <h2 className="mb-4 text-2xl font-semibold text-[var(--ink)]">我的视频</h2>
+          <VideoWorksSection initialVideos={myVideos} />
+        </div>
       </section>
     </main>
   );
