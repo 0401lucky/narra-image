@@ -43,3 +43,6 @@ next-env.d.ts
 
 # playwright mcp debug logs
 /.playwright-mcp/
+
+# superpowers brainstorm visual companion
+/.superpowers/
