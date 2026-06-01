@@ -1,6 +1,6 @@
 import { readdirSync } from "node:fs";
 import { delimiter, join } from "node:path";
-import { spawnSync } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
 
 import pg from "pg";
 
@@ -10,6 +10,13 @@ const RECOVERABLE_FAILED_MIGRATIONS = new Set([
 ]);
 const DATABASE_READY_ATTEMPTS = Number(process.env.DATABASE_READY_ATTEMPTS ?? 180);
 const DATABASE_READY_DELAY_MS = Number(process.env.DATABASE_READY_DELAY_MS ?? 2_000);
+const ENABLE_EMBEDDED_WORKER =
+  (process.env.ENABLE_EMBEDDED_WORKER ?? "true").toLowerCase() !== "false";
+const WORKER_COMMAND = process.env.WORKER_COMMAND ?? "./narra-worker";
+const WORKER_READY_TIMEOUT_MS = Number(process.env.WORKER_READY_TIMEOUT_MS ?? 60_000);
+const WORKER_READY_POLL_INTERVAL_MS = 1_000;
+const WORKER_READY_REQUEST_TIMEOUT_MS = 2_000;
+const NEXT_BIN = join(process.cwd(), "node_modules", "next", "dist", "bin", "next");
 
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -109,9 +116,126 @@ async function runPrismaWithDatabaseRetry(args) {
   return lastResult ?? { ok: false, output: "", status: 1 };
 }
 
-function runRequired(command, args) {
-  const result = run(command, args);
-  if (!result.ok) process.exit(result.status);
+function startManagedProcess(label, command, args = []) {
+  const child = spawn(command, args, {
+    env: process.env,
+    shell: process.platform === "win32",
+    stdio: "inherit",
+  });
+
+  child.on("error", (error) => {
+    console.error(`${label} failed to start: ${describeDatabaseError(error)}`);
+    process.exitCode = 1;
+    shutdownChildren();
+  });
+
+  child.on("exit", (code, signal) => {
+    managedChildren.delete(child);
+    if (signal) {
+      console.error(`${label} exited with signal ${signal}.`);
+    } else {
+      console.error(`${label} exited with code ${code ?? 1}.`);
+    }
+    if (!isShuttingDown) {
+      process.exitCode = code === 0 ? 1 : (code ?? 1);
+    }
+    shutdownChildren(child);
+    maybeExitParent();
+  });
+
+  managedChildren.add(child);
+  return child;
+}
+
+const managedChildren = new Set();
+let isShuttingDown = false;
+
+function shutdownChildren(skipChild = null) {
+  if (isShuttingDown) return;
+  isShuttingDown = true;
+
+  for (const child of managedChildren) {
+    if (child === skipChild || child.killed) continue;
+    child.kill("SIGTERM");
+  }
+
+  maybeExitParent();
+}
+
+function maybeExitParent() {
+  if (!isShuttingDown || managedChildren.size > 0) return;
+  process.exit(process.exitCode ?? 0);
+}
+
+function startWorker() {
+  if (!ENABLE_EMBEDDED_WORKER) {
+    console.log("Embedded worker is disabled.");
+    return null;
+  }
+
+  return startManagedProcess("Embedded worker", WORKER_COMMAND);
+}
+
+function getWorkerHealthUrl() {
+  const workerHttpAddr = (process.env.WORKER_HTTP_ADDR ?? ":8081").trim();
+  if (!workerHttpAddr) return null;
+
+  const match = workerHttpAddr.match(/:(\d+)$/);
+  if (!match) return null;
+
+  return `http://127.0.0.1:${match[1]}/healthz`;
+}
+
+async function waitForWorkerReady(child) {
+  const healthUrl = getWorkerHealthUrl();
+  if (!healthUrl || WORKER_READY_TIMEOUT_MS <= 0) return;
+
+  const deadline = Date.now() + WORKER_READY_TIMEOUT_MS;
+  console.log(`Waiting for embedded worker health at ${healthUrl}.`);
+
+  let attempt = 0;
+  let lastError = "";
+
+  while (Date.now() < deadline) {
+    if (child.exitCode !== null || child.signalCode !== null) return;
+    if (!managedChildren.has(child)) return;
+
+    attempt += 1;
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), WORKER_READY_REQUEST_TIMEOUT_MS);
+
+    try {
+      const response = await fetch(healthUrl, {
+        cache: "no-store",
+        method: "GET",
+        signal: controller.signal,
+      });
+
+      if (response.ok) {
+        console.log(`Embedded worker is ready after ${attempt} checks.`);
+        return;
+      }
+
+      const responseBody = await response.text();
+      lastError = `${response.status} ${responseBody}`.trim();
+    } catch (error) {
+      lastError = describeDatabaseError(error);
+    } finally {
+      clearTimeout(timer);
+    }
+
+    await sleep(WORKER_READY_POLL_INTERVAL_MS);
+  }
+
+  throw new Error(
+    `Embedded worker did not become ready within ${WORKER_READY_TIMEOUT_MS} ms${
+      lastError ? `: ${lastError}` : ""
+    }`,
+  );
+}
+
+function startNext() {
+  return startManagedProcess("Next.js", process.execPath, [NEXT_BIN, "start"]);
 }
 
 function getPrismaMigrations() {
@@ -412,4 +536,27 @@ try {
   process.exit(1);
 }
 
-runRequired("next", ["start"]);
+const worker = startWorker();
+if (worker) {
+  try {
+    await waitForWorkerReady(worker);
+  } catch (error) {
+    console.error(`Embedded worker startup failed: ${describeDatabaseError(error)}`);
+    shutdownChildren();
+    process.exit(process.exitCode ?? 1);
+  }
+}
+
+if (isShuttingDown) {
+  process.exit(process.exitCode ?? 1);
+}
+
+startNext();
+
+process.on("SIGINT", () => {
+  shutdownChildren();
+});
+
+process.on("SIGTERM", () => {
+  shutdownChildren();
+});

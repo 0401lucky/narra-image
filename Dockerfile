@@ -26,6 +26,16 @@ ENV BUILTIN_PROVIDER_API_KEY="demo-key"
 
 RUN pnpm build
 
+FROM golang:1.25-alpine AS worker-builder
+
+WORKDIR /src/worker
+
+COPY worker/go.mod worker/go.sum ./
+RUN go mod download
+
+COPY worker/ ./
+RUN CGO_ENABLED=0 GOOS=linux go build -o /out/narra-worker ./cmd/worker
+
 FROM base AS runner
 
 ENV NODE_ENV=production
@@ -41,6 +51,7 @@ COPY --from=builder /app/pnpm-lock.yaml ./pnpm-lock.yaml
 COPY --from=builder /app/pnpm-workspace.yaml ./pnpm-workspace.yaml
 COPY --from=builder /app/next.config.ts ./next.config.ts
 COPY --from=builder /app/node_modules ./node_modules
+COPY --from=worker-builder /out/narra-worker ./narra-worker
 
 EXPOSE 3000
 
