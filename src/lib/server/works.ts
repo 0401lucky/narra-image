@@ -5,8 +5,10 @@ import { Prisma, ShowcaseStatus } from "@prisma/client";
 import { db } from "@/lib/db";
 import {
   serializeAdminWork,
+  serializeFeaturedVideo,
   serializeFeaturedWork,
   serializeWork,
+  type FeaturedVideoRecord,
   type FeaturedWorkRecord,
   type SerializedWork,
 } from "@/lib/prisma-mappers";
@@ -385,6 +387,96 @@ export async function getWorkMutationTarget(id: string) {
           userId: true,
         },
       },
+      showcaseStatus: true,
+    },
+  });
+}
+
+const videoFeaturedInclude = {
+  job: {
+    select: {
+      createdAt: true,
+      id: true,
+      model: true,
+      negativePrompt: true,
+      prompt: true,
+      size: true,
+      status: true,
+      user: {
+        select: {
+          avatarUrl: true,
+          id: true,
+          nickname: true,
+        },
+      },
+      userId: true,
+    },
+  },
+  _count: {
+    select: {
+      likes: true,
+    },
+  },
+};
+
+export type FeaturedVideosPage = {
+  hasMore: boolean;
+  items: ReturnType<typeof serializeFeaturedVideo>[];
+  nextCursor: string | null;
+};
+
+export async function listFeaturedVideosPage(
+  options: { cursor?: string | null; limit?: number; viewerId?: string | null } = {},
+): Promise<FeaturedVideosPage> {
+  const limit = Math.min(Math.max(options.limit ?? FEATURED_WORKS_PAGE_SIZE, 1), FEATURED_WORKS_PAGE_SIZE);
+  const cursor = decodeFeaturedWorksCursor(options.cursor);
+  const cursorFeaturedAt = cursor ? new Date(cursor.featuredAt) : null;
+  const hasValidCursor = cursor && cursorFeaturedAt && !Number.isNaN(cursorFeaturedAt.getTime());
+
+  const videos = await db.generatedVideo.findMany({
+    where: {
+      showcaseStatus: ShowcaseStatus.FEATURED,
+      featuredAt: { not: null },
+      ...(hasValidCursor
+        ? {
+            OR: [
+              { featuredAt: { lt: cursorFeaturedAt } },
+              { featuredAt: cursorFeaturedAt, id: { lt: cursor.id } },
+            ],
+          }
+        : {}),
+    },
+    include: {
+      ...videoFeaturedInclude,
+      ...(options.viewerId
+        ? { likes: { where: { userId: options.viewerId }, select: { userId: true }, take: 1 } }
+        : {}),
+    },
+    orderBy: [{ featuredAt: "desc" }, { id: "desc" }],
+    take: limit + 1,
+  });
+
+  const hasMore = videos.length > limit;
+  const pageItems = hasMore ? videos.slice(0, limit) : videos;
+  const last = pageItems[pageItems.length - 1];
+  const nextCursor =
+    hasMore && last && last.featuredAt
+      ? encodeFeaturedWorksCursor({ featuredAt: last.featuredAt.toISOString(), id: last.id })
+      : null;
+
+  return {
+    hasMore,
+    items: pageItems.map((v) => serializeFeaturedVideo(v as unknown as FeaturedVideoRecord)),
+    nextCursor,
+  };
+}
+
+export async function getVideoMutationTarget(id: string) {
+  return db.generatedVideo.findUnique({
+    where: { id },
+    select: {
+      featuredAt: true,
+      job: { select: { userId: true } },
       showcaseStatus: true,
     },
   });
