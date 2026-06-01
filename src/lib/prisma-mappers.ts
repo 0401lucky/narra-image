@@ -278,6 +278,51 @@ export function serializeFeaturedWork(work: FeaturedWorkRecord): SerializedFeatu
   };
 }
 
+export type SerializedFeaturedVideo = {
+  authorAvatar: string | null;
+  authorName: string;
+  durationSeconds: number | null;
+  featuredAt: string | null;
+  id: string;
+  likeCount: number;
+  likedByMe: boolean;
+  posterUrl: string | null;
+  prompt: string;
+  size: string;
+  title: string;
+  videoUrl: string;
+};
+
+export type FeaturedVideoRecord = GeneratedVideo & {
+  job: WorkJobFields & {
+    user: WorkAuthorFields;
+  };
+  _count?: {
+    likes: number;
+  };
+  likes?: Array<{
+    userId: string;
+  }>;
+};
+
+export function serializeFeaturedVideo(video: FeaturedVideoRecord): SerializedFeaturedVideo {
+  const author = video.job.user;
+  return {
+    authorAvatar: author.avatarUrl,
+    authorName: author.nickname || "匿名创作者",
+    durationSeconds: typeof video.durationSeconds === "number" ? video.durationSeconds : null,
+    featuredAt: video.featuredAt?.toISOString() ?? null,
+    id: video.id,
+    likeCount: video._count?.likes ?? 0,
+    likedByMe: Boolean(video.likes?.length),
+    posterUrl: typeof video.posterUrl === "string" ? video.posterUrl : null,
+    prompt: video.showPromptPublic ? video.job.prompt : "作者未公开提示词",
+    size: video.job.size,
+    title: video.job.model,
+    videoUrl: video.url,
+  };
+}
+
 export function serializeGeneration(
   job: GenerationJob & { images: GenerationImage[]; videos?: GeneratedVideo[] },
 ): SerializedGeneration {
