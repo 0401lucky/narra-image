@@ -19,6 +19,15 @@ export type GenerationImage = {
   url: string;
 };
 
+export type GenerationVideo = {
+  id: string;
+  url: string;
+  posterUrl?: string | null;
+  width?: number | null;
+  height?: number | null;
+  durationSeconds?: number | null;
+};
+
 export type GenerationItem = {
   completedAt?: string | null;
   conversationId?: string | null;
@@ -30,6 +39,9 @@ export type GenerationItem = {
   generationType: GenerationType;
   id: string;
   images: GenerationImage[];
+  videos?: GenerationVideo[];
+  aspectRatio?: string | null;
+  durationSeconds?: number | null;
   model: string;
   moderation?: string;
   negativePrompt?: string | null;
