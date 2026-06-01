@@ -199,16 +199,20 @@ model InviteCode {
 }
 
 model WorkLike {
-  id        String          @id @default(cuid())
-  workId    String
+  id        String           @id @default(cuid())
+  workId    String?
+  videoId   String?
   userId    String
-  createdAt DateTime        @default(now())
-  work      GenerationImage @relation(fields: [workId], references: [id], onDelete: Cascade)
-  user      User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime         @default(now())
+  work      GenerationImage? @relation(fields: [workId], references: [id], onDelete: Cascade)
+  video     GeneratedVideo?  @relation(fields: [videoId], references: [id], onDelete: Cascade)
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([workId, userId])
+  @@unique([videoId, userId])
   @@index([userId])
   @@index([workId])
+  @@index([videoId])
 }
 
 model RedeemCodeBatch {
@@ -402,6 +406,7 @@ model GeneratedVideo {
   createdAt        DateTime       @default(now())
   job              GenerationJob  @relation(fields: [jobId], references: [id], onDelete: Cascade)
   reviewedBy       User?          @relation("ReviewedVideos", fields: [reviewedById], references: [id], onDelete: SetNull)
+  likes            WorkLike[]
 
   @@index([showcaseStatus, featuredAt(sort: Desc), id(sort: Desc)])
   @@index([jobId, createdAt])
