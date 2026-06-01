@@ -26,6 +26,8 @@ enum GenerationStatus {
 enum GenerationType {
   TEXT_TO_IMAGE
   IMAGE_TO_IMAGE
+  TEXT_TO_VIDEO
+  IMAGE_TO_VIDEO
 }
 
 enum GenerationClientSource {
@@ -65,6 +67,7 @@ model User {
   generations          GenerationJob[]
   featuredGenerations  GenerationJob[]      @relation("FeaturedByAdmin")
   reviewedWorks        GenerationImage[]    @relation("ReviewedWorks")
+  reviewedVideos       GeneratedVideo[]     @relation("ReviewedVideos")
   likedWorks           WorkLike[]
   redeemBatches        RedeemCodeBatch[]    @relation("RedeemBatchCreatedBy")
   createdRedeemCodes   RedeemCode[]         @relation("RedeemCodeCreatedBy")
@@ -173,6 +176,7 @@ model ProviderChannel {
   defaultModel    String
   models          String[] @default([])
   creditCost      Int      @default(5)
+  videoCreditCost Int      @default(20)
   isActive        Boolean  @default(true)
   sortOrder       Int      @default(0)
   createdAt       DateTime @default(now())
@@ -316,6 +320,8 @@ model GenerationJob {
   moderation              String                 @default("auto")
   seed                    Int?
   sourceImageUrls         String[]               @default([])
+  durationSeconds         Int?
+  aspectRatio             String?
   count                   Int
   status                  GenerationStatus       @default(PENDING)
   errorMessage            String?
@@ -329,6 +335,7 @@ model GenerationJob {
   featuredBy              User?                  @relation("FeaturedByAdmin", fields: [featuredById], references: [id], onDelete: SetNull)
   conversation            Conversation?          @relation(fields: [conversationId], references: [id], onDelete: SetNull)
   images                  GenerationImage[]
+  videos                  GeneratedVideo[]
 
   @@index([apiKeyId])
   @@index([apiKeyId, clientSource, createdAt])
@@ -371,6 +378,30 @@ model GenerationImage {
   job              GenerationJob  @relation(fields: [jobId], references: [id], onDelete: Cascade)
   reviewedBy       User?          @relation("ReviewedWorks", fields: [reviewedById], references: [id], onDelete: SetNull)
   likes            WorkLike[]
+
+  @@index([showcaseStatus, featuredAt(sort: Desc), id(sort: Desc)])
+  @@index([jobId, createdAt])
+  @@index([createdAt(sort: Desc), id(sort: Desc)])
+}
+
+model GeneratedVideo {
+  id               String         @id @default(cuid())
+  jobId            String
+  url              String
+  posterUrl        String?
+  width            Int?
+  height           Int?
+  durationSeconds  Int?
+  showcaseStatus   ShowcaseStatus @default(PRIVATE)
+  showPromptPublic Boolean        @default(false)
+  submittedAt      DateTime?
+  featuredAt       DateTime?
+  reviewedAt       DateTime?
+  reviewNote       String?
+  reviewedById     String?
+  createdAt        DateTime       @default(now())
+  job              GenerationJob  @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  reviewedBy       User?          @relation("ReviewedVideos", fields: [reviewedById], references: [id], onDelete: SetNull)
 
   @@index([showcaseStatus, featuredAt(sort: Desc), id(sort: Desc)])
   @@index([jobId, createdAt])
