@@ -43,6 +43,8 @@ type GenerationJob struct {
 	Quality                 string
 	Seed                    sql.NullInt32
 	Size                    string
+	DurationSeconds         sql.NullInt32
+	AspectRatio             sql.NullString
 	SourceImageURLs         []string
 	UserID                  string
 }
@@ -217,7 +219,9 @@ RETURNING
   job."outputCompression",
   job.moderation,
   job.seed,
-  job."sourceImageUrls"
+  job."sourceImageUrls",
+  job."durationSeconds",
+  job."aspectRatio"
 `, staleBefore, w.cfg.MaxAttempts, w.cfg.WorkerID, now)
 
 	var job GenerationJob
@@ -243,6 +247,8 @@ RETURNING
 		&job.Moderation,
 		&job.Seed,
 		&job.SourceImageURLs,
+		&job.DurationSeconds,
+		&job.AspectRatio,
 	)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return GenerationJob{}, false, tx.Commit(ctx)
