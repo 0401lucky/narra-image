@@ -1,4 +1,4 @@
-import type { ProviderMode } from "@/lib/types";
+import type { GenerationType, ProviderMode } from "@/lib/types";
 
 type CreditInput = {
   providerMode: ProviderMode;
@@ -26,4 +26,22 @@ export function hasEnoughCredits({
   builtInCreditCost,
 }: CreditGuardInput) {
   return credits >= calculateGenerationCost({ providerMode, builtInCreditCost });
+}
+
+type ResolveCreditCostInput = {
+  generationType: GenerationType;
+  imageCreditCost: number;
+  videoCreditCost: number;
+};
+
+export function isVideoGenerationType(generationType: GenerationType) {
+  return generationType === "text_to_video" || generationType === "image_to_video";
+}
+
+export function resolveCreditCost({
+  generationType,
+  imageCreditCost,
+  videoCreditCost,
+}: ResolveCreditCostInput) {
+  return isVideoGenerationType(generationType) ? videoCreditCost : imageCreditCost;
 }

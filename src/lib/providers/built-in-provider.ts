@@ -9,6 +9,7 @@ export type ResolvedChannel = {
   apiKey: string;
   baseUrl: string;
   creditCost: number;
+  videoCreditCost: number;
   defaultModel: string;
   id: string;
   models: string[];
@@ -36,6 +37,7 @@ export async function getActiveChannels(): Promise<ResolvedChannel[]> {
         apiKey: envKey,
         baseUrl: envBase,
         creditCost: env.BUILTIN_PROVIDER_CREDIT_COST,
+        videoCreditCost: env.BUILTIN_PROVIDER_VIDEO_CREDIT_COST,
         defaultModel: env.BUILTIN_PROVIDER_MODEL,
         id: "__env__",
         models: [],
@@ -49,6 +51,7 @@ export async function getActiveChannels(): Promise<ResolvedChannel[]> {
       apiKey: await decryptProviderSecret(ch.apiKeyEncrypted, env.AUTH_SECRET),
       baseUrl: ch.baseUrl,
       creditCost: ch.creditCost,
+      videoCreditCost: ch.videoCreditCost,
       defaultModel: ch.defaultModel,
       id: ch.id,
       models: ch.models,
@@ -73,6 +76,7 @@ export async function getChannelById(id: string): Promise<ResolvedChannel | null
       apiKey: envKey,
       baseUrl: envBase,
       creditCost: env.BUILTIN_PROVIDER_CREDIT_COST,
+      videoCreditCost: env.BUILTIN_PROVIDER_VIDEO_CREDIT_COST,
       defaultModel: env.BUILTIN_PROVIDER_MODEL,
       id: "__env__",
       models: [],
@@ -87,6 +91,7 @@ export async function getChannelById(id: string): Promise<ResolvedChannel | null
     apiKey: await decryptProviderSecret(ch.apiKeyEncrypted, env.AUTH_SECRET),
     baseUrl: ch.baseUrl,
     creditCost: ch.creditCost,
+    videoCreditCost: ch.videoCreditCost,
     defaultModel: ch.defaultModel,
     id: ch.id,
     models: ch.models,
@@ -151,6 +156,7 @@ export async function getBuiltInProviderConfig() {
       apiKey: env.BUILTIN_PROVIDER_API_KEY || "",
       baseUrl: env.BUILTIN_PROVIDER_BASE_URL || "",
       creditCost: env.BUILTIN_PROVIDER_CREDIT_COST,
+      videoCreditCost: env.BUILTIN_PROVIDER_VIDEO_CREDIT_COST,
       id: "__env__",
       model: env.BUILTIN_PROVIDER_MODEL,
       models: [] as string[],
@@ -162,6 +168,7 @@ export async function getBuiltInProviderConfig() {
     apiKey: first.apiKey,
     baseUrl: first.baseUrl,
     creditCost: first.creditCost,
+    videoCreditCost: first.videoCreditCost,
     id: first.id,
     model: first.defaultModel,
     models: first.models,

@@ -1,6 +1,7 @@
 import {
   calculateGenerationCost,
   hasEnoughCredits,
+  resolveCreditCost,
   shouldChargeCredits,
 } from "@/lib/credits";
 
@@ -36,5 +37,20 @@ describe("积分规则", () => {
         builtInCreditCost: 5,
       }),
     ).toBe(false);
+  });
+
+  it("视频生成类型取视频单价，图片类型取图片单价", () => {
+    expect(
+      resolveCreditCost({ generationType: "text_to_video", imageCreditCost: 5, videoCreditCost: 20 }),
+    ).toBe(20);
+    expect(
+      resolveCreditCost({ generationType: "image_to_video", imageCreditCost: 5, videoCreditCost: 20 }),
+    ).toBe(20);
+    expect(
+      resolveCreditCost({ generationType: "text_to_image", imageCreditCost: 5, videoCreditCost: 20 }),
+    ).toBe(5);
+    expect(
+      resolveCreditCost({ generationType: "image_to_image", imageCreditCost: 5, videoCreditCost: 20 }),
+    ).toBe(5);
   });
 });
