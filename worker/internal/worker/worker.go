@@ -288,6 +288,22 @@ func (w *Worker) processJob(parent context.Context, job GenerationJob) {
 		return
 	}
 
+	if job.GenerationType == "TEXT_TO_VIDEO" || job.GenerationType == "IMAGE_TO_VIDEO" {
+		video, err := generateVideo(ctx, w.storage, job, provider, w.cfg.VideoPollInterval)
+		if err != nil {
+			logger.Error("视频生成失败", "error", err)
+			_ = w.failJobAndRefund(parent, job.ID, err.Error())
+			return
+		}
+		if err := w.completeVideoJob(parent, job, video); err != nil {
+			logger.Error("写入视频结果失败", "error", err)
+			_ = w.failJobAndRefund(parent, job.ID, err.Error())
+			return
+		}
+		logger.Info("视频生成任务完成", "url", video.URL)
+		return
+	}
+
 	images, err := generateImages(ctx, w.storage, job, provider)
 	if err != nil {
 		logger.Error("生成失败", "error", err)
@@ -518,6 +534,90 @@ ON CONFLICT ("userId") DO UPDATE SET
 	}
 
 	return tx.Commit(ctx)
+}
+
+func (w *Worker) completeVideoJob(ctx context.Context, job GenerationJob, video VideoResult) error {
+	tx, err := w.pool.BeginTx(ctx, pgx.TxOptions{})
+	if err != nil {
+		return err
+	}
+	defer rollbackSilently(ctx, tx)
+
+	now := time.Now().UTC()
+	tag, err := tx.Exec(ctx, `
+UPDATE "GenerationJob"
+SET
+  status = 'SUCCEEDED',
+  "completedAt" = $1,
+  "lockedAt" = NULL,
+  "workerId" = NULL,
+  "updatedAt" = $1
+WHERE id = $2
+  AND status = 'PROCESSING'
+  AND "workerId" = $3
+`, now, job.ID, w.cfg.WorkerID)
+	if err != nil {
+		return err
+	}
+	if tag.RowsAffected() == 0 {
+		return errors.New("任务状态已变化，跳过写入")
+	}
+
+	_, err = tx.Exec(ctx, `
+INSERT INTO "GeneratedVideo" (
+  id,
+  "jobId",
+  url,
+  "posterUrl",
+  width,
+  height,
+  "durationSeconds",
+  "showcaseStatus",
+  "showPromptPublic",
+  "createdAt"
+) VALUES ($1, $2, $3, $4, $5, $6, $7, 'PRIVATE', false, $8)
+`, cuidLikeID(), job.ID, video.URL, nullableVideoString(video.PosterURL), nullableInt(video.Width), nullableInt(video.Height), nullableInt(video.DurationSeconds), now)
+	if err != nil {
+		return err
+	}
+
+	if job.ProviderMode == "CUSTOM" && job.ProviderRemember {
+		if !job.ProviderBaseURL.Valid || !job.ProviderAPIKeyEncrypted.Valid {
+			return errors.New("自填渠道配置不完整")
+		}
+		_, err := tx.Exec(ctx, `
+INSERT INTO "SavedProviderConfig" (
+  id,
+  "userId",
+  label,
+  "baseUrl",
+  "apiKeyEncrypted",
+  model,
+  models,
+  "createdAt",
+  "updatedAt"
+) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $8)
+ON CONFLICT ("userId") DO UPDATE SET
+  label = EXCLUDED.label,
+  "baseUrl" = EXCLUDED."baseUrl",
+  "apiKeyEncrypted" = EXCLUDED."apiKeyEncrypted",
+  model = EXCLUDED.model,
+  models = EXCLUDED.models,
+  "updatedAt" = EXCLUDED."updatedAt"
+`, cuidLikeID(), job.UserID, nullableString(job.ProviderLabel), job.ProviderBaseURL.String, job.ProviderAPIKeyEncrypted.String, job.Model, job.ProviderModels, now)
+		if err != nil {
+			return err
+		}
+	}
+
+	return tx.Commit(ctx)
+}
+
+func nullableVideoString(value string) any {
+	if strings.TrimSpace(value) == "" {
+		return nil
+	}
+	return value
 }
 
 func (w *Worker) failJobAndRefund(ctx context.Context, jobID string, message string) error {
