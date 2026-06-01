@@ -5,6 +5,7 @@ import {
   Role,
   ShowcaseStatus,
   type Conversation,
+  type GeneratedVideo,
   type GenerationImage,
   type GenerationJob,
   type User,
@@ -23,14 +24,24 @@ export type SerializedGeneration = {
   durationMs: number | null;
   errorMessage: string | null;
   featuredAt: string | null;
-  generationType: "text_to_image" | "image_to_image";
+  generationType: "text_to_image" | "image_to_image" | "text_to_video" | "image_to_video";
   id: string;
+  aspectRatio: string | null;
+  durationSeconds: number | null;
   images: Array<{
     actualHeight: number | null;
     actualSize: string | null;
     actualWidth: number | null;
     id: string;
     url: string;
+  }>;
+  videos: Array<{
+    durationSeconds: number | null;
+    height: number | null;
+    id: string;
+    posterUrl: string | null;
+    url: string;
+    width: number | null;
   }>;
   model: string;
   moderation: string;
@@ -146,9 +157,16 @@ export function toPrismaProviderMode(providerMode: UiProviderMode) {
 }
 
 export function toPrismaGenerationType(generationType: UiGenerationType) {
-  return generationType === "image_to_image"
-    ? GenerationType.IMAGE_TO_IMAGE
-    : GenerationType.TEXT_TO_IMAGE;
+  switch (generationType) {
+    case "image_to_image":
+      return GenerationType.IMAGE_TO_IMAGE;
+    case "text_to_video":
+      return GenerationType.TEXT_TO_VIDEO;
+    case "image_to_video":
+      return GenerationType.IMAGE_TO_VIDEO;
+    default:
+      return GenerationType.TEXT_TO_IMAGE;
+  }
 }
 
 export function fromPrismaProviderMode(providerMode: ProviderMode): UiProviderMode {
@@ -156,9 +174,16 @@ export function fromPrismaProviderMode(providerMode: ProviderMode): UiProviderMo
 }
 
 export function fromPrismaGenerationType(generationType: GenerationType): UiGenerationType {
-  return generationType === GenerationType.IMAGE_TO_IMAGE
-    ? "image_to_image"
-    : "text_to_image";
+  switch (generationType) {
+    case GenerationType.IMAGE_TO_IMAGE:
+      return "image_to_image";
+    case GenerationType.TEXT_TO_VIDEO:
+      return "text_to_video";
+    case GenerationType.IMAGE_TO_VIDEO:
+      return "image_to_video";
+    default:
+      return "text_to_image";
+  }
 }
 
 export function fromPrismaRole(role: Role): UserRole {
@@ -254,7 +279,7 @@ export function serializeFeaturedWork(work: FeaturedWorkRecord): SerializedFeatu
 }
 
 export function serializeGeneration(
-  job: GenerationJob & { images: GenerationImage[] },
+  job: GenerationJob & { images: GenerationImage[]; videos?: GeneratedVideo[] },
 ): SerializedGeneration {
   const generationType = fromPrismaGenerationType(
     "generationType" in job && job.generationType
@@ -296,6 +321,12 @@ export function serializeGeneration(
     errorMessage: job.errorMessage,
     featuredAt: job.featuredAt?.toISOString() ?? null,
     generationType,
+    aspectRatio:
+      "aspectRatio" in job && typeof job.aspectRatio === "string" ? job.aspectRatio : null,
+    durationSeconds:
+      "durationSeconds" in job && typeof job.durationSeconds === "number"
+        ? job.durationSeconds
+        : null,
     id: job.id,
     images: job.images.map((image) => {
       const width = "width" in image && typeof image.width === "number" ? image.width : null;
@@ -309,6 +340,18 @@ export function serializeGeneration(
         url: image.url,
       };
     }),
+    videos:
+      "videos" in job && Array.isArray(job.videos)
+        ? job.videos.map((video) => ({
+            durationSeconds:
+              typeof video.durationSeconds === "number" ? video.durationSeconds : null,
+            height: typeof video.height === "number" ? video.height : null,
+            id: video.id,
+            posterUrl: typeof video.posterUrl === "string" ? video.posterUrl : null,
+            url: video.url,
+            width: typeof video.width === "number" ? video.width : null,
+          }))
+        : [],
     model: job.model,
     moderation:
       "moderation" in job && typeof job.moderation === "string"

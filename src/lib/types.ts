@@ -1,5 +1,5 @@
 export type ProviderMode = "built_in" | "custom";
-export type GenerationType = "text_to_image" | "image_to_image";
+export type GenerationType = "text_to_image" | "image_to_image" | "text_to_video" | "image_to_video";
 export type {
   GenerationSizeToken,
   SizeTier,
