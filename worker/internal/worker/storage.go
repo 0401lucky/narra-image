@@ -113,11 +113,12 @@ func (s *Storage) PersistVideo(ctx context.Context, userID string, data []byte) 
 		return strings.TrimRight(s.cfg.S3Endpoint, "/") + "/" + s.cfg.S3Bucket + "/" + fileName, nil
 	}
 
-	if s.cfg.EnableLocalImageFallback {
-		return fmt.Sprintf("data:video/mp4;base64,%s", base64.StdEncoding.EncodeToString(data)), nil
-	}
-
 	return "", errors.New("当前没有可用的视频存储配置")
+}
+
+// hasObjectStorage 表示是否配置了可用的 S3 对象存储。
+func (s *Storage) hasObjectStorage() bool {
+	return s.client != nil && s.cfg.S3Bucket != ""
 }
 
 func loadSourceImages(ctx context.Context, urls []string) ([]SourceImage, error) {

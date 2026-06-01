@@ -58,15 +58,19 @@ func generateVideo(ctx context.Context, storage *Storage, job GenerationJob, pro
 		return VideoResult{}, errors.New("视频生成完成但渠道未返回视频地址")
 	}
 
-	// 渠道成品视频在对象存储（公开 URL）上，下载后转存到本站 S3 以便长期可播放。
-	data, err := downloadVideo(ctx, final.VideoURL)
-	if err != nil {
-		return VideoResult{}, err
-	}
-
-	url, err := storage.PersistVideo(ctx, job.UserID, data)
-	if err != nil {
-		return VideoResult{}, err
+	// 有对象存储则下载转存到本站 S3（长期可播放）；否则直接用渠道公开 URL
+	// （与图片直接用渠道 URL 一致，避免把大体积视频塞进数据库）。
+	url := final.VideoURL
+	if storage.hasObjectStorage() {
+		data, err := downloadVideo(ctx, final.VideoURL)
+		if err != nil {
+			return VideoResult{}, err
+		}
+		stored, err := storage.PersistVideo(ctx, job.UserID, data)
+		if err != nil {
+			return VideoResult{}, err
+		}
+		url = stored
 	}
 
 	result := VideoResult{URL: url}

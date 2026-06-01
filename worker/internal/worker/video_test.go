@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
-	"strings"
 	"testing"
 	"time"
 )
@@ -55,8 +54,9 @@ func TestGenerateVideoPollsUntilCompletedAndPersists(t *testing.T) {
 	if err != nil {
 		t.Fatalf("generateVideo returned error: %v", err)
 	}
-	if !strings.HasPrefix(result.URL, "data:video/mp4;base64,") {
-		t.Fatalf("unexpected video url: %s", result.URL)
+	// 测试 storage 未配 S3，应直接回退为渠道公开 URL（不下载、不转存）。
+	if result.URL != server.URL+"/file.mp4" {
+		t.Fatalf("expected channel url %s, got %s", server.URL+"/file.mp4", result.URL)
 	}
 	if polls < 2 {
 		t.Fatalf("expected at least 2 polls, got %d", polls)
