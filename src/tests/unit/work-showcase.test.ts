@@ -5,6 +5,7 @@ import {
   canViewWorkDetail,
   type WorkShowcaseStatus,
 } from "@/lib/work-showcase";
+import { adminWorkReviewSchema, workShowcaseUpdateSchema } from "@/lib/validators";
 
 describe("作品状态流转", () => {
   const now = new Date("2026-04-23T12:00:00.000Z");
@@ -269,4 +270,16 @@ describe("作品访问与提示词可见性", () => {
       ).toBe(false);
     },
   );
+});
+
+describe("作品操作 schema 的 mediaType", () => {
+  it("投稿 schema 默认 mediaType=image，可显式传 video", () => {
+    expect(workShowcaseUpdateSchema.parse({ action: "submit" }).mediaType).toBe("image");
+    expect(workShowcaseUpdateSchema.parse({ action: "submit", mediaType: "video" }).mediaType).toBe("video");
+  });
+
+  it("审核 schema 默认 mediaType=image，可显式传 video", () => {
+    expect(adminWorkReviewSchema.parse({ action: "approve_feature" }).mediaType).toBe("image");
+    expect(adminWorkReviewSchema.parse({ action: "approve_feature", mediaType: "video" }).mediaType).toBe("video");
+  });
 });

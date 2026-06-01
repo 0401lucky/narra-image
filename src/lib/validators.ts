@@ -151,11 +151,13 @@ export const providerProbeSchema = z.object({
 
 export const workShowcaseUpdateSchema = z.object({
   action: z.enum(userWorkShowcaseActions),
+  mediaType: z.enum(["image", "video"]).default("image"),
   showPromptPublic: z.boolean().optional(),
 });
 
 export const adminWorkReviewSchema = z.object({
   action: z.enum(adminWorkReviewActions),
+  mediaType: z.enum(["image", "video"]).default("image"),
   reviewNote: z.string().trim().max(300, "审核备注最多 300 个字符").optional().nullable(),
 });
 
