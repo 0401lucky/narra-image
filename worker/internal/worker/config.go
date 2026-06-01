@@ -10,28 +10,31 @@ import (
 )
 
 type Config struct {
-	AppURL                    string
-	AuthSecret                string
-	BuiltInProviderAPIKey     string
-	BuiltInProviderBaseURL    string
-	BuiltInProviderModel      string
-	BuiltInProviderName       string
-	BuiltInProviderCreditCost int
-	Concurrency               int
-	DatabaseURL               string
-	EnableLocalImageFallback  bool
-	HTTPAddr                  string
-	JobTimeout                time.Duration
-	MaxAttempts               int
-	MetricsWindow             time.Duration
-	PollInterval              time.Duration
-	S3AccessKeyID             string
-	S3Bucket                  string
-	S3Endpoint                string
-	S3PublicBaseURL           string
-	S3Region                  string
-	S3SecretAccessKey         string
-	WorkerID                  string
+	AppURL                         string
+	AuthSecret                     string
+	BuiltInProviderAPIKey          string
+	BuiltInProviderBaseURL         string
+	BuiltInProviderModel           string
+	BuiltInProviderName            string
+	BuiltInProviderCreditCost      int
+	Concurrency                    int
+	DatabaseURL                    string
+	EnableLocalImageFallback       bool
+	HTTPAddr                       string
+	JobTimeout                     time.Duration
+	MaxAttempts                    int
+	MetricsWindow                  time.Duration
+	PollInterval                   time.Duration
+	VideoPollInterval              time.Duration
+	BuiltInProviderVideoCreditCost int
+	BuiltInProviderVideoModel      string
+	S3AccessKeyID                  string
+	S3Bucket                       string
+	S3Endpoint                     string
+	S3PublicBaseURL                string
+	S3Region                       string
+	S3SecretAccessKey              string
+	WorkerID                       string
 }
 
 func LoadConfig() (Config, error) {
@@ -50,28 +53,31 @@ func LoadConfig() (Config, error) {
 	}
 
 	return Config{
-		AppURL:                    getenv("APP_URL", "http://localhost:3000"),
-		AuthSecret:                authSecret,
-		BuiltInProviderAPIKey:     os.Getenv("BUILTIN_PROVIDER_API_KEY"),
-		BuiltInProviderBaseURL:    os.Getenv("BUILTIN_PROVIDER_BASE_URL"),
-		BuiltInProviderModel:      getenv("BUILTIN_PROVIDER_MODEL", "gpt-image-2"),
-		BuiltInProviderName:       getenv("BUILTIN_PROVIDER_NAME", "Studio"),
-		BuiltInProviderCreditCost: getenvInt("BUILTIN_PROVIDER_CREDIT_COST", 5),
-		Concurrency:               getenvInt("WORKER_CONCURRENCY", 2),
-		DatabaseURL:               databaseURL,
-		EnableLocalImageFallback:  getenvBool("ENABLE_LOCAL_IMAGE_FALLBACK", true),
-		HTTPAddr:                  getenv("WORKER_HTTP_ADDR", ":8081"),
-		JobTimeout:                time.Duration(getenvInt("WORKER_JOB_TIMEOUT_SECONDS", 900)) * time.Second,
-		MaxAttempts:               getenvInt("WORKER_MAX_ATTEMPTS", 2),
-		MetricsWindow:             time.Duration(getenvInt("WORKER_METRICS_WINDOW_MINUTES", 1440)) * time.Minute,
-		PollInterval:              time.Duration(getenvInt("WORKER_POLL_INTERVAL_MS", 1000)) * time.Millisecond,
-		S3AccessKeyID:             os.Getenv("S3_ACCESS_KEY_ID"),
-		S3Bucket:                  os.Getenv("S3_BUCKET"),
-		S3Endpoint:                os.Getenv("S3_ENDPOINT"),
-		S3PublicBaseURL:           os.Getenv("S3_PUBLIC_BASE_URL"),
-		S3Region:                  getenv("S3_REGION", "auto"),
-		S3SecretAccessKey:         os.Getenv("S3_SECRET_ACCESS_KEY"),
-		WorkerID:                  fmt.Sprintf("%s-%d", hostname, os.Getpid()),
+		AppURL:                         getenv("APP_URL", "http://localhost:3000"),
+		AuthSecret:                     authSecret,
+		BuiltInProviderAPIKey:          os.Getenv("BUILTIN_PROVIDER_API_KEY"),
+		BuiltInProviderBaseURL:         os.Getenv("BUILTIN_PROVIDER_BASE_URL"),
+		BuiltInProviderModel:           getenv("BUILTIN_PROVIDER_MODEL", "gpt-image-2"),
+		BuiltInProviderName:            getenv("BUILTIN_PROVIDER_NAME", "Studio"),
+		BuiltInProviderCreditCost:      getenvInt("BUILTIN_PROVIDER_CREDIT_COST", 5),
+		Concurrency:                    getenvInt("WORKER_CONCURRENCY", 2),
+		DatabaseURL:                    databaseURL,
+		EnableLocalImageFallback:       getenvBool("ENABLE_LOCAL_IMAGE_FALLBACK", true),
+		HTTPAddr:                       getenv("WORKER_HTTP_ADDR", ":8081"),
+		JobTimeout:                     time.Duration(getenvInt("WORKER_JOB_TIMEOUT_SECONDS", 900)) * time.Second,
+		MaxAttempts:                    getenvInt("WORKER_MAX_ATTEMPTS", 2),
+		MetricsWindow:                  time.Duration(getenvInt("WORKER_METRICS_WINDOW_MINUTES", 1440)) * time.Minute,
+		PollInterval:                   time.Duration(getenvInt("WORKER_POLL_INTERVAL_MS", 1000)) * time.Millisecond,
+		VideoPollInterval:              time.Duration(getenvInt("WORKER_VIDEO_POLL_INTERVAL_MS", 5000)) * time.Millisecond,
+		BuiltInProviderVideoCreditCost: getenvInt("BUILTIN_PROVIDER_VIDEO_CREDIT_COST", 20),
+		BuiltInProviderVideoModel:      getenv("BUILTIN_PROVIDER_VIDEO_MODEL", "sora-2"),
+		S3AccessKeyID:                  os.Getenv("S3_ACCESS_KEY_ID"),
+		S3Bucket:                       os.Getenv("S3_BUCKET"),
+		S3Endpoint:                     os.Getenv("S3_ENDPOINT"),
+		S3PublicBaseURL:                os.Getenv("S3_PUBLIC_BASE_URL"),
+		S3Region:                       getenv("S3_REGION", "auto"),
+		S3SecretAccessKey:              os.Getenv("S3_SECRET_ACCESS_KEY"),
+		WorkerID:                       fmt.Sprintf("%s-%d", hostname, os.Getpid()),
 	}, nil
 }
 
