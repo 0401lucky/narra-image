@@ -1,8 +1,9 @@
 "use client";
 
-import { AlertTriangle, Download, Loader2, RotateCcw, Video } from "lucide-react";
+import { AlertTriangle, Download, RotateCcw, Video } from "lucide-react";
 
 import type { GenerationItem } from "@/components/create/types";
+import { VideoGeneratingProgress } from "@/components/video/parts/video-generating-progress";
 
 type VideoStageProps = {
   generation: GenerationItem | null;
@@ -28,11 +29,7 @@ export function VideoStage({ generation, onDownload, onRetry }: VideoStageProps)
     <div className="flex flex-1 flex-col items-center justify-center gap-5 overflow-y-auto p-6 md:p-10">
       <div className="flex w-full max-w-3xl flex-col items-center">
         {generation.status === "pending" && (
-          <div className="flex aspect-video w-full flex-col items-center justify-center gap-4 rounded-2xl border border-[var(--line)] bg-[#1c1714] text-white/90">
-            <Loader2 className="size-10 animate-spin text-[var(--accent)]" />
-            <p className="text-sm">视频生成中，请稍候…</p>
-            <p className="text-xs text-white/50">视频生成耗时较长，可切到其他标签页，完成后会自动更新</p>
-          </div>
+          <VideoGeneratingProgress startedAt={generation.startedAt ?? generation.createdAt} />
         )}
 
         {generation.status === "failed" && (
