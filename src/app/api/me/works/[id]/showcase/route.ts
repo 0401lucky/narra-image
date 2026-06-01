@@ -1,7 +1,7 @@
 import { revalidateTag } from "next/cache";
 
 import { db } from "@/lib/db";
-import { getWorkById, getWorkMutationTarget } from "@/lib/server/works";
+import { getVideoMutationTarget, getWorkById, getWorkMutationTarget } from "@/lib/server/works";
 import { requireCurrentUserRecord } from "@/lib/server/current-user";
 import { getErrorMessage, jsonError, jsonOk, parseJsonBody } from "@/lib/server/http";
 import { applyUserShowcaseAction } from "@/lib/work-showcase";
@@ -25,7 +25,8 @@ export async function PATCH(
     const body = workShowcaseUpdateSchema.parse(await parseJsonBody(request));
     const { id } = await context.params;
 
-    const work = await getWorkMutationTarget(id);
+    const isVideo = body.mediaType === "video";
+    const work = isVideo ? await getVideoMutationTarget(id) : await getWorkMutationTarget(id);
     if (!work || work.job.userId !== user.id) {
       return jsonError("作品不存在", 404);
     }
@@ -50,17 +51,25 @@ export async function PATCH(
       });
     }
 
-    await db.generationImage.update({
-      where: { id },
-      data,
-    });
+    if (isVideo) {
+      await db.generatedVideo.update({
+        where: { id },
+        data,
+      });
+    } else {
+      await db.generationImage.update({
+        where: { id },
+        data,
+      });
+    }
 
     revalidateTag("featured-works", "max");
 
-    const updatedWork = await getWorkById(id);
+    const updatedWork = isVideo ? null : await getWorkById(id);
 
     return jsonOk({
       work: updatedWork,
+      mediaType: body.mediaType,
     });
   } catch (error) {
     return jsonError(getErrorMessage(error), resolveStatusCode(error));

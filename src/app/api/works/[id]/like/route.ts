@@ -15,6 +15,36 @@ export async function PUT(
     }
 
     const { id } = await context.params;
+    const { searchParams } = new URL(_request.url);
+    const isVideo = searchParams.get("mediaType") === "video";
+
+    if (isVideo) {
+      const video = await db.generatedVideo.findUnique({
+        where: { id },
+        select: { id: true, showcaseStatus: true },
+      });
+      if (!video || video.showcaseStatus !== ShowcaseStatus.FEATURED) {
+        return jsonError("作品未公开，暂不能点赞", 404);
+      }
+
+      const result = await db.$transaction(async (tx) => {
+        const existing = await tx.workLike.findUnique({
+          where: { videoId_userId: { userId: user.id, videoId: id } },
+        });
+        const liked = !existing;
+        if (existing) {
+          await tx.workLike.delete({
+            where: { videoId_userId: { userId: user.id, videoId: id } },
+          });
+        } else {
+          await tx.workLike.create({ data: { userId: user.id, videoId: id } });
+        }
+        const likeCount = await tx.workLike.count({ where: { videoId: id } });
+        return { likeCount, liked };
+      });
+
+      return jsonOk(result);
+    }
 
     const work = await db.generationImage.findUnique({
       where: { id },

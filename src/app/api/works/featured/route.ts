@@ -1,6 +1,6 @@
 import { unstable_cache } from "next/cache";
 
-import { listFeaturedWorksPage } from "@/lib/server/works";
+import { listFeaturedVideosPage, listFeaturedWorksPage } from "@/lib/server/works";
 import { getCurrentUserRecord } from "@/lib/server/current-user";
 
 function parseLimit(value: string | null) {
@@ -18,15 +18,28 @@ const getAnonymousFeaturedPage = unstable_cache(
   { revalidate: 60, tags: ["featured-works"] },
 );
 
+const getAnonymousFeaturedVideoPage = unstable_cache(
+  async (cursor: string | null, limit: number) =>
+    listFeaturedVideosPage({ cursor, limit }),
+  ["featured-api-anonymous-video"],
+  { revalidate: 60, tags: ["featured-works"] },
+);
+
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const user = await getCurrentUserRecord();
   const cursor = searchParams.get("cursor");
   const limit = parseLimit(searchParams.get("limit"));
 
-  const data = user
-    ? await listFeaturedWorksPage({ cursor, limit, viewerId: user.id })
-    : await getAnonymousFeaturedPage(cursor, limit);
+  const isVideo = searchParams.get("mediaType") === "video";
+
+  const data = isVideo
+    ? user
+      ? await listFeaturedVideosPage({ cursor, limit, viewerId: user.id })
+      : await getAnonymousFeaturedVideoPage(cursor, limit)
+    : user
+      ? await listFeaturedWorksPage({ cursor, limit, viewerId: user.id })
+      : await getAnonymousFeaturedPage(cursor, limit);
 
   const headers: HeadersInit = user
     ? { "Cache-Control": "private, no-store" }
