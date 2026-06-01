@@ -78,6 +78,8 @@ export async function parseGenerateRequest(request: Request | FormData) {
             }
           : null,
       generationType: toNullableString(formData.get("generationType")) || "image_to_image",
+      durationSeconds: toNullableNumber(formData.get("durationSeconds")),
+      aspectRatio: toNullableString(formData.get("aspectRatio")),
       model: toNullableString(formData.get("model")),
       negativePrompt: null,
       outputCompression: toNullableNumber(formData.get("outputCompression"))

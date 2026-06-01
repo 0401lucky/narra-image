@@ -165,4 +165,47 @@ describe("生成请求解析", () => {
 
     await expect(parseGenerateRequest(formData)).rejects.toThrow("参考图最多支持 16 张");
   });
+
+  it("解析 JSON 文生视频请求并保留时长与比例", async () => {
+    const request = new Request("https://example.com/api/generate", {
+      body: JSON.stringify({
+        aspectRatio: "16:9",
+        durationSeconds: 8,
+        generationType: "text_to_video",
+        model: "sora-2",
+        prompt: "海浪拍打礁石的慢镜头",
+        providerMode: "built_in",
+        size: "1280x720",
+      }),
+      headers: { "Content-Type": "application/json" },
+      method: "POST",
+    });
+
+    const result = await parseGenerateRequest(request);
+
+    expect(result.generationType).toBe("text_to_video");
+    expect(result.durationSeconds).toBe(8);
+    expect(result.aspectRatio).toBe("16:9");
+    expect(result.size).toBe("1280x720");
+  });
+
+  it("解析 form-data 图生视频请求并提取首帧参考图", async () => {
+    const formData = new FormData();
+    formData.append("aspectRatio", "9:16");
+    formData.append("durationSeconds", "4");
+    formData.append("generationType", "image_to_video");
+    formData.append("model", "sora-2");
+    formData.append("prompt", "让这张照片里的人物挥手");
+    formData.append("providerMode", "built_in");
+    formData.append("size", "720x1280");
+    formData.append("image", new File(["fake-image"], "frame.png", { type: "image/png" }));
+
+    const result = await parseGenerateRequest(formData);
+
+    expect(result.generationType).toBe("image_to_video");
+    expect(result.durationSeconds).toBe(4);
+    expect(result.aspectRatio).toBe("9:16");
+    expect(result.image?.name).toBe("frame.png");
+    expect(result.images).toHaveLength(1);
+  });
 });

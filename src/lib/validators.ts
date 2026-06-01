@@ -61,7 +61,9 @@ export const providerConfigSchema = z.object({
 export const generateSchema = z.object({
   count: z.number().int().min(1).max(4).default(1),
   customProvider: providerConfigSchema.optional().nullable(),
-  generationType: z.enum(["text_to_image", "image_to_image"]).default("text_to_image"),
+  generationType: z
+    .enum(["text_to_image", "image_to_image", "text_to_video", "image_to_video"])
+    .default("text_to_image"),
   model: z.string().trim().min(1, "请选择模型"),
   negativePrompt: z.string().trim().max(1000).optional().nullable(),
   outputCompression: generationOutputCompressionSchema,
@@ -71,6 +73,8 @@ export const generateSchema = z.object({
   quality: generationQualitySchema,
   moderation: generationModerationSchema,
   seed: z.number().int().positive().optional().nullable(),
+  durationSeconds: z.number().int().min(1).max(60).optional().nullable(),
+  aspectRatio: z.enum(["16:9", "9:16", "1:1"]).optional().nullable(),
   size: generationSizeSchema,
 }).transform((value) => ({
   ...value,
