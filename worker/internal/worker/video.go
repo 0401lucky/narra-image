@@ -111,8 +111,16 @@ func createVideo(ctx context.Context, job GenerationJob, provider ProviderConfig
 		body["input_reference"] = job.SourceImageURLs[0]
 	}
 
-	responseBody, err := postJSON(ctx, endpoint(provider.BaseURL, "/videos"), provider.APIKey, body, nil)
+	// create 仅是提交任务，正常应秒回。加 30s 超时，避免图生视频在渠道网关
+	// （agnes litellm 对 multipart 转发有故障）一直挂到 ~60s 才失败。
+	createCtx, cancel := context.WithTimeout(ctx, 30*time.Second)
+	defer cancel()
+
+	responseBody, err := postJSON(createCtx, endpoint(provider.BaseURL, "/videos"), provider.APIKey, body, nil)
 	if err != nil {
+		if job.GenerationType == "IMAGE_TO_VIDEO" {
+			return "", fmt.Errorf("图生视频暂不可用（渠道网关故障，可稍后再试或改用文生视频）：%w", err)
+		}
 		return "", err
 	}
 	var created videoCreateResponse

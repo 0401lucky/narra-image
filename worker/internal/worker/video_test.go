@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 	"time"
 )
@@ -89,5 +90,38 @@ func TestGenerateVideoReturnsErrorOnFailedStatus(t *testing.T) {
 	_, err := generateVideo(context.Background(), storage, job, provider, time.Millisecond)
 	if err == nil {
 		t.Fatal("expected error on failed status, got nil")
+	}
+}
+
+// TestImageToVideoCreateFailureReturnsFriendlyError：图生视频在渠道 create 失败时
+// （agnes litellm 对 multipart 转发故障会 500），应返回明确的用户可读提示，而非裸渠道错误。
+func TestImageToVideoCreateFailureReturnsFriendlyError(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method == http.MethodPost && r.URL.Path == "/videos" {
+			http.Error(w, `{"code":"fail_to_fetch_task","message":"litellm.InternalServerError"}`, http.StatusInternalServerError)
+			return
+		}
+		http.Error(w, "unexpected "+r.Method+" "+r.URL.Path, http.StatusNotFound)
+	}))
+	defer server.Close()
+
+	storage := &Storage{cfg: Config{EnableLocalImageFallback: true}}
+	job := GenerationJob{
+		ID:              "job_i2v",
+		UserID:          "user_1",
+		GenerationType:  "IMAGE_TO_VIDEO",
+		Model:           "agnes-video-v2.0",
+		Prompt:          "让苹果旋转",
+		Size:            "1280x720",
+		SourceImageURLs: []string{"https://example.com/apple.png"},
+	}
+	provider := ProviderConfig{APIKey: "k", BaseURL: server.URL, Model: "agnes-video-v2.0"}
+
+	_, err := generateVideo(context.Background(), storage, job, provider, time.Millisecond)
+	if err == nil {
+		t.Fatal("expected error on image-to-video channel failure, got nil")
+	}
+	if !strings.Contains(err.Error(), "图生视频暂不可用") {
+		t.Fatalf("expected friendly image-to-video error, got: %v", err)
 	}
 }
