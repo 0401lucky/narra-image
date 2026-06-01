@@ -643,8 +643,11 @@ git commit -m "feat(video): 新增视频积分单价与按类型取价"
 
 **Files:**
 - Modify: `src/app/api/generate/route.ts`
+- Modify: `src/app/api/me/generations/[id]/route.ts`
+- Modify: `src/app/api/me/generations/route.ts`
 
-> 本仓库未对 `/api/generate` route 写单测（`src/tests/unit/` 仅测纯函数 `parseGenerateRequest`），route 是装配层。其逻辑分支已由 Task 3（解析）+ Task 4（`resolveCreditCost` 纯函数）覆盖。本 Task 验证 = `tsc` 通过 + 全量测试不回归；端到端真实生成在 Task 9 完成后联调。
+> 本仓库未对这些 route 写单测（`src/tests/unit/` 仅测纯函数 `parseGenerateRequest`），route 是装配层。其逻辑分支已由 Task 3（解析）+ Task 4（`resolveCreditCost` 纯函数）覆盖。本 Task 验证 = `tsc` 通过 + 全量测试不回归；端到端真实生成在 Task 9 完成后联调。
+> 轮询端点 `[id]` 与历史列表端点必须 `include videos`，否则 `serializeGeneration` 永远输出 `videos: []`，前端拿不到生成好的视频——这是端到端打通的必要环节。
 
 - [ ] **Step 1: 引入 `resolveCreditCost` 并按类型计价**
 
@@ -717,21 +720,49 @@ import { calculateGenerationCost, hasEnoughCredits, resolveCreditCost } from "@/
 
 > 创建瞬间 `videos` 为空数组，`serializeGeneration` 据此输出 `videos: []`；Worker 完成后写入，前端轮询拿到。
 
-- [ ] **Step 3: 类型自检**
+- [ ] **Step 3: 两个读取端点同步 `include videos`**
+
+`src/app/api/me/generations/[id]/route.ts` 的 `db.generationJob.findFirst`（约 20-27 行）把 `include` 改为：
+
+```ts
+    include: {
+      images: {
+        orderBy: { createdAt: "asc" },
+      },
+      videos: {
+        orderBy: { createdAt: "asc" },
+      },
+    },
+```
+
+`src/app/api/me/generations/route.ts` 的 `db.generationJob.findMany`（约 15-24 行）同样把 `include` 改为：
+
+```ts
+    include: {
+      images: {
+        orderBy: { createdAt: "asc" },
+      },
+      videos: {
+        orderBy: { createdAt: "asc" },
+      },
+    },
+```
+
+- [ ] **Step 4: 类型自检**
 
 Run: `pnpm exec tsc --noEmit`
 Expected: 无错误。
 
-- [ ] **Step 4: 全量测试不回归**
+- [ ] **Step 5: 全量测试不回归**
 
 Run: `pnpm test`
 Expected: 全部 PASS。
 
-- [ ] **Step 5: Commit**
+- [ ] **Step 6: Commit**
 
 ```bash
-git add src/app/api/generate/route.ts
-git commit -m "feat(video): 提交接口按类型计费并落库视频参数"
+git add src/app/api/generate/route.ts "src/app/api/me/generations/[id]/route.ts" src/app/api/me/generations/route.ts
+git commit -m "feat(video): 提交接口按类型计费、落库视频参数，读取端点含视频"
 ```
 
 ---
