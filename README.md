@@ -70,6 +70,7 @@ pnpm dev
 - `BUILTIN_PROVIDER_CREDIT_COST`: 内置渠道每次消耗积分
 - `S3_*`: 对象存储配置，可选
 - `NEXT_PUBLIC_IMAGE_OPTIMIZER_BYPASS_HOSTS`: 不走 Next Image 优化的图片域名列表，适合自建 CDN 解析到内网/保留地址的情况
+- `ENABLE_EMBEDDED_WORKER`: 让单个部署容器同时启动 Next.js 和 Go Worker，Zeabur 单服务部署时建议保持 `true`
 - `WORKER_*`: Go 生图 Worker 的并发、轮询间隔、任务超时与最大重试配置
 - `BOOTSTRAP_ADMIN_EMAIL`: 需要自动提权为管理员的邮箱
 - `BOOTSTRAP_INVITE_CODE`: 初始邀请码
@@ -93,6 +94,7 @@ docker compose up --build -d
 - 一个 `PostgreSQL` 服务
 - 应用服务使用仓库根目录的 `Dockerfile`
 - 运行前配置好 `DATABASE_URL`、`AUTH_SECRET`、内置渠道相关环境变量
+- 如果只部署一个应用服务，保持 `ENABLE_EMBEDDED_WORKER=true`，容器会同时启动 Next.js 和 Go Worker
 
 如果你本地直接用 `docker compose`，默认会同时启动：
 

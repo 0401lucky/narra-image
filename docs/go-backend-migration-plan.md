@@ -15,6 +15,7 @@
 - 支持内置渠道、自填渠道、图生图、多参考图和 Responses image tool。
 - 支持 S3/R2 图片持久化，本地 data URL fallback 用于非生产兜底。
 - Docker Compose 已包含 `worker` 服务。
+- 单容器部署也支持通过 `ENABLE_EMBEDDED_WORKER=true` 同时启动 Next.js 和 Go Worker。
 - 前端生成结果展示任务总耗时，便于观察真实生成速度。
 - 外部 OpenAI 兼容 API 的生图执行链路已开始切到 Go Worker，Next.js 不再在请求进程内直接调用图片模型。
 - Go Worker 暴露 `/healthz` 和 `/metrics`，可检查数据库健康、队列积压、最近成功率和 P95/P99 总耗时。
