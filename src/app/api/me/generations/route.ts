@@ -19,6 +19,9 @@ export async function GET() {
       images: {
         orderBy: { createdAt: "asc" },
       },
+      videos: {
+        orderBy: { createdAt: "asc" },
+      },
     },
     take: 24,
   });

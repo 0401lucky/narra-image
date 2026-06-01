@@ -3,7 +3,7 @@ import { GenerationStatus } from "@prisma/client";
 import { db } from "@/lib/db";
 import { getEnv } from "@/lib/env";
 import { parseGenerateRequest } from "@/lib/generation/parse-generate-request";
-import { calculateGenerationCost, hasEnoughCredits } from "@/lib/credits";
+import { calculateGenerationCost, hasEnoughCredits, resolveCreditCost } from "@/lib/credits";
 import {
   serializeGeneration,
   toPrismaGenerationType,
@@ -33,6 +33,7 @@ export async function POST(request: Request) {
         apiKey: channel.apiKey,
         baseUrl: channel.baseUrl,
         creditCost: channel.creditCost,
+        videoCreditCost: channel.videoCreditCost,
         id: channel.id,
         model: channel.defaultModel,
         models: channel.models,
@@ -42,15 +43,21 @@ export async function POST(request: Request) {
       builtInProvider = await getBuiltInProviderConfig();
     }
 
+    const builtInCreditCost = resolveCreditCost({
+      generationType: body.generationType,
+      imageCreditCost: builtInProvider.creditCost,
+      videoCreditCost: builtInProvider.videoCreditCost,
+    });
+
     const cost = calculateGenerationCost({
-      builtInCreditCost: builtInProvider.creditCost,
+      builtInCreditCost,
       providerMode: body.providerMode,
     });
 
     if (
       body.providerMode === "built_in" &&
       !hasEnoughCredits({
-        builtInCreditCost: builtInProvider.creditCost,
+        builtInCreditCost,
         credits: user.credits,
         providerMode: body.providerMode,
       })
@@ -125,6 +132,8 @@ export async function POST(request: Request) {
           count: body.count,
           creditsSpent: body.providerMode === "built_in" ? cost : 0,
           generationType: toPrismaGenerationType(body.generationType),
+          durationSeconds: body.durationSeconds ?? null,
+          aspectRatio: body.aspectRatio ?? null,
           model: body.model,
           negativePrompt: body.negativePrompt,
           outputCompression: body.outputCompression,
@@ -154,6 +163,7 @@ export async function POST(request: Request) {
         },
         include: {
           images: true,
+          videos: true,
         },
       });
 
