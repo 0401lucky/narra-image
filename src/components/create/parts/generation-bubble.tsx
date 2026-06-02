@@ -144,8 +144,11 @@ export function GenerationBubble({
                 )}
               </div>
               <div
-                className={`grid w-full gap-3 ${generation.images.length > 1 ? "grid-cols-1 min-[520px]:grid-cols-2" : "grid-cols-1"}`}
-                style={{ maxWidth: generation.images.length === 1 ? "min(100%, 360px)" : "min(100%, 740px)" }}
+                className={`grid w-full gap-3 ${
+                  generation.images.length > 1
+                    ? "max-w-[34rem] grid-cols-1 min-[520px]:grid-cols-2"
+                    : "max-w-[15rem] sm:max-w-[16rem]"
+                }`}
               >
                 {generation.images.map((image) => {
                   const downgrade = describeSizeDowngrade(generation, image);
