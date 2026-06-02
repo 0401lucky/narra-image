@@ -53,6 +53,41 @@ export function ApiKeyConsole({ apiBaseUrl, apiKeys, apiConfig }: ApiKeyConsoleP
   );
   const normalizedApiBaseUrl = apiBaseUrl.replace(/\/$/, "");
   const openAiBaseUrl = `${normalizedApiBaseUrl}/v1`;
+  const usageExamples = [
+    {
+      title: "文生图",
+      endpoint: "POST /v1/images/generations",
+      code: `curl -X POST ${openAiBaseUrl}/images/generations \\
+  -H "Authorization: Bearer narra_sk_xxx" \\
+  -H "Content-Type: application/json" \\
+  -d '{"prompt":"一张手绘风格的咖啡店海报","size":"1024x1024","response_format":"url"}'`,
+    },
+    {
+      title: "图生图",
+      endpoint: "POST /v1/images/edits",
+      code: `curl -X POST ${openAiBaseUrl}/images/edits \\
+  -H "Authorization: Bearer narra_sk_xxx" \\
+  -F "image=@reference.png" \\
+  -F "prompt=把这张图改成低饱和复古海报" \\
+  -F "size=1024x1024"`,
+    },
+    {
+      title: "Responses",
+      endpoint: "POST /v1/responses",
+      code: `curl -X POST ${openAiBaseUrl}/responses \\
+  -H "Authorization: Bearer narra_sk_xxx" \\
+  -H "Content-Type: application/json" \\
+  -d '{"model":"narra-image","input":"生成一张极简产品主图，白底，高级摄影感","tools":[{"type":"image_generation"}]}'`,
+    },
+    {
+      title: "Chat",
+      endpoint: "POST /v1/chat/completions",
+      code: `curl -X POST ${openAiBaseUrl}/chat/completions \\
+  -H "Authorization: Bearer narra_sk_xxx" \\
+  -H "Content-Type: application/json" \\
+  -d '{"model":"narra-image","messages":[{"role":"user","content":"画一只赛博风格的猫"}]}'`,
+    },
+  ];
 
   async function copyText(text: string) {
     try {
@@ -255,8 +290,11 @@ export function ApiKeyConsole({ apiBaseUrl, apiKeys, apiConfig }: ApiKeyConsoleP
             <div>
               <h2 className="font-semibold text-[var(--ink)]">调用示例</h2>
               <p className="mt-1 text-xs text-[var(--ink-soft)]">
-                OpenAI 客户端 Base URL：
+                OpenAI 兼容 Base URL：
                 <span className="font-mono text-[var(--ink)]">{openAiBaseUrl}</span>
+              </p>
+              <p className="mt-1 text-xs text-[var(--ink-soft)]">
+                可直接用于 OpenAI SDK 的 baseURL / base_url 配置。
               </p>
             </div>
             <button
@@ -268,18 +306,29 @@ export function ApiKeyConsole({ apiBaseUrl, apiKeys, apiConfig }: ApiKeyConsoleP
               复制地址
             </button>
           </div>
-          <pre className="mt-4 overflow-x-auto rounded-2xl bg-[var(--ink)] p-4 text-xs leading-relaxed text-white">
-{`curl -X POST ${openAiBaseUrl}/images/generations \\
-  -H "Authorization: Bearer narra_sk_xxx" \\
-  -H "Content-Type: application/json" \\
-  -d '{"prompt":"一张手绘风格的咖啡店海报","size":"1024x1024","response_format":"url"}'`}
-          </pre>
-          <pre className="mt-3 overflow-x-auto rounded-2xl bg-[var(--ink)] p-4 text-xs leading-relaxed text-white">
-{`curl -X POST ${openAiBaseUrl}/chat/completions \\
-  -H "Authorization: Bearer narra_sk_xxx" \\
-  -H "Content-Type: application/json" \\
-  -d '{"model":"narra-image","messages":[{"role":"user","content":"画一只赛博风格的猫"}]}'`}
-          </pre>
+          <div className="mt-4 grid gap-3">
+            {usageExamples.map((example) => (
+              <div key={example.endpoint} className="overflow-hidden rounded-2xl border border-[var(--line)]">
+                <div className="flex items-center justify-between gap-3 border-b border-[var(--line)] bg-[var(--surface-strong)]/50 px-4 py-2">
+                  <div>
+                    <p className="text-sm font-medium text-[var(--ink)]">{example.title}</p>
+                    <p className="font-mono text-[10px] text-[var(--ink-soft)]">{example.endpoint}</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => void copyText(example.code)}
+                    className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-[var(--line)] bg-white/70 px-3 py-1.5 text-xs font-medium text-[var(--ink-soft)] transition hover:border-[var(--accent)] hover:text-[var(--accent)]"
+                  >
+                    <Copy className="size-3.5" />
+                    复制
+                  </button>
+                </div>
+                <pre className="overflow-x-auto bg-[var(--ink)] p-4 text-xs leading-relaxed text-white">
+                  {example.code}
+                </pre>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
