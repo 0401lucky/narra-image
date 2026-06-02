@@ -5,6 +5,7 @@ import type {
   GenerationQuality,
   GenerationSizeToken,
   GenerationType,
+  ProviderMode,
 } from "@/lib/types";
 
 export type ViewerUser = {
@@ -66,6 +67,26 @@ export type ChannelInfo = {
   models: string[];
   name: string;
 };
+
+export type SavedProviderInfo = {
+  baseUrl: string;
+  id: string;
+  label: string | null;
+  model: string;
+  models: string[];
+  updatedAt: string;
+};
+
+export type CustomProviderDraft = {
+  apiKey: string;
+  baseUrl: string;
+  label: string;
+  model: string;
+  models: string[];
+  remember: boolean;
+};
+
+export type ProviderSelectionMode = ProviderMode;
 
 export type ReferenceImage = {
   id: string;

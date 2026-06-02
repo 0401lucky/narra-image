@@ -21,12 +21,14 @@ export async function POST(request: Request) {
         baseUrl: body.baseUrl,
         label: body.label || null,
         model: body.model,
+        models: body.models,
       },
       create: {
         apiKeyEncrypted: encryptedKey,
         baseUrl: body.baseUrl,
         label: body.label || null,
         model: body.model,
+        models: body.models,
         userId: user.id,
       },
     });
@@ -37,6 +39,7 @@ export async function POST(request: Request) {
         id: savedConfig.id,
         label: savedConfig.label,
         model: savedConfig.model,
+        models: savedConfig.models,
         updatedAt: savedConfig.updatedAt.toISOString(),
       },
     });

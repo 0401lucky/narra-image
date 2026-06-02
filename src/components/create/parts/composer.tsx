@@ -4,7 +4,18 @@
 
 // 底部输入悬浮区（Composer）：参考图、错误提示、文本框、模式与尺寸切换、发送、高级设置入口。
 import Link from "next/link";
-import { ArrowLeft, ArrowRight, Code2, GripVertical, Paperclip, Send, Settings2, Sparkles, X } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  Code2,
+  GripVertical,
+  KeyRound,
+  Paperclip,
+  Send,
+  Settings2,
+  Sparkles,
+  X,
+} from "lucide-react";
 import { forwardRef, useRef, useState, type DragEvent, type ReactNode, type Ref } from "react";
 
 import { Alert } from "@/components/ui/alert";
@@ -12,7 +23,7 @@ import { GENERATION_PROMPT_MAX_LENGTH } from "@/lib/generation/limits";
 import type { GenerationSizeToken, GenerationType } from "@/lib/types";
 
 import { SIZE_OPTIONS } from "../constants";
-import type { ChannelInfo, ReferenceImage } from "../types";
+import type { ChannelInfo, ProviderSelectionMode, ReferenceImage } from "../types";
 
 type ComposerProps = {
   prompt: string;
@@ -49,6 +60,9 @@ type ComposerProps = {
   modelOptions: string[];
   model: string;
   onChangeModel: (model: string) => void;
+  providerMode: ProviderSelectionMode;
+  activeModel: string;
+  onOpenCustomProviderSettings: () => void;
 
   onSubmit: () => void;
 
@@ -94,6 +108,9 @@ export const Composer = forwardRef<HTMLTextAreaElement, ComposerProps>(function 
     modelOptions,
     model,
     onChangeModel,
+    providerMode,
+    activeModel,
+    onOpenCustomProviderSettings,
     onSubmit,
     canSubmit,
     onClickImageMode,
@@ -362,37 +379,63 @@ export const Composer = forwardRef<HTMLTextAreaElement, ComposerProps>(function 
                 <Settings2 className="size-3.5" />
                 高级设置
               </button>
+              <button
+                type="button"
+                onClick={onOpenCustomProviderSettings}
+                className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-semibold transition-colors sm:py-2 ${
+                  providerMode === "custom"
+                    ? "bg-[var(--accent)]/10 text-[var(--accent)]"
+                    : "text-[var(--ink-soft)] hover:bg-[#fffaf2]/78 hover:text-[var(--ink)]"
+                }`}
+                title="使用自己的第三方 API 生成"
+              >
+                <KeyRound className="size-3.5" />
+                自填 API
+              </button>
               <Link
                 href="/api-keys"
                 className="flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-semibold text-[var(--ink-soft)] transition-colors hover:bg-[#fffaf2]/78 hover:text-[var(--ink)] sm:py-2"
-                title="查看 OpenAI 兼容 API 接入方式"
+                title="管理本站开放 API Key"
               >
                 <Code2 className="size-3.5" />
-                API 接入
+                开放 API
               </Link>
             </div>
 
             <div className="hidden items-center gap-3 md:flex">
-              {channels.length > 1 && (
-                <select
-                  value={selectedChannelId ?? ""}
-                  onChange={(e) => onChangeChannel(e.target.value)}
-                  className="cursor-pointer rounded-xl border border-[var(--line)] bg-[#f7efe4]/72 px-3 py-2 text-xs font-semibold text-[var(--ink)] shadow-sm outline-none"
+              {providerMode === "built_in" ? (
+                <>
+                  {channels.length > 1 && (
+                    <select
+                      value={selectedChannelId ?? ""}
+                      onChange={(e) => onChangeChannel(e.target.value)}
+                      className="cursor-pointer rounded-xl border border-[var(--line)] bg-[#f7efe4]/72 px-3 py-2 text-xs font-semibold text-[var(--ink)] shadow-sm outline-none"
+                    >
+                      {channels.map((ch) => (
+                        <option key={ch.id} value={ch.id}>{ch.name}</option>
+                      ))}
+                    </select>
+                  )}
+                  <select
+                    value={model}
+                    onChange={(e) => onChangeModel(e.target.value)}
+                    className="cursor-pointer rounded-xl border border-[var(--line)] bg-[#fffaf2]/72 px-4 py-2 text-sm font-medium text-[var(--ink)] shadow-sm outline-none"
+                  >
+                    {modelOptions.map((m) => (
+                      <option key={m} value={m}>{m}</option>
+                    ))}
+                  </select>
+                </>
+              ) : (
+                <button
+                  type="button"
+                  onClick={onOpenCustomProviderSettings}
+                  className="max-w-[18rem] truncate rounded-xl border border-[var(--line)] bg-[#fffaf2]/72 px-4 py-2 text-sm font-medium text-[var(--ink)] shadow-sm outline-none transition hover:border-[var(--accent)] hover:text-[var(--accent)]"
+                  title={activeModel}
                 >
-                  {channels.map((ch) => (
-                    <option key={ch.id} value={ch.id}>{ch.name}</option>
-                  ))}
-                </select>
+                  自填 API · {activeModel}
+                </button>
               )}
-              <select
-                value={model}
-                onChange={(e) => onChangeModel(e.target.value)}
-                className="cursor-pointer rounded-xl border border-[var(--line)] bg-[#fffaf2]/72 px-4 py-2 text-sm font-medium text-[var(--ink)] shadow-sm outline-none"
-              >
-                {modelOptions.map((m) => (
-                  <option key={m} value={m}>{m}</option>
-                ))}
-              </select>
             </div>
           </div>
 

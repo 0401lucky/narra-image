@@ -66,6 +66,8 @@ export async function POST(request: Request) {
     }
 
     let customProvider = body.customProvider ?? null;
+    let customProviderRemember = body.customProvider?.remember ?? false;
+    let customProviderModels = body.customProvider?.models ?? [];
     if (body.providerMode === "custom" && !customProvider) {
       const saved = await db.savedProviderConfig.findUnique({
         where: { userId: user.id },
@@ -81,10 +83,13 @@ export async function POST(request: Request) {
           env.AUTH_SECRET,
         ),
         baseUrl: saved.baseUrl,
-        model: saved.model,
+        label: saved.label,
+        model: body.model || saved.model,
         models: saved.models,
         remember: true,
       };
+      customProviderRemember = true;
+      customProviderModels = saved.models;
     }
 
     const customProviderApiKeyEncrypted = customProvider
@@ -148,10 +153,10 @@ export async function POST(request: Request) {
           providerLabel:
             body.providerMode === "custom" ? customProvider?.label ?? null : null,
           providerModels:
-            body.providerMode === "custom" ? body.customProvider?.models ?? [] : [],
+            body.providerMode === "custom" ? customProviderModels : [],
           providerMode: toPrismaProviderMode(body.providerMode),
           providerRemember:
-            body.providerMode === "custom" ? body.customProvider?.remember ?? false : false,
+            body.providerMode === "custom" ? customProviderRemember : false,
           quality: body.quality,
           moderation: body.moderation,
           seed: body.seed,

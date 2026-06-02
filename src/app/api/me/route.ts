@@ -16,6 +16,7 @@ export async function GET() {
       id: true,
       label: true,
       model: true,
+      models: true,
       updatedAt: true,
     },
   });

@@ -19,7 +19,7 @@ export default async function CreatePage() {
 
   await failStalePendingGenerationJobs({ userId: user.id });
 
-  const [jobs, channels, checkInSummary, conversations] = await Promise.all([
+  const [jobs, channels, checkInSummary, conversations, savedProvider] = await Promise.all([
     db.generationJob.findMany({
       where: { userId: user.id },
       include: {
@@ -43,6 +43,17 @@ export default async function CreatePage() {
       },
       take: 100,
     }),
+    db.savedProviderConfig.findUnique({
+      where: { userId: user.id },
+      select: {
+        baseUrl: true,
+        id: true,
+        label: true,
+        model: true,
+        models: true,
+        updatedAt: true,
+      },
+    }),
   ]);
 
   const currentUser = serializeUser(user);
@@ -65,6 +76,14 @@ export default async function CreatePage() {
           initialGenerations={jobs.map(serializeGeneration)}
           initialConversations={conversations.map(serializeConversation)}
           channels={serializedChannels}
+          savedProvider={
+            savedProvider
+              ? {
+                  ...savedProvider,
+                  updatedAt: savedProvider.updatedAt.toISOString(),
+                }
+              : null
+          }
         />
       </section>
     </main>

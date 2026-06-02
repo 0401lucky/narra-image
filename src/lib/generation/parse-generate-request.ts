@@ -64,16 +64,31 @@ export async function parseGenerateRequest(request: Request | FormData) {
       throw new Error("参考图必须是图片文件");
     }
 
+    const providerMode = toNullableString(formData.get("providerMode")) || "built_in";
+    const customApiKey = toNullableString(formData.get("customApiKey"));
+    const customModels = (() => {
+      const raw = toNullableString(formData.get("customModels"));
+      if (!raw) return [] as string[];
+      try {
+        const parsed = JSON.parse(raw) as unknown;
+        return Array.isArray(parsed)
+          ? parsed.filter((item): item is string => typeof item === "string" && item.trim().length > 0)
+          : [];
+      } catch {
+        return [] as string[];
+      }
+    })();
+
     const body = generateSchema.parse({
       count: 1,
       customProvider:
-        toNullableString(formData.get("providerMode")) === "custom"
+        providerMode === "custom" && customApiKey
           ? {
-              apiKey: toNullableString(formData.get("customApiKey")),
+              apiKey: customApiKey,
               baseUrl: toNullableString(formData.get("customBaseUrl")),
-              label: "我的渠道",
+              label: toNullableString(formData.get("customLabel")) || "我的渠道",
               model: toNullableString(formData.get("customModel")) || toNullableString(formData.get("model")),
-              models: [],
+              models: customModels,
               remember: toBoolean(formData.get("rememberProvider")),
             }
           : null,
@@ -86,7 +101,7 @@ export async function parseGenerateRequest(request: Request | FormData) {
         ?? toNullableNumber(formData.get("output_compression")),
       outputFormat: firstString(formData.get("outputFormat"), formData.get("output_format")) || "png",
       prompt: toNullableString(formData.get("prompt")),
-      providerMode: toNullableString(formData.get("providerMode")) || "built_in",
+      providerMode,
       quality: toNullableString(formData.get("quality")) || "auto",
       moderation: toNullableString(formData.get("moderation")) || "auto",
       seed: null,

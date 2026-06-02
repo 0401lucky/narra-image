@@ -1,9 +1,11 @@
+import { db } from "@/lib/db";
 import { getEnv } from "@/lib/env";
 import { getBuiltInProviderConfig } from "@/lib/providers/built-in-provider";
 import {
   fetchOpenAICompatibleModelIds,
   looksLikeImageModel,
 } from "@/lib/providers/model-catalog";
+import { decryptProviderSecret } from "@/lib/providers/provider-secret";
 import { requireCurrentUserRecord } from "@/lib/server/current-user";
 import {
   getErrorMessage,
@@ -15,10 +17,28 @@ import { providerProbeSchema } from "@/lib/validators";
 
 export async function POST(request: Request) {
   try {
-    await requireCurrentUserRecord();
+    const user = await requireCurrentUserRecord();
     const body = providerProbeSchema.parse(await parseJsonBody(request));
+    const env = getEnv();
+    let apiKey = body.apiKey?.trim() || "";
+
+    if (!apiKey) {
+      const saved = await db.savedProviderConfig.findFirst({
+        where: {
+          baseUrl: body.baseUrl,
+          userId: user.id,
+        },
+        select: {
+          apiKeyEncrypted: true,
+        },
+      });
+      if (saved) {
+        apiKey = await decryptProviderSecret(saved.apiKeyEncrypted, env.AUTH_SECRET);
+      }
+    }
+
     const builtIn = await getBuiltInProviderConfig();
-    const apiKey = body.apiKey?.trim() || builtIn.apiKey || getEnv().BUILTIN_PROVIDER_API_KEY;
+    apiKey = apiKey || builtIn.apiKey || env.BUILTIN_PROVIDER_API_KEY || "";
 
     if (!apiKey) {
       return jsonError("请先提供 API Key", 400);

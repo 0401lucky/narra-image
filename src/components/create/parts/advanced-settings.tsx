@@ -3,6 +3,7 @@
 // 高级设置面板（折叠展开），承担所有"次要参数"输入：
 // 自定义尺寸、张数、质量、格式、压缩、审核、负向提示词，以及移动端的渠道/模型选择。
 import { AnimatePresence, motion } from "motion/react";
+import { useId } from "react";
 
 import { imageSizeLimits } from "@/lib/generation/sizes";
 import type {
@@ -13,7 +14,11 @@ import type {
 } from "@/lib/types";
 
 import { MODERATION_OPTIONS, OUTPUT_FORMAT_OPTIONS, QUALITY_OPTIONS } from "../constants";
-import type { ChannelInfo } from "../types";
+import type {
+  ChannelInfo,
+  CustomProviderDraft,
+  ProviderSelectionMode,
+} from "../types";
 
 type AdvancedSettingsProps = {
   open: boolean;
@@ -36,6 +41,15 @@ type AdvancedSettingsProps = {
   modelOptions: string[];
   model: string;
   onChangeModel: (model: string) => void;
+  providerMode: ProviderSelectionMode;
+  onChangeProviderMode: (mode: ProviderSelectionMode) => void;
+  customProvider: CustomProviderDraft;
+  onChangeCustomProvider: (provider: CustomProviderDraft) => void;
+  customModelOptions: string[];
+  savedProviderConfigured: boolean;
+  onProbeCustomProviderModels: () => void;
+  customProviderProbePending: boolean;
+  customProviderProbeMessage: string | null;
   onChangeCustomSize: (width: string, height: string) => void;
   onChangeCount: (count: number) => void;
   onChangeQuality: (quality: GenerationQuality) => void;
@@ -65,6 +79,15 @@ export function AdvancedSettings({
   modelOptions,
   model,
   onChangeModel,
+  providerMode,
+  onChangeProviderMode,
+  customProvider,
+  onChangeCustomProvider,
+  customModelOptions,
+  savedProviderConfigured,
+  onProbeCustomProviderModels,
+  customProviderProbePending,
+  customProviderProbeMessage,
   onChangeCustomSize,
   onChangeCount,
   onChangeQuality,
@@ -73,6 +96,8 @@ export function AdvancedSettings({
   onChangeModeration,
   onChangeNegativePrompt,
 }: AdvancedSettingsProps) {
+  const customModelDatalistId = useId();
+
   return (
     <AnimatePresence>
       {open && (
@@ -84,6 +109,149 @@ export function AdvancedSettings({
           transition={{ duration: 0.2, ease: "easeOut" }}
           className="max-h-[42vh] overflow-y-auto md:max-h-[42vh] max-md:max-h-none max-md:overflow-visible rounded-b-[1.25rem] border-t border-[var(--line)]/50 bg-[var(--surface)]/50 p-3 sm:max-h-[52vh] sm:rounded-b-[2rem] sm:p-5"
         >
+          <section className="mb-4 rounded-2xl border border-[var(--line)]/70 bg-[#fffaf2]/58 p-3 shadow-sm sm:p-4">
+            <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+              <div>
+                <span className="block text-xs font-medium text-[var(--ink-soft)]">渠道来源</span>
+                <div
+                  role="group"
+                  aria-label="渠道来源"
+                  className="mt-2 flex w-full rounded-xl border border-[var(--line)] bg-[#f7efe4]/72 p-1 sm:w-auto"
+                >
+                  <button
+                    type="button"
+                    aria-pressed={providerMode === "built_in"}
+                    onClick={() => onChangeProviderMode("built_in")}
+                    className={`flex-1 rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors sm:flex-none sm:px-4 ${
+                      providerMode === "built_in"
+                        ? "bg-white text-black shadow-sm"
+                        : "text-[var(--ink-soft)] hover:text-[var(--ink)]"
+                    }`}
+                  >
+                    平台渠道
+                  </button>
+                  <button
+                    type="button"
+                    aria-pressed={providerMode === "custom"}
+                    onClick={() => onChangeProviderMode("custom")}
+                    className={`flex-1 rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors sm:flex-none sm:px-4 ${
+                      providerMode === "custom"
+                        ? "bg-white text-black shadow-sm"
+                        : "text-[var(--ink-soft)] hover:text-[var(--ink)]"
+                    }`}
+                  >
+                    自填 API
+                  </button>
+                </div>
+              </div>
+              <p className="max-w-md text-[11px] leading-relaxed text-[var(--ink-soft)]">
+                自填 API 会使用你自己的第三方 OpenAI 兼容渠道；本站不收取生成积分，第三方费用由该 API 方结算。
+              </p>
+            </div>
+
+            {providerMode === "custom" && (
+              <div className="mt-4 grid gap-3 md:grid-cols-2">
+                <label>
+                  <span className="mb-1.5 block text-xs font-medium text-[var(--ink-soft)]">Base URL</span>
+                  <input
+                    aria-label="第三方 Base URL"
+                    value={customProvider.baseUrl}
+                    onChange={(event) => onChangeCustomProvider({
+                      ...customProvider,
+                      baseUrl: event.target.value,
+                    })}
+                    placeholder="https://api.example.com/v1"
+                    className="w-full rounded-xl border border-[var(--line)] bg-[var(--surface-strong)]/55 px-3 py-2 text-sm outline-none focus:border-[var(--accent)]"
+                  />
+                </label>
+
+                <label>
+                  <span className="mb-1.5 block text-xs font-medium text-[var(--ink-soft)]">API Key</span>
+                  <input
+                    aria-label="第三方 API Key"
+                    type="password"
+                    autoComplete="off"
+                    value={customProvider.apiKey}
+                    onChange={(event) => onChangeCustomProvider({
+                      ...customProvider,
+                      apiKey: event.target.value,
+                    })}
+                    placeholder={savedProviderConfigured ? "已保存，可留空继续使用" : "sk-..."}
+                    className="w-full rounded-xl border border-[var(--line)] bg-[var(--surface-strong)]/55 px-3 py-2 text-sm outline-none focus:border-[var(--accent)]"
+                  />
+                </label>
+
+                <label>
+                  <span className="mb-1.5 block text-xs font-medium text-[var(--ink-soft)]">模型</span>
+                  <input
+                    aria-label="第三方模型"
+                    list={customModelOptions.length > 0 ? customModelDatalistId : undefined}
+                    value={customProvider.model}
+                    onChange={(event) => onChangeCustomProvider({
+                      ...customProvider,
+                      model: event.target.value,
+                    })}
+                    placeholder="gpt-image-1"
+                    className="w-full rounded-xl border border-[var(--line)] bg-[var(--surface-strong)]/55 px-3 py-2 text-sm outline-none focus:border-[var(--accent)]"
+                  />
+                  {customModelOptions.length > 0 && (
+                    <datalist id={customModelDatalistId}>
+                      {customModelOptions.map((item) => (
+                        <option key={item} value={item} />
+                      ))}
+                    </datalist>
+                  )}
+                </label>
+
+                <label>
+                  <span className="mb-1.5 block text-xs font-medium text-[var(--ink-soft)]">配置名称</span>
+                  <input
+                    aria-label="第三方配置名称"
+                    value={customProvider.label}
+                    onChange={(event) => onChangeCustomProvider({
+                      ...customProvider,
+                      label: event.target.value,
+                    })}
+                    placeholder="我的 API"
+                    className="w-full rounded-xl border border-[var(--line)] bg-[var(--surface-strong)]/55 px-3 py-2 text-sm outline-none focus:border-[var(--accent)]"
+                  />
+                </label>
+
+                <div className="flex flex-col gap-2 md:col-span-2 min-[520px]:flex-row min-[520px]:items-center min-[520px]:justify-between">
+                  <label className="inline-flex items-center gap-2 text-xs font-medium text-[var(--ink-soft)]">
+                    <input
+                      aria-label="记住第三方 API 配置"
+                      type="checkbox"
+                      checked={customProvider.remember}
+                      onChange={(event) => onChangeCustomProvider({
+                        ...customProvider,
+                        remember: event.target.checked,
+                      })}
+                      className="size-4 rounded border-[var(--line)] accent-[var(--accent)]"
+                    />
+                    记住配置，下次可留空 Key 使用
+                  </label>
+
+                  <div className="flex flex-col items-stretch gap-2 min-[520px]:items-end">
+                    <button
+                      type="button"
+                      onClick={onProbeCustomProviderModels}
+                      disabled={customProviderProbePending}
+                      className="rounded-xl border border-[var(--line)] bg-white/70 px-3 py-2 text-xs font-semibold text-[var(--ink)] shadow-sm transition hover:border-[var(--accent)] hover:text-[var(--accent)] disabled:cursor-not-allowed disabled:opacity-60"
+                    >
+                      {customProviderProbePending ? "拉取中..." : "拉取模型"}
+                    </button>
+                    {customProviderProbeMessage && (
+                      <p className="text-[11px] leading-relaxed text-[var(--ink-soft)]" role="status">
+                        {customProviderProbeMessage}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+          </section>
+
           <div className="grid gap-4 md:grid-cols-2 md:gap-6">
             <div className="space-y-3 sm:space-y-4">
               {showCustomSize && (
@@ -222,36 +390,38 @@ export function AdvancedSettings({
           </p>
 
           {/* 移动端：渠道/模型选择（桌面端在 Composer 底部栏，故只在 md 以下显示） */}
-          <div className="mt-4 grid grid-cols-1 gap-3 border-t border-[var(--line)]/50 pt-4 min-[420px]:grid-cols-2 md:hidden">
-            {channels.length > 1 && (
-              <label>
-                <span className="mb-1.5 block text-xs font-medium text-[var(--ink-soft)]">渠道</span>
+          {providerMode === "built_in" && (
+            <div className="mt-4 grid grid-cols-1 gap-3 border-t border-[var(--line)]/50 pt-4 min-[420px]:grid-cols-2 md:hidden">
+              {channels.length > 1 && (
+                <label>
+                  <span className="mb-1.5 block text-xs font-medium text-[var(--ink-soft)]">渠道</span>
+                  <select
+                    aria-label="渠道"
+                    value={selectedChannelId ?? ""}
+                    onChange={(e) => onChangeChannel(e.target.value)}
+                    className="w-full rounded-xl border border-[var(--line)] bg-[var(--surface-strong)]/50 px-3 py-2 text-sm outline-none focus:border-[var(--accent)]"
+                  >
+                    {channels.map((ch) => (
+                      <option key={ch.id} value={ch.id}>{ch.name}</option>
+                    ))}
+                  </select>
+                </label>
+              )}
+              <label className={channels.length > 1 ? "" : "min-[420px]:col-span-2"}>
+                <span className="mb-1.5 block text-xs font-medium text-[var(--ink-soft)]">模型</span>
                 <select
-                  aria-label="渠道"
-                  value={selectedChannelId ?? ""}
-                  onChange={(e) => onChangeChannel(e.target.value)}
+                  aria-label="模型"
+                  value={model}
+                  onChange={(e) => onChangeModel(e.target.value)}
                   className="w-full rounded-xl border border-[var(--line)] bg-[var(--surface-strong)]/50 px-3 py-2 text-sm outline-none focus:border-[var(--accent)]"
                 >
-                  {channels.map((ch) => (
-                    <option key={ch.id} value={ch.id}>{ch.name}</option>
+                  {modelOptions.map((m) => (
+                    <option key={m} value={m}>{m}</option>
                   ))}
                 </select>
               </label>
-            )}
-            <label className={channels.length > 1 ? "" : "min-[420px]:col-span-2"}>
-              <span className="mb-1.5 block text-xs font-medium text-[var(--ink-soft)]">模型</span>
-              <select
-                aria-label="模型"
-                value={model}
-                onChange={(e) => onChangeModel(e.target.value)}
-                className="w-full rounded-xl border border-[var(--line)] bg-[var(--surface-strong)]/50 px-3 py-2 text-sm outline-none focus:border-[var(--accent)]"
-              >
-                {modelOptions.map((m) => (
-                  <option key={m} value={m}>{m}</option>
-                ))}
-              </select>
-            </label>
-          </div>
+            </div>
+          )}
         </motion.div>
       )}
     </AnimatePresence>

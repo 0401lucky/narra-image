@@ -29,7 +29,16 @@ import { Composer } from "./parts/composer";
 import { HistoryRail } from "./parts/history-rail";
 import { SessionSidebar } from "./parts/session-sidebar";
 import { getSizeSelectValue, toReusableGenerationConfig } from "./utils";
-import type { ChannelInfo, GenerationItem, ReferenceImage, SessionInfo, ViewerUser } from "./types";
+import type {
+  ChannelInfo,
+  CustomProviderDraft,
+  GenerationItem,
+  ProviderSelectionMode,
+  ReferenceImage,
+  SavedProviderInfo,
+  SessionInfo,
+  ViewerUser,
+} from "./types";
 
 const AdvancedSettings = dynamic(
   () => import("./parts/advanced-settings").then((mod) => mod.AdvancedSettings),
@@ -50,6 +59,7 @@ type GeneratorStudioProps = {
   initialGenerations?: GenerationItem[];
   initialConversations?: SessionInfo[];
   channels?: ChannelInfo[];
+  savedProvider?: SavedProviderInfo | null;
 };
 
 // 模块级稳定空数组，避免组件每次 render 时 default 表达式创建新引用，
@@ -63,6 +73,7 @@ export function GeneratorStudio({
   initialGenerations = EMPTY_GENERATIONS,
   initialConversations = EMPTY_CONVERSATIONS,
   channels = EMPTY_CHANNELS,
+  savedProvider = null,
 }: GeneratorStudioProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
@@ -78,6 +89,17 @@ export function GeneratorStudio({
     [channels, selectedChannelId],
   );
   const [model, setModel] = useState(selectedChannel?.defaultModel || "gpt-image-2");
+  const [providerMode, setProviderMode] = useState<ProviderSelectionMode>("built_in");
+  const [customProvider, setCustomProvider] = useState<CustomProviderDraft>(() => ({
+    apiKey: "",
+    baseUrl: savedProvider?.baseUrl ?? "https://api.openai.com/v1",
+    label: savedProvider?.label ?? "我的 API",
+    model: savedProvider?.model ?? selectedChannel?.defaultModel ?? "gpt-image-2",
+    models: savedProvider?.models ?? [],
+    remember: Boolean(savedProvider),
+  }));
+  const [customProviderProbePending, setCustomProviderProbePending] = useState(false);
+  const [customProviderProbeMessage, setCustomProviderProbeMessage] = useState<string | null>(null);
   const [size, setSize] = useState<GenerationSizeToken>("auto");
   const [customSizeMode, setCustomSizeMode] = useState(false);
   const [customWidth, setCustomWidth] = useState("2048");
@@ -277,6 +299,128 @@ export function GeneratorStudio({
     if (channelModels.includes(model)) return channelModels;
     return [model, ...channelModels];
   }, [selectedChannel?.models, model]);
+  const customModelOptions = useMemo(() => {
+    const models = customProvider.models.filter((item) => item.trim().length > 0);
+    if (customProvider.model && !models.includes(customProvider.model)) {
+      return [customProvider.model, ...models];
+    }
+    return models;
+  }, [customProvider.model, customProvider.models]);
+  const activeModel = providerMode === "custom" ? customProvider.model : model;
+  const savedProviderConfigured = Boolean(savedProvider);
+
+  type CustomProviderSubmitPayload = {
+    apiKey: string;
+    baseUrl: string;
+    label: string;
+    model: string;
+    models: string[];
+    remember: boolean;
+  };
+
+  type CustomProviderSubmitResult = {
+    error?: string;
+    payload: CustomProviderSubmitPayload | null;
+  };
+
+  function getCustomProviderSubmitPayload(): CustomProviderSubmitResult {
+    const apiKey = customProvider.apiKey.trim();
+    const baseUrl = customProvider.baseUrl.trim();
+    const label = customProvider.label.trim() || "我的 API";
+    const customModel = customProvider.model.trim();
+
+    if (!baseUrl) {
+      return { error: "请输入第三方 Base URL", payload: null };
+    }
+
+    try {
+      new URL(baseUrl);
+    } catch {
+      return { error: "请输入正确的第三方 Base URL", payload: null };
+    }
+
+    if (!customModel) {
+      return { error: "请输入第三方模型名", payload: null };
+    }
+
+    if (!apiKey && !savedProviderConfigured) {
+      return { error: "请输入第三方 API Key", payload: null };
+    }
+
+    if (!apiKey) {
+      if (savedProvider?.baseUrl && baseUrl !== savedProvider.baseUrl) {
+        return { error: "修改 Base URL 时请重新输入 API Key", payload: null };
+      }
+      return { payload: null };
+    }
+
+    return {
+      payload: {
+        apiKey,
+        baseUrl,
+        label,
+        model: customModel,
+        models: customProvider.models,
+        remember: customProvider.remember,
+      },
+    };
+  }
+
+  async function handleProbeCustomProviderModels() {
+    const baseUrl = customProvider.baseUrl.trim();
+    if (!baseUrl) {
+      setCustomProviderProbeMessage("请先填写 Base URL");
+      return;
+    }
+
+    setCustomProviderProbePending(true);
+    setCustomProviderProbeMessage(null);
+    try {
+      const response = await fetch("/api/provider-models/probe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          apiKey: customProvider.apiKey.trim() || undefined,
+          baseUrl,
+        }),
+      });
+      const result = (await response.json()) as {
+        data?: { models?: Array<{ id: string } | string> };
+        error?: string;
+      };
+
+      if (!response.ok) {
+        setCustomProviderProbeMessage(result.error || "模型拉取失败，请手动填写模型名");
+        return;
+      }
+
+      const nextModels = (result.data?.models ?? [])
+        .map((item) => (typeof item === "string" ? item : item.id))
+        .filter((item) => item.trim().length > 0);
+
+      if (nextModels.length === 0) {
+        setCustomProviderProbeMessage("未拉取到模型，请手动填写模型名");
+        return;
+      }
+
+      setCustomProvider((current) => ({
+        ...current,
+        model: current.model && nextModels.includes(current.model) ? current.model : nextModels[0],
+        models: nextModels,
+      }));
+      setCustomProviderProbeMessage(`已拉取 ${nextModels.length} 个模型`);
+    } catch (err) {
+      setCustomProviderProbeMessage(err instanceof Error ? err.message : "模型拉取失败，请手动填写模型名");
+    } finally {
+      setCustomProviderProbePending(false);
+    }
+  }
+
+  function getActiveCustomProviderSubmitPayload(): CustomProviderSubmitResult {
+    return providerMode === "custom"
+      ? getCustomProviderSubmitPayload()
+      : { payload: null };
+  }
 
   function handleSizeSelect(value: string) {
     if (value === "custom") {
@@ -334,9 +478,24 @@ export function GeneratorStudio({
   }
 
   type GenerateSnapshot = {
-    prompt: string;
-    referenceImages: Array<{ id: string; file: File | null; previewUrl: string; sourceUrl?: string }>;
+    count: number;
+    customProvider: CustomProviderSubmitPayload | null;
     generationType: GenerationType;
+    model: string;
+    moderation: GenerationModeration;
+    negativePrompt: string;
+    outputCompression: number;
+    outputFormat: GenerationOutputFormat;
+    prompt: string;
+    providerMode: ProviderSelectionMode;
+    quality: GenerationQuality;
+    referenceImages: Array<{ id: string; file: File | null; previewUrl: string; sourceUrl?: string }>;
+    customProviderBaseUrl: string;
+    customProviderLabel: string;
+    customProviderModels: string[];
+    customProviderRemember: boolean;
+    selectedChannelId: string | null;
+    size: GenerationSizeToken;
   };
 
   function handleSubmit() {
@@ -350,13 +509,34 @@ export function GeneratorStudio({
       return;
     }
     if (!prompt.trim() && referenceImages.length === 0) return;
+    const customProviderResult = getActiveCustomProviderSubmitPayload();
+    if (customProviderResult.error) {
+      setShowSettings(true);
+      setError(customProviderResult.error);
+      return;
+    }
 
     // 快照本次发送的内容并立即清空输入区。
     // 必须在 startTransition 之外执行：transition 内的 setState 是低优先级，会被推迟到 await 完成后才提交。
     const snapshot: GenerateSnapshot = {
-      prompt,
-      referenceImages: referenceImages.slice(),
+      count,
+      customProvider: customProviderResult.payload,
       generationType,
+      model: activeModel,
+      moderation,
+      negativePrompt,
+      outputCompression,
+      outputFormat,
+      prompt,
+      providerMode,
+      quality,
+      referenceImages: referenceImages.slice(),
+      customProviderBaseUrl: customProvider.baseUrl.trim(),
+      customProviderLabel: customProvider.label.trim() || "我的 API",
+      customProviderModels: customProvider.models,
+      customProviderRemember: customProvider.remember,
+      selectedChannelId,
+      size,
     };
 
     setPrompt("");
@@ -406,18 +586,28 @@ export function GeneratorStudio({
               body: (() => {
                 const formData = new FormData();
                 formData.append("generationType", "image_to_image");
-                formData.append("model", model);
-                formData.append("moderation", moderation);
-                if (outputFormat !== "png") {
-                  formData.append("outputCompression", String(outputCompression));
+                formData.append("model", snapshot.model);
+                formData.append("moderation", snapshot.moderation);
+                if (snapshot.outputFormat !== "png") {
+                  formData.append("outputCompression", String(snapshot.outputCompression));
                 }
-                formData.append("outputFormat", outputFormat);
+                formData.append("outputFormat", snapshot.outputFormat);
                 formData.append("prompt", snapshot.prompt);
-                formData.append("providerMode", "built_in");
-                formData.append("quality", quality);
-                formData.append("size", size);
-                if (selectedChannelId) {
-                  formData.append("channelId", selectedChannelId);
+                formData.append("providerMode", snapshot.providerMode);
+                formData.append("quality", snapshot.quality);
+                formData.append("size", snapshot.size);
+                if (snapshot.providerMode === "built_in" && snapshot.selectedChannelId) {
+                  formData.append("channelId", snapshot.selectedChannelId);
+                }
+                if (snapshot.providerMode === "custom") {
+                  formData.append("customBaseUrl", snapshot.customProviderBaseUrl);
+                  formData.append("customModel", snapshot.model);
+                  formData.append("customLabel", snapshot.customProviderLabel);
+                  formData.append("rememberProvider", String(snapshot.customProviderRemember));
+                  if (snapshot.customProvider) {
+                    formData.append("customApiKey", snapshot.customProvider.apiKey);
+                    formData.append("customModels", JSON.stringify(snapshot.customProviderModels));
+                  }
                 }
                 if (conversationId) {
                   formData.append("conversationId", conversationId);
@@ -436,20 +626,20 @@ export function GeneratorStudio({
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
-                channelId: selectedChannelId,
+                channelId: snapshot.providerMode === "built_in" ? snapshot.selectedChannelId : undefined,
                 conversationId,
-                count,
-                customProvider: null,
+                count: snapshot.count,
+                customProvider: snapshot.customProvider,
                 generationType: "text_to_image",
-                moderation,
-                model,
-                negativePrompt: negativePrompt || null,
-                outputCompression: outputFormat === "png" ? null : outputCompression,
-                outputFormat,
+                moderation: snapshot.moderation,
+                model: snapshot.model,
+                negativePrompt: snapshot.negativePrompt || null,
+                outputCompression: snapshot.outputFormat === "png" ? null : snapshot.outputCompression,
+                outputFormat: snapshot.outputFormat,
                 prompt: snapshot.prompt,
-                providerMode: "built_in",
-                quality,
-                size,
+                providerMode: snapshot.providerMode,
+                quality: snapshot.quality,
+                size: snapshot.size,
               }),
             });
 
@@ -613,11 +803,32 @@ export function GeneratorStudio({
       return;
     }
     setError(null);
+    const customProviderResult = getActiveCustomProviderSubmitPayload();
+    if (customProviderResult.error) {
+      setShowSettings(true);
+      setError(customProviderResult.error);
+      return;
+    }
     const snapshot: GenerateSnapshot = {
+      count,
+      customProvider: customProviderResult.payload,
+      generationType: "text_to_image",
+      model: activeModel,
+      moderation,
+      negativePrompt,
+      outputCompression,
+      outputFormat,
       prompt: target.prompt,
+      providerMode,
+      quality,
       // 重试不带原参考图：用户如想图生图重试，可用气泡内"加入编辑"再重发。
       referenceImages: [],
-      generationType: "text_to_image",
+      customProviderBaseUrl: customProvider.baseUrl.trim(),
+      customProviderLabel: customProvider.label.trim() || "我的 API",
+      customProviderModels: customProvider.models,
+      customProviderRemember: customProvider.remember,
+      selectedChannelId,
+      size,
     };
     startTransition(() => {
       void handleGenerate(snapshot);
@@ -671,6 +882,14 @@ export function GeneratorStudio({
     if (ch && !ch.models.includes(model)) {
       setModel(ch.defaultModel);
     }
+  }
+
+  function openCustomProviderSettings() {
+    setProviderMode("custom");
+    setShowSettings(true);
+    requestAnimationFrame(() => {
+      textareaRef.current?.focus({ preventScroll: true });
+    });
   }
 
   return (
@@ -758,6 +977,9 @@ export function GeneratorStudio({
           modelOptions={modelOptions}
           model={model}
           onChangeModel={setModel}
+          providerMode={providerMode}
+          activeModel={activeModel}
+          onOpenCustomProviderSettings={openCustomProviderSettings}
           onSubmit={handleSubmit}
           canSubmit={Boolean(prompt.trim() || referenceImages.length > 0)}
           onClickImageMode={() => setGenerationType("image_to_image")}
@@ -782,6 +1004,15 @@ export function GeneratorStudio({
             modelOptions={modelOptions}
             model={model}
             onChangeModel={setModel}
+            providerMode={providerMode}
+            onChangeProviderMode={setProviderMode}
+            customProvider={customProvider}
+            onChangeCustomProvider={setCustomProvider}
+            customModelOptions={customModelOptions}
+            savedProviderConfigured={savedProviderConfigured}
+            onProbeCustomProviderModels={handleProbeCustomProviderModels}
+            customProviderProbePending={customProviderProbePending}
+            customProviderProbeMessage={customProviderProbeMessage}
             onChangeCustomSize={updateCustomSize}
             onChangeCount={setCount}
             onChangeQuality={setQuality}
@@ -858,6 +1089,15 @@ export function GeneratorStudio({
                     modelOptions={modelOptions}
                     model={model}
                     onChangeModel={setModel}
+                    providerMode={providerMode}
+                    onChangeProviderMode={setProviderMode}
+                    customProvider={customProvider}
+                    onChangeCustomProvider={setCustomProvider}
+                    customModelOptions={customModelOptions}
+                    savedProviderConfigured={savedProviderConfigured}
+                    onProbeCustomProviderModels={handleProbeCustomProviderModels}
+                    customProviderProbePending={customProviderProbePending}
+                    customProviderProbeMessage={customProviderProbeMessage}
                     onChangeCustomSize={updateCustomSize}
                     onChangeCount={setCount}
                     onChangeQuality={setQuality}
