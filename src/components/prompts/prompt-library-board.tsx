@@ -162,8 +162,8 @@ export function PromptLibraryBoard({ canCreate, initialData, isAdmin }: PromptLi
         {/* Category horizontal bar + Filters trigger */}
         <div className="mb-6 flex flex-col gap-4 border-b border-[var(--line)]/50 pb-5 md:flex-row md:items-center md:justify-between">
           
-          {/* Horizontal scrollable Source Tabs (Scrollbar hidden) */}
-          <div className="flex flex-1 items-center gap-2 overflow-x-auto pb-1 pr-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+          {/* Horizontal scrollable Source Tabs (Elegant Custom Scrollbar) */}
+          <div className="flex flex-1 min-w-0 items-center gap-2 overflow-x-auto pb-2 pr-4 [scrollbar-width:thin] [scrollbar-color:rgba(84,52,29,0.18)_transparent] [&::-webkit-scrollbar]:h-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[var(--line)] hover:[&::-webkit-scrollbar-thumb]:bg-[var(--accent)]/50">
             <button
               type="button"
               onClick={() => setSource(ALL_SOURCE)}
