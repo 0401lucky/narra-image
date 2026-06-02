@@ -28,7 +28,7 @@ import { ChatStream } from "./parts/chat-stream";
 import { Composer } from "./parts/composer";
 import { HistoryRail } from "./parts/history-rail";
 import { SessionSidebar } from "./parts/session-sidebar";
-import { getSizeSelectValue } from "./utils";
+import { getSizeSelectValue, toReusableGenerationConfig } from "./utils";
 import type { ChannelInfo, GenerationItem, ReferenceImage, SessionInfo, ViewerUser } from "./types";
 
 const AdvancedSettings = dynamic(
@@ -88,10 +88,22 @@ export function GeneratorStudio({
   const [moderation, setModeration] = useState<GenerationModeration>("auto");
   const [count, setCount] = useState(1);
   const [zoomedImage, setZoomedImage] = useState<string | null>(null);
+  const [zoomedImageMeta, setZoomedImageMeta] = useState<{
+    dimensionLabel?: string;
+    ratioLabel?: string;
+  } | null>(null);
   const [showSettings, setShowSettings] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const { referenceImages, addFiles, removeImage, clear: clearReferenceImages, setImages: setReferenceImages } = useReferenceImages();
+  const {
+    referenceImages,
+    addFiles,
+    removeImage,
+    moveImage,
+    reorderImage,
+    clear: clearReferenceImages,
+    setImages: setReferenceImages,
+  } = useReferenceImages();
 
   // 会话状态：基于服务端 API 持久化（本次修复 #8 落地）。
   const {
@@ -108,8 +120,10 @@ export function GeneratorStudio({
   const [sessionGenerations, setSessionGenerations] = useState<GenerationItem[]>([]);
 
   const scrollAreaRef = useRef<HTMLDivElement | null>(null);
+  const composerShellRef = useRef<HTMLDivElement | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const isComposingRef = useRef(false);
+  const [composerBottomInset, setComposerBottomInset] = useState(0);
   // 缓存"看到过"的所有 generation，用于跨会话切换时还原本次会话期间产生的新数据。
   const allGenerationsRef = useRef<Map<string, GenerationItem>>(new Map());
 
@@ -169,9 +183,37 @@ export function GeneratorStudio({
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
-      textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 200)}px`;
+      textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 144)}px`;
     }
   }, [prompt]);
+
+  // Composer 是底部悬浮覆盖层；对话流底部留白需要跟随它的实际高度，
+  // 否则参考图、错误提示或桌面高级设置展开后会遮住最后一条消息。
+  useEffect(() => {
+    const shell = composerShellRef.current;
+    if (!shell) return;
+
+    const updateBottomInset = () => {
+      const nextInset = Math.ceil(shell.getBoundingClientRect().height);
+      setComposerBottomInset((current) => (current === nextInset ? current : nextInset));
+    };
+
+    updateBottomInset();
+
+    if (typeof ResizeObserver === "undefined") {
+      window.addEventListener("resize", updateBottomInset);
+      return () => window.removeEventListener("resize", updateBottomInset);
+    }
+
+    const observer = new ResizeObserver(updateBottomInset);
+    observer.observe(shell);
+    window.addEventListener("resize", updateBottomInset);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", updateBottomInset);
+    };
+  }, []);
 
   // 单图轮询：拆为独立 hook，外部传入更新回调。
   const handlePollerUpdate = useCallback((updated: GenerationItem) => {
@@ -281,6 +323,14 @@ export function GeneratorStudio({
     } catch {
       window.open(url, "_blank", "noopener,noreferrer");
     }
+  }
+
+  function handleZoomImage(
+    url: string,
+    meta?: { dimensionLabel?: string; ratioLabel?: string },
+  ) {
+    setZoomedImage(url);
+    setZoomedImageMeta(meta ?? null);
   }
 
   type GenerateSnapshot = {
@@ -477,6 +527,55 @@ export function GeneratorStudio({
     });
   }
 
+  function handleReuseConfig(generation: GenerationItem) {
+    const config = toReusableGenerationConfig(
+      generation,
+      channels.map((channel) => channel.id),
+    );
+    const targetChannel = config.channelId
+      ? channels.find((channel) => channel.id === config.channelId) ?? null
+      : selectedChannel;
+    const nextChannelId = targetChannel?.id ?? selectedChannelId ?? channels[0]?.id ?? null;
+    const nextModels = targetChannel?.models ?? selectedChannel?.models ?? [];
+    const nextModel = nextModels.length === 0 || nextModels.includes(config.model)
+      ? config.model
+      : targetChannel?.defaultModel ?? selectedChannel?.defaultModel ?? config.model;
+    const parsedSize = parseImageSize(config.size);
+
+    setPrompt(config.prompt);
+    setNegativePrompt(config.negativePrompt);
+    setGenerationType(config.sourceImageUrls.length > 0 ? "image_to_image" : config.generationType);
+    setCount(config.sourceImageUrls.length > 0 || config.generationType === "image_to_image" ? 1 : config.count);
+    setSize(config.size);
+    setCustomSizeMode(getSizeSelectValue(config.size) === "custom");
+    if (parsedSize) {
+      setCustomWidth(String(parsedSize.width));
+      setCustomHeight(String(parsedSize.height));
+    }
+    setQuality(config.quality);
+    setOutputFormat(config.outputFormat);
+    setOutputCompression(config.outputCompression);
+    setModeration(config.moderation);
+    setModel(nextModel);
+    if (nextChannelId) {
+      setSelectedChannelId(nextChannelId);
+    }
+    clearReferenceImages();
+    setReferenceImages(() =>
+      config.sourceImageUrls.map((url, index) => ({
+        file: null,
+        id: `${Date.now()}_reuse_${index}_${Math.random().toString(36).slice(2, 8)}`,
+        previewUrl: url,
+        sourceUrl: url,
+      })),
+    );
+    setShowSettings(false);
+    setError(null);
+    requestAnimationFrame(() => {
+      textareaRef.current?.focus({ preventScroll: true });
+    });
+  }
+
   function handlePaste(e: React.ClipboardEvent) {
     const items = e.clipboardData?.items;
     if (!items) return;
@@ -619,15 +718,18 @@ export function GeneratorStudio({
         <ChatStream
           ref={scrollAreaRef}
           generations={sortedGenerations}
-          onZoom={(url) => setZoomedImage(url)}
+          onZoom={handleZoomImage}
           onDownload={handleDownload}
           onUseForEdit={(url) => void handleUseImageForEdit(url)}
+          bottomInset={composerBottomInset}
+          onReuseConfig={handleReuseConfig}
           onRetry={handleRetryGeneration}
           onCancel={handleCancelGeneration}
         />
 
         <Composer
           ref={textareaRef}
+          shellRef={composerShellRef}
           prompt={prompt}
           onChangePrompt={setPrompt}
           onPaste={handlePaste}
@@ -643,6 +745,8 @@ export function GeneratorStudio({
           referenceImages={referenceImages}
           onPickFiles={handleReferenceFiles}
           onRemoveReference={handleRemoveReference}
+          onMoveReference={moveImage}
+          onReorderReference={reorderImage}
           size={size}
           sizeSelectValue={sizeSelectValue}
           onSizeSelect={handleSizeSelect}
@@ -690,7 +794,11 @@ export function GeneratorStudio({
 
         <ImageZoomModal
           src={zoomedImage}
-          onClose={() => setZoomedImage(null)}
+          meta={zoomedImageMeta}
+          onClose={() => {
+            setZoomedImage(null);
+            setZoomedImageMeta(null);
+          }}
           onDownload={handleDownload}
           onUseForEdit={(url) => void handleUseImageForEdit(url)}
         />

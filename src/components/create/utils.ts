@@ -4,7 +4,17 @@ import {
   normalizeGenerationSize,
 } from "@/lib/generation/sizes";
 import { SIZE_DOWNGRADE_TOLERANCE, SIZE_OPTIONS } from "./constants";
-import type { GenerationImage, GenerationItem } from "./types";
+import type {
+  GenerationImage,
+  GenerationItem,
+  ReusableGenerationConfig,
+} from "./types";
+import type {
+  GenerationModeration,
+  GenerationOutputFormat,
+  GenerationQuality,
+  GenerationSizeToken,
+} from "@/lib/types";
 
 export function getSizeSelectValue(size: string) {
   const normalized = normalizeGenerationSize(size);
@@ -74,6 +84,77 @@ export function getGenerationSourceImageUrls(generation: GenerationItem) {
     : generation.sourceImageUrl
       ? [generation.sourceImageUrl]
       : [];
+}
+
+export function getImageDimensionLabel(generation: GenerationItem, image: GenerationImage) {
+  const actual = image.actualSize ?? (
+    typeof image.actualWidth === "number" && typeof image.actualHeight === "number"
+      ? `${image.actualWidth}x${image.actualHeight}`
+      : null
+  );
+  const requested = generation.size && generation.size.toLowerCase() !== "auto"
+    ? generation.size
+    : null;
+
+  return actual ?? requested ?? "尺寸待确认";
+}
+
+export function getImageRatioLabel(generation: GenerationItem, image: GenerationImage) {
+  const pixels = parseSizePixels(getImageDimensionLabel(generation, image));
+  if (!pixels) return "比例待确认";
+
+  function gcd(a: number, b: number): number {
+    return b === 0 ? a : gcd(b, a % b);
+  }
+
+  const divisor = gcd(pixels.width, pixels.height);
+  return `${pixels.width / divisor}:${pixels.height / divisor}`;
+}
+
+function isGenerationQuality(value: unknown): value is GenerationQuality {
+  return value === "auto" || value === "low" || value === "medium" || value === "high";
+}
+
+function isGenerationOutputFormat(value: unknown): value is GenerationOutputFormat {
+  return value === "png" || value === "jpeg" || value === "webp";
+}
+
+function isGenerationModeration(value: unknown): value is GenerationModeration {
+  return value === "auto" || value === "low";
+}
+
+export function toReusableGenerationConfig(
+  generation: GenerationItem,
+  availableChannelIds: string[],
+): ReusableGenerationConfig {
+  const normalizedSize = normalizeGenerationSize(generation.size) ?? "auto";
+  const outputFormat = isGenerationOutputFormat(generation.outputFormat)
+    ? generation.outputFormat
+    : "png";
+  const channelId = generation.providerChannelId && availableChannelIds.includes(generation.providerChannelId)
+    ? generation.providerChannelId
+    : null;
+
+  return {
+    channelId,
+    count: Math.min(4, Math.max(1, generation.count || 1)),
+    generationType:
+      generation.generationType === "image_to_image" || getGenerationSourceImageUrls(generation).length > 0
+        ? "image_to_image"
+        : "text_to_image",
+    model: generation.model,
+    moderation: isGenerationModeration(generation.moderation) ? generation.moderation : "auto",
+    negativePrompt: generation.negativePrompt ?? "",
+    outputCompression:
+      typeof generation.outputCompression === "number"
+        ? Math.min(100, Math.max(0, generation.outputCompression))
+        : 100,
+    outputFormat,
+    prompt: generation.prompt,
+    quality: isGenerationQuality(generation.quality) ? generation.quality : "auto",
+    size: normalizedSize as GenerationSizeToken,
+    sourceImageUrls: getGenerationSourceImageUrls(generation),
+  };
 }
 
 export function genSessionId() {

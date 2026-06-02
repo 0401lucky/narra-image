@@ -9,21 +9,24 @@ import type { GenerationItem } from "../types";
 
 type ChatStreamProps = {
   generations: GenerationItem[];
-  onZoom: (url: string) => void;
+  onZoom: (url: string, meta?: { dimensionLabel?: string; ratioLabel?: string }) => void;
   onDownload: (url: string) => void;
   onUseForEdit: (url: string) => void;
+  bottomInset?: number;
+  onReuseConfig?: (generation: GenerationItem) => void;
   onRetry?: (generation: GenerationItem) => void;
   onCancel?: (generation: GenerationItem) => void;
 };
 
 export const ChatStream = forwardRef<HTMLDivElement, ChatStreamProps>(function ChatStream(
-  { generations, onZoom, onDownload, onUseForEdit, onRetry, onCancel },
+  { generations, onZoom, onDownload, onUseForEdit, bottomInset, onReuseConfig, onRetry, onCancel },
   ref,
 ) {
   return (
     <div
       ref={ref}
-      className="premium-scrollbar relative z-10 flex-1 overflow-y-auto px-3 pb-48 pt-4 scroll-smooth sm:px-4 sm:pb-56 sm:pt-6 md:px-8 md:pb-48 md:pt-8"
+      className="premium-scrollbar relative z-10 flex-1 overflow-y-auto px-3 pb-36 pt-4 scroll-smooth sm:px-4 sm:pb-40 sm:pt-6 md:px-8 md:pb-36 md:pt-8"
+      style={bottomInset ? { paddingBottom: `${bottomInset + 12}px` } : undefined}
     >
       <div className="mx-auto max-w-4xl space-y-7 sm:space-y-9">
         {generations.length === 0 ? (
@@ -44,6 +47,7 @@ export const ChatStream = forwardRef<HTMLDivElement, ChatStreamProps>(function C
               onZoom={onZoom}
               onDownload={onDownload}
               onUseForEdit={onUseForEdit}
+              onReuseConfig={onReuseConfig}
               onRetry={onRetry}
               onCancel={onCancel}
             />

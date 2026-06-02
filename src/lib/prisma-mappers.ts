@@ -49,6 +49,7 @@ export type SerializedGeneration = {
   outputCompression: number | null;
   outputFormat: string;
   prompt: string;
+  providerChannelId: string | null;
   providerMode: UiProviderMode;
   quality: string;
   size: string;
@@ -412,6 +413,10 @@ export function serializeGeneration(
         ? job.outputFormat
         : "png",
     prompt: job.prompt,
+    providerChannelId:
+      "providerChannelId" in job && typeof job.providerChannelId === "string"
+        ? job.providerChannelId
+        : null,
     providerMode: fromPrismaProviderMode(job.providerMode),
     quality:
       "quality" in job && typeof job.quality === "string"

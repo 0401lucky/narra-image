@@ -1,5 +1,6 @@
 // 创作台共享类型：从 generator-studio 拆出，方便子组件与 hooks 共用。
 import type {
+  GenerationModeration,
   GenerationOutputFormat,
   GenerationQuality,
   GenerationSizeToken,
@@ -48,6 +49,7 @@ export type GenerationItem = {
   outputCompression?: number | null;
   outputFormat?: string;
   prompt: string;
+  providerChannelId?: string | null;
   providerMode: "built_in" | "custom";
   quality?: string;
   size: string;
@@ -70,6 +72,21 @@ export type ReferenceImage = {
   file: File | null;
   previewUrl: string;
   sourceUrl?: string;
+};
+
+export type ReusableGenerationConfig = {
+  channelId?: string | null;
+  count: number;
+  generationType: GenerationType;
+  model: string;
+  moderation: GenerationModeration;
+  negativePrompt: string;
+  outputCompression: number;
+  outputFormat: GenerationOutputFormat;
+  prompt: string;
+  quality: GenerationQuality;
+  size: GenerationSizeToken;
+  sourceImageUrls: string[];
 };
 
 export type SessionInfo = {

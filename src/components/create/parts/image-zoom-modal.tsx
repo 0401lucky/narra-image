@@ -7,12 +7,16 @@ import { useEffect } from "react";
 
 type ImageZoomModalProps = {
   src: string | null;
+  meta?: {
+    dimensionLabel?: string;
+    ratioLabel?: string;
+  } | null;
   onClose: () => void;
   onDownload: (url: string) => void;
   onUseForEdit: (url: string) => void;
 };
 
-export function ImageZoomModal({ src, onClose, onDownload, onUseForEdit }: ImageZoomModalProps) {
+export function ImageZoomModal({ src, meta, onClose, onDownload, onUseForEdit }: ImageZoomModalProps) {
   // 监听 Escape 关闭，弥补原实现只能点背景关闭的可访问性短板。
   useEffect(() => {
     if (!src) return;
@@ -59,6 +63,20 @@ export function ImageZoomModal({ src, onClose, onDownload, onUseForEdit }: Image
             className="max-h-[90vh] max-w-[90vw] select-none rounded-xl object-contain shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           />
+          {meta && (
+            <div className="absolute left-6 top-6 flex flex-wrap gap-2 text-xs font-medium text-white">
+              {meta.dimensionLabel && (
+                <span className="rounded-full bg-black/60 px-3 py-1.5 shadow-sm backdrop-blur-md">
+                  {meta.dimensionLabel}
+                </span>
+              )}
+              {meta.ratioLabel && (
+                <span className="rounded-full bg-black/60 px-3 py-1.5 shadow-sm backdrop-blur-md">
+                  {meta.ratioLabel}
+                </span>
+              )}
+            </div>
+          )}
           <div className="absolute bottom-8 flex items-center gap-4">
             <button
               onClick={(e) => {

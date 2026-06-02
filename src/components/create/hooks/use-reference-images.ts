@@ -5,7 +5,7 @@
 // 2) 限制最多 MAX_REFERENCE_IMAGES 张并产生友好提示；
 // 3) 暴露 add / remove / clear 三种命令式操作；
 // 4) addFiles 同步返回结果（不依赖 setState reducer 闭包的延迟执行）。
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type Dispatch, type SetStateAction } from "react";
 
 import { MAX_REFERENCE_IMAGES } from "../constants";
 import type { ReferenceImage } from "../types";
@@ -17,7 +17,9 @@ type UseReferenceImagesResult = {
   addFiles: (files: File[] | FileList | null) => AddFilesResult;
   removeImage: (id: string) => void;
   clear: () => void;
-  setImages: React.Dispatch<React.SetStateAction<ReferenceImage[]>>;
+  moveImage: (id: string, direction: -1 | 1) => void;
+  reorderImage: (sourceId: string, targetId: string) => void;
+  setImages: Dispatch<SetStateAction<ReferenceImage[]>>;
 };
 
 export function useReferenceImages(): UseReferenceImagesResult {
@@ -88,5 +90,41 @@ export function useReferenceImages(): UseReferenceImagesResult {
     });
   }, []);
 
-  return { addFiles, clear, referenceImages, removeImage, setImages: setReferenceImages };
+  const moveImage = useCallback((id: string, direction: -1 | 1) => {
+    setReferenceImages((current) => {
+      const index = current.findIndex((item) => item.id === id);
+      if (index < 0) return current;
+      const nextIndex = index + direction;
+      if (nextIndex < 0 || nextIndex >= current.length) return current;
+
+      const next = current.slice();
+      const [target] = next.splice(index, 1);
+      next.splice(nextIndex, 0, target);
+      return next;
+    });
+  }, []);
+
+  const reorderImage = useCallback((sourceId: string, targetId: string) => {
+    if (sourceId === targetId) return;
+    setReferenceImages((current) => {
+      const sourceIndex = current.findIndex((item) => item.id === sourceId);
+      const targetIndex = current.findIndex((item) => item.id === targetId);
+      if (sourceIndex < 0 || targetIndex < 0) return current;
+
+      const next = current.slice();
+      const [source] = next.splice(sourceIndex, 1);
+      next.splice(targetIndex, 0, source);
+      return next;
+    });
+  }, []);
+
+  return {
+    addFiles,
+    clear,
+    moveImage,
+    referenceImages,
+    removeImage,
+    reorderImage,
+    setImages: setReferenceImages,
+  };
 }

@@ -3,13 +3,15 @@
 /* eslint-disable @next/next/no-img-element */
 
 // 单条生成消息气泡（用户提示 + Narra 结果）。
-import { AlertTriangle, Clock3, Download, ImagePlus, RotateCcw, Sparkles, X, ZoomIn } from "lucide-react";
+import { AlertTriangle, Clock3, Download, ImagePlus, RotateCcw, Ruler, SlidersHorizontal, Sparkles, X, ZoomIn } from "lucide-react";
 
 import { getAspectRatio as getGenerationAspectRatio } from "@/lib/generation/sizes";
 import { getThumbUrl } from "@/lib/image-url";
 
 import {
   describeSizeDowngrade,
+  getImageDimensionLabel,
+  getImageRatioLabel,
   getGenerationOptionSummary,
   getGenerationSourceImageUrls,
 } from "../utils";
@@ -17,9 +19,10 @@ import type { GenerationItem } from "../types";
 
 type GenerationBubbleProps = {
   generation: GenerationItem;
-  onZoom: (url: string) => void;
+  onZoom: (url: string, meta?: { dimensionLabel?: string; ratioLabel?: string }) => void;
   onDownload: (url: string) => void;
   onUseForEdit: (url: string) => void;
+  onReuseConfig?: (generation: GenerationItem) => void;
   onRetry?: (generation: GenerationItem) => void;
   onCancel?: (generation: GenerationItem) => void;
 };
@@ -47,6 +50,7 @@ export function GenerationBubble({
   onZoom,
   onDownload,
   onUseForEdit,
+  onReuseConfig,
   onRetry,
   onCancel,
 }: GenerationBubbleProps) {
@@ -145,13 +149,15 @@ export function GenerationBubble({
               >
                 {generation.images.map((image) => {
                   const downgrade = describeSizeDowngrade(generation, image);
+                  const dimensionLabel = getImageDimensionLabel(generation, image);
+                  const ratioLabel = getImageRatioLabel(generation, image);
                   return (
                     <div
                       key={image.id}
                       className="group relative overflow-hidden rounded-[1.15rem] border border-[var(--line)] bg-[#fffaf2]/90 shadow-[0_16px_34px_rgba(84,52,29,0.12)]"
                     >
                       <div
-                        className="overflow-hidden bg-[var(--surface-strong)]/40"
+                        className="relative overflow-hidden bg-[var(--surface-strong)]/40"
                         style={getGenerationAspectRatio(generation.size) ? { aspectRatio: getGenerationAspectRatio(generation.size) } : undefined}
                       >
                         <img
@@ -160,8 +166,17 @@ export function GenerationBubble({
                           loading="lazy"
                           decoding="async"
                           className="size-full cursor-pointer object-cover transition-transform duration-200 ease-out hover:scale-[1.015]"
-                          onClick={() => onZoom(image.url)}
+                          onClick={() => onZoom(image.url, { dimensionLabel, ratioLabel })}
                         />
+                        <div className="absolute bottom-2 left-2 flex flex-wrap gap-1.5">
+                          <span className="inline-flex items-center gap-1 rounded-full bg-black/58 px-2 py-1 text-[10px] font-medium text-white shadow-sm backdrop-blur-sm">
+                            <Ruler className="size-3" />
+                            {dimensionLabel}
+                          </span>
+                          <span className="rounded-full bg-black/58 px-2 py-1 text-[10px] font-medium text-white shadow-sm backdrop-blur-sm">
+                            {ratioLabel}
+                          </span>
+                        </div>
                       </div>
                       {downgrade && (
                         <div
@@ -175,18 +190,30 @@ export function GenerationBubble({
                         </div>
                       )}
                       <div className="flex flex-wrap items-center justify-between gap-2 border-t border-[var(--line)]/50 bg-[#fffaf2]/88 px-3 py-2.5">
-                        <button
-                          type="button"
-                          onClick={() => onUseForEdit(image.url)}
-                          className="relative z-10 inline-flex min-h-9 cursor-pointer touch-manipulation items-center gap-1.5 rounded-full border border-[var(--line)] bg-[#f3eadc] px-3.5 py-1.5 text-xs font-medium text-[var(--ink)] transition-colors duration-150 hover:border-[var(--accent)] hover:bg-[#fff6e8] hover:text-[var(--accent)] active:scale-[0.98] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
-                        >
-                          <ImagePlus className="size-3.5" />
-                          加入编辑
-                        </button>
+                        <div className="flex flex-wrap items-center gap-1.5">
+                          <button
+                            type="button"
+                            onClick={() => onUseForEdit(image.url)}
+                            className="relative z-10 inline-flex min-h-9 cursor-pointer touch-manipulation items-center gap-1.5 rounded-full border border-[var(--line)] bg-[#f3eadc] px-3.5 py-1.5 text-xs font-medium text-[var(--ink)] transition-colors duration-150 hover:border-[var(--accent)] hover:bg-[#fff6e8] hover:text-[var(--accent)] active:scale-[0.98] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
+                          >
+                            <ImagePlus className="size-3.5" />
+                            加入编辑
+                          </button>
+                          {onReuseConfig && (
+                            <button
+                              type="button"
+                              onClick={() => onReuseConfig(generation)}
+                              className="relative z-10 inline-flex min-h-9 cursor-pointer touch-manipulation items-center gap-1.5 rounded-full border border-[var(--line)] bg-white/70 px-3.5 py-1.5 text-xs font-medium text-[var(--ink)] transition-colors duration-150 hover:border-[var(--accent)] hover:bg-[#fff6e8] hover:text-[var(--accent)] active:scale-[0.98] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
+                            >
+                              <SlidersHorizontal className="size-3.5" />
+                              复用配置
+                            </button>
+                          )}
+                        </div>
                         <div className="flex items-center gap-1">
                           <button
                             type="button"
-                            onClick={() => onZoom(image.url)}
+                            onClick={() => onZoom(image.url, { dimensionLabel, ratioLabel })}
                             className="rounded-lg p-1.5 text-[var(--ink-soft)] transition hover:bg-[var(--surface-strong)] hover:text-[var(--ink)]"
                             title="放大查看"
                           >
