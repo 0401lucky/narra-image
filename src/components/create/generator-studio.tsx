@@ -24,6 +24,7 @@ import {
 import { useImagePoller } from "./hooks/use-image-poller";
 import { useReferenceImages } from "./hooks/use-reference-images";
 import { useSessions } from "./hooks/use-sessions";
+import { MAX_REFERENCE_IMAGES } from "./constants";
 import { ChatStream } from "./parts/chat-stream";
 import { Composer } from "./parts/composer";
 import { HistoryRail } from "./parts/history-rail";
@@ -248,7 +249,7 @@ export function GeneratorStudio({
   // 历史图片栏数据：合并初始历史 + 当前会话新生成图，按 id 去重，按 generation 时间倒序。
   const historyImages = useMemo(() => {
     const seen = new Set<string>();
-    const merged: Array<{ id: string; url: string; createdAt: string }> = [];
+    const merged: Array<{ id: string; url: string; createdAt: string; generation: GenerationItem }> = [];
     for (const generation of [...initialGenerations, ...sessionGenerations]) {
       if (generation.status !== "succeeded") continue;
       for (const image of generation.images) {
@@ -256,6 +257,7 @@ export function GeneratorStudio({
         seen.add(image.id);
         merged.push({
           createdAt: generation.createdAt,
+          generation,
           id: image.id,
           url: image.url,
         });
@@ -702,16 +704,22 @@ export function GeneratorStudio({
   }
 
   function handleUseImageForEdit(url: string) {
+    if (referenceImages.length >= MAX_REFERENCE_IMAGES) {
+      setError("最多上传 16 张参考图");
+      return;
+    }
+
     const image: ReferenceImage = {
       id: `${Date.now()}_url_${Math.random().toString(36).slice(2, 8)}`,
       file: null,
       previewUrl: url,
       sourceUrl: url,
     };
-    setReferenceImages((current) => [...current, image]);
+    setReferenceImages((current) => current.length >= MAX_REFERENCE_IMAGES ? current : [...current, image]);
     setGenerationType("image_to_image");
     setCount(1);
     setPrompt("");
+    setError(null);
     requestAnimationFrame(() => {
       textareaRef.current?.focus({ preventScroll: true });
     });
@@ -963,6 +971,7 @@ export function GeneratorStudio({
           onChangeGenerationType={setGenerationType}
           referenceImages={referenceImages}
           onPickFiles={handleReferenceFiles}
+          onPickImageUrl={handleUseImageForEdit}
           onRemoveReference={handleRemoveReference}
           onMoveReference={moveImage}
           onReorderReference={reorderImage}
@@ -1113,7 +1122,12 @@ export function GeneratorStudio({
         </AnimatePresence>
       </div>
 
-      <HistoryRail images={historyImages} onPickImage={(url) => setZoomedImage(url)} />
+      <HistoryRail
+        images={historyImages}
+        onPickImage={(url) => setZoomedImage(url)}
+        onUseForEdit={handleUseImageForEdit}
+        onReuseConfig={handleReuseConfig}
+      />
     </div>
   );
 }

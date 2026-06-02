@@ -192,28 +192,28 @@ export function GenerationBubble({
                           </span>
                         </div>
                       )}
-                      <div className="flex flex-wrap items-center justify-between gap-2 border-t border-[var(--line)]/50 bg-[#fffaf2]/88 px-3 py-2.5">
-                        <div className="flex flex-wrap items-center gap-1.5">
+                      <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2 border-t border-[var(--line)]/50 bg-[#fffaf2]/88 px-2.5 py-2">
+                        <div className="grid min-w-0 grid-cols-2 gap-1.5">
                           <button
                             type="button"
                             onClick={() => onUseForEdit(image.url)}
-                            className="relative z-10 inline-flex min-h-9 cursor-pointer touch-manipulation items-center gap-1.5 rounded-full border border-[var(--line)] bg-[#f3eadc] px-3.5 py-1.5 text-xs font-medium text-[var(--ink)] transition-colors duration-150 hover:border-[var(--accent)] hover:bg-[#fff6e8] hover:text-[var(--accent)] active:scale-[0.98] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
+                            className="relative z-10 inline-flex min-h-8 min-w-0 cursor-pointer touch-manipulation items-center justify-center gap-1 rounded-full border border-[var(--line)] bg-[#f3eadc] px-2 py-1.5 text-[11px] font-medium text-[var(--ink)] transition-colors duration-150 hover:border-[var(--accent)] hover:bg-[#fff6e8] hover:text-[var(--accent)] active:scale-[0.98] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
                           >
-                            <ImagePlus className="size-3.5" />
-                            加入编辑
+                            <ImagePlus className="size-3.5 shrink-0" />
+                            <span className="whitespace-nowrap">加入编辑</span>
                           </button>
                           {onReuseConfig && (
                             <button
                               type="button"
                               onClick={() => onReuseConfig(generation)}
-                              className="relative z-10 inline-flex min-h-9 cursor-pointer touch-manipulation items-center gap-1.5 rounded-full border border-[var(--line)] bg-white/70 px-3.5 py-1.5 text-xs font-medium text-[var(--ink)] transition-colors duration-150 hover:border-[var(--accent)] hover:bg-[#fff6e8] hover:text-[var(--accent)] active:scale-[0.98] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
+                              className="relative z-10 inline-flex min-h-8 min-w-0 cursor-pointer touch-manipulation items-center justify-center gap-1 rounded-full border border-[var(--line)] bg-white/70 px-2 py-1.5 text-[11px] font-medium text-[var(--ink)] transition-colors duration-150 hover:border-[var(--accent)] hover:bg-[#fff6e8] hover:text-[var(--accent)] active:scale-[0.98] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
                             >
-                              <SlidersHorizontal className="size-3.5" />
-                              复用配置
+                              <SlidersHorizontal className="size-3.5 shrink-0" />
+                              <span className="whitespace-nowrap">复用配置</span>
                             </button>
                           )}
                         </div>
-                        <div className="flex items-center gap-1">
+                        <div className="flex shrink-0 items-center gap-0.5">
                           <button
                             type="button"
                             onClick={() => onZoom(image.url, { dimensionLabel, ratioLabel })}

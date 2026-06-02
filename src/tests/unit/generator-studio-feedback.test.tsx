@@ -3,6 +3,7 @@ import userEvent from "@testing-library/user-event";
 import type { ComponentProps } from "react";
 
 import { GeneratorStudio } from "@/components/create/generator-studio";
+import { HISTORY_IMAGE_DRAG_MIME } from "@/components/create/constants";
 
 vi.mock("next/navigation", () => ({
   useRouter: () => ({
@@ -238,6 +239,23 @@ describe("创作台反馈改进", () => {
     expect(screen.getByPlaceholderText("描述你希望如何修改这些参考图...")).toBeInTheDocument();
   });
 
+  it("支持把历史图片拖入输入区作为参考图", () => {
+    renderStudio({
+      initialGenerations: [createSucceededGeneration()],
+    });
+
+    fireEvent.drop(getComposerDropTarget(), {
+      dataTransfer: {
+        files: [],
+        getData: (type: string) => (type === HISTORY_IMAGE_DRAG_MIME ? "https://example.com/image.png" : ""),
+        types: [HISTORY_IMAGE_DRAG_MIME],
+      },
+    });
+
+    expect(screen.getByAltText("Reference")).toHaveAttribute("src", "https://example.com/image.png");
+    expect(screen.getByPlaceholderText("描述你希望如何修改这些参考图...")).toBeInTheDocument();
+  });
+
   it("按底部输入区实际高度同步消息流留白", async () => {
     const rectSpy = vi.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockReturnValue({
       bottom: 180,
@@ -320,6 +338,23 @@ describe("创作台反馈改进", () => {
     expect(screen.getAllByAltText("Reference").some((item) => item.getAttribute("src") === "https://example.com/source.png")).toBe(true);
   });
 
+  it("历史栏右键菜单可以复用生成配置", async () => {
+    const user = userEvent.setup();
+    renderStudio({
+      initialGenerations: [createSucceededGeneration()],
+    });
+
+    fireEvent.contextMenu(screen.getByTitle("点击放大查看，右键可复用配置"), {
+      clientX: 300,
+      clientY: 120,
+    });
+
+    await user.click(screen.getByRole("menuitem", { name: "复用配置" }));
+
+    expect(screen.getByRole("textbox")).toHaveValue("电影感夜景肖像");
+    expect(screen.getByRole("combobox", { name: "尺寸" })).toHaveValue("2048x1152");
+  });
+
   it("自填 API 文生图提交时发送 customProvider", async () => {
     const user = userEvent.setup();
     const { generateRequests } = mockGenerateFetch();
@@ -400,5 +435,33 @@ describe("创作台反馈改进", () => {
     expect(formData.get("rememberProvider")).toBe("false");
     expect(formData.get("channelId")).toBeNull();
     expect((formData.get("referenceImages") as File | null)?.name).toBe("source-a.png");
+  });
+
+  it("历史图片作为参考图提交时发送 referenceImageUrls", async () => {
+    const user = userEvent.setup();
+    const { generateRequests } = mockGenerateFetch();
+    renderStudio({
+      initialGenerations: [createSucceededGeneration()],
+    });
+
+    fireEvent.drop(getComposerDropTarget(), {
+      dataTransfer: {
+        files: [],
+        getData: (type: string) => (type === HISTORY_IMAGE_DRAG_MIME ? "https://example.com/image.png" : ""),
+        types: [HISTORY_IMAGE_DRAG_MIME],
+      },
+    });
+    await user.type(screen.getByPlaceholderText("描述你希望如何修改这些参考图..."), "换成海报风格");
+    await user.click(screen.getByRole("button", { name: "发送" }));
+
+    await waitFor(() => {
+      expect(generateRequests).toHaveLength(1);
+    });
+
+    const body = generateRequests[0].body;
+    expect(body).toBeInstanceOf(FormData);
+    const formData = body as FormData;
+    expect(formData.get("referenceImageUrls")).toBe("https://example.com/image.png");
+    expect(formData.get("referenceImages")).toBeNull();
   });
 });

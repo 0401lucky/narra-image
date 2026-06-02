@@ -40,6 +40,9 @@ export const MODERATION_OPTIONS: Array<{ label: string; value: GenerationModerat
 // 参考图最大数量，与后端 parseGenerateRequest 的 16 张限制保持一致。
 export const MAX_REFERENCE_IMAGES = 16;
 
+// 历史图片拖入 Composer 时使用的内部拖拽类型，避免和参考图排序的 text/plain 冲突。
+export const HISTORY_IMAGE_DRAG_MIME = "application/x-narra-history-image";
+
 // 渠道返回实际像素相对于请求像素的容忍偏差；超过则视为渠道降级（free 号池/反代静默缩水）。
 export const SIZE_DOWNGRADE_TOLERANCE = 0.05;
 

@@ -22,7 +22,7 @@ import { Alert } from "@/components/ui/alert";
 import { GENERATION_PROMPT_MAX_LENGTH } from "@/lib/generation/limits";
 import type { GenerationSizeToken, GenerationType } from "@/lib/types";
 
-import { SIZE_OPTIONS } from "../constants";
+import { HISTORY_IMAGE_DRAG_MIME, SIZE_OPTIONS } from "../constants";
 import type { ChannelInfo, ProviderSelectionMode, ReferenceImage } from "../types";
 
 type ComposerProps = {
@@ -43,6 +43,7 @@ type ComposerProps = {
 
   referenceImages: ReferenceImage[];
   onPickFiles: (files: File[] | FileList | null) => void;
+  onPickImageUrl: (url: string) => void;
   onRemoveReference: (id: string) => void;
   onMoveReference: (id: string, direction: -1 | 1) => void;
   onReorderReference: (sourceId: string, targetId: string) => void;
@@ -95,6 +96,7 @@ export const Composer = forwardRef<HTMLTextAreaElement, ComposerProps>(function 
     onChangeGenerationType,
     referenceImages,
     onPickFiles,
+    onPickImageUrl,
     onRemoveReference,
     onMoveReference,
     onReorderReference,
@@ -125,22 +127,42 @@ export const Composer = forwardRef<HTMLTextAreaElement, ComposerProps>(function 
     return Array.from(event.dataTransfer.types).includes("Files");
   }
 
+  function hasDraggedImageUrl(event: DragEvent) {
+    const types = Array.from(event.dataTransfer.types);
+    return types.includes(HISTORY_IMAGE_DRAG_MIME) || types.includes("text/uri-list");
+  }
+
+  function getDraggedImageUrl(event: DragEvent) {
+    const internalUrl = event.dataTransfer.getData(HISTORY_IMAGE_DRAG_MIME).trim();
+    if (internalUrl) return internalUrl;
+
+    const uriList = event.dataTransfer.getData("text/uri-list");
+    return uriList
+      .split(/\r?\n/)
+      .map((line) => line.trim())
+      .find((line) => line && !line.startsWith("#")) ?? "";
+  }
+
+  function canAcceptDrop(event: DragEvent) {
+    return hasDraggedFiles(event) || hasDraggedImageUrl(event);
+  }
+
   function handleDragEnter(event: DragEvent<HTMLDivElement>) {
-    if (!hasDraggedFiles(event)) return;
+    if (!canAcceptDrop(event)) return;
     event.preventDefault();
     dragDepthRef.current += 1;
     setDragActive(true);
   }
 
   function handleDragOver(event: DragEvent<HTMLDivElement>) {
-    if (!hasDraggedFiles(event)) return;
+    if (!canAcceptDrop(event)) return;
     event.preventDefault();
     event.dataTransfer.dropEffect = "copy";
     setDragActive(true);
   }
 
   function handleDragLeave(event: DragEvent<HTMLDivElement>) {
-    if (!hasDraggedFiles(event)) return;
+    if (!canAcceptDrop(event)) return;
     event.preventDefault();
     dragDepthRef.current = Math.max(0, dragDepthRef.current - 1);
     if (dragDepthRef.current === 0) {
@@ -149,11 +171,19 @@ export const Composer = forwardRef<HTMLTextAreaElement, ComposerProps>(function 
   }
 
   function handleDrop(event: DragEvent<HTMLDivElement>) {
-    if (!hasDraggedFiles(event)) return;
+    if (!canAcceptDrop(event)) return;
     event.preventDefault();
     dragDepthRef.current = 0;
     setDragActive(false);
-    onPickFiles(event.dataTransfer.files);
+    if (hasDraggedFiles(event)) {
+      onPickFiles(event.dataTransfer.files);
+      return;
+    }
+
+    const imageUrl = getDraggedImageUrl(event);
+    if (imageUrl) {
+      onPickImageUrl(imageUrl);
+    }
   }
 
   return (
