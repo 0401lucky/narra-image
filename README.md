@@ -75,6 +75,22 @@ pnpm dev
 - `BOOTSTRAP_ADMIN_EMAIL`: 需要自动提权为管理员的邮箱
 - `BOOTSTRAP_INVITE_CODE`: 初始邀请码
 
+## 提示词库同步
+
+提示词库前台与后台管理由 Next.js 提供，GitHub 提示词抓取也提供 Go 同步命令，适合部署侧一次性任务或定时任务使用：
+
+```bash
+pnpm prompt:sync
+```
+
+同步单个来源：
+
+```bash
+pnpm prompt:sync -- -source awesome-gpt-image
+```
+
+Docker 镜像内也包含 `/app/narra-prompt-sync`，可在容器环境里连接同一个 `DATABASE_URL` 执行。
+
 ## 测试与构建
 
 ```bash

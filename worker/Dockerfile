@@ -7,11 +7,13 @@ RUN go mod download
 
 COPY worker/ ./
 RUN CGO_ENABLED=0 GOOS=linux go build -o /out/narra-worker ./cmd/worker
+RUN CGO_ENABLED=0 GOOS=linux go build -o /out/narra-prompt-sync ./cmd/prompt-sync
 
 FROM alpine:3.22
 
 WORKDIR /app
 
 COPY --from=builder /out/narra-worker /app/narra-worker
+COPY --from=builder /out/narra-prompt-sync /app/narra-prompt-sync
 
 CMD ["/app/narra-worker"]

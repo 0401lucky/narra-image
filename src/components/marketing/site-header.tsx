@@ -32,6 +32,7 @@ export async function SiteHeader({
   const links = [
     { href: "/", label: "首页" },
     { href: "/create", label: "创作台" },
+    { href: "/prompts", label: "提示词库" },
     { href: "/video", label: "视频" },
     { href: "/works", label: "作品" },
     ...(currentUser ? [{ href: "/api-keys", label: "API" }] : []),

@@ -35,6 +35,7 @@ RUN go mod download
 
 COPY worker/ ./
 RUN CGO_ENABLED=0 GOOS=linux go build -o /out/narra-worker ./cmd/worker
+RUN CGO_ENABLED=0 GOOS=linux go build -o /out/narra-prompt-sync ./cmd/prompt-sync
 
 FROM base AS runner
 
@@ -52,6 +53,7 @@ COPY --from=builder /app/pnpm-workspace.yaml ./pnpm-workspace.yaml
 COPY --from=builder /app/next.config.ts ./next.config.ts
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=worker-builder /out/narra-worker ./narra-worker
+COPY --from=worker-builder /out/narra-prompt-sync ./narra-prompt-sync
 
 EXPOSE 3000
 

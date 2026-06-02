@@ -9,6 +9,7 @@ import {
   X,
   Home,
   Wand2,
+  BookOpenText,
   Image as ImageIcon,
   Key,
   Settings,
@@ -41,6 +42,7 @@ type MobileNavProps = {
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   "首页": Home,
   "创作台": Wand2,
+  "提示词库": BookOpenText,
   "作品": ImageIcon,
   "API": Key,
   "管理后台": Settings,

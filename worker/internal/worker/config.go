@@ -38,11 +38,11 @@ type Config struct {
 }
 
 func LoadConfig() (Config, error) {
-	databaseURL := normalizeDatabaseURL(os.Getenv("DATABASE_URL"))
-	authSecret := os.Getenv("AUTH_SECRET")
-	if databaseURL == "" {
-		return Config{}, errors.New("DATABASE_URL 不能为空")
+	databaseURL, err := LoadDatabaseURL()
+	if err != nil {
+		return Config{}, err
 	}
+	authSecret := os.Getenv("AUTH_SECRET")
 	if len(authSecret) < 10 {
 		return Config{}, errors.New("AUTH_SECRET 不能为空，且至少 10 位")
 	}
@@ -79,6 +79,14 @@ func LoadConfig() (Config, error) {
 		S3SecretAccessKey:              os.Getenv("S3_SECRET_ACCESS_KEY"),
 		WorkerID:                       fmt.Sprintf("%s-%d", hostname, os.Getpid()),
 	}, nil
+}
+
+func LoadDatabaseURL() (string, error) {
+	databaseURL := normalizeDatabaseURL(os.Getenv("DATABASE_URL"))
+	if databaseURL == "" {
+		return "", errors.New("DATABASE_URL 不能为空")
+	}
+	return databaseURL, nil
 }
 
 func getenv(key string, fallback string) string {

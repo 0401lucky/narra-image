@@ -11,7 +11,11 @@ import { failStalePendingGenerationJobs } from "@/lib/generation/job-refund";
 
 export const dynamic = "force-dynamic";
 
-export default async function CreatePage() {
+type CreatePageProps = {
+  searchParams?: Promise<Record<string, string | string[] | undefined>> | Record<string, string | string[] | undefined>;
+};
+
+export default async function CreatePage({ searchParams }: CreatePageProps) {
   const user = await getCurrentUserRecord();
   if (!user) {
     redirect("/login");
@@ -57,6 +61,9 @@ export default async function CreatePage() {
   ]);
 
   const currentUser = serializeUser(user);
+  const params = await searchParams;
+  const rawPrompt = Array.isArray(params?.prompt) ? params?.prompt[0] : params?.prompt;
+  const initialPrompt = typeof rawPrompt === "string" ? rawPrompt.slice(0, 8000) : "";
   const serializedChannels = channels.map((ch) => ({
     creditCost: ch.creditCost,
     defaultModel: ch.defaultModel,
@@ -73,6 +80,7 @@ export default async function CreatePage() {
         <GeneratorStudio
           checkInSummary={checkInSummary}
           currentUser={currentUser}
+          initialPrompt={initialPrompt}
           initialGenerations={jobs.map(serializeGeneration)}
           initialConversations={conversations.map(serializeConversation)}
           channels={serializedChannels}

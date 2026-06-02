@@ -59,6 +59,7 @@ type GeneratorStudioProps = {
   currentUser: ViewerUser;
   initialGenerations?: GenerationItem[];
   initialConversations?: SessionInfo[];
+  initialPrompt?: string;
   channels?: ChannelInfo[];
   savedProvider?: SavedProviderInfo | null;
 };
@@ -73,6 +74,7 @@ export function GeneratorStudio({
   currentUser,
   initialGenerations = EMPTY_GENERATIONS,
   initialConversations = EMPTY_CONVERSATIONS,
+  initialPrompt = "",
   channels = EMPTY_CHANNELS,
   savedProvider = null,
 }: GeneratorStudioProps) {
@@ -80,7 +82,7 @@ export function GeneratorStudio({
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [generationType, setGenerationType] = useState<GenerationType>("text_to_image");
-  const [prompt, setPrompt] = useState("");
+  const [prompt, setPrompt] = useState(initialPrompt);
   const [negativePrompt, setNegativePrompt] = useState("");
   const [selectedChannelId, setSelectedChannelId] = useState<string | null>(
     channels[0]?.id ?? null,

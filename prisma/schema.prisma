@@ -47,6 +47,13 @@ enum RedeemCodeMode {
   SHARED
 }
 
+enum PromptSourceStatus {
+  IDLE
+  SYNCING
+  SUCCESS
+  FAILED
+}
+
 model User {
   id                   String               @id @default(cuid())
   email                String               @unique
@@ -129,6 +136,49 @@ model LoginCoverConfig {
   customUrl String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model PromptSource {
+  id            String              @id @default(cuid())
+  slug          String              @unique
+  name          String
+  description   String?
+  sourceUrl     String
+  rawBaseUrl    String
+  parser        String
+  isEnabled     Boolean             @default(true)
+  sortOrder     Int                 @default(0)
+  status        PromptSourceStatus  @default(IDLE)
+  lastSyncedAt  DateTime?
+  lastSyncError String?
+  itemCount     Int                 @default(0)
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+  prompts       PromptLibraryItem[]
+
+  @@index([isEnabled, sortOrder])
+}
+
+model PromptLibraryItem {
+  id          String       @id @default(cuid())
+  sourceId    String
+  remoteId    String
+  title       String
+  prompt      String       @db.Text
+  coverUrl    String?
+  preview     String?      @db.Text
+  previewUrls String[]     @default([])
+  tags        String[]     @default([])
+  sortOrder   Int          @default(0)
+  source      PromptSource @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  syncedAt    DateTime     @default(now())
+
+  @@unique([sourceId, remoteId])
+  @@index([sourceId, sortOrder])
+  @@index([createdAt])
+  @@index([updatedAt])
 }
 
 model OAuthProvider {

@@ -46,6 +46,9 @@ export function AdminFrame({ children, currentUser }: AdminFrameProps) {
   } else if (pathname.startsWith("/admin/works")) {
     currentBreadcrumb = "Works";
     currentPageTitle = "作品广场投稿审核";
+  } else if (pathname.startsWith("/admin/prompts")) {
+    currentBreadcrumb = "Prompts";
+    currentPageTitle = "提示词库同步管理";
   } else if (pathname.startsWith("/admin/benefits")) {
     currentBreadcrumb = "Benefits";
     currentPageTitle = "每日签到福利配置";

@@ -4,6 +4,7 @@ import { ShowcaseStatus } from "@prisma/client";
 import Link from "next/link";
 import {
   BadgePercent,
+  BookOpenText,
   ClipboardList,
   ImageIcon,
   Sparkles,
@@ -26,7 +27,7 @@ export default async function AdminPage() {
   const todayStart = new Date();
   todayStart.setHours(0, 0, 0, 0);
 
-  const [userCount, inviteCount, redeemCodeCount, generationCount, featuredCount, todayGenerationCount] =
+  const [userCount, inviteCount, redeemCodeCount, generationCount, featuredCount, todayGenerationCount, promptCount] =
     await Promise.all([
       db.user.count(),
       db.inviteCode.count(),
@@ -42,6 +43,7 @@ export default async function AdminPage() {
           createdAt: { gte: todayStart },
         },
       }),
+      db.promptLibraryItem.count(),
     ]);
   const metrics = [
     { caption: "用户池", icon: Users, label: "注册用户", value: userCount },
@@ -60,6 +62,7 @@ export default async function AdminPage() {
     },
     { caption: "今日产出", icon: Sparkles, label: "今日生成", value: todayGenerationCount },
     { caption: "社区精选", icon: ImageIcon, label: "公开作品", value: featuredCount },
+    { caption: "GitHub 同步", icon: BookOpenText, label: "提示词", value: promptCount },
   ];
 
   return (
@@ -77,7 +80,7 @@ export default async function AdminPage() {
           </div>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-6">
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-7">
           {metrics.map((metric) => {
             const Icon = metric.icon;
             return (
@@ -141,6 +144,7 @@ export default async function AdminPage() {
                 ["/admin/works", "批量审核", "集中处理投稿作品"],
                 ["/admin/users", "用户管理", "搜索与调整用户"],
                 ["/admin/generations", "生成记录", "查看任务流水"],
+                ["/admin/prompts", "提示词库", "同步 GitHub 来源"],
                 ["/admin/settings", "系统设置", "站点与安全配置"],
               ].map(([href, title, desc]) => (
                 <Link
