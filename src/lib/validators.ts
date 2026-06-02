@@ -131,6 +131,7 @@ export const channelCreateSchema = z.object({
   name: z.string().trim().min(1, "请输入渠道名称").max(40),
   slug: z.string().trim().min(1, "请输入渠道标识").max(40).regex(/^[a-z0-9-]+$/, "仅允许小写字母、数字和连字符"),
   sortOrder: z.number().int().default(0),
+  videoCreditCost: z.number().int().min(0).max(10000).default(20),
 });
 
 export const channelUpdateSchema = z.object({
@@ -142,6 +143,7 @@ export const channelUpdateSchema = z.object({
   models: z.array(z.string()).optional(),
   name: z.string().trim().min(1).max(40).optional(),
   sortOrder: z.number().int().optional(),
+  videoCreditCost: z.number().int().min(0).max(10000).optional(),
 });
 
 export const providerProbeSchema = z.object({

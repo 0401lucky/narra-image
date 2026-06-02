@@ -104,6 +104,7 @@ export async function getChannelById(id: string): Promise<ResolvedChannel | null
  * Also auto-migrates legacy BuiltInProviderConfig data if no channels exist.
  */
 export async function getChannelsForAdmin() {
+  const env = getEnv();
   let channels = await db.providerChannel.findMany({
     orderBy: { sortOrder: "asc" },
   });
@@ -123,6 +124,7 @@ export async function getChannelsForAdmin() {
           name: legacy.name || "默认渠道",
           slug: "default",
           sortOrder: 0,
+          videoCreditCost: env.BUILTIN_PROVIDER_VIDEO_CREDIT_COST,
         },
       });
       channels = [migrated];
@@ -140,6 +142,7 @@ export async function getChannelsForAdmin() {
     name: ch.name,
     slug: ch.slug,
     sortOrder: ch.sortOrder,
+    videoCreditCost: ch.videoCreditCost,
   }));
 }
 

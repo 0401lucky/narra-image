@@ -15,6 +15,7 @@ type ChannelItem = {
   name: string;
   slug: string;
   sortOrder: number;
+  videoCreditCost: number;
 };
 
 type ChannelManagerProps = {
@@ -40,6 +41,7 @@ export function ChannelManager({ initialChannels }: ChannelManagerProps) {
   // 拉取到的所有模型（包含非生图），管理员可在其中勾选实际启用的模型
   const [fetchedModels, setFetchedModels] = useState<Array<{ id: string; imageLikely: boolean }>>([]);
   const [formCreditCost, setFormCreditCost] = useState(5);
+  const [formVideoCreditCost, setFormVideoCreditCost] = useState(20);
   const [formIsActive, setFormIsActive] = useState(true);
   const [formSortOrder, setFormSortOrder] = useState(0);
 
@@ -52,6 +54,7 @@ export function ChannelManager({ initialChannels }: ChannelManagerProps) {
     setFormModels([]);
     setFetchedModels([]);
     setFormCreditCost(5);
+    setFormVideoCreditCost(20);
     setFormIsActive(true);
     setFormSortOrder(0);
     setError(null);
@@ -75,6 +78,7 @@ export function ChannelManager({ initialChannels }: ChannelManagerProps) {
     // 老数据没有 imageLikely 标记，先按已启用来展示，后续重新拉取再覆盖
     setFetchedModels(ch.models.map((id) => ({ id, imageLikely: true })));
     setFormCreditCost(ch.creditCost);
+    setFormVideoCreditCost(ch.videoCreditCost);
     setFormIsActive(ch.isActive);
     setFormSortOrder(ch.sortOrder);
     setEditingChannel(ch);
@@ -116,6 +120,7 @@ export function ChannelManager({ initialChannels }: ChannelManagerProps) {
           models: formModels,
           name: formName,
           sortOrder: formSortOrder,
+          videoCreditCost: formVideoCreditCost,
         }),
       });
 
@@ -140,6 +145,7 @@ export function ChannelManager({ initialChannels }: ChannelManagerProps) {
           name: formName,
           slug: formSlug,
           sortOrder: formSortOrder,
+          videoCreditCost: formVideoCreditCost,
         }),
       });
 
@@ -319,7 +325,10 @@ export function ChannelManager({ initialChannels }: ChannelManagerProps) {
               <div className="mt-4 flex items-center justify-between border-t border-[var(--line)]/50 pt-3">
                 <div className="flex items-center gap-2">
                   <span className="rounded-md bg-[var(--accent)]/10 px-2 py-0.5 text-xs font-medium text-[var(--accent)]">
-                    -{ch.creditCost} 积分/次
+                    图片 -{ch.creditCost}
+                  </span>
+                  <span className="rounded-md bg-violet-500/10 px-2 py-0.5 text-xs font-medium text-violet-600">
+                    视频 -{ch.videoCreditCost}
                   </span>
                   {ch.models.length > 0 && (
                     <span className="rounded-md bg-[var(--surface-strong)] px-2 py-0.5 text-[10px] text-[var(--ink-soft)]">
@@ -442,11 +451,21 @@ export function ChannelManager({ initialChannels }: ChannelManagerProps) {
               </label>
 
               <label className="grid gap-1.5">
-                <span className="text-sm text-[var(--ink-soft)]">每次消耗积分</span>
+                <span className="text-sm text-[var(--ink-soft)]">图片每次消耗积分</span>
                 <input
                   type="number"
                   value={formCreditCost}
                   onChange={(e) => setFormCreditCost(Number(e.target.value))}
+                  className="rounded-xl border border-[var(--line)] bg-white/70 px-4 py-2.5 outline-none transition focus:border-[var(--accent)]"
+                />
+              </label>
+
+              <label className="grid gap-1.5">
+                <span className="text-sm text-[var(--ink-soft)]">视频每次消耗积分</span>
+                <input
+                  type="number"
+                  value={formVideoCreditCost}
+                  onChange={(e) => setFormVideoCreditCost(Number(e.target.value))}
                   className="rounded-xl border border-[var(--line)] bg-white/70 px-4 py-2.5 outline-none transition focus:border-[var(--accent)]"
                 />
               </label>

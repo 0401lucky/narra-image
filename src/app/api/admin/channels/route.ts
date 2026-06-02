@@ -9,7 +9,7 @@ import {
   jsonOk,
   parseJsonBody,
 } from "@/lib/server/http";
-import { channelCreateSchema, channelUpdateSchema } from "@/lib/validators";
+import { channelCreateSchema } from "@/lib/validators";
 
 /**
  * GET /api/admin/channels — list all channels for admin
@@ -43,6 +43,7 @@ export async function POST(request: Request) {
         name: body.name,
         slug: body.slug,
         sortOrder: body.sortOrder,
+        videoCreditCost: body.videoCreditCost,
       },
     });
 

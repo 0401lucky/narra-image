@@ -34,6 +34,7 @@ export async function PATCH(request: Request, context: RouteContext) {
         ...(body.defaultModel !== undefined && { defaultModel: body.defaultModel }),
         ...(body.models !== undefined && { models: body.models }),
         ...(body.creditCost !== undefined && { creditCost: body.creditCost }),
+        ...(body.videoCreditCost !== undefined && { videoCreditCost: body.videoCreditCost }),
         ...(body.isActive !== undefined && { isActive: body.isActive }),
         ...(body.sortOrder !== undefined && { sortOrder: body.sortOrder }),
         ...(body.apiKey && {
