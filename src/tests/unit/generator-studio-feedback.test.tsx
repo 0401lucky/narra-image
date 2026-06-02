@@ -54,6 +54,31 @@ const baseProps = {
 type StudioProps = ComponentProps<typeof GeneratorStudio>;
 type Generation = NonNullable<StudioProps["initialGenerations"]>[number];
 
+function createPendingGeneration(overrides: Partial<Generation> = {}): Generation {
+  return {
+    count: 1,
+    createdAt: "2026-04-23T08:00:00.000Z",
+    creditsSpent: 0,
+    generationType: "text_to_image",
+    id: "job_custom",
+    images: [],
+    model: "gpt-image-1",
+    moderation: "auto",
+    negativePrompt: null,
+    outputCompression: null,
+    outputFormat: "png",
+    prompt: "第三方 API 生成测试",
+    providerChannelId: null,
+    providerMode: "custom",
+    quality: "auto",
+    size: "auto",
+    sourceImageUrl: null,
+    sourceImageUrls: [],
+    status: "pending",
+    ...overrides,
+  };
+}
+
 function createSucceededGeneration(overrides: Partial<Generation> = {}): Generation {
   return {
     count: 1,
@@ -106,10 +131,76 @@ function renderStudio(props: Partial<StudioProps> = {}) {
 }
 
 function getComposerDropTarget() {
-  const textarea = screen.getByRole("textbox");
+  const textarea =
+    screen.queryByPlaceholderText("输入提示词生成图片，或直接粘贴图片进入图生图...")
+    ?? screen.queryByPlaceholderText("描述你希望如何修改这些参考图...");
+  if (!textarea) throw new Error("找不到主输入框");
   const target = textarea.closest(".composer-silk");
   if (!target) throw new Error("找不到输入区");
   return target;
+}
+
+function getFirstTextbox(name: string) {
+  const input = screen.getAllByRole("textbox", { name })[0];
+  if (!input) throw new Error(`找不到输入框：${name}`);
+  return input;
+}
+
+function getFirstLabelText(name: string) {
+  const input = screen.getAllByLabelText(name)[0];
+  if (!input) throw new Error(`找不到输入框：${name}`);
+  return input;
+}
+
+function mockGenerateFetch() {
+  const generateRequests: RequestInit[] = [];
+  const fetchMock = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
+    const url = typeof input === "string" ? input : input.toString();
+
+    if (url === "/api/me/conversations" && init?.method === "POST") {
+      return {
+        json: async () => ({
+          data: {
+            conversation: {
+              createdAt: "2026-04-23T08:00:00.000Z",
+              generationIds: [],
+              id: "conversation_1",
+              title: "新对话",
+              updatedAt: "2026-04-23T08:00:00.000Z",
+            },
+          },
+        }),
+        ok: true,
+      };
+    }
+
+    if (url === "/api/generate") {
+      generateRequests.push(init ?? {});
+      return {
+        json: async () => ({
+          data: {
+            generation: createPendingGeneration({
+              conversationId: "conversation_1",
+            }),
+          },
+        }),
+        ok: true,
+      };
+    }
+
+    return {
+      blob: async () => new Blob(["fake-image"], { type: "image/png" }),
+      json: async () => ({ data: {} }),
+      ok: true,
+    };
+  });
+
+  vi.stubGlobal("fetch", fetchMock);
+
+  return {
+    fetchMock,
+    generateRequests,
+  };
 }
 
 describe("创作台反馈改进", () => {
@@ -227,5 +318,87 @@ describe("创作台反馈改进", () => {
     expect(screen.getByRole("combobox", { name: "尺寸" })).toHaveValue("2048x1152");
     expect(screen.getByPlaceholderText("描述你希望如何修改这些参考图...")).toBeInTheDocument();
     expect(screen.getAllByAltText("Reference").some((item) => item.getAttribute("src") === "https://example.com/source.png")).toBe(true);
+  });
+
+  it("自填 API 文生图提交时发送 customProvider", async () => {
+    const user = userEvent.setup();
+    const { generateRequests } = mockGenerateFetch();
+    renderStudio();
+
+    await user.click(screen.getByRole("button", { name: "自填 API" }));
+    await user.clear(getFirstTextbox("第三方 Base URL"));
+    await user.type(getFirstTextbox("第三方 Base URL"), "https://api.custom.test/v1");
+    await user.type(getFirstLabelText("第三方 API Key"), "sk-custom-key");
+    await user.clear(getFirstLabelText("第三方模型"));
+    await user.type(getFirstLabelText("第三方模型"), "custom-image-model");
+    await user.clear(getFirstTextbox("第三方配置名称"));
+    await user.type(getFirstTextbox("第三方配置名称"), "测试渠道");
+    await user.type(screen.getByPlaceholderText("输入提示词生成图片，或直接粘贴图片进入图生图..."), "第三方 API 生成测试");
+    await user.click(screen.getByRole("button", { name: "发送" }));
+
+    await waitFor(() => {
+      expect(generateRequests).toHaveLength(1);
+    });
+
+    const body = JSON.parse(String(generateRequests[0].body)) as {
+      channelId?: string;
+      customProvider?: {
+        apiKey: string;
+        baseUrl: string;
+        label: string;
+        model: string;
+        remember: boolean;
+      };
+      model: string;
+      providerMode: string;
+    };
+
+    expect(body.providerMode).toBe("custom");
+    expect(body.channelId).toBeUndefined();
+    expect(body.model).toBe("custom-image-model");
+    expect(body.customProvider).toMatchObject({
+      apiKey: "sk-custom-key",
+      baseUrl: "https://api.custom.test/v1",
+      label: "测试渠道",
+      model: "custom-image-model",
+      remember: false,
+    });
+  });
+
+  it("自填 API 图生图提交时发送 FormData 参数", async () => {
+    const user = userEvent.setup();
+    const { generateRequests } = mockGenerateFetch();
+    renderStudio();
+
+    await user.click(screen.getByRole("button", { name: "自填 API" }));
+    await user.clear(getFirstTextbox("第三方 Base URL"));
+    await user.type(getFirstTextbox("第三方 Base URL"), "https://api.custom.test/v1");
+    await user.type(getFirstLabelText("第三方 API Key"), "sk-custom-key");
+    await user.clear(getFirstLabelText("第三方模型"));
+    await user.type(getFirstLabelText("第三方模型"), "custom-image-model");
+
+    fireEvent.drop(getComposerDropTarget(), {
+      dataTransfer: {
+        files: [new File(["fake-a"], "source-a.png", { type: "image/png" })],
+        types: ["Files"],
+      },
+    });
+    await user.type(screen.getByPlaceholderText("描述你希望如何修改这些参考图..."), "把参考图改成电影感");
+    await user.click(screen.getByRole("button", { name: "发送" }));
+
+    await waitFor(() => {
+      expect(generateRequests).toHaveLength(1);
+    });
+
+    const body = generateRequests[0].body;
+    expect(body).toBeInstanceOf(FormData);
+    const formData = body as FormData;
+    expect(formData.get("providerMode")).toBe("custom");
+    expect(formData.get("customBaseUrl")).toBe("https://api.custom.test/v1");
+    expect(formData.get("customApiKey")).toBe("sk-custom-key");
+    expect(formData.get("customModel")).toBe("custom-image-model");
+    expect(formData.get("rememberProvider")).toBe("false");
+    expect(formData.get("channelId")).toBeNull();
+    expect((formData.get("referenceImages") as File | null)?.name).toBe("source-a.png");
   });
 });

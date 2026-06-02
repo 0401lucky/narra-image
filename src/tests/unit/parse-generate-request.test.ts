@@ -130,6 +130,50 @@ describe("生成请求解析", () => {
     expect(result.image?.name).toBe("source-a.png");
   });
 
+  it("解析 form-data 自填 API 图生图请求", async () => {
+    const formData = new FormData();
+    formData.append("customApiKey", "sk-custom-key");
+    formData.append("customBaseUrl", "https://api.custom.test/v1");
+    formData.append("customLabel", "测试渠道");
+    formData.append("customModel", "custom-image-model");
+    formData.append("customModels", JSON.stringify(["custom-image-model", "custom-image-large"]));
+    formData.append("generationType", "image_to_image");
+    formData.append("model", "custom-image-model");
+    formData.append("prompt", "把这张图调成胶片质感");
+    formData.append("providerMode", "custom");
+    formData.append("rememberProvider", "true");
+    formData.append("image", new File(["fake-image"], "source.png", { type: "image/png" }));
+
+    const result = await parseGenerateRequest(formData);
+
+    expect(result.providerMode).toBe("custom");
+    expect(result.customProvider).toMatchObject({
+      apiKey: "sk-custom-key",
+      baseUrl: "https://api.custom.test/v1",
+      label: "测试渠道",
+      model: "custom-image-model",
+      models: ["custom-image-model", "custom-image-large"],
+      remember: true,
+    });
+  });
+
+  it("解析 form-data 自填 API 图生图请求时允许留空 Key 复用已保存配置", async () => {
+    const formData = new FormData();
+    formData.append("customBaseUrl", "https://api.custom.test/v1");
+    formData.append("customModel", "custom-image-model");
+    formData.append("generationType", "image_to_image");
+    formData.append("model", "custom-image-model");
+    formData.append("prompt", "把这张图调成胶片质感");
+    formData.append("providerMode", "custom");
+    formData.append("image", new File(["fake-image"], "source.png", { type: "image/png" }));
+
+    const result = await parseGenerateRequest(formData);
+
+    expect(result.providerMode).toBe("custom");
+    expect(result.customProvider).toBeNull();
+    expect(result.model).toBe("custom-image-model");
+  });
+
   it("图生图 form-data 未传 size 时默认使用 auto", async () => {
     const formData = new FormData();
     formData.append("generationType", "image_to_image");
