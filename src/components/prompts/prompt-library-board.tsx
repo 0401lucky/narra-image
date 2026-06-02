@@ -580,15 +580,15 @@ function PromptDetailDialog({
         </div>
 
         {/* Modal Layout Grid */}
-        <div className="grid flex-1 overflow-y-auto md:grid-cols-[1.1fr_1fr]">
+        <div className="grid flex-1 overflow-y-auto md:grid-cols-[1fr_1.3fr]">
           
           {/* Left panel cover image */}
-          <div className="relative flex min-h-64 items-center justify-center bg-[#eadcca] p-4 md:h-full md:min-h-0">
+          <div className="relative flex min-h-64 items-center justify-center bg-[#eadcca]/60 p-6 md:h-full md:min-h-0 md:p-8">
             {item.coverUrl ? (
               <img
                 src={item.coverUrl}
                 alt={item.title}
-                className="max-h-[40dvh] w-full rounded-2xl object-contain shadow-md md:max-h-full"
+                className="max-h-[35dvh] w-full rounded-2xl object-contain shadow-md md:max-h-[52dvh]"
               />
             ) : (
               <div className="grid size-full place-items-center text-center text-lg font-semibold text-[var(--ink-soft)]">
