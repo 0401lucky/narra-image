@@ -3,13 +3,10 @@
 /* eslint-disable @next/next/no-img-element */
 
 // 底部输入悬浮区（Composer）：参考图、错误提示、文本框、模式与尺寸切换、发送、高级设置入口。
-import Link from "next/link";
 import {
   ArrowLeft,
   ArrowRight,
-  Code2,
   GripVertical,
-  KeyRound,
   Paperclip,
   Send,
   Settings2,
@@ -409,27 +406,6 @@ export const Composer = forwardRef<HTMLTextAreaElement, ComposerProps>(function 
                 <Settings2 className="size-3.5" />
                 高级设置
               </button>
-              <button
-                type="button"
-                onClick={onOpenCustomProviderSettings}
-                className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-semibold transition-colors sm:py-2 ${
-                  providerMode === "custom"
-                    ? "bg-[var(--accent)]/10 text-[var(--accent)]"
-                    : "text-[var(--ink-soft)] hover:bg-[#fffaf2]/78 hover:text-[var(--ink)]"
-                }`}
-                title="使用自己的第三方 API 生成"
-              >
-                <KeyRound className="size-3.5" />
-                自填 API
-              </button>
-              <Link
-                href="/api-keys"
-                className="flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-semibold text-[var(--ink-soft)] transition-colors hover:bg-[#fffaf2]/78 hover:text-[var(--ink)] sm:py-2"
-                title="管理本站开放 API Key"
-              >
-                <Code2 className="size-3.5" />
-                开放 API
-              </Link>
             </div>
 
             <div className="hidden items-center gap-3 md:flex">

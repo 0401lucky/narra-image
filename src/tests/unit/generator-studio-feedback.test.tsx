@@ -153,6 +153,12 @@ function getFirstLabelText(name: string) {
   return input;
 }
 
+function getFirstButton(name: string) {
+  const button = screen.getAllByRole("button", { name })[0];
+  if (!button) throw new Error(`找不到按钮：${name}`);
+  return button;
+}
+
 function mockGenerateFetch() {
   const generateRequests: RequestInit[] = [];
   const fetchMock = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
@@ -360,7 +366,8 @@ describe("创作台反馈改进", () => {
     const { generateRequests } = mockGenerateFetch();
     renderStudio();
 
-    await user.click(screen.getByRole("button", { name: "自填 API" }));
+    await user.click(getFirstButton("高级设置"));
+    await user.click(getFirstButton("自填 API"));
     await user.clear(getFirstTextbox("第三方 Base URL"));
     await user.type(getFirstTextbox("第三方 Base URL"), "https://api.custom.test/v1");
     await user.type(getFirstLabelText("第三方 API Key"), "sk-custom-key");
@@ -405,7 +412,8 @@ describe("创作台反馈改进", () => {
     const { generateRequests } = mockGenerateFetch();
     renderStudio();
 
-    await user.click(screen.getByRole("button", { name: "自填 API" }));
+    await user.click(getFirstButton("高级设置"));
+    await user.click(getFirstButton("自填 API"));
     await user.clear(getFirstTextbox("第三方 Base URL"));
     await user.type(getFirstTextbox("第三方 Base URL"), "https://api.custom.test/v1");
     await user.type(getFirstLabelText("第三方 API Key"), "sk-custom-key");

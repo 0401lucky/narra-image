@@ -23,6 +23,7 @@ import (
 )
 
 const probeMaxBytes = 64 * 1024
+const remoteImageMaxBytes = 50 * 1024 * 1024
 
 type Storage struct {
 	client *s3.Client
@@ -33,6 +34,12 @@ type SourceImage struct {
 	Data     []byte
 	FileName string
 	MimeType string
+}
+
+type PersistedRemoteImage struct {
+	Data     []byte
+	MimeType string
+	URL      string
 }
 
 func NewStorage(ctx context.Context, cfg Config) (*Storage, error) {
@@ -92,6 +99,24 @@ func (s *Storage) PersistImage(ctx context.Context, userID string, data []byte, 
 	}
 
 	return "", errors.New("当前没有可用的图片存储配置")
+}
+
+func (s *Storage) PersistImageFromURL(ctx context.Context, userID string, rawURL string) (PersistedRemoteImage, error) {
+	image, err := downloadRemoteImage(ctx, rawURL)
+	if err != nil {
+		return PersistedRemoteImage{}, err
+	}
+
+	url, err := s.PersistImage(ctx, userID, image.Data, extensionFromMime(image.MimeType), image.MimeType)
+	if err != nil {
+		return PersistedRemoteImage{}, err
+	}
+
+	return PersistedRemoteImage{
+		Data:     image.Data,
+		MimeType: image.MimeType,
+		URL:      url,
+	}, nil
 }
 
 func (s *Storage) PersistVideo(ctx context.Context, userID string, data []byte) (string, error) {
@@ -167,6 +192,48 @@ func loadSourceImage(ctx context.Context, rawURL string, index int) (SourceImage
 	return SourceImage{
 		Data:     data,
 		FileName: sourceFileName(rawURL, mimeType, index),
+		MimeType: mimeType,
+	}, nil
+}
+
+func downloadRemoteImage(ctx context.Context, rawURL string) (SourceImage, error) {
+	if strings.HasPrefix(rawURL, "data:") {
+		return parseDataURL(rawURL, 0)
+	}
+
+	reqCtx, cancel := context.WithTimeout(ctx, 30*time.Second)
+	defer cancel()
+
+	request, err := http.NewRequestWithContext(reqCtx, http.MethodGet, rawURL, nil)
+	if err != nil {
+		return SourceImage{}, err
+	}
+	response, err := http.DefaultClient.Do(request)
+	if err != nil {
+		return SourceImage{}, err
+	}
+	defer response.Body.Close()
+
+	if response.StatusCode < 200 || response.StatusCode >= 300 {
+		return SourceImage{}, fmt.Errorf("远程图片下载失败：HTTP %d", response.StatusCode)
+	}
+
+	if response.ContentLength > remoteImageMaxBytes {
+		return SourceImage{}, errors.New("远程图片过大，无法保存")
+	}
+
+	data, err := io.ReadAll(io.LimitReader(response.Body, remoteImageMaxBytes+1))
+	if err != nil {
+		return SourceImage{}, err
+	}
+	if len(data) > remoteImageMaxBytes {
+		return SourceImage{}, errors.New("远程图片过大，无法保存")
+	}
+
+	mimeType := imageMimeType(response.Header.Get("content-type"), data)
+	return SourceImage{
+		Data:     data,
+		FileName: sourceFileName(rawURL, mimeType, 0),
 		MimeType: mimeType,
 	}, nil
 }
@@ -254,6 +321,21 @@ func extensionFromMime(mimeType string) string {
 	default:
 		return "png"
 	}
+}
+
+func imageMimeType(headerValue string, data []byte) string {
+	mediaType, _, err := mime.ParseMediaType(headerValue)
+	if err == nil && strings.HasPrefix(mediaType, "image/") {
+		return mediaType
+	}
+
+	detected := http.DetectContentType(data)
+	mediaType, _, err = mime.ParseMediaType(detected)
+	if err == nil && strings.HasPrefix(mediaType, "image/") {
+		return mediaType
+	}
+
+	return "image/png"
 }
 
 func randomHex(size int) string {

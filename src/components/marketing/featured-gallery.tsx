@@ -4,6 +4,7 @@
 
 import {
   startTransition,
+  type SyntheticEvent,
   useEffect,
   useEffectEvent,
   useRef,
@@ -52,6 +53,20 @@ function parseAspectSize(size: string): { width: number; height: number } {
 function getPromptPreview(prompt: string): string {
   if (prompt.length <= PROMPT_PREVIEW_LENGTH) return prompt;
   return `${prompt.slice(0, PROMPT_PREVIEW_LENGTH)}...`;
+}
+
+function fallbackToOriginalImage(
+  event: SyntheticEvent<HTMLImageElement>,
+  originalSrc: string,
+) {
+  const image = event.currentTarget;
+  if (!originalSrc || image.dataset.originalFallback === "true") {
+    return;
+  }
+
+  image.dataset.originalFallback = "true";
+  image.removeAttribute("srcset");
+  image.src = originalSrc;
 }
 
 function mergeUniqueWorks(current: Work[], incoming: Work[]) {
@@ -243,6 +258,7 @@ export function FeaturedGallery({
                   loading={index < 4 ? "eager" : "lazy"}
                   decoding="async"
                   fetchPriority={index < 2 ? "high" : "auto"}
+                  onError={(event) => fallbackToOriginalImage(event, work.image)}
                   style={{ aspectRatio: `${width} / ${height}` }}
                   className="block h-auto w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
                 />
@@ -257,6 +273,9 @@ export function FeaturedGallery({
                             alt={work.authorName}
                             loading="lazy"
                             decoding="async"
+                            onError={(event) =>
+                              fallbackToOriginalImage(event, work.authorAvatar ?? "")
+                            }
                             className="size-full object-cover"
                           />
                         ) : (

@@ -1,6 +1,7 @@
 package worker
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"io"
@@ -100,4 +101,53 @@ func TestGenerateWithImageEditRequestsB64JSON(t *testing.T) {
 	if len(payload.Data) != 1 || payload.Data[0]["b64_json"] != "Y2F0" {
 		t.Fatalf("unexpected payload: %#v", payload.Data)
 	}
+}
+
+func TestNormalizeGeneratedImagePersistsRemoteURL(t *testing.T) {
+	imageData := minimalPNG(640, 480)
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet || r.URL.Path != "/generated.png" {
+			http.Error(w, "unexpected request", http.StatusNotFound)
+			return
+		}
+		w.Header().Set("Content-Type", "image/png")
+		_, _ = w.Write(imageData)
+	}))
+	defer server.Close()
+
+	storage := &Storage{cfg: Config{EnableLocalImageFallback: true}}
+	record, err := normalizeGeneratedImage(
+		context.Background(),
+		storage,
+		GenerationJob{UserID: "user-1"},
+		map[string]any{"url": server.URL + "/generated.png"},
+		imagePayload{},
+	)
+	if err != nil {
+		t.Fatalf("normalizeGeneratedImage returned error: %v", err)
+	}
+	if strings.HasPrefix(record.URL, server.URL) {
+		t.Fatalf("expected persisted image URL, got raw URL: %s", record.URL)
+	}
+	if !strings.HasPrefix(record.URL, "data:image/png;base64,") {
+		t.Fatalf("expected local fallback data URL, got %s", record.URL)
+	}
+	if record.Width == nil || *record.Width != 640 || record.Height == nil || *record.Height != 480 {
+		t.Fatalf("unexpected dimensions: width=%v height=%v", record.Width, record.Height)
+	}
+}
+
+func minimalPNG(width int, height int) []byte {
+	data := make([]byte, 13)
+	data[0], data[1], data[2], data[3] = byte(width>>24), byte(width>>16), byte(width>>8), byte(width)
+	data[4], data[5], data[6], data[7] = byte(height>>24), byte(height>>16), byte(height>>8), byte(height)
+	data[8] = 8
+
+	return bytes.Join([][]byte{
+		{0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a},
+		{0x00, 0x00, 0x00, 0x0d},
+		[]byte("IHDR"),
+		data,
+		make([]byte, 4),
+	}, nil)
 }

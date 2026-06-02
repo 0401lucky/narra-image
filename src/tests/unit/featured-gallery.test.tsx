@@ -1,4 +1,4 @@
-import { act, render, screen, waitFor } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { FeaturedGallery } from "@/components/marketing/featured-gallery";
@@ -87,4 +87,17 @@ describe("首页精选瀑布流", () => {
     expect(screen.getAllByRole("link")).toHaveLength(25);
     expect(screen.getByRole("link", { name: /title-work_25/i })).toBeInTheDocument();
   }, 20000);
+
+  it("优化图片加载失败时回退到作品原图", () => {
+    render(<FeaturedGallery works={[createWork("work_1")]} />);
+
+    const image = screen.getByAltText("title-work_1") as HTMLImageElement;
+    expect(image.getAttribute("src")).toContain("/_next/image");
+    expect(image.getAttribute("srcset")).toContain("/_next/image");
+
+    fireEvent.error(image);
+
+    expect(image.getAttribute("src")).toBe("https://example.com/work_1.png");
+    expect(image.getAttribute("srcset")).toBeNull();
+  });
 });

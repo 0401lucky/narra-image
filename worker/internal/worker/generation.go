@@ -301,10 +301,14 @@ func normalizeGeneratedImage(ctx context.Context, storage *Storage, job Generati
 
 	if rawURL, ok := pickString(item, "url"); ok {
 		dimensions := extractDimensionsFromMetadata(item)
-		if dimensions == nil {
-			dimensions = fetchAndProbeDimensions(ctx, rawURL)
+		persisted, err := storage.PersistImageFromURL(ctx, job.UserID, rawURL)
+		if err != nil {
+			return GeneratedImage{}, err
 		}
-		return generatedImageRecord(rawURL, dimensions), nil
+		if dimensions == nil {
+			dimensions = readImageDimensions(persisted.Data)
+		}
+		return generatedImageRecord(persisted.URL, dimensions), nil
 	}
 
 	return GeneratedImage{}, errors.New("返回结果里没有可用图片")
