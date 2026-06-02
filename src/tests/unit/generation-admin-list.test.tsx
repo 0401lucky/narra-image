@@ -27,17 +27,21 @@ vi.mock("next/navigation", () => ({
 
 function createJob(input: Partial<GenerationAdminJob> = {}): GenerationAdminJob {
   const now = new Date("2026-05-05T12:00:00.000Z");
-  return {
+  const base: GenerationAdminJob = {
+    attemptCount: 0,
     apiKeyId: null,
     clientSource: "WEB",
+    completedAt: null,
     conversationId: null,
     count: 1,
     createdAt: now,
     creditsSpent: 20,
+    durationSeconds: null,
     errorMessage: null,
     featuredAt: null,
     featuredById: null,
     generationType: GenerationType.TEXT_TO_IMAGE,
+    aspectRatio: null,
     id: "job_1",
     images: [
       {
@@ -62,10 +66,18 @@ function createJob(input: Partial<GenerationAdminJob> = {}): GenerationAdminJob 
     outputCompression: null,
     outputFormat: "png",
     prompt: "测试提示词",
+    providerApiKeyEncrypted: null,
+    providerBaseUrl: null,
+    providerChannelId: null,
+    providerLabel: null,
     providerMode: ProviderMode.BUILT_IN,
+    providerModels: [],
+    providerRemember: false,
     quality: "auto",
+    seed: null,
     size: "1024x1024",
     sourceImageUrls: [],
+    startedAt: null,
     status: GenerationStatus.SUCCEEDED,
     updatedAt: now,
     user: {
@@ -73,8 +85,11 @@ function createJob(input: Partial<GenerationAdminJob> = {}): GenerationAdminJob 
       nickname: null,
     },
     userId: "user_1",
-    ...input,
+    workerId: null,
+    workerManaged: false,
+    lockedAt: null,
   };
+  return { ...base, ...input } as GenerationAdminJob;
 }
 
 describe("后台生成记录列表视图", () => {
