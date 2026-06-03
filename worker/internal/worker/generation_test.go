@@ -11,7 +11,7 @@ import (
 	"testing"
 )
 
-func TestGenerateWithImageGenerationRequestsB64JSON(t *testing.T) {
+func TestGenerateWithImageGenerationOmitsResponseFormat(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost || r.URL.Path != "/images/generations" {
 			http.Error(w, "unexpected request", http.StatusNotFound)
@@ -21,8 +21,8 @@ func TestGenerateWithImageGenerationRequestsB64JSON(t *testing.T) {
 		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
 			t.Fatalf("decode request body: %v", err)
 		}
-		if body["response_format"] != "b64_json" {
-			t.Fatalf("expected response_format=b64_json, got %#v", body["response_format"])
+		if _, ok := body["response_format"]; ok {
+			t.Fatalf("expected response_format to be omitted, got %#v", body["response_format"])
 		}
 		_ = json.NewEncoder(w).Encode(map[string]any{
 			"data": []map[string]any{{"b64_json": "Y2F0"}},
@@ -44,7 +44,7 @@ func TestGenerateWithImageGenerationRequestsB64JSON(t *testing.T) {
 	}
 }
 
-func TestGenerateWithImageEditRequestsB64JSON(t *testing.T) {
+func TestGenerateWithImageEditOmitsResponseFormat(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost || r.URL.Path != "/images/edits" {
 			http.Error(w, "unexpected request", http.StatusNotFound)
@@ -66,14 +66,10 @@ func TestGenerateWithImageEditRequestsB64JSON(t *testing.T) {
 			if part.FormName() != "response_format" {
 				continue
 			}
-			value, err := io.ReadAll(part)
-			if err != nil {
-				t.Fatalf("read response_format field: %v", err)
-			}
-			seenResponseFormat = strings.TrimSpace(string(value)) == "b64_json"
+			seenResponseFormat = true
 		}
-		if !seenResponseFormat {
-			t.Fatal("expected multipart response_format=b64_json")
+		if seenResponseFormat {
+			t.Fatal("expected multipart response_format to be omitted")
 		}
 		_ = json.NewEncoder(w).Encode(map[string]any{
 			"data": []map[string]any{{"b64_json": "Y2F0"}},

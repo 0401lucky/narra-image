@@ -76,11 +76,10 @@ func generateImages(ctx context.Context, storage *Storage, job GenerationJob, pr
 
 func generateWithImageGeneration(ctx context.Context, job GenerationJob, provider ProviderConfig) (imagePayload, error) {
 	body := map[string]any{
-		"model":           job.Model,
-		"n":               job.Count,
-		"prompt":          job.Prompt,
-		"response_format": "b64_json",
-		"size":            job.Size,
+		"model":  job.Model,
+		"n":      job.Count,
+		"prompt": job.Prompt,
+		"size":   job.Size,
 	}
 	addOutputOptions(body, job)
 	if job.Moderation != "" && job.Moderation != "auto" {
@@ -105,11 +104,10 @@ func generateWithImageEdit(ctx context.Context, job GenerationJob, provider Prov
 	writer := multipart.NewWriter(&body)
 
 	fields := map[string]string{
-		"model":           job.Model,
-		"n":               "1",
-		"prompt":          job.Prompt,
-		"response_format": "b64_json",
-		"size":            job.Size,
+		"model":  job.Model,
+		"n":      "1",
+		"prompt": job.Prompt,
+		"size":   job.Size,
 	}
 	if job.Quality != "" && job.Quality != "auto" {
 		fields["quality"] = job.Quality
