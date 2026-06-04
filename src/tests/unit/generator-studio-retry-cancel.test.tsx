@@ -1,4 +1,4 @@
-import { render, screen, within } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import { GeneratorStudio } from "@/components/create/generator-studio";
@@ -82,6 +82,96 @@ describe("创作台：失败重试 / 取消生成 入口", () => {
 
     expect(screen.getByRole("button", { name: "重试" })).toBeInTheDocument();
     expect(screen.getByText(/生成失败：渠道暂时不可用/)).toBeInTheDocument();
+  });
+
+  it("重试成功创建新任务后覆盖旧失败消息", async () => {
+    const user = userEvent.setup();
+    const generateRequests: RequestInit[] = [];
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
+        const url = typeof input === "string" ? input : input.toString();
+        if (url === "/api/generate") {
+          generateRequests.push(init ?? {});
+          return {
+            json: async () => ({
+              data: {
+                generation: {
+                  conversationId: "conversation_1",
+                  count: 1,
+                  createdAt: "2026-04-23T08:01:00.000Z",
+                  creditsSpent: 5,
+                  generationType: "text_to_image",
+                  id: "job_retry",
+                  images: [],
+                  model: "gpt-image-1",
+                  negativePrompt: null,
+                  prompt: "重试用例",
+                  providerMode: "built_in",
+                  size: "1024x1024",
+                  sourceImageUrl: null,
+                  status: "pending",
+                },
+              },
+            }),
+            ok: true,
+          };
+        }
+        return {
+          blob: async () => new Blob(["fake-image"], { type: "image/png" }),
+          json: async () => ({ data: {} }),
+          ok: true,
+        };
+      }),
+    );
+
+    const { container } = render(
+      <GeneratorStudio
+        checkInSummary={baseCheckIn}
+        currentUser={baseUser}
+        initialConversations={[
+          {
+            createdAt: "2026-04-23T08:00:00.000Z",
+            generationIds: ["job_failed"],
+            id: "conversation_1",
+            title: "重试用例",
+          },
+        ]}
+        initialGenerations={[
+          {
+            conversationId: "conversation_1",
+            count: 1,
+            createdAt: "2026-04-23T08:00:00.000Z",
+            creditsSpent: 0,
+            errorMessage: "渠道暂时不可用",
+            generationType: "text_to_image",
+            id: "job_failed",
+            images: [],
+            model: "gpt-image-1",
+            negativePrompt: null,
+            prompt: "重试用例",
+            providerMode: "built_in",
+            size: "1024x1024",
+            sourceImageUrl: null,
+            status: "failed",
+          },
+        ]}
+      />,
+    );
+
+    await user.click(screen.getByRole("button", { name: "重试" }));
+
+    await waitFor(() => {
+      expect(generateRequests).toHaveLength(1);
+    });
+
+    const body = JSON.parse(String(generateRequests[0].body)) as {
+      replaceGenerationId?: string;
+    };
+    expect(body.replaceGenerationId).toBe("job_failed");
+    expect(screen.queryByText(/生成失败：渠道暂时不可用/)).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "取消生成" })).toBeInTheDocument();
+    expect(container.querySelectorAll(".generation-bubble")).toHaveLength(1);
   });
 
   it("pending generation 显示取消按钮，点击后变成已取消", async () => {

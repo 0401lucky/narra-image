@@ -116,6 +116,7 @@ export async function parseGenerateRequest(request: Request | FormData) {
       image: images[0] ?? null,
       imageUrls,
       images,
+      replaceGenerationId: toNullableString(formData.get("replaceGenerationId")) || undefined,
     };
   };
 
@@ -143,5 +144,9 @@ export async function parseGenerateRequest(request: Request | FormData) {
     image: null,
     imageUrls: [] as string[],
     images: [],
+    replaceGenerationId:
+      typeof json.replaceGenerationId === "string" && json.replaceGenerationId.trim()
+        ? json.replaceGenerationId.trim()
+        : undefined,
   };
 }

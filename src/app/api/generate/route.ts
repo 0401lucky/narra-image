@@ -172,6 +172,20 @@ export async function POST(request: Request) {
         },
       });
 
+      if (body.replaceGenerationId && conversationToBind) {
+        await tx.generationJob.updateMany({
+          where: {
+            conversationId: conversationToBind,
+            id: body.replaceGenerationId,
+            status: GenerationStatus.FAILED,
+            userId: user.id,
+          },
+          data: {
+            conversationId: null,
+          },
+        });
+      }
+
       if (conversationToBind) {
         // 触发 updatedAt 刷新；若是会话内首条 generation，把 prompt 截前 30 字符作为 title 默认。
         const existingCount = await tx.generationJob.count({

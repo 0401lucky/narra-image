@@ -97,6 +97,23 @@ export function useSessions(initial: SessionInfo[] = []) {
     );
   }, []);
 
+  const replaceGeneration = useCallback((sessionId: string, previousId: string, nextId: string) => {
+    setSessions((prev) =>
+      prev.map((s) => {
+        if (s.id !== sessionId) return s;
+        if (!s.generationIds.includes(previousId)) {
+          return s.generationIds.includes(nextId)
+            ? s
+            : { ...s, generationIds: [...s.generationIds, nextId] };
+        }
+        const generationIds = s.generationIds
+          .map((id) => (id === previousId ? nextId : id))
+          .filter((id, index, ids) => ids.indexOf(id) === index);
+        return { ...s, generationIds };
+      }),
+    );
+  }, []);
+
   // 删除会话。
   const deleteSession = useCallback(async (id: string) => {
     try {
@@ -149,6 +166,7 @@ export function useSessions(initial: SessionInfo[] = []) {
     createSession,
     renameSession,
     appendGeneration,
+    replaceGeneration,
     deleteSession,
     readLastActive,
     writeLastActive,

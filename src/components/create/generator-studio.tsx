@@ -140,6 +140,7 @@ export function GeneratorStudio({
     deleteSession: deleteSessionRemote,
     readLastActive,
     writeLastActive,
+    replaceGeneration: replaceGenerationInSession,
   } = useSessions(initialConversations);
   const [activeSessionId, setActiveSessionId] = useState<string | null>(null);
   const [sessionGenerations, setSessionGenerations] = useState<GenerationItem[]>([]);
@@ -494,6 +495,7 @@ export function GeneratorStudio({
     providerMode: ProviderSelectionMode;
     quality: GenerationQuality;
     referenceImages: Array<{ id: string; file: File | null; previewUrl: string; sourceUrl?: string }>;
+    replaceGenerationId?: string | null;
     customProviderBaseUrl: string;
     customProviderLabel: string;
     customProviderModels: string[];
@@ -616,6 +618,9 @@ export function GeneratorStudio({
                 if (conversationId) {
                   formData.append("conversationId", conversationId);
                 }
+                if (snapshot.replaceGenerationId) {
+                  formData.append("replaceGenerationId", snapshot.replaceGenerationId);
+                }
                 snapshot.referenceImages.forEach((referenceImage) => {
                   if (referenceImage.sourceUrl) {
                     formData.append("referenceImageUrls", referenceImage.sourceUrl);
@@ -643,6 +648,7 @@ export function GeneratorStudio({
                 prompt: snapshot.prompt,
                 providerMode: snapshot.providerMode,
                 quality: snapshot.quality,
+                replaceGenerationId: snapshot.replaceGenerationId || undefined,
                 size: snapshot.size,
               }),
             });
@@ -665,11 +671,26 @@ export function GeneratorStudio({
       // 成功后释放快照中的参考图预览 URL。
       snapshot.referenceImages.forEach((image) => URL.revokeObjectURL(image.previewUrl));
 
-      setSessionGenerations((current) => [...current, generation]);
+      setSessionGenerations((current) => {
+        if (!snapshot.replaceGenerationId) {
+          return [...current, generation];
+        }
+        let replaced = false;
+        const next = current.map((item) => {
+          if (item.id !== snapshot.replaceGenerationId) return item;
+          replaced = true;
+          return generation;
+        });
+        return replaced ? next : [...next, generation];
+      });
       // 把 generation 写入会话本地状态；服务端在 /api/generate 已自动绑定 conversationId 与刷新 title。
       const targetConversationId = generation.conversationId ?? activeSessionId;
       if (targetConversationId) {
-        appendGenerationToSession(targetConversationId, generation.id);
+        if (snapshot.replaceGenerationId) {
+          replaceGenerationInSession(targetConversationId, snapshot.replaceGenerationId, generation.id);
+        } else {
+          appendGenerationToSession(targetConversationId, generation.id);
+        }
         // 若是会话内首条 generation 且 title 还是默认的"新对话"，本地同步一份 title。
         const session = sessions.find((s) => s.id === targetConversationId);
         if (session && session.generationIds.length === 0 && session.title === "新对话") {
@@ -833,6 +854,7 @@ export function GeneratorStudio({
       quality,
       // 重试不带原参考图：用户如想图生图重试，可用气泡内"加入编辑"再重发。
       referenceImages: [],
+      replaceGenerationId: target.id,
       customProviderBaseUrl: customProvider.baseUrl.trim(),
       customProviderLabel: customProvider.label.trim() || "我的 API",
       customProviderModels: customProvider.models,

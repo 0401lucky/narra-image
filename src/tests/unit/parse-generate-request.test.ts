@@ -9,6 +9,7 @@ describe("生成请求解析", () => {
         model: "gpt-image-1",
         prompt: "电影感夜景肖像",
         providerMode: "built_in",
+        replaceGenerationId: "job_failed",
         size: "1024x1024",
       }),
       headers: {
@@ -22,6 +23,7 @@ describe("生成请求解析", () => {
     expect(result.generationType).toBe("text_to_image");
     expect(result.image).toBeNull();
     expect(result.prompt).toBe("电影感夜景肖像");
+    expect(result.replaceGenerationId).toBe("job_failed");
     expect(result.size).toBe("1024x1024");
   });
 
@@ -73,6 +75,7 @@ describe("生成请求解析", () => {
     formData.append("model", "gpt-image-1");
     formData.append("prompt", "把这张图调成胶片质感");
     formData.append("providerMode", "built_in");
+    formData.append("replaceGenerationId", "job_failed");
     formData.append("size", "9:16");
     formData.append("image", new File(["fake-image"], "source.png", { type: "image/png" }));
 
@@ -81,6 +84,7 @@ describe("生成请求解析", () => {
     expect(result.generationType).toBe("image_to_image");
     expect(result.image?.name).toBe("source.png");
     expect(result.images).toHaveLength(1);
+    expect(result.replaceGenerationId).toBe("job_failed");
     expect(result.count).toBe(1);
     expect(result.size).toBe("1024x1824");
   });

@@ -2,7 +2,7 @@
 
 // 单个 generation 任务的轮询 Hook。
 // 1) setTimeout + 退避（POLL_DELAYS_MS）替代固定 setInterval；
-// 2) 监听 visibilitychange，标签页隐藏时挂起，恢复后立即继续；
+// 2) 监听 visibilitychange/focus/pageshow，标签页隐藏时挂起，恢复后立即补拉；
 // 3) 任务进入 succeeded/failed 即停止；超过 POLL_MAX_ATTEMPTS 兜底放弃。
 import { useEffect, useRef } from "react";
 
@@ -45,7 +45,39 @@ export function useImagePoller({ generations, onUpdate }: UseImagePollerOptions)
       }
     }
 
-    function schedulePoller(id: string, attempts: number) {
+    async function pollOnce(id: string, attempts: number) {
+      if (attempts > POLL_MAX_ATTEMPTS) {
+        stopPoller(id);
+        return;
+      }
+      try {
+        const response = await fetch(`/api/me/generations/${id}`);
+        if (!response.ok) {
+          schedulePoller(id, attempts + 1);
+          return;
+        }
+        const json = (await response.json()) as {
+          data?: { generation: GenerationItem };
+        };
+        const updated = json?.data?.generation;
+        if (!updated) {
+          schedulePoller(id, attempts + 1);
+          return;
+        }
+        if (updated.status === "pending") {
+          schedulePoller(id, attempts + 1);
+          return;
+        }
+        // 命中 succeeded/failed：写回外部状态并结束。
+        onUpdate(updated);
+        stopPoller(id);
+      } catch {
+        // 单次失败不致命，按下一档延时继续。
+        schedulePoller(id, attempts + 1);
+      }
+    }
+
+    function schedulePoller(id: string, attempts: number, delay = nextDelay(attempts)) {
       // 标签页不可见时占位，等可见性事件唤醒；避免后台浏览器节流引发的重试堆积。
       if (typeof document !== "undefined" && document.hidden) {
         const entry: PollerEntry = { attempts, handle: setTimeout(() => {}, 0) };
@@ -54,36 +86,8 @@ export function useImagePoller({ generations, onUpdate }: UseImagePollerOptions)
       }
 
       const handle = setTimeout(async () => {
-        if (attempts > POLL_MAX_ATTEMPTS) {
-          stopPoller(id);
-          return;
-        }
-        try {
-          const response = await fetch(`/api/me/generations/${id}`);
-          if (!response.ok) {
-            schedulePoller(id, attempts + 1);
-            return;
-          }
-          const json = (await response.json()) as {
-            data?: { generation: GenerationItem };
-          };
-          const updated = json?.data?.generation;
-          if (!updated) {
-            schedulePoller(id, attempts + 1);
-            return;
-          }
-          if (updated.status === "pending") {
-            schedulePoller(id, attempts + 1);
-            return;
-          }
-          // 命中 succeeded/failed：写回外部状态并结束。
-          onUpdate(updated);
-          stopPoller(id);
-        } catch {
-          // 单次失败不致命，按下一档延时继续。
-          schedulePoller(id, attempts + 1);
-        }
-      }, nextDelay(attempts));
+        await pollOnce(id, attempts);
+      }, delay);
 
       pollers.set(id, { attempts, handle });
     }
@@ -104,30 +108,47 @@ export function useImagePoller({ generations, onUpdate }: UseImagePollerOptions)
       }
     }
 
+    function pauseAllPollers() {
+      for (const [id, entry] of Array.from(pollers.entries())) {
+        clearTimeout(entry.handle);
+        pollers.set(id, { attempts: entry.attempts, handle: setTimeout(() => {}, 0) });
+      }
+    }
+
+    function resumePendingPollers() {
+      if (typeof document !== "undefined" && document.hidden) return;
+      // 切回前台：对仍处于 pending 的任务立即补拉一次，避免后台已完成但 UI 卡住。
+      for (const id of pendingIds) {
+        const entry = pollers.get(id);
+        if (entry) clearTimeout(entry.handle);
+        schedulePoller(id, entry?.attempts ?? 0, 0);
+      }
+    }
+
     function handleVisibilityChange() {
       if (typeof document === "undefined") return;
       if (document.hidden) {
         // 隐藏时挂起所有 poller，保留 attempts 以便恢复时按对应延时继续。
-        for (const [id, entry] of Array.from(pollers.entries())) {
-          clearTimeout(entry.handle);
-          pollers.set(id, { attempts: entry.attempts, handle: setTimeout(() => {}, 0) });
-        }
+        pauseAllPollers();
       } else {
-        // 切回前台：对仍处于 pending 的任务立即重新启动。
-        for (const id of pendingIds) {
-          const entry = pollers.get(id);
-          if (entry) clearTimeout(entry.handle);
-          schedulePoller(id, entry?.attempts ?? 0);
-        }
+        resumePendingPollers();
       }
     }
 
     if (typeof document !== "undefined") {
       document.addEventListener("visibilitychange", handleVisibilityChange);
     }
+    if (typeof window !== "undefined") {
+      window.addEventListener("focus", resumePendingPollers);
+      window.addEventListener("pageshow", resumePendingPollers);
+    }
     return () => {
       if (typeof document !== "undefined") {
         document.removeEventListener("visibilitychange", handleVisibilityChange);
+      }
+      if (typeof window !== "undefined") {
+        window.removeEventListener("focus", resumePendingPollers);
+        window.removeEventListener("pageshow", resumePendingPollers);
       }
     };
   }, [generations, onUpdate]);
