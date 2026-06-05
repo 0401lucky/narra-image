@@ -83,7 +83,7 @@ export async function SiteHeader({
           </a>
         </div>
 
-        <nav className="absolute left-1/2 hidden shrink-0 -translate-x-1/2 items-center gap-1 rounded-full border border-[var(--line)] bg-[#eee5d8]/75 p-1 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)] lg:flex xl:left-[46%] 2xl:left-[45%]">
+        <nav className="absolute left-1/2 hidden shrink-0 -translate-x-1/2 items-center gap-1 rounded-full border border-[var(--line)] bg-[#eee5d8]/75 p-1 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)] lg:flex xl:left-[44.5%] 2xl:left-[43.5%]">
           {links.map((link) => (
             <Link
               key={link.href}
@@ -161,16 +161,15 @@ export async function SiteHeader({
               </span>
             </div>
           ) : null}
-          <Link
-            href={currentUser ? "/create" : "/login"}
-            prefetch={false}
-            className={cn(
-              "shrink-0 whitespace-nowrap rounded-full bg-[#21170f] px-4 py-2 text-sm font-semibold text-white shadow-[0_14px_30px_rgba(33,23,15,0.22)] transition hover:-translate-y-0.5 hover:bg-[var(--accent)] sm:px-5 sm:py-2.5",
-              currentUser ? "hidden sm:inline-flex" : "inline-flex",
-            )}
-          >
-            {currentUser ? "继续创作" : "登录开启"}
-          </Link>
+          {!currentUser ? (
+            <Link
+              href="/login"
+              prefetch={false}
+              className="inline-flex shrink-0 whitespace-nowrap rounded-full bg-[#21170f] px-4 py-2 text-sm font-semibold text-white shadow-[0_14px_30px_rgba(33,23,15,0.22)] transition hover:-translate-y-0.5 hover:bg-[var(--accent)] sm:px-5 sm:py-2.5"
+            >
+              登录开启
+            </Link>
+          ) : null}
 
           {/* 移动端汉堡包菜单抽屉 */}
           <MobileNav
