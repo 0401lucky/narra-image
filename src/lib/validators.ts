@@ -149,6 +149,7 @@ export const channelUpdateSchema = z.object({
 export const providerProbeSchema = z.object({
   apiKey: z.string().trim().optional().nullable(),
   baseUrl: z.url("请输入正确的 Base URL"),
+  channelId: z.string().trim().optional().nullable(),
 });
 
 export const workShowcaseUpdateSchema = z.object({

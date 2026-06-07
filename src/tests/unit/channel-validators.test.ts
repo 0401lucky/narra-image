@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { channelCreateSchema, channelUpdateSchema } from "@/lib/validators";
+import { channelCreateSchema, channelUpdateSchema, providerProbeSchema } from "@/lib/validators";
 
 describe("渠道参数校验", () => {
   it("创建渠道时接受视频积分消耗", () => {
@@ -24,5 +24,14 @@ describe("渠道参数校验", () => {
     });
 
     expect(parsed).toEqual({ videoCreditCost: 18 });
+  });
+
+  it("模型探测允许携带已有渠道 id", () => {
+    const parsed = providerProbeSchema.parse({
+      baseUrl: "https://provider.example.com/v1",
+      channelId: "channel_1",
+    });
+
+    expect(parsed.channelId).toBe("channel_1");
   });
 });

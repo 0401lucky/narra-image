@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import { Plus, Pencil, Trash2, X, ToggleLeft, ToggleRight, Zap, Globe, Key, Server } from "lucide-react";
 
@@ -193,6 +194,7 @@ export function ChannelManager({ initialChannels }: ChannelManagerProps) {
       body: JSON.stringify({
         apiKey: formApiKey || null,
         baseUrl: formBaseUrl,
+        channelId: editingChannel?.id ?? null,
       }),
     });
     const result = (await response.json()) as {
@@ -340,12 +342,14 @@ export function ChannelManager({ initialChannels }: ChannelManagerProps) {
                   <button
                     onClick={() => openEdit(ch)}
                     className="rounded-lg p-1.5 text-[var(--ink-soft)] transition hover:bg-[var(--surface-strong)] hover:text-[var(--ink)]"
+                    aria-label={`编辑 ${ch.name}`}
                   >
                     <Pencil className="size-3.5" />
                   </button>
                   <button
                     onClick={() => handleDelete(ch.id)}
                     className="rounded-lg p-1.5 text-[var(--ink-soft)] transition hover:bg-rose-50 hover:text-rose-500"
+                    aria-label={`删除 ${ch.name}`}
                   >
                     <Trash2 className="size-3.5" />
                   </button>
@@ -357,14 +361,20 @@ export function ChannelManager({ initialChannels }: ChannelManagerProps) {
       )}
 
 
-      {showCreateForm && (
+      {showCreateForm &&
+        typeof document !== "undefined" &&
+        createPortal(
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
           onClick={closeForm}
+          role="presentation"
         >
           <div
             className="studio-card relative w-full max-w-2xl rounded-[2rem] p-6 md:p-8 max-h-[85vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="channel-dialog-title"
           >
             <button
               className="absolute top-6 right-6 text-[var(--ink-soft)] transition hover:text-[var(--ink)]"
@@ -373,7 +383,7 @@ export function ChannelManager({ initialChannels }: ChannelManagerProps) {
               <X className="size-6" />
             </button>
 
-            <h3 className="text-xl font-semibold mb-6">
+            <h3 id="channel-dialog-title" className="text-xl font-semibold mb-6">
               {editingChannel ? `编辑渠道: ${editingChannel.name}` : "新增渠道"}
             </h3>
 
@@ -593,8 +603,9 @@ export function ChannelManager({ initialChannels }: ChannelManagerProps) {
               </button>
             </div>
           </div>
-        </div>
-      )}
+        </div>,
+          document.body,
+        )}
     </div>
   );
 }

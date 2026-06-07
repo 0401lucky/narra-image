@@ -6,7 +6,10 @@ import {
   looksLikeImageModel,
 } from "@/lib/providers/model-catalog";
 import { decryptProviderSecret } from "@/lib/providers/provider-secret";
-import { requireCurrentUserRecord } from "@/lib/server/current-user";
+import {
+  requireAdminRecord,
+  requireCurrentUserRecord,
+} from "@/lib/server/current-user";
 import {
   getErrorMessage,
   jsonError,
@@ -21,6 +24,20 @@ export async function POST(request: Request) {
     const body = providerProbeSchema.parse(await parseJsonBody(request));
     const env = getEnv();
     let apiKey = body.apiKey?.trim() || "";
+
+    if (!apiKey && body.channelId) {
+      await requireAdminRecord();
+      const channel = await db.providerChannel.findUnique({
+        where: { id: body.channelId },
+        select: {
+          apiKeyEncrypted: true,
+        },
+      });
+      if (!channel) {
+        return jsonError("渠道不存在", 404);
+      }
+      apiKey = await decryptProviderSecret(channel.apiKeyEncrypted, env.AUTH_SECRET);
+    }
 
     if (!apiKey) {
       const saved = await db.savedProviderConfig.findFirst({
