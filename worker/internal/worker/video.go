@@ -37,6 +37,18 @@ type videoStatusResponse struct {
 	Size     string `json:"size"`
 }
 
+type videoGenerationsResponse struct {
+	Created  int64                 `json:"created"`
+	Data     []videoGenerationItem `json:"data"`
+	URL      string                `json:"url"`
+	VideoURL string                `json:"video_url"`
+}
+
+type videoGenerationItem struct {
+	Ratio string `json:"ratio"`
+	URL   string `json:"url"`
+}
+
 // generateVideo 在单次任务内完成「提交→轮询→取结果」。pollInterval 由调用方传入
 // （生产取 cfg.VideoPollInterval，测试取极小值）。整体受 ctx 的 JobTimeout 约束。
 func generateVideo(ctx context.Context, storage *Storage, job GenerationJob, provider ProviderConfig, pollInterval time.Duration) (VideoResult, error) {
@@ -47,6 +59,9 @@ func generateVideo(ctx context.Context, storage *Storage, job GenerationJob, pro
 
 	videoID, err := createVideo(ctx, job, provider, model)
 	if err != nil {
+		if job.GenerationType == "TEXT_TO_VIDEO" && isHTTPStatusError(err, http.StatusNotFound, http.StatusMethodNotAllowed) {
+			return generateVideoWithGenerationsEndpoint(ctx, storage, job, provider, model)
+		}
 		return VideoResult{}, err
 	}
 
@@ -54,42 +69,8 @@ func generateVideo(ctx context.Context, storage *Storage, job GenerationJob, pro
 	if err != nil {
 		return VideoResult{}, err
 	}
-	if strings.TrimSpace(final.VideoURL) == "" {
-		return VideoResult{}, errors.New("视频生成完成但渠道未返回视频地址")
-	}
 
-	// 有对象存储则下载转存到本站 S3（长期可播放）；否则直接用渠道公开 URL
-	// （与图片直接用渠道 URL 一致，避免把大体积视频塞进数据库）。
-	url := final.VideoURL
-	if storage.hasObjectStorage() {
-		data, err := downloadVideo(ctx, final.VideoURL)
-		if err != nil {
-			return VideoResult{}, err
-		}
-		stored, err := storage.PersistVideo(ctx, job.UserID, data)
-		if err != nil {
-			return VideoResult{}, err
-		}
-		url = stored
-	}
-
-	result := VideoResult{URL: url}
-	// 时长/尺寸优先用渠道实际返回值（渠道可能对请求做归一化），回退到任务请求值。
-	if seconds := parseSeconds(final.Seconds); seconds > 0 {
-		result.DurationSeconds = &seconds
-	} else if job.DurationSeconds.Valid {
-		seconds := int(job.DurationSeconds.Int32)
-		result.DurationSeconds = &seconds
-	}
-	width, height := parseAspectSize(final.Size)
-	if width <= 0 || height <= 0 {
-		width, height = parseAspectSize(job.Size)
-	}
-	if width > 0 && height > 0 {
-		result.Width = &width
-		result.Height = &height
-	}
-	return result, nil
+	return buildVideoResult(ctx, storage, job, final.VideoURL, final.Seconds, final.Size)
 }
 
 func createVideo(ctx context.Context, job GenerationJob, provider ProviderConfig, model string) (string, error) {
@@ -131,6 +112,38 @@ func createVideo(ctx context.Context, job GenerationJob, provider ProviderConfig
 		return "", errors.New("视频渠道未返回任务 id")
 	}
 	return created.ID, nil
+}
+
+// generateVideoWithGenerationsEndpoint 兼容 qwen2api-rs 这类 OpenAI 风格同步视频接口：
+// POST /videos/generations 直接返回 data[].url，不再返回任务 id 供轮询。
+func generateVideoWithGenerationsEndpoint(ctx context.Context, storage *Storage, job GenerationJob, provider ProviderConfig, model string) (VideoResult, error) {
+	body := map[string]any{
+		"model":  model,
+		"prompt": job.Prompt,
+	}
+	if ratio := videoRequestRatio(job); ratio != "" {
+		body["ratio"] = ratio
+	}
+	if job.DurationSeconds.Valid {
+		body["seconds"] = strconv.Itoa(int(job.DurationSeconds.Int32))
+	}
+	if job.Size != "" && job.Size != "auto" {
+		body["size"] = job.Size
+	}
+
+	responseBody, err := postJSON(ctx, endpoint(provider.BaseURL, "/videos/generations"), provider.APIKey, body, nil)
+	if err != nil {
+		return VideoResult{}, err
+	}
+	var generated videoGenerationsResponse
+	if err := json.Unmarshal(responseBody, &generated); err != nil {
+		return VideoResult{}, err
+	}
+	videoURL := firstGeneratedVideoURL(generated)
+	if strings.TrimSpace(videoURL) == "" {
+		return VideoResult{}, errors.New("视频渠道未返回视频地址")
+	}
+	return buildVideoResult(ctx, storage, job, videoURL, "", "")
 }
 
 // pollVideo 轮询直到任务到达终态，返回完成时的状态响应（含视频 URL）。
@@ -176,6 +189,45 @@ func fetchVideoStatus(ctx context.Context, provider ProviderConfig, videoID stri
 	return parsed, nil
 }
 
+func buildVideoResult(ctx context.Context, storage *Storage, job GenerationJob, rawURL string, secondsValue string, sizeValue string) (VideoResult, error) {
+	if strings.TrimSpace(rawURL) == "" {
+		return VideoResult{}, errors.New("视频生成完成但渠道未返回视频地址")
+	}
+
+	// 有对象存储则下载转存到本站 S3（长期可播放）；否则直接用渠道公开 URL
+	// （与图片直接用渠道 URL 一致，避免把大体积视频塞进数据库）。
+	url := rawURL
+	if storage.hasObjectStorage() {
+		data, err := downloadVideo(ctx, rawURL)
+		if err != nil {
+			return VideoResult{}, err
+		}
+		stored, err := storage.PersistVideo(ctx, job.UserID, data)
+		if err != nil {
+			return VideoResult{}, err
+		}
+		url = stored
+	}
+
+	result := VideoResult{URL: url}
+	// 时长/尺寸优先用渠道实际返回值（渠道可能对请求做归一化），回退到任务请求值。
+	if seconds := parseSeconds(secondsValue); seconds > 0 {
+		result.DurationSeconds = &seconds
+	} else if job.DurationSeconds.Valid {
+		seconds := int(job.DurationSeconds.Int32)
+		result.DurationSeconds = &seconds
+	}
+	width, height := parseAspectSize(sizeValue)
+	if width <= 0 || height <= 0 {
+		width, height = parseAspectSize(job.Size)
+	}
+	if width > 0 && height > 0 {
+		result.Width = &width
+		result.Height = &height
+	}
+	return result, nil
+}
+
 // downloadVideo 下载成品视频字节。渠道返回的是公开可访问的对象存储地址，无需鉴权。
 func downloadVideo(ctx context.Context, rawURL string) ([]byte, error) {
 	request, err := http.NewRequestWithContext(ctx, http.MethodGet, rawURL, nil)
@@ -192,6 +244,52 @@ func getWithAuth(ctx context.Context, rawURL string, apiKey string) ([]byte, err
 	}
 	request.Header.Set("Authorization", "Bearer "+apiKey)
 	return doRequest(request)
+}
+
+func firstGeneratedVideoURL(response videoGenerationsResponse) string {
+	if strings.TrimSpace(response.VideoURL) != "" {
+		return response.VideoURL
+	}
+	if strings.TrimSpace(response.URL) != "" {
+		return response.URL
+	}
+	for _, item := range response.Data {
+		if strings.TrimSpace(item.URL) != "" {
+			return item.URL
+		}
+	}
+	return ""
+}
+
+func videoRequestRatio(job GenerationJob) string {
+	if job.AspectRatio.Valid && strings.TrimSpace(job.AspectRatio.String) != "" {
+		return strings.TrimSpace(job.AspectRatio.String)
+	}
+	width, height := parseAspectSize(job.Size)
+	if width <= 0 || height <= 0 {
+		return ""
+	}
+	switch {
+	case width == height:
+		return "1:1"
+	case width > height:
+		return "16:9"
+	default:
+		return "9:16"
+	}
+}
+
+func isHTTPStatusError(err error, codes ...int) bool {
+	if err == nil {
+		return false
+	}
+	message := err.Error()
+	for _, code := range codes {
+		if strings.Contains(message, fmt.Sprintf("HTTP %d", code)) {
+			return true
+		}
+	}
+	return false
 }
 
 // parseAspectSize 解析 "1280x720" 形式，复用 storage 侧的维度约定。

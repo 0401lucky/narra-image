@@ -2,6 +2,7 @@ package worker
 
 import (
 	"context"
+	"database/sql"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
@@ -67,6 +68,112 @@ func TestGenerateVideoPollsUntilCompletedAndPersists(t *testing.T) {
 	}
 	if result.Width == nil || *result.Width != 1280 || result.Height == nil || *result.Height != 720 {
 		t.Fatalf("expected 1280x720 dimensions, got %v x %v", result.Width, result.Height)
+	}
+}
+
+func TestGenerateVideoFallsBackToVideoGenerationsEndpoint(t *testing.T) {
+	var sawFallback bool
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		switch {
+		case r.Method == http.MethodPost && r.URL.Path == "/videos":
+			http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+		case r.Method == http.MethodPost && r.URL.Path == "/videos/generations":
+			sawFallback = true
+			var body map[string]any
+			if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+				t.Fatalf("decode fallback request: %v", err)
+			}
+			if body["model"] != "qwen3.6-plus-video" {
+				t.Fatalf("expected qwen model, got %#v", body["model"])
+			}
+			if body["prompt"] != "海边日落延时摄影" {
+				t.Fatalf("expected prompt to be forwarded, got %#v", body["prompt"])
+			}
+			if body["ratio"] != "16:9" {
+				t.Fatalf("expected ratio from aspectRatio, got %#v", body["ratio"])
+			}
+			_ = json.NewEncoder(w).Encode(map[string]any{
+				"created": 123,
+				"data": []map[string]any{{
+					"ratio": "16:9",
+					"url":   "https://cdn.qwenlm.ai/t2v/fake-video.mp4",
+				}},
+			})
+		default:
+			http.Error(w, "unexpected "+r.Method+" "+r.URL.Path, http.StatusNotFound)
+		}
+	}))
+	defer server.Close()
+
+	storage := &Storage{cfg: Config{EnableLocalImageFallback: true}}
+	job := GenerationJob{
+		ID:              "job_qwen",
+		UserID:          "user_1",
+		GenerationType:  "TEXT_TO_VIDEO",
+		Model:           "qwen3.6-plus-video",
+		Prompt:          "海边日落延时摄影",
+		Size:            "1280x720",
+		DurationSeconds: sql.NullInt32{Int32: 8, Valid: true},
+		AspectRatio:     sql.NullString{String: "16:9", Valid: true},
+	}
+	provider := ProviderConfig{APIKey: "test-key", BaseURL: server.URL, Model: "qwen3.6-plus-video"}
+
+	result, err := generateVideo(context.Background(), storage, job, provider, time.Millisecond)
+	if err != nil {
+		t.Fatalf("generateVideo returned error: %v", err)
+	}
+	if !sawFallback {
+		t.Fatal("expected /videos/generations fallback to be used")
+	}
+	if result.URL != "https://cdn.qwenlm.ai/t2v/fake-video.mp4" {
+		t.Fatalf("expected qwen cdn url, got %s", result.URL)
+	}
+	if result.DurationSeconds == nil || *result.DurationSeconds != 8 {
+		t.Fatalf("expected duration fallback 8, got %v", result.DurationSeconds)
+	}
+	if result.Width == nil || *result.Width != 1280 || result.Height == nil || *result.Height != 720 {
+		t.Fatalf("expected 1280x720 dimensions, got %v x %v", result.Width, result.Height)
+	}
+}
+
+func TestGenerateVideoFallbackRespectsVersionedBaseURL(t *testing.T) {
+	var sawFallback bool
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		switch {
+		case r.Method == http.MethodPost && r.URL.Path == "/v1/videos":
+			http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+		case r.Method == http.MethodPost && r.URL.Path == "/v1/videos/generations":
+			sawFallback = true
+			_ = json.NewEncoder(w).Encode(map[string]any{
+				"data": []map[string]any{{"url": "https://cdn.qwenlm.ai/t2v/versioned.mp4"}},
+			})
+		default:
+			http.Error(w, "unexpected "+r.Method+" "+r.URL.Path, http.StatusNotFound)
+		}
+	}))
+	defer server.Close()
+
+	storage := &Storage{cfg: Config{EnableLocalImageFallback: true}}
+	job := GenerationJob{
+		GenerationType: "TEXT_TO_VIDEO",
+		Model:          "qwen3.6-plus-video",
+		Prompt:         "城市霓虹",
+		Size:           "720x1280",
+	}
+	provider := ProviderConfig{APIKey: "test-key", BaseURL: server.URL + "/v1", Model: "qwen3.6-plus-video"}
+
+	result, err := generateVideo(context.Background(), storage, job, provider, time.Millisecond)
+	if err != nil {
+		t.Fatalf("generateVideo returned error: %v", err)
+	}
+	if !sawFallback {
+		t.Fatal("expected /v1/videos/generations fallback to be used")
+	}
+	if result.URL != "https://cdn.qwenlm.ai/t2v/versioned.mp4" {
+		t.Fatalf("expected qwen cdn url, got %s", result.URL)
+	}
+	if result.Width == nil || *result.Width != 720 || result.Height == nil || *result.Height != 1280 {
+		t.Fatalf("expected 720x1280 dimensions, got %v x %v", result.Width, result.Height)
 	}
 }
 
