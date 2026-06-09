@@ -9,8 +9,10 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"mime"
 	"mime/multipart"
 	"net/http"
+	"net/textproto"
 	"strconv"
 	"strings"
 )
@@ -125,15 +127,12 @@ func generateWithImageEdit(ctx context.Context, job GenerationJob, provider Prov
 	}
 
 	for index, image := range sourceImages {
-		part, err := writer.CreateFormFile("image", image.FileName)
+		part, err := createImageFormFile(writer, "image", image, index)
 		if err != nil {
 			return imagePayload{}, err
 		}
 		if _, err := part.Write(image.Data); err != nil {
 			return imagePayload{}, err
-		}
-		if index == 0 && image.MimeType == "" {
-			image.MimeType = "image/png"
 		}
 	}
 	if err := writer.Close(); err != nil {
@@ -496,11 +495,23 @@ func mimeTypeFromOutputFormat(job GenerationJob) string {
 }
 
 func imageDataURL(image SourceImage) string {
-	mimeType := image.MimeType
-	if mimeType == "" {
-		mimeType = "image/png"
-	}
+	mimeType := imageMimeType(image.MimeType, image.Data)
 	return fmt.Sprintf("data:%s;base64,%s", mimeType, base64.StdEncoding.EncodeToString(image.Data))
+}
+
+func createImageFormFile(writer *multipart.Writer, fieldName string, image SourceImage, index int) (io.Writer, error) {
+	fileName := strings.TrimSpace(image.FileName)
+	if fileName == "" {
+		fileName = fmt.Sprintf("source-%d.%s", index+1, extensionFromMime(imageMimeType(image.MimeType, image.Data)))
+	}
+
+	header := make(textproto.MIMEHeader)
+	header.Set("Content-Disposition", mime.FormatMediaType("form-data", map[string]string{
+		"name":     fieldName,
+		"filename": fileName,
+	}))
+	header.Set("Content-Type", imageMimeType(image.MimeType, image.Data))
+	return writer.CreatePart(header)
 }
 
 func supportsResponsesImageGeneration(modelID string) bool {

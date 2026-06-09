@@ -184,10 +184,7 @@ func loadSourceImage(ctx context.Context, rawURL string, index int) (SourceImage
 	if err != nil {
 		return SourceImage{}, err
 	}
-	mimeType := response.Header.Get("content-type")
-	if mimeType == "" {
-		mimeType = http.DetectContentType(data)
-	}
+	mimeType := imageMimeType(response.Header.Get("content-type"), data)
 
 	return SourceImage{
 		Data:     data,
@@ -255,6 +252,7 @@ func parseDataURL(rawURL string, index int) (SourceImage, error) {
 	if err != nil {
 		return SourceImage{}, err
 	}
+	mimeType = imageMimeType(mimeType, data)
 
 	return SourceImage{
 		Data:     data,

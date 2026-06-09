@@ -55,6 +55,7 @@ func TestGenerateWithImageEditOmitsResponseFormat(t *testing.T) {
 			t.Fatalf("read multipart request: %v", err)
 		}
 		seenResponseFormat := false
+		imageContentType := ""
 		for {
 			part, err := reader.NextPart()
 			if err == io.EOF {
@@ -64,12 +65,18 @@ func TestGenerateWithImageEditOmitsResponseFormat(t *testing.T) {
 				t.Fatalf("read multipart part: %v", err)
 			}
 			if part.FormName() != "response_format" {
+				if part.FormName() == "image" {
+					imageContentType = part.Header.Get("Content-Type")
+				}
 				continue
 			}
 			seenResponseFormat = true
 		}
 		if seenResponseFormat {
 			t.Fatal("expected multipart response_format to be omitted")
+		}
+		if imageContentType != "image/png" {
+			t.Fatalf("expected image part Content-Type image/png, got %q", imageContentType)
 		}
 		_ = json.NewEncoder(w).Encode(map[string]any{
 			"data": []map[string]any{{"b64_json": "Y2F0"}},
@@ -96,6 +103,18 @@ func TestGenerateWithImageEditOmitsResponseFormat(t *testing.T) {
 	}
 	if len(payload.Data) != 1 || payload.Data[0]["b64_json"] != "Y2F0" {
 		t.Fatalf("unexpected payload: %#v", payload.Data)
+	}
+}
+
+func TestImageDataURLSniffsOctetStreamImage(t *testing.T) {
+	got := imageDataURL(SourceImage{
+		Data:     minimalPNG(32, 32),
+		FileName: "source.bin",
+		MimeType: "application/octet-stream",
+	})
+
+	if !strings.HasPrefix(got, "data:image/png;base64,") {
+		t.Fatalf("expected image/png data URL, got %s", got[:min(len(got), 64)])
 	}
 }
 
@@ -130,6 +149,26 @@ func TestNormalizeGeneratedImagePersistsRemoteURL(t *testing.T) {
 	}
 	if record.Width == nil || *record.Width != 640 || record.Height == nil || *record.Height != 480 {
 		t.Fatalf("unexpected dimensions: width=%v height=%v", record.Width, record.Height)
+	}
+}
+
+func TestLoadSourceImageSniffsOctetStreamResponse(t *testing.T) {
+	imageData := minimalPNG(320, 240)
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/octet-stream")
+		_, _ = w.Write(imageData)
+	}))
+	defer server.Close()
+
+	image, err := loadSourceImage(context.Background(), server.URL+"/source.bin", 0)
+	if err != nil {
+		t.Fatalf("loadSourceImage returned error: %v", err)
+	}
+	if image.MimeType != "image/png" {
+		t.Fatalf("expected sniffed image/png, got %q", image.MimeType)
+	}
+	if image.FileName != "source.bin" {
+		t.Fatalf("expected original filename, got %q", image.FileName)
 	}
 }
 
