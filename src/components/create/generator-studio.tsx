@@ -258,7 +258,10 @@ export function GeneratorStudio({
     setSessionGenerations((current) =>
       current.map((generation) => (generation.id === updated.id ? updated : generation)),
     );
-  }, []);
+    if (updated.status !== "pending") {
+      router.refresh();
+    }
+  }, [router]);
   useImagePoller({ generations: sessionGenerations, onUpdate: handlePollerUpdate });
 
   // 历史图片栏数据：合并初始历史 + 当前会话新生成图，按 id 去重，按 generation 时间倒序。
@@ -705,6 +708,7 @@ export function GeneratorStudio({
         });
         return replaced ? next : [...next, generation];
       });
+      router.refresh();
       // 把 generation 写入会话本地状态；服务端在 /api/generate 已自动绑定 conversationId 与刷新 title。
       const targetConversationId = generation.conversationId ?? activeSessionId;
       if (targetConversationId) {
@@ -834,17 +838,33 @@ export function GeneratorStudio({
     }
   }
 
-  // 取消一个仍在 pending 的 generation：仅停止前端轮询并把 UI 标记为 failed/已取消。
-  // 后端 after() 仍可能继续生成，但结果不再回灌（用户可在历史接口里按 jobId 找到）。
-  // 如未来要做"真取消"，需要在 /api/me/generations/[id] 增加 PATCH/DELETE 端点退还积分。
-  function handleCancelGeneration(target: GenerationItem) {
-    setSessionGenerations((current) =>
-      current.map((g) =>
-        g.id === target.id && g.status === "pending"
-          ? { ...g, errorMessage: "已被用户取消", status: "failed" as const }
-          : g,
-      ),
-    );
+  // 取消仍在 pending/processing 的 generation：服务端标记失败并退还预扣积分。
+  async function handleCancelGeneration(target: GenerationItem) {
+    if (target.status !== "pending") return;
+    try {
+      const response = await fetch(`/api/me/generations/${target.id}`, {
+        method: "DELETE",
+      });
+      const result = (await response.json()) as {
+        data?: { generation?: GenerationItem };
+        error?: string;
+      };
+
+      if (!response.ok) {
+        setError(result.error || "取消生成失败，请稍后再试");
+        return;
+      }
+
+      const updated = result.data?.generation;
+      if (updated) {
+        setSessionGenerations((current) =>
+          current.map((generation) => (generation.id === updated.id ? updated : generation)),
+        );
+      }
+      router.refresh();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "取消生成失败，请稍后再试");
+    }
   }
 
   // 失败重试：使用原 generation 的 prompt + 当前选项重新触发，等价于用户手动重新填写一次。

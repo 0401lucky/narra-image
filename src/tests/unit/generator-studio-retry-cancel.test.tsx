@@ -176,6 +176,42 @@ describe("创作台：失败重试 / 取消生成 入口", () => {
 
   it("pending generation 显示取消按钮，点击后变成已取消", async () => {
     const user = userEvent.setup();
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
+        const url = typeof input === "string" ? input : input.toString();
+        if (url === "/api/me/generations/job_pending" && init?.method === "DELETE") {
+          return {
+            json: async () => ({
+              data: {
+                generation: {
+                  count: 1,
+                  createdAt: "2026-04-23T08:00:00.000Z",
+                  creditsSpent: 0,
+                  errorMessage: "用户取消生成，已退还预扣积分。",
+                  generationType: "text_to_image",
+                  id: "job_pending",
+                  images: [],
+                  model: "gpt-image-1",
+                  negativePrompt: null,
+                  prompt: "正在生成",
+                  providerMode: "built_in",
+                  size: "1024x1024",
+                  sourceImageUrl: null,
+                  status: "failed",
+                },
+              },
+            }),
+            ok: true,
+          };
+        }
+
+        return {
+          json: async () => ({ data: {} }),
+          ok: true,
+        };
+      }),
+    );
     render(
       <GeneratorStudio
         checkInSummary={baseCheckIn}
@@ -204,8 +240,10 @@ describe("创作台：失败重试 / 取消生成 入口", () => {
     await user.click(cancelButton);
 
     // 取消后状态变 failed，errorMessage 出现"已被用户取消"，重试按钮取代取消按钮
-    expect(screen.queryByRole("button", { name: "取消生成" })).not.toBeInTheDocument();
-    expect(screen.getByText(/已被用户取消/)).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.queryByRole("button", { name: "取消生成" })).not.toBeInTheDocument();
+    });
+    expect(screen.getByText(/用户取消生成/)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "重试" })).toBeInTheDocument();
   });
 

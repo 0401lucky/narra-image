@@ -122,7 +122,7 @@ export function GenerationBubble({
                   type="button"
                   onClick={() => onCancel(generation)}
                   className="inline-flex w-fit items-center gap-1.5 rounded-full border border-[var(--line)] bg-[var(--surface)]/80 px-3 py-1 text-xs text-[var(--ink-soft)] transition hover:border-rose-400 hover:text-rose-500"
-                  title="停止前端轮询并把任务标记为已取消（后端可能仍在生成，但结果不再展示）"
+                  title="取消任务并退还预扣积分"
                 >
                   <X className="size-3" />
                   取消生成

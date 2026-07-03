@@ -71,7 +71,10 @@ export function VideoStudio({
   // 轮询：pending 任务持续拉取 /api/me/generations/{id}，命中终态写回。
   const handlePollerUpdate = useCallback((updated: GenerationItem) => {
     setGenerations((current) => current.map((g) => (g.id === updated.id ? updated : g)));
-  }, []);
+    if (updated.status !== "pending") {
+      router.refresh();
+    }
+  }, [router]);
   useImagePoller({ generations, onUpdate: handlePollerUpdate });
 
   const selectedGeneration = useMemo(
@@ -195,6 +198,7 @@ export function VideoStudio({
       }
       setGenerations((current) => [generation, ...current]);
       setSelectedId(generation.id);
+      router.refresh();
     } catch (err) {
       restore(err instanceof Error ? err.message : "生成失败，请稍后再试");
     }

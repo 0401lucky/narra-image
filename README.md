@@ -2,7 +2,7 @@
 
 一个面向普通用户的高颜值生图网站。
 
-> 在线站点：[narra.c0ffee.space](https://narra.c0ffee.space) ｜ 仓库：<https://github.com/0401lucky/narra-image> ｜ 协议：[AGPL-3.0](#开源协议)
+> 在线站点：[narralucky.c0ffee.space](https://narralucky.c0ffee.space) ｜ 仓库：<https://github.com/0401lucky/narra-image> ｜ 协议：[AGPL-3.0](#开源协议)
 
 核心特性：
 
