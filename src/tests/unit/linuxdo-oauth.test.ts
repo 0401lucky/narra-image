@@ -4,6 +4,7 @@ const { mockDb } = vi.hoisted(() => {
   const inviteCode = {
     findUnique: vi.fn(),
     update: vi.fn(),
+    updateMany: vi.fn(),
   };
   const user = {
     create: vi.fn(),
@@ -228,6 +229,7 @@ describe("LinuxDo OAuth 用户处理", () => {
       id: "invite-2",
       usedAt: null,
     });
+    mockDb.inviteCode.updateMany.mockResolvedValue({ count: 1 });
     mockDb.user.create.mockResolvedValue({
       avatarUrl: null,
       credits: 500,
@@ -247,6 +249,10 @@ describe("LinuxDo OAuth 用户处理", () => {
     expect(mockDb.inviteCode.findUnique).toHaveBeenCalledWith({
       select: { id: true, usedAt: true },
       where: { code: "VALID-CODE" },
+    });
+    expect(mockDb.inviteCode.updateMany).toHaveBeenCalledWith({
+      data: { usedAt: expect.any(Date) },
+      where: { id: "invite-2", usedAt: null },
     });
     expect(mockDb.user.create).toHaveBeenCalledWith({
       data: {
@@ -268,12 +274,35 @@ describe("LinuxDo OAuth 用户处理", () => {
     });
     expect(mockDb.inviteCode.update).toHaveBeenCalledWith({
       data: {
-        usedAt: expect.any(Date),
         usedById: "user-3",
       },
       where: { id: "invite-2" },
     });
     expect(result.ok).toBe(true);
     if (result.ok) expect(result.user.id).toBe("user-3");
+  });
+
+  it("邀请码被并发抢占时返回 invite_invalid 且不创建用户", async () => {
+    mockDb.user.findFirst.mockResolvedValue(null);
+    mockDb.user.findUnique.mockResolvedValue(null);
+    // 读到时还未使用，但条件占用时已被并发事务抢先消费
+    mockDb.inviteCode.findUnique.mockResolvedValue({
+      id: "invite-3",
+      usedAt: null,
+    });
+    mockDb.inviteCode.updateMany.mockResolvedValue({ count: 0 });
+
+    const result = await findOrCreateOAuthUser({
+      ldUser: { ...baseLdUser, id: 10 },
+      inviteCode: "RACED-CODE",
+    });
+
+    expect(mockDb.inviteCode.updateMany).toHaveBeenCalledWith({
+      data: { usedAt: expect.any(Date) },
+      where: { id: "invite-3", usedAt: null },
+    });
+    expect(mockDb.user.create).not.toHaveBeenCalled();
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.reason).toBe("invite_invalid");
   });
 });

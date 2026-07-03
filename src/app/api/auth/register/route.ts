@@ -30,6 +30,9 @@ export async function POST(request: Request) {
       },
     });
 
+    // bcrypt 约需上百毫秒，先在事务外算好，避免拉长事务持锁时间
+    const passwordHash = await hashPassword(body.password);
+
     const result = await db.$transaction(async (tx) =>
       registerUser(body, {
         bootstrapAdminEmail: getEnv().BOOTSTRAP_ADMIN_EMAIL || undefined,
@@ -44,7 +47,7 @@ export async function POST(request: Request) {
             where: { code },
             select: { code: true, id: true, usedAt: true },
           }),
-        hashPassword,
+        hashPassword: async () => passwordHash,
         createUser: async (data) => {
           const user = await tx.user.create({
             data: {
@@ -64,13 +67,18 @@ export async function POST(request: Request) {
           };
         },
         markInviteUsed: async ({ inviteId, userId }) => {
-          await tx.inviteCode.update({
-            where: { id: inviteId },
+          // 条件占用：并发注册同码时只有一个事务能把 usedAt 从 null 写成非 null，
+          // 其余 count=0 抛错回滚（用户创建一并撤销）
+          const claimed = await tx.inviteCode.updateMany({
+            where: { id: inviteId, usedAt: null },
             data: {
               usedAt: new Date(),
               usedById: userId,
             },
           });
+          if (claimed.count === 0) {
+            throw new Error("邀请码已失效");
+          }
         },
       }),
     );

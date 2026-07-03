@@ -171,7 +171,8 @@ export async function findOrCreateOAuthUser(
     return { ok: false, reason: "invite_required" };
   }
 
-  // 在事务内校验邀请码并创建用户，避免邀请码被并发消费
+  // 事务内先条件占用邀请码再创建用户：Read Committed 下事务包裹本身挡不住写覆盖，
+  // 必须靠 updateMany 的 usedAt:null 条件保证并发下一码只进一人
   return db.$transaction(async (tx) => {
     const invite = await tx.inviteCode.findUnique({
       where: { code: inviteCode },
@@ -179,6 +180,15 @@ export async function findOrCreateOAuthUser(
     });
 
     if (!invite || invite.usedAt) {
+      return { ok: false as const, reason: "invite_invalid" as const };
+    }
+
+    const claimed = await tx.inviteCode.updateMany({
+      where: { id: invite.id, usedAt: null },
+      data: { usedAt: new Date() },
+    });
+
+    if (claimed.count === 0) {
       return { ok: false as const, reason: "invite_invalid" as const };
     }
 
@@ -196,10 +206,7 @@ export async function findOrCreateOAuthUser(
 
     await tx.inviteCode.update({
       where: { id: invite.id },
-      data: {
-        usedAt: new Date(),
-        usedById: newUser.id,
-      },
+      data: { usedById: newUser.id },
     });
 
     return { ok: true as const, user: newUser as OAuthUser };
