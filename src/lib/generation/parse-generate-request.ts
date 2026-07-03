@@ -117,6 +117,7 @@ export async function parseGenerateRequest(request: Request | FormData) {
       imageUrls,
       images,
       replaceGenerationId: toNullableString(formData.get("replaceGenerationId")) || undefined,
+      turnstileToken: toNullableString(formData.get("turnstileToken")) || undefined,
     };
   };
 
@@ -147,6 +148,10 @@ export async function parseGenerateRequest(request: Request | FormData) {
     replaceGenerationId:
       typeof json.replaceGenerationId === "string" && json.replaceGenerationId.trim()
         ? json.replaceGenerationId.trim()
+        : undefined,
+    turnstileToken:
+      typeof json.turnstileToken === "string" && json.turnstileToken.trim()
+        ? json.turnstileToken.trim()
         : undefined,
   };
 }

@@ -11,6 +11,7 @@ import {
 } from "@/lib/prisma-mappers";
 import { getBuiltInProviderConfig, getChannelById } from "@/lib/providers/built-in-provider";
 import { decryptProviderSecret, encryptProviderSecret } from "@/lib/providers/provider-secret";
+import { requireTurnstile } from "@/lib/auth/turnstile";
 import { requireCurrentUserRecord } from "@/lib/server/current-user";
 import { getErrorMessage, jsonError, jsonOk } from "@/lib/server/http";
 import { persistGeneratedImage } from "@/lib/storage/persist-generated-image";
@@ -22,6 +23,7 @@ export async function POST(request: Request) {
   try {
     const user = await requireCurrentUserRecord();
     const body = await parseGenerateRequest(request);
+    await requireTurnstile("generate", body.turnstileToken);
     const env = getEnv();
 
     const channelId = body.channelId as string | undefined;

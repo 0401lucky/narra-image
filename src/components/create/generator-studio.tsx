@@ -20,6 +20,10 @@ import {
   normalizeGenerationSize,
   parseImageSize,
 } from "@/lib/generation/sizes";
+import {
+  TurnstileWidget,
+  type TurnstileWidgetHandle,
+} from "@/components/auth/turnstile-widget";
 
 import { useImagePoller } from "./hooks/use-image-poller";
 import { useReferenceImages } from "./hooks/use-reference-images";
@@ -38,6 +42,7 @@ import type {
   ReferenceImage,
   SavedProviderInfo,
   SessionInfo,
+  StudioTurnstile,
   ViewerUser,
 } from "./types";
 
@@ -62,6 +67,7 @@ type GeneratorStudioProps = {
   initialPrompt?: string;
   channels?: ChannelInfo[];
   savedProvider?: SavedProviderInfo | null;
+  turnstile?: StudioTurnstile | null;
 };
 
 // 模块级稳定空数组，避免组件每次 render 时 default 表达式创建新引用，
@@ -77,10 +83,16 @@ export function GeneratorStudio({
   initialPrompt = "",
   channels = EMPTY_CHANNELS,
   savedProvider = null,
+  turnstile = null,
 }: GeneratorStudioProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const turnstileWidgetRef = useRef<TurnstileWidgetHandle>(null);
+  const needsTurnstile = Boolean(
+    turnstile?.isEnabled && turnstile?.siteKey && turnstile?.protectGenerate,
+  );
   const [generationType, setGenerationType] = useState<GenerationType>("text_to_image");
   const [prompt, setPrompt] = useState(initialPrompt);
   const [negativePrompt, setNegativePrompt] = useState("");
@@ -628,6 +640,9 @@ export function GeneratorStudio({
                     formData.append("referenceImages", referenceImage.file);
                   }
                 });
+                if (turnstileToken) {
+                  formData.append("turnstileToken", turnstileToken);
+                }
                 return formData;
               })(),
             })
@@ -650,8 +665,15 @@ export function GeneratorStudio({
                 quality: snapshot.quality,
                 replaceGenerationId: snapshot.replaceGenerationId || undefined,
                 size: snapshot.size,
+                turnstileToken: turnstileToken || undefined,
               }),
             });
+
+      // Turnstile token 一次性有效，无论成败都要重置以便下次提交
+      if (needsTurnstile) {
+        setTurnstileToken(null);
+        turnstileWidgetRef.current?.reset();
+      }
 
       const result = (await response.json()) as {
         data?: { generation: GenerationItem };
@@ -1014,8 +1036,22 @@ export function GeneratorStudio({
           activeModel={activeModel}
           onOpenCustomProviderSettings={openCustomProviderSettings}
           onSubmit={handleSubmit}
-          canSubmit={Boolean(prompt.trim() || referenceImages.length > 0)}
+          canSubmit={Boolean(
+            (prompt.trim() || referenceImages.length > 0) &&
+              (!needsTurnstile || turnstileToken),
+          )}
           onClickImageMode={() => setGenerationType("image_to_image")}
+          turnstileSlot={
+            needsTurnstile && turnstile?.siteKey ? (
+              <TurnstileWidget
+                ref={turnstileWidgetRef}
+                siteKey={turnstile.siteKey}
+                onVerify={(token) => setTurnstileToken(token)}
+                onExpire={() => setTurnstileToken(null)}
+                onError={() => setTurnstileToken(null)}
+              />
+            ) : undefined
+          }
         >
           <AdvancedSettings
             open={showSettings}

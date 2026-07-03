@@ -256,4 +256,42 @@ describe("生成请求解析", () => {
     expect(result.image?.name).toBe("frame.png");
     expect(result.images).toHaveLength(1);
   });
+
+  it("解析 JSON 请求中的 turnstileToken", async () => {
+    const request = new Request("https://example.com/api/generate", {
+      body: JSON.stringify({
+        count: 1,
+        generationType: "text_to_image",
+        model: "gpt-image-1",
+        prompt: "带人机验证的请求",
+        providerMode: "built_in",
+        size: "1024x1024",
+        turnstileToken: "tok_json",
+      }),
+      headers: { "Content-Type": "application/json" },
+      method: "POST",
+    });
+
+    const result = await parseGenerateRequest(request);
+
+    expect(result.turnstileToken).toBe("tok_json");
+  });
+
+  it("解析 form-data 请求中的 turnstileToken，缺省时为 undefined", async () => {
+    const build = (withToken: boolean) => {
+      const formData = new FormData();
+      formData.append("generationType", "image_to_image");
+      formData.append("model", "gpt-image-1");
+      formData.append("prompt", "编辑这张图");
+      formData.append("image", new File(["fake-image"], "ref.png", { type: "image/png" }));
+      if (withToken) formData.append("turnstileToken", "tok_form");
+      return formData;
+    };
+
+    const withToken = await parseGenerateRequest(build(true));
+    expect(withToken.turnstileToken).toBe("tok_form");
+
+    const withoutToken = await parseGenerateRequest(build(false));
+    expect(withoutToken.turnstileToken).toBeUndefined();
+  });
 });

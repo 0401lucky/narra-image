@@ -6,8 +6,12 @@ import { useCallback, useMemo, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 
 import { useImagePoller } from "@/components/create/hooks/use-image-poller";
-import type { GenerationItem, ViewerUser } from "@/components/create/types";
+import type { GenerationItem, StudioTurnstile, ViewerUser } from "@/components/create/types";
 import type { GenerationType } from "@/lib/types";
+import {
+  TurnstileWidget,
+  type TurnstileWidgetHandle,
+} from "@/components/auth/turnstile-widget";
 
 import { resolveVideoSize } from "./constants";
 import type { VideoAspectRatio, VideoChannelInfo, VideoReferenceImage, VideoResolution } from "./types";
@@ -19,6 +23,7 @@ type VideoStudioProps = {
   currentUser: ViewerUser;
   initialGenerations?: GenerationItem[];
   channels?: VideoChannelInfo[];
+  turnstile?: StudioTurnstile | null;
 };
 
 const EMPTY_GENERATIONS: GenerationItem[] = [];
@@ -34,10 +39,16 @@ export function VideoStudio({
   currentUser,
   initialGenerations = EMPTY_GENERATIONS,
   channels = EMPTY_CHANNELS,
+  turnstile = null,
 }: VideoStudioProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const turnstileWidgetRef = useRef<TurnstileWidgetHandle>(null);
+  const needsTurnstile = Boolean(
+    turnstile?.isEnabled && turnstile?.siteKey && turnstile?.protectGenerate,
+  );
 
   const [generationType, setGenerationType] = useState<VideoSnapshot["generationType"]>("text_to_video");
   const [prompt, setPrompt] = useState("");
@@ -74,7 +85,10 @@ export function VideoStudio({
     return [model, ...channelModels];
   }, [selectedChannel?.models, model]);
 
-  const canSubmit = Boolean(prompt.trim()) && (generationType === "text_to_video" || referenceImage !== null);
+  const canSubmit =
+    Boolean(prompt.trim()) &&
+    (generationType === "text_to_video" || referenceImage !== null) &&
+    (!needsTurnstile || turnstileToken !== null);
 
   function handleChannelChange(newChannelId: string) {
     setSelectedChannelId(newChannelId);
@@ -132,6 +146,7 @@ export function VideoStudio({
         formData.append("aspectRatio", aspectRatio);
         if (selectedChannelId) formData.append("channelId", selectedChannelId);
         formData.append("image", snapshot.referenceImage.file);
+        if (turnstileToken) formData.append("turnstileToken", turnstileToken);
         response = await fetch("/api/generate", { method: "POST", body: formData });
       } else {
         response = await fetch("/api/generate", {
@@ -147,8 +162,15 @@ export function VideoStudio({
             prompt: snapshot.prompt,
             providerMode: "built_in",
             size,
+            turnstileToken: turnstileToken || undefined,
           }),
         });
+      }
+
+      // Turnstile token 一次性有效，无论成败都要重置以便下次提交
+      if (needsTurnstile) {
+        setTurnstileToken(null);
+        turnstileWidgetRef.current?.reset();
       }
 
       const result = (await response.json()) as {
@@ -226,6 +248,17 @@ export function VideoStudio({
           onDismissError={() => setError(null)}
           canSubmit={canSubmit}
           onSubmit={handleSubmit}
+          turnstileSlot={
+            needsTurnstile && turnstile?.siteKey ? (
+              <TurnstileWidget
+                ref={turnstileWidgetRef}
+                siteKey={turnstile.siteKey}
+                onVerify={(token) => setTurnstileToken(token)}
+                onExpire={() => setTurnstileToken(null)}
+                onError={() => setTurnstileToken(null)}
+              />
+            ) : undefined
+          }
         />
 
         <VideoStage

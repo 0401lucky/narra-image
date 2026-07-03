@@ -73,6 +73,9 @@ type ComposerProps = {
   // 高级设置面板由父组件渲染并通过 children 注入，避免反向耦合。
   children?: ReactNode;
 
+  // 人机验证挂件由父组件按需注入，渲染在错误提示同一区域。
+  turnstileSlot?: ReactNode;
+
   // 外层悬浮区域 ref 交给父级测量高度，用于同步对话流底部留白。
   shellRef?: Ref<HTMLDivElement>;
 };
@@ -113,6 +116,7 @@ export const Composer = forwardRef<HTMLTextAreaElement, ComposerProps>(function 
     onSubmit,
     canSubmit,
     onClickImageMode,
+    turnstileSlot,
   } = props;
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -271,6 +275,12 @@ export const Composer = forwardRef<HTMLTextAreaElement, ComposerProps>(function 
                   </button>
                 </div>
               ))}
+            </div>
+          )}
+
+          {turnstileSlot && (
+            <div className="relative z-10 mx-3 mt-3 sm:mx-5 sm:mt-4">
+              {turnstileSlot}
             </div>
           )}
 

@@ -2,7 +2,7 @@
 
 /* eslint-disable @next/next/no-img-element */
 import { Film, ImagePlus, Send, Sparkles, Type, X } from "lucide-react";
-import { forwardRef, useRef } from "react";
+import { forwardRef, useRef, type ReactNode } from "react";
 
 import { Alert } from "@/components/ui/alert";
 import { GENERATION_PROMPT_MAX_LENGTH } from "@/lib/generation/limits";
@@ -37,6 +37,8 @@ type VideoComposerProps = {
   onDismissError: () => void;
   canSubmit: boolean;
   onSubmit: () => void;
+  // 人机验证挂件由父组件按需注入，渲染在错误提示同一区域。
+  turnstileSlot?: ReactNode;
 };
 
 export const VideoComposer = forwardRef<HTMLTextAreaElement, VideoComposerProps>(
@@ -67,6 +69,7 @@ export const VideoComposer = forwardRef<HTMLTextAreaElement, VideoComposerProps>
       onDismissError,
       canSubmit,
       onSubmit,
+      turnstileSlot,
     } = props;
 
     return (
@@ -186,6 +189,8 @@ export const VideoComposer = forwardRef<HTMLTextAreaElement, VideoComposerProps>
           onChange={onChangeModel}
           options={modelOptions.map((m) => ({ label: m, value: m }))}
         />
+
+        {turnstileSlot && <div className="mt-3">{turnstileSlot}</div>}
 
         {error && (
           <div className="mt-3">

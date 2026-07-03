@@ -4,6 +4,7 @@ import { getCheckInSummary } from "@/lib/benefits/config";
 import { db } from "@/lib/db";
 import { serializeConversation, serializeGeneration, serializeUser } from "@/lib/prisma-mappers";
 import { getCurrentUserRecord } from "@/lib/server/current-user";
+import { getPublicTurnstileConfig } from "@/lib/auth/turnstile";
 import { GeneratorStudio } from "@/components/create/generator-studio";
 import { SiteHeader } from "@/components/marketing/site-header";
 import { getActiveChannels } from "@/lib/providers/built-in-provider";
@@ -23,7 +24,7 @@ export default async function CreatePage({ searchParams }: CreatePageProps) {
 
   await failStalePendingGenerationJobs({ userId: user.id });
 
-  const [jobs, channels, checkInSummary, conversations, savedProvider] = await Promise.all([
+  const [jobs, channels, checkInSummary, conversations, savedProvider, turnstileConfig] = await Promise.all([
     db.generationJob.findMany({
       where: { userId: user.id },
       include: {
@@ -58,6 +59,7 @@ export default async function CreatePage({ searchParams }: CreatePageProps) {
         updatedAt: true,
       },
     }),
+    getPublicTurnstileConfig(),
   ]);
 
   const currentUser = serializeUser(user);
@@ -92,6 +94,11 @@ export default async function CreatePage({ searchParams }: CreatePageProps) {
                 }
               : null
           }
+          turnstile={{
+            isEnabled: turnstileConfig.isEnabled,
+            siteKey: turnstileConfig.siteKey,
+            protectGenerate: turnstileConfig.protectGenerate,
+          }}
         />
       </section>
     </main>

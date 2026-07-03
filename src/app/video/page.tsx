@@ -4,6 +4,7 @@ import { GenerationType } from "@prisma/client";
 import { db } from "@/lib/db";
 import { serializeGeneration, serializeUser } from "@/lib/prisma-mappers";
 import { getCurrentUserRecord } from "@/lib/server/current-user";
+import { getPublicTurnstileConfig } from "@/lib/auth/turnstile";
 import { SiteHeader } from "@/components/marketing/site-header";
 import { VideoStudio } from "@/components/video/video-studio";
 import { getActiveChannels } from "@/lib/providers/built-in-provider";
@@ -19,7 +20,7 @@ export default async function VideoPage() {
 
   await failStalePendingGenerationJobs({ userId: user.id });
 
-  const [jobs, channels] = await Promise.all([
+  const [jobs, channels, turnstileConfig] = await Promise.all([
     db.generationJob.findMany({
       where: {
         userId: user.id,
@@ -33,6 +34,7 @@ export default async function VideoPage() {
       take: 50,
     }),
     getActiveChannels(),
+    getPublicTurnstileConfig(),
   ]);
 
   const currentUser = serializeUser(user);
@@ -53,6 +55,11 @@ export default async function VideoPage() {
           currentUser={currentUser}
           initialGenerations={jobs.map(serializeGeneration)}
           channels={serializedChannels}
+          turnstile={{
+            isEnabled: turnstileConfig.isEnabled,
+            siteKey: turnstileConfig.siteKey,
+            protectGenerate: turnstileConfig.protectGenerate,
+          }}
         />
       </section>
     </main>

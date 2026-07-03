@@ -128,3 +128,9 @@ export type GenerationFormState = {
   quality: GenerationQuality;
   outputFormat: GenerationOutputFormat;
 };
+
+export type StudioTurnstile = {
+  isEnabled: boolean;
+  siteKey: string | null;
+  protectGenerate: boolean;
+};
