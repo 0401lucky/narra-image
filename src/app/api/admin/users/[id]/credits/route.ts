@@ -12,6 +12,37 @@ export async function PATCH(
     const body = creditUpdateSchema.parse(await parseJsonBody(request));
     const { id } = await context.params;
 
+    const userSelect = {
+      credits: true,
+      email: true,
+      id: true,
+    } as const;
+
+    if (body.amount < 0) {
+      // 条件扣减：余额不足时拒绝，避免把用户积分调成负数
+      const deducted = await db.user.updateMany({
+        where: { id, credits: { gte: -body.amount } },
+        data: {
+          credits: {
+            increment: body.amount,
+          },
+        },
+      });
+
+      if (deducted.count === 0) {
+        return jsonError("扣减失败：用户不存在或积分余额不足", 400);
+      }
+
+      const updatedUser = await db.user.findUniqueOrThrow({
+        where: { id },
+        select: userSelect,
+      });
+
+      return jsonOk({
+        user: updatedUser,
+      });
+    }
+
     const updatedUser = await db.user.update({
       where: { id },
       data: {
@@ -19,11 +50,7 @@ export async function PATCH(
           increment: body.amount,
         },
       },
-      select: {
-        credits: true,
-        email: true,
-        id: true,
-      },
+      select: userSelect,
     });
 
     return jsonOk({
