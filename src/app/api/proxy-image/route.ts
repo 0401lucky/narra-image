@@ -1,5 +1,6 @@
 import { getCurrentSession } from "@/lib/server/current-user";
 import { getErrorMessage } from "@/lib/server/http";
+import { assertPublicHttpUrl } from "@/lib/server/safe-remote-url";
 
 const PROXY_FETCH_TIMEOUT_MS = 15_000;
 
@@ -22,8 +23,12 @@ export async function GET(request: Request) {
       return new Response("Missing url parameter", { status: 400 });
     }
 
-    const upstream = await fetch(imageUrl, {
+    const target = await assertPublicHttpUrl(imageUrl);
+
+    const upstream = await fetch(target, {
       signal: AbortSignal.timeout(PROXY_FETCH_TIMEOUT_MS),
+      // 重定向可指向内网，绕过上面的地址校验，直接拒绝
+      redirect: "error",
     });
 
     if (!upstream.ok || !upstream.body) {
