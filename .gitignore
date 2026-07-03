@@ -46,3 +46,6 @@ next-env.d.ts
 
 # superpowers brainstorm visual companion
 /.superpowers/
+
+# codex 辅助进程日志
+.codex-*.log
