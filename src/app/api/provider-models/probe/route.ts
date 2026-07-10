@@ -1,6 +1,5 @@
 import { db } from "@/lib/db";
 import { getEnv } from "@/lib/env";
-import { getBuiltInProviderConfig } from "@/lib/providers/built-in-provider";
 import {
   fetchOpenAICompatibleModelIds,
   looksLikeImageModel,
@@ -24,25 +23,30 @@ export async function POST(request: Request) {
     const body = providerProbeSchema.parse(await parseJsonBody(request));
     const env = getEnv();
     let apiKey = body.apiKey?.trim() || "";
+    let baseUrl = body.baseUrl;
 
-    if (!apiKey && body.channelId) {
+    if (body.channelId) {
       await requireAdminRecord();
       const channel = await db.providerChannel.findUnique({
         where: { id: body.channelId },
         select: {
           apiKeyEncrypted: true,
+          baseUrl: true,
         },
       });
       if (!channel) {
         return jsonError("渠道不存在", 404);
       }
-      apiKey = await decryptProviderSecret(channel.apiKeyEncrypted, env.AUTH_SECRET);
+      baseUrl = channel.baseUrl;
+      if (!apiKey) {
+        apiKey = await decryptProviderSecret(channel.apiKeyEncrypted, env.AUTH_SECRET);
+      }
     }
 
-    if (!apiKey) {
+    if (!apiKey && !body.channelId) {
       const saved = await db.savedProviderConfig.findFirst({
         where: {
-          baseUrl: body.baseUrl,
+          baseUrl,
           userId: user.id,
         },
         select: {
@@ -54,16 +58,13 @@ export async function POST(request: Request) {
       }
     }
 
-    const builtIn = await getBuiltInProviderConfig();
-    apiKey = apiKey || builtIn.apiKey || env.BUILTIN_PROVIDER_API_KEY || "";
-
     if (!apiKey) {
-      return jsonError("请先提供 API Key", 400);
+      return jsonError("请提供自己的 API Key；模型探测不会使用站点内置密钥", 400);
     }
 
     const modelIds = await fetchOpenAICompatibleModelIds({
       apiKey,
-      baseUrl: body.baseUrl,
+      baseUrl,
     });
 
     return jsonOk({

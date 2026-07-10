@@ -8,7 +8,7 @@ services:
       POSTGRES_USER: ${E2E_POSTGRES_USER:-narra_e2e}
       POSTGRES_PASSWORD: ${E2E_POSTGRES_PASSWORD:-narra_e2e_password}
     ports:
-      - "${E2E_POSTGRES_PORT:-55432}:5432"
+      - "127.0.0.1:${E2E_POSTGRES_PORT:-55432}:5432"
     volumes:
       - postgres_e2e_data:/var/lib/postgresql/data
     healthcheck:
@@ -34,7 +34,7 @@ services:
       NODE_ENV: production
       PORT: 3000
       DATABASE_URL: postgresql://${E2E_POSTGRES_USER:-narra_e2e}:${E2E_POSTGRES_PASSWORD:-narra_e2e_password}@db:5432/${E2E_POSTGRES_DB:-narra_image_e2e}?schema=public
-      AUTH_SECRET: ${AUTH_SECRET:-replace-this-secret}
+      AUTH_SECRET: ${E2E_AUTH_SECRET:-narra-e2e-only-secret-do-not-use-production}
       APP_URL: ${E2E_APP_URL:-http://localhost:3100}
       BUILTIN_PROVIDER_BASE_URL: ${BUILTIN_PROVIDER_BASE_URL:-}
       BUILTIN_PROVIDER_API_KEY: ${BUILTIN_PROVIDER_API_KEY:-}
@@ -55,7 +55,7 @@ services:
       BOOTSTRAP_INVITE_CODE: ${BOOTSTRAP_INVITE_CODE:-FOUNDING-ACCESS}
       BOOTSTRAP_ADMIN_PASSWORD_HASH: ${BOOTSTRAP_ADMIN_PASSWORD_HASH:-}
     ports:
-      - "${E2E_APP_PORT:-3100}:3000"
+      - "127.0.0.1:${E2E_APP_PORT:-3100}:3000"
 
   worker:
     build:
@@ -68,7 +68,7 @@ services:
         condition: service_healthy
     environment:
       DATABASE_URL: postgresql://${E2E_POSTGRES_USER:-narra_e2e}:${E2E_POSTGRES_PASSWORD:-narra_e2e_password}@db:5432/${E2E_POSTGRES_DB:-narra_image_e2e}?schema=public
-      AUTH_SECRET: ${AUTH_SECRET:-replace-this-secret}
+      AUTH_SECRET: ${E2E_AUTH_SECRET:-narra-e2e-only-secret-do-not-use-production}
       APP_URL: ${E2E_APP_URL:-http://localhost:3100}
       BUILTIN_PROVIDER_BASE_URL: ${BUILTIN_PROVIDER_BASE_URL:-}
       BUILTIN_PROVIDER_API_KEY: ${BUILTIN_PROVIDER_API_KEY:-}

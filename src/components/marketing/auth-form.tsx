@@ -140,7 +140,7 @@ export function AuthForm({
               id="auth-invite"
               name="inviteCode"
               defaultValue={initialInviteCode}
-              placeholder="FOUNDING-ACCESS"
+              placeholder="请输入邀请码"
               className="auth-input uppercase"
             />
           </div>
@@ -225,7 +225,7 @@ export function AuthForm({
               <input
                 value={oauthInviteCode}
                 onChange={(event) => setOauthInviteCode(event.target.value)}
-                placeholder="FOUNDING-ACCESS"
+                placeholder="请输入邀请码"
                 className="auth-input mt-3 w-full uppercase"
               />
               <p className="mt-2 text-[11px] leading-5 text-[var(--ink-soft)]/80">

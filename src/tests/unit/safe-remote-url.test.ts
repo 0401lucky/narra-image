@@ -1,4 +1,8 @@
-import { assertPublicHttpUrl, isPrivateAddress } from "@/lib/server/safe-remote-url";
+import {
+  assertPublicHttpUrl,
+  fetchPublicHttpUrl,
+  isPrivateAddress,
+} from "@/lib/server/safe-remote-url";
 
 describe("isPrivateAddress", () => {
   it.each([
@@ -10,7 +14,13 @@ describe("isPrivateAddress", () => {
     "169.254.169.254",
     "100.64.0.1",
     "0.0.0.0",
-  ])("拦截私网/环回/链路本地 IPv4：%s", (ip) => {
+    "192.0.2.1",
+    "198.18.0.1",
+    "198.51.100.1",
+    "203.0.113.1",
+    "224.0.0.1",
+    "255.255.255.255",
+  ])("拦截非公网 IPv4：%s", (ip) => {
     expect(isPrivateAddress(ip)).toBe(true);
   });
 
@@ -31,7 +41,14 @@ describe("isPrivateAddress", () => {
     "fc00::1234",
     "::ffff:127.0.0.1", // IPv4-mapped 点分书写
     "::ffff:7f00:1", // IPv4-mapped 十六进制书写
-  ])("拦截私网/环回 IPv6：%s", (ip) => {
+    "64:ff9b::a00:1", // NAT64 可映射到私网 IPv4
+    "100::1",
+    "2001::1",
+    "2001:db8::1",
+    "2002:a00:1::1", // 6to4 可封装私网 IPv4
+    "3fff::1",
+    "ff02::1",
+  ])("拦截非公网 IPv6：%s", (ip) => {
     expect(isPrivateAddress(ip)).toBe(true);
   });
 
@@ -45,6 +62,16 @@ describe("isPrivateAddress", () => {
   it("非法地址一律视为不安全", () => {
     expect(isPrivateAddress("not-an-ip")).toBe(true);
     expect(isPrivateAddress("")).toBe(true);
+  });
+});
+
+describe("fetchPublicHttpUrl", () => {
+  it("连接前拒绝解析到私网的地址", async () => {
+    await expect(
+      fetchPublicHttpUrl("http://rebind.example.com/image.png", {
+        lookupAddresses: async () => ["127.0.0.1"],
+      }),
+    ).rejects.toThrow("不允许访问内网地址");
   });
 });
 
@@ -93,6 +120,17 @@ describe("assertPublicHttpUrl", () => {
       }),
     ).rejects.toThrow("不允许访问内网地址");
   });
+
+  it.each(["localhost", "service.local", "api.internal", "router.home.arpa"])(
+    "拒绝本地域名：%s",
+    async (hostname) => {
+      await expect(
+        assertPublicHttpUrl(`http://${hostname}/x.png`, {
+          lookupAddresses: publicLookup,
+        }),
+      ).rejects.toThrow("不允许访问内网地址");
+    },
+  );
 
   it("域名解析结果只要有一个私网地址就拒绝", async () => {
     await expect(

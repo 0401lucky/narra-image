@@ -64,14 +64,24 @@ export async function DELETE(
   if (!job) {
     return jsonError("任务不存在", 404);
   }
-  if (job.status === GenerationStatus.SUCCEEDED) {
-    return jsonError("已完成的任务不能取消", 409);
+  if (job.status !== GenerationStatus.PENDING) {
+    return jsonError(
+      job.status === GenerationStatus.PROCESSING
+        ? "任务已开始处理，无法取消"
+        : "当前任务状态无法取消",
+      409,
+    );
   }
 
   const result = await failGenerationJobAndRefund({
+    allowedStatuses: [GenerationStatus.PENDING],
     errorMessage: "用户取消生成，已退还预扣积分。",
     jobId: id,
   });
+
+  if (!result.updated) {
+    return jsonError("任务状态已变化，无法取消", 409);
+  }
 
   const updated = await db.generationJob.findFirst({
     where: { id, userId: user.id },

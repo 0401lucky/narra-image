@@ -5,11 +5,14 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"net/http"
 	"strconv"
 	"strings"
 	"time"
 )
+
+const remoteVideoMaxBytes = 128 * 1024 * 1024
 
 // VideoResult 是一次视频生成的产物，写入 GeneratedVideo。
 type VideoResult struct {
@@ -97,7 +100,13 @@ func createVideo(ctx context.Context, job GenerationJob, provider ProviderConfig
 	createCtx, cancel := context.WithTimeout(ctx, 30*time.Second)
 	defer cancel()
 
-	responseBody, err := postJSON(createCtx, endpoint(provider.BaseURL, "/videos"), provider.APIKey, body, nil)
+	responseBody, err := postJSON(
+		createCtx,
+		endpoint(provider.BaseURL, "/videos"),
+		provider,
+		body,
+		idempotencyHeaders(job.ID, "videos-create"),
+	)
 	if err != nil {
 		if job.GenerationType == "IMAGE_TO_VIDEO" {
 			return "", fmt.Errorf("图生视频暂不可用（渠道网关故障，可稍后再试或改用文生视频）：%w", err)
@@ -131,7 +140,13 @@ func generateVideoWithGenerationsEndpoint(ctx context.Context, storage *Storage,
 		body["size"] = job.Size
 	}
 
-	responseBody, err := postJSON(ctx, endpoint(provider.BaseURL, "/videos/generations"), provider.APIKey, body, nil)
+	responseBody, err := postJSON(
+		ctx,
+		endpoint(provider.BaseURL, "/videos/generations"),
+		provider,
+		body,
+		idempotencyHeaders(job.ID, "videos-generations"),
+	)
 	if err != nil {
 		return VideoResult{}, err
 	}
@@ -175,7 +190,7 @@ func pollVideo(ctx context.Context, provider ProviderConfig, videoID string, pol
 }
 
 func fetchVideoStatus(ctx context.Context, provider ProviderConfig, videoID string) (videoStatusResponse, error) {
-	body, err := getWithAuth(ctx, endpoint(provider.BaseURL, "/videos/"+videoID), provider.APIKey)
+	body, err := getWithAuth(ctx, endpoint(provider.BaseURL, "/videos/"+videoID), provider)
 	if err != nil {
 		return videoStatusResponse{}, err
 	}
@@ -198,7 +213,11 @@ func buildVideoResult(ctx context.Context, storage *Storage, job GenerationJob, 
 	// （与图片直接用渠道 URL 一致，避免把大体积视频塞进数据库）。
 	url := rawURL
 	if storage.hasObjectStorage() {
-		data, err := downloadVideo(ctx, rawURL)
+		data, err := downloadVideo(
+			ctx,
+			rawURL,
+			providerHTTPClient(job.ProviderMode != "CUSTOM"),
+		)
 		if err != nil {
 			return VideoResult{}, err
 		}
@@ -229,21 +248,39 @@ func buildVideoResult(ctx context.Context, storage *Storage, job GenerationJob, 
 }
 
 // downloadVideo 下载成品视频字节。渠道返回的是公开可访问的对象存储地址，无需鉴权。
-func downloadVideo(ctx context.Context, rawURL string) ([]byte, error) {
+func downloadVideo(ctx context.Context, rawURL string, client *http.Client) ([]byte, error) {
 	request, err := http.NewRequestWithContext(ctx, http.MethodGet, rawURL, nil)
 	if err != nil {
 		return nil, err
 	}
-	return doRequest(request)
+	response, err := client.Do(request)
+	if err != nil {
+		return nil, err
+	}
+	defer response.Body.Close()
+	if response.StatusCode < 200 || response.StatusCode >= 300 {
+		return nil, fmt.Errorf("视频下载失败：HTTP %d", response.StatusCode)
+	}
+	if response.ContentLength > remoteVideoMaxBytes {
+		return nil, errors.New("视频文件过大，无法保存")
+	}
+	data, err := io.ReadAll(io.LimitReader(response.Body, remoteVideoMaxBytes+1))
+	if err != nil {
+		return nil, err
+	}
+	if len(data) > remoteVideoMaxBytes {
+		return nil, errors.New("视频文件过大，无法保存")
+	}
+	return data, nil
 }
 
-func getWithAuth(ctx context.Context, rawURL string, apiKey string) ([]byte, error) {
+func getWithAuth(ctx context.Context, rawURL string, provider ProviderConfig) ([]byte, error) {
 	request, err := http.NewRequestWithContext(ctx, http.MethodGet, rawURL, nil)
 	if err != nil {
 		return nil, err
 	}
-	request.Header.Set("Authorization", "Bearer "+apiKey)
-	return doRequest(request)
+	request.Header.Set("Authorization", "Bearer "+provider.APIKey)
+	return doRequestWithClient(request, provider.httpClient())
 }
 
 func firstGeneratedVideoURL(response videoGenerationsResponse) string {

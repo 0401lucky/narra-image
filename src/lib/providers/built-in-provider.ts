@@ -84,7 +84,9 @@ export async function getChannelById(id: string): Promise<ResolvedChannel | null
     };
   }
 
-  const ch = await db.providerChannel.findUnique({ where: { id } });
+  const ch = await db.providerChannel.findFirst({
+    where: { id, isActive: true },
+  });
   if (!ch) return null;
 
   return {

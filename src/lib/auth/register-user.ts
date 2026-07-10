@@ -70,7 +70,7 @@ export async function registerUser(
   }
 
   const invite = inviteCode ? await deps.findInviteByCode(inviteCode) : null;
-  if (!bootstrapAdmin && (!invite || invite.usedAt)) {
+  if (!invite || invite.usedAt) {
     return {
       ok: false,
       message: "邀请码已失效",

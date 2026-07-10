@@ -7,8 +7,7 @@ const prisma = createPrismaClient({
 });
 
 async function main() {
-  const bootstrapInviteCode =
-    process.env.BOOTSTRAP_INVITE_CODE?.trim() || "FOUNDING-ACCESS";
+  const bootstrapInviteCode = process.env.BOOTSTRAP_INVITE_CODE?.trim();
 
   await prisma.benefitConfig.upsert({
     where: { scope: "default" },
@@ -19,14 +18,16 @@ async function main() {
     },
   });
 
-  await prisma.inviteCode.upsert({
-    where: { code: bootstrapInviteCode },
-    update: {},
-    create: {
-      code: bootstrapInviteCode,
-      note: "初始管理员邀请码",
-    },
-  });
+  if (bootstrapInviteCode) {
+    await prisma.inviteCode.upsert({
+      where: { code: bootstrapInviteCode },
+      update: {},
+      create: {
+        code: bootstrapInviteCode,
+        note: "初始管理员邀请码",
+      },
+    });
+  }
 
   const bootstrapAdminEmail = process.env.BOOTSTRAP_ADMIN_EMAIL?.trim();
   const bootstrapAdminPasswordHash =

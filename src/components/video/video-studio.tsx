@@ -206,8 +206,11 @@ export function VideoStudio({
 
   async function handleDownload(url: string) {
     try {
-      const proxyUrl = `/api/proxy-image?url=${encodeURIComponent(url)}`;
+      const proxyUrl = `/api/proxy-video?url=${encodeURIComponent(url)}`;
       const response = await fetch(proxyUrl);
+      if (!response.ok || !response.headers.get("content-type")?.startsWith("video/")) {
+        throw new Error("视频下载失败");
+      }
       const blob = await response.blob();
       const blobUrl = URL.createObjectURL(blob);
       const a = document.createElement("a");

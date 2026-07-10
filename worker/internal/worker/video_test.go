@@ -17,6 +17,9 @@ func TestGenerateVideoPollsUntilCompletedAndPersists(t *testing.T) {
 	server = httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch {
 		case r.Method == http.MethodPost && r.URL.Path == "/videos":
+			if got := r.Header.Get("Idempotency-Key"); got != "narra-image:job_v1:videos-create" {
+				t.Fatalf("unexpected idempotency key %q", got)
+			}
 			_ = json.NewEncoder(w).Encode(map[string]any{"id": "vid_123", "status": "queued"})
 		case r.Method == http.MethodGet && r.URL.Path == "/file.mp4":
 			w.Header().Set("Content-Type", "video/mp4")
@@ -50,7 +53,7 @@ func TestGenerateVideoPollsUntilCompletedAndPersists(t *testing.T) {
 		Prompt:         "海浪慢镜头",
 		Size:           "1280x720",
 	}
-	provider := ProviderConfig{APIKey: "test-key", BaseURL: server.URL, Model: "agnes-video-v2.0"}
+	provider := ProviderConfig{APIKey: "test-key", BaseURL: server.URL, Model: "agnes-video-v2.0", AllowPrivateNetwork: true}
 
 	result, err := generateVideo(context.Background(), storage, job, provider, time.Millisecond)
 	if err != nil {
@@ -79,6 +82,9 @@ func TestGenerateVideoFallsBackToVideoGenerationsEndpoint(t *testing.T) {
 			http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 		case r.Method == http.MethodPost && r.URL.Path == "/videos/generations":
 			sawFallback = true
+			if got := r.Header.Get("Idempotency-Key"); got != "narra-image:job_qwen:videos-generations" {
+				t.Fatalf("unexpected fallback idempotency key %q", got)
+			}
 			var body map[string]any
 			if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
 				t.Fatalf("decode fallback request: %v", err)
@@ -116,7 +122,7 @@ func TestGenerateVideoFallsBackToVideoGenerationsEndpoint(t *testing.T) {
 		DurationSeconds: sql.NullInt32{Int32: 8, Valid: true},
 		AspectRatio:     sql.NullString{String: "16:9", Valid: true},
 	}
-	provider := ProviderConfig{APIKey: "test-key", BaseURL: server.URL, Model: "qwen3.6-plus-video"}
+	provider := ProviderConfig{APIKey: "test-key", BaseURL: server.URL, Model: "qwen3.6-plus-video", AllowPrivateNetwork: true}
 
 	result, err := generateVideo(context.Background(), storage, job, provider, time.Millisecond)
 	if err != nil {
@@ -160,7 +166,7 @@ func TestGenerateVideoFallbackRespectsVersionedBaseURL(t *testing.T) {
 		Prompt:         "城市霓虹",
 		Size:           "720x1280",
 	}
-	provider := ProviderConfig{APIKey: "test-key", BaseURL: server.URL + "/v1", Model: "qwen3.6-plus-video"}
+	provider := ProviderConfig{APIKey: "test-key", BaseURL: server.URL + "/v1", Model: "qwen3.6-plus-video", AllowPrivateNetwork: true}
 
 	result, err := generateVideo(context.Background(), storage, job, provider, time.Millisecond)
 	if err != nil {
@@ -192,7 +198,7 @@ func TestGenerateVideoReturnsErrorOnFailedStatus(t *testing.T) {
 
 	storage := &Storage{cfg: Config{EnableLocalImageFallback: true}}
 	job := GenerationJob{ID: "job_e", GenerationType: "TEXT_TO_VIDEO", Model: "agnes-video-v2.0", Prompt: "x", Size: "1280x720"}
-	provider := ProviderConfig{APIKey: "k", BaseURL: server.URL, Model: "agnes-video-v2.0"}
+	provider := ProviderConfig{APIKey: "k", BaseURL: server.URL, Model: "agnes-video-v2.0", AllowPrivateNetwork: true}
 
 	_, err := generateVideo(context.Background(), storage, job, provider, time.Millisecond)
 	if err == nil {
@@ -222,7 +228,7 @@ func TestImageToVideoCreateFailureReturnsFriendlyError(t *testing.T) {
 		Size:            "1280x720",
 		SourceImageURLs: []string{"https://example.com/apple.png"},
 	}
-	provider := ProviderConfig{APIKey: "k", BaseURL: server.URL, Model: "agnes-video-v2.0"}
+	provider := ProviderConfig{APIKey: "k", BaseURL: server.URL, Model: "agnes-video-v2.0", AllowPrivateNetwork: true}
 
 	_, err := generateVideo(context.Background(), storage, job, provider, time.Millisecond)
 	if err == nil {

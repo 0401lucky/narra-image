@@ -473,6 +473,9 @@ export function GeneratorStudio({
     try {
       const proxyUrl = `/api/proxy-image?url=${encodeURIComponent(url)}`;
       const response = await fetch(proxyUrl);
+      if (!response.ok || !response.headers.get("content-type")?.startsWith("image/")) {
+        throw new Error("图片下载失败");
+      }
       const blob = await response.blob();
       const blobUrl = URL.createObjectURL(blob);
       const a = document.createElement("a");

@@ -61,6 +61,7 @@ describe("生成任务失败退款", () => {
 
     await expect(
       failGenerationJobAndRefund({
+        allowedStatuses: [GenerationStatus.PENDING],
         errorMessage: "渠道超时",
         jobId: "job_1",
       }),
@@ -73,7 +74,7 @@ describe("生成任务失败退款", () => {
         creditsSpent: 20,
         id: "job_1",
         status: {
-          not: GenerationStatus.SUCCEEDED,
+          in: [GenerationStatus.PENDING],
         },
       },
       data: {
@@ -113,9 +114,33 @@ describe("生成任务失败退款", () => {
     expect(mockUpdateUser).not.toHaveBeenCalled();
   });
 
+  it("读取后任务状态变化时不会退款", async () => {
+    mockFindUnique.mockResolvedValue({
+      creditsSpent: 20,
+      id: "job_raced",
+      status: GenerationStatus.PENDING,
+      userId: "user_1",
+    });
+    mockUpdateMany.mockResolvedValue({ count: 0 });
+
+    await expect(
+      failGenerationJobAndRefund({
+        allowedStatuses: [GenerationStatus.PENDING],
+        errorMessage: "用户取消",
+        jobId: "job_raced",
+      }),
+    ).resolves.toEqual({
+      refundedCredits: 0,
+      updated: false,
+    });
+    expect(mockUpdateUser).not.toHaveBeenCalled();
+  });
+
   it("只清理超过宽限时间的 pending 任务", async () => {
     const now = new Date("2026-05-05T12:00:00.000Z");
-    mockFindMany.mockResolvedValue([{ id: "job_stale" }]);
+    mockFindMany.mockResolvedValue([
+      { id: "job_stale", status: GenerationStatus.PENDING },
+    ]);
     mockFindUnique.mockResolvedValue({
       creditsSpent: 20,
       id: "job_stale",
@@ -155,6 +180,7 @@ describe("生成任务失败退款", () => {
       },
       select: {
         id: true,
+        status: true,
       },
       orderBy: {
         createdAt: "asc",

@@ -111,8 +111,8 @@ describe("注册流程", () => {
     expect(result.user.role).toBe("admin");
   });
 
-  it("首个管理员邮箱注册时可以跳过邀请码", async () => {
-    const markInviteUsed = vi.fn(async () => undefined);
+  it("管理员引导邮箱也必须提供有效邀请码", async () => {
+    const createUser = vi.fn();
 
     const result = await registerUser(
       {
@@ -126,17 +126,15 @@ describe("注册流程", () => {
         findUserByEmail: async () => null,
         findInviteByCode: async () => null,
         hashPassword: async () => "hashed-password",
-        createUser: async (data) => ({ id: "admin_2", ...data }),
-        markInviteUsed,
+        createUser,
+        markInviteUsed: async () => undefined,
       },
     );
 
-    expect(result.ok).toBe(true);
-    if (!result.ok) {
-      throw new Error("expected success");
-    }
-
-    expect(result.user.role).toBe("admin");
-    expect(markInviteUsed).not.toHaveBeenCalled();
+    expect(result).toEqual({
+      message: "邀请码已失效",
+      ok: false,
+    });
+    expect(createUser).not.toHaveBeenCalled();
   });
 });

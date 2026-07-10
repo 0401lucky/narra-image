@@ -5,7 +5,6 @@ const {
   mockFetchOpenAICompatibleModelIds,
   mockFindFirst,
   mockFindUnique,
-  mockGetBuiltInProviderConfig,
   mockRequireAdminRecord,
   mockRequireCurrentUserRecord,
 } = vi.hoisted(() => ({
@@ -13,7 +12,6 @@ const {
   mockFetchOpenAICompatibleModelIds: vi.fn(),
   mockFindFirst: vi.fn(),
   mockFindUnique: vi.fn(),
-  mockGetBuiltInProviderConfig: vi.fn(),
   mockRequireAdminRecord: vi.fn(),
   mockRequireCurrentUserRecord: vi.fn(),
 }));
@@ -30,11 +28,10 @@ vi.mock("@/lib/db", () => ({
 }));
 
 vi.mock("@/lib/env", () => ({
-  getEnv: () => ({ AUTH_SECRET: "unit-test-secret", BUILTIN_PROVIDER_API_KEY: "" }),
-}));
-
-vi.mock("@/lib/providers/built-in-provider", () => ({
-  getBuiltInProviderConfig: mockGetBuiltInProviderConfig,
+  getEnv: () => ({
+    AUTH_SECRET: "unit-test-secret",
+    BUILTIN_PROVIDER_API_KEY: "site-secret-key",
+  }),
 }));
 
 vi.mock("@/lib/providers/model-catalog", () => ({
@@ -59,15 +56,9 @@ describe("模型探测接口", () => {
     mockDecryptProviderSecret.mockResolvedValue("decrypted-channel-key");
     mockFetchOpenAICompatibleModelIds.mockResolvedValue(["qwen-image", "qwen-video"]);
     mockFindFirst.mockResolvedValue(null);
-    mockFindUnique.mockResolvedValue({ apiKeyEncrypted: "encrypted-channel-key" });
-    mockGetBuiltInProviderConfig.mockResolvedValue({
-      apiKey: "",
-      baseUrl: "https://builtin.example.com/v1",
-      creditCost: 5,
-      model: "gpt-image-2",
-      models: [],
-      name: "内置渠道",
-      videoCreditCost: 20,
+    mockFindUnique.mockResolvedValue({
+      apiKeyEncrypted: "encrypted-channel-key",
+      baseUrl: "https://saved-channel.example.com/v1",
     });
     mockRequireAdminRecord.mockResolvedValue({ id: "admin_1" });
     mockRequireCurrentUserRecord.mockResolvedValue({ id: "admin_1" });
@@ -90,7 +81,7 @@ describe("模型探测接口", () => {
     expect(mockRequireAdminRecord).toHaveBeenCalled();
     expect(mockFindUnique).toHaveBeenCalledWith({
       where: { id: "channel_1" },
-      select: { apiKeyEncrypted: true },
+      select: { apiKeyEncrypted: true, baseUrl: true },
     });
     expect(mockDecryptProviderSecret).toHaveBeenCalledWith(
       "encrypted-channel-key",
@@ -98,11 +89,28 @@ describe("模型探测接口", () => {
     );
     expect(mockFetchOpenAICompatibleModelIds).toHaveBeenCalledWith({
       apiKey: "decrypted-channel-key",
-      baseUrl: "https://provider.example.com/v1",
+      baseUrl: "https://saved-channel.example.com/v1",
     });
     expect(payload.data.models).toEqual([
       { id: "qwen-image", imageLikely: true },
       { id: "qwen-video", imageLikely: false },
     ]);
+  });
+
+  it("普通用户没有自有密钥时不会回退使用站点内置密钥", async () => {
+    const response = await POST(
+      new Request("http://localhost/api/provider-models/probe", {
+        method: "POST",
+        body: JSON.stringify({
+          baseUrl: "https://attacker.example.com/v1",
+        }),
+      }),
+    );
+
+    const payload = await response.json();
+
+    expect(response.status).toBe(400);
+    expect(payload.error).toContain("自己的 API Key");
+    expect(mockFetchOpenAICompatibleModelIds).not.toHaveBeenCalled();
   });
 });

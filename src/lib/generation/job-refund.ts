@@ -8,8 +8,11 @@ const STALE_PENDING_JOB_AGE_MS = 30 * 60 * 1000;
 const STALE_PENDING_MESSAGE = "生成任务超时未完成，已自动退还预扣积分。";
 
 type FailGenerationJobInput = {
+  allowedStatuses?: GenerationStatus[];
+  createdBefore?: Date;
   errorMessage: string;
   jobId: string;
+  lockedBefore?: Date;
 };
 
 type CleanupStalePendingJobsInput = {
@@ -19,8 +22,11 @@ type CleanupStalePendingJobsInput = {
 };
 
 export async function failGenerationJobAndRefund({
+  allowedStatuses,
+  createdBefore,
   errorMessage,
   jobId,
+  lockedBefore,
 }: FailGenerationJobInput) {
   return db.$transaction(async (tx) => {
     const job = await tx.generationJob.findUnique({
@@ -33,7 +39,13 @@ export async function failGenerationJobAndRefund({
       },
     });
 
-    if (!job || job.status === GenerationStatus.SUCCEEDED) {
+    const statuses = allowedStatuses ?? [
+      GenerationStatus.PENDING,
+      GenerationStatus.PROCESSING,
+      GenerationStatus.FAILED,
+    ];
+
+    if (!job || !statuses.includes(job.status)) {
       return {
         refundedCredits: 0,
         updated: false,
@@ -44,9 +56,11 @@ export async function failGenerationJobAndRefund({
     const updated = await tx.generationJob.updateMany({
       where: {
         creditsSpent: job.creditsSpent,
+        ...(createdBefore ? { createdAt: { lt: createdBefore } } : {}),
         id: job.id,
+        ...(lockedBefore ? { lockedAt: { lt: lockedBefore } } : {}),
         status: {
-          not: GenerationStatus.SUCCEEDED,
+          in: statuses,
         },
       },
       data: {
@@ -107,6 +121,7 @@ export async function failStalePendingGenerationJobs({
     },
     select: {
       id: true,
+      status: true,
     },
     orderBy: {
       createdAt: "asc",
@@ -117,6 +132,10 @@ export async function failStalePendingGenerationJobs({
   const results = await Promise.all(
     staleJobs.map((job) =>
       failGenerationJobAndRefund({
+        allowedStatuses: [job.status],
+        ...(job.status === GenerationStatus.PENDING
+          ? { createdBefore: cutoff }
+          : { lockedBefore: cutoff }),
         errorMessage: STALE_PENDING_MESSAGE,
         jobId: job.id,
       }),

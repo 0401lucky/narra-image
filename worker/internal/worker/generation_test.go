@@ -24,6 +24,9 @@ func TestGenerateWithImageGenerationOmitsResponseFormat(t *testing.T) {
 		if _, ok := body["response_format"]; ok {
 			t.Fatalf("expected response_format to be omitted, got %#v", body["response_format"])
 		}
+		if got := r.Header.Get("Idempotency-Key"); got != "narra-image:job_image_1:images-generations" {
+			t.Fatalf("unexpected idempotency key %q", got)
+		}
 		_ = json.NewEncoder(w).Encode(map[string]any{
 			"data": []map[string]any{{"b64_json": "Y2F0"}},
 		})
@@ -31,16 +34,64 @@ func TestGenerateWithImageGenerationOmitsResponseFormat(t *testing.T) {
 	defer server.Close()
 
 	payload, err := generateWithImageGeneration(context.Background(), GenerationJob{
+		ID:     "job_image_1",
 		Count:  1,
 		Model:  "gpt-image-2",
 		Prompt: "生成一只小猫",
 		Size:   "auto",
-	}, ProviderConfig{APIKey: "test-key", BaseURL: server.URL})
+	}, ProviderConfig{APIKey: "test-key", BaseURL: server.URL, AllowPrivateNetwork: true})
 	if err != nil {
 		t.Fatalf("generateWithImageGeneration returned error: %v", err)
 	}
 	if len(payload.Data) != 1 || payload.Data[0]["b64_json"] != "Y2F0" {
 		t.Fatalf("unexpected payload: %#v", payload.Data)
+	}
+}
+
+func TestCustomProviderRejectsLoopbackAddress(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		http.Error(w, "should not be reached", http.StatusInternalServerError)
+	}))
+	defer server.Close()
+
+	_, err := generateWithImageGeneration(context.Background(), GenerationJob{
+		ID:     "job_custom_loopback",
+		Count:  1,
+		Model:  "gpt-image-2",
+		Prompt: "测试自定义渠道",
+		Size:   "auto",
+	}, ProviderConfig{APIKey: "test-key", BaseURL: server.URL})
+	if err == nil || !strings.Contains(err.Error(), "非公网") {
+		t.Fatalf("expected loopback provider rejection, got %v", err)
+	}
+}
+
+func TestAppendSourceImageRejectsTotalLimit(t *testing.T) {
+	_, _, err := appendSourceImage(nil, sourceImagesTotalMaxBytes-1, SourceImage{
+		Data: []byte{0x01, 0x02},
+	})
+	if err == nil || !strings.Contains(err.Error(), "总大小") {
+		t.Fatalf("expected total source image limit error, got %v", err)
+	}
+}
+
+func TestProviderErrorBodyIsTruncated(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		w.WriteHeader(http.StatusBadGateway)
+		_, _ = w.Write([]byte(strings.Repeat("x", providerErrorBodyMaxBytes*2)))
+	}))
+	defer server.Close()
+
+	request, err := http.NewRequest(http.MethodGet, server.URL, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, err = doRequestWithClient(request, server.Client())
+	if err == nil || !strings.Contains(err.Error(), "已截断") {
+		t.Fatalf("expected truncated provider error, got %v", err)
+	}
+	if len(err.Error()) > providerErrorBodyMaxBytes+256 {
+		t.Fatalf("provider error is still too large: %d", len(err.Error()))
 	}
 }
 
@@ -78,6 +129,9 @@ func TestGenerateWithImageEditOmitsResponseFormat(t *testing.T) {
 		if imageContentType != "image/png" {
 			t.Fatalf("expected image part Content-Type image/png, got %q", imageContentType)
 		}
+		if got := r.Header.Get("Idempotency-Key"); got != "narra-image:job_edit_1:images-edits" {
+			t.Fatalf("unexpected idempotency key %q", got)
+		}
 		_ = json.NewEncoder(w).Encode(map[string]any{
 			"data": []map[string]any{{"b64_json": "Y2F0"}},
 		})
@@ -87,11 +141,12 @@ func TestGenerateWithImageEditOmitsResponseFormat(t *testing.T) {
 	payload, err := generateWithImageEdit(
 		context.Background(),
 		GenerationJob{
+			ID:     "job_edit_1",
 			Model:  "gpt-image-2",
 			Prompt: "按参考图生成小猫",
 			Size:   "auto",
 		},
-		ProviderConfig{APIKey: "test-key", BaseURL: server.URL},
+		ProviderConfig{APIKey: "test-key", BaseURL: server.URL, AllowPrivateNetwork: true},
 		[]SourceImage{{
 			Data:     []byte("fake-image"),
 			FileName: "source.png",
@@ -160,7 +215,7 @@ func TestLoadSourceImageSniffsOctetStreamResponse(t *testing.T) {
 	}))
 	defer server.Close()
 
-	image, err := loadSourceImage(context.Background(), server.URL+"/source.bin", 0)
+	image, err := loadSourceImageWithClient(context.Background(), server.Client(), server.URL+"/source.bin", 0)
 	if err != nil {
 		t.Fatalf("loadSourceImage returned error: %v", err)
 	}
@@ -169,6 +224,46 @@ func TestLoadSourceImageSniffsOctetStreamResponse(t *testing.T) {
 	}
 	if image.FileName != "source.bin" {
 		t.Fatalf("expected original filename, got %q", image.FileName)
+	}
+}
+
+func TestLoadSourceImageRejectsPrivateAddress(t *testing.T) {
+	_, err := loadSourceImage(context.Background(), "http://127.0.0.1/source.png", 0)
+	if err == nil || !strings.Contains(err.Error(), "内网") {
+		t.Fatalf("expected private address rejection, got %v", err)
+	}
+}
+
+func TestLoadSourceImageRejectsNonImageContent(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "image/png")
+		_, _ = w.Write([]byte("not an image"))
+	}))
+	defer server.Close()
+
+	_, err := loadSourceImageWithClient(context.Background(), server.Client(), server.URL+"/source.png", 0)
+	if err == nil || !strings.Contains(err.Error(), "有效图片") {
+		t.Fatalf("expected invalid image rejection, got %v", err)
+	}
+}
+
+func TestLoadSourceImageRejectsOversizedResponse(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Length", "52428801")
+		w.WriteHeader(http.StatusOK)
+	}))
+	defer server.Close()
+
+	_, err := loadSourceImageWithClient(context.Background(), server.Client(), server.URL+"/large.png", 0)
+	if err == nil || !strings.Contains(err.Error(), "50MB") {
+		t.Fatalf("expected oversized image rejection, got %v", err)
+	}
+}
+
+func TestParseDataURLRejectsNonImageContent(t *testing.T) {
+	_, err := parseDataURL("data:image/png;base64,bm90IGFuIGltYWdl", 0)
+	if err == nil || !strings.Contains(err.Error(), "有效图片") {
+		t.Fatalf("expected invalid data URL image rejection, got %v", err)
 	}
 }
 

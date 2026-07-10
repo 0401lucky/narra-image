@@ -48,7 +48,7 @@ pnpm db:generate
 pnpm db:push
 ```
 
-5. 初始化邀请码
+5. 初始化邀请码（先在 `.env` 显式设置 `BOOTSTRAP_INVITE_CODE`）
 
 ```bash
 pnpm db:seed
@@ -120,7 +120,7 @@ docker compose up --build -d
 
 容器启动时会自动准备数据库：新空库会先创建当前 schema，旧库会接管迁移历史，然后应用仓库内的新增迁移。
 当前生产启动流程不会主动执行 `seed`，避免在低内存环境里因为 `tsx prisma/seed.ts` 触发额外内存峰值。
-初始邀请码会在注册接口里自动补入数据库，管理员邮箱也支持首次免邀请码注册。
+仅在显式配置 `BOOTSTRAP_INVITE_CODE` 时，注册接口才会创建初始邀请码；管理员引导邮箱同样必须使用有效邀请码注册。
 
 ## 关于模型拉取
 

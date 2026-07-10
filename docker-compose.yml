@@ -6,9 +6,9 @@ services:
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-narra_image}
       POSTGRES_USER: ${POSTGRES_USER:-narra}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-narra_password}
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:?请在 .env 中设置 POSTGRES_PASSWORD}"
     ports:
-      - "${POSTGRES_PORT:-5432}:5432"
+      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -29,8 +29,8 @@ services:
     environment:
       NODE_ENV: production
       PORT: 3000
-      DATABASE_URL: postgresql://${POSTGRES_USER:-narra}:${POSTGRES_PASSWORD:-narra_password}@db:5432/${POSTGRES_DB:-narra_image}?schema=public
-      AUTH_SECRET: ${AUTH_SECRET:-replace-this-secret}
+      DATABASE_URL: "postgresql://${POSTGRES_USER:-narra}:${POSTGRES_PASSWORD:?请在 .env 中设置 POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-narra_image}?schema=public"
+      AUTH_SECRET: "${AUTH_SECRET:?请在 .env 中设置 AUTH_SECRET}"
       APP_URL: ${APP_URL:-http://localhost:3000}
       BUILTIN_PROVIDER_BASE_URL: ${BUILTIN_PROVIDER_BASE_URL:-}
       BUILTIN_PROVIDER_API_KEY: ${BUILTIN_PROVIDER_API_KEY:-}
@@ -47,8 +47,8 @@ services:
       ENABLE_EMBEDDED_WORKER: "false"
       EXTERNAL_GENERATION_WAIT_TIMEOUT_SECONDS: ${EXTERNAL_GENERATION_WAIT_TIMEOUT_SECONDS:-900}
       EXTERNAL_GENERATION_POLL_INTERVAL_MS: ${EXTERNAL_GENERATION_POLL_INTERVAL_MS:-1000}
-      BOOTSTRAP_ADMIN_EMAIL: ${BOOTSTRAP_ADMIN_EMAIL:-admin@example.com}
-      BOOTSTRAP_INVITE_CODE: ${BOOTSTRAP_INVITE_CODE:-FOUNDING-ACCESS}
+      BOOTSTRAP_ADMIN_EMAIL: "${BOOTSTRAP_ADMIN_EMAIL:-}"
+      BOOTSTRAP_INVITE_CODE: "${BOOTSTRAP_INVITE_CODE:-}"
       BOOTSTRAP_ADMIN_PASSWORD_HASH: ${BOOTSTRAP_ADMIN_PASSWORD_HASH:-}
     ports:
       - "${APP_PORT:-3000}:3000"
@@ -63,8 +63,8 @@ services:
       db:
         condition: service_healthy
     environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER:-narra}:${POSTGRES_PASSWORD:-narra_password}@db:5432/${POSTGRES_DB:-narra_image}?schema=public
-      AUTH_SECRET: ${AUTH_SECRET:-replace-this-secret}
+      DATABASE_URL: "postgresql://${POSTGRES_USER:-narra}:${POSTGRES_PASSWORD:?请在 .env 中设置 POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-narra_image}?schema=public"
+      AUTH_SECRET: "${AUTH_SECRET:?请在 .env 中设置 AUTH_SECRET}"
       APP_URL: ${APP_URL:-http://localhost:3000}
       BUILTIN_PROVIDER_BASE_URL: ${BUILTIN_PROVIDER_BASE_URL:-}
       BUILTIN_PROVIDER_API_KEY: ${BUILTIN_PROVIDER_API_KEY:-}

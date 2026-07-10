@@ -1,6 +1,9 @@
 export async function downloadImage(url: string, filenamePrefix = "narra-work") {
   try {
     const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error("图片下载失败");
+    }
     const blob = await response.blob();
     const blobUrl = URL.createObjectURL(blob);
     const link = document.createElement("a");

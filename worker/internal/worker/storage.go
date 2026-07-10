@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"io"
 	"mime"
+	"net"
 	"net/http"
 	"net/url"
 	"path"
@@ -24,6 +25,8 @@ import (
 
 const probeMaxBytes = 64 * 1024
 const remoteImageMaxBytes = 50 * 1024 * 1024
+const sourceImagesTotalMaxBytes = 32 * 1024 * 1024
+const referenceImageMaxRedirects = 5
 
 type Storage struct {
 	client *s3.Client
@@ -101,8 +104,13 @@ func (s *Storage) PersistImage(ctx context.Context, userID string, data []byte, 
 	return "", errors.New("当前没有可用的图片存储配置")
 }
 
-func (s *Storage) PersistImageFromURL(ctx context.Context, userID string, rawURL string) (PersistedRemoteImage, error) {
-	image, err := downloadRemoteImage(ctx, rawURL)
+func (s *Storage) PersistImageFromURL(
+	ctx context.Context,
+	userID string,
+	rawURL string,
+	client *http.Client,
+) (PersistedRemoteImage, error) {
+	image, err := downloadRemoteImage(ctx, rawURL, client)
 	if err != nil {
 		return PersistedRemoteImage{}, err
 	}
@@ -148,20 +156,44 @@ func (s *Storage) hasObjectStorage() bool {
 
 func loadSourceImages(ctx context.Context, urls []string) ([]SourceImage, error) {
 	images := make([]SourceImage, 0, len(urls))
+	totalBytes := 0
 	for index, rawURL := range urls {
 		image, err := loadSourceImage(ctx, rawURL, index)
 		if err != nil {
 			return nil, err
 		}
-		images = append(images, image)
+		images, totalBytes, err = appendSourceImage(images, totalBytes, image)
+		if err != nil {
+			return nil, err
+		}
 	}
 	return images, nil
+}
+
+func appendSourceImage(
+	images []SourceImage,
+	totalBytes int,
+	image SourceImage,
+) ([]SourceImage, int, error) {
+	nextTotal := totalBytes + len(image.Data)
+	if nextTotal > sourceImagesTotalMaxBytes {
+		return nil, totalBytes, errors.New("参考图总大小超过 32MB")
+	}
+	return append(images, image), nextTotal, nil
 }
 
 func loadSourceImage(ctx context.Context, rawURL string, index int) (SourceImage, error) {
 	if strings.HasPrefix(rawURL, "data:") {
 		return parseDataURL(rawURL, index)
 	}
+	if err := validateReferenceURL(rawURL); err != nil {
+		return SourceImage{}, err
+	}
+
+	return loadSourceImageWithClient(ctx, newReferenceImageHTTPClient(), rawURL, index)
+}
+
+func loadSourceImageWithClient(ctx context.Context, client *http.Client, rawURL string, index int) (SourceImage, error) {
 
 	reqCtx, cancel := context.WithTimeout(ctx, 30*time.Second)
 	defer cancel()
@@ -170,7 +202,7 @@ func loadSourceImage(ctx context.Context, rawURL string, index int) (SourceImage
 	if err != nil {
 		return SourceImage{}, err
 	}
-	response, err := http.DefaultClient.Do(request)
+	response, err := client.Do(request)
 	if err != nil {
 		return SourceImage{}, err
 	}
@@ -180,11 +212,21 @@ func loadSourceImage(ctx context.Context, rawURL string, index int) (SourceImage
 		return SourceImage{}, fmt.Errorf("参考图下载失败：HTTP %d", response.StatusCode)
 	}
 
-	data, err := io.ReadAll(response.Body)
+	if response.ContentLength > remoteImageMaxBytes {
+		return SourceImage{}, errors.New("参考图过大，最大允许 50MB")
+	}
+
+	data, err := io.ReadAll(io.LimitReader(response.Body, remoteImageMaxBytes+1))
 	if err != nil {
 		return SourceImage{}, err
 	}
-	mimeType := imageMimeType(response.Header.Get("content-type"), data)
+	if len(data) > remoteImageMaxBytes {
+		return SourceImage{}, errors.New("参考图过大，最大允许 50MB")
+	}
+	mimeType, err := validatedImageMimeType(response.Header.Get("content-type"), data)
+	if err != nil {
+		return SourceImage{}, err
+	}
 
 	return SourceImage{
 		Data:     data,
@@ -193,7 +235,7 @@ func loadSourceImage(ctx context.Context, rawURL string, index int) (SourceImage
 	}, nil
 }
 
-func downloadRemoteImage(ctx context.Context, rawURL string) (SourceImage, error) {
+func downloadRemoteImage(ctx context.Context, rawURL string, client *http.Client) (SourceImage, error) {
 	if strings.HasPrefix(rawURL, "data:") {
 		return parseDataURL(rawURL, 0)
 	}
@@ -205,7 +247,7 @@ func downloadRemoteImage(ctx context.Context, rawURL string) (SourceImage, error
 	if err != nil {
 		return SourceImage{}, err
 	}
-	response, err := http.DefaultClient.Do(request)
+	response, err := client.Do(request)
 	if err != nil {
 		return SourceImage{}, err
 	}
@@ -227,7 +269,10 @@ func downloadRemoteImage(ctx context.Context, rawURL string) (SourceImage, error
 		return SourceImage{}, errors.New("远程图片过大，无法保存")
 	}
 
-	mimeType := imageMimeType(response.Header.Get("content-type"), data)
+	mimeType, err := validatedImageMimeType(response.Header.Get("content-type"), data)
+	if err != nil {
+		return SourceImage{}, err
+	}
 	return SourceImage{
 		Data:     data,
 		FileName: sourceFileName(rawURL, mimeType, 0),
@@ -247,18 +292,111 @@ func parseDataURL(rawURL string, index int) (SourceImage, error) {
 	if mimeType == "" {
 		mimeType = "image/png"
 	}
+	if !strings.Contains(strings.ToLower(header), ";base64") {
+		return SourceImage{}, errors.New("参考图 data URL 必须使用 base64 编码")
+	}
+	if base64.StdEncoding.DecodedLen(len(payload)) > remoteImageMaxBytes {
+		return SourceImage{}, errors.New("参考图过大，最大允许 50MB")
+	}
 
 	data, err := base64.StdEncoding.DecodeString(payload)
 	if err != nil {
 		return SourceImage{}, err
 	}
-	mimeType = imageMimeType(mimeType, data)
+	if len(data) > remoteImageMaxBytes {
+		return SourceImage{}, errors.New("参考图过大，最大允许 50MB")
+	}
+	mimeType, err = validatedImageMimeType(mimeType, data)
+	if err != nil {
+		return SourceImage{}, err
+	}
 
 	return SourceImage{
 		Data:     data,
 		FileName: fmt.Sprintf("source-%d.%s", index+1, extensionFromMime(mimeType)),
 		MimeType: mimeType,
 	}, nil
+}
+
+func newReferenceImageHTTPClient() *http.Client {
+	dialer := &net.Dialer{Timeout: 10 * time.Second}
+	transport := &http.Transport{
+		DialContext: func(ctx context.Context, network string, address string) (net.Conn, error) {
+			host, port, err := net.SplitHostPort(address)
+			if err != nil {
+				return nil, err
+			}
+			ips, err := net.DefaultResolver.LookupIP(ctx, "ip", host)
+			if err != nil {
+				return nil, err
+			}
+			for _, ip := range ips {
+				if !isPublicReferenceIP(ip) {
+					continue
+				}
+				return dialer.DialContext(ctx, network, net.JoinHostPort(ip.String(), port))
+			}
+			return nil, errors.New("参考图地址解析到非公网 IP")
+		},
+	}
+
+	return &http.Client{
+		Transport: transport,
+		CheckRedirect: func(request *http.Request, via []*http.Request) error {
+			if len(via) >= referenceImageMaxRedirects {
+				return errors.New("参考图重定向次数过多")
+			}
+			return validateReferenceURL(request.URL.String())
+		},
+	}
+}
+
+func providerHTTPClient(allowPrivateNetwork bool) *http.Client {
+	if allowPrivateNetwork {
+		return http.DefaultClient
+	}
+	return newReferenceImageHTTPClient()
+}
+
+func validateReferenceURL(rawURL string) error {
+	parsed, err := url.Parse(rawURL)
+	if err != nil {
+		return errors.New("参考图 URL 格式无效")
+	}
+	if parsed.Scheme != "http" && parsed.Scheme != "https" {
+		return errors.New("参考图 URL 仅支持 http 或 https")
+	}
+	if parsed.Hostname() == "" || parsed.User != nil {
+		return errors.New("参考图 URL 地址无效")
+	}
+	if ip := net.ParseIP(parsed.Hostname()); ip != nil && !isPublicReferenceIP(ip) {
+		return errors.New("参考图 URL 不允许访问内网地址")
+	}
+	return nil
+}
+
+func isPublicReferenceIP(ip net.IP) bool {
+	if ip == nil || !ip.IsGlobalUnicast() || ip.IsPrivate() || ip.IsLoopback() ||
+		ip.IsLinkLocalUnicast() || ip.IsLinkLocalMulticast() || ip.IsUnspecified() {
+		return false
+	}
+	// Go 的 IsPrivate 不包含共享地址空间 100.64.0.0/10。
+	sharedAddressSpace := &net.IPNet{IP: net.IPv4(100, 64, 0, 0), Mask: net.CIDRMask(10, 32)}
+	return !sharedAddressSpace.Contains(ip)
+}
+
+func validatedImageMimeType(headerValue string, data []byte) (string, error) {
+	detected := http.DetectContentType(data)
+	mediaType, _, err := mime.ParseMediaType(detected)
+	if err != nil || !strings.HasPrefix(mediaType, "image/") {
+		return "", errors.New("参考图内容不是有效图片")
+	}
+
+	headerType, _, headerErr := mime.ParseMediaType(headerValue)
+	if headerErr == nil && strings.HasPrefix(headerType, "image/") && headerType != mediaType {
+		return "", errors.New("参考图 MIME 类型与内容不一致")
+	}
+	return mediaType, nil
 }
 
 func fetchAndProbeDimensions(ctx context.Context, rawURL string) *ImageDimensions {

@@ -14,8 +14,17 @@ import { decryptProviderSecret, encryptProviderSecret } from "@/lib/providers/pr
 import { requireTurnstile } from "@/lib/auth/turnstile";
 import { requireCurrentUserRecord } from "@/lib/server/current-user";
 import { getErrorMessage, jsonError, jsonOk } from "@/lib/server/http";
+import { assertPublicHttpUrl } from "@/lib/server/safe-remote-url";
 import { persistGeneratedImage } from "@/lib/storage/persist-generated-image";
 import { failGenerationJobAndRefund } from "@/lib/generation/job-refund";
+
+async function assertGenerationPublicHttpUrl(url: string, fieldName: string) {
+  try {
+    await assertPublicHttpUrl(url);
+  } catch {
+    throw new Error(`${fieldName}仅支持公网 HTTP(S) 地址`);
+  }
+}
 
 export async function POST(request: Request) {
   let jobId: string | null = null;
@@ -94,6 +103,30 @@ export async function POST(request: Request) {
       customProviderModels = saved.models;
     }
 
+    // 此处做入队前校验；Worker 仍需对实际请求和重定向目标重复校验。
+    const urlChecks = body.imageUrls.map((url) =>
+      assertGenerationPublicHttpUrl(url, "参考图 URL")
+    );
+    if (body.providerMode === "custom" && customProvider) {
+      urlChecks.push(
+        assertGenerationPublicHttpUrl(customProvider.baseUrl, "自填渠道 Base URL"),
+      );
+    }
+    await Promise.all(urlChecks);
+
+    const inputConversationId = body.conversationId as string | undefined;
+    let conversationToBind: string | null = null;
+    if (inputConversationId) {
+      const owned = await db.conversation.findFirst({
+        where: { id: inputConversationId, userId: user.id },
+        select: { id: true, generations: { select: { id: true }, take: 1 } },
+      });
+      if (!owned) {
+        return jsonError("会话不存在或不属于当前用户", 400);
+      }
+      conversationToBind = owned.id;
+    }
+
     const customProviderApiKeyEncrypted = customProvider
       ? await encryptProviderSecret(customProvider.apiKey, env.AUTH_SECRET)
       : null;
@@ -119,19 +152,6 @@ export async function POST(request: Request) {
 
     // 创建 PENDING 任务并预扣积分。模型调用转交给 Go Worker，
     // 让请求链路保持短平快，也避免 Next 进程重启导致后台生成丢失。
-    const inputConversationId = body.conversationId as string | undefined;
-    let conversationToBind: string | null = null;
-    if (inputConversationId) {
-      const owned = await db.conversation.findFirst({
-        where: { id: inputConversationId, userId: user.id },
-        select: { id: true, generations: { select: { id: true }, take: 1 } },
-      });
-      if (!owned) {
-        return jsonError("会话不存在或不属于当前用户", 400);
-      }
-      conversationToBind = owned.id;
-    }
-
     const job = await db.$transaction(async (tx) => {
       const created = await tx.generationJob.create({
         data: {

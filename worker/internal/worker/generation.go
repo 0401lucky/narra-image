@@ -18,9 +18,17 @@ import (
 )
 
 type ProviderConfig struct {
-	APIKey  string
-	BaseURL string
-	Model   string
+	APIKey              string
+	BaseURL             string
+	Model               string
+	AllowPrivateNetwork bool
+}
+
+func (provider ProviderConfig) httpClient() *http.Client {
+	if provider.AllowPrivateNetwork {
+		return http.DefaultClient
+	}
+	return newReferenceImageHTTPClient()
 }
 
 type GeneratedImage struct {
@@ -32,6 +40,10 @@ type GeneratedImage struct {
 type imagePayload struct {
 	Data []map[string]any `json:"data"`
 }
+
+const providerResponseMaxBytes = 128 * 1024 * 1024
+const providerErrorBodyMaxBytes = 8 * 1024
+const generationErrorMessageMaxBytes = 2 * 1024
 
 func generateImages(ctx context.Context, storage *Storage, job GenerationJob, provider ProviderConfig) ([]GeneratedImage, error) {
 	if strings.TrimSpace(job.Model) == "" {
@@ -94,7 +106,13 @@ func generateWithImageGeneration(ctx context.Context, job GenerationJob, provide
 		body["seed"] = job.Seed.Int32
 	}
 
-	responseBody, err := postJSON(ctx, endpoint(provider.BaseURL, "/images/generations"), provider.APIKey, body, nil)
+	responseBody, err := postJSON(
+		ctx,
+		endpoint(provider.BaseURL, "/images/generations"),
+		provider,
+		body,
+		idempotencyHeaders(job.ID, "images-generations"),
+	)
 	if err != nil {
 		return imagePayload{}, err
 	}
@@ -145,8 +163,9 @@ func generateWithImageEdit(ctx context.Context, job GenerationJob, provider Prov
 	}
 	request.Header.Set("Authorization", "Bearer "+provider.APIKey)
 	request.Header.Set("Content-Type", writer.FormDataContentType())
+	request.Header.Set("Idempotency-Key", idempotencyKey(job.ID, "images-edits"))
 
-	responseBody, err := doRequest(request)
+	responseBody, err := doRequestWithClient(request, provider.httpClient())
 	if err != nil {
 		return imagePayload{}, err
 	}
@@ -160,9 +179,14 @@ func generateWithResponsesImageTool(ctx context.Context, job GenerationJob, prov
 	}
 
 	results := make([]map[string]any, 0, count)
-	for range count {
+	for index := range count {
 		requestBody := buildResponsesRequest(job, provider.BaseURL, sourceImages, shouldUseAnyrouterResponsesCompat(provider.BaseURL))
-		items, err := createResponsesImageGeneration(ctx, provider, requestBody)
+		items, err := createResponsesImageGeneration(
+			ctx,
+			provider,
+			requestBody,
+			idempotencyKey(job.ID, fmt.Sprintf("responses-image-%d", index)),
+		)
 		if err != nil {
 			return imagePayload{}, err
 		}
@@ -246,8 +270,8 @@ func buildResponsesInput(prompt string, sourceImages []SourceImage, useAnyrouter
 	return []any{map[string]any{"content": content, "role": "user"}}
 }
 
-func createResponsesImageGeneration(ctx context.Context, provider ProviderConfig, requestBody map[string]any) ([]string, error) {
-	headers := map[string]string{}
+func createResponsesImageGeneration(ctx context.Context, provider ProviderConfig, requestBody map[string]any, requestID string) ([]string, error) {
+	headers := map[string]string{"Idempotency-Key": requestID}
 	if shouldUseAnyrouterResponsesCompat(provider.BaseURL) {
 		headers["chatgpt-account-id"] = ""
 		headers["originator"] = "codex_cli_rs"
@@ -256,13 +280,18 @@ func createResponsesImageGeneration(ctx context.Context, provider ProviderConfig
 		headers["accept"] = "text/event-stream"
 	}
 
-	body, err := postJSON(ctx, endpoint(provider.BaseURL, "/responses"), provider.APIKey, requestBody, headers)
+	body, err := postJSON(ctx, endpoint(provider.BaseURL, "/responses"), provider, requestBody, headers)
 	if err != nil {
 		if !strings.Contains(strings.ToLower(err.Error()), "must be stream request") {
 			return nil, err
 		}
 		requestBody["stream"] = true
-		body, err = postJSON(ctx, endpoint(provider.BaseURL, "/responses"), provider.APIKey, requestBody, headers)
+		streamHeaders := map[string]string{}
+		for key, value := range headers {
+			streamHeaders[key] = value
+		}
+		streamHeaders["Idempotency-Key"] = requestID + ":stream"
+		body, err = postJSON(ctx, endpoint(provider.BaseURL, "/responses"), provider, requestBody, streamHeaders)
 		if err != nil {
 			return nil, err
 		}
@@ -277,6 +306,14 @@ func createResponsesImageGeneration(ctx context.Context, provider ProviderConfig
 		return nil, err
 	}
 	return collectImageResults(payload), nil
+}
+
+func idempotencyHeaders(jobID string, operation string) map[string]string {
+	return map[string]string{"Idempotency-Key": idempotencyKey(jobID, operation)}
+}
+
+func idempotencyKey(jobID string, operation string) string {
+	return "narra-image:" + jobID + ":" + operation
 }
 
 func normalizeGeneratedImage(ctx context.Context, storage *Storage, job GenerationJob, item map[string]any, payload imagePayload) (GeneratedImage, error) {
@@ -298,7 +335,12 @@ func normalizeGeneratedImage(ctx context.Context, storage *Storage, job Generati
 
 	if rawURL, ok := pickString(item, "url"); ok {
 		dimensions := extractDimensionsFromMetadata(item)
-		persisted, err := storage.PersistImageFromURL(ctx, job.UserID, rawURL)
+		persisted, err := storage.PersistImageFromURL(
+			ctx,
+			job.UserID,
+			rawURL,
+			providerHTTPClient(job.ProviderMode != "CUSTOM"),
+		)
 		if err != nil {
 			return GeneratedImage{}, err
 		}
@@ -342,7 +384,7 @@ func parseImagePayload(body []byte) (imagePayload, error) {
 	return payload, nil
 }
 
-func postJSON(ctx context.Context, rawURL string, apiKey string, payload map[string]any, headers map[string]string) ([]byte, error) {
+func postJSON(ctx context.Context, rawURL string, provider ProviderConfig, payload map[string]any, headers map[string]string) ([]byte, error) {
 	body, err := json.Marshal(payload)
 	if err != nil {
 		return nil, err
@@ -351,29 +393,71 @@ func postJSON(ctx context.Context, rawURL string, apiKey string, payload map[str
 	if err != nil {
 		return nil, err
 	}
-	request.Header.Set("Authorization", "Bearer "+apiKey)
+	request.Header.Set("Authorization", "Bearer "+provider.APIKey)
 	request.Header.Set("Content-Type", "application/json")
 	for key, value := range headers {
 		request.Header.Set(key, value)
 	}
-	return doRequest(request)
+	return doRequestWithClient(request, provider.httpClient())
 }
 
 func doRequest(request *http.Request) ([]byte, error) {
-	response, err := http.DefaultClient.Do(request)
+	return doRequestWithClient(request, http.DefaultClient)
+}
+
+func doRequestWithClient(request *http.Request, client *http.Client) ([]byte, error) {
+	response, err := client.Do(request)
 	if err != nil {
 		return nil, err
 	}
 	defer response.Body.Close()
 
-	body, err := io.ReadAll(response.Body)
+	if response.StatusCode < 200 || response.StatusCode >= 300 {
+		body, truncated, err := readBodyWithLimit(response.Body, providerErrorBodyMaxBytes)
+		if err != nil {
+			return nil, err
+		}
+		summary := strings.TrimSpace(string(body))
+		if truncated {
+			summary += "…（错误响应已截断）"
+		}
+		return nil, fmt.Errorf("渠道请求失败：HTTP %d %s", response.StatusCode, summary)
+	}
+
+	if response.ContentLength > providerResponseMaxBytes {
+		return nil, errors.New("渠道响应过大")
+	}
+	body, truncated, err := readBodyWithLimit(response.Body, providerResponseMaxBytes)
 	if err != nil {
 		return nil, err
 	}
-	if response.StatusCode < 200 || response.StatusCode >= 300 {
-		return nil, fmt.Errorf("渠道请求失败：HTTP %d %s", response.StatusCode, string(body))
+	if truncated {
+		return nil, errors.New("渠道响应过大")
 	}
 	return body, nil
+}
+
+func readBodyWithLimit(body io.Reader, limit int64) ([]byte, bool, error) {
+	data, err := io.ReadAll(io.LimitReader(body, limit+1))
+	if err != nil {
+		return nil, false, err
+	}
+	if int64(len(data)) > limit {
+		return data[:limit], true, nil
+	}
+	return data, false, nil
+}
+
+func truncateGenerationErrorMessage(message string) string {
+	validMessage := strings.ToValidUTF8(message, "�")
+	if len(validMessage) <= generationErrorMessageMaxBytes {
+		return validMessage
+	}
+	cutoff := generationErrorMessageMaxBytes
+	for cutoff > 0 && validMessage[cutoff]&0xc0 == 0x80 {
+		cutoff--
+	}
+	return validMessage[:cutoff] + "…（错误信息已截断）"
 }
 
 func collectResponsesStreamResults(body []byte) []string {

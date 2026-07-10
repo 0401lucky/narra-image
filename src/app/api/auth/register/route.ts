@@ -16,26 +16,28 @@ export async function POST(request: Request) {
   try {
     const body = registerSchema.parse(await parseJsonBody(request));
     await requireTurnstile("register", body.turnstileToken);
-    const bootstrapInviteCode =
-      process.env.BOOTSTRAP_INVITE_CODE?.trim() || "FOUNDING-ACCESS";
+    const env = getEnv();
+    const bootstrapInviteCode = env.BOOTSTRAP_INVITE_CODE?.trim();
 
-    await db.inviteCode.upsert({
-      where: {
-        code: bootstrapInviteCode,
-      },
-      update: {},
-      create: {
-        code: bootstrapInviteCode,
-        note: "初始管理员邀请码",
-      },
-    });
+    if (bootstrapInviteCode) {
+      await db.inviteCode.upsert({
+        where: {
+          code: bootstrapInviteCode,
+        },
+        update: {},
+        create: {
+          code: bootstrapInviteCode,
+          note: "初始管理员邀请码",
+        },
+      });
+    }
 
     // bcrypt 约需上百毫秒，先在事务外算好，避免拉长事务持锁时间
     const passwordHash = await hashPassword(body.password);
 
     const result = await db.$transaction(async (tx) =>
       registerUser(body, {
-        bootstrapAdminEmail: getEnv().BOOTSTRAP_ADMIN_EMAIL || undefined,
+        bootstrapAdminEmail: env.BOOTSTRAP_ADMIN_EMAIL || undefined,
         initialCredits: DEFAULT_INITIAL_CREDITS,
         findUserByEmail: (email) =>
           tx.user.findUnique({

@@ -170,20 +170,14 @@ func (w *Worker) claimJob(ctx context.Context) (GenerationJob, bool, error) {
 	defer rollbackSilently(ctx, tx)
 
 	now := time.Now().UTC()
-	staleBefore := now.Add(-w.cfg.JobTimeout)
+	// 只领取从未提交过上游的任务。租约过期任务由清理流程失败退款，
+	// 避免第三方不支持幂等键时自动重提并产生重复计费。
 	row := tx.QueryRow(ctx, `
 WITH next_job AS (
   SELECT id
   FROM "GenerationJob"
   WHERE "workerManaged" = true
-    AND (
-      status = 'PENDING'
-      OR (
-        status = 'PROCESSING'
-        AND "lockedAt" < $1
-        AND "attemptCount" < $2
-      )
-    )
+    AND status = 'PENDING'
   ORDER BY "createdAt" ASC
   FOR UPDATE SKIP LOCKED
   LIMIT 1
@@ -191,11 +185,11 @@ WITH next_job AS (
 UPDATE "GenerationJob" AS job
 SET
   status = 'PROCESSING',
-  "workerId" = $3,
-  "lockedAt" = $4,
-  "startedAt" = COALESCE(job."startedAt", $4),
+  "workerId" = $1,
+  "lockedAt" = $2,
+  "startedAt" = COALESCE(job."startedAt", $2),
   "attemptCount" = job."attemptCount" + 1,
-  "updatedAt" = $4
+  "updatedAt" = $2
 FROM next_job
 WHERE job.id = next_job.id
 RETURNING
@@ -222,7 +216,7 @@ RETURNING
   job."sourceImageUrls",
   job."durationSeconds",
   job."aspectRatio"
-`, staleBefore, w.cfg.MaxAttempts, w.cfg.WorkerID, now)
+`, w.cfg.WorkerID, now)
 
 	var job GenerationJob
 	err = row.Scan(
@@ -274,7 +268,7 @@ func (w *Worker) processJob(parent context.Context, job GenerationJob) {
 	heartbeatDone.Add(1)
 	go func() {
 		defer heartbeatDone.Done()
-		w.heartbeat(parent, job.ID, stopHeartbeat)
+		w.heartbeat(ctx, job.ID, stopHeartbeat, cancel)
 	}()
 	defer func() {
 		close(stopHeartbeat)
@@ -320,7 +314,7 @@ func (w *Worker) processJob(parent context.Context, job GenerationJob) {
 	logger.Info("生成任务完成", "images", len(images))
 }
 
-func (w *Worker) heartbeat(ctx context.Context, jobID string, stop <-chan struct{}) {
+func (w *Worker) heartbeat(ctx context.Context, jobID string, stop <-chan struct{}, cancel context.CancelFunc) {
 	interval := 30 * time.Second
 	if w.cfg.JobTimeout/3 < interval {
 		interval = w.cfg.JobTimeout / 3
@@ -338,7 +332,7 @@ func (w *Worker) heartbeat(ctx context.Context, jobID string, stop <-chan struct
 		case <-stop:
 			return
 		case <-ticker.C:
-			_, err := w.pool.Exec(ctx, `
+			tag, err := w.pool.Exec(ctx, `
 UPDATE "GenerationJob"
 SET "lockedAt" = $1, "updatedAt" = $1
 WHERE id = $2
@@ -347,6 +341,12 @@ WHERE id = $2
 `, time.Now().UTC(), jobID, w.cfg.WorkerID)
 			if err != nil {
 				w.logger.Warn("任务心跳更新失败", "jobId", jobID, "error", err)
+				continue
+			}
+			if tag.RowsAffected() == 0 {
+				w.logger.Warn("任务租约已丢失，取消当前请求", "jobId", jobID)
+				cancel()
+				return
 			}
 		}
 	}
@@ -363,9 +363,10 @@ func (w *Worker) resolveProvider(ctx context.Context, job GenerationJob) (Provid
 			return ProviderConfig{}, err
 		}
 		return ProviderConfig{
-			APIKey:  apiKey,
-			BaseURL: job.ProviderBaseURL.String,
-			Model:   job.Model,
+			APIKey:              apiKey,
+			BaseURL:             job.ProviderBaseURL.String,
+			Model:               job.Model,
+			AllowPrivateNetwork: false,
 		}, nil
 	}
 
@@ -439,9 +440,10 @@ func (w *Worker) scanChannel(row pgx.Row, requestedModel string) (ProviderConfig
 		model = defaultModel
 	}
 	return ProviderConfig{
-		APIKey:  apiKey,
-		BaseURL: baseURL,
-		Model:   model,
+		APIKey:              apiKey,
+		BaseURL:             baseURL,
+		Model:               model,
+		AllowPrivateNetwork: true,
 	}, true, nil
 }
 
@@ -453,9 +455,10 @@ func (w *Worker) envProvider(model string) (ProviderConfig, error) {
 		model = w.cfg.BuiltInProviderModel
 	}
 	return ProviderConfig{
-		APIKey:  w.cfg.BuiltInProviderAPIKey,
-		BaseURL: w.cfg.BuiltInProviderBaseURL,
-		Model:   model,
+		APIKey:              w.cfg.BuiltInProviderAPIKey,
+		BaseURL:             w.cfg.BuiltInProviderBaseURL,
+		Model:               model,
+		AllowPrivateNetwork: true,
 	}, nil
 }
 
@@ -621,6 +624,7 @@ func nullableVideoString(value string) any {
 }
 
 func (w *Worker) failJobAndRefund(ctx context.Context, jobID string, message string) error {
+	message = truncateGenerationErrorMessage(message)
 	tx, err := w.pool.BeginTx(ctx, pgx.TxOptions{})
 	if err != nil {
 		return err
@@ -629,23 +633,20 @@ func (w *Worker) failJobAndRefund(ctx context.Context, jobID string, message str
 
 	var userID string
 	var creditsSpent int
-	var status string
 	err = tx.QueryRow(ctx, `
-SELECT "userId", "creditsSpent", status
+SELECT "userId", "creditsSpent"
 FROM "GenerationJob"
 WHERE id = $1
+  AND status = 'PROCESSING'
+  AND "workerId" = $2
 FOR UPDATE
-`, jobID).Scan(&userID, &creditsSpent, &status)
+`, jobID, w.cfg.WorkerID).Scan(&userID, &creditsSpent)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return tx.Commit(ctx)
 	}
 	if err != nil {
 		return err
 	}
-	if status == "SUCCEEDED" {
-		return tx.Commit(ctx)
-	}
-
 	now := time.Now().UTC()
 	tag, err := tx.Exec(ctx, `
 UPDATE "GenerationJob"
@@ -658,8 +659,9 @@ SET
   "workerId" = NULL,
   "updatedAt" = $2
 WHERE id = $3
-  AND status <> 'SUCCEEDED'
-`, message, now, jobID)
+  AND status = 'PROCESSING'
+  AND "workerId" = $4
+`, message, now, jobID, w.cfg.WorkerID)
 	if err != nil {
 		return err
 	}
@@ -684,17 +686,18 @@ func (w *Worker) failExpiredProcessingJobs(ctx context.Context) error {
 	defer rollbackSilently(ctx, tx)
 
 	staleBefore := time.Now().UTC().Add(-w.cfg.JobTimeout)
+	// PROCESSING 是否已被上游受理无法可靠判断，因此过期后一律失败退款，
+	// 不再依赖 attemptCount 自动重试。
 	rows, err := tx.Query(ctx, `
 SELECT id
 FROM "GenerationJob"
 WHERE "workerManaged" = true
   AND status = 'PROCESSING'
   AND "lockedAt" < $1
-  AND "attemptCount" >= $2
 ORDER BY "lockedAt" ASC
 FOR UPDATE SKIP LOCKED
-LIMIT $3
-`, staleBefore, w.cfg.MaxAttempts, maxExpiredJobsPerSweep)
+LIMIT $2
+`, staleBefore, maxExpiredJobsPerSweep)
 	if err != nil {
 		return err
 	}
@@ -716,11 +719,67 @@ LIMIT $3
 	}
 
 	for _, id := range ids {
-		if err := w.failJobAndRefund(ctx, id, "生成任务执行超时，已自动退还预扣积分。"); err != nil {
+		if err := w.failExpiredJobAndRefund(ctx, id, staleBefore, "生成任务执行超时，已自动退还预扣积分。"); err != nil {
 			return err
 		}
 	}
 	return nil
+}
+
+func (w *Worker) failExpiredJobAndRefund(ctx context.Context, jobID string, staleBefore time.Time, message string) error {
+	tx, err := w.pool.BeginTx(ctx, pgx.TxOptions{})
+	if err != nil {
+		return err
+	}
+	defer rollbackSilently(ctx, tx)
+
+	var userID string
+	var creditsSpent int
+	err = tx.QueryRow(ctx, `
+SELECT "userId", "creditsSpent"
+FROM "GenerationJob"
+WHERE id = $1
+  AND "workerManaged" = true
+  AND status = 'PROCESSING'
+  AND "lockedAt" < $2
+FOR UPDATE
+`, jobID, staleBefore).Scan(&userID, &creditsSpent)
+	if errors.Is(err, pgx.ErrNoRows) {
+		return tx.Commit(ctx)
+	}
+	if err != nil {
+		return err
+	}
+
+	now := time.Now().UTC()
+	tag, err := tx.Exec(ctx, `
+UPDATE "GenerationJob"
+SET
+  status = 'FAILED',
+  "errorMessage" = $1,
+  "creditsSpent" = 0,
+  "completedAt" = $2,
+  "lockedAt" = NULL,
+  "workerId" = NULL,
+  "updatedAt" = $2
+WHERE id = $3
+  AND status = 'PROCESSING'
+  AND "lockedAt" < $4
+`, message, now, jobID, staleBefore)
+	if err != nil {
+		return err
+	}
+	if tag.RowsAffected() > 0 && creditsSpent > 0 {
+		if _, err := tx.Exec(ctx, `
+UPDATE "User"
+SET credits = credits + $1, "updatedAt" = $2
+WHERE id = $3
+`, creditsSpent, now, userID); err != nil {
+			return err
+		}
+	}
+
+	return tx.Commit(ctx)
 }
 
 func rollbackSilently(ctx context.Context, tx pgx.Tx) {
