@@ -789,22 +789,36 @@ textarea {
   inset: 0;
   z-index: 9999;
   pointer-events: none;
-  background-color: var(--surface);
-  background-image: 
-    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.4), transparent 60%),
-    linear-gradient(180deg, #faf6ef 0%, #f2e9dc 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: inset 0 0 120px rgba(94, 58, 33, 0.08);
+  overflow: hidden;
 }
 
-/* 垂直扫描中线 */
-.route-transition-gate-line {
+/* 左右门板：只做 transform 位移（合成器动画），避免逐帧重绘 */
+.route-transition-gate-panel {
   position: absolute;
   top: 0;
   bottom: 0;
-  left: 50%;
+  width: 50%;
+  will-change: transform;
+  background-color: var(--surface);
+  background-image: linear-gradient(180deg, #faf6ef 0%, #f2e9dc 100%);
+}
+
+.route-transition-gate-panel-left {
+  left: 0;
+  box-shadow: inset -24px 0 48px rgba(94, 58, 33, 0.05);
+}
+
+.route-transition-gate-panel-right {
+  right: 0;
+  box-shadow: inset 24px 0 48px rgba(94, 58, 33, 0.05);
+}
+
+/* 中缝光线：贴在门板内侧边缘，随门板一起滑开 */
+.route-transition-gate-panel::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
   width: 2px;
   background: linear-gradient(
     to bottom,
@@ -814,34 +828,15 @@ textarea {
     rgba(217, 100, 58, 0.3) 85%,
     transparent
   );
-  transform: translateX(-50%);
-  box-shadow: 
+  box-shadow:
     0 0 12px var(--accent),
     0 0 24px var(--accent);
 }
 
-/* 左右扫描遮罩 */
-.route-transition-gate-scan {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 50%;
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.08) 0%,
-    rgba(255, 255, 255, 0.02) 100%
-  );
-  pointer-events: none;
+.route-transition-gate-panel-left::after {
+  right: -1px;
 }
 
-.route-transition-gate-scan-left {
-  left: 0;
-  border-right: 1px solid rgba(217, 100, 58, 0.2);
-  box-shadow: inset -30px 0 60px rgba(94, 58, 33, 0.03);
-}
-
-.route-transition-gate-scan-right {
-  right: 0;
-  border-left: 1px solid rgba(217, 100, 58, 0.2);
-  box-shadow: inset 30px 0 60px rgba(94, 58, 33, 0.03);
+.route-transition-gate-panel-right::after {
+  left: -1px;
 }
