@@ -7,20 +7,10 @@ export default function Loading() {
       aria-busy
       aria-live="polite"
     >
-      {/* 流体渐变背景氛围层 */}
+      {/* 流体渐变背景氛围层：保持静态，路由切换时主线程正忙，大面积模糊不再逐帧动 */}
       <div className="absolute inset-0 z-0 pointer-events-none mix-blend-multiply opacity-50">
-        <div 
-          className="absolute top-[20%] left-[20%] h-[40vh] w-[40vh] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-br from-rose-400 to-orange-300 blur-[80px] animate-pulse" 
-          style={{ animationDuration: '4s' }} 
-        />
-        <div 
-          className="absolute bottom-[20%] right-[20%] h-[50vh] w-[50vh] translate-x-1/4 translate-y-1/4 rounded-full bg-gradient-to-br from-sky-300 to-indigo-400 blur-[100px] animate-pulse" 
-          style={{ animationDuration: '5s', animationDelay: '1s' }} 
-        />
-        <div 
-          className="absolute top-1/2 left-1/2 h-[30vh] w-[30vh] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-tr from-amber-200 to-rose-200 blur-[60px] animate-pulse opacity-70" 
-          style={{ animationDuration: '3.5s', animationDelay: '0.5s' }} 
-        />
+        <div className="absolute top-[20%] left-[20%] h-[40vh] w-[40vh] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-br from-rose-400 to-orange-300 blur-[56px]" />
+        <div className="absolute bottom-[20%] right-[20%] h-[50vh] w-[50vh] translate-x-1/4 translate-y-1/4 rounded-full bg-gradient-to-br from-sky-300 to-indigo-400 blur-[64px]" />
       </div>
 
       <section className="relative z-10 flex flex-col items-center gap-10" aria-label="Narra Image 正在加载">

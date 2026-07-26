@@ -176,7 +176,7 @@ export default async function Home() {
               </div>
 
               {/* 外层浮动标签 2: 模式参数展示 (悬漂在窗口外部右下方) */}
-              <div className="absolute -right-4 top-1/4 hidden select-none md:flex flex-col gap-1.5 rounded-2xl border border-[var(--line)] bg-[var(--card-strong)] p-3 shadow-lg backdrop-blur-md xl:-right-8 animate-bounce-[duration:6s]">
+              <div className="absolute -right-4 top-1/4 hidden select-none md:flex flex-col gap-1.5 rounded-2xl border border-[var(--line)] bg-[var(--card-strong)] p-3 shadow-lg backdrop-blur-md xl:-right-8 animate-[float-gentle_6s_ease-in-out_infinite]">
                 <div className="text-[10px] font-semibold text-[var(--ink-soft)]/50">生成参数</div>
                 <div className="flex items-center gap-1.5 text-xs font-semibold text-[var(--ink)]">
                   <span className="size-1.5 rounded-full bg-[var(--accent)]" />
@@ -188,7 +188,7 @@ export default async function Home() {
               </div>
 
               {/* 外层浮动标签 3: 分辨率比例 (悬漂在窗口外部左下方) */}
-              <div className="absolute -left-6 bottom-16 hidden select-none items-center gap-2 rounded-full border border-[var(--line)] bg-[var(--card-strong)] px-3 py-1.5 shadow-md backdrop-blur-md md:flex animate-bounce-[duration:8s]">
+              <div className="absolute -left-6 bottom-16 hidden select-none items-center gap-2 rounded-full border border-[var(--line)] bg-[var(--card-strong)] px-3 py-1.5 shadow-md backdrop-blur-md md:flex animate-[float-gentle_8s_ease-in-out_infinite]">
                 <span className="text-xs text-[var(--accent)]">✦</span>
                 <span className="text-xs font-semibold text-[var(--ink)] font-mono">Aspect Ratio: 4:3</span>
               </div>

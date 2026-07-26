@@ -430,7 +430,7 @@ function PromptCard({
   onOpen: () => void;
 }) {
   return (
-    <article className="group flex flex-col overflow-hidden rounded-2xl border border-[var(--line)] bg-[#fffaf2]/78 shadow-[0_12px_30px_rgba(84,52,29,0.03)] transition-all duration-500 hover:-translate-y-1 hover:border-[var(--accent)]/30 hover:bg-white hover:shadow-[0_20px_40px_rgba(84,52,29,0.08)]">
+    <article className="group flex flex-col overflow-hidden rounded-2xl border border-[var(--line)] bg-[#fffaf2]/78 shadow-[0_12px_30px_rgba(84,52,29,0.03)] transition-[transform,box-shadow,border-color,background-color] duration-300 hover:-translate-y-1 hover:border-[var(--accent)]/30 hover:bg-white hover:shadow-[0_20px_40px_rgba(84,52,29,0.08)]">
       
       {/* Cover Image Wrapper with hover overlay */}
       <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#eadcca]">

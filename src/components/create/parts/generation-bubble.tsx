@@ -4,6 +4,8 @@
 
 // 单条生成消息气泡（用户提示 + Narra 结果）。
 import { AlertTriangle, Clock3, Download, ImagePlus, RotateCcw, Ruler, SlidersHorizontal, Sparkles, X, ZoomIn } from "lucide-react";
+import { motion } from "motion/react";
+import { useRef } from "react";
 
 import { getAspectRatio as getGenerationAspectRatio } from "@/lib/generation/sizes";
 import { getThumbUrl } from "@/lib/image-url";
@@ -56,6 +58,9 @@ export function GenerationBubble({
 }: GenerationBubbleProps) {
   const sourceUrls = getGenerationSourceImageUrls(generation);
   const durationLabel = formatDuration(generation.durationMs);
+  // 仅当这条记录是"当场等出来的"（挂载时还在 pending）才播结果入场动画；
+  // 历史记录初次挂载直接静态呈现，避免整个列表集体重放。
+  const sawPendingRef = useRef(generation.status === "pending");
   return (
     <div
       id={`gen-${generation.id}`}
@@ -94,13 +99,13 @@ export function GenerationBubble({
 
       <div className="flex gap-3 sm:gap-4">
         <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#e06b47] via-[#cc5aa5] to-[#9a77c7] text-white shadow-[0_12px_24px_rgba(154,79,139,0.25)] sm:size-10">
-          <Sparkles className={`size-4 sm:size-5 ${generation.status === "pending" ? "animate-pulse" : ""}`} />
+          <Sparkles className="size-4 sm:size-5" />
         </div>
         <div className="flex w-full max-w-[calc(100%-2.5rem)] flex-col gap-2 sm:max-w-[85%]">
           <div className="flex flex-wrap items-center gap-2">
             <span className="text-sm font-medium text-[var(--ink)]">Narra AI</span>
             {generation.status === "pending" ? (
-              <span className="text-xs text-[var(--ink-soft)] animate-pulse">正在生成中...</span>
+              <span className="text-xs text-[var(--ink-soft)]">正在生成中...</span>
             ) : (
               <span className="text-xs text-[var(--ink-soft)]">{getGenerationOptionSummary(generation)}</span>
             )}
@@ -113,7 +118,7 @@ export function GenerationBubble({
                   <Sparkles className="size-4 text-white" />
                 </div>
                 <div className="relative z-10 flex flex-col gap-0.5">
-                  <span className="text-sm font-bold text-[var(--ink)] tracking-tight">正在显影中<span className="animate-pulse">...</span></span>
+                  <span className="text-sm font-bold text-[var(--ink)] tracking-tight">正在显影中...</span>
                   <span className="text-xs font-medium text-[var(--ink-soft)]">Narra 正在挥动魔杖</span>
                 </div>
               </div>
@@ -130,7 +135,12 @@ export function GenerationBubble({
               )}
             </div>
           ) : generation.images.length > 0 ? (
-            <div className="space-y-3">
+            <motion.div
+              className="space-y-3"
+              initial={sawPendingRef.current ? { opacity: 0, scale: 0.97, y: 10 } : false}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            >
               <div className="flex flex-wrap items-center gap-2 text-xs text-[var(--ink-soft)]">
                 <span>结果 {generation.images.length}</span>
                 {durationLabel && (
@@ -236,7 +246,7 @@ export function GenerationBubble({
                   );
                 })}
               </div>
-            </div>
+            </motion.div>
           ) : (
             <div className="flex flex-col gap-2">
               <div className="rounded-2xl rounded-tl-none border border-rose-500/20 bg-rose-500/10 px-5 py-3.5 text-sm text-rose-400">

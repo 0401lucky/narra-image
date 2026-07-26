@@ -777,6 +777,17 @@ textarea {
   }
 }
 
+/* 装饰元素轻柔浮动：幅度小、周期长，只走 transform */
+@keyframes float-gentle {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
 /* ===== 页面路由切换动效组件（Gate Transition） ===== */
 .page-transition-shell {
   position: relative;
