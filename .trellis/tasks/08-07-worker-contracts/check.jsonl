@@ -1,0 +1,10 @@
+{"file":".trellis/spec/guides/cross-layer-thinking-guide.md","reason":"检查 Source→Transform→Store→Retrieve 链路、共享 decoder/fixture 和错误/退款边界是否一致。"}
+{"file":".trellis/spec/guides/code-reuse-thinking-guide.md","reason":"检查 Node/Go 是否重复定义状态、错误、模型规则或局部解析，及所有消费者是否同步。"}
+{"file":".trellis/tasks/08-07-go-migration-audit/research/feature-parity.md","reason":"复核原始高风险行为是否都被测试锁定且未引入新的跨实现漂移。"}
+{"file":".trellis/tasks/08-07-go-migration-audit/research/operations-gaps.md","reason":"检查 schema、停止、公平性、密钥兼容、测试数据库和生产安全边界。"}
+{"file":".trellis/tasks/08-07-go-migration-audit/research/baseline-validation.md","reason":"对照实施前基线，区分新回归与既有全量测试超时问题。"}
+{"file":".trellis/tasks/08-07-worker-contracts/research/contract-evidence.md","reason":"按源码证据核验 attempt/handoff、退款与渠道模型实现，而不是只审查文档。"}
+{"file":".trellis/tasks/08-07-worker-contracts/research/planning-review.md","reason":"确保原 NO-GO 阻塞项在实现和验证记录中被逐项关闭。"}
+{"file":".trellis/tasks/08-07-worker-contracts/research/final-planning-review.md","reason":"复核最终 CONDITIONAL GO 条件、测试命令契约、退款 CAS 和旧 Worker handoff guard 未被实现偏离。"}
+{"file":".trellis/tasks/08-07-worker-contracts/research/implementation-audit.md","reason":"检查所有退款/清理/写回入口、legacy sentinel、nextAttemptAt 和混合版本回滚保护。"}
+{"file":".trellis/tasks/08-07-worker-contracts/research/test-harness-audit.md","reason":"检查验证 runner 的文件预检、全局超时、Windows 子进程、Docker 资源归属和数据库 sentinel。"}

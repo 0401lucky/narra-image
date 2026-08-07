@@ -1,0 +1,11 @@
+{"file":".trellis/spec/guides/cross-layer-thinking-guide.md","reason":"约束 Node、Go、PostgreSQL、上游与查询/退款之间的数据流、契约所有权和往返验证。"}
+{"file":".trellis/spec/guides/code-reuse-thinking-guide.md","reason":"要求状态、错误、模型规则和未类型化 payload 只有一个 owner，并先搜索现有实现。"}
+{"file":".trellis/tasks/08-07-go-migration-audit/research/architecture-inventory.md","reason":"提供当前 Next 入队、Go 领取、双拓扑、schema gate 和运行边界的源码证据。"}
+{"file":".trellis/tasks/08-07-go-migration-audit/research/feature-parity.md","reason":"提供渠道模型、静默回退、重试配置、取消超时和旧 Node 实现的功能差异证据。"}
+{"file":".trellis/tasks/08-07-go-migration-audit/research/operations-gaps.md","reason":"提供迁移、队列、公平性、停止、密钥 fixture、健康与真实验证边界的运维证据。"}
+{"file":".trellis/tasks/08-07-go-migration-audit/research/baseline-validation.md","reason":"记录实施前 TypeScript、Go 和核心生成/退款测试的可运行基线与已知超时。"}
+{"file":".trellis/tasks/08-07-worker-contracts/research/contract-evidence.md","reason":"汇总 attempt/handoff、退款、渠道、schema、停止和共享 fixture 的具体源码证据与设计提案。"}
+{"file":".trellis/tasks/08-07-worker-contracts/research/planning-review.md","reason":"列出子任务启动前必须解决的事务闭环、验收矩阵、所有权和危险操作门槛。"}
+{"file":".trellis/tasks/08-07-worker-contracts/research/final-planning-review.md","reason":"记录最终 CONDITIONAL GO 结论、已关闭阻塞项和实施阶段必须保持的混合版本回滚下限。"}
+{"file":".trellis/tasks/08-07-worker-contracts/research/implementation-audit.md","reason":"提供实现阶段的事务、旧清理器、管理员删除、nextAttemptAt、SIGTERM 和 migration 现实边界闸门。"}
+{"file":".trellis/tasks/08-07-worker-contracts/research/test-harness-audit.md","reason":"提供 Windows、Vitest、Go、Docker、Prisma runner 的超时、进程清理和防假绿要求。"}
