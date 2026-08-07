@@ -41,7 +41,19 @@ vi.mock("@/lib/generation/job-refund", () => ({
 }));
 
 vi.mock("@/lib/providers/built-in-provider", () => ({
-  getActiveChannels: mockGetActiveChannels,
+  generationChannelModelSnapshot: (channel: {
+    defaultModel: string;
+    models: string[];
+  }) => [channel.defaultModel, ...channel.models],
+  getGenerationChannelForModel: async (model: string) => {
+    const channels = await mockGetActiveChannels();
+    const matched = channels.find((channel: {
+      defaultModel: string;
+      models: string[];
+    }) => channel.defaultModel === model || channel.models.includes(model));
+    if (!matched) throw new Error("模型不可用");
+    return matched;
+  },
 }));
 
 vi.mock("@/lib/storage/persist-generated-image", () => ({

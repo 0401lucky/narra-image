@@ -90,7 +90,8 @@ describe("用户生成任务取消接口", () => {
     expect(response.status).toBe(200);
     expect(mockFailGenerationJobAndRefund).toHaveBeenCalledWith({
       allowedStatuses: [GenerationStatus.PENDING],
-      errorMessage: "用户取消生成，已退还预扣积分。",
+      errorCode: "GENERATION_CANCELLED",
+      errorMessage: "用户取消生成。",
       jobId: "job_1",
     });
     await expect(response.json()).resolves.toMatchObject({

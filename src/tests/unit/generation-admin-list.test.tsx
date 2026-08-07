@@ -31,18 +31,22 @@ function createJob(input: Partial<GenerationAdminJob> = {}): GenerationAdminJob 
     attemptCount: 0,
     apiKeyId: null,
     clientSource: "WEB",
+    cancelRequestedAt: null,
     completedAt: null,
+    contractVersion: 0,
     conversationId: null,
     count: 1,
     createdAt: now,
     creditsSpent: 20,
     durationSeconds: null,
+    errorCode: null,
     errorMessage: null,
     featuredAt: null,
     featuredById: null,
     generationType: GenerationType.TEXT_TO_IMAGE,
     aspectRatio: null,
     id: "job_1",
+    handoffState: null,
     images: [
       {
         createdAt: now,
@@ -63,6 +67,7 @@ function createJob(input: Partial<GenerationAdminJob> = {}): GenerationAdminJob 
     model: "gpt-image-2",
     moderation: "auto",
     negativePrompt: null,
+    nextAttemptAt: null,
     outputCompression: null,
     outputFormat: "png",
     prompt: "测试提示词",
@@ -74,6 +79,7 @@ function createJob(input: Partial<GenerationAdminJob> = {}): GenerationAdminJob 
     providerModels: [],
     providerRemember: false,
     quality: "auto",
+    refundAppliedAt: null,
     seed: null,
     size: "1024x1024",
     sourceImageUrls: [],
@@ -98,7 +104,7 @@ describe("后台生成记录列表视图", () => {
     vi.stubGlobal(
       "fetch",
       vi.fn(async () => ({
-        json: async () => ({ data: { deleted: 1, ids: ["job_1"] } }),
+        json: async () => ({ data: { deleted: 1, deletedIds: ["job_1"] } }),
         ok: true,
       })),
     );

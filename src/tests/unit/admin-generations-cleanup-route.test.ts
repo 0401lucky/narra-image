@@ -40,6 +40,8 @@ describe("后台失败生成记录清理接口", () => {
     });
     expect(mockDeleteMany).toHaveBeenCalledWith({
       where: {
+        attempts: { none: {} },
+        contractVersion: { lt: 1 },
         status: GenerationStatus.FAILED,
       },
     });

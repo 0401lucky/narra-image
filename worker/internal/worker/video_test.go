@@ -17,7 +17,7 @@ func TestGenerateVideoPollsUntilCompletedAndPersists(t *testing.T) {
 	server = httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch {
 		case r.Method == http.MethodPost && r.URL.Path == "/videos":
-			if got := r.Header.Get("Idempotency-Key"); got != "narra-image:job_v1:videos-create" {
+			if got := r.Header.Get("Idempotency-Key"); got != "narra-image:job_v1:videos" {
 				t.Fatalf("unexpected idempotency key %q", got)
 			}
 			_ = json.NewEncoder(w).Encode(map[string]any{"id": "vid_123", "status": "queued"})
@@ -82,7 +82,7 @@ func TestGenerateVideoFallsBackToVideoGenerationsEndpoint(t *testing.T) {
 			http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 		case r.Method == http.MethodPost && r.URL.Path == "/videos/generations":
 			sawFallback = true
-			if got := r.Header.Get("Idempotency-Key"); got != "narra-image:job_qwen:videos-generations" {
+			if got := r.Header.Get("Idempotency-Key"); got != "narra-image:job_qwen:videos" {
 				t.Fatalf("unexpected fallback idempotency key %q", got)
 			}
 			var body map[string]any

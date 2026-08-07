@@ -6,8 +6,8 @@ const {
   mockDecryptProviderSecret,
   mockEncryptProviderSecret,
   mockFailGenerationJobAndRefund,
-  mockGetBuiltInProviderConfig,
-  mockGetChannelById,
+  mockGetGenerationChannelById,
+  mockGetGenerationChannelForModel,
   mockParseGenerateRequest,
   mockPersistGeneratedImage,
   mockRequireCurrentUserRecord,
@@ -19,8 +19,8 @@ const {
   mockDecryptProviderSecret: vi.fn(),
   mockEncryptProviderSecret: vi.fn(),
   mockFailGenerationJobAndRefund: vi.fn(),
-  mockGetBuiltInProviderConfig: vi.fn(),
-  mockGetChannelById: vi.fn(),
+  mockGetGenerationChannelById: vi.fn(),
+  mockGetGenerationChannelForModel: vi.fn(),
   mockParseGenerateRequest: vi.fn(),
   mockPersistGeneratedImage: vi.fn(),
   mockRequireCurrentUserRecord: vi.fn(),
@@ -37,7 +37,12 @@ vi.mock("@/lib/db", () => ({
 }));
 
 vi.mock("@/lib/env", () => ({
-  getEnv: () => ({ AUTH_SECRET: "unit-test-secret" }),
+  getEnv: () => ({
+    AUTH_SECRET: "unit-test-secret",
+    BUILTIN_PROVIDER_CREDIT_COST: 5,
+    BUILTIN_PROVIDER_VIDEO_CREDIT_COST: 20,
+    WORKER_CONTRACTS_V1_ENABLED: false,
+  }),
 }));
 
 vi.mock("@/lib/generation/parse-generate-request", async (importOriginal) => {
@@ -61,8 +66,12 @@ vi.mock("@/lib/prisma-mappers", () => ({
 }));
 
 vi.mock("@/lib/providers/built-in-provider", () => ({
-  getBuiltInProviderConfig: mockGetBuiltInProviderConfig,
-  getChannelById: mockGetChannelById,
+  generationChannelModelSnapshot: (channel: { defaultModel: string; models: string[] }) => [
+    channel.defaultModel,
+    ...channel.models,
+  ],
+  getGenerationChannelById: mockGetGenerationChannelById,
+  getGenerationChannelForModel: mockGetGenerationChannelForModel,
 }));
 
 vi.mock("@/lib/providers/provider-secret", () => ({
@@ -121,12 +130,12 @@ describe("生成接口安全校验顺序", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockRequireCurrentUserRecord.mockResolvedValue({ credits: 100, id: "user_1" });
-    mockGetBuiltInProviderConfig.mockResolvedValue({
+    mockGetGenerationChannelForModel.mockResolvedValue({
       apiKey: "builtin-key",
       baseUrl: "https://provider.example.com/v1",
       creditCost: 5,
+      defaultModel: "gpt-image-1",
       id: "channel_1",
-      model: "gpt-image-1",
       models: ["gpt-image-1"],
       name: "内置渠道",
       videoCreditCost: 20,
