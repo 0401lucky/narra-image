@@ -56,6 +56,8 @@ export async function DELETE(
   const job = await db.generationJob.findFirst({
     where: { id, userId: user.id },
     select: {
+      contractVersion: true,
+      handoffState: true,
       id: true,
       status: true,
     },
@@ -64,18 +66,57 @@ export async function DELETE(
   if (!job) {
     return jsonError("任务不存在", 404);
   }
+  if (job.status === GenerationStatus.PROCESSING) {
+    if (job.contractVersion < 1 || job.handoffState !== "NOT_STARTED") {
+      return jsonError(
+        "任务已经提交渠道或提交状态暂不确定，请继续查询结果",
+        409,
+        "GENERATION_ALREADY_SUBMITTED",
+      );
+    }
+
+    const requested = await db.generationJob.updateMany({
+      where: {
+        contractVersion: { gte: 1 },
+        handoffState: "NOT_STARTED",
+        id,
+        status: GenerationStatus.PROCESSING,
+        userId: user.id,
+      },
+      data: { cancelRequestedAt: new Date() },
+    });
+    if (requested.count === 0) {
+      return jsonError(
+        "任务状态已变化，请继续查询结果",
+        409,
+        "GENERATION_ALREADY_SUBMITTED",
+      );
+    }
+
+    const updated = await db.generationJob.findFirst({
+      where: { id, userId: user.id },
+      include: {
+        images: { orderBy: { createdAt: "asc" } },
+        videos: { orderBy: { createdAt: "asc" } },
+      },
+    });
+    if (!updated) {
+      return jsonError("任务不存在", 404);
+    }
+    return jsonOk({
+      cancellationRequested: true,
+      generation: serializeGeneration(updated),
+      refundedCredits: 0,
+    });
+  }
   if (job.status !== GenerationStatus.PENDING) {
-    return jsonError(
-      job.status === GenerationStatus.PROCESSING
-        ? "任务已开始处理，无法取消"
-        : "当前任务状态无法取消",
-      409,
-    );
+    return jsonError("当前任务状态无法取消", 409);
   }
 
   const result = await failGenerationJobAndRefund({
     allowedStatuses: [GenerationStatus.PENDING],
-    errorMessage: "用户取消生成，已退还预扣积分。",
+    errorCode: "GENERATION_CANCELLED",
+    errorMessage: "用户取消生成。",
     jobId: id,
   });
 

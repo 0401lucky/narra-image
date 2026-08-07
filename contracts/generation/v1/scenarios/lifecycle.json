@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "scenarios": [
+    {
+      "id": "WC-C01",
+      "status": "PENDING",
+      "handoffState": "NOT_STARTED",
+      "action": "cancel",
+      "result": { "status": "FAILED", "errorCode": "GENERATION_CANCELLED", "refund": true }
+    },
+    {
+      "id": "WC-C02",
+      "status": "PROCESSING",
+      "handoffState": "NOT_STARTED",
+      "action": "cancel",
+      "result": { "cancelRequested": true, "refundWhenWorkerStops": true }
+    },
+    {
+      "id": "WC-C03-submitting",
+      "status": "PROCESSING",
+      "handoffState": "SUBMITTING",
+      "action": "cancel",
+      "result": { "conflict": true, "refund": false }
+    },
+    {
+      "id": "WC-C03-submitted",
+      "status": "PROCESSING",
+      "handoffState": "SUBMITTED",
+      "action": "cancel",
+      "result": { "conflict": true, "refund": false }
+    },
+    {
+      "id": "WC-C04",
+      "status": "PROCESSING",
+      "handoffState": "SUBMITTED",
+      "action": "client_wait_timeout",
+      "result": { "jobChanged": false, "errorCode": "GENERATION_WAIT_TIMEOUT", "refund": false }
+    },
+    {
+      "id": "WC-B07",
+      "status": "PROCESSING",
+      "handoffState": "SUBMITTING",
+      "action": "accepted_then_disconnected",
+      "result": { "status": "FAILED", "handoffState": "UNKNOWN", "errorCode": "HANDOFF_UNKNOWN", "refund": false, "retry": false }
+    }
+  ]
+}

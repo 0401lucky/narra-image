@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "responsesPattern": "(?:^|/)gpt-5(?:[.\\-_]|$)",
+  "vectors": [
+    { "model": "gpt-5", "operation": "responses" },
+    { "model": "Gpt-5", "operation": "responses" },
+    { "model": "openai/gpt-5", "operation": "responses" },
+    { "model": "vendor/openai/gpt-5-2026-01-01", "operation": "responses" },
+    { "model": "gpt-5.1", "operation": "responses" },
+    { "model": "gpt-5_image", "operation": "responses" },
+    { "model": "gpt-5x", "operation": "images" },
+    { "model": "vendor/gpt-5x", "operation": "images" },
+    { "model": "my-gpt-5", "operation": "images" },
+    { "model": "gpt-image-2", "operation": "images" },
+    { "model": "seedream-pro", "operation": "images" }
+  ]
+}

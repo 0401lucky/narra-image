@@ -20,7 +20,9 @@ import (
 type ProviderConfig struct {
 	APIKey              string
 	BaseURL             string
+	ChannelID           string
 	Model               string
+	Models              []string
 	AllowPrivateNetwork bool
 }
 
@@ -74,7 +76,7 @@ func generateImages(ctx context.Context, storage *Storage, job GenerationJob, pr
 		return nil, err
 	}
 	if len(payload.Data) == 0 {
-		return nil, errors.New("渠道没有返回图片结果")
+		return nil, ResultPersistError{Cause: errors.New("渠道没有返回图片结果")}
 	}
 
 	records := make([]GeneratedImage, 0, len(payload.Data))
@@ -116,7 +118,11 @@ func generateWithImageGeneration(ctx context.Context, job GenerationJob, provide
 	if err != nil {
 		return imagePayload{}, err
 	}
-	return parseImagePayload(responseBody)
+	payload, err := parseImagePayload(responseBody)
+	if err != nil {
+		return imagePayload{}, ResultPersistError{Cause: err}
+	}
+	return payload, nil
 }
 
 func generateWithImageEdit(ctx context.Context, job GenerationJob, provider ProviderConfig, sourceImages []SourceImage) (imagePayload, error) {
@@ -169,7 +175,11 @@ func generateWithImageEdit(ctx context.Context, job GenerationJob, provider Prov
 	if err != nil {
 		return imagePayload{}, err
 	}
-	return parseImagePayload(responseBody)
+	payload, err := parseImagePayload(responseBody)
+	if err != nil {
+		return imagePayload{}, ResultPersistError{Cause: err}
+	}
+	return payload, nil
 }
 
 func generateWithResponsesImageTool(ctx context.Context, job GenerationJob, provider ProviderConfig, sourceImages []SourceImage) (imagePayload, error) {
@@ -185,7 +195,7 @@ func generateWithResponsesImageTool(ctx context.Context, job GenerationJob, prov
 			ctx,
 			provider,
 			requestBody,
-			idempotencyKey(job.ID, fmt.Sprintf("responses-image-%d", index)),
+			responsesRequestID(job.ID, index),
 		)
 		if err != nil {
 			return imagePayload{}, err
@@ -282,7 +292,10 @@ func createResponsesImageGeneration(ctx context.Context, provider ProviderConfig
 
 	body, err := postJSON(ctx, endpoint(provider.BaseURL, "/responses"), provider, requestBody, headers)
 	if err != nil {
-		if !strings.Contains(strings.ToLower(err.Error()), "must be stream request") {
+		var httpFailure ProviderHTTPError
+		if !errors.As(err, &httpFailure) ||
+			httpFailure.StatusCode != http.StatusBadRequest ||
+			!strings.Contains(strings.ToLower(httpFailure.Summary), "must be stream request") {
 			return nil, err
 		}
 		requestBody["stream"] = true
@@ -303,9 +316,16 @@ func createResponsesImageGeneration(ctx context.Context, provider ProviderConfig
 
 	var payload any
 	if err := json.Unmarshal(body, &payload); err != nil {
-		return nil, err
+		return nil, ResultPersistError{Cause: err}
 	}
 	return collectImageResults(payload), nil
+}
+
+func responsesRequestID(jobID string, index int) string {
+	if index <= 0 {
+		return idempotencyKey(jobID, "responses")
+	}
+	return idempotencyKey(jobID, fmt.Sprintf("responses:%d", index+1))
 }
 
 func idempotencyHeaders(jobID string, operation string) map[string]string {
@@ -328,7 +348,7 @@ func normalizeGeneratedImage(ctx context.Context, storage *Storage, job Generati
 		}
 		url, err := storage.PersistImage(ctx, job.UserID, data, outputFormat(job), mimeTypeFromOutputFormat(job))
 		if err != nil {
-			return GeneratedImage{}, err
+			return GeneratedImage{}, ResultPersistError{Cause: err}
 		}
 		return generatedImageRecord(url, dimensions), nil
 	}
@@ -342,7 +362,7 @@ func normalizeGeneratedImage(ctx context.Context, storage *Storage, job Generati
 			providerHTTPClient(job.ProviderMode != "CUSTOM"),
 		)
 		if err != nil {
-			return GeneratedImage{}, err
+			return GeneratedImage{}, ResultPersistError{Cause: err}
 		}
 		if dimensions == nil {
 			dimensions = readImageDimensions(persisted.Data)
@@ -406,6 +426,23 @@ func doRequest(request *http.Request) ([]byte, error) {
 }
 
 func doRequestWithClient(request *http.Request, client *http.Client) ([]byte, error) {
+	if request.Method != http.MethodGet && request.Method != http.MethodHead {
+		// mutation 请求不能依赖 net/http 的透明重放或自动重定向；否则应用层
+		// 无法证明连接错误发生前是否已经把请求写给某个上游 hop。
+		request.GetBody = nil
+		baseClient := client
+		if baseClient == nil {
+			baseClient = http.DefaultClient
+		}
+		clonedClient := *baseClient
+		clonedClient.CheckRedirect = func(_ *http.Request, _ []*http.Request) error {
+			return http.ErrUseLastResponse
+		}
+		client = &clonedClient
+	}
+	if err := markProviderSubmitting(request.Context()); err != nil {
+		return nil, err
+	}
 	response, err := client.Do(request)
 	if err != nil {
 		return nil, err
@@ -421,7 +458,18 @@ func doRequestWithClient(request *http.Request, client *http.Client) ([]byte, er
 		if truncated {
 			summary += "…（错误响应已截断）"
 		}
-		return nil, fmt.Errorf("渠道请求失败：HTTP %d %s", response.StatusCode, summary)
+		return nil, ProviderHTTPError{
+			NotSubmitted: response.StatusCode == http.StatusTooManyRequests ||
+				providerExplicitlyRejected(response.Header),
+			StatusCode: response.StatusCode,
+			Summary:    summary,
+		}
+	}
+	if err := markProviderSubmitted(
+		request.Context(),
+		providerRequestIDFromHeader(response.Header),
+	); err != nil {
+		return nil, err
 	}
 
 	if response.ContentLength > providerResponseMaxBytes {
@@ -599,10 +647,7 @@ func createImageFormFile(writer *multipart.Writer, fieldName string, image Sourc
 }
 
 func supportsResponsesImageGeneration(modelID string) bool {
-	id := strings.ToLower(modelID)
-	return strings.HasPrefix(id, "gpt-5") ||
-		strings.Contains(id, "/gpt-5") ||
-		strings.Contains(id, "gpt-5.")
+	return supportsResponsesModelID(modelID)
 }
 
 func shouldUseAnyrouterResponsesCompat(baseURL string) bool {

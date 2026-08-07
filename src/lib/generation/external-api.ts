@@ -10,9 +10,16 @@ import { ApiTimeoutError } from "@/lib/api-errors";
 import { persistGeneratedImage } from "@/lib/storage/persist-generated-image";
 import { failGenerationJobAndRefund } from "@/lib/generation/job-refund";
 import {
-  getActiveChannels,
-  type ResolvedChannel,
+  generationChannelModelSnapshot,
+  getGenerationChannelForModel,
 } from "@/lib/providers/built-in-provider";
+import {
+  GenerationContractError,
+  type GenerationErrorCode,
+  generationContractWriteFields,
+  getGenerationErrorDefinition,
+  isGenerationErrorCode,
+} from "@/lib/generation/contracts";
 import type {
   GenerationModeration,
   GenerationOutputFormat,
@@ -59,30 +66,25 @@ type WaitForExternalGenerationInput = {
 };
 
 class ExternalGenerationTimeoutError extends ApiTimeoutError {
-  constructor(jobId: string) {
-    super(`生成任务 ${jobId} 等待超时，请稍后通过 /v1/generations/${jobId} 查询结果`);
+  constructor(jobId: string, reason = "等待超时") {
+    super(
+      `生成任务 ${jobId} ${reason}，请稍后通过 /v1/generations/${jobId} 查询结果`,
+      { code: "GENERATION_WAIT_TIMEOUT", jobId },
+    );
     this.name = "ExternalGenerationTimeoutError";
   }
 }
 
-async function resolveApiChannel(model?: string | null): Promise<ResolvedChannel> {
-  const channels = await getActiveChannels();
-  if (channels.length === 0) {
-    throw new Error("当前没有可用的内置渠道");
-  }
+class ExternalGenerationContractError extends GenerationContractError {
+  readonly jobId: string;
 
-  if (!model) {
-    return channels[0];
+  constructor(code: GenerationErrorCode, jobId: string) {
+    const definition = getGenerationErrorDefinition(code);
+    super(code, {
+      status: definition.category === "coordination_required" ? 409 : 400,
+    });
+    this.jobId = jobId;
   }
-
-  const matched = channels.find((channel) =>
-    channel.defaultModel === model || channel.models.includes(model),
-  );
-  if (!matched) {
-    throw new Error("模型不可用，请先通过 /v1/models 查看可用模型");
-  }
-
-  return matched;
 }
 
 function externalGenerationWaitConfig() {
@@ -93,9 +95,9 @@ function externalGenerationWaitConfig() {
   };
 }
 
-function wait(ms: number, signal?: AbortSignal) {
+function wait(ms: number, jobId: string, signal?: AbortSignal) {
   if (signal?.aborted) {
-    return Promise.reject(new Error("请求已取消"));
+    return Promise.reject(new ExternalGenerationTimeoutError(jobId, "等待已取消"));
   }
 
   return new Promise<void>((resolve, reject) => {
@@ -106,7 +108,7 @@ function wait(ms: number, signal?: AbortSignal) {
 
     const onAbort = () => {
       clearTimeout(timer);
-      reject(new Error("请求已取消"));
+      reject(new ExternalGenerationTimeoutError(jobId, "等待已取消"));
     };
 
     signal?.addEventListener("abort", onAbort, { once: true });
@@ -123,7 +125,7 @@ async function waitForExternalGeneration({
 
   while (true) {
     if (signal?.aborted) {
-      throw new Error("请求已取消");
+      throw new ExternalGenerationTimeoutError(jobId, "等待已取消");
     }
 
     const job = await db.generationJob.findFirst({
@@ -146,13 +148,20 @@ async function waitForExternalGeneration({
       return job;
     }
     if (job.status === GenerationStatus.FAILED) {
+      if (job.errorCode && isGenerationErrorCode(job.errorCode)) {
+        throw new ExternalGenerationContractError(job.errorCode, jobId);
+      }
       throw new Error(job.errorMessage || "生成失败");
     }
     if (Date.now() >= deadline) {
       throw new ExternalGenerationTimeoutError(jobId);
     }
 
-    await wait(Math.min(pollIntervalMs, Math.max(1, deadline - Date.now())), signal);
+    await wait(
+      Math.min(pollIntervalMs, Math.max(1, deadline - Date.now())),
+      jobId,
+      signal,
+    );
   }
 }
 
@@ -166,7 +175,9 @@ export async function runExternalGeneration({
   let handedToWorker = false;
   await assertApiRateLimit(apiKeyId);
 
-  const builtInProvider = await resolveApiChannel(input.model);
+  const env = getEnv();
+  const requestedModel = input.model?.trim() || env.BUILTIN_PROVIDER_MODEL;
+  const builtInProvider = await getGenerationChannelForModel(requestedModel);
   const cost = calculateGenerationCost({
     builtInCreditCost: builtInProvider.creditCost,
     providerMode: "built_in",
@@ -174,6 +185,9 @@ export async function runExternalGeneration({
   const sourceImages = input.sourceImages ?? [];
   const model = input.model || builtInProvider.defaultModel;
   const count = input.generationType === "image_to_image" ? 1 : input.count;
+  const contractFields = generationContractWriteFields(
+    env.WORKER_CONTRACTS_V1_ENABLED,
+  );
 
   try {
     const job = await db.$transaction(async (tx) => {
@@ -182,6 +196,7 @@ export async function runExternalGeneration({
           apiKeyId,
           clientSource: GenerationClientSource.API,
           count,
+          contractVersion: contractFields.contractVersion,
           creditsSpent: cost,
           generationType:
             input.generationType === "image_to_image"
@@ -193,6 +208,7 @@ export async function runExternalGeneration({
           outputFormat: input.outputFormat,
           prompt: input.prompt,
           providerChannelId: builtInProvider.id,
+          providerModels: generationChannelModelSnapshot(builtInProvider),
           providerMode: "BUILT_IN",
           quality: input.quality,
           moderation: input.moderation,
@@ -200,6 +216,7 @@ export async function runExternalGeneration({
           size: input.size,
           sourceImageUrls: [],
           status: GenerationStatus.PENDING,
+          handoffState: contractFields.handoffState,
           userId: user.id,
           workerManaged: false,
         },

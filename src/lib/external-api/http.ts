@@ -6,16 +6,29 @@ import { getErrorMessage } from "@/lib/server/http";
 const IMAGE_JSON_KEEP_ALIVE_INTERVAL_MS = 10_000;
 
 function openAiErrorPayload(error: unknown) {
+  const contractStatus =
+    typeof error === "object" && error !== null && "status" in error &&
+      typeof error.status === "number"
+      ? error.status
+      : null;
   const status =
     error instanceof ApiAuthError ||
     error instanceof ApiRateLimitError ||
     error instanceof ApiTimeoutError
       ? error.status
-      : 400;
+      : contractStatus ?? 400;
   const isAuthError = error instanceof ApiAuthError;
   const isRateLimitError = error instanceof ApiRateLimitError;
   const isTimeoutError = error instanceof ApiTimeoutError;
   const message = getErrorMessage(error);
+  const timeoutCode = error instanceof ApiTimeoutError && error.code
+    ? error.code
+    : "timeout";
+  const contractCode =
+    typeof error === "object" && error !== null && "code" in error &&
+      typeof error.code === "string"
+      ? error.code
+      : null;
 
   return {
     body: {
@@ -25,8 +38,8 @@ function openAiErrorPayload(error: unknown) {
           : isAuthError
             ? "invalid_api_key"
             : isTimeoutError
-              ? "timeout"
-              : "invalid_request_error",
+              ? timeoutCode
+              : contractCode ?? "invalid_request_error",
         message,
         type: isRateLimitError
           ? "rate_limit_error"
@@ -36,6 +49,9 @@ function openAiErrorPayload(error: unknown) {
               ? "server_error"
               : "invalid_request_error",
       },
+      ...(error instanceof ApiTimeoutError && error.jobId
+        ? { generation_id: error.jobId }
+        : {}),
     },
     status,
   };

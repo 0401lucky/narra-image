@@ -1,4 +1,7 @@
 import { fetchPublicHttpUrl } from "@/lib/server/safe-remote-url";
+import { supportsResponsesImageGeneration } from "@/lib/generation/contracts";
+
+export { supportsResponsesImageGeneration } from "@/lib/generation/contracts";
 
 const MODEL_FETCH_TIMEOUT_MS = 15_000;
 const MODEL_RESPONSE_MAX_BYTES = 2 * 1024 * 1024;
@@ -38,11 +41,6 @@ const IMAGE_HINTS = [
 ];
 
 const PRIORITY_HINTS = ["image", "imagen", "dall-e", "grok"];
-
-export function supportsResponsesImageGeneration(modelId: string) {
-  const id = modelId.toLowerCase();
-  return /(?:^|\/)gpt-5(?:[.\-_]|$)/.test(id);
-}
 
 export function looksLikeImageModel(modelId: string) {
   const id = modelId.toLowerCase();

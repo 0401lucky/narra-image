@@ -24,8 +24,13 @@ type Worker struct {
 }
 
 type GenerationJob struct {
+	AttemptCount            int
+	CancelRequestedAt       sql.NullTime
 	Count                   int
+	ContractVersion         int
+	CreditsSpent            int
 	GenerationType          string
+	HandoffState            sql.NullString
 	ID                      string
 	Model                   string
 	Moderation              string
@@ -77,6 +82,9 @@ func (w *Worker) Run(ctx context.Context) error {
 		"jobTimeout", w.cfg.JobTimeout,
 	)
 
+	processingCtx, cancelProcessing := context.WithCancel(context.WithoutCancel(ctx))
+	defer cancelProcessing()
+
 	var waitGroup sync.WaitGroup
 	if strings.TrimSpace(w.cfg.HTTPAddr) != "" {
 		waitGroup.Add(1)
@@ -92,12 +100,31 @@ func (w *Worker) Run(ctx context.Context) error {
 		waitGroup.Add(1)
 		go func(slot int) {
 			defer waitGroup.Done()
-			w.runLoop(ctx, slot)
+			w.runLoop(ctx, processingCtx, slot)
 		}(index + 1)
 	}
 
 	<-ctx.Done()
-	waitGroup.Wait()
+	drained := make(chan struct{})
+	go func() {
+		waitGroup.Wait()
+		close(drained)
+	}()
+
+	grace := w.cfg.ShutdownGrace
+	if grace <= 0 {
+		grace = 30 * time.Second
+	}
+	timer := time.NewTimer(grace)
+	defer timer.Stop()
+	select {
+	case <-drained:
+		w.logger.Info("Worker 已完成优雅停止")
+	case <-timer.C:
+		w.logger.Warn("Worker 停止宽限期已到，取消在途任务", "grace", grace)
+		cancelProcessing()
+		<-drained
+	}
 	return nil
 }
 
@@ -106,13 +133,12 @@ func (w *Worker) waitForSchema(ctx context.Context) error {
 	defer ticker.Stop()
 
 	for attempt := 1; ; attempt++ {
-		var ready bool
-		err := w.pool.QueryRow(ctx, `SELECT to_regclass('"GenerationJob"') IS NOT NULL`).Scan(&ready)
-		if err == nil && ready {
+		report, err := CheckSchemaContract(ctx, w.pool)
+		if err == nil && report.Ready() {
 			return nil
 		}
 		if err == nil {
-			err = errors.New("GenerationJob 表尚未创建")
+			err = fmt.Errorf("数据库 schema contract v1 不完整: %+v", report.Issues)
 		}
 
 		if attempt == 1 || attempt%30 == 0 {
@@ -127,31 +153,31 @@ func (w *Worker) waitForSchema(ctx context.Context) error {
 	}
 }
 
-func (w *Worker) runLoop(ctx context.Context, slot int) {
+func (w *Worker) runLoop(claimCtx context.Context, processingCtx context.Context, slot int) {
 	ticker := time.NewTicker(w.cfg.PollInterval)
 	defer ticker.Stop()
 
 	for {
-		if ctx.Err() != nil {
+		if claimCtx.Err() != nil {
 			return
 		}
 
-		if err := w.failExpiredProcessingJobs(ctx); err != nil {
+		if err := w.failExpiredProcessingJobs(claimCtx); err != nil {
 			w.logger.Warn("清理过期任务失败", "slot", slot, "error", err)
 		}
 
-		job, ok, err := w.claimJob(ctx)
+		job, ok, err := w.claimJob(claimCtx)
 		if err != nil {
 			w.logger.Error("领取任务失败", "slot", slot, "error", err)
-			waitForNextTick(ctx, ticker)
+			waitForNextTick(claimCtx, ticker)
 			continue
 		}
 		if !ok {
-			waitForNextTick(ctx, ticker)
+			waitForNextTick(claimCtx, ticker)
 			continue
 		}
 
-		w.processJob(ctx, job)
+		w.processJob(processingCtx, job)
 	}
 }
 
@@ -170,18 +196,55 @@ func (w *Worker) claimJob(ctx context.Context) (GenerationJob, bool, error) {
 	defer rollbackSilently(ctx, tx)
 
 	now := time.Now().UTC()
-	// 只领取从未提交过上游的任务。租约过期任务由清理流程失败退款，
-	// 避免第三方不支持幂等键时自动重提并产生重复计费。
+	var candidateID string
+	var candidateUserID string
+	err = tx.QueryRow(ctx, `
+SELECT job.id, job."userId"
+FROM "GenerationJob" AS job
+WHERE job."workerManaged" = true
+  AND job.status = 'PENDING'
+  AND (job."nextAttemptAt" IS NULL OR job."nextAttemptAt" <= $1)
+  AND (job."contractVersion" < 1 OR $2)
+  AND (job."contractVersion" < 1 OR job."attemptCount" < $3)
+  AND (
+    SELECT COUNT(*)
+    FROM "GenerationJob" AS active
+    WHERE active."workerManaged" = true
+      AND active."userId" = job."userId"
+      AND active.status = 'PROCESSING'
+  ) < $4
+  AND NOT EXISTS (
+    SELECT 1
+    FROM "GenerationJob" AS older
+    WHERE older."workerManaged" = true
+      AND older.status = 'PENDING'
+      AND older."userId" = job."userId"
+      AND (older."nextAttemptAt" IS NULL OR older."nextAttemptAt" <= $1)
+      AND (older."contractVersion" < 1 OR $2)
+      AND (older."contractVersion" < 1 OR older."attemptCount" < $3)
+      AND (older."createdAt", older.id) < (job."createdAt", job.id)
+  )
+ORDER BY job."createdAt" ASC, job.id ASC
+FOR UPDATE SKIP LOCKED
+LIMIT 1
+`, now, w.cfg.ContractsV1Enabled, w.cfg.MaxAttempts, w.cfg.MaxActivePerUser).Scan(
+		&candidateID,
+		&candidateUserID,
+	)
+	if errors.Is(err, pgx.ErrNoRows) {
+		return GenerationJob{}, false, tx.Commit(ctx)
+	}
+	if err != nil {
+		return GenerationJob{}, false, err
+	}
+
+	// 同一用户的并发额度用事务级 advisory lock 串行复核，避免多个
+	// Worker 在彼此未提交时同时越过活动任务上限。
+	if _, err := tx.Exec(ctx, `SELECT pg_advisory_xact_lock(hashtextextended($1, 0))`, candidateUserID); err != nil {
+		return GenerationJob{}, false, err
+	}
+
 	row := tx.QueryRow(ctx, `
-WITH next_job AS (
-  SELECT id
-  FROM "GenerationJob"
-  WHERE "workerManaged" = true
-    AND status = 'PENDING'
-  ORDER BY "createdAt" ASC
-  FOR UPDATE SKIP LOCKED
-  LIMIT 1
-)
 UPDATE "GenerationJob" AS job
 SET
   status = 'PROCESSING',
@@ -189,12 +252,32 @@ SET
   "lockedAt" = $2,
   "startedAt" = COALESCE(job."startedAt", $2),
   "attemptCount" = job."attemptCount" + 1,
+  "handoffState" = CASE
+    WHEN job."contractVersion" >= 1 THEN 'NOT_STARTED'::"GenerationHandoffState"
+    ELSE job."handoffState"
+  END,
+  "errorCode" = NULL,
+  "errorMessage" = NULL,
+  "nextAttemptAt" = NULL,
   "updatedAt" = $2
-FROM next_job
-WHERE job.id = next_job.id
+WHERE job.id = $3
+  AND job.status = 'PENDING'
+  AND (job."nextAttemptAt" IS NULL OR job."nextAttemptAt" <= $2)
+  AND (
+    SELECT COUNT(*)
+    FROM "GenerationJob" AS active
+    WHERE active."workerManaged" = true
+      AND active."userId" = job."userId"
+      AND active.status = 'PROCESSING'
+  ) < $4
 RETURNING
   job.id,
   job."userId",
+  job."attemptCount",
+  job."contractVersion",
+  job."handoffState",
+  job."cancelRequestedAt",
+  job."creditsSpent",
   job.count,
   job."generationType",
   job."providerMode",
@@ -216,12 +299,17 @@ RETURNING
   job."sourceImageUrls",
   job."durationSeconds",
   job."aspectRatio"
-`, w.cfg.WorkerID, now)
+`, w.cfg.WorkerID, now, candidateID, w.cfg.MaxActivePerUser)
 
 	var job GenerationJob
 	err = row.Scan(
 		&job.ID,
 		&job.UserID,
+		&job.AttemptCount,
+		&job.ContractVersion,
+		&job.HandoffState,
+		&job.CancelRequestedAt,
+		&job.CreditsSpent,
 		&job.Count,
 		&job.GenerationType,
 		&job.ProviderMode,
@@ -250,10 +338,54 @@ RETURNING
 	if err != nil {
 		return GenerationJob{}, false, err
 	}
+	if job.ContractVersion >= 1 {
+		operation := generationOperation(job)
+		_, err = tx.Exec(ctx, `
+INSERT INTO "GenerationAttempt" (
+  id,
+  "jobId",
+  ordinal,
+  "workerId",
+  operation,
+  "providerChannelId",
+  model,
+  "idempotencyKey",
+  status,
+  "createdAt",
+  "updatedAt"
+) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, 'CLAIMED', $9, $9)
+`,
+			cuidLikeID(),
+			job.ID,
+			job.AttemptCount,
+			w.cfg.WorkerID,
+			operation,
+			nullableString(job.ProviderChannelID),
+			job.Model,
+			idempotencyKey(job.ID, operation),
+			now,
+		)
+		if err != nil {
+			return GenerationJob{}, false, err
+		}
+	}
 	if err := tx.Commit(ctx); err != nil {
 		return GenerationJob{}, false, err
 	}
 	return job, true, nil
+}
+
+func generationOperation(job GenerationJob) string {
+	if job.GenerationType == "TEXT_TO_VIDEO" || job.GenerationType == "IMAGE_TO_VIDEO" {
+		return "videos"
+	}
+	if supportsResponsesImageGeneration(job.Model) {
+		return "responses"
+	}
+	if job.GenerationType == "IMAGE_TO_IMAGE" {
+		return "images-edits"
+	}
+	return "images-generations"
 }
 
 func (w *Worker) processJob(parent context.Context, job GenerationJob) {
@@ -275,23 +407,50 @@ func (w *Worker) processJob(parent context.Context, job GenerationJob) {
 		heartbeatDone.Wait()
 	}()
 
+	cancelled, err := w.finalizeRequestedCancellation(ctx, job)
+	if err != nil {
+		logger.Error("处理提交前取消失败", "error", err)
+		return
+	}
+	if cancelled {
+		logger.Info("任务在提交渠道前已取消")
+		return
+	}
+
 	provider, err := w.resolveProvider(ctx, job)
 	if err != nil {
 		logger.Error("渠道解析失败", "error", err)
-		_ = w.failJobAndRefund(parent, job.ID, err.Error())
+		if finalizeErr := w.handleJobFailure(parent, job, err); finalizeErr != nil {
+			logger.Error("终结渠道解析失败任务失败", "error", finalizeErr)
+		}
 		return
 	}
+	if err := w.pinResolvedProvider(ctx, job, provider); err != nil {
+		logger.Error("固定渠道快照失败", "error", err)
+		if finalizeErr := w.handleJobFailure(parent, job, preHandoffRetryableFailure(err)); finalizeErr != nil {
+			logger.Error("终结渠道快照失败任务失败", "error", finalizeErr)
+		}
+		return
+	}
+	ctx = w.withJobProviderLifecycle(ctx, job)
 
 	if job.GenerationType == "TEXT_TO_VIDEO" || job.GenerationType == "IMAGE_TO_VIDEO" {
 		video, err := generateVideo(ctx, w.storage, job, provider, w.cfg.VideoPollInterval)
 		if err != nil {
 			logger.Error("视频生成失败", "error", err)
-			_ = w.failJobAndRefund(parent, job.ID, err.Error())
+			if finalizeErr := w.handleJobFailure(parent, job, err); finalizeErr != nil {
+				logger.Error("终结视频失败任务失败", "error", finalizeErr)
+			}
 			return
 		}
-		if err := w.completeVideoJob(parent, job, video); err != nil {
+		finalizeCtx, finalizeCancel := detachedFinalizationContext(parent, w.cfg.ShutdownGrace)
+		err = w.completeVideoJob(finalizeCtx, job, video)
+		finalizeCancel()
+		if err != nil {
 			logger.Error("写入视频结果失败", "error", err)
-			_ = w.failJobAndRefund(parent, job.ID, err.Error())
+			if finalizeErr := w.handleJobFailure(parent, job, wrapResultPersist("写入视频结果", err)); finalizeErr != nil {
+				logger.Error("记录视频写回失败状态失败", "error", finalizeErr)
+			}
 			return
 		}
 		logger.Info("视频生成任务完成", "url", video.URL)
@@ -301,13 +460,20 @@ func (w *Worker) processJob(parent context.Context, job GenerationJob) {
 	images, err := generateImages(ctx, w.storage, job, provider)
 	if err != nil {
 		logger.Error("生成失败", "error", err)
-		_ = w.failJobAndRefund(parent, job.ID, err.Error())
+		if finalizeErr := w.handleJobFailure(parent, job, err); finalizeErr != nil {
+			logger.Error("终结图片失败任务失败", "error", finalizeErr)
+		}
 		return
 	}
 
-	if err := w.completeJob(parent, job, images); err != nil {
+	finalizeCtx, finalizeCancel := detachedFinalizationContext(parent, w.cfg.ShutdownGrace)
+	err = w.completeJob(finalizeCtx, job, images)
+	finalizeCancel()
+	if err != nil {
 		logger.Error("写入生成结果失败", "error", err)
-		_ = w.failJobAndRefund(parent, job.ID, err.Error())
+		if finalizeErr := w.handleJobFailure(parent, job, wrapResultPersist("写入图片结果", err)); finalizeErr != nil {
+			logger.Error("记录图片写回失败状态失败", "error", finalizeErr)
+		}
 		return
 	}
 
@@ -356,16 +522,29 @@ func (w *Worker) resolveProvider(ctx context.Context, job GenerationJob) (Provid
 	if job.ProviderMode == "CUSTOM" {
 		if !job.ProviderBaseURL.Valid || strings.TrimSpace(job.ProviderBaseURL.String) == "" ||
 			!job.ProviderAPIKeyEncrypted.Valid || strings.TrimSpace(job.ProviderAPIKeyEncrypted.String) == "" {
-			return ProviderConfig{}, errors.New("自填渠道配置不完整")
+			return ProviderConfig{}, ContractFailure{
+				Code:    errorProviderNotConfigured,
+				Message: "自填渠道配置不完整",
+			}
+		}
+		if job.ContractVersion >= 1 && len(job.ProviderModels) > 0 && !modelInSnapshot(job.Model, job.ProviderModels) {
+			return ProviderConfig{}, ContractFailure{
+				Code:    errorModelNotSupported,
+				Message: "自填渠道不支持请求模型",
+			}
 		}
 		apiKey, err := decryptProviderSecret(job.ProviderAPIKeyEncrypted.String, w.cfg.AuthSecret)
 		if err != nil {
-			return ProviderConfig{}, err
+			return ProviderConfig{}, ContractFailure{
+				Code:    errorChannelSecretDecryptFailed,
+				Message: "自填渠道密钥无法读取",
+			}
 		}
 		return ProviderConfig{
 			APIKey:              apiKey,
 			BaseURL:             job.ProviderBaseURL.String,
 			Model:               job.Model,
+			Models:              append([]string(nil), job.ProviderModels...),
 			AllowPrivateNetwork: false,
 		}, nil
 	}
@@ -374,15 +553,26 @@ func (w *Worker) resolveProvider(ctx context.Context, job GenerationJob) (Provid
 		if job.ProviderChannelID.String == "__env__" {
 			return w.envProvider(job.Model)
 		}
-		if provider, ok, err := w.channelByID(ctx, job.ProviderChannelID.String, job.Model); err != nil || ok {
-			return provider, err
+		provider, ok, err := w.channelByID(ctx, job.ProviderChannelID.String, job.Model)
+		if err != nil {
+			return ProviderConfig{}, err
 		}
+		if !ok {
+			return ProviderConfig{}, ContractFailure{
+				Code:    errorChannelNotFound,
+				Message: "所选渠道不存在",
+			}
+		}
+		return provider, nil
 	}
 
-	if provider, ok, err := w.channelByModel(ctx, job.Model); err != nil || ok {
-		return provider, err
+	if job.ContractVersion >= 1 {
+		return ProviderConfig{}, ContractFailure{
+			Code:    errorProviderNotConfigured,
+			Message: "contract v1 任务缺少固定渠道",
+		}
 	}
-	if provider, ok, err := w.firstActiveChannel(ctx, job.Model); err != nil || ok {
+	if provider, ok, err := w.channelByModel(ctx, job.Model); err != nil || ok {
 		return provider, err
 	}
 	return w.envProvider(job.Model)
@@ -390,50 +580,57 @@ func (w *Worker) resolveProvider(ctx context.Context, job GenerationJob) (Provid
 
 func (w *Worker) channelByID(ctx context.Context, id string, model string) (ProviderConfig, bool, error) {
 	row := w.pool.QueryRow(ctx, `
-SELECT "baseUrl", "apiKeyEncrypted", "defaultModel"
+SELECT id, "baseUrl", "apiKeyEncrypted", "defaultModel", models, "isActive"
 FROM "ProviderChannel"
-WHERE id = $1 AND "isActive" = true
+WHERE id = $1
 `, id)
 	return w.scanChannel(row, model)
 }
 
 func (w *Worker) channelByModel(ctx context.Context, model string) (ProviderConfig, bool, error) {
 	row := w.pool.QueryRow(ctx, `
-SELECT "baseUrl", "apiKeyEncrypted", "defaultModel"
+SELECT id, "baseUrl", "apiKeyEncrypted", "defaultModel", models, "isActive"
 FROM "ProviderChannel"
 WHERE "isActive" = true
   AND ("defaultModel" = $1 OR $1 = ANY(models))
-ORDER BY "sortOrder" ASC, "createdAt" ASC
+ORDER BY "sortOrder" ASC, "createdAt" ASC, id ASC
 LIMIT 1
 `, model)
 	return w.scanChannel(row, model)
 }
 
-func (w *Worker) firstActiveChannel(ctx context.Context, model string) (ProviderConfig, bool, error) {
-	row := w.pool.QueryRow(ctx, `
-SELECT "baseUrl", "apiKeyEncrypted", "defaultModel"
-FROM "ProviderChannel"
-WHERE "isActive" = true
-ORDER BY "sortOrder" ASC, "createdAt" ASC
-LIMIT 1
-`)
-	return w.scanChannel(row, model)
-}
-
 func (w *Worker) scanChannel(row pgx.Row, requestedModel string) (ProviderConfig, bool, error) {
+	var id string
 	var baseURL string
 	var encrypted string
 	var defaultModel string
-	if err := row.Scan(&baseURL, &encrypted, &defaultModel); err != nil {
+	var models []string
+	var active bool
+	if err := row.Scan(&id, &baseURL, &encrypted, &defaultModel, &models, &active); err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			return ProviderConfig{}, false, nil
 		}
-		return ProviderConfig{}, false, err
+		return ProviderConfig{}, false, preHandoffRetryableFailure(err)
+	}
+	if !active {
+		return ProviderConfig{}, false, ContractFailure{
+			Code:    errorChannelInactive,
+			Message: "所选渠道已停用",
+		}
+	}
+	if !providerSupportsModel(defaultModel, requestedModel, models) {
+		return ProviderConfig{}, false, ContractFailure{
+			Code:    errorModelNotSupported,
+			Message: "所选渠道不支持请求模型",
+		}
 	}
 
 	apiKey, err := decryptProviderSecret(encrypted, w.cfg.AuthSecret)
 	if err != nil {
-		return ProviderConfig{}, false, err
+		return ProviderConfig{}, false, ContractFailure{
+			Code:    errorChannelSecretDecryptFailed,
+			Message: "渠道密钥无法读取",
+		}
 	}
 	model := requestedModel
 	if model == "" {
@@ -442,27 +639,82 @@ func (w *Worker) scanChannel(row pgx.Row, requestedModel string) (ProviderConfig
 	return ProviderConfig{
 		APIKey:              apiKey,
 		BaseURL:             baseURL,
+		ChannelID:           id,
 		Model:               model,
+		Models:              normalizedProviderModels(defaultModel, models),
 		AllowPrivateNetwork: true,
 	}, true, nil
 }
 
 func (w *Worker) envProvider(model string) (ProviderConfig, error) {
 	if strings.TrimSpace(w.cfg.BuiltInProviderAPIKey) == "" || strings.TrimSpace(w.cfg.BuiltInProviderBaseURL) == "" {
-		return ProviderConfig{}, errors.New("当前渠道未配置完成")
+		return ProviderConfig{}, ContractFailure{
+			Code:    errorProviderNotConfigured,
+			Message: "当前渠道未配置完成",
+		}
 	}
 	if model == "" {
 		model = w.cfg.BuiltInProviderModel
 	}
+	if !providerSupportsModel(w.cfg.BuiltInProviderModel, model, nil) {
+		return ProviderConfig{}, ContractFailure{
+			Code:    errorModelNotSupported,
+			Message: "环境渠道不支持请求模型",
+		}
+	}
 	return ProviderConfig{
 		APIKey:              w.cfg.BuiltInProviderAPIKey,
 		BaseURL:             w.cfg.BuiltInProviderBaseURL,
+		ChannelID:           "__env__",
 		Model:               model,
+		Models:              []string{w.cfg.BuiltInProviderModel},
 		AllowPrivateNetwork: true,
 	}, nil
 }
 
-func (w *Worker) completeJob(ctx context.Context, job GenerationJob, images []GeneratedImage) error {
+func providerSupportsModel(defaultModel string, requestedModel string, models []string) bool {
+	requestedModel = strings.TrimSpace(requestedModel)
+	if requestedModel == "" {
+		return false
+	}
+	return modelInSnapshot(requestedModel, normalizedProviderModels(defaultModel, models))
+}
+
+func modelInSnapshot(model string, models []string) bool {
+	model = strings.TrimSpace(model)
+	for _, candidate := range models {
+		if model == strings.TrimSpace(candidate) {
+			return true
+		}
+	}
+	return false
+}
+
+func normalizedProviderModels(defaultModel string, models []string) []string {
+	result := make([]string, 0, len(models)+1)
+	seen := map[string]struct{}{}
+	for _, candidate := range append([]string{defaultModel}, models...) {
+		candidate = strings.TrimSpace(candidate)
+		if candidate == "" {
+			continue
+		}
+		if _, exists := seen[candidate]; exists {
+			continue
+		}
+		seen[candidate] = struct{}{}
+		result = append(result, candidate)
+	}
+	return result
+}
+
+func (w *Worker) pinResolvedProvider(
+	ctx context.Context,
+	job GenerationJob,
+	provider ProviderConfig,
+) error {
+	if job.ProviderMode == "CUSTOM" || job.ProviderChannelID.Valid || strings.TrimSpace(provider.ChannelID) == "" {
+		return nil
+	}
 	tx, err := w.pool.BeginTx(ctx, pgx.TxOptions{})
 	if err != nil {
 		return err
@@ -473,20 +725,52 @@ func (w *Worker) completeJob(ctx context.Context, job GenerationJob, images []Ge
 	tag, err := tx.Exec(ctx, `
 UPDATE "GenerationJob"
 SET
-  status = 'SUCCEEDED',
-  "completedAt" = $1,
-  "lockedAt" = NULL,
-  "workerId" = NULL,
-  "updatedAt" = $1
-WHERE id = $2
+  "providerChannelId" = $1,
+  "providerModels" = $2,
+  "updatedAt" = $3
+WHERE id = $4
   AND status = 'PROCESSING'
-  AND "workerId" = $3
-`, now, job.ID, w.cfg.WorkerID)
+  AND "workerId" = $5
+  AND "attemptCount" = $6
+  AND "providerChannelId" IS NULL
+`, provider.ChannelID, provider.Models, now, job.ID, w.cfg.WorkerID, job.AttemptCount)
 	if err != nil {
 		return err
 	}
-	if tag.RowsAffected() == 0 {
-		return errors.New("任务状态已变化，跳过写入")
+	if tag.RowsAffected() != 1 {
+		return errors.New("任务渠道已被其他执行者修改")
+	}
+	if job.ContractVersion >= 1 {
+		tag, err = tx.Exec(ctx, `
+UPDATE "GenerationAttempt"
+SET
+  "providerChannelId" = $1,
+  "updatedAt" = $2
+WHERE "jobId" = $3
+  AND ordinal = $4
+  AND "workerId" = $5
+  AND status = 'CLAIMED'
+`, provider.ChannelID, now, job.ID, job.AttemptCount, w.cfg.WorkerID)
+		if err != nil {
+			return err
+		}
+		if tag.RowsAffected() != 1 {
+			return errors.New("attempt 渠道快照已被其他执行者修改")
+		}
+	}
+	return tx.Commit(ctx)
+}
+
+func (w *Worker) completeJob(ctx context.Context, job GenerationJob, images []GeneratedImage) error {
+	tx, err := w.pool.BeginTx(ctx, pgx.TxOptions{})
+	if err != nil {
+		return err
+	}
+	defer rollbackSilently(ctx, tx)
+
+	now := time.Now().UTC()
+	if err := w.lockCompletionTarget(ctx, tx, job); err != nil {
+		return err
 	}
 
 	for _, image := range images {
@@ -536,6 +820,9 @@ ON CONFLICT ("userId") DO UPDATE SET
 		}
 	}
 
+	if err := w.finishCompletion(ctx, tx, job, now); err != nil {
+		return err
+	}
 	return tx.Commit(ctx)
 }
 
@@ -547,23 +834,8 @@ func (w *Worker) completeVideoJob(ctx context.Context, job GenerationJob, video 
 	defer rollbackSilently(ctx, tx)
 
 	now := time.Now().UTC()
-	tag, err := tx.Exec(ctx, `
-UPDATE "GenerationJob"
-SET
-  status = 'SUCCEEDED',
-  "completedAt" = $1,
-  "lockedAt" = NULL,
-  "workerId" = NULL,
-  "updatedAt" = $1
-WHERE id = $2
-  AND status = 'PROCESSING'
-  AND "workerId" = $3
-`, now, job.ID, w.cfg.WorkerID)
-	if err != nil {
+	if err := w.lockCompletionTarget(ctx, tx, job); err != nil {
 		return err
-	}
-	if tag.RowsAffected() == 0 {
-		return errors.New("任务状态已变化，跳过写入")
 	}
 
 	_, err = tx.Exec(ctx, `
@@ -613,7 +885,122 @@ ON CONFLICT ("userId") DO UPDATE SET
 		}
 	}
 
+	if err := w.finishCompletion(ctx, tx, job, now); err != nil {
+		return err
+	}
 	return tx.Commit(ctx)
+}
+
+func (w *Worker) lockCompletionTarget(ctx context.Context, tx pgx.Tx, job GenerationJob) error {
+	query := `
+SELECT 1
+FROM "GenerationJob"
+WHERE id = $1
+  AND status = 'PROCESSING'
+  AND "workerId" = $2
+FOR UPDATE
+`
+	args := []any{job.ID, w.cfg.WorkerID}
+	if job.ContractVersion >= 1 {
+		query = `
+SELECT 1
+FROM "GenerationJob" AS job
+WHERE job.id = $1
+  AND job.status = 'PROCESSING'
+  AND job."workerId" = $2
+  AND job."attemptCount" = $3
+  AND job."contractVersion" >= 1
+  AND job."handoffState" = 'SUBMITTED'
+  AND EXISTS (
+    SELECT 1
+    FROM "GenerationAttempt" AS attempt
+    WHERE attempt."jobId" = job.id
+      AND attempt.ordinal = job."attemptCount"
+      AND attempt."workerId" = job."workerId"
+      AND attempt.status = 'SUBMITTED'
+  )
+FOR UPDATE
+`
+		args = append(args, job.AttemptCount)
+	}
+
+	var marker int
+	if err := tx.QueryRow(ctx, query, args...).Scan(&marker); err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return ResultPersistError{Cause: errors.New("任务租约、attempt ordinal 或 handoff 状态已变化")}
+		}
+		return err
+	}
+	return nil
+}
+
+func (w *Worker) finishCompletion(ctx context.Context, tx pgx.Tx, job GenerationJob, now time.Time) error {
+	if job.ContractVersion >= 1 {
+		tag, err := tx.Exec(ctx, `
+UPDATE "GenerationAttempt"
+SET
+  status = 'SUCCEEDED',
+  "completedAt" = $1,
+  "updatedAt" = $1
+WHERE "jobId" = $2
+  AND ordinal = $3
+  AND "workerId" = $4
+  AND status = 'SUBMITTED'
+`, now, job.ID, job.AttemptCount, w.cfg.WorkerID)
+		if err != nil {
+			return err
+		}
+		if tag.RowsAffected() != 1 {
+			return ResultPersistError{Cause: errors.New("attempt 成功状态已变化")}
+		}
+
+		tag, err = tx.Exec(ctx, `
+UPDATE "GenerationJob"
+SET
+  status = 'SUCCEEDED',
+  "errorCode" = NULL,
+  "errorMessage" = NULL,
+  "handoffState" = 'RESOLVED',
+  "completedAt" = $1,
+  "nextAttemptAt" = NULL,
+  "lockedAt" = NULL,
+  "workerId" = NULL,
+  "updatedAt" = $1
+WHERE id = $2
+  AND status = 'PROCESSING'
+  AND "workerId" = $3
+  AND "attemptCount" = $4
+  AND "contractVersion" >= 1
+  AND "handoffState" = 'SUBMITTED'
+`, now, job.ID, w.cfg.WorkerID, job.AttemptCount)
+		if err != nil {
+			return err
+		}
+		if tag.RowsAffected() != 1 {
+			return ResultPersistError{Cause: errors.New("任务成功状态已变化")}
+		}
+		return nil
+	}
+
+	tag, err := tx.Exec(ctx, `
+UPDATE "GenerationJob"
+SET
+  status = 'SUCCEEDED',
+  "completedAt" = $1,
+  "lockedAt" = NULL,
+  "workerId" = NULL,
+  "updatedAt" = $1
+WHERE id = $2
+  AND status = 'PROCESSING'
+  AND "workerId" = $3
+`, now, job.ID, w.cfg.WorkerID)
+	if err != nil {
+		return err
+	}
+	if tag.RowsAffected() != 1 {
+		return errors.New("任务状态已变化，跳过写入")
+	}
+	return nil
 }
 
 func nullableVideoString(value string) any {
@@ -621,61 +1008,6 @@ func nullableVideoString(value string) any {
 		return nil
 	}
 	return value
-}
-
-func (w *Worker) failJobAndRefund(ctx context.Context, jobID string, message string) error {
-	message = truncateGenerationErrorMessage(message)
-	tx, err := w.pool.BeginTx(ctx, pgx.TxOptions{})
-	if err != nil {
-		return err
-	}
-	defer rollbackSilently(ctx, tx)
-
-	var userID string
-	var creditsSpent int
-	err = tx.QueryRow(ctx, `
-SELECT "userId", "creditsSpent"
-FROM "GenerationJob"
-WHERE id = $1
-  AND status = 'PROCESSING'
-  AND "workerId" = $2
-FOR UPDATE
-`, jobID, w.cfg.WorkerID).Scan(&userID, &creditsSpent)
-	if errors.Is(err, pgx.ErrNoRows) {
-		return tx.Commit(ctx)
-	}
-	if err != nil {
-		return err
-	}
-	now := time.Now().UTC()
-	tag, err := tx.Exec(ctx, `
-UPDATE "GenerationJob"
-SET
-  status = 'FAILED',
-  "errorMessage" = $1,
-  "creditsSpent" = 0,
-  "completedAt" = $2,
-  "lockedAt" = NULL,
-  "workerId" = NULL,
-  "updatedAt" = $2
-WHERE id = $3
-  AND status = 'PROCESSING'
-  AND "workerId" = $4
-`, message, now, jobID, w.cfg.WorkerID)
-	if err != nil {
-		return err
-	}
-	if tag.RowsAffected() > 0 && creditsSpent > 0 {
-		if _, err := tx.Exec(ctx, `
-UPDATE "User"
-SET credits = credits + $1, "updatedAt" = $2
-WHERE id = $3
-`, creditsSpent, now, userID); err != nil {
-			return err
-		}
-	}
-
-	return tx.Commit(ctx)
 }
 
 func (w *Worker) failExpiredProcessingJobs(ctx context.Context) error {
@@ -686,10 +1018,8 @@ func (w *Worker) failExpiredProcessingJobs(ctx context.Context) error {
 	defer rollbackSilently(ctx, tx)
 
 	staleBefore := time.Now().UTC().Add(-w.cfg.JobTimeout)
-	// PROCESSING 是否已被上游受理无法可靠判断，因此过期后一律失败退款，
-	// 不再依赖 attemptCount 自动重试。
 	rows, err := tx.Query(ctx, `
-SELECT id
+SELECT id, "contractVersion"
 FROM "GenerationJob"
 WHERE "workerManaged" = true
   AND status = 'PROCESSING'
@@ -703,13 +1033,17 @@ LIMIT $2
 	}
 	defer rows.Close()
 
-	ids := []string{}
+	type expiredJob struct {
+		contractVersion int
+		id              string
+	}
+	jobs := []expiredJob{}
 	for rows.Next() {
-		var id string
-		if err := rows.Scan(&id); err != nil {
+		var job expiredJob
+		if err := rows.Scan(&job.id, &job.contractVersion); err != nil {
 			return err
 		}
-		ids = append(ids, id)
+		jobs = append(jobs, job)
 	}
 	if err := rows.Err(); err != nil {
 		return err
@@ -718,8 +1052,14 @@ LIMIT $2
 		return err
 	}
 
-	for _, id := range ids {
-		if err := w.failExpiredJobAndRefund(ctx, id, staleBefore, "生成任务执行超时，已自动退还预扣积分。"); err != nil {
+	for _, job := range jobs {
+		if job.contractVersion >= 1 {
+			if err := w.finalizeExpiredV1Job(ctx, job.id, staleBefore); err != nil {
+				return err
+			}
+			continue
+		}
+		if err := w.failExpiredJobAndRefund(ctx, job.id, staleBefore, "生成任务执行超时，已自动退还预扣积分。"); err != nil {
 			return err
 		}
 	}

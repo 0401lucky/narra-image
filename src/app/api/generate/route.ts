@@ -2,6 +2,12 @@ import { GenerationStatus } from "@prisma/client";
 
 import { db } from "@/lib/db";
 import { getEnv } from "@/lib/env";
+import {
+  GenerationContractError,
+  channelSupportsModel,
+  generationContractWriteFields,
+  normalizeProviderModels,
+} from "@/lib/generation/contracts";
 import { parseGenerateRequest } from "@/lib/generation/parse-generate-request";
 import { calculateGenerationCost, hasEnoughCredits, resolveCreditCost } from "@/lib/credits";
 import {
@@ -9,7 +15,11 @@ import {
   toPrismaGenerationType,
   toPrismaProviderMode,
 } from "@/lib/prisma-mappers";
-import { getBuiltInProviderConfig, getChannelById } from "@/lib/providers/built-in-provider";
+import {
+  generationChannelModelSnapshot,
+  getGenerationChannelById,
+  getGenerationChannelForModel,
+} from "@/lib/providers/built-in-provider";
 import { decryptProviderSecret, encryptProviderSecret } from "@/lib/providers/provider-secret";
 import { requireTurnstile } from "@/lib/auth/turnstile";
 import { requireCurrentUserRecord } from "@/lib/server/current-user";
@@ -36,28 +46,18 @@ export async function POST(request: Request) {
     const env = getEnv();
 
     const channelId = body.channelId as string | undefined;
-    let builtInProvider;
-    if (channelId) {
-      const channel = await getChannelById(channelId);
-      if (!channel) return jsonError("所选渠道不存在或已被停用", 400);
-      builtInProvider = {
-        apiKey: channel.apiKey,
-        baseUrl: channel.baseUrl,
-        creditCost: channel.creditCost,
-        videoCreditCost: channel.videoCreditCost,
-        id: channel.id,
-        model: channel.defaultModel,
-        models: channel.models,
-        name: channel.name,
-      };
-    } else {
-      builtInProvider = await getBuiltInProviderConfig();
-    }
+    const builtInProvider = body.providerMode === "built_in"
+      ? channelId
+        ? await getGenerationChannelById(channelId, body.model)
+        : await getGenerationChannelForModel(body.model)
+      : null;
 
     const builtInCreditCost = resolveCreditCost({
       generationType: body.generationType,
-      imageCreditCost: builtInProvider.creditCost,
-      videoCreditCost: builtInProvider.videoCreditCost,
+      imageCreditCost:
+        builtInProvider?.creditCost ?? env.BUILTIN_PROVIDER_CREDIT_COST,
+      videoCreditCost:
+        builtInProvider?.videoCreditCost ?? env.BUILTIN_PROVIDER_VIDEO_CREDIT_COST,
     });
 
     const cost = calculateGenerationCost({
@@ -101,6 +101,14 @@ export async function POST(request: Request) {
       };
       customProviderRemember = true;
       customProviderModels = saved.models;
+    }
+
+    if (body.providerMode === "custom" && customProvider && !channelSupportsModel({
+      defaultModel: customProvider.model,
+      model: body.model,
+      models: customProviderModels,
+    })) {
+      throw new GenerationContractError("MODEL_NOT_SUPPORTED_BY_CHANNEL");
     }
 
     // 此处做入队前校验；Worker 仍需对实际请求和重定向目标重复校验。
@@ -149,6 +157,9 @@ export async function POST(request: Request) {
       ),
     );
     const sourceImageUrls = [...uploadedUrls, ...body.imageUrls];
+    const contractFields = generationContractWriteFields(
+      env.WORKER_CONTRACTS_V1_ENABLED,
+    );
 
     // 创建 PENDING 任务并预扣积分。模型调用转交给 Go Worker，
     // 让请求链路保持短平快，也避免 Next 进程重启导致后台生成丢失。
@@ -157,6 +168,7 @@ export async function POST(request: Request) {
         data: {
           ...(conversationToBind ? { conversationId: conversationToBind } : {}),
           count: body.count,
+          contractVersion: contractFields.contractVersion,
           creditsSpent: body.providerMode === "built_in" ? cost : 0,
           generationType: toPrismaGenerationType(body.generationType),
           durationSeconds: body.durationSeconds ?? null,
@@ -171,11 +183,13 @@ export async function POST(request: Request) {
           providerBaseUrl:
             body.providerMode === "custom" ? customProvider?.baseUrl ?? null : null,
           providerChannelId:
-            body.providerMode === "built_in" ? builtInProvider.id ?? null : null,
+            body.providerMode === "built_in" ? builtInProvider?.id ?? null : null,
           providerLabel:
             body.providerMode === "custom" ? customProvider?.label ?? null : null,
           providerModels:
-            body.providerMode === "custom" ? customProviderModels : [],
+            body.providerMode === "custom"
+              ? normalizeProviderModels(customProvider?.model ?? body.model, customProviderModels)
+              : generationChannelModelSnapshot(builtInProvider!),
           providerMode: toPrismaProviderMode(body.providerMode),
           providerRemember:
             body.providerMode === "custom" ? customProviderRemember : false,
@@ -185,6 +199,7 @@ export async function POST(request: Request) {
           size: body.size,
           sourceImageUrls,
           status: GenerationStatus.PENDING,
+          handoffState: contractFields.handoffState,
           userId: user.id,
           workerManaged: true,
         },
@@ -248,6 +263,9 @@ export async function POST(request: Request) {
       });
     }
 
+    if (error instanceof GenerationContractError) {
+      return jsonError(error.message, error.status, error.code);
+    }
     return jsonError(getErrorMessage(error), 400);
   }
 }

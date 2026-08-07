@@ -9,7 +9,11 @@ export async function POST() {
     await requireAdminRecord();
 
     const result = await db.generationJob.deleteMany({
-      where: { status: GenerationStatus.FAILED },
+      where: {
+        attempts: { none: {} },
+        contractVersion: { lt: 1 },
+        status: GenerationStatus.FAILED,
+      },
     });
 
     return jsonOk({ deleted: result.count });

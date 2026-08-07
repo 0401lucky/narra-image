@@ -128,21 +128,38 @@ export default async function AdminGenerationsPage({
         ],
       }
     : {};
-  const visibleWhere: Prisma.GenerationJobWhereInput = {
-    ...searchWhere,
-    status: {
-      in: [
-        GenerationStatus.SUCCEEDED,
-        GenerationStatus.PENDING,
-        GenerationStatus.PROCESSING,
-      ],
-    },
-  };
-  const pendingWhere: Prisma.GenerationJobWhereInput = {
-    ...searchWhere,
+  const withSearch = (
+    where: Prisma.GenerationJobWhereInput,
+  ): Prisma.GenerationJobWhereInput =>
+    search ? { AND: [searchWhere, where] } : where;
+  const coordinationWhere = withSearch({
+    contractVersion: { gte: 1 },
+    handoffState: "UNKNOWN",
+    status: GenerationStatus.FAILED,
+  });
+  const visibleWhere = withSearch({
+    OR: [
+      {
+        status: {
+          in: [
+            GenerationStatus.SUCCEEDED,
+            GenerationStatus.PENDING,
+            GenerationStatus.PROCESSING,
+          ],
+        },
+      },
+      {
+        contractVersion: { gte: 1 },
+        handoffState: "UNKNOWN",
+        status: GenerationStatus.FAILED,
+      },
+    ],
+  });
+  const pendingWhere = withSearch({
     status: { in: [GenerationStatus.PENDING, GenerationStatus.PROCESSING] },
-  };
-  const [jobs, totalCount, failedCount, pendingCount] = await Promise.all([
+  });
+  const [jobs, totalCount, failedCount, pendingCount, coordinationCount] =
+    await Promise.all([
     db.generationJob.findMany({
       where: visibleWhere,
       orderBy: { createdAt: "desc" },
@@ -161,8 +178,15 @@ export default async function AdminGenerationsPage({
       take: PAGE_SIZE,
     }),
     db.generationJob.count({ where: visibleWhere }),
-    db.generationJob.count({ where: { status: GenerationStatus.FAILED } }),
+    db.generationJob.count({
+      where: {
+        attempts: { none: {} },
+        contractVersion: { lt: 1 },
+        status: GenerationStatus.FAILED,
+      },
+    }),
     db.generationJob.count({ where: pendingWhere }),
+    db.generationJob.count({ where: coordinationWhere }),
   ]);
 
   const totalPages = Math.ceil(totalCount / PAGE_SIZE);
@@ -177,7 +201,9 @@ export default async function AdminGenerationsPage({
               生成记录
             </h1>
             <p className="mt-2 text-sm text-[var(--ink-soft)]">
-              查看并管理所有用户生成的图片记录。当前显示 {totalCount} 条记录，其中 {pendingCount} 条生成中；失败任务已隐藏。
+              查看并管理所有用户生成的图片记录。当前显示 {totalCount} 条记录，
+              其中 {pendingCount} 条生成中、{coordinationCount}
+              条需要人工协调；普通失败任务已隐藏。
             </p>
           </div>
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center xl:justify-end">

@@ -1,0 +1,132 @@
+{
+  "version": 1,
+  "errors": {
+    "CHANNEL_NOT_FOUND": {
+      "category": "validation",
+      "retryable": false,
+      "refundable": true,
+      "userMessage": "所选渠道不存在"
+    },
+    "CHANNEL_INACTIVE": {
+      "category": "validation",
+      "retryable": false,
+      "refundable": true,
+      "userMessage": "所选渠道已停用"
+    },
+    "CHANNEL_SECRET_DECRYPT_FAILED": {
+      "category": "configuration",
+      "retryable": false,
+      "refundable": true,
+      "userMessage": "渠道密钥无法读取"
+    },
+    "MODEL_NOT_SUPPORTED_BY_CHANNEL": {
+      "category": "validation",
+      "retryable": false,
+      "refundable": true,
+      "userMessage": "所选渠道不支持该模型"
+    },
+    "PROVIDER_NOT_CONFIGURED": {
+      "category": "configuration",
+      "retryable": false,
+      "refundable": true,
+      "userMessage": "当前渠道未配置完成"
+    },
+    "PROVIDER_CONNECTION_FAILED": {
+      "category": "upstream_transient",
+      "retryable": true,
+      "requiresNotSubmitted": true,
+      "refundable": true,
+      "userMessage": "渠道连接失败"
+    },
+    "PROVIDER_RATE_LIMITED": {
+      "category": "upstream_transient",
+      "retryable": true,
+      "requiresNotSubmitted": true,
+      "refundable": true,
+      "userMessage": "渠道请求过于频繁"
+    },
+    "PROVIDER_UNAVAILABLE": {
+      "category": "upstream_transient",
+      "retryable": true,
+      "requiresNotSubmitted": true,
+      "refundable": true,
+      "userMessage": "渠道暂时不可用"
+    },
+    "PROVIDER_AUTH_FAILED": {
+      "category": "upstream_final",
+      "retryable": false,
+      "refundable": true,
+      "userMessage": "渠道鉴权失败"
+    },
+    "PROVIDER_REQUEST_INVALID": {
+      "category": "upstream_final",
+      "retryable": false,
+      "refundable": true,
+      "userMessage": "渠道拒绝了生成参数"
+    },
+    "PROVIDER_POLICY_REJECTED": {
+      "category": "upstream_final",
+      "retryable": false,
+      "refundable": true,
+      "userMessage": "生成请求未通过渠道策略"
+    },
+    "SOURCE_IMAGE_INVALID": {
+      "category": "validation",
+      "retryable": false,
+      "refundable": true,
+      "userMessage": "参考图无效或无法读取"
+    },
+    "GENERATION_CANCELLED": {
+      "category": "cancelled",
+      "retryable": false,
+      "refundable": true,
+      "userMessage": "生成任务已取消"
+    },
+    "GENERATION_ALREADY_SUBMITTED": {
+      "category": "cancel_conflict",
+      "retryable": false,
+      "refundable": false,
+      "jobTerminal": false,
+      "userMessage": "任务已经提交渠道，请继续查询结果"
+    },
+    "GENERATION_WAIT_TIMEOUT": {
+      "category": "client_wait",
+      "retryable": false,
+      "refundable": false,
+      "jobTerminal": false,
+      "userMessage": "等待生成结果超时，请稍后查询任务"
+    },
+    "MAX_ATTEMPTS_EXHAUSTED": {
+      "category": "upstream_final",
+      "retryable": false,
+      "refundable": true,
+      "userMessage": "渠道多次尝试后仍不可用"
+    },
+    "LEASE_LOST_BEFORE_HANDOFF": {
+      "category": "worker_transient",
+      "retryable": true,
+      "requiresNotSubmitted": true,
+      "refundable": true,
+      "userMessage": "任务租约已转移，系统将安全重试"
+    },
+    "HANDOFF_UNKNOWN": {
+      "category": "coordination_required",
+      "retryable": false,
+      "refundable": false,
+      "userMessage": "渠道提交结果暂不确定，请保留任务编号并稍后查询"
+    },
+    "RESULT_PERSIST_FAILED": {
+      "category": "coordination_required",
+      "retryable": false,
+      "refundable": false,
+      "userMessage": "生成结果写回失败，需要继续协调"
+    },
+    "SCHEMA_CONTRACT_MISMATCH": {
+      "category": "schema",
+      "retryable": false,
+      "refundable": false,
+      "jobTerminal": false,
+      "userMessage": "数据库契约版本不兼容"
+    }
+  }
+}

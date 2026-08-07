@@ -1,5 +1,10 @@
 import { db } from "@/lib/db";
 import { getEnv } from "@/lib/env";
+import {
+  GenerationContractError,
+  channelSupportsModel,
+  normalizeProviderModels,
+} from "@/lib/generation/contracts";
 import { decryptProviderSecret } from "@/lib/providers/provider-secret";
 
 /**
@@ -16,72 +21,85 @@ export type ResolvedChannel = {
   name: string;
 };
 
+type StoredChannel = {
+  apiKeyEncrypted: string;
+  baseUrl: string;
+  creditCost: number;
+  defaultModel: string;
+  id: string;
+  isActive: boolean;
+  models: string[];
+  name: string;
+  videoCreditCost: number;
+};
+
+async function resolveStoredChannel(channel: StoredChannel): Promise<ResolvedChannel> {
+  const env = getEnv();
+  let apiKey: string;
+  try {
+    apiKey = await decryptProviderSecret(channel.apiKeyEncrypted, env.AUTH_SECRET);
+  } catch (error) {
+    throw new GenerationContractError("CHANNEL_SECRET_DECRYPT_FAILED", {
+      cause: error,
+    });
+  }
+
+  return {
+    apiKey,
+    baseUrl: channel.baseUrl,
+    creditCost: channel.creditCost,
+    videoCreditCost: channel.videoCreditCost,
+    defaultModel: channel.defaultModel,
+    id: channel.id,
+    models: channel.models,
+    name: channel.name,
+  };
+}
+
+function envChannel(): ResolvedChannel | null {
+  const env = getEnv();
+  const apiKey = env.BUILTIN_PROVIDER_API_KEY || "";
+  const baseUrl = env.BUILTIN_PROVIDER_BASE_URL || "";
+  if (!apiKey || !baseUrl) {
+    return null;
+  }
+  return {
+    apiKey,
+    baseUrl,
+    creditCost: env.BUILTIN_PROVIDER_CREDIT_COST,
+    videoCreditCost: env.BUILTIN_PROVIDER_VIDEO_CREDIT_COST,
+    defaultModel: env.BUILTIN_PROVIDER_MODEL,
+    id: "__env__",
+    models: [],
+    name: env.BUILTIN_PROVIDER_NAME,
+  };
+}
+
 /**
  * Get all active provider channels, ordered by sortOrder.
  */
 export async function getActiveChannels(): Promise<ResolvedChannel[]> {
-  const env = getEnv();
   const channels = await db.providerChannel.findMany({
     where: { isActive: true },
-    orderBy: { sortOrder: "asc" },
+    orderBy: [{ sortOrder: "asc" }, { createdAt: "asc" }, { id: "asc" }],
   });
 
   if (channels.length === 0) {
     // Fallback to env config if no channels in DB
-    const envKey = env.BUILTIN_PROVIDER_API_KEY || "";
-    const envBase = env.BUILTIN_PROVIDER_BASE_URL || "";
-    if (!envKey || !envBase) return [];
-
-    return [
-      {
-        apiKey: envKey,
-        baseUrl: envBase,
-        creditCost: env.BUILTIN_PROVIDER_CREDIT_COST,
-        videoCreditCost: env.BUILTIN_PROVIDER_VIDEO_CREDIT_COST,
-        defaultModel: env.BUILTIN_PROVIDER_MODEL,
-        id: "__env__",
-        models: [],
-        name: env.BUILTIN_PROVIDER_NAME,
-      },
-    ];
+    const fallback = envChannel();
+    return fallback ? [fallback] : [];
   }
 
-  return Promise.all(
-    channels.map(async (ch) => ({
-      apiKey: await decryptProviderSecret(ch.apiKeyEncrypted, env.AUTH_SECRET),
-      baseUrl: ch.baseUrl,
-      creditCost: ch.creditCost,
-      videoCreditCost: ch.videoCreditCost,
-      defaultModel: ch.defaultModel,
-      id: ch.id,
-      models: ch.models,
-      name: ch.name,
-    })),
-  );
+  return Promise.all(channels.map(resolveStoredChannel));
 }
 
 /**
  * Get a single channel by ID — used during generation.
  */
 export async function getChannelById(id: string): Promise<ResolvedChannel | null> {
-  const env = getEnv();
-
   // env fallback
   if (id === "__env__") {
-    const envKey = env.BUILTIN_PROVIDER_API_KEY || "";
-    const envBase = env.BUILTIN_PROVIDER_BASE_URL || "";
-    if (!envKey || !envBase) return null;
-
-    return {
-      apiKey: envKey,
-      baseUrl: envBase,
-      creditCost: env.BUILTIN_PROVIDER_CREDIT_COST,
-      videoCreditCost: env.BUILTIN_PROVIDER_VIDEO_CREDIT_COST,
-      defaultModel: env.BUILTIN_PROVIDER_MODEL,
-      id: "__env__",
-      models: [],
-      name: env.BUILTIN_PROVIDER_NAME,
-    };
+    return envChannel();
   }
 
   const ch = await db.providerChannel.findFirst({
@@ -89,16 +107,7 @@ export async function getChannelById(id: string): Promise<ResolvedChannel | null
   });
   if (!ch) return null;
 
-  return {
-    apiKey: await decryptProviderSecret(ch.apiKeyEncrypted, env.AUTH_SECRET),
-    baseUrl: ch.baseUrl,
-    creditCost: ch.creditCost,
-    videoCreditCost: ch.videoCreditCost,
-    defaultModel: ch.defaultModel,
-    id: ch.id,
-    models: ch.models,
-    name: ch.name,
-  };
+  return resolveStoredChannel(ch);
 }
 
 /**
@@ -146,6 +155,79 @@ export async function getChannelsForAdmin() {
     sortOrder: ch.sortOrder,
     videoCreditCost: ch.videoCreditCost,
   }));
+}
+
+export async function getGenerationChannelById(
+  id: string,
+  requestedModel: string,
+): Promise<ResolvedChannel> {
+  if (id === "__env__") {
+    const channel = envChannel();
+    if (!channel) {
+      throw new GenerationContractError("CHANNEL_NOT_FOUND");
+    }
+    if (!channelSupportsModel({
+      defaultModel: channel.defaultModel,
+      model: requestedModel,
+      models: channel.models,
+    })) {
+      throw new GenerationContractError("MODEL_NOT_SUPPORTED_BY_CHANNEL");
+    }
+    return channel;
+  }
+
+  const channel = await db.providerChannel.findUnique({ where: { id } });
+  if (!channel) {
+    throw new GenerationContractError("CHANNEL_NOT_FOUND");
+  }
+  if (!channel.isActive) {
+    throw new GenerationContractError("CHANNEL_INACTIVE");
+  }
+  if (!channelSupportsModel({
+    defaultModel: channel.defaultModel,
+    model: requestedModel,
+    models: channel.models,
+  })) {
+    throw new GenerationContractError("MODEL_NOT_SUPPORTED_BY_CHANNEL");
+  }
+  return resolveStoredChannel(channel);
+}
+
+export async function getGenerationChannelForModel(
+  requestedModel: string,
+): Promise<ResolvedChannel> {
+  const channels = await db.providerChannel.findMany({
+    where: { isActive: true },
+    orderBy: [{ sortOrder: "asc" }, { createdAt: "asc" }, { id: "asc" }],
+  });
+  if (channels.length === 0) {
+    const fallback = envChannel();
+    if (!fallback) {
+      throw new GenerationContractError("PROVIDER_NOT_CONFIGURED");
+    }
+    if (!channelSupportsModel({
+      defaultModel: fallback.defaultModel,
+      model: requestedModel,
+      models: fallback.models,
+    })) {
+      throw new GenerationContractError("MODEL_NOT_SUPPORTED_BY_CHANNEL");
+    }
+    return fallback;
+  }
+
+  const channel = channels.find((candidate) => channelSupportsModel({
+    defaultModel: candidate.defaultModel,
+    model: requestedModel,
+    models: candidate.models,
+  }));
+  if (!channel) {
+    throw new GenerationContractError("MODEL_NOT_SUPPORTED_BY_CHANNEL");
+  }
+  return resolveStoredChannel(channel);
+}
+
+export function generationChannelModelSnapshot(channel: ResolvedChannel) {
+  return normalizeProviderModels(channel.defaultModel, channel.models);
 }
 
 /**

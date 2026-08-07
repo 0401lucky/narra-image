@@ -16,8 +16,12 @@ export class ApiRateLimitError extends Error {
 
 export class ApiTimeoutError extends Error {
   status = 504;
+  code?: string;
+  jobId?: string;
 
-  constructor(message: string) {
+  constructor(message: string, options: { code?: string; jobId?: string } = {}) {
     super(message);
+    this.code = options.code;
+    this.jobId = options.jobId;
   }
 }

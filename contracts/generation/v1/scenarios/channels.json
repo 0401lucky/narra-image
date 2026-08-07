@@ -1,0 +1,42 @@
+{
+  "version": 1,
+  "scenarios": [
+    {
+      "id": "WC-A01",
+      "explicit": true,
+      "channel": { "id": "c1", "active": true, "defaultModel": "m1", "models": ["m2"] },
+      "requestedModel": "m1",
+      "result": { "channelId": "c1", "errorCode": null }
+    },
+    {
+      "id": "WC-A02",
+      "explicit": true,
+      "channel": { "id": "c1", "active": true, "defaultModel": "m1", "models": ["m2"] },
+      "requestedModel": "m2",
+      "result": { "channelId": "c1", "errorCode": null }
+    },
+    {
+      "id": "WC-A03",
+      "explicit": true,
+      "channel": { "id": "c1", "active": true, "defaultModel": "m1", "models": ["m2"] },
+      "requestedModel": "m9",
+      "result": { "channelId": null, "errorCode": "MODEL_NOT_SUPPORTED_BY_CHANNEL" }
+    },
+    {
+      "id": "WC-A04-inactive",
+      "explicit": true,
+      "channel": { "id": "c1", "active": false, "defaultModel": "m1", "models": [] },
+      "requestedModel": "m1",
+      "fallbackChannelId": "c2",
+      "result": { "channelId": null, "errorCode": "CHANNEL_INACTIVE" }
+    },
+    {
+      "id": "WC-A04-missing",
+      "explicit": true,
+      "channel": null,
+      "requestedModel": "m1",
+      "fallbackChannelId": "c2",
+      "result": { "channelId": null, "errorCode": "CHANNEL_NOT_FOUND" }
+    }
+  ]
+}

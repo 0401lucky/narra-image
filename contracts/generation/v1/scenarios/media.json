@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "image": {
+    "generationFields": ["model", "prompt", "n", "size", "quality", "output_format", "output_compression", "moderation", "negative_prompt", "seed"],
+    "editCount": 1,
+    "resultFields": ["url", "width", "height"]
+  },
+  "video": {
+    "requestFields": ["model", "prompt", "seconds", "size", "ratio", "input_reference"],
+    "resultFields": ["url", "posterUrl", "width", "height", "durationSeconds"],
+    "nullableResultFields": ["posterUrl", "width", "height", "durationSeconds"]
+  }
+}

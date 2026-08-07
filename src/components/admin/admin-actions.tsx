@@ -33,20 +33,39 @@ function getUserDisplayName(user: GenerationAdminJob["user"] | null | undefined)
   return user?.nickname?.trim() || user?.email || "未知用户";
 }
 
-function getGenerationStatusLabel(status: GenerationAdminJob["status"]) {
-  if (status === "PENDING" || status === "PROCESSING") return "生成中";
-  if (status === "FAILED") return "已失败";
+function isGenerationCoordinationRequired(job: GenerationAdminJob) {
+  return (
+    job.contractVersion >= 1 &&
+    (job.handoffState === "UNKNOWN" || job.errorCode === "HANDOFF_UNKNOWN")
+  );
+}
+
+function getGenerationStatusLabel(job: GenerationAdminJob) {
+  if (isGenerationCoordinationRequired(job)) return "待协调";
+  if (job.status === "PENDING" || job.status === "PROCESSING") return "生成中";
+  if (job.status === "FAILED") return "已失败";
   return "已完成";
 }
 
-function getMissingImageLabel(status: GenerationAdminJob["status"]) {
-  if (status === "PENDING" || status === "PROCESSING") return "生成中";
-  if (status === "FAILED") return "生成失败";
+function getMissingImageLabel(job: GenerationAdminJob) {
+  if (isGenerationCoordinationRequired(job)) return "等待人工协调";
+  if (job.status === "PENDING" || job.status === "PROCESSING") return "生成中";
+  if (job.status === "FAILED") return "生成失败";
   return "图片缺失";
 }
 
 function getCreditLabel(job: GenerationAdminJob) {
-  if (job.status === "FAILED") return "已退还";
+  if (isGenerationCoordinationRequired(job)) {
+    return job.creditsSpent > 0
+      ? `保留 ${job.creditsSpent} 积分`
+      : "未扣积分（待协调）";
+  }
+  if (job.status === "FAILED") {
+    if (job.creditsSpent > 0 && !job.refundAppliedAt) {
+      return `待处理 ${job.creditsSpent} 积分`;
+    }
+    return job.refundAppliedAt ? "已退还" : "未扣积分";
+  }
   if ((job.status === "PENDING" || job.status === "PROCESSING") && job.creditsSpent > 0) {
     return `预扣 -${job.creditsSpent}`;
   }
@@ -192,6 +211,10 @@ export function GenerationAdminList({ jobs }: { jobs: GenerationAdminJob[] }) {
         body: JSON.stringify({ ids: deleteTargetIds }),
       });
       const result = (await response.json().catch(() => ({}))) as {
+        data?: {
+          deletedIds?: string[];
+          protectedIds?: string[];
+        };
         error?: string;
       };
       if (!response.ok) {
@@ -199,16 +222,27 @@ export function GenerationAdminList({ jobs }: { jobs: GenerationAdminJob[] }) {
         return;
       }
 
+      const deletedIds = result.data?.deletedIds ?? [];
+      const protectedIds = result.data?.protectedIds ?? [];
       setHiddenIds((current) => {
         const next = new Set(current);
-        deleteTargetIds.forEach((id) => next.add(id));
+        deletedIds.forEach((id) => next.add(id));
         return next;
       });
       setSelectedIds((current) => {
         const next = new Set(current);
-        deleteTargetIds.forEach((id) => next.delete(id));
+        deletedIds.forEach((id) => next.delete(id));
         return next;
       });
+      if (protectedIds.length > 0) {
+        setCopyFeedback(
+          `已删除 ${deletedIds.length} 条；${protectedIds.length} 条契约任务需保留协调证据，未删除。`,
+        );
+      } else if (deletedIds.length > 0) {
+        setCopyFeedback(`已删除 ${deletedIds.length} 条记录。`);
+      } else {
+        setCopyFeedback("没有记录被删除，列表已刷新。");
+      }
       setDeleteTargetIds(null);
       startTransition(() => {
         router.refresh();
@@ -313,8 +347,16 @@ export function GenerationAdminList({ jobs }: { jobs: GenerationAdminJob[] }) {
                     </p>
                     <div className="mt-2 flex flex-wrap gap-1.5 text-[11px] text-[var(--ink-soft)]">
                       <span className="rounded-full border border-[var(--line)] bg-white/60 px-2 py-0.5">
-                        {getGenerationStatusLabel(job.status)}
+                        {getGenerationStatusLabel(job)}
                       </span>
+                      {isGenerationCoordinationRequired(job) ? (
+                        <span
+                          className="rounded-full border border-amber-300 bg-amber-50 px-2 py-0.5 text-amber-800"
+                          title={job.errorCode ?? "HANDOFF_UNKNOWN"}
+                        >
+                          需人工协调
+                        </span>
+                      ) : null}
                       <span className="rounded-full border border-[var(--line)] bg-white/60 px-2 py-0.5">
                         {getGenerationTypeLabel(job)}
                       </span>
@@ -481,8 +523,16 @@ export function GenerationAdminList({ jobs }: { jobs: GenerationAdminJob[] }) {
                     <td className="px-4 py-4 align-middle text-xs text-[var(--ink-soft)]">
                       <div className="flex flex-wrap gap-1.5">
                         <span className="rounded-full border border-[var(--line)] bg-white/60 px-2 py-1">
-                          {getGenerationStatusLabel(job.status)}
+                          {getGenerationStatusLabel(job)}
                         </span>
+                        {isGenerationCoordinationRequired(job) ? (
+                          <span
+                            className="rounded-full border border-amber-300 bg-amber-50 px-2 py-1 text-amber-800"
+                            title={job.errorCode ?? "HANDOFF_UNKNOWN"}
+                          >
+                            需人工协调
+                          </span>
+                        ) : null}
                         <span className="rounded-full border border-[var(--line)] bg-white/60 px-2 py-1">
                           {getGenerationTypeLabel(job)}
                         </span>
@@ -616,7 +666,8 @@ export function GenerationAdminList({ jobs }: { jobs: GenerationAdminJob[] }) {
               删除生成记录
             </h3>
             <p className="mt-2 text-sm leading-relaxed text-[var(--ink-soft)]">
-              将删除 {deleteCount} 条生成任务及其图片记录，操作不可恢复。是否继续？
+              将尝试删除 {deleteCount} 条生成任务及其图片记录，操作不可恢复。
+              v1 契约任务及 attempt 证据会被保留。是否继续？
             </p>
             {deleteError ? (
               <div className="mt-3">
@@ -1291,7 +1342,7 @@ export function GenerationAdminCard({ job }: { job: GenerationAdminJob }) {
         </div>
       ) : (
         <div className="flex size-32 xl:size-40 shrink-0 mx-auto xl:mx-0 items-center justify-center rounded-xl bg-[var(--surface-strong)]/50 text-xs text-[var(--ink-soft)] border border-[var(--line)]">
-          {getMissingImageLabel(job.status)}
+          {getMissingImageLabel(job)}
         </div>
       )}
       
@@ -1306,7 +1357,7 @@ export function GenerationAdminCard({ job }: { job: GenerationAdminJob }) {
             </span>
             <div className="flex items-center gap-2">
               <span className="shrink-0 rounded-full bg-[var(--surface-strong)] border border-[var(--line)] px-2 py-0.5">
-                {getGenerationStatusLabel(job.status)}
+                {getGenerationStatusLabel(job)}
               </span>
               <span className="shrink-0 rounded-full bg-[var(--surface-strong)] border border-[var(--line)] px-2 py-0.5">
                 {job.generationType === "IMAGE_TO_IMAGE" ? "图生图" : "文生图"}

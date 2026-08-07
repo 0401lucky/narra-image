@@ -18,13 +18,17 @@ type Config struct {
 	BuiltInProviderName            string
 	BuiltInProviderCreditCost      int
 	Concurrency                    int
+	ContractsV1Enabled             bool
 	DatabaseURL                    string
 	EnableLocalImageFallback       bool
 	HTTPAddr                       string
 	JobTimeout                     time.Duration
 	MaxAttempts                    int
+	MaxActivePerUser               int
 	MetricsWindow                  time.Duration
 	PollInterval                   time.Duration
+	RetryBaseDelay                 time.Duration
+	ShutdownGrace                  time.Duration
 	VideoPollInterval              time.Duration
 	BuiltInProviderVideoCreditCost int
 	BuiltInProviderVideoModel      string
@@ -61,13 +65,17 @@ func LoadConfig() (Config, error) {
 		BuiltInProviderName:            getenv("BUILTIN_PROVIDER_NAME", "Studio"),
 		BuiltInProviderCreditCost:      getenvInt("BUILTIN_PROVIDER_CREDIT_COST", 5),
 		Concurrency:                    getenvInt("WORKER_CONCURRENCY", 2),
+		ContractsV1Enabled:             getenvBool("WORKER_CONTRACTS_V1_ENABLED", false),
 		DatabaseURL:                    databaseURL,
 		EnableLocalImageFallback:       getenvBool("ENABLE_LOCAL_IMAGE_FALLBACK", true),
 		HTTPAddr:                       getenv("WORKER_HTTP_ADDR", ":8081"),
 		JobTimeout:                     time.Duration(getenvInt("WORKER_JOB_TIMEOUT_SECONDS", 900)) * time.Second,
 		MaxAttempts:                    getenvInt("WORKER_MAX_ATTEMPTS", 2),
+		MaxActivePerUser:               getenvInt("WORKER_MAX_ACTIVE_PER_USER", 1),
 		MetricsWindow:                  time.Duration(getenvInt("WORKER_METRICS_WINDOW_MINUTES", 1440)) * time.Minute,
 		PollInterval:                   time.Duration(getenvInt("WORKER_POLL_INTERVAL_MS", 1000)) * time.Millisecond,
+		RetryBaseDelay:                 time.Duration(getenvInt("WORKER_RETRY_BASE_DELAY_MS", 1000)) * time.Millisecond,
+		ShutdownGrace:                  time.Duration(getenvInt("WORKER_SHUTDOWN_GRACE_SECONDS", 30)) * time.Second,
 		VideoPollInterval:              time.Duration(getenvInt("WORKER_VIDEO_POLL_INTERVAL_MS", 5000)) * time.Millisecond,
 		BuiltInProviderVideoCreditCost: getenvInt("BUILTIN_PROVIDER_VIDEO_CREDIT_COST", 20),
 		BuiltInProviderVideoModel:      getenv("BUILTIN_PROVIDER_VIDEO_MODEL", "sora-2"),

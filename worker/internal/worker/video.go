@@ -105,7 +105,7 @@ func createVideo(ctx context.Context, job GenerationJob, provider ProviderConfig
 		endpoint(provider.BaseURL, "/videos"),
 		provider,
 		body,
-		idempotencyHeaders(job.ID, "videos-create"),
+		idempotencyHeaders(job.ID, "videos"),
 	)
 	if err != nil {
 		if job.GenerationType == "IMAGE_TO_VIDEO" {
@@ -115,10 +115,13 @@ func createVideo(ctx context.Context, job GenerationJob, provider ProviderConfig
 	}
 	var created videoCreateResponse
 	if err := json.Unmarshal(responseBody, &created); err != nil {
-		return "", err
+		return "", ResultPersistError{Cause: err}
 	}
 	if created.ID == "" {
-		return "", errors.New("视频渠道未返回任务 id")
+		return "", ResultPersistError{Cause: errors.New("视频渠道未返回任务 id")}
+	}
+	if err := recordProviderRequestID(createCtx, created.ID); err != nil {
+		return "", err
 	}
 	return created.ID, nil
 }
@@ -145,18 +148,18 @@ func generateVideoWithGenerationsEndpoint(ctx context.Context, storage *Storage,
 		endpoint(provider.BaseURL, "/videos/generations"),
 		provider,
 		body,
-		idempotencyHeaders(job.ID, "videos-generations"),
+		idempotencyHeaders(job.ID, "videos"),
 	)
 	if err != nil {
 		return VideoResult{}, err
 	}
 	var generated videoGenerationsResponse
 	if err := json.Unmarshal(responseBody, &generated); err != nil {
-		return VideoResult{}, err
+		return VideoResult{}, ResultPersistError{Cause: err}
 	}
 	videoURL := firstGeneratedVideoURL(generated)
 	if strings.TrimSpace(videoURL) == "" {
-		return VideoResult{}, errors.New("视频渠道未返回视频地址")
+		return VideoResult{}, ResultPersistError{Cause: errors.New("视频渠道未返回视频地址")}
 	}
 	return buildVideoResult(ctx, storage, job, videoURL, "", "")
 }
@@ -178,7 +181,11 @@ func pollVideo(ctx context.Context, provider ProviderConfig, videoID string, pol
 		case "completed", "succeeded":
 			return status, nil
 		case "failed", "error", "cancelled", "canceled":
-			return videoStatusResponse{}, fmt.Errorf("视频生成失败：渠道返回状态 %s", status.Status)
+			return videoStatusResponse{}, ContractFailure{
+				Code:                errorProviderPolicyRejected,
+				Message:             fmt.Sprintf("视频生成失败：渠道返回状态 %s", status.Status),
+				ResolvedAfterSubmit: true,
+			}
 		}
 
 		select {
@@ -196,17 +203,17 @@ func fetchVideoStatus(ctx context.Context, provider ProviderConfig, videoID stri
 	}
 	var parsed videoStatusResponse
 	if err := json.Unmarshal(body, &parsed); err != nil {
-		return videoStatusResponse{}, err
+		return videoStatusResponse{}, ResultPersistError{Cause: err}
 	}
 	if parsed.Status == "" {
-		return videoStatusResponse{}, errors.New("视频渠道未返回状态")
+		return videoStatusResponse{}, ResultPersistError{Cause: errors.New("视频渠道未返回状态")}
 	}
 	return parsed, nil
 }
 
 func buildVideoResult(ctx context.Context, storage *Storage, job GenerationJob, rawURL string, secondsValue string, sizeValue string) (VideoResult, error) {
 	if strings.TrimSpace(rawURL) == "" {
-		return VideoResult{}, errors.New("视频生成完成但渠道未返回视频地址")
+		return VideoResult{}, ResultPersistError{Cause: errors.New("视频生成完成但渠道未返回视频地址")}
 	}
 
 	// 有对象存储则下载转存到本站 S3（长期可播放）；否则直接用渠道公开 URL
@@ -219,11 +226,11 @@ func buildVideoResult(ctx context.Context, storage *Storage, job GenerationJob, 
 			providerHTTPClient(job.ProviderMode != "CUSTOM"),
 		)
 		if err != nil {
-			return VideoResult{}, err
+			return VideoResult{}, ResultPersistError{Cause: err}
 		}
 		stored, err := storage.PersistVideo(ctx, job.UserID, data)
 		if err != nil {
-			return VideoResult{}, err
+			return VideoResult{}, ResultPersistError{Cause: err}
 		}
 		url = stored
 	}

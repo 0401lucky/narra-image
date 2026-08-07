@@ -1,19 +1,30 @@
-import { GenerationStatus } from "@prisma/client";
+import { GenerationStatus, type Prisma } from "@prisma/client";
 
 import { db } from "@/lib/db";
+import { failGenerationJobAndRefundInTransaction } from "@/lib/generation/job-refund";
 import { serializeGeneration } from "@/lib/prisma-mappers";
 import { requireAdminRecord } from "@/lib/server/current-user";
 import { getErrorMessage, jsonError, jsonOk, parseJsonBody } from "@/lib/server/http";
 import { adminGenerationBulkDeleteSchema } from "@/lib/validators";
 
-const ADMIN_DELETE_REFUND_MESSAGE = "管理员删除生成记录，已退还预扣积分。";
+const ADMIN_DELETE_REFUND_MESSAGE = "管理员删除生成记录。";
+const ADMIN_COORDINATION_WHERE = {
+  contractVersion: { gte: 1 },
+  handoffState: "UNKNOWN",
+  status: GenerationStatus.FAILED,
+} satisfies Prisma.GenerationJobWhereInput;
 
 export async function GET() {
   try {
     await requireAdminRecord();
 
     const jobs = await db.generationJob.findMany({
-      where: { status: { not: GenerationStatus.FAILED } },
+      where: {
+        OR: [
+          { status: { not: GenerationStatus.FAILED } },
+          ADMIN_COORDINATION_WHERE,
+        ],
+      },
       orderBy: { createdAt: "desc" },
       include: {
         images: {
@@ -56,74 +67,76 @@ export async function DELETE(request: Request) {
           },
         },
         select: {
+          _count: {
+            select: {
+              attempts: true,
+            },
+          },
+          contractVersion: true,
           creditsSpent: true,
           id: true,
           status: true,
-          userId: true,
         },
       });
 
-      const refundByUser = new Map<string, number>();
-      for (const job of jobs) {
-        if (job.status === GenerationStatus.SUCCEEDED || job.creditsSpent <= 0) {
+      const jobsById = new Map(jobs.map((job) => [job.id, job]));
+      const deletedIds: string[] = [];
+      const protectedIds: string[] = [];
+      let refundedCredits = 0;
+      for (const id of uniqueIds) {
+        const job = jobsById.get(id);
+        if (!job) continue;
+
+        if (job.contractVersion >= 1 || job._count.attempts > 0) {
+          protectedIds.push(job.id);
           continue;
         }
-        const refunded = await tx.generationJob.updateMany({
-          where: {
-            creditsSpent: job.creditsSpent,
-            id: job.id,
-            status: {
-              not: GenerationStatus.SUCCEEDED,
-            },
-          },
-          data: {
-            creditsSpent: 0,
+
+        const alreadyFinalizedWithoutCredits =
+          job.status === GenerationStatus.FAILED && job.creditsSpent <= 0;
+        if (
+          job.status !== GenerationStatus.SUCCEEDED &&
+          !alreadyFinalizedWithoutCredits
+        ) {
+          const finalized = await failGenerationJobAndRefundInTransaction(tx, {
+            allowedStatuses: [job.status],
             errorMessage: ADMIN_DELETE_REFUND_MESSAGE,
-            status: GenerationStatus.FAILED,
+            jobId: job.id,
+          });
+          if (!finalized.updated) {
+            protectedIds.push(job.id);
+            continue;
+          }
+          refundedCredits += finalized.refundedCredits;
+        }
+
+        const deleted = await tx.generationJob.deleteMany({
+          where: {
+            attempts: { none: {} },
+            contractVersion: { lt: 1 },
+            id: job.id,
           },
         });
-        if (refunded.count === 0) {
-          continue;
+        if (deleted.count === 1) {
+          deletedIds.push(job.id);
+        } else {
+          protectedIds.push(job.id);
         }
-        refundByUser.set(
-          job.userId,
-          (refundByUser.get(job.userId) ?? 0) + job.creditsSpent,
-        );
       }
 
-      await Promise.all(
-        Array.from(refundByUser.entries()).map(([userId, credits]) =>
-          tx.user.update({
-            where: { id: userId },
-            data: {
-              credits: {
-                increment: credits,
-              },
-            },
-          }),
-        ),
-      );
-
-      const deleted = await tx.generationJob.deleteMany({
-        where: {
-          id: {
-            in: uniqueIds,
-          },
-        },
-      });
-
       return {
-        deleted: deleted.count,
-        refundedCredits: Array.from(refundByUser.values()).reduce(
-          (total, credits) => total + credits,
-          0,
-        ),
+        deletedIds,
+        protectedIds,
+        refundedCredits,
       };
     });
 
     return jsonOk({
-      deleted: result.deleted,
-      ids: uniqueIds,
+      deleted: result.deletedIds.length,
+      deletedIds: result.deletedIds,
+      ...(result.protectedIds.length > 0
+        ? { protectedIds: result.protectedIds }
+        : {}),
       refundedCredits: result.refundedCredits,
     });
   } catch (error) {

@@ -1,0 +1,57 @@
+{
+  "contract": "narra.generation",
+  "version": 1,
+  "legacyVersion": 0,
+  "job": {
+    "statusField": "status",
+    "statusValues": ["PENDING", "PROCESSING", "SUCCEEDED", "FAILED"],
+    "fields": {
+      "contractVersion": { "nullable": false, "legacyDefault": 0 },
+      "errorCode": { "nullable": true },
+      "nextAttemptAt": { "nullable": true },
+      "handoffState": { "nullable": true, "legacyDefault": null },
+      "cancelRequestedAt": { "nullable": true },
+      "refundAppliedAt": { "nullable": true },
+      "attemptCount": { "nullable": false, "legacyDefault": 0 },
+      "providerChannelId": { "nullable": true },
+      "providerModels": { "nullable": false, "legacyDefault": [] }
+    }
+  },
+  "attempt": {
+    "table": "GenerationAttempt",
+    "ordinalUniqueWithJob": true,
+    "requiredFields": [
+      "id",
+      "jobId",
+      "ordinal",
+      "workerId",
+      "operation",
+      "model",
+      "idempotencyKey",
+      "status",
+      "createdAt",
+      "updatedAt"
+    ],
+    "nullableFields": [
+      "providerChannelId",
+      "providerRequestId",
+      "upstreamSubmittedAt",
+      "nextRetryAt",
+      "errorCode",
+      "errorMessage",
+      "completedAt"
+    ]
+  },
+  "rollout": {
+    "environmentFlag": "WORKER_CONTRACTS_V1_ENABLED",
+    "defaultEnabled": false,
+    "enabledWrite": {
+      "contractVersion": 1,
+      "handoffState": "NOT_STARTED"
+    },
+    "disabledWrite": {
+      "contractVersion": 0,
+      "handoffState": null
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "jobStatuses": ["PENDING", "PROCESSING", "SUCCEEDED", "FAILED"],
+  "handoffStates": ["NOT_STARTED", "SUBMITTING", "SUBMITTED", "UNKNOWN", "RESOLVED"],
+  "attemptStatuses": [
+    "CLAIMED",
+    "SUBMITTING",
+    "SUBMITTED",
+    "SUCCEEDED",
+    "FAILED_RETRYABLE",
+    "FAILED_FINAL",
+    "UNKNOWN"
+  ],
+  "jobTransitions": {
+    "PENDING": ["PROCESSING", "FAILED"],
+    "PROCESSING": ["PENDING", "SUCCEEDED", "FAILED"],
+    "SUCCEEDED": [],
+    "FAILED": []
+  },
+  "handoffTransitions": {
+    "NOT_STARTED": ["SUBMITTING", "RESOLVED"],
+    "SUBMITTING": ["SUBMITTED", "UNKNOWN", "RESOLVED"],
+    "SUBMITTED": ["RESOLVED", "UNKNOWN"],
+    "UNKNOWN": ["RESOLVED"],
+    "RESOLVED": []
+  },
+  "refundAllowedHandoffStates": [null, "NOT_STARTED", "RESOLVED"],
+  "refundBlockedHandoffStates": ["SUBMITTING", "SUBMITTED", "UNKNOWN"],
+  "unknownTerminal": {
+    "status": "FAILED",
+    "errorCode": "HANDOFF_UNKNOWN",
+    "handoffState": "UNKNOWN",
+    "refund": false,
+    "retry": false
+  }
+}

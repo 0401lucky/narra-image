@@ -16,15 +16,19 @@ import type { GenerationType as UiGenerationType } from "@/lib/types";
 import type { WorkShowcaseStatus } from "@/lib/work-showcase";
 
 export type SerializedGeneration = {
+  cancelRequestedAt: string | null;
   completedAt: string | null;
+  contractVersion: number;
   conversationId: string | null;
   count: number;
   createdAt: string;
   creditsSpent: number;
   durationMs: number | null;
+  errorCode: string | null;
   errorMessage: string | null;
   featuredAt: string | null;
   generationType: "text_to_image" | "image_to_image" | "text_to_video" | "image_to_video";
+  handoffState: string | null;
   id: string;
   aspectRatio: string | null;
   durationSeconds: number | null;
@@ -355,7 +359,15 @@ export function serializeGeneration(
     : null;
 
   return {
+    cancelRequestedAt:
+      "cancelRequestedAt" in job && job.cancelRequestedAt instanceof Date
+        ? job.cancelRequestedAt.toISOString()
+        : null,
     completedAt: completedAt?.toISOString() ?? null,
+    contractVersion:
+      "contractVersion" in job && typeof job.contractVersion === "number"
+        ? job.contractVersion
+        : 0,
     conversationId:
       "conversationId" in job && typeof job.conversationId === "string"
         ? job.conversationId
@@ -364,6 +376,10 @@ export function serializeGeneration(
     createdAt: job.createdAt.toISOString(),
     creditsSpent: job.creditsSpent,
     durationMs,
+    errorCode:
+      "errorCode" in job && typeof job.errorCode === "string"
+        ? job.errorCode
+        : null,
     errorMessage: job.errorMessage,
     featuredAt: job.featuredAt?.toISOString() ?? null,
     generationType,
@@ -374,6 +390,10 @@ export function serializeGeneration(
         ? job.durationSeconds
         : null,
     id: job.id,
+    handoffState:
+      "handoffState" in job && typeof job.handoffState === "string"
+        ? job.handoffState
+        : null,
     images: job.images.map((image) => {
       const width = "width" in image && typeof image.width === "number" ? image.width : null;
       const height = "height" in image && typeof image.height === "number" ? image.height : null;
