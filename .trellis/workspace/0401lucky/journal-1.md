@@ -57,3 +57,12 @@
 ### Status
 
 [OK] 验证全绿；待提交。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `03d792f` | feat(ops): 固化生产迁移与可观测部署 |
+| `e4281fb` | chore(trellis): 纳入 Trellis 平台适配与项目指南 |
+
+本地个人文件（.claude/settings.local.json、operations-log、context-summary）已加入 .gitignore，未提交。
