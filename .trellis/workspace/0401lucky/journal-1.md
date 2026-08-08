@@ -146,3 +146,26 @@
 ### Status
 
 [OK] 父任务集成验收通过,四个子任务全部归档;待归档父任务。
+
+## Session 5: Bootstrap Guidelines（前端 spec 填充）
+
+**Date**: 2026-08-08
+**Task**: 00-bootstrap-guidelines
+**Branch**: `main`
+
+### 完成项
+
+- 确认仓库仅 AGENTS.md(Trellis 管理),无 CLAUDE.md/.cursorrules 等既有约定文档;从代码库真实模式提取约定。
+- 填充 `.trellis/spec/frontend/` 6 个文件(全部 Active,中文,带真实路径示例):
+  - `directory-structure.md`:app/components/lib/tests 组织、feature 目录(parts/hooks/constants/types/utils)、`@/` 别名。
+  - `component-guidelines.md`:命名导出、`cn()`、variant+`variantStyles` Record、中文文案/aria-label、无障碍(role/aria-live/aria-hidden)。
+  - `hook-guidelines.md`:`use-*.ts` 命名、命令式返回契约(`useReferenceImages`)、`useRef`+cleanup、setTimeout 退避轮询(visibilitychange 挂起/恢复)。
+  - `state-management.md`:无全局状态库;server 初始数据(serialize)+ 本地 useState + `/api/*` 轮询。
+  - `type-safety.md`:`types.ts` 字面量联合、zod 中文校验、`prisma-mappers` 序列化、server-only、`import type`。
+  - `quality-guidelines.md`:vitest/Testing Library、`vi.hoisted`+`vi.mock`、DB 哨兵、验证命令与已知约束。
+- 更新 `index.md`:状态 To fill → Active,语言说明改中文(与 operations/ 等一致)。
+- 全部 spec 引用的文件路径经 `for f in ...` 逐一校验存在。
+
+### Status
+
+[OK] 6 个前端 spec 已填充并带真实示例;待 finish + archive。
