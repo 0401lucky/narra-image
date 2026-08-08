@@ -62,18 +62,52 @@ pnpm dev
 
 ## 关键环境变量
 
-- `DATABASE_URL`: PostgreSQL 连接串
-- `AUTH_SECRET`: 会话签名与自填渠道加密密钥
-- `BUILTIN_PROVIDER_BASE_URL`: 内置 OpenAI 兼容网关地址
-- `BUILTIN_PROVIDER_API_KEY`: 内置渠道密钥
-- `BUILTIN_PROVIDER_MODEL`: 内置渠道默认模型，默认推荐 `gpt-image-2`
-- `BUILTIN_PROVIDER_CREDIT_COST`: 内置渠道每次消耗积分
-- `S3_*`: 对象存储配置，可选
-- `NEXT_PUBLIC_IMAGE_OPTIMIZER_BYPASS_HOSTS`: 不走 Next Image 优化的图片域名列表，适合自建 CDN 解析到内网/保留地址的情况
-- `ENABLE_EMBEDDED_WORKER`: 让单个部署容器同时启动 Next.js 和 Go Worker，Zeabur 单服务部署时建议保持 `true`
-- `WORKER_*`: Go 生图 Worker 的并发、轮询间隔、任务超时与最大重试配置
-- `BOOTSTRAP_ADMIN_EMAIL`: 需要自动提权为管理员的邮箱
-- `BOOTSTRAP_INVITE_CODE`: 初始邀请码
+发布关键变量以 `contracts/runtime/v1/environment.json` 为事实来源：
+
+- 基础配置：`APP_URL`、`DATABASE_URL`、`AUTH_SECRET`。生产必须显式提供
+  非 localhost/loopback 的 HTTP(S) `APP_URL`；`AUTH_SECRET` 至少 32 位且
+  不能使用公开占位值。development/test 未设置 `APP_URL` 时默认使用
+  `http://localhost:3000`。
+- `DATABASE_URL` 必须由部署环境完整注入。用户名或密码包含
+  `@ : # ? /` 等字符时必须百分号编码，不能在 Compose 中用
+  `POSTGRES_*` 临时拼接。
+- 内置渠道：`BUILTIN_PROVIDER_BASE_URL`、`BUILTIN_PROVIDER_API_KEY`、
+  `BUILTIN_PROVIDER_MODEL`、`BUILTIN_PROVIDER_NAME`、
+  `BUILTIN_PROVIDER_CREDIT_COST`、`BUILTIN_PROVIDER_VIDEO_MODEL`、
+  `BUILTIN_PROVIDER_VIDEO_CREDIT_COST`。
+- 存储：`S3_ENDPOINT`、`S3_REGION`、`S3_ACCESS_KEY_ID`、
+  `S3_SECRET_ACCESS_KEY`、`S3_BUCKET`、`S3_PUBLIC_BASE_URL`、
+  `ENABLE_LOCAL_IMAGE_FALLBACK`。
+- 外部生成等待：`EXTERNAL_GENERATION_POLL_INTERVAL_MS`、
+  `EXTERNAL_GENERATION_WAIT_TIMEOUT_SECONDS`。
+- Worker 契约与拓扑：`WORKER_CONTRACTS_V1_ENABLED` 默认关闭；
+  `ENABLE_EMBEDDED_WORKER` 决定 supervisor 是否派生 Worker；
+  `WORKER_RUNTIME_MODE` 必须显式为 `embedded` 或 `dedicated`。
+- 应用 readiness：`WORKER_INTERNAL_URL`、`WORKER_READINESS_REQUIRED`、
+  `WORKER_READINESS_TIMEOUT_MS`。超时表示单次请求 Worker `/readyz`
+  的上限，默认 2000ms、允许 100–30000ms。
+- embedded supervisor：`WORKER_COMMAND`、`WORKER_READY_TIMEOUT_MS`、
+  `WORKER_READY_POLL_INTERVAL_MS`、`DATABASE_READY_ATTEMPTS`、
+  `DATABASE_READY_DELAY_MS`。
+- Worker 运行：`WORKER_CONCURRENCY`、`WORKER_HTTP_ADDR`、
+  `WORKER_POLL_INTERVAL_MS`、`WORKER_JOB_TIMEOUT_SECONDS`、
+  `WORKER_MAX_ATTEMPTS`、`WORKER_MAX_ACTIVE_PER_USER`、
+  `WORKER_RETRY_BASE_DELAY_MS`、`WORKER_SHUTDOWN_GRACE_SECONDS`、
+  `WORKER_SHUTDOWN_HARD_TIMEOUT_SECONDS`、`WORKER_VIDEO_POLL_INTERVAL_MS`。
+- 观测：`WORKER_METRICS_WINDOW_MINUTES`、`WORKER_METRICS_TOKEN`、
+  `LOG_LEVEL`。`WORKER_METRICS_TOKEN` 设置后至少 16 位。
+- `NEXT_PUBLIC_IMAGE_OPTIMIZER_BYPASS_HOSTS` 是构建期变量；修改后必须
+  重新构建 Next 镜像，不能只在运行中的容器里覆盖。
+- `BOOTSTRAP_ADMIN_EMAIL`: 需要自动提权为管理员的邮箱。
+- `BOOTSTRAP_INVITE_CODE`: 初始邀请码。
+
+应用提供两个独立探针：
+
+- `GET /api/healthz` 只表示 Next 进程可响应，不查询数据库或 Worker。
+- `GET /api/readyz` 检查环境配置、数据库，并在
+  `WORKER_READINESS_REQUIRED=true` 时检查 Worker `/readyz`。成功必须是
+  HTTP 200 且 Worker JSON 中 `status` 为 `ready`；失败只向客户端返回稳定
+  错误码，不暴露 DSN、SQL、上游正文或密钥。
 
 ## 提示词库同步
 
@@ -101,6 +135,9 @@ pnpm build
 
 ## Docker Compose 部署
 
+生产发布、历史库接管、探针和回滚步骤见
+[`docs/production-operations.md`](docs/production-operations.md)。
+
 ```bash
 docker compose up --build -d
 ```
@@ -118,7 +155,10 @@ docker compose up --build -d
 - `worker`: Go 生图 Worker，消费数据库中的待生成任务
 - `db`: PostgreSQL 17
 
-容器启动时会自动准备数据库：新空库会先创建当前 schema，旧库会接管迁移历史，然后应用仓库内的新增迁移。
+普通容器启动只执行 `prisma migrate deploy` 和只读校验。空库由完整 migration
+历史创建；已有表但缺失迁移历史、或存在 failed migration 时会明确失败，不再
+自动 `db push`、baseline、resolve 或 repair。需要接管历史库时，先按运维手册
+执行只读 inspect，再经过备份、目标身份核对和明确审批执行 apply。
 当前生产启动流程不会主动执行 `seed`，避免在低内存环境里因为 `tsx prisma/seed.ts` 触发额外内存峰值。
 仅在显式配置 `BOOTSTRAP_INVITE_CODE` 时，注册接口才会创建初始邀请码；管理员引导邮箱同样必须使用有效邀请码注册。
 

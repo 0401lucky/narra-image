@@ -15,6 +15,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // 本地 pi 工具目录，不属于仓库源码：
+    ".pi/**",
   ]),
 ]);
 

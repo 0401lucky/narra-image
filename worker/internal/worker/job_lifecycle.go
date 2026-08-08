@@ -107,6 +107,12 @@ WHERE "jobId" = $2
 	if err := tx.Commit(ctx); err != nil {
 		return preHandoffRetryableFailure(err)
 	}
+	w.logger.Info(
+		"任务即将提交渠道",
+		"event", "provider_submitting",
+		"job_id", job.ID,
+		"attempt_ordinal", job.AttemptCount,
+	)
 	return nil
 }
 
@@ -162,6 +168,13 @@ WHERE "jobId" = $3
 	if err := tx.Commit(ctx); err != nil {
 		return ResultPersistError{Cause: err}
 	}
+	w.logger.Info(
+		"任务已提交渠道",
+		"event", "provider_submitted",
+		"job_id", job.ID,
+		"attempt_ordinal", job.AttemptCount,
+		"provider_request_id", strings.TrimSpace(requestID),
+	)
 	return nil
 }
 
@@ -190,6 +203,13 @@ WHERE "jobId" = $3
 	if tag.RowsAffected() != 1 {
 		return ResultPersistError{Cause: errors.New("无法保存渠道 request ID")}
 	}
+	w.logger.Info(
+		"已记录渠道请求标识",
+		"event", "provider_request_id_recorded",
+		"job_id", job.ID,
+		"attempt_ordinal", job.AttemptCount,
+		"provider_request_id", requestID,
+	)
 	return nil
 }
 

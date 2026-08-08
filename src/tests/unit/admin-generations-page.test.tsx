@@ -77,29 +77,44 @@ describe("后台生成记录页面", () => {
         skip: 20,
         take: 20,
         where: {
-          OR: [
-            { id: { contains: "Alice", mode: "insensitive" } },
-            { model: { contains: "Alice", mode: "insensitive" } },
-            { prompt: { contains: "Alice", mode: "insensitive" } },
-            { userId: { contains: "Alice", mode: "insensitive" } },
+          AND: [
             {
-              user: {
-                is: {
-                  OR: [
-                    { email: { contains: "Alice", mode: "insensitive" } },
-                    { nickname: { contains: "Alice", mode: "insensitive" } },
-                  ],
+              OR: [
+                { id: { contains: "Alice", mode: "insensitive" } },
+                { model: { contains: "Alice", mode: "insensitive" } },
+                { prompt: { contains: "Alice", mode: "insensitive" } },
+                { userId: { contains: "Alice", mode: "insensitive" } },
+                {
+                  user: {
+                    is: {
+                      OR: [
+                        { email: { contains: "Alice", mode: "insensitive" } },
+                        { nickname: { contains: "Alice", mode: "insensitive" } },
+                      ],
+                    },
+                  },
                 },
-              },
+              ],
+            },
+            {
+              OR: [
+                {
+                  status: {
+                    in: [
+                      GenerationStatus.SUCCEEDED,
+                      GenerationStatus.PENDING,
+                      GenerationStatus.PROCESSING,
+                    ],
+                  },
+                },
+                {
+                  contractVersion: { gte: 1 },
+                  handoffState: "UNKNOWN",
+                  status: GenerationStatus.FAILED,
+                },
+              ],
             },
           ],
-          status: {
-            in: [
-              GenerationStatus.SUCCEEDED,
-              GenerationStatus.PENDING,
-              GenerationStatus.PROCESSING,
-            ],
-          },
         },
       }),
     );

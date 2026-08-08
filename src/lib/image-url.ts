@@ -1,3 +1,5 @@
+import { getPublicEnv } from "@/lib/public-env";
+
 /**
  * 把远程原图 URL 包装成 Next.js Image Optimization 端点 URL。
  *
@@ -11,7 +13,7 @@
 const DEFAULT_OPTIMIZER_BYPASS_HOSTS = ["image.204152.xyz"];
 
 function getOptimizerBypassHosts() {
-  const configured = process.env.NEXT_PUBLIC_IMAGE_OPTIMIZER_BYPASS_HOSTS
+  const configured = getPublicEnv().NEXT_PUBLIC_IMAGE_OPTIMIZER_BYPASS_HOSTS
     ?.split(",")
     .map((host) => host.trim().toLowerCase())
     .filter(Boolean);

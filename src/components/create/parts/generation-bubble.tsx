@@ -5,7 +5,7 @@
 // 单条生成消息气泡（用户提示 + Narra 结果）。
 import { AlertTriangle, Clock3, Download, ImagePlus, RotateCcw, Ruler, SlidersHorizontal, Sparkles, X, ZoomIn } from "lucide-react";
 import { motion } from "motion/react";
-import { useRef } from "react";
+import { useState } from "react";
 
 import { getAspectRatio as getGenerationAspectRatio } from "@/lib/generation/sizes";
 import { getThumbUrl } from "@/lib/image-url";
@@ -60,7 +60,8 @@ export function GenerationBubble({
   const durationLabel = formatDuration(generation.durationMs);
   // 仅当这条记录是"当场等出来的"（挂载时还在 pending）才播结果入场动画；
   // 历史记录初次挂载直接静态呈现，避免整个列表集体重放。
-  const sawPendingRef = useRef(generation.status === "pending");
+  // 挂载时捕获初始是否已是 pending，避免渲染期读取 ref（react-hooks 规则）。
+  const [sawPending] = useState(() => generation.status === "pending");
   return (
     <div
       id={`gen-${generation.id}`}
@@ -137,7 +138,7 @@ export function GenerationBubble({
           ) : generation.images.length > 0 ? (
             <motion.div
               className="space-y-3"
-              initial={sawPendingRef.current ? { opacity: 0, scale: 0.97, y: 10 } : false}
+              initial={sawPending ? { opacity: 0, scale: 0.97, y: 10 } : false}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
             >

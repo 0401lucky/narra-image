@@ -3,9 +3,11 @@ package worker
 import (
 	"errors"
 	"fmt"
+	"log/slog"
 	"net/url"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -23,12 +25,16 @@ type Config struct {
 	EnableLocalImageFallback       bool
 	HTTPAddr                       string
 	JobTimeout                     time.Duration
+	LogLevel                       slog.Level
 	MaxAttempts                    int
 	MaxActivePerUser               int
+	MetricsToken                   string
 	MetricsWindow                  time.Duration
 	PollInterval                   time.Duration
 	RetryBaseDelay                 time.Duration
+	RuntimeMode                    RuntimeMode
 	ShutdownGrace                  time.Duration
+	ShutdownHardTimeout            time.Duration
 	VideoPollInterval              time.Duration
 	BuiltInProviderVideoCreditCost int
 	BuiltInProviderVideoModel      string
@@ -46,9 +52,32 @@ func LoadConfig() (Config, error) {
 	if err != nil {
 		return Config{}, err
 	}
-	authSecret := os.Getenv("AUTH_SECRET")
+	authSecret := strings.TrimSpace(os.Getenv("AUTH_SECRET"))
 	if len(authSecret) < 10 {
 		return Config{}, errors.New("AUTH_SECRET 不能为空，且至少 10 位")
+	}
+	if isPublicAuthSecret(authSecret) {
+		return Config{}, errors.New("AUTH_SECRET 不能使用公开占位值")
+	}
+	if strings.EqualFold(strings.TrimSpace(os.Getenv("NODE_ENV")), "production") && len(authSecret) < 32 {
+		return Config{}, errors.New("生产环境 AUTH_SECRET 至少需要 32 位")
+	}
+
+	runtimeMode, err := loadRuntimeMode(os.Getenv("WORKER_RUNTIME_MODE"))
+	if err != nil {
+		return Config{}, err
+	}
+	logLevel, err := ParseLogLevel(os.Getenv("LOG_LEVEL"))
+	if err != nil {
+		return Config{}, err
+	}
+	metricsToken := strings.TrimSpace(os.Getenv("WORKER_METRICS_TOKEN"))
+	if metricsToken != "" && len(metricsToken) < 16 {
+		return Config{}, errors.New("WORKER_METRICS_TOKEN 设置后至少需要 16 位")
+	}
+	hardTimeoutSeconds, err := getenvBoundedInt("WORKER_SHUTDOWN_HARD_TIMEOUT_SECONDS", 10, 1, 300)
+	if err != nil {
+		return Config{}, err
 	}
 
 	hostname, _ := os.Hostname()
@@ -68,14 +97,18 @@ func LoadConfig() (Config, error) {
 		ContractsV1Enabled:             getenvBool("WORKER_CONTRACTS_V1_ENABLED", false),
 		DatabaseURL:                    databaseURL,
 		EnableLocalImageFallback:       getenvBool("ENABLE_LOCAL_IMAGE_FALLBACK", true),
-		HTTPAddr:                       getenv("WORKER_HTTP_ADDR", ":8081"),
+		HTTPAddr:                       getenv("WORKER_HTTP_ADDR", "127.0.0.1:8081"),
 		JobTimeout:                     time.Duration(getenvInt("WORKER_JOB_TIMEOUT_SECONDS", 900)) * time.Second,
+		LogLevel:                       logLevel,
 		MaxAttempts:                    getenvInt("WORKER_MAX_ATTEMPTS", 2),
 		MaxActivePerUser:               getenvInt("WORKER_MAX_ACTIVE_PER_USER", 1),
+		MetricsToken:                   metricsToken,
 		MetricsWindow:                  time.Duration(getenvInt("WORKER_METRICS_WINDOW_MINUTES", 1440)) * time.Minute,
 		PollInterval:                   time.Duration(getenvInt("WORKER_POLL_INTERVAL_MS", 1000)) * time.Millisecond,
 		RetryBaseDelay:                 time.Duration(getenvInt("WORKER_RETRY_BASE_DELAY_MS", 1000)) * time.Millisecond,
+		RuntimeMode:                    runtimeMode,
 		ShutdownGrace:                  time.Duration(getenvInt("WORKER_SHUTDOWN_GRACE_SECONDS", 30)) * time.Second,
+		ShutdownHardTimeout:            time.Duration(hardTimeoutSeconds) * time.Second,
 		VideoPollInterval:              time.Duration(getenvInt("WORKER_VIDEO_POLL_INTERVAL_MS", 5000)) * time.Millisecond,
 		BuiltInProviderVideoCreditCost: getenvInt("BUILTIN_PROVIDER_VIDEO_CREDIT_COST", 20),
 		BuiltInProviderVideoModel:      getenv("BUILTIN_PROVIDER_VIDEO_MODEL", "sora-2"),
@@ -87,6 +120,26 @@ func LoadConfig() (Config, error) {
 		S3SecretAccessKey:              os.Getenv("S3_SECRET_ACCESS_KEY"),
 		WorkerID:                       fmt.Sprintf("%s-%d", hostname, os.Getpid()),
 	}, nil
+}
+
+func loadRuntimeMode(raw string) (RuntimeMode, error) {
+	switch RuntimeMode(strings.ToLower(strings.TrimSpace(raw))) {
+	case RuntimeModeEmbedded:
+		return RuntimeModeEmbedded, nil
+	case RuntimeModeDedicated:
+		return RuntimeModeDedicated, nil
+	default:
+		return "", errors.New("WORKER_RUNTIME_MODE 必须明确设置为 embedded 或 dedicated")
+	}
+}
+
+func isPublicAuthSecret(value string) bool {
+	switch strings.ToLower(strings.TrimSpace(value)) {
+	case "change-me", "changeme", "replace-me", "replace-this-secret", "replace-with-strong-random-string-at-least-10-chars":
+		return true
+	default:
+		return false
+	}
 }
 
 func LoadDatabaseURL() (string, error) {
@@ -115,6 +168,18 @@ func getenvInt(key string, fallback int) int {
 		return fallback
 	}
 	return parsed
+}
+
+func getenvBoundedInt(key string, fallback int, minimum int, maximum int) (int, error) {
+	value := strings.TrimSpace(os.Getenv(key))
+	if value == "" {
+		return fallback, nil
+	}
+	parsed, err := strconv.Atoi(value)
+	if err != nil || parsed < minimum || parsed > maximum {
+		return 0, fmt.Errorf("%s 必须是 %d 到 %d 之间的整数", key, minimum, maximum)
+	}
+	return parsed, nil
 }
 
 func getenvBool(key string, fallback bool) bool {

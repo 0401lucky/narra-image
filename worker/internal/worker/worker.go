@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"io"
 	"log/slog"
 	"strings"
 	"sync"
@@ -17,10 +18,17 @@ import (
 const maxExpiredJobsPerSweep = 20
 
 type Worker struct {
-	cfg     Config
-	logger  *slog.Logger
-	pool    *pgxpool.Pool
-	storage *Storage
+	cfg              Config
+	checkSchema      func(context.Context) (SchemaContractReport, error)
+	consumerLoop     func(context.Context, context.Context, int)
+	logger           *slog.Logger
+	metricsCollector func(context.Context) (metricsResponse, error)
+	pingDatabase     func(context.Context) error
+	pool             *pgxpool.Pool
+	state            *runtimeState
+	storage          *Storage
+	storageFactory   func(context.Context, Config) (*Storage, error)
+	topologyConnect  topologyConnectionFactory
 }
 
 type GenerationJob struct {
@@ -55,77 +63,200 @@ type GenerationJob struct {
 }
 
 func New(pool *pgxpool.Pool, cfg Config, logger *slog.Logger) *Worker {
-	return &Worker{
-		cfg:    cfg,
-		logger: logger,
-		pool:   pool,
+	if logger == nil {
+		logger = NewJSONLogger(io.Discard, slog.LevelError)
+	} else {
+		logger = slog.New(&redactingHandler{next: logger.Handler()})
 	}
+	worker := &Worker{
+		cfg:            cfg,
+		logger:         logger,
+		pool:           pool,
+		state:          newRuntimeState(time.Now()),
+		storageFactory: NewStorage,
+	}
+	worker.consumerLoop = worker.runLoop
+	if pool != nil {
+		worker.checkSchema = func(ctx context.Context) (SchemaContractReport, error) {
+			return CheckSchemaContract(ctx, pool)
+		}
+		worker.pingDatabase = pool.Ping
+		worker.metricsCollector = worker.collectMetrics
+	}
+	return worker
 }
 
 func (w *Worker) Run(ctx context.Context) error {
-	storage, err := NewStorage(ctx, w.cfg)
+	httpRuntime, err := w.startHTTPServer()
 	if err != nil {
-		return err
-	}
-	w.storage = storage
-
-	if err := w.waitForSchema(ctx); err != nil {
-		return err
+		w.state.markStopped()
+		return fmt.Errorf("启动 Worker HTTP 服务: %w", err)
 	}
 
-	w.logger.Info(
-		"Go Worker 已启动",
-		"workerId", w.cfg.WorkerID,
-		"concurrency", w.cfg.Concurrency,
-		"httpAddr", w.cfg.HTTPAddr,
-		"pollInterval", w.cfg.PollInterval,
-		"jobTimeout", w.cfg.JobTimeout,
-	)
-
+	shutdown := newShutdownController()
+	runtimeCtx, cancelRuntime := context.WithCancel(context.WithoutCancel(ctx))
 	processingCtx, cancelProcessing := context.WithCancel(context.WithoutCancel(ctx))
+	defer cancelRuntime()
 	defer cancelProcessing()
 
-	var waitGroup sync.WaitGroup
-	if strings.TrimSpace(w.cfg.HTTPAddr) != "" {
-		waitGroup.Add(1)
-		go func() {
-			defer waitGroup.Done()
-			if err := w.runHTTPServer(ctx); err != nil {
-				w.logger.Error("Worker HTTP 服务退出", "error", err)
-			}
-		}()
-	}
-
-	for index := 0; index < w.cfg.Concurrency; index++ {
-		waitGroup.Add(1)
-		go func(slot int) {
-			defer waitGroup.Done()
-			w.runLoop(ctx, processingCtx, slot)
-		}(index + 1)
-	}
-
-	<-ctx.Done()
-	drained := make(chan struct{})
 	go func() {
-		waitGroup.Wait()
-		close(drained)
+		select {
+		case <-ctx.Done():
+			w.state.beginDraining(readinessCodeDraining)
+			shutdown.request(nil)
+		case <-shutdown.done:
+		}
+	}()
+	go func() {
+		<-shutdown.done
+		cancelRuntime()
+	}()
+	go func() {
+		serveErr, ok := <-httpRuntime.done
+		if !ok {
+			serveErr = nil
+		}
+		if shutdown.requested() {
+			return
+		}
+		if serveErr == nil {
+			serveErr = errors.New("Worker HTTP 服务意外停止")
+		}
+		shutdown.request(fmt.Errorf("Worker HTTP 服务退出: %w", serveErr))
 	}()
 
-	grace := w.cfg.ShutdownGrace
-	if grace <= 0 {
-		grace = 30 * time.Second
+	var lock *topologyLock
+	var lockMonitor sync.WaitGroup
+	storage, startupErr := w.storageFactory(runtimeCtx, w.cfg)
+	if startupErr == nil {
+		w.storage = storage
+		lock, startupErr = w.acquireTopologyLock(runtimeCtx)
 	}
-	timer := time.NewTimer(grace)
-	defer timer.Stop()
-	select {
-	case <-drained:
-		w.logger.Info("Worker 已完成优雅停止")
-	case <-timer.C:
-		w.logger.Warn("Worker 停止宽限期已到，取消在途任务", "grace", grace)
-		cancelProcessing()
-		<-drained
+	if startupErr == nil {
+		lockMonitor.Add(1)
+		go func() {
+			defer lockMonitor.Done()
+			if monitorErr := lock.monitor(runtimeCtx, w.cfg.PollInterval); monitorErr != nil {
+				w.state.markTopologyUnavailable(readinessCodeTopologyLockLost)
+				shutdown.request(monitorErr)
+			}
+		}()
+		startupErr = w.waitForSchema(runtimeCtx)
 	}
-	return nil
+	if startupErr != nil && !shutdown.requested() {
+		shutdown.request(startupErr)
+	}
+
+	var consumers sync.WaitGroup
+	consumersStarted := startupErr == nil && !shutdown.requested()
+	if consumersStarted {
+		for index := 0; index < w.cfg.Concurrency; index++ {
+			consumers.Add(1)
+			go func(slot int) {
+				defer consumers.Done()
+				defer func() {
+					if panicValue := recover(); panicValue != nil {
+						w.state.markConsumersRunning(false)
+						shutdown.request(fmt.Errorf("消费协程 %d panic: %v", slot, panicValue))
+					}
+				}()
+				w.consumerLoop(runtimeCtx, processingCtx, slot)
+				if runtimeCtx.Err() == nil {
+					w.state.markConsumersRunning(false)
+					shutdown.request(fmt.Errorf("消费协程 %d 意外退出", slot))
+				}
+			}(index + 1)
+		}
+		w.state.markConsumersRunning(true)
+		if !w.state.markReady() {
+			shutdown.request(errors.New("Worker 状态无法进入 ready"))
+		} else {
+			w.logger.Info(
+				"Go Worker 已就绪",
+				"event", "worker_ready",
+				"concurrency", w.cfg.Concurrency,
+				"http_addr", w.cfg.HTTPAddr,
+				"poll_interval_ms", w.cfg.PollInterval.Milliseconds(),
+				"job_timeout_ms", w.cfg.JobTimeout.Milliseconds(),
+			)
+		}
+	}
+
+	<-shutdown.done
+	cause := shutdown.cause()
+	drainCode := readinessCodeForRuntimeError(cause)
+	w.state.beginDraining(drainCode)
+	cancelRuntime()
+	if cause != nil {
+		w.logger.Error(
+			"Worker 关键运行协程失败",
+			"event", "worker_runtime_failed",
+			"error_code", drainCode,
+			"error", cause,
+		)
+	}
+	w.logger.Info(
+		"Worker 开始停止领取任务",
+		"event", "worker_draining",
+		"grace_ms", w.cfg.ShutdownGrace.Milliseconds(),
+		"hard_timeout_ms", w.cfg.ShutdownHardTimeout.Milliseconds(),
+	)
+
+	var drainErr error
+	if consumersStarted {
+		drained := make(chan struct{})
+		go func() {
+			consumers.Wait()
+			close(drained)
+		}()
+		drainErr = waitForProcessingDrain(
+			drained,
+			func() {
+				w.logger.Warn(
+					"Worker 停止宽限期已到，取消在途任务",
+					"event", "worker_grace_expired",
+					"grace_ms", w.cfg.ShutdownGrace.Milliseconds(),
+				)
+				cancelProcessing()
+			},
+			w.cfg.ShutdownGrace,
+			w.cfg.ShutdownHardTimeout,
+		)
+	}
+	w.state.markConsumersRunning(false)
+	cancelProcessing()
+	lockMonitor.Wait()
+
+	var cleanupErr error
+	if lock != nil {
+		releaseCtx, releaseCancel := context.WithTimeout(context.Background(), 2*time.Second)
+		releaseErr := lock.release(releaseCtx)
+		releaseCancel()
+		if releaseErr != nil && !errors.Is(cause, ErrTopologyLockLost) {
+			cleanupErr = errors.Join(cleanupErr, fmt.Errorf("释放 Worker 拓扑锁: %w", releaseErr))
+		}
+		w.state.markTopologyUnavailable("")
+	}
+
+	httpShutdownCtx, httpShutdownCancel := context.WithTimeout(context.Background(), 5*time.Second)
+	httpErr := httpRuntime.shutdown(httpShutdownCtx)
+	httpShutdownCancel()
+	if httpErr != nil {
+		cleanupErr = errors.Join(cleanupErr, fmt.Errorf("停止 Worker HTTP 服务: %w", httpErr))
+	}
+	w.state.markStopped()
+
+	if drainErr == nil {
+		w.logger.Info("Worker 已完成优雅停止", "event", "worker_drained")
+	} else {
+		w.logger.Error(
+			"Worker 未能在硬停止期限内排空",
+			"event", "worker_hard_stop",
+			"error_code", "SHUTDOWN_HARD_TIMEOUT",
+			"error", drainErr,
+		)
+	}
+	return errors.Join(cause, drainErr, cleanupErr)
 }
 
 func (w *Worker) waitForSchema(ctx context.Context) error {
@@ -133,7 +264,10 @@ func (w *Worker) waitForSchema(ctx context.Context) error {
 	defer ticker.Stop()
 
 	for attempt := 1; ; attempt++ {
-		report, err := CheckSchemaContract(ctx, w.pool)
+		if w.checkSchema == nil {
+			return errors.New("Worker schema probe 未配置")
+		}
+		report, err := w.checkSchema(ctx)
 		if err == nil && report.Ready() {
 			return nil
 		}
@@ -153,6 +287,19 @@ func (w *Worker) waitForSchema(ctx context.Context) error {
 	}
 }
 
+func readinessCodeForRuntimeError(err error) string {
+	switch {
+	case errors.Is(err, ErrTopologyConflict):
+		return readinessCodeTopologyConflict
+	case errors.Is(err, ErrTopologyLockLost):
+		return readinessCodeTopologyLockLost
+	case err != nil:
+		return readinessCodeRuntimeFailure
+	default:
+		return readinessCodeDraining
+	}
+}
+
 func (w *Worker) runLoop(claimCtx context.Context, processingCtx context.Context, slot int) {
 	ticker := time.NewTicker(w.cfg.PollInterval)
 	defer ticker.Stop()
@@ -163,12 +310,12 @@ func (w *Worker) runLoop(claimCtx context.Context, processingCtx context.Context
 		}
 
 		if err := w.failExpiredProcessingJobs(claimCtx); err != nil {
-			w.logger.Warn("清理过期任务失败", "slot", slot, "error", err)
+			w.logger.Warn("清理过期任务失败", "event", "expired_job_sweep_failed", "slot", slot, "error", err)
 		}
 
 		job, ok, err := w.claimJob(claimCtx)
 		if err != nil {
-			w.logger.Error("领取任务失败", "slot", slot, "error", err)
+			w.logger.Error("领取任务失败", "event", "job_claim_failed", "slot", slot, "error", err)
 			waitForNextTick(claimCtx, ticker)
 			continue
 		}
@@ -389,8 +536,18 @@ func generationOperation(job GenerationJob) string {
 }
 
 func (w *Worker) processJob(parent context.Context, job GenerationJob) {
-	logger := w.logger.With("jobId", job.ID, "userId", job.UserID)
-	logger.Info("开始处理生成任务", "model", job.Model, "type", job.GenerationType)
+	startedAt := time.Now()
+	logger := w.logger.With(
+		"job_id", job.ID,
+		"attempt_ordinal", job.AttemptCount,
+		"operation", generationOperation(job),
+	)
+	logger.Info(
+		"开始处理生成任务",
+		"event", "job_processing_started",
+		"model", job.Model,
+		"generation_type", job.GenerationType,
+	)
 
 	ctx, cancel := context.WithTimeout(parent, w.cfg.JobTimeout)
 	defer cancel()
@@ -400,7 +557,7 @@ func (w *Worker) processJob(parent context.Context, job GenerationJob) {
 	heartbeatDone.Add(1)
 	go func() {
 		defer heartbeatDone.Done()
-		w.heartbeat(ctx, job.ID, stopHeartbeat, cancel)
+		w.heartbeat(ctx, job, stopHeartbeat, cancel)
 	}()
 	defer func() {
 		close(stopHeartbeat)
@@ -409,26 +566,31 @@ func (w *Worker) processJob(parent context.Context, job GenerationJob) {
 
 	cancelled, err := w.finalizeRequestedCancellation(ctx, job)
 	if err != nil {
-		logger.Error("处理提交前取消失败", "error", err)
+		logJobFailure(logger, "job_cancellation_finalize_failed", startedAt, err)
 		return
 	}
 	if cancelled {
-		logger.Info("任务在提交渠道前已取消")
+		logger.Info(
+			"任务在提交渠道前已取消",
+			"event", "job_cancelled_before_submit",
+			"error_code", errorGenerationCancelled,
+			"duration_ms", time.Since(startedAt).Milliseconds(),
+		)
 		return
 	}
 
 	provider, err := w.resolveProvider(ctx, job)
 	if err != nil {
-		logger.Error("渠道解析失败", "error", err)
+		logJobFailure(logger, "provider_resolution_failed", startedAt, err)
 		if finalizeErr := w.handleJobFailure(parent, job, err); finalizeErr != nil {
-			logger.Error("终结渠道解析失败任务失败", "error", finalizeErr)
+			logJobFailure(logger, "job_failure_finalize_failed", startedAt, finalizeErr)
 		}
 		return
 	}
 	if err := w.pinResolvedProvider(ctx, job, provider); err != nil {
-		logger.Error("固定渠道快照失败", "error", err)
+		logJobFailure(logger, "provider_snapshot_failed", startedAt, err)
 		if finalizeErr := w.handleJobFailure(parent, job, preHandoffRetryableFailure(err)); finalizeErr != nil {
-			logger.Error("终结渠道快照失败任务失败", "error", finalizeErr)
+			logJobFailure(logger, "job_failure_finalize_failed", startedAt, finalizeErr)
 		}
 		return
 	}
@@ -437,9 +599,9 @@ func (w *Worker) processJob(parent context.Context, job GenerationJob) {
 	if job.GenerationType == "TEXT_TO_VIDEO" || job.GenerationType == "IMAGE_TO_VIDEO" {
 		video, err := generateVideo(ctx, w.storage, job, provider, w.cfg.VideoPollInterval)
 		if err != nil {
-			logger.Error("视频生成失败", "error", err)
+			logJobFailure(logger, "video_generation_failed", startedAt, err)
 			if finalizeErr := w.handleJobFailure(parent, job, err); finalizeErr != nil {
-				logger.Error("终结视频失败任务失败", "error", finalizeErr)
+				logJobFailure(logger, "job_failure_finalize_failed", startedAt, finalizeErr)
 			}
 			return
 		}
@@ -447,21 +609,26 @@ func (w *Worker) processJob(parent context.Context, job GenerationJob) {
 		err = w.completeVideoJob(finalizeCtx, job, video)
 		finalizeCancel()
 		if err != nil {
-			logger.Error("写入视频结果失败", "error", err)
+			logJobFailure(logger, "video_result_persist_failed", startedAt, err)
 			if finalizeErr := w.handleJobFailure(parent, job, wrapResultPersist("写入视频结果", err)); finalizeErr != nil {
-				logger.Error("记录视频写回失败状态失败", "error", finalizeErr)
+				logJobFailure(logger, "job_failure_finalize_failed", startedAt, finalizeErr)
 			}
 			return
 		}
-		logger.Info("视频生成任务完成", "url", video.URL)
+		logger.Info(
+			"视频生成任务完成",
+			"event", "job_succeeded",
+			"duration_ms", time.Since(startedAt).Milliseconds(),
+			"media_url", video.URL,
+		)
 		return
 	}
 
 	images, err := generateImages(ctx, w.storage, job, provider)
 	if err != nil {
-		logger.Error("生成失败", "error", err)
+		logJobFailure(logger, "image_generation_failed", startedAt, err)
 		if finalizeErr := w.handleJobFailure(parent, job, err); finalizeErr != nil {
-			logger.Error("终结图片失败任务失败", "error", finalizeErr)
+			logJobFailure(logger, "job_failure_finalize_failed", startedAt, finalizeErr)
 		}
 		return
 	}
@@ -470,17 +637,37 @@ func (w *Worker) processJob(parent context.Context, job GenerationJob) {
 	err = w.completeJob(finalizeCtx, job, images)
 	finalizeCancel()
 	if err != nil {
-		logger.Error("写入生成结果失败", "error", err)
+		logJobFailure(logger, "image_result_persist_failed", startedAt, err)
 		if finalizeErr := w.handleJobFailure(parent, job, wrapResultPersist("写入图片结果", err)); finalizeErr != nil {
-			logger.Error("记录图片写回失败状态失败", "error", finalizeErr)
+			logJobFailure(logger, "job_failure_finalize_failed", startedAt, finalizeErr)
 		}
 		return
 	}
 
-	logger.Info("生成任务完成", "images", len(images))
+	logger.Info(
+		"生成任务完成",
+		"event", "job_succeeded",
+		"duration_ms", time.Since(startedAt).Milliseconds(),
+		"image_count", len(images),
+	)
 }
 
-func (w *Worker) heartbeat(ctx context.Context, jobID string, stop <-chan struct{}, cancel context.CancelFunc) {
+func logJobFailure(logger *slog.Logger, event string, startedAt time.Time, err error) {
+	failure := classifyProviderFailure(err)
+	code := failure.Code
+	if code == "" {
+		code = "INTERNAL_ERROR"
+	}
+	logger.Error(
+		"生成任务处理失败",
+		"event", event,
+		"error_code", code,
+		"duration_ms", time.Since(startedAt).Milliseconds(),
+		"error", err,
+	)
+}
+
+func (w *Worker) heartbeat(ctx context.Context, job GenerationJob, stop <-chan struct{}, cancel context.CancelFunc) {
 	interval := 30 * time.Second
 	if w.cfg.JobTimeout/3 < interval {
 		interval = w.cfg.JobTimeout / 3
@@ -504,13 +691,25 @@ SET "lockedAt" = $1, "updatedAt" = $1
 WHERE id = $2
   AND status = 'PROCESSING'
   AND "workerId" = $3
-`, time.Now().UTC(), jobID, w.cfg.WorkerID)
+`, time.Now().UTC(), job.ID, w.cfg.WorkerID)
 			if err != nil {
-				w.logger.Warn("任务心跳更新失败", "jobId", jobID, "error", err)
+				w.logger.Warn(
+					"任务心跳更新失败",
+					"event", "job_heartbeat_failed",
+					"job_id", job.ID,
+					"attempt_ordinal", job.AttemptCount,
+					"error", err,
+				)
 				continue
 			}
 			if tag.RowsAffected() == 0 {
-				w.logger.Warn("任务租约已丢失，取消当前请求", "jobId", jobID)
+				w.logger.Warn(
+					"任务租约已丢失，取消当前请求",
+					"event", "job_lease_lost",
+					"job_id", job.ID,
+					"attempt_ordinal", job.AttemptCount,
+					"error_code", errorLeaseLostBeforeHandoff,
+				)
 				cancel()
 				return
 			}

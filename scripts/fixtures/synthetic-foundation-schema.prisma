@@ -1,0 +1,186 @@
+// Synthetic foundation 的审计源：
+// 1. 最早已发布 migration 的父提交 26d61bb3d361ceaa4c9d6b95e5f1ffa05118b82a。
+// 2. 第二个已发布 migration 的父提交 a9ca130da91b2ddc365fde40316eb0c20c6d3335。
+// 3. 明确移除了首个 migration 自己拥有的 ShowcaseStatus 与作品审核字段。
+// 该 fixture 只重建历史上通过 db push 落库、但没有 migration owner 的基础对象。
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum ProviderMode {
+  BUILT_IN
+  CUSTOM
+}
+
+enum GenerationStatus {
+  PENDING
+  SUCCEEDED
+  FAILED
+}
+
+enum GenerationType {
+  TEXT_TO_IMAGE
+  IMAGE_TO_IMAGE
+}
+
+model User {
+  id                   String                @id @default(cuid())
+  email                String                @unique
+  passwordHash         String?
+  nickname             String?
+  avatarUrl            String?
+  oauthProvider        String?
+  oauthId              String?
+  role                 Role                  @default(USER)
+  credits              Int                   @default(500)
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+  inviteUsed           InviteCode?           @relation("InviteUsedBy")
+  inviteBatches        InviteBatch[]         @relation("InviteBatchCreatedBy")
+  createdInvites       InviteCode[]          @relation("InviteCreatedBy")
+  customProviderConfig SavedProviderConfig?
+  checkInRecords       CheckInRecord[]
+  generations          GenerationJob[]
+  featuredGenerations  GenerationJob[]       @relation("FeaturedByAdmin")
+
+  @@index([oauthProvider, oauthId])
+}
+
+model InviteBatch {
+  id          String       @id @default(cuid())
+  title       String?
+  isPublic    Boolean      @default(false)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  createdById String?
+  createdBy   User?        @relation("InviteBatchCreatedBy", fields: [createdById], references: [id])
+  inviteCodes InviteCode[]
+}
+
+model BenefitConfig {
+  id                  String   @id @default(cuid())
+  scope               String   @unique @default("default")
+  checkInReward       Int      @default(50)
+  autoApproveShowcase Boolean  @default(false)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+}
+
+model OAuthProvider {
+  id           String   @id @default(cuid())
+  type         String   @unique
+  displayName  String
+  clientId     String
+  clientSecret String
+  isEnabled    Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model CheckInRecord {
+  id            String   @id @default(cuid())
+  userId        String
+  dateKey       String
+  rewardCredits Int
+  createdAt     DateTime @default(now())
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, dateKey])
+}
+
+model BuiltInProviderConfig {
+  id              String   @id @default(cuid())
+  scope           String   @unique @default("default")
+  name            String
+  baseUrl         String
+  apiKeyEncrypted String
+  model           String
+  models          String[] @default([])
+  creditCost      Int      @default(5)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model ProviderChannel {
+  id              String   @id @default(cuid())
+  name            String
+  slug            String   @unique
+  baseUrl         String
+  apiKeyEncrypted String
+  defaultModel    String
+  models          String[] @default([])
+  creditCost      Int      @default(5)
+  isActive        Boolean  @default(true)
+  sortOrder       Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model InviteCode {
+  id          String       @id @default(cuid())
+  code        String       @unique
+  note        String?
+  batchId     String?
+  claimedAt   DateTime?
+  createdAt   DateTime     @default(now())
+  usedAt      DateTime?
+  createdById String?
+  usedById    String?      @unique
+  batch       InviteBatch? @relation(fields: [batchId], references: [id], onDelete: SetNull)
+  createdBy   User?        @relation("InviteCreatedBy", fields: [createdById], references: [id])
+  usedBy      User?        @relation("InviteUsedBy", fields: [usedById], references: [id])
+}
+
+model SavedProviderConfig {
+  id              String   @id @default(cuid())
+  userId          String   @unique
+  label           String?
+  baseUrl         String
+  apiKeyEncrypted String
+  model           String
+  models          String[] @default([])
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model GenerationJob {
+  id             String           @id @default(cuid())
+  userId         String
+  generationType GenerationType   @default(TEXT_TO_IMAGE)
+  providerMode   ProviderMode
+  model          String
+  prompt         String
+  negativePrompt String?
+  size           String
+  sourceImageUrl String?
+  count          Int
+  status         GenerationStatus @default(PENDING)
+  errorMessage   String?
+  creditsSpent   Int              @default(0)
+  featuredAt     DateTime?
+  featuredById   String?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  featuredBy     User?            @relation("FeaturedByAdmin", fields: [featuredById], references: [id])
+  images         GenerationImage[]
+}
+
+model GenerationImage {
+  id        String        @id @default(cuid())
+  jobId     String
+  url       String
+  createdAt DateTime      @default(now())
+  job       GenerationJob @relation(fields: [jobId], references: [id], onDelete: Cascade)
+}

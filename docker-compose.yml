@@ -1,7 +1,29 @@
+x-runtime-environment: &runtime-environment
+  DATABASE_URL: "${DATABASE_URL:?请注入完整且已编码的 DATABASE_URL}"
+  AUTH_SECRET: "${AUTH_SECRET:?请在 .env 中设置 AUTH_SECRET}"
+  APP_URL: "${APP_URL:?请在 .env 中设置 APP_URL}"
+  BUILTIN_PROVIDER_BASE_URL: ${BUILTIN_PROVIDER_BASE_URL:-}
+  BUILTIN_PROVIDER_API_KEY: ${BUILTIN_PROVIDER_API_KEY:-}
+  BUILTIN_PROVIDER_MODEL: ${BUILTIN_PROVIDER_MODEL:-gpt-image-2}
+  BUILTIN_PROVIDER_CREDIT_COST: ${BUILTIN_PROVIDER_CREDIT_COST:-5}
+  BUILTIN_PROVIDER_NAME: ${BUILTIN_PROVIDER_NAME:-Studio}
+  BUILTIN_PROVIDER_VIDEO_MODEL: ${BUILTIN_PROVIDER_VIDEO_MODEL:-sora-2}
+  BUILTIN_PROVIDER_VIDEO_CREDIT_COST: ${BUILTIN_PROVIDER_VIDEO_CREDIT_COST:-20}
+  S3_ENDPOINT: ${S3_ENDPOINT:-}
+  S3_REGION: ${S3_REGION:-auto}
+  S3_ACCESS_KEY_ID: ${S3_ACCESS_KEY_ID:-}
+  S3_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY:-}
+  S3_BUCKET: ${S3_BUCKET:-}
+  S3_PUBLIC_BASE_URL: ${S3_PUBLIC_BASE_URL:-}
+  ENABLE_LOCAL_IMAGE_FALLBACK: ${ENABLE_LOCAL_IMAGE_FALLBACK:-true}
+  WORKER_CONTRACTS_V1_ENABLED: "false"
+  WORKER_METRICS_TOKEN: "${WORKER_METRICS_TOKEN:?请设置至少 16 位的 WORKER_METRICS_TOKEN}"
+  WORKER_SHUTDOWN_HARD_TIMEOUT_SECONDS: "10"
+  LOG_LEVEL: info
+
 services:
   db:
-    image: postgres:17-alpine
-    container_name: narra-image-db
+    image: ${POSTGRES_IMAGE:-postgres:17-alpine}
     restart: unless-stopped
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-narra_image}
@@ -12,83 +34,95 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-narra} -d ${POSTGRES_DB:-narra_image}"]
+      test: ["CMD-SHELL", "pg_isready -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\""]
       interval: 10s
       timeout: 5s
-      retries: 5
+      retries: 10
 
-  app:
+  migrate:
+    image: ${APP_IMAGE:-narra-image-app:local}
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: narra-image-app
-    restart: unless-stopped
+      args:
+        NODE_BASE_IMAGE: ${NODE_BASE_IMAGE:-node:24-alpine}
+        GO_BASE_IMAGE: ${GO_BASE_IMAGE:-golang:1.25-alpine}
+    restart: "no"
     depends_on:
       db:
         condition: service_healthy
     environment:
       NODE_ENV: production
-      PORT: 3000
-      DATABASE_URL: "postgresql://${POSTGRES_USER:-narra}:${POSTGRES_PASSWORD:?请在 .env 中设置 POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-narra_image}?schema=public"
-      AUTH_SECRET: "${AUTH_SECRET:?请在 .env 中设置 AUTH_SECRET}"
-      APP_URL: ${APP_URL:-http://localhost:3000}
-      BUILTIN_PROVIDER_BASE_URL: ${BUILTIN_PROVIDER_BASE_URL:-}
-      BUILTIN_PROVIDER_API_KEY: ${BUILTIN_PROVIDER_API_KEY:-}
-      BUILTIN_PROVIDER_MODEL: ${BUILTIN_PROVIDER_MODEL:-gpt-image-2}
-      BUILTIN_PROVIDER_CREDIT_COST: ${BUILTIN_PROVIDER_CREDIT_COST:-5}
-      BUILTIN_PROVIDER_NAME: ${BUILTIN_PROVIDER_NAME:-Studio}
-      S3_ENDPOINT: ${S3_ENDPOINT:-}
-      S3_REGION: ${S3_REGION:-auto}
-      S3_ACCESS_KEY_ID: ${S3_ACCESS_KEY_ID:-}
-      S3_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY:-}
-      S3_BUCKET: ${S3_BUCKET:-}
-      S3_PUBLIC_BASE_URL: ${S3_PUBLIC_BASE_URL:-}
-      ENABLE_LOCAL_IMAGE_FALLBACK: ${ENABLE_LOCAL_IMAGE_FALLBACK:-true}
-      ENABLE_EMBEDDED_WORKER: "false"
-      EXTERNAL_GENERATION_WAIT_TIMEOUT_SECONDS: ${EXTERNAL_GENERATION_WAIT_TIMEOUT_SECONDS:-900}
-      EXTERNAL_GENERATION_POLL_INTERVAL_MS: ${EXTERNAL_GENERATION_POLL_INTERVAL_MS:-1000}
-      BOOTSTRAP_ADMIN_EMAIL: "${BOOTSTRAP_ADMIN_EMAIL:-}"
-      BOOTSTRAP_INVITE_CODE: "${BOOTSTRAP_INVITE_CODE:-}"
-      BOOTSTRAP_ADMIN_PASSWORD_HASH: ${BOOTSTRAP_ADMIN_PASSWORD_HASH:-}
-    ports:
-      - "${APP_PORT:-3000}:3000"
+      DATABASE_URL: "${DATABASE_URL:?请注入完整且已编码的 DATABASE_URL}"
+    command: ["node", "scripts/migrate-deploy.mjs"]
 
   worker:
+    image: ${WORKER_IMAGE:-narra-image-worker:local}
     build:
       context: .
       dockerfile: worker/Dockerfile
-    container_name: narra-image-worker
+      args:
+        GO_BASE_IMAGE: ${GO_BASE_IMAGE:-golang:1.25-alpine}
+        ALPINE_BASE_IMAGE: ${ALPINE_BASE_IMAGE:-alpine:3.22}
     restart: unless-stopped
+    stop_grace_period: 45s
     depends_on:
-      db:
-        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
     environment:
-      DATABASE_URL: "postgresql://${POSTGRES_USER:-narra}:${POSTGRES_PASSWORD:?请在 .env 中设置 POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-narra_image}?schema=public"
-      AUTH_SECRET: "${AUTH_SECRET:?请在 .env 中设置 AUTH_SECRET}"
-      APP_URL: ${APP_URL:-http://localhost:3000}
-      BUILTIN_PROVIDER_BASE_URL: ${BUILTIN_PROVIDER_BASE_URL:-}
-      BUILTIN_PROVIDER_API_KEY: ${BUILTIN_PROVIDER_API_KEY:-}
-      BUILTIN_PROVIDER_MODEL: ${BUILTIN_PROVIDER_MODEL:-gpt-image-2}
-      BUILTIN_PROVIDER_CREDIT_COST: ${BUILTIN_PROVIDER_CREDIT_COST:-5}
-      BUILTIN_PROVIDER_NAME: ${BUILTIN_PROVIDER_NAME:-Studio}
-      S3_ENDPOINT: ${S3_ENDPOINT:-}
-      S3_REGION: ${S3_REGION:-auto}
-      S3_ACCESS_KEY_ID: ${S3_ACCESS_KEY_ID:-}
-      S3_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY:-}
-      S3_BUCKET: ${S3_BUCKET:-}
-      S3_PUBLIC_BASE_URL: ${S3_PUBLIC_BASE_URL:-}
-      ENABLE_LOCAL_IMAGE_FALLBACK: ${ENABLE_LOCAL_IMAGE_FALLBACK:-true}
+      <<: *runtime-environment
+      NODE_ENV: production
+      WORKER_RUNTIME_MODE: dedicated
+      WORKER_HTTP_ADDR: ":8081"
       WORKER_CONCURRENCY: ${WORKER_CONCURRENCY:-2}
-      WORKER_HTTP_ADDR: "${WORKER_HTTP_ADDR:-:8081}"
       WORKER_METRICS_WINDOW_MINUTES: ${WORKER_METRICS_WINDOW_MINUTES:-1440}
       WORKER_POLL_INTERVAL_MS: ${WORKER_POLL_INTERVAL_MS:-1000}
       WORKER_JOB_TIMEOUT_SECONDS: ${WORKER_JOB_TIMEOUT_SECONDS:-900}
       WORKER_MAX_ATTEMPTS: ${WORKER_MAX_ATTEMPTS:-2}
+      WORKER_MAX_ACTIVE_PER_USER: ${WORKER_MAX_ACTIVE_PER_USER:-1}
+      WORKER_RETRY_BASE_DELAY_MS: ${WORKER_RETRY_BASE_DELAY_MS:-1000}
+      WORKER_SHUTDOWN_GRACE_SECONDS: ${WORKER_SHUTDOWN_GRACE_SECONDS:-30}
+      WORKER_VIDEO_POLL_INTERVAL_MS: ${WORKER_VIDEO_POLL_INTERVAL_MS:-5000}
+    expose:
+      - "8081"
     healthcheck:
-      test: ["CMD-SHELL", "port=$${WORKER_HTTP_ADDR##*:}; wget -qO- \"http://127.0.0.1:$${port}/healthz\" >/dev/null"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:8081/readyz >/dev/null"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+      start_period: 10s
+
+  app:
+    image: ${APP_IMAGE:-narra-image-app:local}
+    restart: unless-stopped
+    stop_grace_period: 20s
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      worker:
+        condition: service_healthy
+    environment:
+      <<: *runtime-environment
+      NODE_ENV: production
+      PORT: 3000
+      ENABLE_EMBEDDED_WORKER: "false"
+      WORKER_INTERNAL_URL: http://worker:8081
+      WORKER_READINESS_REQUIRED: "true"
+      WORKER_READINESS_TIMEOUT_MS: "2000"
+      EXTERNAL_GENERATION_WAIT_TIMEOUT_SECONDS: ${EXTERNAL_GENERATION_WAIT_TIMEOUT_SECONDS:-900}
+      EXTERNAL_GENERATION_POLL_INTERVAL_MS: ${EXTERNAL_GENERATION_POLL_INTERVAL_MS:-1000}
+      BOOTSTRAP_ADMIN_EMAIL: "${BOOTSTRAP_ADMIN_EMAIL:-}"
+      BOOTSTRAP_INVITE_CODE: "${BOOTSTRAP_INVITE_CODE:-}"
+      BOOTSTRAP_ADMIN_PASSWORD_HASH: "${BOOTSTRAP_ADMIN_PASSWORD_HASH:-}"
+    command: ["node", "node_modules/next/dist/bin/next", "start"]
+    ports:
+      - "${APP_PORT:-3000}:3000"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:3000/api/readyz >/dev/null"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+      start_period: 10s
 
 volumes:
   postgres_data:

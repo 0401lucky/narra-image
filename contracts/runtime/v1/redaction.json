@@ -1,0 +1,52 @@
+{
+  "contract": "narra.runtime.redaction",
+  "version": 1,
+  "cases": [
+    {
+      "name": "database-dsn-in-error-cause",
+      "input": {
+        "event": "database_connect_failed",
+        "cause": "connect postgresql://narra:super%40secret@db.internal:5432/narra?schema=public&token=db-token failed"
+      },
+      "forbiddenFragments": ["super%40secret", "db-token", "db.internal:5432/narra"],
+      "requiredFragments": ["[REDACTED_DATABASE_URL]"]
+    },
+    {
+      "name": "authorization-and-api-key-headers",
+      "input": {
+        "headers": {
+          "Authorization": "Bearer bearer-secret-value",
+          "X-API-Key": "provider-header-secret",
+          "Content-Type": "application/json"
+        }
+      },
+      "forbiddenFragments": ["bearer-secret-value", "provider-header-secret"],
+      "requiredFragments": ["[REDACTED]", "application/json"]
+    },
+    {
+      "name": "provider-response-body",
+      "input": {
+        "provider_body": "{\"api_key\":\"provider-body-secret\",\"error\":\"raw upstream response\"}"
+      },
+      "forbiddenFragments": ["provider-body-secret", "raw upstream response"],
+      "requiredFragments": ["[REDACTED]"]
+    },
+    {
+      "name": "signed-media-url",
+      "input": {
+        "media_url": "https://cdn.example.com/generated/video.mp4?X-Amz-Credential=credential-secret&X-Amz-Signature=signature-secret&X-Amz-Expires=3600"
+      },
+      "forbiddenFragments": ["credential-secret", "signature-secret", "X-Amz-Credential"],
+      "requiredFragments": ["https://cdn.example.com/generated/video.mp4", "[REDACTED_QUERY]"]
+    },
+    {
+      "name": "nested-auth-secret-and-token",
+      "input": {
+        "auth_secret": "application-auth-secret",
+        "cause": "Authorization: Bearer nested-bearer-secret"
+      },
+      "forbiddenFragments": ["application-auth-secret", "nested-bearer-secret"],
+      "requiredFragments": ["[REDACTED]"]
+    }
+  ]
+}

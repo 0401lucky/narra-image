@@ -10,14 +10,15 @@ declare global {
 }
 
 function createAppPrismaClient() {
+  const env = getEnv();
   return createPrismaClient({
-    connectionString: getEnv().DATABASE_URL,
-    log: process.env.NODE_ENV === "development" ? ["error", "warn"] : ["error"],
+    connectionString: env.DATABASE_URL,
+    log: env.NODE_ENV === "development" ? ["error", "warn"] : ["error"],
   });
 }
 
 export const db = globalThis.__narraPrisma__ ?? createAppPrismaClient();
 
-if (process.env.NODE_ENV !== "production") {
+if (getEnv().NODE_ENV !== "production") {
   globalThis.__narraPrisma__ = db;
 }

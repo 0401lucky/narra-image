@@ -255,8 +255,3 @@ func (c GenerationContract) WriteFields(enabled bool) ContractWriteFields {
 		HandoffState:    c.Schema.Rollout.DisabledWrite.HandoffState,
 	}
 }
-
-func contractsV1Enabled() bool {
-	value := strings.ToLower(strings.TrimSpace(os.Getenv("WORKER_CONTRACTS_V1_ENABLED")))
-	return value == "true" || value == "1" || value == "yes"
-}

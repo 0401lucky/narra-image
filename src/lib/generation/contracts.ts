@@ -166,8 +166,9 @@ export function isGenerationErrorCode(value: string): value is GenerationErrorCo
 }
 
 export function isGenerationContractsV1Enabled(
-  value = process.env.WORKER_CONTRACTS_V1_ENABLED,
+  value: string | boolean | undefined,
 ) {
+  if (typeof value === "boolean") return value;
   return value === "true" || value === "1" || value === "yes";
 }
 

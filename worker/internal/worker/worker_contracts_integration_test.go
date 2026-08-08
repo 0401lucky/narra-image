@@ -4,6 +4,7 @@ package worker
 
 import (
 	"context"
+	"errors"
 	"os"
 	"testing"
 	"time"
@@ -43,6 +44,84 @@ func TestWorkerContractsDB(t *testing.T) {
 		RetryBaseDelay:     time.Millisecond,
 		WorkerID:           "db-worker-a",
 	}, nil)
+	t.Run("topology locks allow dedicated replicas and reject embedded", func(t *testing.T) {
+		dedicatedA := New(pool, Config{
+			DatabaseURL:  databaseURL,
+			PollInterval: time.Millisecond,
+			RuntimeMode:  RuntimeModeDedicated,
+			WorkerID:     "topology-dedicated-a",
+		}, nil)
+		lockA, err := dedicatedA.acquireTopologyLock(ctx)
+		if err != nil {
+			t.Fatalf("first dedicated lock failed: %v", err)
+		}
+		defer func() {
+			if lockA != nil {
+				_ = lockA.release(context.Background())
+			}
+		}()
+
+		dedicatedB := New(pool, Config{
+			DatabaseURL:  databaseURL,
+			PollInterval: time.Millisecond,
+			RuntimeMode:  RuntimeModeDedicated,
+			WorkerID:     "topology-dedicated-b",
+		}, nil)
+		lockB, err := dedicatedB.acquireTopologyLock(ctx)
+		if err != nil {
+			t.Fatalf("second dedicated lock failed: %v", err)
+		}
+		defer func() {
+			if lockB != nil {
+				_ = lockB.release(context.Background())
+			}
+		}()
+
+		embedded := New(pool, Config{
+			DatabaseURL:  databaseURL,
+			PollInterval: time.Millisecond,
+			RuntimeMode:  RuntimeModeEmbedded,
+			WorkerID:     "topology-embedded",
+		}, nil)
+		if _, err := embedded.acquireTopologyLock(ctx); !errors.Is(err, ErrTopologyConflict) {
+			t.Fatalf("expected embedded conflict while dedicated locks are held, got %v", err)
+		}
+
+		if err := lockB.release(context.Background()); err != nil {
+			t.Fatalf("release second dedicated lock: %v", err)
+		}
+		lockB = nil
+		if err := lockA.release(context.Background()); err != nil {
+			t.Fatalf("release first dedicated lock: %v", err)
+		}
+		lockA = nil
+
+		embeddedLock, err := embedded.acquireTopologyLock(ctx)
+		if err != nil {
+			t.Fatalf("embedded lock after dedicated release failed: %v", err)
+		}
+		defer func() { _ = embeddedLock.release(context.Background()) }()
+
+		secondEmbedded := New(pool, Config{
+			DatabaseURL:  databaseURL,
+			PollInterval: time.Millisecond,
+			RuntimeMode:  RuntimeModeEmbedded,
+			WorkerID:     "topology-embedded-b",
+		}, nil)
+		if _, err := secondEmbedded.acquireTopologyLock(ctx); !errors.Is(err, ErrTopologyConflict) {
+			t.Fatalf("expected second embedded conflict, got %v", err)
+		}
+
+		dedicatedDuringEmbedded := New(pool, Config{
+			DatabaseURL:  databaseURL,
+			PollInterval: time.Millisecond,
+			RuntimeMode:  RuntimeModeDedicated,
+			WorkerID:     "topology-dedicated-c",
+		}, nil)
+		if _, err := dedicatedDuringEmbedded.acquireTopologyLock(ctx); !errors.Is(err, ErrTopologyConflict) {
+			t.Fatalf("expected dedicated conflict while embedded lock is held, got %v", err)
+		}
+	})
 	reset := func() {
 		t.Helper()
 		if _, err := pool.Exec(ctx, `DELETE FROM "User"`); err != nil {

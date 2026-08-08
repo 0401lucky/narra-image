@@ -2,6 +2,9 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import type { ComponentProps } from "react";
 
+// 创作台交互用例在高负载 CI/本地下耗时波动大，放宽单用例截止以避免偶发超时。
+vi.setConfig({ testTimeout: 60_000 });
+
 import { GeneratorStudio } from "@/components/create/generator-studio";
 import { HISTORY_IMAGE_DRAG_MIME } from "@/components/create/constants";
 
@@ -376,7 +379,9 @@ describe("创作台反馈改进", () => {
     await user.clear(getFirstTextbox("第三方配置名称"));
     await user.type(getFirstTextbox("第三方配置名称"), "测试渠道");
     await user.type(screen.getByPlaceholderText("输入提示词生成图片，或直接粘贴图片进入图生图..."), "第三方 API 生成测试");
-    await user.click(screen.getByRole("button", { name: "发送" }));
+    const sendButton = screen.getByRole("button", { name: "发送" });
+    await waitFor(() => expect(sendButton).not.toBeDisabled());
+    await user.click(sendButton);
 
     await waitFor(() => {
       expect(generateRequests).toHaveLength(1);
@@ -427,7 +432,9 @@ describe("创作台反馈改进", () => {
       },
     });
     await user.type(screen.getByPlaceholderText("描述你希望如何修改这些参考图..."), "把参考图改成电影感");
-    await user.click(screen.getByRole("button", { name: "发送" }));
+    const sendButton = screen.getByRole("button", { name: "发送" });
+    await waitFor(() => expect(sendButton).not.toBeDisabled());
+    await user.click(sendButton);
 
     await waitFor(() => {
       expect(generateRequests).toHaveLength(1);

@@ -1,562 +1,268 @@
-import { readdirSync } from "node:fs";
-import { delimiter, join } from "node:path";
-import { spawn, spawnSync } from "node:child_process";
+import { spawn } from "node:child_process";
+import { fileURLToPath } from "node:url";
+import path from "node:path";
 
-import pg from "pg";
+import { terminateProcessTree } from "./lib/command-runner.mjs";
+import { describeError, parsePositiveInteger, prepareDatabase } from "./lib/migration-runtime.mjs";
 
-const BASELINE_MIGRATIONS = ["20260423165000_single_image_works"];
-const RECOVERABLE_FAILED_MIGRATIONS = new Set([
-  "20260428083000_generation_image_options",
-]);
-const DATABASE_READY_ATTEMPTS = Number(process.env.DATABASE_READY_ATTEMPTS ?? 180);
-const DATABASE_READY_DELAY_MS = Number(process.env.DATABASE_READY_DELAY_MS ?? 2_000);
-const ENABLE_EMBEDDED_WORKER =
-  (process.env.ENABLE_EMBEDDED_WORKER ?? "true").toLowerCase() !== "false";
-const WORKER_COMMAND = process.env.WORKER_COMMAND ?? "./narra-worker";
-const WORKER_READY_TIMEOUT_MS = Number(process.env.WORKER_READY_TIMEOUT_MS ?? 60_000);
-const WORKER_READY_POLL_INTERVAL_MS = 1_000;
-const WORKER_READY_REQUEST_TIMEOUT_MS = 2_000;
-const NEXT_BIN = join(process.cwd(), "node_modules", "next", "dist", "bin", "next");
-
-function sleep(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
+const PROJECT_ROOT = path.resolve(
+  path.dirname(fileURLToPath(import.meta.url)),
+  "..",
+);
+const NEXT_BIN = path.join(
+  PROJECT_ROOT,
+  "node_modules",
+  "next",
+  "dist",
+  "bin",
+  "next",
+);
+function parseBoolean(value, fallback) {
+  if (value === undefined || value === "") return fallback;
+  const normalized = value.trim().toLowerCase();
+  if (["1", "true", "yes", "on"].includes(normalized)) return true;
+  if (["0", "false", "no", "off"].includes(normalized)) return false;
+  throw new Error(`布尔配置值无效：${value}`);
 }
 
-function describeDatabaseError(error) {
-  if (!error || typeof error !== "object") {
-    return String(error);
-  }
-
-  const code = "code" in error && error.code ? ` ${error.code}` : "";
-  const message =
-    "message" in error && error.message ? error.message : String(error);
-
-  return `${message}${code}`;
-}
-
-function isTransientDatabaseError(value) {
-  const message =
-    typeof value === "string" ? value : describeDatabaseError(value);
-
-  return /57P03|P1001|P1002|P1017|DatabaseNotReachable|Connection terminated|terminating connection|not yet accepting connections|in recovery mode|ECONNREFUSED|ETIMEDOUT|ENOTFOUND|EAI_AGAIN/i.test(
-    message,
-  );
-}
-
-function createDatabaseClient() {
-  const client = new pg.Client({
-    connectionString: process.env.DATABASE_URL,
-  });
-
-  client.on("error", () => {
-    // PostgreSQL 恢复期间可能在 connect/query 前后抛 error 事件。
-    // 监听后让调用处通过 Promise 拒绝进入重试，而不是让 Node 进程直接退出。
-  });
-
-  return client;
-}
-
-async function closeDatabaseClient(client) {
-  try {
-    await client.end();
-  } catch {
-    // 连接未建立或已被服务端关闭时，关闭连接可能也会失败。
-  }
-}
-
-function run(command, args) {
-  const env = { ...process.env };
-  const pathKey =
-    Object.keys(env).find((key) => key.toLowerCase() === "path") ?? "PATH";
-  env[pathKey] = `${join(process.cwd(), "node_modules", ".bin")}${delimiter}${
-    env[pathKey] ?? ""
-  }`;
-
-  const result = spawnSync(command, args, {
-    encoding: "utf8",
-    env,
-    shell: process.platform === "win32",
-  });
-
-  if (result.stdout) process.stdout.write(result.stdout);
-  if (result.stderr) process.stderr.write(result.stderr);
-
+export function loadSupervisorConfig(env = process.env) {
   return {
-    ok: result.status === 0,
-    output: `${result.stdout ?? ""}\n${result.stderr ?? ""}`,
-    status: result.status ?? 1,
+    embeddedWorkerEnabled: parseBoolean(env.ENABLE_EMBEDDED_WORKER, true),
+    workerCommand: env.WORKER_COMMAND?.trim() || "./narra-worker",
+    workerReadyDeadlineMs: parsePositiveInteger(
+      env.WORKER_READY_TIMEOUT_MS,
+      60_000,
+      "WORKER_READY_TIMEOUT_MS",
+    ),
+    workerReadinessRequestTimeoutMs: parsePositiveInteger(
+      env.WORKER_READINESS_TIMEOUT_MS,
+      2_000,
+      "WORKER_READINESS_TIMEOUT_MS",
+    ),
+    workerReadinessRequired: parseBoolean(
+      env.WORKER_READINESS_REQUIRED,
+      true,
+    ),
+    workerReadyPollIntervalMs: parsePositiveInteger(
+      env.WORKER_READY_POLL_INTERVAL_MS,
+      1_000,
+      "WORKER_READY_POLL_INTERVAL_MS",
+    ),
+    workerShutdownHardTimeoutSeconds: parsePositiveInteger(
+      env.WORKER_SHUTDOWN_HARD_TIMEOUT_SECONDS,
+      10,
+      "WORKER_SHUTDOWN_HARD_TIMEOUT_SECONDS",
+    ),
+    workerInternalUrl: env.WORKER_INTERNAL_URL?.trim() || "",
+    workerHttpAddr: env.WORKER_HTTP_ADDR?.trim() || "127.0.0.1:8081",
   };
 }
 
-function runPrisma(args) {
-  return run("prisma", args);
-}
-
-async function runPrismaWithDatabaseRetry(args) {
-  let lastResult = null;
-
-  for (let attempt = 1; attempt <= DATABASE_READY_ATTEMPTS; attempt++) {
-    const result = runPrisma(args);
-    lastResult = result;
-
-    if (result.ok || !isTransientDatabaseError(result.output)) {
-      return result;
-    }
-
-    if (attempt >= DATABASE_READY_ATTEMPTS) {
-      return result;
-    }
-
-    console.warn(
-      `Database is not ready for prisma ${args.join(" ")} (${attempt}/${DATABASE_READY_ATTEMPTS}).`,
-    );
-    await sleep(DATABASE_READY_DELAY_MS);
+export function getWorkerReadyUrl(config) {
+  if (config.workerInternalUrl) {
+    return new URL("/readyz", `${config.workerInternalUrl.replace(/\/$/, "")}/`).toString();
   }
 
-  return lastResult ?? { ok: false, output: "", status: 1 };
-}
-
-function startManagedProcess(label, command, args = []) {
-  const child = spawn(command, args, {
-    env: process.env,
-    shell: process.platform === "win32",
-    stdio: "inherit",
-  });
-
-  child.on("error", (error) => {
-    console.error(`${label} failed to start: ${describeDatabaseError(error)}`);
-    process.exitCode = 1;
-    shutdownChildren();
-  });
-
-  child.on("exit", (code, signal) => {
-    managedChildren.delete(child);
-    if (signal) {
-      console.error(`${label} exited with signal ${signal}.`);
-    } else {
-      console.error(`${label} exited with code ${code ?? 1}.`);
-    }
-    if (!isShuttingDown) {
-      process.exitCode = code === 0 ? 1 : (code ?? 1);
-    }
-    shutdownChildren(child);
-    maybeExitParent();
-  });
-
-  managedChildren.add(child);
-  return child;
-}
-
-const managedChildren = new Set();
-let isShuttingDown = false;
-
-function shutdownChildren(skipChild = null) {
-  if (isShuttingDown) return;
-  isShuttingDown = true;
-
-  for (const child of managedChildren) {
-    if (child === skipChild || child.killed) continue;
-    child.kill("SIGTERM");
+  const portMatch = config.workerHttpAddr.match(/:(\d+)$/);
+  if (!portMatch) {
+    throw new Error("WORKER_HTTP_ADDR 必须包含有效端口");
   }
-
-  maybeExitParent();
+  return `http://127.0.0.1:${portMatch[1]}/readyz`;
 }
 
-function maybeExitParent() {
-  if (!isShuttingDown || managedChildren.size > 0) return;
-  process.exit(process.exitCode ?? 0);
-}
-
-function startWorker() {
-  if (!ENABLE_EMBEDDED_WORKER) {
-    console.log("Embedded worker is disabled.");
-    return null;
+async function readReadyPayload(response) {
+  try {
+    const payload = await response.json();
+    if (!payload || typeof payload !== "object") return {};
+    return payload;
+  } catch {
+    return {};
   }
-
-  return startManagedProcess("Embedded worker", WORKER_COMMAND);
 }
 
-function getWorkerHealthUrl() {
-  const workerHttpAddr = (process.env.WORKER_HTTP_ADDR ?? ":8081").trim();
-  if (!workerHttpAddr) return null;
+export async function waitForWorkerReady(
+  child,
+  config,
+  options = {},
+) {
+  if (!config.workerReadinessRequired) {
+    console.warn("[supervisor] WORKER_READINESS_REQUIRED=false，跳过 Worker ready gate");
+    return;
+  }
+  const fetchImpl = options.fetchImpl ?? fetch;
+  const sleep =
+    options.sleep ??
+    ((milliseconds) =>
+      new Promise((resolve) => setTimeout(resolve, milliseconds)));
+  const readyUrl = getWorkerReadyUrl(config);
+  const deadlineAt = Date.now() + config.workerReadyDeadlineMs;
+  let checks = 0;
+  let lastStatus = "尚未响应";
 
-  const match = workerHttpAddr.match(/:(\d+)$/);
-  if (!match) return null;
+  console.log(`[supervisor] 等待 embedded Worker readyz：${readyUrl}`);
+  while (Date.now() < deadlineAt) {
+    if (child.exitCode !== null || child.signalCode !== null) {
+      throw new Error("embedded Worker 在 ready 前已退出");
+    }
 
-  return `http://127.0.0.1:${match[1]}/healthz`;
-}
-
-async function waitForWorkerReady(child) {
-  const healthUrl = getWorkerHealthUrl();
-  if (!healthUrl || WORKER_READY_TIMEOUT_MS <= 0) return;
-
-  const deadline = Date.now() + WORKER_READY_TIMEOUT_MS;
-  console.log(`Waiting for embedded worker health at ${healthUrl}.`);
-
-  let attempt = 0;
-  let lastError = "";
-
-  while (Date.now() < deadline) {
-    if (child.exitCode !== null || child.signalCode !== null) return;
-    if (!managedChildren.has(child)) return;
-
-    attempt += 1;
+    checks += 1;
     const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), WORKER_READY_REQUEST_TIMEOUT_MS);
-
+    const timer = setTimeout(
+      () => controller.abort(),
+      config.workerReadinessRequestTimeoutMs,
+    );
     try {
-      const response = await fetch(healthUrl, {
+      const response = await fetchImpl(readyUrl, {
         cache: "no-store",
         method: "GET",
         signal: controller.signal,
       });
-
-      if (response.ok) {
-        console.log(`Embedded worker is ready after ${attempt} checks.`);
+      const payload = await readReadyPayload(response);
+      if (response.status === 200 && payload.status === "ready") {
+        console.log(
+          `[supervisor] embedded Worker 已就绪，checks=${checks}`,
+        );
         return;
       }
-
-      const responseBody = await response.text();
-      lastError = `${response.status} ${responseBody}`.trim();
+      lastStatus = `HTTP ${response.status} code=${payload.code ?? "UNKNOWN"}`;
     } catch (error) {
-      lastError = describeDatabaseError(error);
+      lastStatus = error?.name === "AbortError" ? "请求超时" : describeError(error);
     } finally {
       clearTimeout(timer);
     }
 
-    await sleep(WORKER_READY_POLL_INTERVAL_MS);
+    await sleep(config.workerReadyPollIntervalMs);
   }
 
   throw new Error(
-    `Embedded worker did not become ready within ${WORKER_READY_TIMEOUT_MS} ms${
-      lastError ? `: ${lastError}` : ""
-    }`,
+    `embedded Worker 未在 ${config.workerReadyDeadlineMs}ms 内 ready：${lastStatus}`,
   );
 }
 
-function startNext() {
-  return startManagedProcess("Next.js", process.execPath, [NEXT_BIN, "start"]);
-}
+function createSupervisor(hardTimeoutMs) {
+  const children = new Set();
+  let shuttingDown = false;
+  let resolveFinished;
+  let hardStopTimer = null;
+  const finished = new Promise((resolve) => {
+    resolveFinished = resolve;
+  });
 
-function getPrismaMigrations() {
-  return readdirSync(join(process.cwd(), "prisma", "migrations"), {
-    withFileTypes: true,
-  })
-    .filter((entry) => entry.isDirectory())
-    .map((entry) => entry.name)
-    .sort();
-}
+  const finishIfDone = () => {
+    if (shuttingDown && children.size === 0) {
+      if (hardStopTimer) clearTimeout(hardStopTimer);
+      resolveFinished();
+    }
+  };
 
-function getDatabaseSchemaName() {
-  const databaseUrl = process.env.DATABASE_URL;
-  if (!databaseUrl) return "public";
+  const shutdown = (skipChild = null) => {
+    if (!shuttingDown) shuttingDown = true;
+    for (const child of children) {
+      if (child === skipChild || child.killed) continue;
+      child.kill("SIGTERM");
+    }
+    if (!hardStopTimer && children.size > 0) {
+      hardStopTimer = setTimeout(() => {
+        console.error(
+          `[supervisor] 子进程未在 hard-stop ${hardTimeoutMs}ms 内退出，终止进程树`,
+        );
+        process.exitCode = 1;
+        for (const child of children) terminateProcessTree(child);
+      }, hardTimeoutMs);
+    }
+    finishIfDone();
+  };
 
-  try {
-    return new URL(databaseUrl).searchParams.get("schema") || "public";
-  } catch {
-    return "public";
-  }
-}
+  const start = (label, executable, args = [], env = process.env) => {
+    const child = spawn(executable, args, {
+      cwd: PROJECT_ROOT,
+      env,
+      shell: false,
+      stdio: "inherit",
+      windowsHide: true,
+    });
+    children.add(child);
 
-function quoteIdentifier(identifier) {
-  return `"${identifier.replaceAll('"', '""')}"`;
-}
-
-function getQualifiedTableName(tableName) {
-  return `${quoteIdentifier(getDatabaseSchemaName())}.${quoteIdentifier(tableName)}`;
-}
-
-async function withDatabaseClient(callback) {
-  const client = createDatabaseClient();
-
-  await client.connect();
-  try {
-    return await callback(client);
-  } finally {
-    await closeDatabaseClient(client);
-  }
-}
-
-async function waitForDatabase() {
-  if (!process.env.DATABASE_URL) return;
-
-  for (let attempt = 1; attempt <= DATABASE_READY_ATTEMPTS; attempt++) {
-    const client = createDatabaseClient();
-
-    try {
-      await client.connect();
-      await client.query("SELECT 1");
-      await closeDatabaseClient(client);
-      console.log("Database is accepting connections.");
-      return;
-    } catch (error) {
-      await closeDatabaseClient(client);
-
-      if (attempt >= DATABASE_READY_ATTEMPTS) {
-        throw error;
+    child.once("error", (error) => {
+      console.error(`[supervisor] ${label} 启动失败：${describeError(error)}`);
+      process.exitCode = 1;
+      children.delete(child);
+      shutdown(child);
+    });
+    child.once("exit", (code, signal) => {
+      children.delete(child);
+      if (!shuttingDown) {
+        console.error(
+          `[supervisor] ${label} 意外退出：${signal ? `signal=${signal}` : `exit_code=${code ?? 1}`}`,
+        );
+        process.exitCode = code === 0 ? 1 : (code ?? 1);
+        shutdown(child);
       }
+      finishIfDone();
+    });
+    return child;
+  };
 
-      console.warn(
-        `Database is not ready yet (${attempt}/${DATABASE_READY_ATTEMPTS}): ${describeDatabaseError(
-          error,
-        )}`,
-      );
-      await sleep(DATABASE_READY_DELAY_MS);
-    }
-  }
+  return {
+    start,
+    shutdown,
+    finished,
+    get shuttingDown() {
+      return shuttingDown;
+    },
+  };
 }
 
-async function isDatabaseSchemaEmpty() {
-  if (!process.env.DATABASE_URL) return false;
-
-  return withDatabaseClient(async (client) => {
-    const result = await client.query(
-      `
-        SELECT table_name
-        FROM information_schema.tables
-        WHERE table_schema = $1
-          AND table_type = 'BASE TABLE'
-          AND table_name <> '_prisma_migrations'
-        LIMIT 1
-      `,
-      [getDatabaseSchemaName()],
-    );
-
-    return result.rowCount === 0;
+export async function main(options = {}) {
+  const env = options.env ?? process.env;
+  const config = loadSupervisorConfig(env);
+  await (options.prepareDatabase ?? prepareDatabase)({
+    databaseUrl: env.DATABASE_URL,
+    env,
   });
-}
 
-async function resolveApplied(migrationName) {
-  const result = await runPrismaWithDatabaseRetry([
-    "migrate",
-    "resolve",
-    "--applied",
-    migrationName,
-  ]);
-  if (!result.ok && !result.output.includes("already recorded as applied")) {
-    process.exit(result.status);
-  }
-}
+  const supervisor = createSupervisor(
+    config.workerShutdownHardTimeoutSeconds * 1_000,
+  );
+  const stop = () => supervisor.shutdown();
+  process.once("SIGINT", stop);
+  process.once("SIGTERM", stop);
 
-async function getFailedMigrations() {
-  if (!process.env.DATABASE_URL) return [];
-
-  return withDatabaseClient(async (client) => {
-    const existsResult = await client.query(
-      `
-        SELECT EXISTS (
-          SELECT 1
-          FROM information_schema.tables
-          WHERE table_schema = $1
-            AND table_name = '_prisma_migrations'
-        ) AS exists
-      `,
-      [getDatabaseSchemaName()],
+  if (config.embeddedWorkerEnabled) {
+    const workerEnv = {
+      ...env,
+      WORKER_RUNTIME_MODE: "embedded",
+      WORKER_HTTP_ADDR: config.workerHttpAddr,
+      WORKER_SHUTDOWN_HARD_TIMEOUT_SECONDS: String(
+        config.workerShutdownHardTimeoutSeconds,
+      ),
+    };
+    const worker = supervisor.start(
+      "embedded Worker",
+      config.workerCommand,
+      [],
+      workerEnv,
     );
-
-    if (!existsResult.rows[0]?.exists) return [];
-
-    const result = await client.query(
-      `
-        SELECT migration_name
-        FROM ${getQualifiedTableName("_prisma_migrations")}
-        WHERE finished_at IS NULL
-          AND rolled_back_at IS NULL
-        ORDER BY started_at ASC
-      `,
-    );
-
-    return result.rows.map((row) => row.migration_name);
-  });
-}
-
-async function isDatabaseSchemaInSync() {
-  const result = await runPrismaWithDatabaseRetry([
-    "migrate",
-    "diff",
-    "--from-config-datasource",
-    "--to-schema",
-    "prisma/schema.prisma",
-    "--exit-code",
-  ]);
-
-  if (result.ok) return true;
-
-  if (result.status === 2) {
-    return false;
-  }
-
-  console.warn("Unable to compare database schema with Prisma schema.");
-  return false;
-}
-
-async function resolveAllMigrationsAsApplied() {
-  for (const migrationName of getPrismaMigrations()) {
-    await resolveApplied(migrationName);
-  }
-}
-
-async function repairGenerationImageOptionsMigration() {
-  await withDatabaseClient(async (client) => {
-    const tableName = getQualifiedTableName("GenerationJob");
-
-    await client.query("BEGIN");
     try {
-      await client.query(
-        `ALTER TABLE ${tableName} ADD COLUMN IF NOT EXISTS "quality" TEXT NOT NULL DEFAULT 'auto'`,
-      );
-      await client.query(
-        `ALTER TABLE ${tableName} ADD COLUMN IF NOT EXISTS "outputFormat" TEXT NOT NULL DEFAULT 'png'`,
-      );
-      await client.query(
-        `ALTER TABLE ${tableName} ADD COLUMN IF NOT EXISTS "outputCompression" INTEGER`,
-      );
-      await client.query(
-        `ALTER TABLE ${tableName} ADD COLUMN IF NOT EXISTS "moderation" TEXT NOT NULL DEFAULT 'auto'`,
-      );
-
-      await client.query(
-        `ALTER TABLE ${tableName} ALTER COLUMN "quality" SET DEFAULT 'auto'`,
-      );
-      await client.query(
-        `UPDATE ${tableName} SET "quality" = 'auto' WHERE "quality" IS NULL`,
-      );
-      await client.query(
-        `ALTER TABLE ${tableName} ALTER COLUMN "quality" SET NOT NULL`,
-      );
-
-      await client.query(
-        `ALTER TABLE ${tableName} ALTER COLUMN "outputFormat" SET DEFAULT 'png'`,
-      );
-      await client.query(
-        `UPDATE ${tableName} SET "outputFormat" = 'png' WHERE "outputFormat" IS NULL`,
-      );
-      await client.query(
-        `ALTER TABLE ${tableName} ALTER COLUMN "outputFormat" SET NOT NULL`,
-      );
-
-      await client.query(
-        `ALTER TABLE ${tableName} ALTER COLUMN "moderation" SET DEFAULT 'auto'`,
-      );
-      await client.query(
-        `UPDATE ${tableName} SET "moderation" = 'auto' WHERE "moderation" IS NULL`,
-      );
-      await client.query(
-        `ALTER TABLE ${tableName} ALTER COLUMN "moderation" SET NOT NULL`,
-      );
-
-      await client.query("COMMIT");
+      await (options.waitForWorkerReady ?? waitForWorkerReady)(worker, config);
     } catch (error) {
-      await client.query("ROLLBACK");
-      throw error;
+      console.error(`[supervisor] embedded Worker 启动失败：${describeError(error)}`);
+      process.exitCode = 1;
+      supervisor.shutdown();
+      await supervisor.finished;
+      return process.exitCode;
     }
-  });
-}
-
-async function repairFailedMigration(migrationName) {
-  if (migrationName === "20260428083000_generation_image_options") {
-    await repairGenerationImageOptionsMigration();
-    await resolveApplied(migrationName);
-    return true;
+  } else {
+    console.log("[supervisor] embedded Worker 已禁用");
   }
 
-  return false;
-}
-
-async function reconcileMigrationHistory() {
-  if (await isDatabaseSchemaInSync()) {
-    console.warn(
-      "Database schema already matches Prisma schema. Marking migrations as applied.",
-    );
-    await resolveAllMigrationsAsApplied();
-    return true;
+  if (!supervisor.shuttingDown) {
+    supervisor.start("Next.js", process.execPath, [NEXT_BIN, "start"], env);
   }
-
-  const failedMigrations = await getFailedMigrations();
-  let repairedAny = false;
-
-  for (const migrationName of failedMigrations) {
-    if (!RECOVERABLE_FAILED_MIGRATIONS.has(migrationName)) {
-      console.warn(`Migration ${migrationName} is not auto-recoverable.`);
-      continue;
-    }
-
-    console.warn(`Repairing failed migration ${migrationName}.`);
-    repairedAny = (await repairFailedMigration(migrationName)) || repairedAny;
-  }
-
-  return repairedAny;
+  await supervisor.finished;
+  return process.exitCode ?? 0;
 }
 
-async function deployMigrationsWithRecovery() {
-  const maxAttempts = getPrismaMigrations().length + 2;
-
-  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
-    const deploy = await runPrismaWithDatabaseRetry(["migrate", "deploy"]);
-    if (deploy.ok) return;
-
-    if (deploy.output.includes("P3005")) {
-      for (const migrationName of BASELINE_MIGRATIONS) {
-        await resolveApplied(migrationName);
-      }
-      continue;
-    }
-
-    if (await reconcileMigrationHistory()) {
-      continue;
-    }
-
-    process.exit(deploy.status);
-  }
-
-  console.error("Failed to deploy migrations after recovery attempts.");
-  process.exit(1);
+if (path.resolve(process.argv[1] ?? "") === fileURLToPath(import.meta.url)) {
+  process.exitCode = await main();
 }
-
-async function prepareDatabase() {
-  await waitForDatabase();
-
-  if (await isDatabaseSchemaEmpty()) {
-    const push = await runPrismaWithDatabaseRetry(["db", "push"]);
-    if (!push.ok) process.exit(push.status);
-
-    for (const migrationName of getPrismaMigrations()) {
-      await resolveApplied(migrationName);
-    }
-    return;
-  }
-
-  await deployMigrationsWithRecovery();
-}
-
-try {
-  await prepareDatabase();
-} catch (error) {
-  console.error(`Failed to prepare database: ${describeDatabaseError(error)}`);
-  process.exit(1);
-}
-
-const worker = startWorker();
-if (worker) {
-  try {
-    await waitForWorkerReady(worker);
-  } catch (error) {
-    console.error(`Embedded worker startup failed: ${describeDatabaseError(error)}`);
-    shutdownChildren();
-    process.exit(process.exitCode ?? 1);
-  }
-}
-
-if (isShuttingDown) {
-  process.exit(process.exitCode ?? 1);
-}
-
-startNext();
-
-process.on("SIGINT", () => {
-  shutdownChildren();
-});
-
-process.on("SIGTERM", () => {
-  shutdownChildren();
-});

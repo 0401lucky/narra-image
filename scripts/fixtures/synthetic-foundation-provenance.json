@@ -1,0 +1,104 @@
+{
+  "schemaVersion": 1,
+  "foundationMigration": "20260423000000_initial_schema",
+  "baseCommit": "26d61bb3d361ceaa4c9d6b95e5f1ffa05118b82a",
+  "auditCutoffCommit": "a9ca130da91b2ddc365fde40316eb0c20c6d3335",
+  "generatedSchema": "scripts/fixtures/synthetic-foundation-schema.prisma",
+  "excludedPublishedOwner": {
+    "migration": "20260423165000_single_image_works",
+    "objects": [
+      "ShowcaseStatus",
+      "GenerationImage.showcaseStatus",
+      "GenerationImage.showPromptPublic",
+      "GenerationImage.submittedAt",
+      "GenerationImage.featuredAt",
+      "GenerationImage.reviewedAt",
+      "GenerationImage.reviewNote",
+      "GenerationImage.reviewedById",
+      "GenerationImage_reviewedById_fkey"
+    ]
+  },
+  "evidence": [
+    {
+      "gitCommit": "26d61bb3d361ceaa4c9d6b95e5f1ffa05118b82a",
+      "objects": [
+        "Role",
+        "ProviderMode",
+        "GenerationStatus",
+        "User base columns",
+        "BuiltInProviderConfig",
+        "InviteCode base columns",
+        "SavedProviderConfig",
+        "GenerationJob base columns",
+        "GenerationImage base columns"
+      ],
+      "firstPublishedConsumer": "20260423165000_single_image_works",
+      "proof": "首个 migration 直接 ALTER GenerationImage 并引用 User；此前没有 migration SQL 创建基础表或枚举。"
+    },
+    {
+      "gitCommit": "0fc0703636a3cf7f3de8f9a632b03589a1c34458",
+      "objects": [
+        "GenerationType",
+        "GenerationJob.generationType",
+        "GenerationJob.sourceImageUrl",
+        "BenefitConfig base columns",
+        "CheckInRecord"
+      ],
+      "firstPublishedConsumer": "20260427090000_likes_redeem_codes_multi_sources",
+      "additionalConsumer": "20260601000000_video_workspace",
+      "proof": "第二个 migration 读取并删除 sourceImageUrl；视频 migration ALTER GenerationType。全仓已发布 migration 从未创建这些前置对象。"
+    },
+    {
+      "gitCommit": "9efa2d1bd42b1263cc41d15254a11f92fc7bfbaa",
+      "objects": [
+        "InviteBatch",
+        "InviteCode.batchId",
+        "InviteCode.claimedAt",
+        "InviteCode_batchId_fkey"
+      ],
+      "firstPublishedConsumer": null,
+      "schemaGateConsumer": "prisma/schema.prisma after 20260807130000_generation_worker_contract_v1",
+      "proof": "这些对象在第二个 migration 之前已进入历史 schema，但没有任何已发布 migration 创建；最终 migrate diff=0 要求 foundation 持有。"
+    },
+    {
+      "gitCommit": "735a3b83cbe75c6bfc96663512977acd0e8cc39e",
+      "objects": [
+        "ProviderChannel base columns"
+      ],
+      "firstPublishedConsumer": "20260601000000_video_workspace",
+      "proof": "视频 migration ALTER ProviderChannel 增加 videoCreditCost，但此前没有 migration 创建 ProviderChannel。"
+    },
+    {
+      "gitCommit": "950ed8c42a495991194258965750e4ae8883c62e",
+      "objects": [
+        "BenefitConfig.autoApproveShowcase"
+      ],
+      "firstPublishedConsumer": null,
+      "schemaGateConsumer": "prisma/schema.prisma after 20260807130000_generation_worker_contract_v1",
+      "proof": "字段在第二个 migration 前已存在，现有 migrations 从未添加。"
+    },
+    {
+      "gitCommit": "83b8f7574ade413503a4a41247c613d6e0aa044b",
+      "objects": [
+        "User.nickname",
+        "User.avatarUrl"
+      ],
+      "firstPublishedConsumer": null,
+      "schemaGateConsumer": "prisma/schema.prisma after 20260807130000_generation_worker_contract_v1",
+      "proof": "字段在第二个 migration 前已存在，现有 migrations 从未添加。"
+    },
+    {
+      "gitCommit": "11c6469d27aebc6ce2ac05c49afc059d9ecc9659",
+      "objects": [
+        "User.passwordHash nullable",
+        "User.oauthProvider",
+        "User.oauthId",
+        "User_oauthProvider_oauthId_idx",
+        "OAuthProvider"
+      ],
+      "firstPublishedConsumer": null,
+      "schemaGateConsumer": "prisma/schema.prisma after 20260807130000_generation_worker_contract_v1",
+      "proof": "对象在第二个 migration 前已存在，现有 migrations 从未创建或修改。"
+    }
+  ]
+}

@@ -2,12 +2,17 @@ package worker
 
 import (
 	"context"
+	"crypto/subtle"
 	"database/sql"
 	"encoding/json"
 	"errors"
+	"net"
 	"net/http"
+	"strings"
 	"time"
 )
+
+const workerHTTPAPISchemaVersion = 1
 
 type queueMetrics struct {
 	OldestPendingAgeMs float64 `json:"oldest_pending_age_ms"`
@@ -27,47 +32,86 @@ type completionMetrics struct {
 	WindowSeconds   int64   `json:"window_seconds"`
 }
 
-type metricsResponse struct {
-	Completed   completionMetrics `json:"completed"`
-	GeneratedAt string            `json:"generated_at"`
-	Queue       queueMetrics      `json:"queue"`
-	WorkerID    string            `json:"worker_id"`
+type reliabilityMetrics struct {
+	ErrorClassCounts map[string]int64 `json:"error_class_counts"`
+	RetryAttempts    int64            `json:"retry_attempts"`
+	RetryExhausted   int64            `json:"retry_exhausted"`
+	UnknownHandoffs  int64            `json:"unknown_handoffs"`
 }
 
-func (w *Worker) runHTTPServer(ctx context.Context) error {
+type runtimeMetrics struct {
+	Draining      bool         `json:"draining"`
+	Mode          RuntimeMode  `json:"mode"`
+	State         runtimePhase `json:"state"`
+	UptimeSeconds int64        `json:"uptime_seconds"`
+}
+
+type metricsResponse struct {
+	Completed     completionMetrics  `json:"completed"`
+	GeneratedAt   string             `json:"generated_at"`
+	Queue         queueMetrics       `json:"queue"`
+	Reliability   reliabilityMetrics `json:"reliability"`
+	Runtime       runtimeMetrics     `json:"runtime"`
+	SchemaVersion int                `json:"schema_version"`
+	WorkerID      string             `json:"worker_id"`
+}
+
+type readinessResult struct {
+	Code  string `json:"code,omitempty"`
+	Ready bool   `json:"-"`
+}
+
+type workerHTTPServer struct {
+	done   <-chan error
+	server *http.Server
+}
+
+func (w *Worker) startHTTPServer() (*workerHTTPServer, error) {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/healthz", w.handleHealth)
+	mux.HandleFunc("/readyz", w.handleReady)
 	mux.HandleFunc("/metrics", w.handleMetrics)
 
+	listener, err := net.Listen("tcp", w.cfg.HTTPAddr)
+	if err != nil {
+		return nil, err
+	}
 	server := &http.Server{
 		Addr:              w.cfg.HTTPAddr,
 		Handler:           mux,
 		ReadHeaderTimeout: 5 * time.Second,
 	}
-
-	errCh := make(chan error, 1)
+	done := make(chan error, 1)
 	go func() {
-		w.logger.Info("Worker HTTP 服务已启动", "addr", w.cfg.HTTPAddr)
-		errCh <- server.ListenAndServe()
+		serveErr := server.Serve(listener)
+		if errors.Is(serveErr, http.ErrServerClosed) {
+			serveErr = nil
+		}
+		done <- serveErr
+		close(done)
 	}()
 
+	w.logger.Info(
+		"Worker HTTP 服务已启动",
+		"event", "http_server_started",
+		"addr", listener.Addr().String(),
+	)
+	return &workerHTTPServer{done: done, server: server}, nil
+}
+
+func (server *workerHTTPServer) shutdown(ctx context.Context) error {
+	shutdownErr := server.server.Shutdown(ctx)
 	select {
+	case serveErr := <-server.done:
+		if shutdownErr != nil {
+			return shutdownErr
+		}
+		return serveErr
 	case <-ctx.Done():
-		shutdownCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-		defer cancel()
-		if err := server.Shutdown(shutdownCtx); err != nil {
-			return err
+		if shutdownErr != nil {
+			return shutdownErr
 		}
-		err := <-errCh
-		if errors.Is(err, http.ErrServerClosed) {
-			return nil
-		}
-		return err
-	case err := <-errCh:
-		if errors.Is(err, http.ErrServerClosed) {
-			return nil
-		}
-		return err
+		return ctx.Err()
 	}
 }
 
@@ -77,25 +121,71 @@ func (w *Worker) handleHealth(writer http.ResponseWriter, request *http.Request)
 		return
 	}
 
+	writeJSON(writer, http.StatusOK, map[string]any{
+		"generated_at":   time.Now().UTC().Format(time.RFC3339),
+		"schema_version": workerHTTPAPISchemaVersion,
+		"status":         "ok",
+	})
+}
+
+func (w *Worker) handleReady(writer http.ResponseWriter, request *http.Request) {
+	if request.Method != http.MethodGet {
+		writer.WriteHeader(http.StatusMethodNotAllowed)
+		return
+	}
+
 	ctx, cancel := context.WithTimeout(request.Context(), 2*time.Second)
 	defer cancel()
-
-	if err := w.pool.Ping(ctx); err != nil {
+	result := w.evaluateReadiness(ctx)
+	if !result.Ready {
 		writeJSON(writer, http.StatusServiceUnavailable, map[string]any{
-			"database":  "down",
-			"error":     err.Error(),
-			"status":    "unhealthy",
-			"worker_id": w.cfg.WorkerID,
+			"code":           result.Code,
+			"generated_at":   time.Now().UTC().Format(time.RFC3339),
+			"schema_version": workerHTTPAPISchemaVersion,
+			"status":         "not_ready",
 		})
 		return
 	}
 
 	writeJSON(writer, http.StatusOK, map[string]any{
-		"database":     "ok",
-		"generated_at": time.Now().UTC().Format(time.RFC3339),
-		"status":       "ok",
-		"worker_id":    w.cfg.WorkerID,
+		"generated_at":   time.Now().UTC().Format(time.RFC3339),
+		"schema_version": workerHTTPAPISchemaVersion,
+		"status":         "ready",
 	})
+}
+
+func (w *Worker) evaluateReadiness(ctx context.Context) readinessResult {
+	snapshot := w.state.snapshot()
+	if snapshot.Phase == runtimePhaseDraining || snapshot.Phase == runtimePhaseStopped {
+		code := snapshot.ReadinessCode
+		if code != readinessCodeTopologyConflict && code != readinessCodeTopologyLockLost {
+			code = readinessCodeDraining
+		}
+		return readinessResult{Code: code}
+	}
+	if w.pingDatabase == nil || w.pingDatabase(ctx) != nil {
+		return readinessResult{Code: readinessCodeDatabaseUnavailable}
+	}
+	if w.checkSchema == nil {
+		return readinessResult{Code: readinessCodeSchemaNotReady}
+	}
+	report, err := w.checkSchema(ctx)
+	if err != nil || !report.Ready() {
+		return readinessResult{Code: readinessCodeSchemaNotReady}
+	}
+	if !snapshot.TopologyHeld {
+		if snapshot.ReadinessCode == readinessCodeTopologyConflict || snapshot.ReadinessCode == readinessCodeTopologyLockLost {
+			return readinessResult{Code: snapshot.ReadinessCode}
+		}
+		return readinessResult{Code: readinessCodeTopologyNotReady}
+	}
+	if !snapshot.ConsumersRunning {
+		return readinessResult{Code: readinessCodeConsumerNotReady}
+	}
+	if snapshot.Phase != runtimePhaseReady {
+		return readinessResult{Code: readinessCodeBooting}
+	}
+	return readinessResult{Ready: true}
 }
 
 func (w *Worker) handleMetrics(writer http.ResponseWriter, request *http.Request) {
@@ -103,16 +193,29 @@ func (w *Worker) handleMetrics(writer http.ResponseWriter, request *http.Request
 		writer.WriteHeader(http.StatusMethodNotAllowed)
 		return
 	}
+	if !w.metricsAuthorized(request) {
+		writeJSON(writer, http.StatusUnauthorized, map[string]any{
+			"code":   "METRICS_UNAUTHORIZED",
+			"status": "error",
+		})
+		return
+	}
 
 	ctx, cancel := context.WithTimeout(request.Context(), 5*time.Second)
 	defer cancel()
-
-	metrics, err := w.collectMetrics(ctx)
+	if w.metricsCollector == nil {
+		writeJSON(writer, http.StatusServiceUnavailable, map[string]any{
+			"code":   "METRICS_UNAVAILABLE",
+			"status": "error",
+		})
+		return
+	}
+	metrics, err := w.metricsCollector(ctx)
 	if err != nil {
-		writeJSON(writer, http.StatusInternalServerError, map[string]any{
-			"error":     err.Error(),
-			"status":    "error",
-			"worker_id": w.cfg.WorkerID,
+		w.logger.Warn("Worker 指标采集失败", "event", "metrics_collection_failed", "error", err)
+		writeJSON(writer, http.StatusServiceUnavailable, map[string]any{
+			"code":   "METRICS_UNAVAILABLE",
+			"status": "error",
 		})
 		return
 	}
@@ -120,11 +223,35 @@ func (w *Worker) handleMetrics(writer http.ResponseWriter, request *http.Request
 	writeJSON(writer, http.StatusOK, metrics)
 }
 
+func (w *Worker) metricsAuthorized(request *http.Request) bool {
+	expected := strings.TrimSpace(w.cfg.MetricsToken)
+	if expected == "" {
+		return true
+	}
+	parts := strings.Fields(request.Header.Get("Authorization"))
+	if len(parts) != 2 || !strings.EqualFold(parts[0], "Bearer") {
+		return false
+	}
+	provided := []byte(parts[1])
+	wanted := []byte(expected)
+	return len(provided) == len(wanted) && subtle.ConstantTimeCompare(provided, wanted) == 1
+}
+
 func (w *Worker) collectMetrics(ctx context.Context) (metricsResponse, error) {
-	since := time.Now().UTC().Add(-w.cfg.MetricsWindow)
+	now := time.Now().UTC()
+	since := now.Add(-w.cfg.MetricsWindow)
+	snapshot := w.state.snapshot()
 	response := metricsResponse{
-		GeneratedAt: time.Now().UTC().Format(time.RFC3339),
-		WorkerID:    w.cfg.WorkerID,
+		GeneratedAt: now.Format(time.RFC3339),
+		Reliability: reliabilityMetrics{ErrorClassCounts: map[string]int64{}},
+		Runtime: runtimeMetrics{
+			Draining:      snapshot.Phase == runtimePhaseDraining,
+			Mode:          w.cfg.RuntimeMode,
+			State:         snapshot.Phase,
+			UptimeSeconds: int64(now.Sub(snapshot.StartedAt).Seconds()),
+		},
+		SchemaVersion: workerHTTPAPISchemaVersion,
+		WorkerID:      w.cfg.WorkerID,
 	}
 
 	err := w.pool.QueryRow(ctx, `
@@ -176,6 +303,48 @@ WHERE "workerManaged" = true
 		&response.Completed.DurationP99Ms,
 	)
 	if err != nil {
+		return metricsResponse{}, err
+	}
+
+	err = w.pool.QueryRow(ctx, `
+SELECT
+  COUNT(*) FILTER (WHERE status = 'FAILED_RETRYABLE'),
+  COUNT(*) FILTER (WHERE "errorCode" = $2),
+  COUNT(*) FILTER (WHERE status = 'UNKNOWN')
+FROM "GenerationAttempt"
+WHERE "createdAt" >= $1
+`, since, errorMaxAttemptsExhausted).Scan(
+		&response.Reliability.RetryAttempts,
+		&response.Reliability.RetryExhausted,
+		&response.Reliability.UnknownHandoffs,
+	)
+	if err != nil {
+		return metricsResponse{}, err
+	}
+
+	rows, err := w.pool.Query(ctx, `
+SELECT "errorCode", COUNT(*)
+FROM "GenerationJob"
+WHERE "workerManaged" = true
+  AND status = 'FAILED'
+  AND "completedAt" >= $1
+  AND "errorCode" IS NOT NULL
+GROUP BY "errorCode"
+ORDER BY "errorCode"
+`, since)
+	if err != nil {
+		return metricsResponse{}, err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var code string
+		var count int64
+		if err := rows.Scan(&code, &count); err != nil {
+			return metricsResponse{}, err
+		}
+		response.Reliability.ErrorClassCounts[code] = count
+	}
+	if err := rows.Err(); err != nil {
 		return metricsResponse{}, err
 	}
 

@@ -13,12 +13,14 @@ type SessionUser = {
   role: UserRole;
 };
 
-const baseCookieOptions = {
-  httpOnly: true,
-  path: "/",
-  sameSite: "lax" as const,
-  secure: process.env.NODE_ENV === "production",
-};
+function getBaseCookieOptions() {
+  return {
+    httpOnly: true,
+    path: "/",
+    sameSite: "lax" as const,
+    secure: getEnv().NODE_ENV === "production",
+  };
+}
 
 export async function createSession(user: SessionUser) {
   return createSessionToken(user, getEnv().AUTH_SECRET);
@@ -51,7 +53,7 @@ export async function attachSessionCookie(
   const token = await createSession(user);
 
   response.cookies.set(SESSION_COOKIE_NAME, token, {
-    ...baseCookieOptions,
+    ...getBaseCookieOptions(),
     maxAge: 60 * 60 * 24 * 14,
   });
 
@@ -60,7 +62,7 @@ export async function attachSessionCookie(
 
 export function clearSessionCookie(response: NextResponse) {
   response.cookies.set(SESSION_COOKIE_NAME, "", {
-    ...baseCookieOptions,
+    ...getBaseCookieOptions(),
     maxAge: 0,
   });
 

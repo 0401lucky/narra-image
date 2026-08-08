@@ -19,8 +19,10 @@ const EXIT = {
   cleanup: 6,
 } as const;
 
-const GLOBAL_DEADLINE_MS = 55_000;
-const CLEANUP_RESERVE_MS = 4_000;
+// DB/migration runner 独立边界（R4 允许其用更长截止，不嵌套进 60s 父截止）。
+// Windows 本地 vitest 冷启动较慢，55s 不足以覆盖 prisma migrate + TS/Go 断言。
+const GLOBAL_DEADLINE_MS = 150_000;
+const CLEANUP_RESERVE_MS = 10_000;
 const DOCKER_PROBE_TIMEOUT_MS = 3_000;
 const POSTGRES_READY_TIMEOUT_MS = 12_000;
 // 默认保持验证矩阵的固定版本；本地缺少该镜像时可显式指定已存在的测试镜像。
@@ -455,6 +457,8 @@ async function startDisposablePostgres(
         resource.containerName,
         "--label",
         `${OWNER_LABEL_KEY}=${resource.ownerToken}`,
+        "--tmpfs",
+        "/var/lib/postgresql/data:rw,noexec,nosuid",
         "--publish",
         "127.0.0.1::5432",
         "--env",
@@ -486,6 +490,64 @@ async function startDisposablePostgres(
     throw failure(
       EXIT.cleanup,
       "[worker-contracts:db] 新容器 owner label 校验失败",
+    );
+  }
+
+  const mountsResult = await runCommand(
+    {
+      label: "校验 PostgreSQL 数据目录为 tmpfs",
+      executable: "docker",
+      args: [
+        "container",
+        "inspect",
+        "--format",
+        "{{json .Mounts}}",
+        resource.containerName,
+      ],
+      capture: true,
+      timeoutMs: DOCKER_PROBE_TIMEOUT_MS,
+    },
+    deadlineAt,
+  );
+  let mounts: Array<{ Type?: string; Destination?: string }> = [];
+  try {
+    mounts = JSON.parse(mountsResult.stdout.trim());
+  } catch {
+    // 下方统一按不安全挂载处理。
+  }
+  const tmpfsResult = await runCommand(
+    {
+      label: "校验 PostgreSQL tmpfs 配置",
+      executable: "docker",
+      args: [
+        "container",
+        "inspect",
+        "--format",
+        "{{json .HostConfig.Tmpfs}}",
+        resource.containerName,
+      ],
+      capture: true,
+      timeoutMs: DOCKER_PROBE_TIMEOUT_MS,
+    },
+    deadlineAt,
+  );
+  let tmpfs: Record<string, string> = {};
+  try {
+    tmpfs = JSON.parse(tmpfsResult.stdout.trim());
+  } catch {
+    // 下方统一按不安全挂载处理。
+  }
+  if (
+    mountsResult.code !== 0 ||
+    tmpfsResult.code !== 0 ||
+    typeof tmpfs["/var/lib/postgresql/data"] !== "string" ||
+    mounts.some((mount) => mount.Type === "volume")
+  ) {
+    printCapturedFailure(mountsResult);
+    printCapturedFailure(tmpfsResult);
+    throw failure(
+      EXIT.cleanup,
+      "[worker-contracts:db] PostgreSQL 数据目录不是无持久卷的 tmpfs",
     );
   }
 
@@ -809,7 +871,13 @@ async function cleanupContainer(
     {
       label: "清理一次性 PostgreSQL",
       executable: "docker",
-      args: ["container", "rm", "--force", resource.containerName],
+      args: [
+        "container",
+        "rm",
+        "--force",
+        "--volumes",
+        resource.containerName,
+      ],
       capture: true,
       timeoutMs: Math.max(1, deadlineAt - Date.now()),
     },

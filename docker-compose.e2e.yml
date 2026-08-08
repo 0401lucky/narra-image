@@ -1,98 +1,182 @@
+x-runner-labels: &runner-labels
+  com.narra.e2e.owner: "${E2E_OWNER_TOKEN:?E2E runner 必须注入 owner token}"
+
+x-runtime-environment: &runtime-environment
+  DATABASE_URL: "${E2E_DATABASE_URL:?E2E runner 必须注入完整数据库 URL}"
+  AUTH_SECRET: "${E2E_AUTH_SECRET:?E2E runner 必须注入 AUTH_SECRET}"
+  APP_URL: https://narra-e2e.invalid
+  BUILTIN_PROVIDER_BASE_URL: ""
+  BUILTIN_PROVIDER_API_KEY: ""
+  BUILTIN_PROVIDER_MODEL: gpt-image-2
+  BUILTIN_PROVIDER_CREDIT_COST: "5"
+  BUILTIN_PROVIDER_NAME: Studio
+  BUILTIN_PROVIDER_VIDEO_MODEL: sora-2
+  BUILTIN_PROVIDER_VIDEO_CREDIT_COST: "20"
+  ENABLE_LOCAL_IMAGE_FALLBACK: "true"
+  WORKER_CONTRACTS_V1_ENABLED: "false"
+  WORKER_METRICS_TOKEN: "${E2E_METRICS_TOKEN:?E2E runner 必须注入 metrics token}"
+  WORKER_SHUTDOWN_HARD_TIMEOUT_SECONDS: "10"
+  LOG_LEVEL: info
+
+x-worker-environment: &worker-environment
+  <<: *runtime-environment
+  NODE_ENV: production
+  WORKER_RUNTIME_MODE: dedicated
+  WORKER_HTTP_ADDR: ":8081"
+  WORKER_CONCURRENCY: "1"
+  WORKER_METRICS_WINDOW_MINUTES: "60"
+  WORKER_POLL_INTERVAL_MS: "250"
+  WORKER_JOB_TIMEOUT_SECONDS: "60"
+  WORKER_MAX_ATTEMPTS: "2"
+  WORKER_MAX_ACTIVE_PER_USER: "1"
+  WORKER_RETRY_BASE_DELAY_MS: "100"
+  WORKER_SHUTDOWN_GRACE_SECONDS: "2"
+  WORKER_VIDEO_POLL_INTERVAL_MS: "250"
+
 services:
   db:
-    image: postgres:17-alpine
-    container_name: narra-image-e2e-db
-    restart: unless-stopped
+    image: ${E2E_POSTGRES_IMAGE:-postgres:17-alpine}
+    restart: "no"
+    labels:
+      <<: *runner-labels
     environment:
-      POSTGRES_DB: ${E2E_POSTGRES_DB:-narra_image_e2e}
-      POSTGRES_USER: ${E2E_POSTGRES_USER:-narra_e2e}
-      POSTGRES_PASSWORD: ${E2E_POSTGRES_PASSWORD:-narra_e2e_password}
-    ports:
-      - "127.0.0.1:${E2E_POSTGRES_PORT:-55432}:5432"
-    volumes:
-      - postgres_e2e_data:/var/lib/postgresql/data
+      POSTGRES_DB: "${E2E_POSTGRES_DB:?}"
+      POSTGRES_USER: "${E2E_POSTGRES_USER:?}"
+      POSTGRES_PASSWORD: "${E2E_POSTGRES_PASSWORD:?}"
+    tmpfs:
+      - /var/lib/postgresql/data:rw,noexec,nosuid
     healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          "pg_isready -U ${E2E_POSTGRES_USER:-narra_e2e} -d ${E2E_POSTGRES_DB:-narra_image_e2e}",
-        ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      test: ["CMD-SHELL", "pg_isready -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\""]
+      interval: 1s
+      timeout: 1s
+      retries: 30
 
-  app:
+  migrate:
+    image: "${E2E_APP_IMAGE:?}"
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: narra-image-e2e-app
-    restart: unless-stopped
+      args:
+        NODE_BASE_IMAGE: ${E2E_NODE_BASE_IMAGE:-node:24-alpine}
+        GO_BASE_IMAGE: ${E2E_GO_BASE_IMAGE:-golang:1.25-alpine}
+    restart: "no"
+    labels:
+      <<: *runner-labels
     depends_on:
       db:
         condition: service_healthy
     environment:
       NODE_ENV: production
-      PORT: 3000
-      DATABASE_URL: postgresql://${E2E_POSTGRES_USER:-narra_e2e}:${E2E_POSTGRES_PASSWORD:-narra_e2e_password}@db:5432/${E2E_POSTGRES_DB:-narra_image_e2e}?schema=public
-      AUTH_SECRET: ${E2E_AUTH_SECRET:-narra-e2e-only-secret-do-not-use-production}
-      APP_URL: ${E2E_APP_URL:-http://localhost:3100}
-      BUILTIN_PROVIDER_BASE_URL: ${BUILTIN_PROVIDER_BASE_URL:-}
-      BUILTIN_PROVIDER_API_KEY: ${BUILTIN_PROVIDER_API_KEY:-}
-      BUILTIN_PROVIDER_MODEL: ${BUILTIN_PROVIDER_MODEL:-gpt-image-2}
-      BUILTIN_PROVIDER_CREDIT_COST: ${BUILTIN_PROVIDER_CREDIT_COST:-5}
-      BUILTIN_PROVIDER_NAME: ${BUILTIN_PROVIDER_NAME:-Studio}
-      S3_ENDPOINT: ${S3_ENDPOINT:-}
-      S3_REGION: ${S3_REGION:-auto}
-      S3_ACCESS_KEY_ID: ${S3_ACCESS_KEY_ID:-}
-      S3_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY:-}
-      S3_BUCKET: ${S3_BUCKET:-}
-      S3_PUBLIC_BASE_URL: ${S3_PUBLIC_BASE_URL:-}
-      ENABLE_LOCAL_IMAGE_FALLBACK: ${ENABLE_LOCAL_IMAGE_FALLBACK:-true}
-      ENABLE_EMBEDDED_WORKER: "false"
-      EXTERNAL_GENERATION_WAIT_TIMEOUT_SECONDS: ${EXTERNAL_GENERATION_WAIT_TIMEOUT_SECONDS:-900}
-      EXTERNAL_GENERATION_POLL_INTERVAL_MS: ${EXTERNAL_GENERATION_POLL_INTERVAL_MS:-1000}
-      BOOTSTRAP_ADMIN_EMAIL: ${BOOTSTRAP_ADMIN_EMAIL:-admin@example.com}
-      BOOTSTRAP_INVITE_CODE: ${BOOTSTRAP_INVITE_CODE:-FOUNDING-ACCESS}
-      BOOTSTRAP_ADMIN_PASSWORD_HASH: ${BOOTSTRAP_ADMIN_PASSWORD_HASH:-}
-    ports:
-      - "127.0.0.1:${E2E_APP_PORT:-3100}:3000"
+      DATABASE_URL: "${E2E_DATABASE_URL:?}"
+    command: ["node", "scripts/migrate-deploy.mjs"]
 
   worker:
+    image: "${E2E_WORKER_IMAGE:?}"
     build:
       context: .
       dockerfile: worker/Dockerfile
-    container_name: narra-image-e2e-worker
-    restart: unless-stopped
+      args:
+        GO_BASE_IMAGE: ${E2E_GO_BASE_IMAGE:-golang:1.25-alpine}
+        ALPINE_BASE_IMAGE: ${E2E_ALPINE_BASE_IMAGE:-alpine:3.22}
+    restart: "no"
+    stop_grace_period: 15s
+    labels:
+      <<: *runner-labels
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    environment:
+      <<: *worker-environment
+    expose:
+      - "8081"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:8081/readyz >/dev/null"]
+      interval: 1s
+      timeout: 1s
+      retries: 30
+      start_period: 2s
+
+  app:
+    image: "${E2E_APP_IMAGE:?}"
+    restart: "no"
+    stop_grace_period: 10s
+    labels:
+      <<: *runner-labels
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      worker:
+        condition: service_healthy
+    environment:
+      <<: *runtime-environment
+      NODE_ENV: production
+      PORT: "3000"
+      ENABLE_EMBEDDED_WORKER: "false"
+      WORKER_RUNTIME_MODE: dedicated
+      WORKER_INTERNAL_URL: http://worker:8081
+      WORKER_READINESS_REQUIRED: "true"
+      WORKER_READINESS_TIMEOUT_MS: "1000"
+    command: ["node", "node_modules/next/dist/bin/next", "start"]
+    ports:
+      - "127.0.0.1::3000"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:3000/api/readyz >/dev/null"]
+      interval: 1s
+      timeout: 1s
+      retries: 60
+      start_period: 3s
+
+  embedded:
+    image: "${E2E_APP_IMAGE:?}"
+    profiles: ["embedded"]
+    restart: "no"
+    stop_grace_period: 15s
+    labels:
+      <<: *runner-labels
     depends_on:
       db:
         condition: service_healthy
     environment:
-      DATABASE_URL: postgresql://${E2E_POSTGRES_USER:-narra_e2e}:${E2E_POSTGRES_PASSWORD:-narra_e2e_password}@db:5432/${E2E_POSTGRES_DB:-narra_image_e2e}?schema=public
-      AUTH_SECRET: ${E2E_AUTH_SECRET:-narra-e2e-only-secret-do-not-use-production}
-      APP_URL: ${E2E_APP_URL:-http://localhost:3100}
-      BUILTIN_PROVIDER_BASE_URL: ${BUILTIN_PROVIDER_BASE_URL:-}
-      BUILTIN_PROVIDER_API_KEY: ${BUILTIN_PROVIDER_API_KEY:-}
-      BUILTIN_PROVIDER_MODEL: ${BUILTIN_PROVIDER_MODEL:-gpt-image-2}
-      BUILTIN_PROVIDER_CREDIT_COST: ${BUILTIN_PROVIDER_CREDIT_COST:-5}
-      BUILTIN_PROVIDER_NAME: ${BUILTIN_PROVIDER_NAME:-Studio}
-      S3_ENDPOINT: ${S3_ENDPOINT:-}
-      S3_REGION: ${S3_REGION:-auto}
-      S3_ACCESS_KEY_ID: ${S3_ACCESS_KEY_ID:-}
-      S3_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY:-}
-      S3_BUCKET: ${S3_BUCKET:-}
-      S3_PUBLIC_BASE_URL: ${S3_PUBLIC_BASE_URL:-}
-      ENABLE_LOCAL_IMAGE_FALLBACK: ${ENABLE_LOCAL_IMAGE_FALLBACK:-true}
-      WORKER_CONCURRENCY: ${WORKER_CONCURRENCY:-2}
-      WORKER_HTTP_ADDR: "${WORKER_HTTP_ADDR:-:8081}"
-      WORKER_METRICS_WINDOW_MINUTES: ${WORKER_METRICS_WINDOW_MINUTES:-1440}
-      WORKER_POLL_INTERVAL_MS: ${WORKER_POLL_INTERVAL_MS:-1000}
-      WORKER_JOB_TIMEOUT_SECONDS: ${WORKER_JOB_TIMEOUT_SECONDS:-900}
-      WORKER_MAX_ATTEMPTS: ${WORKER_MAX_ATTEMPTS:-2}
+      <<: *runtime-environment
+      NODE_ENV: production
+      PORT: "3000"
+      ENABLE_EMBEDDED_WORKER: "true"
+      WORKER_RUNTIME_MODE: embedded
+      WORKER_HTTP_ADDR: 127.0.0.1:8081
+      WORKER_INTERNAL_URL: http://127.0.0.1:8081
+      WORKER_READINESS_REQUIRED: "true"
+      WORKER_READINESS_TIMEOUT_MS: "1000"
+      WORKER_READY_TIMEOUT_MS: "90000"
+      WORKER_READY_POLL_INTERVAL_MS: "250"
+      WORKER_SHUTDOWN_GRACE_SECONDS: "2"
+    command: ["node", "scripts/start-prod.mjs"]
+    ports:
+      - "127.0.0.1::3000"
     healthcheck:
-      test: ["CMD-SHELL", "port=$${WORKER_HTTP_ADDR##*:}; wget -qO- \"http://127.0.0.1:$${port}/healthz\" >/dev/null"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:3000/api/readyz >/dev/null"]
+      interval: 1s
+      timeout: 1s
+      retries: 90
+      start_period: 3s
 
-volumes:
-  postgres_e2e_data:
+  embedded_conflict:
+    image: "${E2E_APP_IMAGE:?}"
+    profiles: ["conflict"]
+    restart: "no"
+    stop_grace_period: 15s
+    labels:
+      <<: *runner-labels
+    environment:
+      <<: *runtime-environment
+      NODE_ENV: production
+      PORT: "3000"
+      ENABLE_EMBEDDED_WORKER: "true"
+      WORKER_RUNTIME_MODE: embedded
+      WORKER_HTTP_ADDR: 127.0.0.1:8081
+      WORKER_INTERNAL_URL: http://127.0.0.1:8081
+      WORKER_READINESS_REQUIRED: "true"
+      WORKER_READINESS_TIMEOUT_MS: "1000"
+      WORKER_READY_TIMEOUT_MS: "15000"
+      WORKER_READY_POLL_INTERVAL_MS: "250"
+      WORKER_SHUTDOWN_GRACE_SECONDS: "2"
+    command: ["node", "scripts/start-prod.mjs"]
