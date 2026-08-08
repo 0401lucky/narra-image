@@ -94,6 +94,12 @@ pnpm dev
   `WORKER_MAX_ATTEMPTS`、`WORKER_MAX_ACTIVE_PER_USER`、
   `WORKER_RETRY_BASE_DELAY_MS`、`WORKER_SHUTDOWN_GRACE_SECONDS`、
   `WORKER_SHUTDOWN_HARD_TIMEOUT_SECONDS`、`WORKER_VIDEO_POLL_INTERVAL_MS`。
+- 提示词同步：`PROMPT_SYNC_ENABLED` 默认关闭，显式开启后 Worker 定时同步；
+  `PROMPT_SYNC_INTERVAL` 为同步间隔秒数（默认 86400，范围 60–604800）。
+  手动 CLI `worker/cmd/prompt-sync` 与管理后台同步入口共用同一实现。
+- 媒体回填：历史 data URL 图片/视频可用 `worker/cmd/backfill-media`
+  转存对象存储（`--dry-run`/`--limit`/`--include-http`），幂等且仅在配置
+  S3/R2 后执行。
 - 观测：`WORKER_METRICS_WINDOW_MINUTES`、`WORKER_METRICS_TOKEN`、
   `LOG_LEVEL`。`WORKER_METRICS_TOKEN` 设置后至少 16 位。
 - `NEXT_PUBLIC_IMAGE_OPTIMIZER_BYPASS_HOSTS` 是构建期变量；修改后必须

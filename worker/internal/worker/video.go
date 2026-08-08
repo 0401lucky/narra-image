@@ -15,12 +15,15 @@ import (
 const remoteVideoMaxBytes = 128 * 1024 * 1024
 
 // VideoResult 是一次视频生成的产物，写入 GeneratedVideo。
+// MediaStorage/StorageKey 标识持久化形态（生产强制 S3）。
 type VideoResult struct {
 	URL             string
 	PosterURL       string
 	Width           *int
 	Height          *int
 	DurationSeconds *int
+	MediaStorage    MediaStorage
+	StorageKey      string
 }
 
 type videoCreateResponse struct {
@@ -216,26 +219,29 @@ func buildVideoResult(ctx context.Context, storage *Storage, job GenerationJob, 
 		return VideoResult{}, ResultPersistError{Cause: errors.New("视频生成完成但渠道未返回视频地址")}
 	}
 
-	// 有对象存储则下载转存到本站 S3（长期可播放）；否则直接用渠道公开 URL
-	// （与图片直接用渠道 URL 一致，避免把大体积视频塞进数据库）。
-	url := rawURL
-	if storage.hasObjectStorage() {
-		data, err := downloadVideo(
-			ctx,
-			rawURL,
-			providerHTTPClient(job.ProviderMode != "CUSTOM"),
-		)
-		if err != nil {
-			return VideoResult{}, ResultPersistError{Cause: err}
-		}
-		stored, err := storage.PersistVideo(ctx, job.UserID, data)
-		if err != nil {
-			return VideoResult{}, ResultPersistError{Cause: err}
-		}
-		url = stored
+	// 生产策略：视频结果必须转存到对象存储（长期可播放）。
+	// 未配置 S3/R2 时直接失败（RESULT_PERSIST_FAILED），不再回退短期上游 URL。
+	if !storage.hasObjectStorage() {
+		return VideoResult{}, ResultPersistError{Cause: errors.New("未配置对象存储（S3/R2），无法持久化视频结果")}
+	}
+	data, err := downloadVideo(
+		ctx,
+		rawURL,
+		providerHTTPClient(job.ProviderMode != "CUSTOM"),
+	)
+	if err != nil {
+		return VideoResult{}, ResultPersistError{Cause: err}
+	}
+	stored, err := storage.PersistVideo(ctx, job.UserID, data)
+	if err != nil {
+		return VideoResult{}, ResultPersistError{Cause: err}
 	}
 
-	result := VideoResult{URL: url}
+	result := VideoResult{
+		URL:          stored.URL,
+		MediaStorage: stored.MediaStorage,
+		StorageKey:   stored.StorageKey,
+	}
 	// 时长/尺寸优先用渠道实际返回值（渠道可能对请求做归一化），回退到任务请求值。
 	if seconds := parseSeconds(secondsValue); seconds > 0 {
 		result.DurationSeconds = &seconds

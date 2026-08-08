@@ -3,11 +3,23 @@
   "image": {
     "generationFields": ["model", "prompt", "n", "size", "quality", "output_format", "output_compression", "moderation", "negative_prompt", "seed"],
     "editCount": 1,
-    "resultFields": ["url", "width", "height"]
+    "resultFields": ["url", "width", "height", "mediaStorage", "storageKey"],
+    "nullableResultFields": ["width", "height", "mediaStorage", "storageKey"],
+    "storageKinds": ["B64", "S3", "UPSTREAM"],
+    "sampleUrls": {
+      "b64": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==",
+      "s3": "https://cdn.example.com/user_abc123/4f2a1c9d0e3b.png",
+      "upstream": "https://cdn.provider.example/generated/abc123.png"
+    }
   },
   "video": {
     "requestFields": ["model", "prompt", "seconds", "size", "ratio", "input_reference"],
-    "resultFields": ["url", "posterUrl", "width", "height", "durationSeconds"],
-    "nullableResultFields": ["posterUrl", "width", "height", "durationSeconds"]
+    "resultFields": ["url", "posterUrl", "width", "height", "durationSeconds", "mediaStorage", "storageKey"],
+    "nullableResultFields": ["posterUrl", "width", "height", "durationSeconds", "mediaStorage", "storageKey"],
+    "storageKinds": ["B64", "S3", "UPSTREAM"],
+    "sampleUrls": {
+      "s3": "https://cdn.example.com/user_abc123/8b7c6d5e4f10.mp4",
+      "upstream": "https://cdn.provider.example/videos/xyz789.mp4"
+    }
   }
 }

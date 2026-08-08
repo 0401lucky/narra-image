@@ -589,6 +589,45 @@
       "documentation": { "envExample": true, "readme": true }
     },
     {
+      "name": "PROMPT_SYNC_ENABLED",
+      "owner": "worker",
+      "type": "boolean",
+      "default": false,
+      "requiredInProduction": false,
+      "secret": false,
+      "phase": "runtime",
+      "constraints": {},
+      "consumers": ["worker"],
+      "allowedReadPaths": ["worker/internal/worker/config.go"],
+      "documentation": { "envExample": true, "readme": true }
+    },
+    {
+      "name": "PROMPT_SYNC_INTERVAL",
+      "owner": "worker",
+      "type": "integer",
+      "default": 86400,
+      "requiredInProduction": false,
+      "secret": false,
+      "phase": "runtime",
+      "constraints": { "minimum": 60, "maximum": 604800 },
+      "consumers": ["worker"],
+      "allowedReadPaths": ["worker/internal/worker/config.go"],
+      "documentation": { "envExample": true, "readme": true }
+    },
+    {
+      "name": "PROMPT_SOURCES_DIR",
+      "owner": "worker",
+      "type": "string",
+      "default": "",
+      "requiredInProduction": false,
+      "secret": false,
+      "phase": "runtime",
+      "constraints": { "allowEmpty": true },
+      "consumers": ["worker"],
+      "allowedReadPaths": ["worker/internal/worker/prompts.go"],
+      "documentation": { "envExample": false, "readme": false }
+    },
+    {
       "name": "WORKER_VIDEO_POLL_INTERVAL_MS",
       "owner": "worker",
       "type": "integer",

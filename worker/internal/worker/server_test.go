@@ -9,6 +9,8 @@ import (
 	"strings"
 	"sync/atomic"
 	"testing"
+
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 func TestHealthzIsPureLiveness(t *testing.T) {
@@ -190,4 +192,91 @@ func decodeResponse(t *testing.T, recorder *httptest.ResponseRecorder) map[strin
 		t.Fatalf("decode response: %v", err)
 	}
 	return payload
+}
+
+func TestPromptSyncRequiresPostMethod(t *testing.T) {
+	worker := New(nil, Config{}, nil)
+	recorder := httptest.NewRecorder()
+	worker.handlePromptSync(recorder, httptest.NewRequest(http.MethodGet, "/internal/prompt-sync", nil))
+	if recorder.Code != http.StatusMethodNotAllowed {
+		t.Fatalf("unexpected status: %d", recorder.Code)
+	}
+}
+
+func TestPromptSyncRequiresConfiguredBearerToken(t *testing.T) {
+	worker := New(nil, Config{MetricsToken: "metrics-secret-12"}, nil)
+	recorder := httptest.NewRecorder()
+	worker.handlePromptSync(recorder, httptest.NewRequest(http.MethodPost, "/internal/prompt-sync", nil))
+	if recorder.Code != http.StatusUnauthorized {
+		t.Fatalf("unexpected unauthorized status: %d", recorder.Code)
+	}
+
+	request := httptest.NewRequest(http.MethodPost, "/internal/prompt-sync", nil)
+	request.Header.Set("Authorization", "Bearer metrics-secret-12")
+	recorder = httptest.NewRecorder()
+	worker.handlePromptSync(recorder, request)
+	if recorder.Code != http.StatusServiceUnavailable {
+		t.Fatalf("expected pool-unavailable 503, got %d", recorder.Code)
+	}
+}
+
+func TestPromptSyncRejectsInvalidBody(t *testing.T) {
+	worker := New(nil, Config{MetricsToken: "metrics-secret-12"}, nil)
+	worker.pool = &pgxpool.Pool{}
+	request := httptest.NewRequest(http.MethodPost, "/internal/prompt-sync", strings.NewReader("{not-json"))
+	request.Header.Set("Authorization", "Bearer metrics-secret-12")
+	recorder := httptest.NewRecorder()
+	worker.handlePromptSync(recorder, request)
+	if recorder.Code != http.StatusBadRequest {
+		t.Fatalf("expected invalid body 400, got %d", recorder.Code)
+	}
+}
+
+func TestPromptSyncWithoutTokenIsAllowedWhenUnset(t *testing.T) {
+	// 未配置 token 时与 /metrics 一致，允许 loopback 内部调用。
+	worker := New(nil, Config{}, nil)
+	request := httptest.NewRequest(http.MethodPost, "/internal/prompt-sync", nil)
+	recorder := httptest.NewRecorder()
+	worker.handlePromptSync(recorder, request)
+	if recorder.Code != http.StatusServiceUnavailable {
+		t.Fatalf("expected pool-unavailable 503 (not 401), got %d", recorder.Code)
+	}
+}
+
+func TestPromptSyncSuccessResponseUsesLowercaseJSON(t *testing.T) {
+	worker := New(nil, Config{MetricsToken: "metrics-secret-12"}, nil)
+	worker.pool = &pgxpool.Pool{}
+	worker.promptSyncRunner = func(ctx context.Context, sourceID string) ([]PromptSyncResult, error) {
+		return []PromptSyncResult{{Count: 3, Slug: "awesome-gpt-image", Status: "SUCCESS"}}, nil
+	}
+
+	request := httptest.NewRequest(http.MethodPost, "/internal/prompt-sync", nil)
+	request.Header.Set("Authorization", "Bearer metrics-secret-12")
+	recorder := httptest.NewRecorder()
+	worker.handlePromptSync(recorder, request)
+	if recorder.Code != http.StatusOK {
+		t.Fatalf("unexpected status: %d", recorder.Code)
+	}
+
+	// Node 契约类型（src/lib/prompts/service.ts）期望小写字段，
+	// 大写 JSON tag 会让 Node 侧拿不到 count/slug/status。
+	var payload struct {
+		Results []struct {
+			Count  int    `json:"count"`
+			Slug   string `json:"slug"`
+			Status string `json:"status"`
+		} `json:"results"`
+	}
+	if err := json.Unmarshal(recorder.Body.Bytes(), &payload); err != nil {
+		t.Fatalf("decode response: %v", err)
+	}
+	if len(payload.Results) != 1 || payload.Results[0].Count != 3 ||
+		payload.Results[0].Slug != "awesome-gpt-image" || payload.Results[0].Status != "SUCCESS" {
+		t.Fatalf("unexpected results payload: %s", recorder.Body.String())
+	}
+	for _, key := range []string{"Count", "Slug", "Status"} {
+		if strings.Contains(recorder.Body.String(), key) {
+			t.Fatalf("response serialized non-lowercase json tag %q: %s", key, recorder.Body.String())
+		}
+	}
 }

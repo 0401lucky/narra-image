@@ -80,6 +80,23 @@ describe("generation contract v1", () => {
     expect(mediaScenario.video.nullableResultFields).toContain("posterUrl");
   });
 
+  it("媒体契约定义存储形态字段与三种 URL 样例", () => {
+    for (const field of ["mediaStorage", "storageKey"]) {
+      expect(mediaScenario.image.resultFields).toContain(field);
+      expect(mediaScenario.video.resultFields).toContain(field);
+    }
+    expect(mediaScenario.image.storageKinds).toEqual(
+      expect.arrayContaining(["B64", "S3", "UPSTREAM"]),
+    );
+    expect(mediaScenario.video.storageKinds).toEqual(
+      expect.arrayContaining(["B64", "S3", "UPSTREAM"]),
+    );
+    expect(mediaScenario.image.sampleUrls.s3).toMatch(/^https:\/\//);
+    expect(mediaScenario.image.sampleUrls.b64).toMatch(/^data:image\/png;base64,/);
+    expect(mediaScenario.image.sampleUrls.upstream).toMatch(/^https:\/\//);
+    expect(mediaScenario.video.sampleUrls.s3).toMatch(/\.mp4$/);
+  });
+
   it("Go/Node 使用同一固定 AES-GCM 密钥 fixture", async () => {
     await expect(
       decryptProviderSecret(secretScenario.encoded, secretScenario.secret),

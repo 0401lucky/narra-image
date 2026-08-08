@@ -10,10 +10,14 @@ import (
 	"io"
 	"log/slog"
 	"net/http"
+	"os"
+	"path/filepath"
 	"regexp"
+	"runtime"
 	"sort"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/jackc/pgx/v5"
@@ -21,6 +25,9 @@ import (
 )
 
 const promptSyncTimeout = 30 * time.Second
+const promptSyncSchedulerTimeout = 30 * time.Minute
+
+var errPromptSourceNotFound = errors.New("提示词来源不存在")
 
 type PromptSource struct {
 	Description string
@@ -45,74 +52,18 @@ type PromptItem struct {
 }
 
 type PromptSyncResult struct {
-	Count  int
-	Slug   string
-	Status string
+	Count  int    `json:"count"`
+	Slug   string `json:"slug"`
+	Status string `json:"status"`
 }
 
 type PromptSyncer struct {
 	logger *slog.Logger
 	pool   *pgxpool.Pool
+	fetch  promptFetcher
 }
 
 type promptFetcher func(ctx context.Context, source PromptSource, filePath string) (string, error)
-
-var defaultPromptSources = []PromptSource{
-	{
-		Description: "EvoLinkAI 整理的 GPT Image 2 API 案例，覆盖广告、角色、海报、电商与 UI 等图像方向。",
-		Name:        "GPT Image 2 Prompts",
-		Parser:      "gpt-image-2-prompts",
-		RawBaseURL:  "https://raw.githubusercontent.com/EvoLinkAI/awesome-gpt-image-2-API-and-Prompts/main",
-		Slug:        "gpt-image-2-prompts",
-		SortOrder:   10,
-		SourceURL:   "https://github.com/EvoLinkAI/awesome-gpt-image-2-API-and-Prompts",
-	},
-	{
-		Description: "ZeroLu 的中文 GPT Image 案例集合，按视觉类型整理示例图和提示词。",
-		Name:        "Awesome GPT Image",
-		Parser:      "awesome-gpt-image",
-		RawBaseURL:  "https://raw.githubusercontent.com/ZeroLu/awesome-gpt-image/main",
-		Slug:        "awesome-gpt-image",
-		SortOrder:   20,
-		SourceURL:   "https://github.com/ZeroLu/awesome-gpt-image",
-	},
-	{
-		Description: "ImgEdify 收集的 GPT-4o 图像提示词案例，包含中英文说明与结果图。",
-		Name:        "Awesome GPT-4o Image Prompts",
-		Parser:      "awesome-gpt4o-image-prompts",
-		RawBaseURL:  "https://raw.githubusercontent.com/ImgEdify/Awesome-GPT4o-Image-Prompts/main",
-		Slug:        "awesome-gpt4o-image-prompts",
-		SortOrder:   30,
-		SourceURL:   "https://github.com/ImgEdify/Awesome-GPT4o-Image-Prompts",
-	},
-	{
-		Description: "YouMind OpenLab 的 GPT Image 2 中文提示词精选，适合快速寻找成片方向。",
-		Name:        "YouMind GPT Image 2",
-		Parser:      "youmind-gpt-image-2",
-		RawBaseURL:  "https://raw.githubusercontent.com/YouMind-OpenLab/awesome-gpt-image-2/main",
-		Slug:        "youmind-gpt-image-2",
-		SortOrder:   40,
-		SourceURL:   "https://github.com/YouMind-OpenLab/awesome-gpt-image-2",
-	},
-	{
-		Description: "YouMind OpenLab 的 Nano Banana Pro 提示词集合，偏产品、海报与写实创作场景。",
-		Name:        "YouMind Nano Banana Pro",
-		Parser:      "youmind-nano-banana-pro",
-		RawBaseURL:  "https://raw.githubusercontent.com/YouMind-OpenLab/awesome-nano-banana-pro-prompts/main",
-		Slug:        "youmind-nano-banana-pro",
-		SortOrder:   50,
-		SourceURL:   "https://github.com/YouMind-OpenLab/awesome-nano-banana-pro-prompts",
-	},
-	{
-		Description: "davidwuw0811-boop 的 GPT Image 2 提示词 JSON 数据源，包含分类、作者和参考图标记。",
-		Name:        "awesome-gpt-image2-prompts",
-		Parser:      "davidwu-gpt-image2-prompts",
-		RawBaseURL:  "https://raw.githubusercontent.com/davidwuw0811-boop/awesome-gpt-image2-prompts/main",
-		Slug:        "davidwu-gpt-image2-prompts",
-		SortOrder:   60,
-		SourceURL:   "https://github.com/davidwuw0811-boop/awesome-gpt-image2-prompts",
-	},
-}
 
 var gptImage2CaseFiles = []string{
 	"README.md",
@@ -125,13 +76,114 @@ var gptImage2CaseFiles = []string{
 	"cases/ui.md",
 }
 
-func DefaultPromptSources() []PromptSource {
-	items := make([]PromptSource, len(defaultPromptSources))
-	copy(items, defaultPromptSources)
-	for i := range items {
-		items[i].ID = promptSourceID(items[i].Slug)
+type promptSourcesManifest struct {
+	Contract string                     `json:"contract"`
+	Version  int                        `json:"version"`
+	Sources  []promptSourceManifestItem `json:"sources"`
+}
+
+type promptSourceManifestItem struct {
+	Description string `json:"description"`
+	Name        string `json:"name"`
+	Parser      string `json:"parser"`
+	RawBaseURL  string `json:"rawBaseUrl"`
+	Slug        string `json:"slug"`
+	SortOrder   int    `json:"sortOrder"`
+	SourceURL   string `json:"sourceUrl"`
+}
+
+var (
+	defaultPromptSourcesOnce sync.Once
+	defaultPromptSources     []PromptSource
+	defaultPromptSourcesErr  error
+)
+
+// DefaultPromptSources 从语言无关的 contracts/prompts/v1/default-sources.json 读取
+// 权威来源清单，代码中不再维护第二份常量。
+func DefaultPromptSources() ([]PromptSource, error) {
+	defaultPromptSourcesOnce.Do(func() {
+		defaultPromptSources, defaultPromptSourcesErr = loadDefaultPromptSources()
+	})
+	return defaultPromptSources, defaultPromptSourcesErr
+}
+
+const defaultPromptSourcesManifest = "default-sources.json"
+
+func loadDefaultPromptSources() ([]PromptSource, error) {
+	root, err := promptSourcesRoot()
+	if err != nil {
+		return nil, err
 	}
-	return items
+	data, err := os.ReadFile(filepath.Join(root, defaultPromptSourcesManifest))
+	if err != nil {
+		return nil, fmt.Errorf("读取提示词来源清单: %w", err)
+	}
+	var manifest promptSourcesManifest
+	if err := json.Unmarshal(data, &manifest); err != nil {
+		return nil, fmt.Errorf("解析提示词来源清单: %w", err)
+	}
+	if manifest.Contract != "narra.prompts.default-sources" || manifest.Version != 1 || len(manifest.Sources) == 0 {
+		return nil, fmt.Errorf("提示词来源清单版本无效: contract=%q version=%d", manifest.Contract, manifest.Version)
+	}
+	items := make([]PromptSource, 0, len(manifest.Sources))
+	for _, item := range manifest.Sources {
+		if strings.TrimSpace(item.Slug) == "" || strings.TrimSpace(item.Parser) == "" || strings.TrimSpace(item.RawBaseURL) == "" {
+			return nil, fmt.Errorf("提示词来源清单存在不完整条目: %+v", item)
+		}
+		items = append(items, PromptSource{
+			Description: item.Description,
+			Name:        item.Name,
+			Parser:      item.Parser,
+			RawBaseURL:  item.RawBaseURL,
+			Slug:        item.Slug,
+			SortOrder:   item.SortOrder,
+			SourceURL:   item.SourceURL,
+			ID:          promptSourceID(item.Slug),
+		})
+	}
+	return items, nil
+}
+
+// findPromptSourcesRoot 从候选目录中返回第一个包含提示词来源清单的目录；
+// 全部缺失时返回带已尝试路径的可诊断错误。
+func findPromptSourcesRoot(candidates []string) (string, error) {
+	var tried []string
+	for _, candidate := range candidates {
+		candidate = strings.TrimSpace(candidate)
+		if candidate == "" {
+			continue
+		}
+		tried = append(tried, candidate)
+		if _, err := os.Stat(filepath.Join(candidate, defaultPromptSourcesManifest)); err == nil {
+			return candidate, nil
+		}
+	}
+	return "", fmt.Errorf(
+		"找不到提示词来源清单 %s，已尝试路径：%s",
+		defaultPromptSourcesManifest,
+		strings.Join(tried, ", "),
+	)
+}
+
+// promptSourcesRoot 按优先级探测提示词来源清单所在目录：
+//  1. PROMPT_SOURCES_DIR 显式覆盖；
+//  2. 由当前源文件推导的仓库内路径（开发/测试）；
+//  3. 工作目录相对路径 contracts/prompts/v1（本地/CI 运行）；
+//  4. 容器常见路径 /app/contracts/prompts/v1（Docker 镜像）。
+//
+// 返回第一个存在 default-sources.json 的候选目录；找不到时返回可诊断错误。
+func promptSourcesRoot() (string, error) {
+	_, file, _, ok := runtime.Caller(0)
+	sourceRelative := filepath.Clean(filepath.Join("contracts", "prompts", "v1"))
+	if ok {
+		sourceRelative = filepath.Clean(filepath.Join(filepath.Dir(file), "../../../contracts/prompts/v1"))
+	}
+	return findPromptSourcesRoot([]string{
+		os.Getenv("PROMPT_SOURCES_DIR"),
+		sourceRelative,
+		filepath.Clean(filepath.Join("contracts", "prompts", "v1")),
+		filepath.Clean(filepath.Join("/app", "contracts", "prompts", "v1")),
+	})
 }
 
 func NewPromptSyncer(pool *pgxpool.Pool, logger *slog.Logger) *PromptSyncer {
@@ -148,48 +200,74 @@ func (s *PromptSyncer) SyncAll(ctx context.Context) ([]PromptSyncResult, error) 
 		return nil, err
 	}
 
+	// 逐来源独立执行：单个来源失败不中断其他来源，结果与错误聚合返回。
 	results := make([]PromptSyncResult, 0, len(sources))
+	var failures []error
 	for _, source := range sources {
 		result, err := s.SyncSource(ctx, source.Slug)
-		if err != nil {
-			return results, err
-		}
 		results = append(results, result)
+		if err != nil {
+			failures = append(failures, fmt.Errorf("%s: %w", source.Slug, err))
+		}
+	}
+	if len(failures) > 0 {
+		return results, errors.Join(failures...)
 	}
 	return results, nil
 }
 
 func (s *PromptSyncer) SyncSource(ctx context.Context, idOrSlug string) (PromptSyncResult, error) {
 	if err := s.ensureDefaultPromptSources(ctx); err != nil {
-		return PromptSyncResult{}, err
+		return PromptSyncResult{Slug: idOrSlug, Status: "FAILED"}, err
 	}
 
 	source, err := s.findPromptSource(ctx, idOrSlug)
 	if err != nil {
-		return PromptSyncResult{}, err
+		return PromptSyncResult{Slug: idOrSlug, Status: "FAILED"}, err
 	}
 
-	if _, err := s.pool.Exec(ctx, `UPDATE "PromptSource" SET status = 'SYNCING', "lastSyncError" = NULL, "updatedAt" = NOW() WHERE id = $1`, source.ID); err != nil {
-		return PromptSyncResult{}, err
-	}
-
-	items, err := parsePromptSource(ctx, source, fetchPromptFile)
+	tx, err := s.pool.Begin(ctx)
 	if err != nil {
+		return PromptSyncResult{Slug: source.Slug, Status: "FAILED"}, err
+	}
+	defer func() { _ = tx.Rollback(ctx) }()
+
+	// 同一来源并发同步互斥：拿不到事务级 advisory 锁说明另一入口正在同步。
+	var locked bool
+	if err := tx.QueryRow(ctx, `SELECT pg_try_advisory_xact_lock(hashtext($1))`, source.ID).Scan(&locked); err != nil {
+		return PromptSyncResult{Slug: source.Slug, Status: "FAILED"}, err
+	}
+	if !locked {
+		return PromptSyncResult{Slug: source.Slug, Status: "SKIPPED_LOCKED"}, errors.New("该来源正在同步，本次触发跳过")
+	}
+
+	if _, err := tx.Exec(ctx, `UPDATE "PromptSource" SET status = 'SYNCING', "lastSyncError" = NULL, "updatedAt" = NOW() WHERE id = $1`, source.ID); err != nil {
+		return PromptSyncResult{Slug: source.Slug, Status: "FAILED"}, err
+	}
+
+	items, err := parsePromptSource(ctx, source, s.fetchFile)
+	if err != nil {
+		_ = tx.Rollback(ctx)
 		_ = s.markPromptSourceFailed(ctx, source.ID, err)
-		return PromptSyncResult{}, err
+		return PromptSyncResult{Slug: source.Slug, Status: "FAILED"}, err
 	}
 	items = normalizePromptItems(items)
 	if len(items) == 0 {
-		err := errors.New("没有从该来源解析到提示词")
-		_ = s.markPromptSourceFailed(ctx, source.ID, err)
-		return PromptSyncResult{}, err
+		syncErr := errors.New("没有从该来源解析到提示词")
+		_ = tx.Rollback(ctx)
+		_ = s.markPromptSourceFailed(ctx, source.ID, syncErr)
+		return PromptSyncResult{Slug: source.Slug, Status: "FAILED"}, syncErr
 	}
 
-	if err := s.replacePromptItems(ctx, source.ID, items); err != nil {
+	if err := s.replacePromptItemsTx(ctx, tx, source.ID, items); err != nil {
+		_ = tx.Rollback(ctx)
 		_ = s.markPromptSourceFailed(ctx, source.ID, err)
-		return PromptSyncResult{}, err
+		return PromptSyncResult{Slug: source.Slug, Status: "FAILED"}, err
 	}
 
+	if err := tx.Commit(ctx); err != nil {
+		return PromptSyncResult{Slug: source.Slug, Status: "FAILED"}, err
+	}
 	if s.logger != nil {
 		s.logger.Info("提示词来源同步完成", "source", source.Slug, "count", len(items))
 	}
@@ -197,7 +275,11 @@ func (s *PromptSyncer) SyncSource(ctx context.Context, idOrSlug string) (PromptS
 }
 
 func (s *PromptSyncer) ensureDefaultPromptSources(ctx context.Context) error {
-	for _, source := range DefaultPromptSources() {
+	sources, err := DefaultPromptSources()
+	if err != nil {
+		return err
+	}
+	for _, source := range sources {
 		_, err := s.pool.Exec(ctx, `
 INSERT INTO "PromptSource" (
   id, slug, name, description, "sourceUrl", "rawBaseUrl", parser,
@@ -249,7 +331,7 @@ LIMIT 1
 		return PromptSource{}, err
 	}
 	if len(items) == 0 {
-		return PromptSource{}, errors.New("提示词来源不存在")
+		return PromptSource{}, errPromptSourceNotFound
 	}
 	return items[0], nil
 }
@@ -273,6 +355,13 @@ func (s *PromptSyncer) replacePromptItems(ctx context.Context, sourceID string, 
 	}
 	defer func() { _ = tx.Rollback(ctx) }()
 
+	if err := s.replacePromptItemsTx(ctx, tx, sourceID, items); err != nil {
+		return err
+	}
+	return tx.Commit(ctx)
+}
+
+func (s *PromptSyncer) replacePromptItemsTx(ctx context.Context, tx pgx.Tx, sourceID string, items []PromptItem) error {
 	remoteIDs := make([]string, 0, len(items))
 	for _, item := range items {
 		remoteIDs = append(remoteIDs, item.RemoteID)
@@ -305,7 +394,7 @@ ON CONFLICT ("sourceId", "remoteId") DO UPDATE SET
 	if _, err := tx.Exec(ctx, `UPDATE "PromptSource" SET status = 'SUCCESS', "lastSyncError" = NULL, "lastSyncedAt" = NOW(), "itemCount" = $2, "updatedAt" = NOW() WHERE id = $1`, sourceID, len(items)); err != nil {
 		return err
 	}
-	return tx.Commit(ctx)
+	return nil
 }
 
 func (s *PromptSyncer) markPromptSourceFailed(ctx context.Context, sourceID string, syncErr error) error {
@@ -330,6 +419,13 @@ func parsePromptSource(ctx context.Context, source PromptSource, fetch promptFet
 	default:
 		return nil, fmt.Errorf("未知提示词解析器：%s", source.Parser)
 	}
+}
+
+func (s *PromptSyncer) fetchFile(ctx context.Context, source PromptSource, filePath string) (string, error) {
+	if s.fetch != nil {
+		return s.fetch(ctx, source, filePath)
+	}
+	return fetchPromptFile(ctx, source, filePath)
 }
 
 func fetchPromptFile(ctx context.Context, source PromptSource, filePath string) (string, error) {
@@ -752,4 +848,50 @@ func truncate(value string, max int) string {
 		return value
 	}
 	return string([]rune(value)[:max])
+}
+
+// runPromptSyncScheduler 是 Worker 内定时提示词同步入口：PROMPT_SYNC_ENABLED
+// 时按 PROMPT_SYNC_INTERVAL 对启用的来源执行 SyncAll，与手动 CLI / admin 转发
+// 共用同一 PromptSyncer 与 advisory 锁。
+func (w *Worker) runPromptSyncScheduler(ctx context.Context, syncAll func(context.Context) ([]PromptSyncResult, error)) {
+	interval := w.cfg.PromptSyncInterval
+	if interval <= 0 {
+		interval = 24 * time.Hour
+	}
+	w.logger.Info(
+		"提示词定时同步已启用",
+		"event", "prompt_sync_scheduler_started",
+		"interval", interval.String(),
+	)
+
+	runOnce := func() {
+		syncCtx, cancel := context.WithTimeout(ctx, promptSyncSchedulerTimeout)
+		defer cancel()
+		results, err := syncAll(syncCtx)
+		if err != nil {
+			w.logger.Warn(
+				"定时提示词同步未完全成功",
+				"event", "prompt_sync_scheduler_run",
+				"error", err,
+			)
+			return
+		}
+		w.logger.Info(
+			"定时提示词同步完成",
+			"event", "prompt_sync_scheduler_run",
+			"sources", len(results),
+		)
+	}
+
+	runOnce()
+	ticker := time.NewTicker(interval)
+	defer ticker.Stop()
+	for {
+		select {
+		case <-ctx.Done():
+			return
+		case <-ticker.C:
+			runOnce()
+		}
+	}
 }

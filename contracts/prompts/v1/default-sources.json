@@ -1,0 +1,60 @@
+{
+  "contract": "narra.prompts.default-sources",
+  "version": 1,
+  "sources": [
+    {
+      "slug": "gpt-image-2-prompts",
+      "name": "GPT Image 2 Prompts",
+      "description": "EvoLinkAI 整理的 GPT Image 2 API 案例，覆盖广告、角色、海报、电商与 UI 等图像方向。",
+      "parser": "gpt-image-2-prompts",
+      "rawBaseUrl": "https://raw.githubusercontent.com/EvoLinkAI/awesome-gpt-image-2-API-and-Prompts/main",
+      "sourceUrl": "https://github.com/EvoLinkAI/awesome-gpt-image-2-API-and-Prompts",
+      "sortOrder": 10
+    },
+    {
+      "slug": "awesome-gpt-image",
+      "name": "Awesome GPT Image",
+      "description": "ZeroLu 的中文 GPT Image 案例集合，按视觉类型整理示例图和提示词。",
+      "parser": "awesome-gpt-image",
+      "rawBaseUrl": "https://raw.githubusercontent.com/ZeroLu/awesome-gpt-image/main",
+      "sourceUrl": "https://github.com/ZeroLu/awesome-gpt-image",
+      "sortOrder": 20
+    },
+    {
+      "slug": "awesome-gpt4o-image-prompts",
+      "name": "Awesome GPT-4o Image Prompts",
+      "description": "ImgEdify 收集的 GPT-4o 图像提示词案例，包含中英文说明与结果图。",
+      "parser": "awesome-gpt4o-image-prompts",
+      "rawBaseUrl": "https://raw.githubusercontent.com/ImgEdify/Awesome-GPT4o-Image-Prompts/main",
+      "sourceUrl": "https://github.com/ImgEdify/Awesome-GPT4o-Image-Prompts",
+      "sortOrder": 30
+    },
+    {
+      "slug": "youmind-gpt-image-2",
+      "name": "YouMind GPT Image 2",
+      "description": "YouMind OpenLab 的 GPT Image 2 中文提示词精选，适合快速寻找成片方向。",
+      "parser": "youmind-gpt-image-2",
+      "rawBaseUrl": "https://raw.githubusercontent.com/YouMind-OpenLab/awesome-gpt-image-2/main",
+      "sourceUrl": "https://github.com/YouMind-OpenLab/awesome-gpt-image-2",
+      "sortOrder": 40
+    },
+    {
+      "slug": "youmind-nano-banana-pro",
+      "name": "YouMind Nano Banana Pro",
+      "description": "YouMind OpenLab 的 Nano Banana Pro 提示词集合，偏产品、海报与写实创作场景。",
+      "parser": "youmind-nano-banana-pro",
+      "rawBaseUrl": "https://raw.githubusercontent.com/YouMind-OpenLab/awesome-nano-banana-pro-prompts/main",
+      "sourceUrl": "https://github.com/YouMind-OpenLab/awesome-nano-banana-pro-prompts",
+      "sortOrder": 50
+    },
+    {
+      "slug": "davidwu-gpt-image2-prompts",
+      "name": "awesome-gpt-image2-prompts",
+      "description": "davidwuw0811-boop 的 GPT Image 2 提示词 JSON 数据源，包含分类、作者和参考图标记。",
+      "parser": "davidwu-gpt-image2-prompts",
+      "rawBaseUrl": "https://raw.githubusercontent.com/davidwuw0811-boop/awesome-gpt-image2-prompts/main",
+      "sourceUrl": "https://github.com/davidwuw0811-boop/awesome-gpt-image2-prompts",
+      "sortOrder": 60
+    }
+  ]
+}

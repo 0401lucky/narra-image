@@ -25,6 +25,7 @@ type Worker struct {
 	metricsCollector func(context.Context) (metricsResponse, error)
 	pingDatabase     func(context.Context) error
 	pool             *pgxpool.Pool
+	promptSyncRunner func(context.Context, string) ([]PromptSyncResult, error)
 	state            *runtimeState
 	storage          *Storage
 	storageFactory   func(context.Context, Config) (*Storage, error)
@@ -179,6 +180,13 @@ func (w *Worker) Run(ctx context.Context) error {
 				"poll_interval_ms", w.cfg.PollInterval.Milliseconds(),
 				"job_timeout_ms", w.cfg.JobTimeout.Milliseconds(),
 			)
+		}
+		if w.cfg.PromptSyncEnabled && w.pool != nil {
+			go func() {
+				w.runPromptSyncScheduler(runtimeCtx, func(syncCtx context.Context) ([]PromptSyncResult, error) {
+					return NewPromptSyncer(w.pool, w.logger).SyncAll(syncCtx)
+				})
+			}()
 		}
 	}
 
@@ -980,11 +988,13 @@ INSERT INTO "GenerationImage" (
   url,
   width,
   height,
+  "mediaStorage",
+  "storageKey",
   "showcaseStatus",
   "showPromptPublic",
   "createdAt"
-) VALUES ($1, $2, $3, $4, $5, 'PRIVATE', false, $6)
-`, cuidLikeID(), job.ID, image.URL, nullableInt(image.Width), nullableInt(image.Height), now)
+) VALUES ($1, $2, $3, $4, $5, $6, $7, 'PRIVATE', false, $8)
+`, cuidLikeID(), job.ID, image.URL, nullableInt(image.Width), nullableInt(image.Height), nullableMediaStorage(image.MediaStorage), nullableStringFromString(image.StorageKey), now)
 		if err != nil {
 			return err
 		}
@@ -1046,11 +1056,13 @@ INSERT INTO "GeneratedVideo" (
   width,
   height,
   "durationSeconds",
+  "mediaStorage",
+  "storageKey",
   "showcaseStatus",
   "showPromptPublic",
   "createdAt"
-) VALUES ($1, $2, $3, $4, $5, $6, $7, 'PRIVATE', false, $8)
-`, cuidLikeID(), job.ID, video.URL, nullableVideoString(video.PosterURL), nullableInt(video.Width), nullableInt(video.Height), nullableInt(video.DurationSeconds), now)
+) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, 'PRIVATE', false, $10)
+`, cuidLikeID(), job.ID, video.URL, nullableVideoString(video.PosterURL), nullableInt(video.Width), nullableInt(video.Height), nullableInt(video.DurationSeconds), nullableMediaStorage(video.MediaStorage), nullableStringFromString(video.StorageKey), now)
 	if err != nil {
 		return err
 	}
@@ -1337,6 +1349,20 @@ func nullableString(value sql.NullString) any {
 		return nil
 	}
 	return value.String
+}
+
+func nullableStringFromString(value string) any {
+	if strings.TrimSpace(value) == "" {
+		return nil
+	}
+	return value
+}
+
+func nullableMediaStorage(value MediaStorage) any {
+	if strings.TrimSpace(string(value)) == "" {
+		return nil
+	}
+	return string(value)
 }
 
 func cuidLikeID() string {

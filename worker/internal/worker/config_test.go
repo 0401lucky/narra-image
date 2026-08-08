@@ -154,3 +154,69 @@ func setRequiredConfigEnv(t *testing.T, mode RuntimeMode) {
 	t.Setenv("DATABASE_URL", "postgresql://user:pass@localhost:5432/app?schema=public")
 	t.Setenv("WORKER_RUNTIME_MODE", string(mode))
 }
+
+func TestLoadConfigReadsPromptSyncSettings(t *testing.T) {
+	setRequiredConfigEnv(t, RuntimeModeDedicated)
+	t.Setenv("PROMPT_SYNC_ENABLED", "true")
+	t.Setenv("PROMPT_SYNC_INTERVAL", "3600")
+
+	cfg, err := LoadConfig()
+	if err != nil {
+		t.Fatalf("LoadConfig returned error: %v", err)
+	}
+	if !cfg.PromptSyncEnabled {
+		t.Fatal("expected prompt sync enabled")
+	}
+	if cfg.PromptSyncInterval != time.Hour {
+		t.Fatalf("unexpected prompt sync interval: %s", cfg.PromptSyncInterval)
+	}
+}
+
+func TestLoadConfigPromptSyncDefaultsDisabled(t *testing.T) {
+	setRequiredConfigEnv(t, RuntimeModeDedicated)
+	cfg, err := LoadConfig()
+	if err != nil {
+		t.Fatalf("LoadConfig returned error: %v", err)
+	}
+	if cfg.PromptSyncEnabled {
+		t.Fatal("prompt sync must default to disabled")
+	}
+	if cfg.PromptSyncInterval != 24*time.Hour {
+		t.Fatalf("unexpected default interval: %s", cfg.PromptSyncInterval)
+	}
+}
+
+func TestLoadConfigClampsPromptSyncInterval(t *testing.T) {
+	setRequiredConfigEnv(t, RuntimeModeDedicated)
+
+	t.Setenv("PROMPT_SYNC_INTERVAL", "30")
+	cfg, err := LoadConfig()
+	if err != nil {
+		t.Fatalf("LoadConfig returned error: %v", err)
+	}
+	if cfg.PromptSyncInterval != 60*time.Second {
+		t.Fatalf("expected interval clamped to 60s, got %s", cfg.PromptSyncInterval)
+	}
+
+	t.Setenv("PROMPT_SYNC_INTERVAL", "999999")
+	cfg, err = LoadConfig()
+	if err != nil {
+		t.Fatalf("LoadConfig returned error: %v", err)
+	}
+	if cfg.PromptSyncInterval != 604800*time.Second {
+		t.Fatalf("expected interval clamped to 604800s, got %s", cfg.PromptSyncInterval)
+	}
+}
+
+func TestLoadConfigReadsNodeEnv(t *testing.T) {
+	setRequiredConfigEnv(t, RuntimeModeDedicated)
+	t.Setenv("NODE_ENV", "production")
+	t.Setenv("AUTH_SECRET", "this-is-a-very-long-production-secret-0123456789")
+	cfg, err := LoadConfig()
+	if err != nil {
+		t.Fatalf("LoadConfig returned error: %v", err)
+	}
+	if cfg.NodeEnv != "production" {
+		t.Fatalf("unexpected node env: %q", cfg.NodeEnv)
+	}
+}

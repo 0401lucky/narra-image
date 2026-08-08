@@ -201,6 +201,66 @@ CREATE TABLE "SavedProviderConfig" (
 CREATE UNIQUE INDEX "SavedProviderConfig_userId_key"
   ON "SavedProviderConfig"("userId");
 
+CREATE TYPE "PromptSourceStatus" AS ENUM ('IDLE', 'SYNCING', 'SUCCESS', 'FAILED');
+
+CREATE TABLE "PromptSource" (
+  "id" TEXT NOT NULL,
+  "slug" TEXT NOT NULL,
+  "name" TEXT NOT NULL,
+  "description" TEXT,
+  "sourceUrl" TEXT NOT NULL,
+  "rawBaseUrl" TEXT NOT NULL,
+  "parser" TEXT NOT NULL,
+  "isEnabled" BOOLEAN NOT NULL DEFAULT true,
+  "sortOrder" INTEGER NOT NULL DEFAULT 0,
+  "status" "PromptSourceStatus" NOT NULL DEFAULT 'IDLE',
+  "lastSyncedAt" TIMESTAMP(3),
+  "lastSyncError" TEXT,
+  "itemCount" INTEGER NOT NULL DEFAULT 0,
+  "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "updatedAt" TIMESTAMP(3) NOT NULL,
+  CONSTRAINT "PromptSource_pkey" PRIMARY KEY ("id")
+);
+
+CREATE TABLE "PromptLibraryItem" (
+  "id" TEXT NOT NULL,
+  "sourceId" TEXT NOT NULL,
+  "remoteId" TEXT NOT NULL,
+  "title" TEXT NOT NULL,
+  "prompt" TEXT NOT NULL,
+  "coverUrl" TEXT,
+  "preview" TEXT,
+  "previewUrls" TEXT[] NOT NULL DEFAULT ARRAY[]::TEXT[],
+  "tags" TEXT[] NOT NULL DEFAULT ARRAY[]::TEXT[],
+  "sortOrder" INTEGER NOT NULL DEFAULT 0,
+  "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "updatedAt" TIMESTAMP(3) NOT NULL,
+  "syncedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT "PromptLibraryItem_pkey" PRIMARY KEY ("id")
+);
+
+CREATE UNIQUE INDEX "PromptSource_slug_key"
+  ON "PromptSource"("slug");
+
+CREATE INDEX "PromptSource_isEnabled_sortOrder_idx"
+  ON "PromptSource"("isEnabled", "sortOrder");
+
+CREATE UNIQUE INDEX "PromptLibraryItem_sourceId_remoteId_key"
+  ON "PromptLibraryItem"("sourceId", "remoteId");
+
+CREATE INDEX "PromptLibraryItem_sourceId_sortOrder_idx"
+  ON "PromptLibraryItem"("sourceId", "sortOrder");
+
+CREATE INDEX "PromptLibraryItem_createdAt_idx"
+  ON "PromptLibraryItem"("createdAt");
+
+CREATE INDEX "PromptLibraryItem_updatedAt_idx"
+  ON "PromptLibraryItem"("updatedAt");
+
+ALTER TABLE "PromptLibraryItem" ADD CONSTRAINT "PromptLibraryItem_sourceId_fkey"
+  FOREIGN KEY ("sourceId") REFERENCES "PromptSource"("id")
+  ON DELETE CASCADE ON UPDATE CASCADE;
+
 CREATE TABLE "_prisma_migrations" (
   "id" VARCHAR(36) NOT NULL,
   "checksum" VARCHAR(64) NOT NULL,

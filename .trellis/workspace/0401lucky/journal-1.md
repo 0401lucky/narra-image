@@ -66,3 +66,34 @@
 | `e4281fb` | chore(trellis): 纳入 Trellis 平台适配与项目指南 |
 
 本地个人文件（.claude/settings.local.json、operations-log、context-summary）已加入 .gitignore，未提交。
+
+## Session 2: 统一媒体存储与提示词同步
+
+**Date**: 2026-08-08
+**Task**: 08-07-media-sync-boundary(统一媒体存储与提示词同步)
+**Branch**: `main`
+
+### 完成项
+
+- **规划**:补全 prd.md(含 3 项已确认决策:视频无 S3 直接失败、提示词封面不转存、定时默认关闭)、design.md(媒体+提示词两阶段)、implement.md(有序清单+验收矩阵+回滚点);填充 implement.jsonl/check.jsonl 各 4 条。
+- **媒体阶段**:生产强制 S3/R2(`PersistImage` 生产拒绝 data URL fallback;`PersistVideo` 无对象存储直接 RESULT_PERSIST_FAILED,删除上游 URL 回退分支);`GenerationImage`/`GeneratedVideo` 加 additive 列 `mediaStorage`/`storageKey`(migration `20260807140000`);media.json 契约补存储形态与 B64/S3/UPSTREAM 样例;新增 `worker/cmd/backfill-media` 回填工具(幂等、--dry-run/--limit/--include-http)。
+- **提示词阶段**:新增 `contracts/prompts/v1/default-sources.json` 唯一权威清单;Go `PromptSyncer` 为唯一实现(manifest 读取 + advisory 锁 + 逐来源聚合);删除 Node `parser.ts`/`source-config.ts`;admin 同步改转发 Worker `POST /internal/prompt-sync`(Bearer 复用 WORKER_METRICS_TOKEN);Worker scheduler(PROMPT_SYNC_ENABLED 默认关、INTERVAL clamp [60,604800]s);环境契约新增 PROMPT_SYNC_ENABLED/INTERVAL/PROMPT_SOURCES_DIR。
+- **check 修复**:Dockerfile 两处补 COPY contracts/ + promptSourcesRoot() 候选路径探测(CRITICAL);PromptSyncResult 补 json tag + handler 成功路径测试(WARNING);env.ts 删 PROMPT_SYNC_* 死代码(WARNING);config.go clamp + backfill 计数修复(LOW)。
+- **spec 更新**:新增 `.trellis/spec/operations/media-storage.md`、`prompt-sync.md`,更新 operations/index.md 索引。
+
+### Verification
+
+详见 `.trellis/tasks/08-07-media-sync-boundary/verification/media-sync-boundary.md`
+
+- tsc/lint/vitest(75 文件 355 用例)、go vet/test/build、verify:worker-contracts:ts/:go/:db(disposable PG)、两个 compose config、git diff --check 全部通过。
+- 未覆盖:真实 S3/R2 读写、真实定时同步、生产大 base64 批量回填演练(需用户授权)。
+
+### Status
+
+[OK] 验证全绿;待提交。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| (待提交) | feat(media): 统一媒体存储与提示词同步 |

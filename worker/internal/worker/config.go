@@ -30,7 +30,10 @@ type Config struct {
 	MaxActivePerUser               int
 	MetricsToken                   string
 	MetricsWindow                  time.Duration
+	NodeEnv                        string
 	PollInterval                   time.Duration
+	PromptSyncEnabled              bool
+	PromptSyncInterval             time.Duration
 	RetryBaseDelay                 time.Duration
 	RuntimeMode                    RuntimeMode
 	ShutdownGrace                  time.Duration
@@ -104,7 +107,10 @@ func LoadConfig() (Config, error) {
 		MaxActivePerUser:               getenvInt("WORKER_MAX_ACTIVE_PER_USER", 1),
 		MetricsToken:                   metricsToken,
 		MetricsWindow:                  time.Duration(getenvInt("WORKER_METRICS_WINDOW_MINUTES", 1440)) * time.Minute,
+		NodeEnv:                        strings.TrimSpace(os.Getenv("NODE_ENV")),
 		PollInterval:                   time.Duration(getenvInt("WORKER_POLL_INTERVAL_MS", 1000)) * time.Millisecond,
+		PromptSyncEnabled:              getenvBool("PROMPT_SYNC_ENABLED", false),
+		PromptSyncInterval:             promptSyncInterval(),
 		RetryBaseDelay:                 time.Duration(getenvInt("WORKER_RETRY_BASE_DELAY_MS", 1000)) * time.Millisecond,
 		RuntimeMode:                    runtimeMode,
 		ShutdownGrace:                  time.Duration(getenvInt("WORKER_SHUTDOWN_GRACE_SECONDS", 30)) * time.Second,
@@ -120,6 +126,22 @@ func LoadConfig() (Config, error) {
 		S3SecretAccessKey:              os.Getenv("S3_SECRET_ACCESS_KEY"),
 		WorkerID:                       fmt.Sprintf("%s-%d", hostname, os.Getpid()),
 	}, nil
+}
+
+// LoadStorageConfig 只读取媒体持久化相关配置，供回填等运维命令使用，
+// 不校验 AUTH_SECRET / WORKER_RUNTIME_MODE 等运行时要求。
+func LoadStorageConfig() Config {
+	return Config{
+		AppURL:                   getenv("APP_URL", "http://localhost:3000"),
+		EnableLocalImageFallback: getenvBool("ENABLE_LOCAL_IMAGE_FALLBACK", true),
+		NodeEnv:                  strings.TrimSpace(os.Getenv("NODE_ENV")),
+		S3AccessKeyID:            os.Getenv("S3_ACCESS_KEY_ID"),
+		S3Bucket:                 os.Getenv("S3_BUCKET"),
+		S3Endpoint:               os.Getenv("S3_ENDPOINT"),
+		S3PublicBaseURL:          os.Getenv("S3_PUBLIC_BASE_URL"),
+		S3Region:                 getenv("S3_REGION", "auto"),
+		S3SecretAccessKey:        os.Getenv("S3_SECRET_ACCESS_KEY"),
+	}
 }
 
 func loadRuntimeMode(raw string) (RuntimeMode, error) {
@@ -148,6 +170,19 @@ func LoadDatabaseURL() (string, error) {
 		return "", errors.New("DATABASE_URL 不能为空")
 	}
 	return databaseURL, nil
+}
+
+// promptSyncInterval 读取 PROMPT_SYNC_INTERVAL（秒）并收敛到环境契约声明的
+// [60, 604800] 范围，与 README/.env.example 一致；非法或缺失时取默认 86400。
+func promptSyncInterval() time.Duration {
+	seconds := getenvInt("PROMPT_SYNC_INTERVAL", 86400)
+	if seconds < 60 {
+		seconds = 60
+	}
+	if seconds > 604800 {
+		seconds = 604800
+	}
+	return time.Duration(seconds) * time.Second
 }
 
 func getenv(key string, fallback string) string {

@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"encoding/json"
+	"errors"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -44,7 +45,7 @@ func TestGenerateVideoPollsUntilCompletedAndPersists(t *testing.T) {
 	}))
 	defer server.Close()
 
-	storage := &Storage{cfg: Config{EnableLocalImageFallback: true}}
+	storage := s3TestStorage()
 	job := GenerationJob{
 		ID:             "job_v1",
 		UserID:         "user_1",
@@ -59,9 +60,15 @@ func TestGenerateVideoPollsUntilCompletedAndPersists(t *testing.T) {
 	if err != nil {
 		t.Fatalf("generateVideo returned error: %v", err)
 	}
-	// 测试 storage 未配 S3，应直接回退为渠道公开 URL（不下载、不转存）。
-	if result.URL != server.URL+"/file.mp4" {
-		t.Fatalf("expected channel url %s, got %s", server.URL+"/file.mp4", result.URL)
+	// 有对象存储时下载并转存到本站 S3，返回 S3 公开 URL。
+	if !strings.HasPrefix(result.URL, "https://cdn.example.test/user_1/") {
+		t.Fatalf("expected s3 url, got %s", result.URL)
+	}
+	if result.MediaStorage != MediaStorageS3 {
+		t.Fatalf("expected media storage S3, got %q", result.MediaStorage)
+	}
+	if result.StorageKey == "" {
+		t.Fatal("expected non-empty storage key")
 	}
 	if polls < 2 {
 		t.Fatalf("expected at least 2 polls, got %d", polls)
@@ -76,7 +83,8 @@ func TestGenerateVideoPollsUntilCompletedAndPersists(t *testing.T) {
 
 func TestGenerateVideoFallsBackToVideoGenerationsEndpoint(t *testing.T) {
 	var sawFallback bool
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	var server *httptest.Server
+	server = httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch {
 		case r.Method == http.MethodPost && r.URL.Path == "/videos":
 			http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
@@ -102,16 +110,19 @@ func TestGenerateVideoFallsBackToVideoGenerationsEndpoint(t *testing.T) {
 				"created": 123,
 				"data": []map[string]any{{
 					"ratio": "16:9",
-					"url":   "https://cdn.qwenlm.ai/t2v/fake-video.mp4",
+					"url":   server.URL + "/generated.mp4",
 				}},
 			})
+		case r.Method == http.MethodGet && r.URL.Path == "/generated.mp4":
+			w.Header().Set("Content-Type", "video/mp4")
+			_, _ = w.Write([]byte("fake-mp4-bytes"))
 		default:
 			http.Error(w, "unexpected "+r.Method+" "+r.URL.Path, http.StatusNotFound)
 		}
 	}))
 	defer server.Close()
 
-	storage := &Storage{cfg: Config{EnableLocalImageFallback: true}}
+	storage := s3TestStorage()
 	job := GenerationJob{
 		ID:              "job_qwen",
 		UserID:          "user_1",
@@ -131,8 +142,11 @@ func TestGenerateVideoFallsBackToVideoGenerationsEndpoint(t *testing.T) {
 	if !sawFallback {
 		t.Fatal("expected /videos/generations fallback to be used")
 	}
-	if result.URL != "https://cdn.qwenlm.ai/t2v/fake-video.mp4" {
-		t.Fatalf("expected qwen cdn url, got %s", result.URL)
+	if !strings.HasPrefix(result.URL, "https://cdn.example.test/") {
+		t.Fatalf("expected s3 url, got %s", result.URL)
+	}
+	if result.MediaStorage != MediaStorageS3 {
+		t.Fatalf("expected media storage S3, got %q", result.MediaStorage)
 	}
 	if result.DurationSeconds == nil || *result.DurationSeconds != 8 {
 		t.Fatalf("expected duration fallback 8, got %v", result.DurationSeconds)
@@ -144,22 +158,26 @@ func TestGenerateVideoFallsBackToVideoGenerationsEndpoint(t *testing.T) {
 
 func TestGenerateVideoFallbackRespectsVersionedBaseURL(t *testing.T) {
 	var sawFallback bool
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	var server *httptest.Server
+	server = httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch {
 		case r.Method == http.MethodPost && r.URL.Path == "/v1/videos":
 			http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 		case r.Method == http.MethodPost && r.URL.Path == "/v1/videos/generations":
 			sawFallback = true
 			_ = json.NewEncoder(w).Encode(map[string]any{
-				"data": []map[string]any{{"url": "https://cdn.qwenlm.ai/t2v/versioned.mp4"}},
+				"data": []map[string]any{{"url": server.URL + "/versioned.mp4"}},
 			})
+		case r.Method == http.MethodGet && r.URL.Path == "/versioned.mp4":
+			w.Header().Set("Content-Type", "video/mp4")
+			_, _ = w.Write([]byte("fake-mp4-bytes"))
 		default:
 			http.Error(w, "unexpected "+r.Method+" "+r.URL.Path, http.StatusNotFound)
 		}
 	}))
 	defer server.Close()
 
-	storage := &Storage{cfg: Config{EnableLocalImageFallback: true}}
+	storage := s3TestStorage()
 	job := GenerationJob{
 		GenerationType: "TEXT_TO_VIDEO",
 		Model:          "qwen3.6-plus-video",
@@ -175,8 +193,11 @@ func TestGenerateVideoFallbackRespectsVersionedBaseURL(t *testing.T) {
 	if !sawFallback {
 		t.Fatal("expected /v1/videos/generations fallback to be used")
 	}
-	if result.URL != "https://cdn.qwenlm.ai/t2v/versioned.mp4" {
-		t.Fatalf("expected qwen cdn url, got %s", result.URL)
+	if !strings.HasPrefix(result.URL, "https://cdn.example.test/") {
+		t.Fatalf("expected s3 url, got %s", result.URL)
+	}
+	if result.MediaStorage != MediaStorageS3 {
+		t.Fatalf("expected media storage S3, got %q", result.MediaStorage)
 	}
 	if result.Width == nil || *result.Width != 720 || result.Height == nil || *result.Height != 1280 {
 		t.Fatalf("expected 720x1280 dimensions, got %v x %v", result.Width, result.Height)
@@ -236,5 +257,52 @@ func TestImageToVideoCreateFailureReturnsFriendlyError(t *testing.T) {
 	}
 	if !strings.Contains(err.Error(), "图生视频暂不可用") {
 		t.Fatalf("expected friendly image-to-video error, got: %v", err)
+	}
+}
+
+// TestGenerateVideoWithoutObjectStorageFails：视频结果必须转存对象存储；
+// 未配置 S3/R2 时直接以 RESULT_PERSIST_FAILED 失败，不回退短期上游 URL。
+func TestGenerateVideoWithoutObjectStorageFails(t *testing.T) {
+	var server *httptest.Server
+	server = httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		switch {
+		case r.Method == http.MethodPost && r.URL.Path == "/videos":
+			_ = json.NewEncoder(w).Encode(map[string]any{"id": "vid_nos3", "status": "queued"})
+		case r.Method == http.MethodGet && r.URL.Path == "/videos/vid_nos3":
+			_ = json.NewEncoder(w).Encode(map[string]any{
+				"id":                    "vid_nos3",
+				"status":                "completed",
+				"remixed_from_video_id": server.URL + "/file.mp4",
+			})
+		case r.Method == http.MethodGet && r.URL.Path == "/file.mp4":
+			w.Header().Set("Content-Type", "video/mp4")
+			_, _ = w.Write([]byte("fake-mp4-bytes"))
+		default:
+			http.Error(w, "unexpected "+r.Method+" "+r.URL.Path, http.StatusNotFound)
+		}
+	}))
+	defer server.Close()
+
+	storage := &Storage{cfg: Config{EnableLocalImageFallback: true}}
+	job := GenerationJob{
+		ID:             "job_nos3",
+		UserID:         "user_1",
+		GenerationType: "TEXT_TO_VIDEO",
+		Model:          "agnes-video-v2.0",
+		Prompt:         "海浪",
+		Size:           "1280x720",
+	}
+	provider := ProviderConfig{APIKey: "test-key", BaseURL: server.URL, Model: "agnes-video-v2.0", AllowPrivateNetwork: true}
+
+	_, err := generateVideo(context.Background(), storage, job, provider, time.Millisecond)
+	if err == nil {
+		t.Fatal("expected error without object storage, got nil")
+	}
+	var persistErr ResultPersistError
+	if !errors.As(err, &persistErr) {
+		t.Fatalf("expected ResultPersistError, got %T: %v", err, err)
+	}
+	if !strings.Contains(err.Error(), "未配置对象存储") {
+		t.Fatalf("expected clear no-object-storage error, got: %v", err)
 	}
 }

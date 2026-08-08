@@ -20,6 +20,7 @@ const verificationModes = {
       "src/tests/unit/external-generation-service.test.ts",
       "src/tests/unit/job-refund.test.ts",
       "src/tests/unit/generation-cancel-route.test.ts",
+      "src/tests/unit/prompt-sync-forwarder.test.ts",
     ],
     commands: [
       {
@@ -33,6 +34,7 @@ const verificationModes = {
           "src/tests/unit/external-generation-service.test.ts",
           "src/tests/unit/job-refund.test.ts",
           "src/tests/unit/generation-cancel-route.test.ts",
+          "src/tests/unit/prompt-sync-forwarder.test.ts",
           "--reporter=dot",
           "--testTimeout=15000",
         ],

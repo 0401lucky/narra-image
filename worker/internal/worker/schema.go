@@ -35,7 +35,7 @@ func (report RollbackSafetyReport) Safe() bool {
 
 func CheckSchemaContract(ctx context.Context, pool *pgxpool.Pool) (SchemaContractReport, error) {
 	report := SchemaContractReport{ContractVersion: 1}
-	for _, table := range []string{"GenerationJob", "GenerationAttempt"} {
+	for _, table := range []string{"GenerationJob", "GenerationAttempt", "GenerationImage", "GeneratedVideo"} {
 		var exists bool
 		err := pool.QueryRow(ctx, `
 SELECT EXISTS (
@@ -66,6 +66,12 @@ SELECT EXISTS (
 			"model", "idempotencyKey", "status", "providerRequestId",
 			"upstreamSubmittedAt", "nextRetryAt", "errorCode",
 			"errorMessage", "createdAt", "updatedAt", "completedAt",
+		},
+		"GenerationImage": {
+			"id", "jobId", "url", "mediaStorage", "storageKey",
+		},
+		"GeneratedVideo": {
+			"id", "jobId", "url", "mediaStorage", "storageKey",
 		},
 	}
 	for table, expected := range requiredColumns {

@@ -9,6 +9,7 @@ COPY worker/go.mod worker/go.sum* ./
 RUN go mod download
 
 COPY worker/ ./
+COPY contracts/ ./contracts/
 RUN CGO_ENABLED=0 GOOS=linux go build -o /out/narra-worker ./cmd/worker
 RUN CGO_ENABLED=0 GOOS=linux go build -o /out/narra-prompt-sync ./cmd/prompt-sync
 RUN CGO_ENABLED=0 GOOS=linux go build -o /out/narra-rollback-preflight ./cmd/rollback-preflight
@@ -20,6 +21,7 @@ WORKDIR /app
 COPY --from=builder /out/narra-worker /app/narra-worker
 COPY --from=builder /out/narra-prompt-sync /app/narra-prompt-sync
 COPY --from=builder /out/narra-rollback-preflight /app/narra-rollback-preflight
+COPY --from=builder /src/contracts /app/contracts
 
 EXPOSE 8081
 

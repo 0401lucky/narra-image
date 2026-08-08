@@ -475,6 +475,8 @@ model GenerationImage {
   url              String
   width            Int?
   height           Int?
+  mediaStorage     String?
+  storageKey       String?
   showcaseStatus   ShowcaseStatus @default(PRIVATE)
   showPromptPublic Boolean        @default(false)
   submittedAt      DateTime?
@@ -500,6 +502,8 @@ model GeneratedVideo {
   width            Int?
   height           Int?
   durationSeconds  Int?
+  mediaStorage     String?
+  storageKey       String?
   showcaseStatus   ShowcaseStatus @default(PRIVATE)
   showPromptPublic Boolean        @default(false)
   submittedAt      DateTime?

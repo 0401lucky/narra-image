@@ -1,1 +1,4 @@
-{"_example": "Fill with {\"file\": \"<path>\", \"reason\": \"<why>\"}. Put spec/research files only — no code paths. Run `python .trellis/scripts/get_context.py --mode packages` to list available specs. Delete this line once real entries are added."}
+{"file": ".trellis/spec/frontend/generation-worker-contracts.md", "reason": "检查媒体/生成跨层契约一致性"}
+{"file": ".trellis/spec/operations/release-hardening.md", "reason": "检查环境契约/部署约束同步"}
+{"file": ".trellis/tasks/08-07-go-migration-audit/implement.md", "reason": "父任务全局质量闸门与验收要求"}
+{"file": ".trellis/tasks/archive/2026-08/08-07-worker-contracts/verification/2026-08-07-worker-contracts.md", "reason": "已归档验证记录示例:仓库内 vs 真实环境证据标注方式"}

@@ -6,6 +6,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"errors"
+	"io"
 	"net"
 	"net/http"
 	"strings"
@@ -71,6 +72,7 @@ func (w *Worker) startHTTPServer() (*workerHTTPServer, error) {
 	mux.HandleFunc("/healthz", w.handleHealth)
 	mux.HandleFunc("/readyz", w.handleReady)
 	mux.HandleFunc("/metrics", w.handleMetrics)
+	mux.HandleFunc("/internal/prompt-sync", w.handlePromptSync)
 
 	listener, err := net.Listen("tcp", w.cfg.HTTPAddr)
 	if err != nil {
@@ -355,6 +357,101 @@ ORDER BY "errorCode"
 	response.Completed.WindowSeconds = int64(w.cfg.MetricsWindow.Seconds())
 
 	return response, nil
+}
+
+// handlePromptSync 是 Node 管理后台 / 手动 CLI 之外的内部触发入口：
+// POST /internal/prompt-sync（Bearer token，复用 WORKER_METRICS_TOKEN）。
+// body {sourceId?: string}，缺省或 "all" 表示同步全部启用来源。
+func (w *Worker) handlePromptSync(writer http.ResponseWriter, request *http.Request) {
+	if request.Method != http.MethodPost {
+		writer.WriteHeader(http.StatusMethodNotAllowed)
+		return
+	}
+	if !w.metricsAuthorized(request) {
+		writeJSON(writer, http.StatusUnauthorized, map[string]any{
+			"code":   "PROMPT_SYNC_UNAUTHORIZED",
+			"status": "error",
+		})
+		return
+	}
+	if w.pool == nil {
+		writeJSON(writer, http.StatusServiceUnavailable, map[string]any{
+			"code":   "PROMPT_SYNC_UNAVAILABLE",
+			"status": "error",
+		})
+		return
+	}
+
+	var body struct {
+		SourceID string `json:"sourceId"`
+	}
+	if request.Body != nil {
+		decoder := json.NewDecoder(io.LimitReader(request.Body, 1<<16))
+		if err := decoder.Decode(&body); err != nil && !errors.Is(err, io.EOF) {
+			writeJSON(writer, http.StatusBadRequest, map[string]any{
+				"code":   "INVALID_BODY",
+				"status": "error",
+			})
+			return
+		}
+	}
+
+	ctx, cancel := context.WithTimeout(request.Context(), promptSyncSchedulerTimeout)
+	defer cancel()
+
+	sourceID := strings.TrimSpace(body.SourceID)
+	results, err := w.runPromptSync(ctx, sourceID)
+
+	if err != nil {
+		if errors.Is(err, errPromptSourceNotFound) {
+			writeJSON(writer, http.StatusNotFound, map[string]any{
+				"code":    "PROMPT_SYNC_SOURCE_NOT_FOUND",
+				"status":  "error",
+				"message": "提示词来源不存在",
+			})
+			return
+		}
+		// 部分来源失败已通过结果中的 FAILED/SKIPPED_LOCKED 状态暴露，仍返回 200；
+		// 仅系统级失败（如来源清单或数据库不可用）返回 500。
+		if len(results) == 0 || !containsFailedSyncResult(results) {
+			w.logger.Warn(
+				"提示词同步内部端点失败",
+				"event", "prompt_sync_endpoint_failed",
+				"error", err,
+			)
+			writeJSON(writer, http.StatusInternalServerError, map[string]any{
+				"code":    "PROMPT_SYNC_FAILED",
+				"status":  "error",
+				"message": "提示词同步失败",
+			})
+			return
+		}
+	}
+
+	writeJSON(writer, http.StatusOK, map[string]any{"results": results})
+}
+
+// runPromptSync 是 /internal/prompt-sync 的实际执行入口：测试可注入
+// promptSyncRunner 替换默认的 PromptSyncer，避免在 handler 单测里依赖数据库。
+func (w *Worker) runPromptSync(ctx context.Context, sourceID string) ([]PromptSyncResult, error) {
+	if w.promptSyncRunner != nil {
+		return w.promptSyncRunner(ctx, sourceID)
+	}
+	syncer := NewPromptSyncer(w.pool, w.logger)
+	if sourceID == "" || strings.EqualFold(sourceID, "all") {
+		return syncer.SyncAll(ctx)
+	}
+	result, err := syncer.SyncSource(ctx, sourceID)
+	return []PromptSyncResult{result}, err
+}
+
+func containsFailedSyncResult(results []PromptSyncResult) bool {
+	for _, result := range results {
+		if result.Status == "FAILED" || result.Status == "SKIPPED_LOCKED" {
+			return true
+		}
+	}
+	return false
 }
 
 func writeJSON(writer http.ResponseWriter, status int, payload any) {

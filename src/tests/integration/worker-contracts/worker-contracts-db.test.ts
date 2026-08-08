@@ -168,4 +168,46 @@ INSERT INTO "GenerationAttempt" (
     await expect(insertAttempt("db_attempt_1")).resolves.toMatchObject({ rowCount: 1 });
     await expect(insertAttempt("db_attempt_2")).rejects.toMatchObject({ code: "23505" });
   });
+
+  it("additive 媒体存储元数据列存在且旧写入保持 NULL", async () => {
+    const columns = await client.query<{ column_name: string }>(`
+SELECT column_name FROM information_schema.columns
+WHERE table_schema = current_schema()
+  AND table_name = 'GenerationImage'
+  AND column_name IN ('mediaStorage', 'storageKey')
+ORDER BY column_name
+`);
+    expect(columns.rows.map((row) => row.column_name)).toEqual([
+      "mediaStorage",
+      "storageKey",
+    ]);
+
+    await insertUser("db_media_ts_user");
+    await insertJob({ id: "db_media_ts_job", userId: "db_media_ts_user" });
+    await client.query(
+      `
+INSERT INTO "GenerationImage" (
+  id, "jobId", url, "showcaseStatus", "showPromptPublic", "createdAt"
+) VALUES ('img_ts_legacy', 'db_media_ts_job', 'https://cdn.example/legacy', 'PRIVATE', false, CURRENT_TIMESTAMP)
+`,
+    );
+    const legacy = await client.query<{ mediaStorage: string | null }>(
+      'SELECT "mediaStorage" FROM "GenerationImage" WHERE id = $1',
+      ["img_ts_legacy"],
+    );
+    expect(legacy.rows[0]?.mediaStorage).toBeNull();
+
+    await client.query(
+      `
+INSERT INTO "GenerationImage" (
+  id, "jobId", url, "mediaStorage", "storageKey", "showcaseStatus", "showPromptPublic", "createdAt"
+) VALUES ('img_ts_s3', 'db_media_ts_job', 'https://cdn.example/s3.png', 'S3', 'user/s3.png', 'PRIVATE', false, CURRENT_TIMESTAMP)
+`,
+    );
+    const s3 = await client.query<{ mediaStorage: string; storageKey: string }>(
+      'SELECT "mediaStorage", "storageKey" FROM "GenerationImage" WHERE id = $1',
+      ["img_ts_s3"],
+    );
+    expect(s3.rows[0]).toEqual({ mediaStorage: "S3", storageKey: "user/s3.png" });
+  });
 });

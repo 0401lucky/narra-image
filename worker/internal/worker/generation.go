@@ -34,9 +34,11 @@ func (provider ProviderConfig) httpClient() *http.Client {
 }
 
 type GeneratedImage struct {
-	Height *int
-	URL    string
-	Width  *int
+	Height       *int
+	URL          string
+	Width        *int
+	MediaStorage MediaStorage
+	StorageKey   string
 }
 
 type imagePayload struct {
@@ -346,11 +348,11 @@ func normalizeGeneratedImage(ctx context.Context, storage *Storage, job Generati
 		if dimensions == nil {
 			dimensions = readImageDimensions(data)
 		}
-		url, err := storage.PersistImage(ctx, job.UserID, data, outputFormat(job), mimeTypeFromOutputFormat(job))
+		persisted, err := storage.PersistImage(ctx, job.UserID, data, outputFormat(job), mimeTypeFromOutputFormat(job))
 		if err != nil {
 			return GeneratedImage{}, ResultPersistError{Cause: err}
 		}
-		return generatedImageRecord(url, dimensions), nil
+		return generatedImageRecord(persisted, dimensions), nil
 	}
 
 	if rawURL, ok := pickString(item, "url"); ok {
@@ -367,21 +369,28 @@ func normalizeGeneratedImage(ctx context.Context, storage *Storage, job Generati
 		if dimensions == nil {
 			dimensions = readImageDimensions(persisted.Data)
 		}
-		return generatedImageRecord(persisted.URL, dimensions), nil
+		return generatedImageRecord(PersistedMedia{
+			URL:          persisted.URL,
+			MediaStorage: persisted.MediaStorage,
+			StorageKey:   persisted.StorageKey,
+		}, dimensions), nil
 	}
 
 	return GeneratedImage{}, errors.New("返回结果里没有可用图片")
 }
 
-func generatedImageRecord(rawURL string, dimensions *ImageDimensions) GeneratedImage {
+func generatedImageRecord(persisted PersistedMedia, dimensions *ImageDimensions) GeneratedImage {
+	record := GeneratedImage{
+		URL:          persisted.URL,
+		MediaStorage: persisted.MediaStorage,
+		StorageKey:   persisted.StorageKey,
+	}
 	if dimensions == nil {
-		return GeneratedImage{URL: rawURL}
+		return record
 	}
-	return GeneratedImage{
-		Height: &dimensions.Height,
-		URL:    rawURL,
-		Width:  &dimensions.Width,
-	}
+	record.Height = &dimensions.Height
+	record.Width = &dimensions.Width
+	return record
 }
 
 func addOutputOptions(target map[string]any, job GenerationJob) {

@@ -102,17 +102,55 @@ func TestGenerationContractConsumesMediaScenario(t *testing.T) {
 	}
 	var media struct {
 		Image struct {
-			EditCount int `json:"editCount"`
+			EditCount int      `json:"editCount"`
+			Fields    []string `json:"resultFields"`
+			Kinds     []string `json:"storageKinds"`
 		} `json:"image"`
 		Video struct {
-			ResultFields []string `json:"resultFields"`
+			Fields []string `json:"resultFields"`
 		} `json:"video"`
 	}
 	if err := json.Unmarshal(contract.Scenarios["media"], &media); err != nil {
 		t.Fatal(err)
 	}
-	if media.Image.EditCount != 1 || !slices.Contains(media.Video.ResultFields, "posterUrl") {
+	if media.Image.EditCount != 1 || !slices.Contains(media.Video.Fields, "posterUrl") {
 		t.Fatalf("unexpected media contract: %+v", media)
+	}
+	for _, field := range []string{"mediaStorage", "storageKey"} {
+		if !slices.Contains(media.Image.Fields, field) || !slices.Contains(media.Video.Fields, field) {
+			t.Errorf("media contract missing result field %q", field)
+		}
+	}
+	for _, kind := range []string{"B64", "S3", "UPSTREAM"} {
+		if !slices.Contains(media.Image.Kinds, kind) {
+			t.Errorf("media contract missing storage kind %q", kind)
+		}
+	}
+}
+
+func TestDefaultPromptSourcesManifestIsComplete(t *testing.T) {
+	sources, err := DefaultPromptSources()
+	if err != nil {
+		t.Fatalf("DefaultPromptSources returned error: %v", err)
+	}
+	if len(sources) != 6 {
+		t.Fatalf("expected 6 default sources, got %d", len(sources))
+	}
+	seen := map[string]bool{}
+	for _, source := range sources {
+		if source.Slug == "" || source.Name == "" || source.Parser == "" || source.RawBaseURL == "" || source.SourceURL == "" {
+			t.Errorf("incomplete source: %+v", source)
+		}
+		if seen[source.Slug] {
+			t.Errorf("duplicate source slug %q", source.Slug)
+		}
+		seen[source.Slug] = true
+		switch source.Parser {
+		case "gpt-image-2-prompts", "awesome-gpt-image", "awesome-gpt4o-image-prompts",
+			"youmind-gpt-image-2", "youmind-nano-banana-pro", "davidwu-gpt-image2-prompts":
+		default:
+			t.Errorf("unsupported parser %q", source.Parser)
+		}
 	}
 }
 

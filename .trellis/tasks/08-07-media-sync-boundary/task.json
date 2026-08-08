@@ -3,7 +3,7 @@
   "name": "media-sync-boundary",
   "title": "统一媒体存储与提示词同步",
   "description": "统一 Go/Node 媒体持久化策略与提示词同步入口，补齐调度、失败恢复和长期可访问性。",
-  "status": "planning",
+  "status": "in_progress",
   "dev_type": null,
   "scope": null,
   "package": null,

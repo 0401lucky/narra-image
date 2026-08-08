@@ -34,7 +34,10 @@ const SCRATCH_PARENT = path.resolve(
 const SCRATCH_PREFIX = "narra-worker-contracts-prisma-";
 const OWNER_LABEL_KEY = "com.narra.worker-contracts.owner";
 const BASELINE_MARKER = "WORKER_CONTRACTS_BASELINE_MIGRATION";
-const ADDITIVE_MIGRATION = "20260807130000_generation_worker_contract_v1";
+const ADDITIVE_MIGRATIONS = [
+  "20260807130000_generation_worker_contract_v1",
+  "20260807140000_generation_media_storage_meta",
+];
 
 const PROJECT_ROOT = path.resolve(__dirname, "../../../..");
 const MIGRATIONS_ROOT = path.join(PROJECT_ROOT, "prisma/migrations");
@@ -54,10 +57,8 @@ const GO_DB_TEST = path.join(
   PROJECT_ROOT,
   "worker/internal/worker/worker_contracts_integration_test.go",
 );
-const ADDITIVE_MIGRATION_SQL = path.join(
-  MIGRATIONS_ROOT,
-  ADDITIVE_MIGRATION,
-  "migration.sql",
+const ADDITIVE_MIGRATION_SQLS = ADDITIVE_MIGRATIONS.map((name) =>
+  path.join(MIGRATIONS_ROOT, name, "migration.sql"),
 );
 
 type ExitCode = (typeof EXIT)[keyof typeof EXIT];
@@ -265,7 +266,7 @@ function assertRequiredTargetsAndBaseline(): BaselineMigration[] {
     ["Prisma schema", PRISMA_SCHEMA],
     ["Prisma CLI", PRISMA_CLI],
     ["legacy schema snapshot", LEGACY_SNAPSHOT],
-    ["additive migration", ADDITIVE_MIGRATION_SQL],
+    ...ADDITIVE_MIGRATION_SQLS.map((target) => ["additive migration", target] as const),
     ["TypeScript DB integration test", TS_DB_TEST],
     ["isolated Vitest config", RUNNER_VITEST_CONFIG],
     ["Go DB integration test", GO_DB_TEST],
@@ -285,13 +286,18 @@ function assertRequiredTargetsAndBaseline(): BaselineMigration[] {
   }
 
   const migrationNames = listMigrationNames();
-  if (
-    !migrationNames.includes(ADDITIVE_MIGRATION) ||
-    migrationNames.at(-1) !== ADDITIVE_MIGRATION
-  ) {
+  for (const additive of ADDITIVE_MIGRATIONS) {
+    if (!migrationNames.includes(additive)) {
+      throw failure(
+        EXIT.preflight,
+        `[worker-contracts:db] 缺少 additive migration ${additive}`,
+      );
+    }
+  }
+  if (migrationNames.at(-1) !== ADDITIVE_MIGRATIONS.at(-1)) {
     throw failure(
       EXIT.preflight,
-      `[worker-contracts:db] ${ADDITIVE_MIGRATION} 必须是唯一最新 migration`,
+      `[worker-contracts:db] ${ADDITIVE_MIGRATIONS.at(-1)} 必须是最新 migration`,
     );
   }
 
@@ -304,7 +310,7 @@ function assertRequiredTargetsAndBaseline(): BaselineMigration[] {
   }
 
   const expectedBaselineNames = migrationNames.filter(
-    (name) => name !== ADDITIVE_MIGRATION,
+    (name) => !ADDITIVE_MIGRATIONS.includes(name),
   );
   const markerNames = parseBaselineMarkers(snapshot);
   if (JSON.stringify(markerNames) !== JSON.stringify(expectedBaselineNames)) {
@@ -966,10 +972,10 @@ async function main(): Promise<ExitCode> {
       afterDeploy,
       [
         ...baselineMigrations,
-        {
-          name: ADDITIVE_MIGRATION,
-          checksum: migrationChecksum(ADDITIVE_MIGRATION),
-        },
+        ...ADDITIVE_MIGRATIONS.map((name) => ({
+          name,
+          checksum: migrationChecksum(name),
+        })),
       ].sort((left, right) => left.name.localeCompare(right.name)),
       "部署后",
     );

@@ -28,8 +28,32 @@ const remoteImageMaxBytes = 50 * 1024 * 1024
 const sourceImagesTotalMaxBytes = 32 * 1024 * 1024
 const referenceImageMaxRedirects = 5
 
+// MediaStorage 标识生成结果的持久化形态，随 GenerationImage/GeneratedVideo 落库。
+// B64 仅允许开发/测试 data URL fallback；S3 是生产强制形态；
+// UPSTREAM 表示上游直连，仅历史数据，新写入不会产生。
+type MediaStorage string
+
+const (
+	MediaStorageB64      MediaStorage = "B64"
+	MediaStorageS3       MediaStorage = "S3"
+	MediaStorageUpstream MediaStorage = "UPSTREAM"
+)
+
+// PersistedMedia 是一次持久化操作的结果：公开 URL、存储形态与 S3 object key。
+// 非 S3 形态的 StorageKey 为空。
+type PersistedMedia struct {
+	URL          string
+	MediaStorage MediaStorage
+	StorageKey   string
+}
+
+// objectStorageClient 抽象 S3 客户端以便测试注入，生产由 *s3.Client 满足。
+type objectStorageClient interface {
+	PutObject(ctx context.Context, params *s3.PutObjectInput, optFns ...func(*s3.Options)) (*s3.PutObjectOutput, error)
+}
+
 type Storage struct {
-	client *s3.Client
+	client objectStorageClient
 	cfg    Config
 }
 
@@ -40,9 +64,11 @@ type SourceImage struct {
 }
 
 type PersistedRemoteImage struct {
-	Data     []byte
-	MimeType string
-	URL      string
+	Data         []byte
+	MimeType     string
+	URL          string
+	MediaStorage MediaStorage
+	StorageKey   string
 }
 
 func NewStorage(ctx context.Context, cfg Config) (*Storage, error) {
@@ -71,7 +97,7 @@ func NewStorage(ctx context.Context, cfg Config) (*Storage, error) {
 	return storage, nil
 }
 
-func (s *Storage) PersistImage(ctx context.Context, userID string, data []byte, extension string, mimeType string) (string, error) {
+func (s *Storage) PersistImage(ctx context.Context, userID string, data []byte, extension string, mimeType string) (PersistedMedia, error) {
 	if extension == "" {
 		extension = "png"
 	}
@@ -88,20 +114,28 @@ func (s *Storage) PersistImage(ctx context.Context, userID string, data []byte, 
 			Key:         aws.String(fileName),
 		})
 		if err != nil {
-			return "", err
+			return PersistedMedia{}, err
 		}
 
-		if s.cfg.S3PublicBaseURL != "" {
-			return strings.TrimRight(s.cfg.S3PublicBaseURL, "/") + "/" + fileName, nil
-		}
-		return strings.TrimRight(s.cfg.S3Endpoint, "/") + "/" + s.cfg.S3Bucket + "/" + fileName, nil
+		return PersistedMedia{
+			URL:          s.publicObjectURL(fileName),
+			MediaStorage: MediaStorageS3,
+			StorageKey:   fileName,
+		}, nil
 	}
 
 	if s.cfg.EnableLocalImageFallback {
-		return fmt.Sprintf("data:%s;base64,%s", mimeType, base64.StdEncoding.EncodeToString(data)), nil
+		// 生产环境禁止把大 base64 作为数据库主存储；即使显式开启 fallback 也拒绝。
+		if s.cfg.isProductionEnvironment() {
+			return PersistedMedia{}, errors.New("生产环境禁止 data URL 图片存储，请配置对象存储（S3/R2）")
+		}
+		return PersistedMedia{
+			URL:          fmt.Sprintf("data:%s;base64,%s", mimeType, base64.StdEncoding.EncodeToString(data)),
+			MediaStorage: MediaStorageB64,
+		}, nil
 	}
 
-	return "", errors.New("当前没有可用的图片存储配置")
+	return PersistedMedia{}, errors.New("当前没有可用的图片存储配置")
 }
 
 func (s *Storage) PersistImageFromURL(
@@ -115,19 +149,21 @@ func (s *Storage) PersistImageFromURL(
 		return PersistedRemoteImage{}, err
 	}
 
-	url, err := s.PersistImage(ctx, userID, image.Data, extensionFromMime(image.MimeType), image.MimeType)
+	persisted, err := s.PersistImage(ctx, userID, image.Data, extensionFromMime(image.MimeType), image.MimeType)
 	if err != nil {
 		return PersistedRemoteImage{}, err
 	}
 
 	return PersistedRemoteImage{
-		Data:     image.Data,
-		MimeType: image.MimeType,
-		URL:      url,
+		Data:         image.Data,
+		MimeType:     image.MimeType,
+		URL:          persisted.URL,
+		MediaStorage: persisted.MediaStorage,
+		StorageKey:   persisted.StorageKey,
 	}, nil
 }
 
-func (s *Storage) PersistVideo(ctx context.Context, userID string, data []byte) (string, error) {
+func (s *Storage) PersistVideo(ctx context.Context, userID string, data []byte) (PersistedMedia, error) {
 	if s.client != nil && s.cfg.S3Bucket != "" {
 		fileName := fmt.Sprintf("%s/%s.mp4", userID, randomHex(16))
 		_, err := s.client.PutObject(ctx, &s3.PutObjectInput{
@@ -137,21 +173,61 @@ func (s *Storage) PersistVideo(ctx context.Context, userID string, data []byte) 
 			Key:         aws.String(fileName),
 		})
 		if err != nil {
-			return "", err
+			return PersistedMedia{}, err
 		}
 
-		if s.cfg.S3PublicBaseURL != "" {
-			return strings.TrimRight(s.cfg.S3PublicBaseURL, "/") + "/" + fileName, nil
-		}
-		return strings.TrimRight(s.cfg.S3Endpoint, "/") + "/" + s.cfg.S3Bucket + "/" + fileName, nil
+		return PersistedMedia{
+			URL:          s.publicObjectURL(fileName),
+			MediaStorage: MediaStorageS3,
+			StorageKey:   fileName,
+		}, nil
 	}
 
-	return "", errors.New("当前没有可用的视频存储配置")
+	// 视频不提供 data URL 或上游 URL 回退：没有对象存储即明确失败，
+	// 避免把依赖短期上游 URL 的地址写入数据库。
+	return PersistedMedia{}, errors.New("未配置对象存储（S3/R2），无法持久化视频结果")
+}
+
+// publicObjectURL 根据公开访问域名或 S3 端点构造对象公开 URL。
+func (s *Storage) publicObjectURL(fileName string) string {
+	if s.cfg.S3PublicBaseURL != "" {
+		return strings.TrimRight(s.cfg.S3PublicBaseURL, "/") + "/" + fileName
+	}
+	return strings.TrimRight(s.cfg.S3Endpoint, "/") + "/" + s.cfg.S3Bucket + "/" + fileName
 }
 
 // hasObjectStorage 表示是否配置了可用的 S3 对象存储。
 func (s *Storage) hasObjectStorage() bool {
 	return s.client != nil && s.cfg.S3Bucket != ""
+}
+
+// HasObjectStorage 导出给运维命令（如 backfill-media）判断对象存储是否就绪。
+func (s *Storage) HasObjectStorage() bool {
+	return s.hasObjectStorage()
+}
+
+// isProductionEnvironment 判断是否处于生产语义：NODE_ENV=production，或
+// APP_URL 被显式配置为非 loopback 地址。默认 loopback 值视为开发/测试。
+func (cfg Config) isProductionEnvironment() bool {
+	if strings.EqualFold(strings.TrimSpace(cfg.NodeEnv), "production") {
+		return true
+	}
+	appURL := strings.TrimSpace(cfg.AppURL)
+	if appURL == "" || appURL == "http://localhost:3000" {
+		return false
+	}
+	parsed, err := url.Parse(appURL)
+	if err != nil || parsed.Hostname() == "" {
+		return false
+	}
+	host := strings.ToLower(parsed.Hostname())
+	if host == "localhost" || host == "0.0.0.0" || host == "::1" || strings.HasSuffix(host, ".localhost") {
+		return false
+	}
+	if ip := net.ParseIP(host); ip != nil && (ip.IsLoopback() || ip.IsUnspecified()) {
+		return false
+	}
+	return true
 }
 
 func loadSourceImages(ctx context.Context, urls []string) ([]SourceImage, error) {

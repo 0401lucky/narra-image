@@ -4,8 +4,10 @@ package worker
 
 import (
 	"context"
+	"encoding/base64"
 	"errors"
 	"os"
+	"strings"
 	"testing"
 	"time"
 
@@ -324,6 +326,205 @@ FROM "GenerationJob" WHERE id = $1
 		}
 		if credits != 109 {
 			t.Fatalf("repeated finalizer changed credits to %d", credits)
+		}
+	})
+
+	t.Run("media storage metadata columns and kinds", func(t *testing.T) {
+		reset()
+		insertUser("db_media_user")
+		insertJob("db_media_job", "db_media_user", 5)
+
+		for _, tc := range []struct {
+			kind string
+			key  string
+		}{
+			{kind: "S3", key: "user/abc.png"},
+			{kind: "B64", key: ""},
+			{kind: "UPSTREAM", key: ""},
+		} {
+			_, err := pool.Exec(ctx, `
+INSERT INTO "GenerationImage" (id, "jobId", url, "mediaStorage", "storageKey", "showcaseStatus", "showPromptPublic", "createdAt")
+VALUES ($1, $2, $3, $4, $5, 'PRIVATE', false, CURRENT_TIMESTAMP)
+`, "img_media_"+tc.kind, "db_media_job", "https://cdn.example/"+tc.kind, tc.kind, nullableStringFromString(tc.key))
+			if err != nil {
+				t.Fatalf("insert media image %s failed: %v", tc.kind, err)
+			}
+		}
+		// legacy 行：旧写入者不传新字段，mediaStorage/storageKey 保持 NULL。
+		if _, err := pool.Exec(ctx, `
+INSERT INTO "GenerationImage" (id, "jobId", url, "showcaseStatus", "showPromptPublic", "createdAt")
+VALUES ('img_media_legacy', 'db_media_job', 'https://cdn.example/legacy', 'PRIVATE', false, CURRENT_TIMESTAMP)
+`); err != nil {
+			t.Fatalf("insert legacy media row failed: %v", err)
+		}
+
+		var withStorage int
+		if err := pool.QueryRow(ctx, `SELECT COUNT(*) FROM "GenerationImage" WHERE "jobId" = $1 AND "mediaStorage" IS NOT NULL`, "db_media_job").Scan(&withStorage); err != nil {
+			t.Fatal(err)
+		}
+		if withStorage != 3 {
+			t.Fatalf("expected 3 rows with mediaStorage, got %d", withStorage)
+		}
+		var legacyStorage *string
+		if err := pool.QueryRow(ctx, `SELECT "mediaStorage" FROM "GenerationImage" WHERE id = 'img_media_legacy'`).Scan(&legacyStorage); err != nil {
+			t.Fatal(err)
+		}
+		if legacyStorage != nil {
+			t.Fatalf("legacy row must keep NULL mediaStorage, got %v", legacyStorage)
+		}
+	})
+
+	t.Run("backfill media is idempotent", func(t *testing.T) {
+		reset()
+		insertUser("db_backfill_user")
+		insertJob("db_backfill_job", "db_backfill_user", 5)
+
+		pngData := minimalPNG(8, 8)
+		dataURL := "data:image/png;base64," + base64.StdEncoding.EncodeToString(pngData)
+		if _, err := pool.Exec(ctx, `
+INSERT INTO "GenerationImage" (id, "jobId", url, "showcaseStatus", "showPromptPublic", "createdAt")
+VALUES ('img_backfill_1', 'db_backfill_job', $1, 'PRIVATE', false, CURRENT_TIMESTAMP)
+`, dataURL); err != nil {
+			t.Fatalf("insert backfill image failed: %v", err)
+		}
+
+		storage := &Storage{client: &fakeObjectStorage{}, cfg: Config{
+			S3Bucket:        "backfill-bucket",
+			S3PublicBaseURL: "https://cdn.example.test",
+		}}
+		result, err := BackfillMedia(ctx, pool, storage, BackfillOptions{})
+		if err != nil {
+			t.Fatalf("BackfillMedia returned error: %v", err)
+		}
+		if result.ImagesScanned != 1 || result.ImagesUpdated != 1 {
+			t.Fatalf("unexpected first backfill result: %+v", result)
+		}
+
+		var url, mediaStorage, storageKey string
+		if err := pool.QueryRow(ctx, `SELECT url, "mediaStorage", COALESCE("storageKey", '') FROM "GenerationImage" WHERE id = 'img_backfill_1'`).Scan(&url, &mediaStorage, &storageKey); err != nil {
+			t.Fatal(err)
+		}
+		if mediaStorage != "S3" || !strings.HasPrefix(url, "https://cdn.example.test/") || storageKey == "" {
+			t.Fatalf("unexpected backfilled row: url=%s storage=%s key=%s", url, mediaStorage, storageKey)
+		}
+
+		// 重复执行：已处理行 mediaStorage != NULL，不会重复转存。
+		result2, err := BackfillMedia(ctx, pool, storage, BackfillOptions{})
+		if err != nil {
+			t.Fatalf("second BackfillMedia returned error: %v", err)
+		}
+		if result2.ImagesScanned != 0 || result2.ImagesUpdated != 0 {
+			t.Fatalf("expected no reprocess on second run, got %+v", result2)
+		}
+	})
+
+	insertPromptSource := func(id, slug, parser string, enabled bool) {
+		t.Helper()
+		_, err := pool.Exec(ctx, `
+INSERT INTO "PromptSource" (id, slug, name, description, "sourceUrl", "rawBaseUrl", parser, "isEnabled", "sortOrder", status, "itemCount", "updatedAt")
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8, 10, 'IDLE', 0, CURRENT_TIMESTAMP)
+`, id, slug, slug, "fixture description", "https://github.com/"+slug, "https://raw.githubusercontent.com/"+slug+"/main", parser, enabled)
+		if err != nil {
+			t.Fatalf("insert prompt source failed: %v", err)
+		}
+	}
+
+	t.Run("prompt sync advisory lock and idempotency", func(t *testing.T) {
+		reset()
+		insertPromptSource("src_sync_a", "sync-a", "awesome-gpt-image", true)
+
+		syncer := NewPromptSyncer(pool, nil)
+		syncer.fetch = func(ctx context.Context, source PromptSource, filePath string) (string, error) {
+			return markdownFixture, nil
+		}
+		result, err := syncer.SyncSource(ctx, "sync-a")
+		if err != nil {
+			t.Fatalf("SyncSource returned error: %v", err)
+		}
+		if result.Status != "SUCCESS" || result.Count != 1 {
+			t.Fatalf("unexpected sync result: %+v", result)
+		}
+
+		var status, lastSyncError *string
+		var itemCount int
+		if err := pool.QueryRow(ctx, `SELECT status::text, "lastSyncError", "itemCount" FROM "PromptSource" WHERE id = 'src_sync_a'`).Scan(&status, &lastSyncError, &itemCount); err != nil {
+			t.Fatal(err)
+		}
+		if *status != "SUCCESS" || lastSyncError != nil || itemCount != 1 {
+			t.Fatalf("unexpected source state: status=%v err=%v count=%d", *status, lastSyncError, itemCount)
+		}
+
+		// 重复同步：全量替换语义，结果一致、无孤儿/重复。
+		result2, err := syncer.SyncSource(ctx, "sync-a")
+		if err != nil || result2.Status != "SUCCESS" || result2.Count != 1 {
+			t.Fatalf("repeated SyncSource failed: %+v err=%v", result2, err)
+		}
+		if err := pool.QueryRow(ctx, `SELECT COUNT(*) FROM "PromptLibraryItem" WHERE "sourceId" = 'src_sync_a'`).Scan(&itemCount); err != nil {
+			t.Fatal(err)
+		}
+		if itemCount != 1 {
+			t.Fatalf("expected exactly 1 prompt item, got %d", itemCount)
+		}
+
+		// 并发互斥：另一事务持有 advisory 锁时返回 SKIPPED_LOCKED。
+		lockTx, err := pool.Begin(ctx)
+		if err != nil {
+			t.Fatal(err)
+		}
+		var locked bool
+		if err := lockTx.QueryRow(ctx, `SELECT pg_try_advisory_xact_lock(hashtext($1))`, "src_sync_a").Scan(&locked); err != nil {
+			t.Fatal(err)
+		}
+		if !locked {
+			t.Fatal("expected to acquire advisory lock")
+		}
+		result3, err := syncer.SyncSource(ctx, "sync-a")
+		if err == nil || result3.Status != "SKIPPED_LOCKED" {
+			t.Fatalf("expected SKIPPED_LOCKED, got %+v err=%v", result3, err)
+		}
+		if err := lockTx.Rollback(ctx); err != nil {
+			t.Fatal(err)
+		}
+	})
+
+	t.Run("prompt sync all aggregates partial failure", func(t *testing.T) {
+		reset()
+		insertPromptSource("src_ok", "sync-ok", "awesome-gpt-image", true)
+		insertPromptSource("src_bad", "sync-bad", "awesome-gpt-image", true)
+
+		syncer := NewPromptSyncer(pool, nil)
+		syncer.fetch = func(ctx context.Context, source PromptSource, filePath string) (string, error) {
+			if source.Slug == "sync-bad" {
+				return "", errors.New("fixture fetch failure")
+			}
+			if source.Parser == "davidwu-gpt-image2-prompts" {
+				return `[{"id":1,"image":"a.jpg","prompt":"p","title_cn":"T","category_cn":"海报"}]`, nil
+			}
+			return markdownFixture, nil
+		}
+
+		results, err := syncer.SyncAll(ctx)
+		if err == nil {
+			t.Fatal("expected aggregated error for partial failure")
+		}
+		statusBySlug := map[string]string{}
+		for _, result := range results {
+			statusBySlug[result.Slug] = result.Status
+		}
+		if statusBySlug["sync-ok"] != "SUCCESS" || statusBySlug["sync-bad"] != "FAILED" {
+			t.Fatalf("unexpected per-source statuses: %v", statusBySlug)
+		}
+
+		var okStatus, badStatus string
+		var badErr *string
+		if err := pool.QueryRow(ctx, `SELECT status::text FROM "PromptSource" WHERE id = 'src_ok'`).Scan(&okStatus); err != nil {
+			t.Fatal(err)
+		}
+		if err := pool.QueryRow(ctx, `SELECT status::text, "lastSyncError" FROM "PromptSource" WHERE id = 'src_bad'`).Scan(&badStatus, &badErr); err != nil {
+			t.Fatal(err)
+		}
+		if okStatus != "SUCCESS" || badStatus != "FAILED" || badErr == nil {
+			t.Fatalf("unexpected db state: ok=%s bad=%s err=%v", okStatus, badStatus, badErr)
 		}
 	})
 }
