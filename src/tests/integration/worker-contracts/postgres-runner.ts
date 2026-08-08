@@ -839,7 +839,7 @@ async function runDatabaseAssertions(
         "-timeout=50s",
         "./internal/worker",
         "-run",
-        "^TestWorkerContractsDB",
+        "^(TestWorkerContractsDB|TestGatewayDB)$",
       ],
       env: databaseEnv,
     },

@@ -9,7 +9,9 @@ import {
   TIMEOUT_EXIT_CODE,
 } from "./lib/command-runner.mjs";
 
-const GLOBAL_DEADLINE_MS = 57_000;
+// Windows 本地 vitest 冷启动可能超过 57s（environment 初始化曾达 65s），
+// 放宽到 90s 避免 CI 偶发超时；不嵌套进 60s 父截止。
+const GLOBAL_DEADLINE_MS = 90_000;
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
 const verificationModes = {

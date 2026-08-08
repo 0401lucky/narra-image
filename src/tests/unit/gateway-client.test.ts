@@ -309,6 +309,71 @@ describe("gateway-client", () => {
     expect(mockIncrementUpdate).toHaveBeenCalled();
   });
 
+  it("abort 且 job 已存在时不退款并返回查询语义", async () => {
+    const controller = new AbortController();
+    controller.abort();
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => {
+        throw new DOMException("Aborted", "AbortError");
+      }),
+    );
+    // 最常见的断连时机：Go 已创建 job，客户端在长等待中断开。
+    mockFindUnique.mockResolvedValue({ apiKeyId: "ck_1" });
+
+    const response = await runExternalGenerationViaGateway({
+      apiKeyId: "ck_1",
+      user: { id: "usr_1", credits: 100 },
+      endpoint: "images.generations",
+      signal: controller.signal,
+      input: {
+        count: 1,
+        generationType: "text_to_image",
+        model: "gpt-image-2",
+        moderation: "auto",
+        outputCompression: null,
+        outputFormat: "png",
+        prompt: "hi",
+        quality: "auto",
+        size: "auto",
+      },
+    });
+    expect(response.status).toBe(504);
+    expect(mockIncrementUpdate).not.toHaveBeenCalled();
+  });
+
+  it("abort 且 job 未创建时退款并返回 502", async () => {
+    const controller = new AbortController();
+    controller.abort();
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => {
+        throw new DOMException("Aborted", "AbortError");
+      }),
+    );
+    mockFindUnique.mockResolvedValue(null);
+
+    const response = await runExternalGenerationViaGateway({
+      apiKeyId: "ck_1",
+      user: { id: "usr_1", credits: 100 },
+      endpoint: "images.generations",
+      signal: controller.signal,
+      input: {
+        count: 1,
+        generationType: "text_to_image",
+        model: "gpt-image-2",
+        moderation: "auto",
+        outputCompression: null,
+        outputFormat: "png",
+        prompt: "hi",
+        quality: "auto",
+        size: "auto",
+      },
+    });
+    expect(response.status).toBe(502);
+    expect(mockIncrementUpdate).toHaveBeenCalled();
+  });
+
   it("forwardGenerationQuery 携带签名与 api key 并透传", async () => {
     const fetchMock = vi.mocked(globalThis.fetch as ReturnType<typeof vi.fn>);
     const response = await forwardGenerationQuery({ apiKeyId: "ck_1", jobId: "job_1" });

@@ -191,7 +191,7 @@ func (w *Worker) writeGatewayChat(
 		w.writeGatewayJobError(writer, result)
 		return
 	}
-	content := buildGatewayImageMarkdown(result.Images)
+	content := "生成完成。\n\n" + buildGatewayImageMarkdown(result.Images)
 	created := result.CreatedAt.Unix()
 	id := "chatcmpl_" + result.JobID
 	model := env.Payload.Model
@@ -288,7 +288,12 @@ func (w *Worker) writeGatewayResponses(
 		return
 	}
 
-	payload := w.formatResponsesPayload(env, result)
+	payload, err := w.formatResponsesPayload(env, result)
+	if err != nil {
+		// 媒体读取失败必须显式失败，不能把空 result 当成成功。
+		w.writeGatewayOpenAiError(writer, http.StatusBadRequest, "GENERATION_IMAGE_B64_FAILED", err.Error(), result.JobID)
+		return
+	}
 	if !env.Payload.Stream {
 		writeJSON(writer, http.StatusOK, payload)
 		return
@@ -296,12 +301,12 @@ func (w *Worker) writeGatewayResponses(
 	w.writeResponsesSSE(writer, payload)
 }
 
-func (w *Worker) formatResponsesPayload(env *gatewayEnvelope, result gatewayJobResult) map[string]any {
+func (w *Worker) formatResponsesPayload(env *gatewayEnvelope, result gatewayJobResult) (map[string]any, error) {
 	output := make([]any, 0, len(result.Images))
 	for index, image := range result.Images {
 		b64, err := w.imageURLToBase64(image.URL)
 		if err != nil {
-			b64 = ""
+			return nil, err
 		}
 		output = append(output, map[string]any{
 			"id":     fmt.Sprintf("ig_%s_%d", result.JobID, index+1),
@@ -309,6 +314,14 @@ func (w *Worker) formatResponsesPayload(env *gatewayEnvelope, result gatewayJobR
 			"status": "completed",
 			"type":   "image_generation_call",
 		})
+	}
+	toolChoice := env.Payload.ToolChoice
+	if toolChoice == nil {
+		toolChoice = "auto"
+	}
+	tools := env.Payload.Tools
+	if tools == nil {
+		tools = []any{}
 	}
 	return map[string]any{
 		"background":           false,
@@ -326,8 +339,8 @@ func (w *Worker) formatResponsesPayload(env *gatewayEnvelope, result gatewayJobR
 		"previous_response_id": nil,
 		"status":               "completed",
 		"temperature":          nil,
-		"tool_choice":          "auto",
-		"tools":                []any{},
+		"tool_choice":          toolChoice,
+		"tools":                tools,
 		"top_p":                nil,
 		"usage": map[string]any{
 			"input_tokens":  0,
@@ -336,7 +349,7 @@ func (w *Worker) formatResponsesPayload(env *gatewayEnvelope, result gatewayJobR
 			"output_tokens_details": map[string]any{"reasoning_tokens": 0},
 			"total_tokens":  0,
 		},
-	}
+	}, nil
 }
 
 func (w *Worker) writeResponsesSSE(writer http.ResponseWriter, payload map[string]any) {

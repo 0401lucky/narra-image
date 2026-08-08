@@ -52,6 +52,27 @@ func TestGatewayDB(t *testing.T) {
 		WorkerID:             "gateway-db-worker",
 	}, nil)
 
+	// runner 的 legacy snapshot 不含 ApiKey 表（后续 migration 才引入）；
+	// 网关测试需要非空 apiKeyId，这里按 Prisma schema 自建最小 ApiKey 表。
+	if _, err := pool.Exec(ctx, `
+CREATE TABLE IF NOT EXISTS "ApiKey" (
+  "id" TEXT NOT NULL,
+  "userId" TEXT NOT NULL,
+  "name" TEXT NOT NULL,
+  "keyHash" TEXT NOT NULL,
+  "keyPrefix" TEXT NOT NULL,
+  "revokedAt" TIMESTAMP(3),
+  "lastUsedAt" TIMESTAMP(3),
+  "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "updatedAt" TIMESTAMP(3) NOT NULL,
+  CONSTRAINT "ApiKey_pkey" PRIMARY KEY ("id"),
+  CONSTRAINT "ApiKey_keyHash_key" UNIQUE ("keyHash"),
+  CONSTRAINT "ApiKey_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE
+)
+`); err != nil {
+		t.Fatalf("创建 ApiKey 测试表失败: %v", err)
+	}
+
 	reset := func() {
 		t.Helper()
 		if _, err := pool.Exec(ctx, `DELETE FROM "GenerationJob"`); err != nil {
@@ -310,7 +331,8 @@ VALUES ('gw_img_2', 'gw_job_h', 'https://cdn.example.test/b.png', 512, 512, CURR
 			t.Fatalf("marshal envelope: %v", err)
 		}
 
-		// handler 创建 job 后轮询等待；后台把 job 置为成功并写入图片。
+		// handler 创建 job 后轮询等待；后台用单事务模拟产品级原子写回
+		// （先插图片再置 SUCCEEDED），避免“已成功但无图”的竞态窗口。
 		completion := make(chan struct{})
 		go func() {
 			defer close(completion)
@@ -318,8 +340,13 @@ VALUES ('gw_img_2', 'gw_job_h', 'https://cdn.example.test/b.png', 512, 512, CURR
 			for time.Now().Before(deadline) {
 				var count int
 				if err := pool.QueryRow(ctx, `SELECT COUNT(*) FROM "GenerationJob" WHERE id = $1`, env.JobID).Scan(&count); err == nil && count > 0 {
-					_, _ = pool.Exec(ctx, `UPDATE "GenerationJob" SET status = 'SUCCEEDED', "completedAt" = CURRENT_TIMESTAMP, "updatedAt" = CURRENT_TIMESTAMP WHERE id = $1`, env.JobID)
-					_, _ = pool.Exec(ctx, `INSERT INTO "GenerationImage" (id, "jobId", url, width, height, "createdAt") VALUES ('gw_img_full', $1, 'https://cdn.example.test/full.png', 1024, 1024, CURRENT_TIMESTAMP)`, env.JobID)
+					tx, txErr := pool.Begin(ctx)
+					if txErr != nil {
+						return
+					}
+					_, _ = tx.Exec(ctx, `INSERT INTO "GenerationImage" (id, "jobId", url, width, height, "createdAt") VALUES ('gw_img_full', $1, 'https://cdn.example.test/full.png', 1024, 1024, CURRENT_TIMESTAMP)`, env.JobID)
+					_, _ = tx.Exec(ctx, `UPDATE "GenerationJob" SET status = 'SUCCEEDED', "completedAt" = CURRENT_TIMESTAMP, "updatedAt" = CURRENT_TIMESTAMP WHERE id = $1`, env.JobID)
+					_ = tx.Commit(ctx)
 					return
 				}
 				time.Sleep(5 * time.Millisecond)

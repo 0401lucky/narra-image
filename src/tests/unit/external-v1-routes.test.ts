@@ -712,4 +712,70 @@ describe("OpenAI 兼容外部 API", () => {
     });
     expect(mockFindGeneration).not.toHaveBeenCalled();
   });
+
+  it("/v1/responses 网关开启时转发并透传 Go 响应", async () => {
+    mockIsGatewayEnabled.mockReturnValue(true);
+    mockRunViaGateway.mockResolvedValue(
+      new Response(JSON.stringify({ id: "resp_1", object: "response", status: "completed" }), {
+        status: 200,
+        headers: { "content-type": "application/json" },
+      }),
+    );
+
+    const response = await responsesPost(
+      jsonRequest("/v1/responses", {
+        input: "创建一个风和日丽的日漫街景",
+        model: "gpt-5.5",
+        tool_choice: { type: "image_generation" },
+        tools: [
+          {
+            output_format: "jpeg",
+            quality: "high",
+            size: "1024x1024",
+            type: "image_generation",
+          },
+        ],
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    expect(mockRunViaGateway).toHaveBeenCalledWith(
+      expect.objectContaining({
+        endpoint: "responses",
+        toolChoice: { type: "image_generation" },
+        tools: [expect.objectContaining({ type: "image_generation" })],
+      }),
+    );
+    await expect(response.json()).resolves.toEqual({
+      id: "resp_1",
+      object: "response",
+      status: "completed",
+    });
+    expect(mockRunExternalGeneration).not.toHaveBeenCalled();
+  });
+
+  it("/v1/images/generations 网关开启时对 Kelivo 提前发送 JSON 保活", async () => {
+    mockIsGatewayEnabled.mockReturnValue(true);
+    mockRunViaGateway.mockResolvedValue(
+      new Response(JSON.stringify({ created: 1, data: [{ url: "https://go.test/a.png" }] }), {
+        status: 200,
+        headers: { "content-type": "application/json" },
+      }),
+    );
+
+    const response = await imagePost(
+      kelivoJsonRequest("/v1/images/generations", {
+        prompt: "测试提示词",
+        size: "1024x1024",
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    expect(mockRunViaGateway).toHaveBeenCalledWith(
+      expect.objectContaining({ endpoint: "images.generations" }),
+    );
+    const text = await response.text();
+    expect(text).toContain("https://go.test/a.png");
+    expect(mockRunExternalGeneration).not.toHaveBeenCalled();
+  });
 });

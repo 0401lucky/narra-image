@@ -70,6 +70,8 @@ type GatewayPayload = {
   size: GenerationSizeToken;
   responseFormat?: string;
   stream?: boolean;
+  toolChoice?: unknown;
+  tools?: unknown[];
 };
 
 type RunThroughGatewayInput = {
@@ -193,11 +195,10 @@ export async function runThroughGateway(
       signal: input.signal,
       cache: "no-store",
     });
-  } catch (error) {
-    if (input.signal?.aborted) {
-      throw error;
-    }
-    // 连接失败/网关不可用：查 DB 决定是否退款。
+  } catch {
+    // 连接失败、网关不可用或客户端中断统一按 DB 中 job 是否存在判定退款：
+    // job 已存在（最常见是长等待中客户端断连）→ 任务继续执行不取消、不退款，返回查询语义；
+    // job 未创建 → 退款并返回 502。禁止在不确定状态下无条件退款。
     const belongs = await gatewayJobBelongsTo(input.jobId, input.apiKeyId);
     if (!belongs) {
       await refundCredits(input.userId, input.creditsSpent);
@@ -233,6 +234,8 @@ export async function runExternalGenerationViaGateway(input: {
   endpoint: GatewayEndpoint;
   responseFormat?: string;
   stream?: boolean;
+  toolChoice?: unknown;
+  tools?: unknown;
 }): Promise<Response> {
   await assertApiRateLimit(input.apiKeyId);
 
@@ -285,6 +288,8 @@ export async function runExternalGenerationViaGateway(input: {
         size: input.input.size,
         responseFormat: input.responseFormat,
         stream: input.stream,
+        toolChoice: input.toolChoice ?? "auto",
+        tools: Array.isArray(input.tools) ? input.tools : [],
       },
       signal: input.signal,
     });

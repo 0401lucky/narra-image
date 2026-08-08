@@ -39,6 +39,8 @@ export async function POST(request: Request) {
         user: auth.user,
         endpoint: "responses",
         stream: Boolean(body.stream),
+        toolChoice: body.tool_choice,
+        tools: body.tools,
       });
       return gatewayResponse;
     }

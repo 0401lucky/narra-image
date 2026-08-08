@@ -76,6 +76,8 @@ type gatewayPayload struct {
 	Size              string  `json:"size"`
 	ResponseFormat    string  `json:"responseFormat,omitempty"`
 	Stream            bool    `json:"stream,omitempty"`
+	ToolChoice        any     `json:"toolChoice"`
+	Tools             []any   `json:"tools"`
 }
 
 func gatewaySignature(secret string, body []byte) string {

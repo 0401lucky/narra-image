@@ -62,3 +62,19 @@
 - 真实 Zeabur 部署灰度切换（`GATEWAY_ENABLED=true` 生产观察期）。
 - 真实 S3/CDN 媒体在 b64_json 路径的下载验证。
 - 真实上游渠道下 Worker 执行 → Go 网关格式化 → Next 透传的完整链路（仓库内以 disposable PG + 手动写回模拟）。
+
+## Trellis check 复核与修复
+
+最终 check 子代理复核发现 3 项 CRITICAL 与若干 WARNING，已全部修复并复验：
+
+- **C1 测试未真正执行**：`postgres-runner.ts` 的 `-run 
+^(TestWorkerContractsDB|TestGatewayDB)$` 限定导致 `TestGatewayDB` 从未执行 → runner 改为 `^(TestWorkerContractsDB|TestGatewayDB)$`。
+- **C2 测试 flaky**：full POST handler 的后台模拟写回分两步产生“已成功但无图”窗口 → 改为单事务（先插图再置 SUCCEEDED），连续多次运行稳定通过。
+- **C3 计费漏洞（真实）**：客户端 abort 后无条件退款，与 legacy“handedToWorker 后不退款”矛盾，造成结果+退款白嫖 → `runThroughGateway` catch 统一按 DB 中 job 是否存在判定：job 已存在不退款（返回 504 查询语义），未创建才退款；补 2 个 abort 单测。
+- **W1 chat 文本不一致**：Go 缺 legacy 的“生成完成。\n\n”前缀 → 已补。
+- **W2 responses 字段不一致 + b64 静默失败**：tool_choice/tools 改为从 envelope 透传（`gateway-client` 传 `body.tool_choice`/`body.tools`，Go 读取）；b64 转换失败改为显式 `GENERATION_IMAGE_B64_FAILED` 错误而非空 result。
+- **W3 verify:gateway 冷启动超时**：`GLOBAL_DEADLINE_MS` 57s → 90s。
+- **W4 Compose 未注入 GATEWAY_\***：`docker-compose.yml`/`docker-compose.e2e.yml` 的 runtime anchor 补 4 个 GATEWAY_* 变量（默认关闭）。
+- **W5 测试缺口**：补 abort（有 job/无 job）、responses 网关开、images Kelivo keep-alive+网关开用例。
+
+修复后复验：`verify:gateway:ts`（34 用例）、`verify:gateway:go`、`postgres-runner`（连续 3 次通过，含 TestGatewayDB）、tsc、lint（0 errors）、全量 vitest（75 文件 362 用例）、go vet/test/build、next build、compose 两文件、`git diff --check` 全部通过。
