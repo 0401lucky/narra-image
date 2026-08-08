@@ -73,6 +73,7 @@ func (w *Worker) startHTTPServer() (*workerHTTPServer, error) {
 	mux.HandleFunc("/readyz", w.handleReady)
 	mux.HandleFunc("/metrics", w.handleMetrics)
 	mux.HandleFunc("/internal/prompt-sync", w.handlePromptSync)
+	w.registerGatewayRoutes(mux)
 
 	listener, err := net.Listen("tcp", w.cfg.HTTPAddr)
 	if err != nil {

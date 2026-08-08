@@ -1,1 +1,7 @@
-{"_example": "Fill with {\"file\": \"<path>\", \"reason\": \"<why>\"}. Put spec/research files only — no code paths. Run `python .trellis/scripts/get_context.py --mode packages` to list available specs. Delete this line once real entries are added."}
+{"file":".trellis/spec/guides/cross-layer-thinking-guide.md","reason":"检查 envelope 在 Source（Next 认证/计费）→ Store（Go 创建 job）→ Retrieve（查询/响应）全链路字段、错误、计费与媒体一致。"}
+{"file":".trellis/spec/guides/code-reuse-thinking-guide.md","reason":"检查旧 Node 生成器删除前是否收敛到单一 owner，TS/Go 契约 fixtures 是否单一事实来源。"}
+{"file":".trellis/spec/frontend/generation-worker-contracts.md","reason":"复核网关创建 job 的任务状态、错误码、渠道快照与 handoff 是否符合契约。"}
+{"file":".trellis/spec/operations/release-hardening.md","reason":"复核环境契约、内部端点鉴权、回滚安全与验证入口是否遵守发布规范。"}
+{"file":".trellis/spec/operations/media-storage.md","reason":"复核 b64/url 响应路径与媒体大小限制是否遵循存储契约。"}
+{"file":".trellis/tasks/08-07-go-migration-audit/research/feature-parity.md","reason":"逐项复核旧实现删除前置条件与行为差异是否全部闭环。"}
+{"file":".trellis/tasks/08-07-go-migration-audit/implement.md","reason":"核对阶段 E 验收、灰度检查与回滚点是否全部满足。"}

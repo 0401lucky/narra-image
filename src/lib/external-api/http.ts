@@ -71,6 +71,10 @@ function shouldUseImageJsonKeepAlive(request: Request) {
   return userAgent.includes("kelivo");
 }
 
+export function isImageJsonKeepAliveRequest(request: Request) {
+  return shouldUseImageJsonKeepAlive(request);
+}
+
 export async function openAiImageJsonResponse(
   request: Request,
   createPayload: () => Promise<unknown>,

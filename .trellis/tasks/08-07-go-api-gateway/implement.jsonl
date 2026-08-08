@@ -1,1 +1,6 @@
-{"_example": "Fill with {\"file\": \"<path>\", \"reason\": \"<why>\"}. Put spec/research files only — no code paths. Run `python .trellis/scripts/get_context.py --mode packages` to list available specs. Delete this line once real entries are added."}
+{"file":".trellis/spec/frontend/generation-worker-contracts.md","reason":"任务状态、错误码、渠道/模型契约与 handoff 语义是 Go 网关创建 job 和错误映射的前置契约。"}
+{"file":".trellis/spec/operations/release-hardening.md","reason":"环境变量单一契约、内部端点鉴权、回滚安全与验证入口约束网关开关和 E2E wrapper 的实现。"}
+{"file":".trellis/spec/operations/media-storage.md","reason":"媒体 URL/存储形态决定网关 b64_json 转换、url 透传与媒体大小限制的承接方式。"}
+{"file":".trellis/tasks/08-07-go-migration-audit/design.md","reason":"父任务定义网关迁移形态：Next 薄代理、内部 envelope、认证/计费边界、灰度与回滚。"}
+{"file":".trellis/tasks/08-07-go-migration-audit/implement.md","reason":"阶段 E 的执行要求、验证命令、灰度检查与旧实现删除闸门。"}
+{"file":".trellis/tasks/08-07-go-migration-audit/research/feature-parity.md","reason":"记录旧 Node 生成器残留、外部 API 现状与高风险行为差异，供删除前核对引用。"}

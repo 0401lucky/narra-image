@@ -97,3 +97,31 @@
 | Hash | Message |
 |------|---------|
 | (待提交) | feat(media): 统一媒体存储与提示词同步 |
+
+## Session 3: 引入 Go 生成网关并清理旧实现
+
+**Date**: 2026-08-08
+**Task**: 08-07-go-api-gateway(引入 Go 生成网关并清理旧实现)
+**Branch**: `main`
+
+### 完成项
+
+- **规划**:补齐 design.md(同步代理形态、envelope 契约、Next/Go 边界、计费补偿、回滚)、implement.md(5 阶段)、implement.jsonl/check.jsonl(6+7 条)。
+- **契约**:`contracts/gateway/v1/envelope.json`(HMAC-SHA256/AUTH_SECRET 签名、endpoint 枚举、必填字段、limits)+ `scenarios/envelope.json`(合法 3 + 非法 5 样例)。
+- **Go 网关**:`gateway.go`(验签/防御校验/5 端点注册/错误响应)、`gateway_enqueue.go`(job 创建 ON CONFLICT 幂等 + 归属校验)、`gateway_wait.go`(轮询/超时不退款)、`gateway_response.go`(images JSON/b64+25MB、chat/responses SSE、错误码映射、查询格式化);`config.go` 新增 3 个 GATEWAY_* 配置。
+- **Next 薄代理**:`gateway-contract.ts`(无副作用共享常量)+ `gateway-client.ts`(isGatewayEnabled/envelope 构造+签名/转发/退款补偿/查询转发);5 个 `/v1` 路由接入 `GATEWAY_ENABLED` 开关(legacy 保留)。
+- **环境契约**:`GATEWAY_ENABLED/POLL/SIGNATURE_SKEW/WAIT` 4 变量入 environment.json + env.ts + .env.example + README,契约测试通过。
+- **验证**:`verify:gateway:ts/go/db` wrapper + 纳入 verify:ci 固定清单;Go 单测 + disposable PG 集成(含完整 POST handler 全链路)+ TS 契约/gateway-client/路由开关测试。
+- **清理**:删除 `generate-images.ts`、`resolve-provider.ts` 及仅为其存在的 2 个测试(删除前全仓搜索确认生产引用为零)。
+- **spec 更新**:新增 `operations/gateway.md`,更新 operations/index.md、generation-worker-contracts.md、docs/go-backend-migration-plan.md。
+
+### Verification
+
+详见 `.trellis/tasks/08-07-go-api-gateway/verification/gateway.md`
+
+- tsc/lint(0 errors)/全量 vitest(75 文件 358 用例)/verify:gateway 三模式/go vet/test/build/next build/compose 两文件/git diff --check 全部通过。
+- 未覆盖:真实 Zeabur 灰度切换、真实 S3 b64_json 下载、真实上游完整链路(需用户授权)。
+
+### Status
+
+[OK] 验证全绿;功能与旧实现删除分两个 commit 待提交。

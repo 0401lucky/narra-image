@@ -21,6 +21,7 @@ const FIXED_TARGETS = [
   "scripts/tests/migration-safety.test.mjs",
   "scripts/tests/release-startup.test.mjs",
   "scripts/verify-worker-contracts.mjs",
+  "scripts/verify-gateway.mjs",
   "src/tests/contracts/generation-contract.test.ts",
   "worker/internal/worker/contract_test.go",
   "worker/cmd/rollback-preflight/main_test.go",

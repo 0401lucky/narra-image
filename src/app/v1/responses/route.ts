@@ -5,6 +5,10 @@ import {
   parseResponsesGenerationInput,
 } from "@/lib/external-api/responses";
 import { openAiError } from "@/lib/external-api/http";
+import {
+  isGatewayEnabled,
+  runExternalGenerationViaGateway,
+} from "@/lib/generation/gateway-client";
 import { runExternalGeneration } from "@/lib/generation/external-api";
 import { requireApiUser } from "@/lib/server/api-auth";
 import { parseJsonBody } from "@/lib/server/http";
@@ -15,6 +19,29 @@ export async function POST(request: Request) {
     const auth = await requireApiUser(request);
     const body = externalResponsesSchema.parse(await parseJsonBody(request));
     const parsed = await parseResponsesGenerationInput(body);
+
+    if (isGatewayEnabled()) {
+      const gatewayResponse = await runExternalGenerationViaGateway({
+        apiKeyId: auth.apiKey.id,
+        input: {
+          count: 1,
+          generationType: parsed.generationType,
+          model: body.model,
+          moderation: parsed.moderation,
+          outputCompression: parsed.outputCompression,
+          outputFormat: parsed.outputFormat,
+          prompt: parsed.prompt,
+          quality: parsed.quality,
+          size: parsed.size,
+          sourceImages: parsed.sourceImages,
+        },
+        signal: request.signal,
+        user: auth.user,
+        endpoint: "responses",
+        stream: Boolean(body.stream),
+      });
+      return gatewayResponse;
+    }
 
     const createPayload = async () => {
       const job = await runExternalGeneration({

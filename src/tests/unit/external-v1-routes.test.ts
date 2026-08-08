@@ -4,14 +4,18 @@ const {
   mockDownloadExternalImage,
   mockFindGeneration,
   mockGetActiveChannels,
+  mockIsGatewayEnabled,
   mockRequireApiUser,
   mockRunExternalGeneration,
+  mockRunViaGateway,
 } = vi.hoisted(() => ({
   mockDownloadExternalImage: vi.fn(),
   mockFindGeneration: vi.fn(),
   mockGetActiveChannels: vi.fn(),
+  mockIsGatewayEnabled: vi.fn(),
   mockRequireApiUser: vi.fn(),
   mockRunExternalGeneration: vi.fn(),
+  mockRunViaGateway: vi.fn(),
 }));
 
 vi.mock("@/lib/db", () => ({
@@ -32,6 +36,17 @@ vi.mock("@/lib/server/api-auth", () => ({
 
 vi.mock("@/lib/generation/external-api", () => ({
   runExternalGeneration: mockRunExternalGeneration,
+}));
+
+vi.mock("@/lib/generation/gateway-client", () => ({
+  forwardGenerationQuery: vi.fn(async ({ jobId }: { jobId: string }) =>
+    new Response(JSON.stringify({ id: jobId, status: "succeeded", object: "image.generation" }), {
+      status: 200,
+      headers: { "content-type": "application/json" },
+    }),
+  ),
+  isGatewayEnabled: mockIsGatewayEnabled,
+  runExternalGenerationViaGateway: mockRunViaGateway,
 }));
 
 vi.mock("@/lib/providers/built-in-provider", () => ({
@@ -78,14 +93,14 @@ const completedJob = {
 };
 const imageBytes = Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]);
 
-function jsonRequest(path: string, body: unknown) {
+function jsonRequest(path: string, body: unknown, method = "POST") {
   return new Request(`http://localhost${path}`, {
-    body: JSON.stringify(body),
+    body: method === "GET" ? null : JSON.stringify(body),
     headers: {
       Authorization: "Bearer narra_sk_test",
       "Content-Type": "application/json",
     },
-    method: "POST",
+    method,
   });
 }
 
@@ -115,11 +130,22 @@ function multipartRequest(path: string, formData: FormData) {
 
 describe("OpenAI 兼容外部 API", () => {
   beforeEach(() => {
+    process.env.AUTH_SECRET = "unit-test-secret";
+    process.env.DATABASE_URL = "postgresql://user:pass@localhost:5432/test";
+    process.env.GATEWAY_ENABLED = "false";
+
     mockDownloadExternalImage.mockReset();
     mockFindGeneration.mockReset();
     mockGetActiveChannels.mockReset();
     mockRequireApiUser.mockReset();
     mockRunExternalGeneration.mockReset();
+    mockIsGatewayEnabled.mockReset().mockReturnValue(false);
+    mockRunViaGateway.mockReset().mockResolvedValue(
+      new Response(JSON.stringify({ created: 1777982400, data: [], generation_id: "job_1" }), {
+        status: 200,
+        headers: { "content-type": "application/json" },
+      }),
+    );
     mockDownloadExternalImage.mockResolvedValue({
       data: Buffer.from([1, 2, 3]),
       fileName: "source-1.png",
@@ -613,5 +639,77 @@ describe("OpenAI 兼容外部 API", () => {
       object: "image.generation",
       status: "succeeded",
     });
+  });
+
+  it("/v1/images/generations 网关开启时转发并透传 Go 响应", async () => {
+    mockIsGatewayEnabled.mockReturnValue(true);
+    const gatewayResponse = new Response(
+      JSON.stringify({ created: 1, data: [{ url: "https://go.test/a.png" }], generation_id: "job_1" }),
+      { status: 200, headers: { "content-type": "application/json" } },
+    );
+    mockRunViaGateway.mockResolvedValue(gatewayResponse);
+
+    const response = await imagePost(
+      jsonRequest("/v1/images/generations", {
+        prompt: "测试提示词",
+        size: "1024x1024",
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    expect(mockRunViaGateway).toHaveBeenCalledWith(
+      expect.objectContaining({
+        apiKeyId: "key_1",
+        endpoint: "images.generations",
+        input: expect.objectContaining({ prompt: "测试提示词" }),
+      }),
+    );
+    await expect(response.json()).resolves.toEqual({
+      created: 1,
+      data: [{ url: "https://go.test/a.png" }],
+      generation_id: "job_1",
+    });
+    expect(mockRunExternalGeneration).not.toHaveBeenCalled();
+  });
+
+  it("/v1/chat/completions 网关开启时透传 SSE 响应", async () => {
+    mockIsGatewayEnabled.mockReturnValue(true);
+    const sseBody = "data: {\"choices\":[]}\n\ndata: [DONE]\n\n";
+    mockRunViaGateway.mockResolvedValue(
+      new Response(sseBody, {
+        status: 200,
+        headers: { "content-type": "text/event-stream; charset=utf-8" },
+      }),
+    );
+
+    const response = await chatPost(
+      jsonRequest("/v1/chat/completions", {
+        messages: [{ content: "画一只猫", role: "user" }],
+        stream: true,
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    expect(mockRunViaGateway).toHaveBeenCalledWith(
+      expect.objectContaining({ endpoint: "chat.completions", stream: true }),
+    );
+    await expect(response.text()).resolves.toBe(sseBody);
+    expect(mockRunExternalGeneration).not.toHaveBeenCalled();
+  });
+
+  it("/v1/generations/:id 网关开启时转发查询", async () => {
+    mockIsGatewayEnabled.mockReturnValue(true);
+    const response = await generationGet(
+      jsonRequest("/v1/generations/job_1", undefined, "GET"),
+      { params: Promise.resolve({ id: "job_1" }) },
+    );
+
+    expect(response.status).toBe(200);
+    await expect(response.json()).resolves.toEqual({
+      id: "job_1",
+      object: "image.generation",
+      status: "succeeded",
+    });
+    expect(mockFindGeneration).not.toHaveBeenCalled();
   });
 });

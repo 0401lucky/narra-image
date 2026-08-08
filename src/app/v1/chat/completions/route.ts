@@ -2,6 +2,10 @@ import { NextResponse } from "next/server";
 
 import { parseChatGenerationInput } from "@/lib/external-api/chat";
 import { openAiChatStream, openAiError, unixSeconds } from "@/lib/external-api/http";
+import {
+  isGatewayEnabled,
+  runExternalGenerationViaGateway,
+} from "@/lib/generation/gateway-client";
 import { runExternalGeneration } from "@/lib/generation/external-api";
 import { requireApiUser } from "@/lib/server/api-auth";
 import { parseJsonBody } from "@/lib/server/http";
@@ -13,6 +17,31 @@ export async function POST(request: Request) {
     const body = externalChatCompletionSchema.parse(await parseJsonBody(request));
 
     const parsed = await parseChatGenerationInput(body);
+
+    if (isGatewayEnabled()) {
+      const gatewayResponse = await runExternalGenerationViaGateway({
+        apiKeyId: auth.apiKey.id,
+        input: {
+          count: body.n ?? 1,
+          generationType:
+            parsed.sourceImages.length > 0 ? "image_to_image" : "text_to_image",
+          model: body.model,
+          moderation: "auto",
+          outputCompression: null,
+          outputFormat: "png",
+          prompt: parsed.prompt,
+          quality: body.quality ?? "auto",
+          size: body.size ?? "auto",
+          sourceImages: parsed.sourceImages,
+        },
+        signal: request.signal,
+        user: auth.user,
+        endpoint: "chat.completions",
+        stream: Boolean(body.stream),
+      });
+      return gatewayResponse;
+    }
+
     const job = await runExternalGeneration({
       apiKeyId: auth.apiKey.id,
       input: {

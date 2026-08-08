@@ -27,7 +27,10 @@
     "verify:e2e": "node scripts/verify-e2e.mjs",
     "verify:worker-contracts:ts": "node scripts/verify-worker-contracts.mjs ts",
     "verify:worker-contracts:go": "node scripts/verify-worker-contracts.mjs go",
-    "verify:worker-contracts:db": "node scripts/verify-worker-contracts.mjs db"
+    "verify:worker-contracts:db": "node scripts/verify-worker-contracts.mjs db",
+    "verify:gateway:ts": "node scripts/verify-gateway.mjs ts",
+    "verify:gateway:go": "node scripts/verify-gateway.mjs go",
+    "verify:gateway:db": "node scripts/verify-gateway.mjs db"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1034.0",

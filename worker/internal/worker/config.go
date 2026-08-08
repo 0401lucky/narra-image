@@ -14,6 +14,9 @@ import (
 type Config struct {
 	AppURL                         string
 	AuthSecret                     string
+	GatewayPollInterval            time.Duration
+	GatewaySignatureSkew           time.Duration
+	GatewayWaitTimeout             time.Duration
 	BuiltInProviderAPIKey          string
 	BuiltInProviderBaseURL         string
 	BuiltInProviderModel           string
@@ -91,6 +94,9 @@ func LoadConfig() (Config, error) {
 	return Config{
 		AppURL:                         getenv("APP_URL", "http://localhost:3000"),
 		AuthSecret:                     authSecret,
+		GatewayPollInterval:            time.Duration(getenvInt("GATEWAY_POLL_INTERVAL_MS", 1000)) * time.Millisecond,
+		GatewaySignatureSkew:           time.Duration(getenvInt("GATEWAY_SIGNATURE_SKEW_SECONDS", 300)) * time.Second,
+		GatewayWaitTimeout:             time.Duration(getenvInt("GATEWAY_WAIT_TIMEOUT_SECONDS", 900)) * time.Second,
 		BuiltInProviderAPIKey:          os.Getenv("BUILTIN_PROVIDER_API_KEY"),
 		BuiltInProviderBaseURL:         os.Getenv("BUILTIN_PROVIDER_BASE_URL"),
 		BuiltInProviderModel:           getenv("BUILTIN_PROVIDER_MODEL", "gpt-image-2"),

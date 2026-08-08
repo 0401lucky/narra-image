@@ -1,0 +1,34 @@
+{
+  "contract": "narra.gateway",
+  "version": 1,
+  "signature": {
+    "algorithm": "HMAC-SHA256",
+    "key": "AUTH_SECRET",
+    "header": "X-Gateway-Signature",
+    "encoding": "hex",
+    "payload": "raw-request-body"
+  },
+  "endpoints": [
+    "images.generations",
+    "images.edits",
+    "responses",
+    "chat.completions",
+    "generations.get"
+  ],
+  "required": {
+    "envelope": ["schemaVersion", "endpoint", "jobId", "issuedAt", "auth", "billing", "provider", "payload"],
+    "auth": ["apiKeyId", "userId"],
+    "billing": ["creditsSpent", "charged"],
+    "provider": ["channelId", "channelModels", "defaultModel", "providerMode"],
+    "payload": ["count", "generationType", "model", "prompt", "moderation", "outputFormat", "quality", "size"]
+  },
+  "limits": {
+    "sourceImageUrlsMax": 10,
+    "sourceImageUrlSchemes": ["http", "https"],
+    "b64ResponseImageMaxBytes": 26214400,
+    "waitTimeoutSecondsDefault": 900,
+    "pollIntervalMsDefault": 1000,
+    "signatureSkewSecondsDefault": 300
+  },
+  "notes": "envelope 不携带渠道密钥/baseUrl；jobId 由 Next 生成并作为幂等键；billing 表示 Next 已预扣的积分，Go 不重复扣分。"
+}

@@ -80,6 +80,9 @@ pnpm dev
   `ENABLE_LOCAL_IMAGE_FALLBACK`。
 - 外部生成等待：`EXTERNAL_GENERATION_POLL_INTERVAL_MS`、
   `EXTERNAL_GENERATION_WAIT_TIMEOUT_SECONDS`。
+- Go 生成网关：`GATEWAY_ENABLED` 默认关闭（关闭时 Next `/v1` 走 legacy 路径）；
+  `GATEWAY_WAIT_TIMEOUT_SECONDS`、`GATEWAY_POLL_INTERVAL_MS`、
+  `GATEWAY_SIGNATURE_SKEW_SECONDS` 控制 Go 内部网关的等待、轮询与签名时间窗。
 - Worker 契约与拓扑：`WORKER_CONTRACTS_V1_ENABLED` 默认关闭；
   `ENABLE_EMBEDDED_WORKER` 决定 supervisor 是否派生 Worker；
   `WORKER_RUNTIME_MODE` 必须显式为 `embedded` 或 `dedicated`。

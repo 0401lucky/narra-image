@@ -4,7 +4,9 @@
 
 第一阶段已经完成：Next.js 负责接收用户请求、鉴权、扣积分和创建生成任务；Go Worker 负责消费 `PENDING` 任务、调用图片渠道、保存图片、回写任务状态并处理失败退款。
 
-第二阶段正在推进：外部 OpenAI 兼容 API 仍由 Next.js 负责鉴权、限流、参数解析和响应格式化，但 `/v1/images/generations`、`/v1/images/edits`、`/v1/responses`、`/v1/chat/completions` 的模型调用改为创建 `workerManaged` 任务并等待 Go Worker 完成。
+第二阶段正在推进：外部 OpenAI 兼容 API 仍由 Next.js 负责鉴权、限流、参数解析和积分扣减，但 `/v1/images/generations`、`/v1/images/edits`、`/v1/responses`、`/v1/chat/completions` 的模型调用改为创建 `workerManaged` 任务并等待 Go Worker 完成。
+
+第三阶段已落地骨架：Go 在内部端口提供版本化生成网关（`/internal/gateway/v1/*`），Next `/v1` 通过 `GATEWAY_ENABLED` 开关在 legacy 路径与 Go 网关间切换；Go 承接 envelope 校验、任务创建、等待/超时语义与 OpenAI JSON/SSE 格式化，认证、限流、渠道解析、计费与入口媒体校验仍保留在 Next。灰度验证通过后旧 Node 直连生成器已删除。
 
 这个阶段的目标不是全量重写，而是先把最慢、最容易阻塞页面体验的生图链路移出 Next.js 请求进程。
 
@@ -19,6 +21,7 @@
 - 前端生成结果展示任务总耗时，便于观察真实生成速度。
 - 外部 OpenAI 兼容 API 的生图执行链路已开始切到 Go Worker，Next.js 不再在请求进程内直接调用图片模型。
 - Go Worker 暴露 `/healthz` 和 `/metrics`，可检查数据库健康、队列积压、最近成功率和 P95/P99 总耗时。
+- Go 内部生成网关（`/internal/gateway/v1/*`）提供 images/edits/responses/chat 与 generations 查询，Next `/v1` 薄代理经 `GATEWAY_ENABLED` 开关切换，旧 Node 直连生成器（`src/lib/providers/generate-images.ts`、`resolve-provider.ts`）已无生产引用并删除。
 
 ## 后续迁移 Todo
 
@@ -28,10 +31,8 @@
    - 将任务耗时拆成排队耗时、模型耗时、存储耗时，方便定位慢点。
 
 2. 外部 API 迁移到 Go
-   - 已开始迁移 `/v1/images/generations`、`/v1/images/edits`。
-   - 已开始迁移 `/v1/responses` 图片工具相关链路。
-   - 当前策略是 Next.js 保持外层 OpenAI 兼容响应格式，Go Worker 承接模型调用和结果落库。
-   - 后续再评估是否引入 Go HTTP API Gateway，让 Go 直接对外提供 `/v1` 接口。
+   - 已落地 Go 内部生成网关：`GATEWAY_ENABLED` 默认关闭，开启后 Next `/v1` 薄代理把版本化签名 envelope 转发给 Go，由 Go 承接协议执行与响应格式化；关闭即回滚 legacy。
+   - 公开 Go ingress / 把 API Key、限流、积分扣减下沉到 Go 仍属后续评估，需另立任务并完成安全评审。
 
 3. 图片存储服务化
    - 把上传、下载代理、缩略图 URL 规则沉到 Go 服务。

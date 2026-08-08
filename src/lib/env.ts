@@ -181,6 +181,7 @@ const envSchema = z.object({
   ENABLE_LOCAL_IMAGE_FALLBACK: booleanEnv(true),
   EXTERNAL_GENERATION_POLL_INTERVAL_MS: integerEnv(1_000, 1, 60_000),
   EXTERNAL_GENERATION_WAIT_TIMEOUT_SECONDS: integerEnv(900, 1, 86_400),
+  GATEWAY_ENABLED: booleanEnv(false),
   LOG_LEVEL: z.enum(["debug", "info", "warn", "error"]).default("info"),
   S3_ACCESS_KEY_ID: optionalString(),
   S3_BUCKET: optionalString(),

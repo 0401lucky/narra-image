@@ -4,7 +4,7 @@
 
 - 适用于 `GenerationJob`、`GenerationAttempt`、Node 入队/取消/退款、Go Worker claim/handoff/写回以及 disposable PostgreSQL 验证。
 - 修改任务状态、错误码、模型分流、渠道快照、attempt、退款或 migration 时，必须先更新 `contracts/generation/v1/`，再让 Node 与 Go 共同消费同一 fixtures。
-- 本规范不授权生产迁移、生产启用 v1、删除旧 Node 生成器或人工退款。
+- 本规范不授权生产迁移、生产启用 v1 或人工退款；旧 Node 生成器已由 `08-07-go-api-gateway` 在无生产引用后删除，删除/回滚旧实现遵循 `operations/gateway.md`。
 
 ## 2. 签名
 

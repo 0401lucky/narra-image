@@ -3,7 +3,7 @@
   "name": "go-api-gateway",
   "title": "引入 Go 生成网关并清理旧实现",
   "description": "在契约和运行保障稳定后，让 Go 承接外部 /v1 网关；验证通过后移除无生产引用的旧 Node 生成器。",
-  "status": "planning",
+  "status": "in_progress",
   "dev_type": null,
   "scope": null,
   "package": null,

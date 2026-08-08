@@ -1,0 +1,111 @@
+{
+  "version": 1,
+  "valid": {
+    "images.generations": {
+      "schemaVersion": 1,
+      "endpoint": "images.generations",
+      "jobId": "cxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "issuedAt": "2026-08-08T12:00:00Z",
+      "auth": { "apiKeyId": "ck_apikey_1", "userId": "usr_1" },
+      "billing": { "creditsSpent": 5, "charged": true },
+      "provider": {
+        "channelId": "chn_1",
+        "channelModels": ["gpt-image-2"],
+        "defaultModel": "gpt-image-2",
+        "providerMode": "BUILT_IN"
+      },
+      "sourceImageUrls": [],
+      "payload": {
+        "count": 1,
+        "generationType": "TEXT_TO_IMAGE",
+        "model": "gpt-image-2",
+        "prompt": "a red fox in the snow",
+        "negativePrompt": null,
+        "moderation": "auto",
+        "outputCompression": null,
+        "outputFormat": "png",
+        "quality": "auto",
+        "seed": null,
+        "size": "1024x1024"
+      }
+    },
+    "images.edits": {
+      "schemaVersion": 1,
+      "endpoint": "images.edits",
+      "jobId": "cxxxxxxxxxxxxxxxxxxxxxxxxxy",
+      "issuedAt": "2026-08-08T12:00:00Z",
+      "auth": { "apiKeyId": "ck_apikey_1", "userId": "usr_1" },
+      "billing": { "creditsSpent": 5, "charged": true },
+      "provider": {
+        "channelId": "chn_1",
+        "channelModels": ["gpt-image-2"],
+        "defaultModel": "gpt-image-2",
+        "providerMode": "BUILT_IN"
+      },
+      "sourceImageUrls": ["https://cdn.example.test/uploads/source.png"],
+      "payload": {
+        "count": 1,
+        "generationType": "IMAGE_TO_IMAGE",
+        "model": "gpt-image-2",
+        "prompt": "make it snowy",
+        "negativePrompt": null,
+        "moderation": "auto",
+        "outputCompression": null,
+        "outputFormat": "png",
+        "quality": "auto",
+        "seed": 7,
+        "size": "1024x1024"
+      }
+    },
+    "chat.completions": {
+      "schemaVersion": 1,
+      "endpoint": "chat.completions",
+      "jobId": "cxxxxxxxxxxxxxxxxxxxxxxxxzz",
+      "issuedAt": "2026-08-08T12:00:00Z",
+      "auth": { "apiKeyId": "ck_apikey_1", "userId": "usr_1" },
+      "billing": { "creditsSpent": 5, "charged": true },
+      "provider": {
+        "channelId": "chn_1",
+        "channelModels": ["gpt-image-2"],
+        "defaultModel": "gpt-image-2",
+        "providerMode": "BUILT_IN"
+      },
+      "sourceImageUrls": [],
+      "payload": {
+        "count": 1,
+        "generationType": "TEXT_TO_IMAGE",
+        "model": "gpt-image-2",
+        "prompt": "draw a mountain lake",
+        "negativePrompt": null,
+        "moderation": "auto",
+        "outputCompression": null,
+        "outputFormat": "png",
+        "quality": "auto",
+        "seed": null,
+        "size": "auto"
+      }
+    }
+  },
+  "invalid": {
+    "missingSignature": {
+      "reason": "缺签名 header 应 401",
+      "envelope": "see valid.images.generations"
+    },
+    "wrongVersion": {
+      "reason": "schemaVersion != 1 应 400",
+      "delta": { "schemaVersion": 2 }
+    },
+    "missingPayloadModel": {
+      "reason": "payload.model 为空应 400",
+      "delta": { "payload": { "model": "" } }
+    },
+    "badSourceUrl": {
+      "reason": "sourceImageUrls 含非 http(s) scheme 应 400",
+      "delta": { "sourceImageUrls": ["file:///etc/passwd"] }
+    },
+    "negativeCredits": {
+      "reason": "creditsSpent < 0 应 400",
+      "delta": { "billing": { "creditsSpent": -1, "charged": true } }
+    }
+  }
+}

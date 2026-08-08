@@ -3,6 +3,10 @@ import { NextResponse } from "next/server";
 
 import { db } from "@/lib/db";
 import { openAiError, unixSeconds } from "@/lib/external-api/http";
+import {
+  forwardGenerationQuery,
+  isGatewayEnabled,
+} from "@/lib/generation/gateway-client";
 import { requireApiUser } from "@/lib/server/api-auth";
 
 export async function GET(
@@ -12,6 +16,11 @@ export async function GET(
   try {
     const auth = await requireApiUser(request);
     const { id } = await context.params;
+
+    if (isGatewayEnabled()) {
+      return await forwardGenerationQuery({ apiKeyId: auth.apiKey.id, jobId: id });
+    }
+
     const job = await db.generationJob.findFirst({
       where: {
         apiKeyId: auth.apiKey.id,

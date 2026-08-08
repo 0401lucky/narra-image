@@ -641,6 +641,58 @@
       "documentation": { "envExample": true, "readme": true }
     },
     {
+      "name": "GATEWAY_ENABLED",
+      "owner": "next",
+      "type": "boolean",
+      "default": false,
+      "requiredInProduction": false,
+      "secret": false,
+      "phase": "runtime",
+      "constraints": { "productionRolloutDefault": false },
+      "consumers": ["next"],
+      "allowedReadPaths": ["src/lib/env.ts"],
+      "documentation": { "envExample": true, "readme": true }
+    },
+    {
+      "name": "GATEWAY_POLL_INTERVAL_MS",
+      "owner": "worker",
+      "type": "integer",
+      "default": 1000,
+      "requiredInProduction": false,
+      "secret": false,
+      "phase": "runtime",
+      "constraints": { "minimum": 100, "maximum": 60000 },
+      "consumers": ["worker"],
+      "allowedReadPaths": ["worker/internal/worker/config.go"],
+      "documentation": { "envExample": true, "readme": true }
+    },
+    {
+      "name": "GATEWAY_SIGNATURE_SKEW_SECONDS",
+      "owner": "worker",
+      "type": "integer",
+      "default": 300,
+      "requiredInProduction": false,
+      "secret": false,
+      "phase": "runtime",
+      "constraints": { "minimum": 30, "maximum": 3600 },
+      "consumers": ["worker"],
+      "allowedReadPaths": ["worker/internal/worker/config.go"],
+      "documentation": { "envExample": true, "readme": true }
+    },
+    {
+      "name": "GATEWAY_WAIT_TIMEOUT_SECONDS",
+      "owner": "worker",
+      "type": "integer",
+      "default": 900,
+      "requiredInProduction": false,
+      "secret": false,
+      "phase": "runtime",
+      "constraints": { "minimum": 1, "maximum": 86400 },
+      "consumers": ["worker"],
+      "allowedReadPaths": ["worker/internal/worker/config.go"],
+      "documentation": { "envExample": true, "readme": true }
+    },
+    {
       "name": "LOG_LEVEL",
       "owner": "worker",
       "type": "enum",
