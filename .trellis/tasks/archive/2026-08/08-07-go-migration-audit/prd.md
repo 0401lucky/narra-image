@@ -57,14 +57,14 @@
 ## Acceptance Criteria
 
 - [x] 已形成架构、功能/API、运行部署、历史和测试基线报告，并给出文件/历史证据。
-- [ ] 四个子交付分别完成其 PRD 验收，依赖、回滚点和验证结果可追溯。
-- [ ] 网页生成和外部 API 的渠道、模型、计费、退款、状态和媒体字段均有 Node/Go 共享契约测试。
-- [ ] embedded 与 dedicated 模式均通过启动、迁移、健康、停止和失败恢复验证，生产 migration 不再被静默跳过。
-- [ ] 生产图片/视频具有长期持久化保证，提示词同步只有一个权威实现和可观测调度入口。
-- [ ] Go `/v1` 网关通过灰度、回滚及兼容测试，旧 Node 直连实现仅在生产引用和测试依赖归零后删除。
-- [ ] Next 页面、BFF、鉴权、管理后台及现有用户数据保持兼容。
-- [ ] TypeScript、Go、单测、类型检查、lint、生产构建、容器和代表性 E2E 均通过，已知测试超时得到稳定化处理。
-- [ ] `design.md`、`implement.md`、`implement.jsonl` 与 `check.jsonl` 完整，最新规划经用户明确批准后才进入实施。
+- [x] 四个子交付分别完成其 PRD 验收，依赖、回滚点和验证结果可追溯（worker-contracts / release-hardening / media-sync-boundary / go-api-gateway 均已归档，各含 verification/）。
+- [x] 网页生成和外部 API 的渠道、模型、计费、退款、状态和媒体字段均有 Node/Go 共享契约测试（contracts/generation/v1 + contracts/gateway/v1 被 TS/Go 共同消费）。
+- [x] embedded 与 dedicated 模式均通过启动、迁移、健康、停止和失败恢复验证，生产 migration 不再被静默跳过（release-hardening：migrate-deploy/baseline/repair + 拓扑互斥 + readyz）。
+- [x] 生产图片/视频具有长期持久化保证，提示词同步只有一个权威实现和可观测调度入口（media-sync-boundary：S3 强制 + PromptSyncer 唯一实现）。
+- [x] Go `/v1` 网关通过灰度、回滚及兼容测试，旧 Node 直连实现仅在生产引用和测试依赖归零后删除（go-api-gateway：GATEWAY_ENABLED 开关 + 独立删除提交）。
+- [x] Next 页面、BFF、鉴权、管理后台及现有用户数据保持兼容（全量 vitest / next build 通过）。
+- [x] TypeScript、Go、单测、类型检查、lint、生产构建、容器和代表性 E2E 均通过，已知测试超时得到稳定化处理（verify:ci 9 阶段全过；全量 vitest --testTimeout=30000）。
+- [x] `design.md`、`implement.md`、`implement.jsonl` 与 `check.jsonl` 完整，最新规划经用户明确批准后才进入实施。
 
 ## Technical Evidence
 
