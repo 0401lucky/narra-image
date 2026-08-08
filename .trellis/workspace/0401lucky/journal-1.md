@@ -125,3 +125,24 @@
 ### Status
 
 [OK] 验证全绿;功能与旧实现删除分两个 commit 待提交。
+
+## Session 4: go-migration-audit 父任务最终集成验收
+
+**Date**: 2026-08-08
+**Task**: 08-07-go-migration-audit(审计并补全项目 Go 化迁移)
+**Branch**: `main`
+
+### 完成项
+
+- **go-api-gateway 收尾**:check 子代理复核发现 3 CRITICAL(TestGatewayDB 从未执行 / full POST 测试 flaky / abort 无条件退款计费漏洞)+ 5 WARNING(W1 chat 前缀、W2 responses 字段与 b64 静默失败、W3 verify 超时、W4 Compose 未注入 GATEWAY_*、W5 测试缺口),全部修复并复验(commit 7d0f185);归档。
+- **父任务集成复核**:dispatch trellis-check 全范围复核——四个子交付可追溯、跨层契约两端共同消费、七条集成链路(Web 生成/外部 API/退款/取消/媒体/提示词同步/部署迁移/回滚)均落地、docs 与 spec 无过时约束、5 个 verify wrapper 固定且全部通过;无 CRITICAL/WARNING。
+- **LOW 清理**:移除无生产引用的 `openai` npm 依赖(commit d143dc2);旧 feature worktree 含已删代码为信息项(不影响 main,后续可选归档)。
+- **父任务 prd** 验收清单 9 项全部勾选(含跨子任务证据)。
+
+### Verification
+
+- 复核本会话实际执行:tsc / lint(0 errors)/ verify:worker-contracts:ts(32)/ :go / :db / verify:gateway:ts(34)/ :go / :db / go vet+test+build / next build / compose 两文件 / verify:ci 9 阶段全过。
+
+### Status
+
+[OK] 父任务集成验收通过,四个子任务全部归档;待归档父任务。
