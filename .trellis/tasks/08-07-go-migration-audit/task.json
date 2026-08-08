@@ -1,0 +1,33 @@
+{
+  "id": "go-migration-audit",
+  "name": "go-migration-audit",
+  "title": "审计并补全项目 Go 化迁移",
+  "description": "基于源码、测试、部署和历史证据审计 Go 化完成度，按渐进深化路线完成剩余迁移与安全闭环。",
+  "status": "planning",
+  "dev_type": null,
+  "scope": null,
+  "package": null,
+  "priority": "P2",
+  "creator": "0401lucky",
+  "assignee": "0401lucky",
+  "createdAt": "2026-08-07",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [
+    "08-07-go-api-gateway",
+    "08-07-media-sync-boundary",
+    "08-07-release-hardening",
+    "08-07-worker-contracts"
+  ],
+  "parent": null,
+  "relatedFiles": [],
+  "notes": "",
+  "meta": {
+    "description": "基于源码、测试、部署和历史证据审计 Go 化完成度，制定并分阶段实施剩余迁移，保持功能、计费、数据和回滚安全。"
+  }
+}

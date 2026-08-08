@@ -1,0 +1,11 @@
+{"file": ".trellis/spec/frontend/generation-worker-contracts.md", "reason": "复用已冻结的 Worker schema、handoff、回滚安全与验证契约"}
+{"file": ".trellis/spec/guides/cross-layer-thinking-guide.md", "reason": "约束 Node、Go、PostgreSQL、Compose 与探针的跨层数据流"}
+{"file": ".trellis/spec/guides/code-reuse-thinking-guide.md", "reason": "复用现有验证 runner，避免环境变量和命令清单重复"}
+{"file": ".trellis/tasks/08-07-go-migration-audit/research/operations-gaps.md", "reason": "父级部署、迁移、健康、指标和配置缺口证据"}
+{"file": ".trellis/tasks/archive/2026-08/08-07-worker-contracts/verification/2026-08-07-worker-contracts.md", "reason": "可复用 disposable PostgreSQL 与 60 秒验证边界"}
+{"file": ".trellis/tasks/08-07-release-hardening/research/deployment-topology.md", "reason": "embedded/dedicated 启停、互斥和回滚证据"}
+{"file": ".trellis/tasks/08-07-release-hardening/research/migration-ci-e2e.md", "reason": "migration 分离、CI 与 E2E 验证矩阵"}
+{"file": ".trellis/tasks/08-07-release-hardening/research/readiness-observability-env.md", "reason": "health/readiness、指标日志与环境变量证据"}
+{"file": ".trellis/tasks/08-07-release-hardening/research/planning-architecture-review.md", "reason": "实施前保留拓扑 fencing、生命周期与 rollback preflight 反审结论"}
+{"file": ".trellis/tasks/08-07-release-hardening/research/planning-execution-review.md", "reason": "实施前保留 tmpfs、baseline digest 与 timeout/CI 反审结论"}
+{"file": ".trellis/tasks/08-07-release-hardening/research/planning-contract-review.md", "reason": "实施前保留 Worker 地址、env owner 与日志脱敏反审结论"}

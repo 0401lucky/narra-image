@@ -49,3 +49,8 @@ next-env.d.ts
 
 # codex 辅助进程日志
 .codex-*.log
+
+# 本地个人文件（Trellis 平台文件除外）
+.claude/settings.local.json
+.claude/operations-log.md
+.claude/context-summary-*.md

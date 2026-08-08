@@ -1,0 +1,7 @@
+{"file":".trellis/spec/guides/cross-layer-thinking-guide.md","reason":"迁移跨 Next API、PostgreSQL、Go Worker、媒体和前端轮询，实施必须逐边界定义输入、输出、验证和回滚。"}
+{"file":".trellis/spec/guides/code-reuse-thinking-guide.md","reason":"Node/Go 已存在重复生成和提示词同步实现，实施需要建立单一事实来源并在删除前全仓搜索。"}
+{"file":".trellis/tasks/08-07-go-migration-audit/research/architecture-inventory.md","reason":"提供当前 Go/Next/双轨架构、运行拓扑、数据流和主要架构缺口。"}
+{"file":".trellis/tasks/08-07-go-migration-audit/research/feature-parity.md","reason":"提供已迁移功能、渠道/模型/重试/取消/视频协议差异和旧 Node 残留证据。"}
+{"file":".trellis/tasks/08-07-go-migration-audit/research/operations-gaps.md","reason":"提供迁移、部署、环境、存储、队列、健康检查、CI/E2E 和回滚风险。"}
+{"file":".trellis/tasks/08-07-go-migration-audit/research/migration-history.md","reason":"提供历史阶段、原始迁移边界和已知生产 migration 事故，避免重复错误。"}
+{"file":".trellis/tasks/08-07-go-migration-audit/research/baseline-validation.md","reason":"提供当前测试基线、历史用户决策和本轮未验证边界。"}

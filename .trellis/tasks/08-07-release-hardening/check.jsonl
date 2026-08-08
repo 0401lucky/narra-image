@@ -1,0 +1,11 @@
+{"file": ".trellis/spec/frontend/generation-worker-contracts.md", "reason": "检查 release 改动未重定义 Worker 业务契约或破坏回滚闸门"}
+{"file": ".trellis/spec/guides/cross-layer-thinking-guide.md", "reason": "检查 app、Worker、数据库和部署入口的完整数据流"}
+{"file": ".trellis/spec/guides/code-reuse-thinking-guide.md", "reason": "检查验证 runner、配置默认值和状态解析无重复 owner"}
+{"file": ".trellis/tasks/08-07-go-migration-audit/research/plan-execution-review.md", "reason": "复核父级规划指出的 migration、超时和所有权阻塞项"}
+{"file": ".trellis/tasks/archive/2026-08/08-07-worker-contracts/verification/worker-contracts-matrix.md", "reason": "确保发布硬化保持 contract v1 场景与 disposable 数据库安全"}
+{"file": ".trellis/tasks/08-07-release-hardening/research/deployment-topology.md", "reason": "复核两种拓扑、互斥、停止和故障演练"}
+{"file": ".trellis/tasks/08-07-release-hardening/research/migration-ci-e2e.md", "reason": "复核普通 migration 路径和自动验证覆盖"}
+{"file": ".trellis/tasks/08-07-release-hardening/research/readiness-observability-env.md", "reason": "复核探针语义、指标安全和配置一致性"}
+{"file": ".trellis/tasks/08-07-release-hardening/research/planning-architecture-review.md", "reason": "检查所有架构 BLOCKER 均有代码与测试闭环"}
+{"file": ".trellis/tasks/08-07-release-hardening/research/planning-execution-review.md", "reason": "检查资源、迁移和 CI 安全 BLOCKER 均已关闭"}
+{"file": ".trellis/tasks/08-07-release-hardening/research/planning-contract-review.md", "reason": "检查 readiness、环境变量和日志契约 BLOCKER 均已关闭"}

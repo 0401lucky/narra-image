@@ -1,0 +1,7 @@
+{"file":".trellis/spec/guides/cross-layer-thinking-guide.md","reason":"检查跨层字段、状态、错误、媒体和配置是否在 Source→Store→Retrieve 全链路一致。"}
+{"file":".trellis/spec/guides/code-reuse-thinking-guide.md","reason":"检查重复实现、常量、模型识别、解析器和配置是否收敛到单一 owner。"}
+{"file":".trellis/tasks/08-07-go-migration-audit/research/architecture-inventory.md","reason":"核对实现是否遵守保留 Next 产品层、深化 Go 基础设施层的目标边界。"}
+{"file":".trellis/tasks/08-07-go-migration-audit/research/feature-parity.md","reason":"逐项复核高风险行为差异与旧实现清理前置条件。"}
+{"file":".trellis/tasks/08-07-go-migration-audit/research/operations-gaps.md","reason":"复核 migration、topology、readiness、CI/E2E、存储、日志和回滚要求。"}
+{"file":".trellis/tasks/08-07-go-migration-audit/research/migration-history.md","reason":"检查发布方案是否避免过去 db push、缺 migration 和启动自愈掩盖问题。"}
+{"file":".trellis/tasks/08-07-go-migration-audit/research/baseline-validation.md","reason":"与实施前基线比较测试、类型检查和已知超时行为。"}
