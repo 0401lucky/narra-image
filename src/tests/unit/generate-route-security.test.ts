@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const {
+  mockCheckGenerationInput,
   mockConversationFindFirst,
   mockDbTransaction,
   mockDecryptProviderSecret,
@@ -14,6 +15,7 @@ const {
   mockRequireTurnstile,
   mockSavedProviderFindUnique,
 } = vi.hoisted(() => ({
+  mockCheckGenerationInput: vi.fn(),
   mockConversationFindFirst: vi.fn(),
   mockDbTransaction: vi.fn(),
   mockDecryptProviderSecret: vi.fn(),
@@ -34,6 +36,10 @@ vi.mock("@/lib/db", () => ({
     conversation: { findFirst: mockConversationFindFirst },
     savedProviderConfig: { findUnique: mockSavedProviderFindUnique },
   },
+}));
+
+vi.mock("@/lib/moderation/check", () => ({
+  checkGenerationInput: mockCheckGenerationInput,
 }));
 
 vi.mock("@/lib/env", () => ({
@@ -141,6 +147,7 @@ describe("生成接口安全校验顺序", () => {
       videoCreditCost: 20,
     });
     mockRequireTurnstile.mockResolvedValue(undefined);
+    mockCheckGenerationInput.mockResolvedValue({ allowed: true });
   });
 
   it("参考图 URL 指向内网时在上传前拒绝", async () => {
@@ -224,6 +231,25 @@ describe("生成接口安全校验顺序", () => {
       error: "会话不存在或不属于当前用户",
     });
     expect(mockConversationFindFirst).toHaveBeenCalled();
+    expect(mockPersistGeneratedImage).not.toHaveBeenCalled();
+    expect(mockDbTransaction).not.toHaveBeenCalled();
+  });
+
+  it("内容审核命中时拒绝生成且不建 job/不扣积分", async () => {
+    mockParseGenerateRequest.mockResolvedValue(buildRequestBody({}));
+    mockCheckGenerationInput.mockResolvedValueOnce({
+      allowed: false,
+      message: "提交内容包含违规描述，已拒绝生成",
+    });
+
+    const response = await POST(
+      new Request("https://example.com/api/generate", { method: "POST" }),
+    );
+
+    expect(response.status).toBe(400);
+    await expect(response.json()).resolves.toEqual({
+      error: "提交内容包含违规描述，已拒绝生成",
+    });
     expect(mockPersistGeneratedImage).not.toHaveBeenCalled();
     expect(mockDbTransaction).not.toHaveBeenCalled();
   });

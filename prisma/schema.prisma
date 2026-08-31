@@ -100,8 +100,46 @@ model User {
   redeemRedemptions    RedeemRedemption[]
   conversations        Conversation[]
   apiKeys              ApiKey[]
+  contentReviews       ContentReview[]
 
   @@index([oauthProvider, oauthId])
+}
+
+model ContentReview {
+  id             String   @id @default(cuid())
+  userId         String
+  // 触发类别：sensitive_word（敏感词命中）| ai_moderation（AI 判定违规）
+  kind           String
+  prompt         String
+  negativePrompt String?
+  // 敏感词命中列表（kind=sensitive_word 时）
+  hitWords       String[] @default([])
+  // 词库类别或 AI 类别
+  category       String?
+  // AI 违规分数 0-1（kind=ai_moderation 时）
+  aiScore        Float?
+  aiModel        String?
+  createdAt      DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([createdAt])
+  @@index([kind, createdAt])
+  @@index([userId, createdAt])
+}
+
+model ModerationConfig {
+  id                    String   @id @default(cuid())
+  scope                 String   @unique @default("default")
+  isEnabled             Boolean  @default(false)
+  sensitiveWordsEnabled Boolean  @default(true)
+  aiEnabled             Boolean  @default(false)
+  aiBaseUrl             String?
+  aiApiKeyEncrypted     String?
+  aiModel               String?  @default("text-moderation-latest")
+  aiThreshold           Float    @default(0.5)
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
 }
 
 model InviteBatch {

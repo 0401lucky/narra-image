@@ -11,6 +11,7 @@ import {
   KeyRound,
   LayoutDashboard,
   Settings,
+  ShieldAlert,
   Ticket,
   Users,
 } from "lucide-react";
@@ -24,6 +25,7 @@ const adminLinks = [
   { href: "/admin/redeem-codes", icon: BadgePercent, label: "兑换码" },
   { href: "/admin/generations", icon: ClipboardList, label: "生成记录" },
   { href: "/admin/works", icon: ImageIcon, label: "作品审核" },
+  { href: "/admin/moderation", icon: ShieldAlert, label: "内容审核" },
   { href: "/admin/prompts", icon: BookOpenText, label: "提示词库" },
   { href: "/admin/benefits", icon: Gift, label: "福利" },
   { href: "/admin/settings", icon: Settings, label: "系统设置" },

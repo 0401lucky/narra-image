@@ -5,7 +5,7 @@ import environmentFixture from "../../contracts/runtime/v1/environment.json";
 const runtimeEnvironmentVariableSchema = z.object({
   name: z.string().regex(/^[A-Z][A-Z0-9_]*$/),
   owner: z.enum(["deployment", "next", "readiness", "shared", "supervisor", "worker"]),
-  type: z.enum(["boolean", "csv", "enum", "integer", "string", "url"]),
+  type: z.enum(["boolean", "csv", "enum", "integer", "number", "string", "url"]),
   default: z.union([z.boolean(), z.number(), z.string(), z.null()]),
   requiredInProduction: z.boolean(),
   secret: z.boolean(),

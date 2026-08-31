@@ -23,6 +23,7 @@ import {
 import { decryptProviderSecret, encryptProviderSecret } from "@/lib/providers/provider-secret";
 import { requireTurnstile } from "@/lib/auth/turnstile";
 import { requireCurrentUserRecord } from "@/lib/server/current-user";
+import { checkGenerationInput } from "@/lib/moderation/check";
 import { getErrorMessage, jsonError, jsonOk } from "@/lib/server/http";
 import { assertPublicHttpUrl } from "@/lib/server/safe-remote-url";
 import { persistGeneratedImage } from "@/lib/storage/persist-generated-image";
@@ -43,6 +44,16 @@ export async function POST(request: Request) {
     const user = await requireCurrentUserRecord();
     const body = await parseGenerateRequest(request);
     await requireTurnstile("generate", body.turnstileToken);
+
+    // 内容审核：敏感词 / AI 命中则阻断本次生成（不扣积分、不建 job）
+    const moderation = await checkGenerationInput({
+      userId: user.id,
+      prompt: body.prompt,
+      negativePrompt: body.negativePrompt,
+    });
+    if (!moderation.allowed) {
+      return jsonError(moderation.message, 400);
+    }
     const env = getEnv();
 
     const channelId = body.channelId as string | undefined;

@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const {
+  mockCheckGenerationInput,
   mockDownloadExternalImage,
   mockFindGeneration,
   mockGetActiveChannels,
@@ -9,6 +10,7 @@ const {
   mockRunExternalGeneration,
   mockRunViaGateway,
 } = vi.hoisted(() => ({
+  mockCheckGenerationInput: vi.fn(),
   mockDownloadExternalImage: vi.fn(),
   mockFindGeneration: vi.fn(),
   mockGetActiveChannels: vi.fn(),
@@ -24,6 +26,10 @@ vi.mock("@/lib/db", () => ({
       findFirst: mockFindGeneration,
     },
   },
+}));
+
+vi.mock("@/lib/moderation/check", () => ({
+  checkGenerationInput: mockCheckGenerationInput,
 }));
 
 vi.mock("@/lib/external-api/source-images", () => ({
@@ -153,6 +159,7 @@ describe("OpenAI 兼容外部 API", () => {
     });
     mockRequireApiUser.mockResolvedValue(auth);
     mockRunExternalGeneration.mockResolvedValue(completedJob);
+    mockCheckGenerationInput.mockReset().mockResolvedValue({ allowed: true });
     vi.stubGlobal(
       "fetch",
       vi.fn(async () =>
@@ -199,6 +206,30 @@ describe("OpenAI 兼容外部 API", () => {
         }),
       }),
     );
+  });
+
+  it("/v1/images/generations 内容审核命中时返回 OpenAI 错误且不生成", async () => {
+    mockCheckGenerationInput.mockReset();
+    mockCheckGenerationInput.mockResolvedValueOnce({
+      allowed: false,
+      message: "提交内容包含违规描述，已拒绝生成",
+    });
+
+    const response = await imagePost(
+      jsonRequest("/v1/images/generations", {
+        prompt: "违规描述",
+        size: "1024x1024",
+      }),
+    );
+
+    expect(response.status).toBe(400);
+    await expect(response.json()).resolves.toEqual({
+      error: expect.objectContaining({
+        message: "提交内容包含违规描述，已拒绝生成",
+      }),
+    });
+    expect(mockRunExternalGeneration).not.toHaveBeenCalled();
+    expect(mockRunViaGateway).not.toHaveBeenCalled();
   });
 
   it("/v1/images/generations 支持 Cherry Studio 常用的 b64_json 返回", async () => {

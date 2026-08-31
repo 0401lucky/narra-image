@@ -41,6 +41,15 @@ function integerEnv(defaultValue: number, minimum = 1, maximum = 2_147_483_647) 
   );
 }
 
+function floatEnv(defaultValue: number, minimum = 0, maximum = 1) {
+  return z.preprocess(
+    (rawValue) => rawValue === undefined || rawValue === null || rawValue === ""
+      ? defaultValue
+      : rawValue,
+    z.coerce.number().min(minimum).max(maximum),
+  );
+}
+
 function optionalString() {
   return z.string().trim().optional().default("");
 }
@@ -183,6 +192,13 @@ const envSchema = z.object({
   EXTERNAL_GENERATION_WAIT_TIMEOUT_SECONDS: integerEnv(900, 1, 86_400),
   GATEWAY_ENABLED: booleanEnv(false),
   LOG_LEVEL: z.enum(["debug", "info", "warn", "error"]).default("info"),
+  MODERATION_AI_ENABLED: booleanEnv(false),
+  MODERATION_API_KEY: optionalString(),
+  MODERATION_BASE_URL: optionalUrl(),
+  MODERATION_ENABLED: booleanEnv(false),
+  MODERATION_MODEL: z.string().trim().min(1).default("text-moderation-latest"),
+  MODERATION_SENSITIVE_WORDS_ENABLED: booleanEnv(true),
+  MODERATION_THRESHOLD: floatEnv(0.5),
   S3_ACCESS_KEY_ID: optionalString(),
   S3_BUCKET: optionalString(),
   S3_ENDPOINT: optionalUrl(),

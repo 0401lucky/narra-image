@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { Cog, ImageIcon, KeyRound, Server, ShieldCheck } from "lucide-react";
+import { Cog, ImageIcon, KeyRound, Server, ShieldAlert, ShieldCheck } from "lucide-react";
 
 import { SettingsSubNav } from "@/components/admin/settings-sub-nav";
 import { requireAdminRecord } from "@/lib/server/current-user";
@@ -35,6 +35,12 @@ const cards = [
     icon: ImageIcon,
     title: "登录封面",
     description: "配置登录/注册页面左侧展示的封面图片，支持精选随机或指定图片。",
+  },
+  {
+    href: "/admin/settings/moderation",
+    icon: ShieldAlert,
+    title: "内容审核",
+    description: "敏感词 + AI 审核开关、阈值与端点；命中即拒绝生成并记录触发。",
   },
 ];
 

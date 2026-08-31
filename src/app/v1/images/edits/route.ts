@@ -11,12 +11,23 @@ import {
   runExternalGenerationViaGateway,
 } from "@/lib/generation/gateway-client";
 import { runExternalGeneration } from "@/lib/generation/external-api";
+import { checkGenerationInput } from "@/lib/moderation/check";
 import { requireApiUser } from "@/lib/server/api-auth";
 
 export async function POST(request: Request) {
   try {
     const auth = await requireApiUser(request);
     const { body, sourceImages } = await parseExternalImageEditRequest(request);
+
+    // 内容审核：敏感词 / AI 命中则阻断（与 WEB 相同策略，防绕过）
+    const moderation = await checkGenerationInput({
+      negativePrompt: body.negativePrompt,
+      prompt: body.prompt,
+      userId: auth.user.id,
+    });
+    if (!moderation.allowed) {
+      return openAiError(new Error(moderation.message));
+    }
 
     if (isGatewayEnabled()) {
       const gatewayResponse = await runExternalGenerationViaGateway({

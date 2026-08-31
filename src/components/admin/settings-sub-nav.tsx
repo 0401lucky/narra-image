@@ -8,6 +8,7 @@ const settingsLinks = [
   { href: "/admin/settings/turnstile", label: "人机验证" },
   { href: "/admin/settings/channels", label: "生图渠道" },
   { href: "/admin/settings/login-cover", label: "登录封面" },
+  { href: "/admin/settings/moderation", label: "内容审核" },
 ];
 
 export function SettingsSubNav({ currentPath }: { currentPath: string }) {
