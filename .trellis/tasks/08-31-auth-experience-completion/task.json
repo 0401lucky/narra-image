@@ -1,0 +1,30 @@
+{
+  "id": "auth-experience-completion",
+  "name": "auth-experience-completion",
+  "title": "认证体验补全:注册第三方登录/邀请码、账号绑定、用户封禁",
+  "description": "",
+  "status": "planning",
+  "dev_type": null,
+  "scope": null,
+  "package": null,
+  "priority": "P2",
+  "creator": "0401lucky",
+  "assignee": "0401lucky",
+  "createdAt": "2026-08-31",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [
+    "08-31-register-oauth-invite",
+    "08-31-account-linking-linuxdo",
+    "08-31-admin-user-ban"
+  ],
+  "parent": null,
+  "relatedFiles": [],
+  "notes": "",
+  "meta": {}
+}

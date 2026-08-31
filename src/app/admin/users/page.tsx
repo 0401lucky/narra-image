@@ -42,6 +42,7 @@ export default async function AdminUsersPage({
       orderBy: { createdAt: "desc" },
       select: {
         _count: { select: { generations: true } },
+        bannedAt: true,
         createdAt: true,
         credits: true,
         email: true,
@@ -58,6 +59,8 @@ export default async function AdminUsersPage({
   const totalPages = Math.ceil(totalCount / PAGE_SIZE);
 
   const serializedUsers = users.map((user) => ({
+    banned: user.bannedAt !== null,
+    bannedAt: user.bannedAt?.toISOString() ?? null,
     createdAt: user.createdAt.toISOString(),
     credits: user.credits,
     email: user.email,

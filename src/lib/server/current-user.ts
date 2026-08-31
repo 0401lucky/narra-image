@@ -12,17 +12,26 @@ export const getCurrentUserRecord = cache(async () => {
     return null;
   }
 
-  return db.user.findUnique({
+  const user = await db.user.findUnique({
     where: { id: session.userId },
     select: {
       avatarUrl: true,
+      bannedAt: true,
       credits: true,
       email: true,
       id: true,
       nickname: true,
+      oauthProvider: true,
       role: true,
     },
   });
+
+  // 封禁用户按未登录处理：等效登出，无需等待 token 过期
+  if (!user || user.bannedAt) {
+    return null;
+  }
+
+  return user;
 });
 
 export const getCurrentSession = cache(async () => {

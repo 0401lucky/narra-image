@@ -36,7 +36,11 @@ vi.mock("@/lib/env", () => ({
   }),
 }));
 
-import { findOrCreateOAuthUser } from "@/lib/auth/linuxdo-oauth";
+import {
+  findOrCreateOAuthUser,
+  linkLinuxDoAccount,
+  unlinkLinuxDoAccount,
+} from "@/lib/auth/linuxdo-oauth";
 
 const baseLdUser = {
   active: true,
@@ -85,6 +89,7 @@ describe("LinuxDo OAuth 用户处理", () => {
       orderBy: { createdAt: "asc" },
       select: {
         avatarUrl: true,
+        bannedAt: true,
         credits: true,
         email: true,
         id: true,
@@ -103,6 +108,7 @@ describe("LinuxDo OAuth 用户处理", () => {
       },
       select: {
         avatarUrl: true,
+        bannedAt: true,
         credits: true,
         email: true,
         id: true,
@@ -141,7 +147,7 @@ describe("LinuxDo OAuth 用户处理", () => {
     });
 
     expect(mockDb.user.findUnique).toHaveBeenCalledWith({
-      select: { id: true, nickname: true },
+      select: { bannedAt: true, id: true, nickname: true },
       where: { email: "tester@linuxdo.oauth" },
     });
     expect(mockDb.user.update).toHaveBeenCalledWith({
@@ -153,6 +159,7 @@ describe("LinuxDo OAuth 用户处理", () => {
       },
       select: {
         avatarUrl: true,
+        bannedAt: true,
         credits: true,
         email: true,
         id: true,
@@ -265,6 +272,7 @@ describe("LinuxDo OAuth 用户处理", () => {
       },
       select: {
         avatarUrl: true,
+        bannedAt: true,
         credits: true,
         email: true,
         id: true,
@@ -304,5 +312,188 @@ describe("LinuxDo OAuth 用户处理", () => {
     expect(mockDb.user.create).not.toHaveBeenCalled();
     expect(result.ok).toBe(false);
     if (!result.ok) expect(result.reason).toBe("invite_invalid");
+  });
+
+  it("已有 OAuth 绑定但账号已被封禁时返回 banned", async () => {
+    mockDb.user.findFirst.mockResolvedValue({
+      avatarUrl: null,
+      bannedAt: new Date(),
+      credits: 500,
+      email: "old@linuxdo.oauth",
+      id: "user-1",
+      nickname: null,
+      role: "USER",
+    });
+
+    const result = await findOrCreateOAuthUser({
+      ldUser: { ...baseLdUser, id: 42, name: "Tester" },
+    });
+
+    expect(mockDb.user.update).not.toHaveBeenCalled();
+    expect(mockDb.$transaction).not.toHaveBeenCalled();
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.reason).toBe("banned");
+  });
+
+  it("占位邮箱命中已封禁账号时返回 banned", async () => {
+    mockDb.user.findFirst.mockResolvedValue(null);
+    mockDb.user.findUnique.mockResolvedValue({
+      bannedAt: new Date(),
+      id: "user-2",
+      nickname: null,
+    });
+
+    const result = await findOrCreateOAuthUser({
+      ldUser: { ...baseLdUser, id: 99, name: "Tester" },
+    });
+
+    expect(mockDb.user.update).not.toHaveBeenCalled();
+    expect(mockDb.user.create).not.toHaveBeenCalled();
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.reason).toBe("banned");
+  });
+
+  it("linkLinuxDoAccount：成功把 LinuxDo 绑定到当前账号", async () => {
+    mockDb.user.findUnique.mockResolvedValue({
+      bannedAt: null,
+      id: "user-4",
+      nickname: null,
+    });
+    mockDb.user.findFirst.mockResolvedValue(null);
+    mockDb.user.update.mockResolvedValue({});
+
+    const result = await linkLinuxDoAccount({
+      ldUser: { ...baseLdUser, id: 200, name: "Binder" },
+      userId: "user-4",
+    });
+
+    expect(mockDb.user.findFirst).toHaveBeenCalledWith({
+      select: { id: true },
+      where: { oauthId: "200", oauthProvider: "linuxdo" },
+    });
+    expect(mockDb.user.update).toHaveBeenCalledWith({
+      data: {
+        nickname: "Binder",
+        oauthId: "200",
+        oauthProvider: "linuxdo",
+      },
+      where: { id: "user-4" },
+    });
+    expect(result.ok).toBe(true);
+  });
+
+  it("linkLinuxDoAccount：已绑定同一 LinuxDo 时幂等成功", async () => {
+    mockDb.user.findUnique.mockResolvedValue({
+      bannedAt: null,
+      id: "user-5",
+      nickname: "Binder",
+    });
+    mockDb.user.findFirst.mockResolvedValue({ id: "user-5" });
+
+    const result = await linkLinuxDoAccount({
+      ldUser: { ...baseLdUser, id: 201, name: "Binder" },
+      userId: "user-5",
+    });
+
+    expect(mockDb.user.update).not.toHaveBeenCalled();
+    expect(result.ok).toBe(true);
+  });
+
+  it("linkLinuxDoAccount：LinuxDo 已被其他账号绑定时返回 conflict", async () => {
+    mockDb.user.findUnique.mockResolvedValue({
+      bannedAt: null,
+      id: "user-6",
+      nickname: null,
+    });
+    mockDb.user.findFirst.mockResolvedValue({ id: "user-other" });
+
+    const result = await linkLinuxDoAccount({
+      ldUser: { ...baseLdUser, id: 202, name: "Binder" },
+      userId: "user-6",
+    });
+
+    expect(mockDb.user.update).not.toHaveBeenCalled();
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.reason).toBe("conflict");
+  });
+
+  it("linkLinuxDoAccount：当前账号被封禁时返回 banned", async () => {
+    mockDb.user.findUnique.mockResolvedValue({
+      bannedAt: new Date(),
+      id: "user-7",
+      nickname: null,
+    });
+
+    const result = await linkLinuxDoAccount({
+      ldUser: { ...baseLdUser, id: 203, name: "Binder" },
+      userId: "user-7",
+    });
+
+    expect(mockDb.user.findFirst).not.toHaveBeenCalled();
+    expect(mockDb.user.update).not.toHaveBeenCalled();
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.reason).toBe("banned");
+  });
+
+  it("linkLinuxDoAccount：目标用户不存在时返回 unknown_user", async () => {
+    mockDb.user.findUnique.mockResolvedValue(null);
+
+    const result = await linkLinuxDoAccount({
+      ldUser: { ...baseLdUser, id: 204, name: "Binder" },
+      userId: "missing-user",
+    });
+
+    expect(mockDb.user.findFirst).not.toHaveBeenCalled();
+    expect(mockDb.user.update).not.toHaveBeenCalled();
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.reason).toBe("unknown_user");
+  });
+
+  it("unlinkLinuxDoAccount：纯 OAuth 注册账号禁止解绑", async () => {
+    mockDb.user.findUnique.mockResolvedValue({
+      id: "user-8",
+      oauthId: "300",
+      oauthProvider: "linuxdo",
+      passwordHash: null,
+    });
+
+    const result = await unlinkLinuxDoAccount("user-8");
+
+    expect(mockDb.user.update).not.toHaveBeenCalled();
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.reason).toBe("password_required");
+  });
+
+  it("unlinkLinuxDoAccount：未绑定账号返回 not_linked", async () => {
+    mockDb.user.findUnique.mockResolvedValue({
+      id: "user-9",
+      oauthId: null,
+      oauthProvider: null,
+      passwordHash: "hashed",
+    });
+
+    const result = await unlinkLinuxDoAccount("user-9");
+
+    expect(mockDb.user.update).not.toHaveBeenCalled();
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.reason).toBe("not_linked");
+  });
+
+  it("unlinkLinuxDoAccount：有密码的账号解绑成功并置空 OAuth 字段", async () => {
+    mockDb.user.findUnique.mockResolvedValue({
+      id: "user-10",
+      oauthId: "301",
+      oauthProvider: "linuxdo",
+      passwordHash: "hashed",
+    });
+    mockDb.user.update.mockResolvedValue({});
+
+    const result = await unlinkLinuxDoAccount("user-10");
+
+    expect(mockDb.user.update).toHaveBeenCalledWith({
+      data: { oauthId: null, oauthProvider: null },
+      where: { id: "user-10" },
+    });
+    expect(result.ok).toBe(true);
   });
 });

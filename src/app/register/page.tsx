@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 
 import { AuthForm } from "@/components/marketing/auth-form";
 import { AuthShell } from "@/components/marketing/auth-shell";
+import { getEnabledOAuthProviders } from "@/lib/auth/oauth-config";
 import { getPublicTurnstileConfig } from "@/lib/auth/turnstile";
 import { fromPrismaRole } from "@/lib/prisma-mappers";
 import { getCurrentUserRecord } from "@/lib/server/current-user";
@@ -13,6 +14,7 @@ export const dynamic = "force-dynamic";
 
 type RegisterPageProps = {
   searchParams?: Promise<{
+    error?: string;
     inviteCode?: string;
   }>;
 };
@@ -28,8 +30,13 @@ export default async function RegisterPage({ searchParams }: RegisterPageProps) 
     typeof resolvedSearchParams?.inviteCode === "string"
       ? resolvedSearchParams.inviteCode
       : "";
+  const oauthError =
+    typeof resolvedSearchParams?.error === "string"
+      ? resolvedSearchParams.error
+      : null;
 
-  const [featuredPage, turnstile, loginCoverConfig] = await Promise.all([
+  const [oauthProviders, featuredPage, turnstile, loginCoverConfig] = await Promise.all([
+    getEnabledOAuthProviders(),
     listFeaturedWorksPage({ limit: 1 }).catch(() => ({
       hasMore: false,
       items: [] as Array<{ authorName: string; image: string; title: string }>,
@@ -74,6 +81,8 @@ export default async function RegisterPage({ searchParams }: RegisterPageProps) 
       <AuthForm
         mode="register"
         initialInviteCode={initialInviteCode}
+        oauthProviders={oauthProviders}
+        oauthError={oauthError}
         turnstile={{
           isEnabled: turnstile.isEnabled,
           siteKey: turnstile.siteKey,

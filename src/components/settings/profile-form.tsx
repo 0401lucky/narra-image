@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState, useRef } from "react";
 import { Camera, Save, Loader2, User, Sparkles } from "lucide-react";
 
@@ -14,9 +15,19 @@ type ProfileFormProps = {
     credits: number;
     role: "user" | "admin";
   };
+  oauthProvider: string | null;
+  hasPassword: boolean;
+  linuxdoEnabled: boolean;
+  queryNotice: { hint: "linked" | "error"; message: string } | null;
 };
 
-export function ProfileForm({ user }: ProfileFormProps) {
+export function ProfileForm({
+  user,
+  oauthProvider,
+  hasPassword,
+  linuxdoEnabled,
+  queryNotice,
+}: ProfileFormProps) {
   const [nickname, setNickname] = useState(user.nickname ?? "");
   const [avatarUrl, setAvatarUrl] = useState(user.avatarUrl);
   const [credits, setCredits] = useState(user.credits);
@@ -27,6 +38,10 @@ export function ProfileForm({ user }: ProfileFormProps) {
     type: "success" | "error";
   } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const router = useRouter();
+  const [unlinkConfirm, setUnlinkConfirm] = useState(false);
+  const [unlinking, setUnlinking] = useState(false);
+  const [unlinkError, setUnlinkError] = useState<string | null>(null);
 
   async function handleAvatarUpload(file: File) {
     setUploading(true);
@@ -73,6 +88,25 @@ export function ProfileForm({ user }: ProfileFormProps) {
       setMessage({ text: "保存时发生错误", type: "error" });
     } finally {
       setSaving(false);
+    }
+  }
+
+  async function handleUnlink() {
+    setUnlinkError(null);
+    setUnlinking(true);
+    try {
+      const res = await fetch("/api/me/oauth/linuxdo/unlink", {
+        method: "POST",
+      });
+      const json = (await res.json().catch(() => ({}))) as { error?: string };
+      if (!res.ok) {
+        setUnlinkError(json.error || "解绑失败");
+        return;
+      }
+      setUnlinkConfirm(false);
+      router.refresh();
+    } finally {
+      setUnlinking(false);
     }
   }
 
@@ -140,6 +174,65 @@ export function ProfileForm({ user }: ProfileFormProps) {
               )}
             </div>
           </div>
+        </div>
+
+        {/* 账号绑定 */}
+        <div className="studio-card rounded-[1.8rem] p-6">
+          <h3 className="font-semibold text-[var(--ink)]">账号绑定</h3>
+          <p className="mt-1 text-xs text-[var(--ink-soft)]">
+            绑定后可使用第三方账号直接登录本账号。
+          </p>
+
+          {queryNotice ? (
+            <p
+              className={`mt-4 rounded-xl px-4 py-3 text-sm ${
+                queryNotice.hint === "linked"
+                  ? "border border-emerald-200 bg-emerald-50 text-emerald-700"
+                  : "border border-red-200 bg-red-50 text-red-700"
+              }`}
+            >
+              {queryNotice.message}
+            </p>
+          ) : null}
+
+          {oauthProvider === "linuxdo" ? (
+            hasPassword ? (
+              <div className="mt-4 flex items-center justify-between gap-2 rounded-2xl border border-[var(--line)] bg-[var(--surface-strong)]/40 px-4 py-3">
+                <div>
+                  <p className="text-sm font-medium text-[var(--ink)]">LinuxDo</p>
+                  <p className="mt-0.5 text-xs text-[var(--ink-soft)]">
+                    可通过 LinuxDo 直接登录
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setUnlinkConfirm(true)}
+                  className="rounded-full border border-rose-200 px-3 py-1.5 text-xs font-medium text-rose-600 transition hover:bg-rose-50"
+                >
+                  解绑
+                </button>
+              </div>
+            ) : (
+              <div className="mt-4 rounded-2xl border border-[var(--line)] bg-[var(--surface-strong)]/40 px-4 py-3">
+                <p className="text-sm font-medium text-[var(--ink)]">LinuxDo</p>
+                <p className="mt-0.5 text-xs text-[var(--ink-soft)]">
+                  该账号仅通过 LinuxDo 登录，解绑需先设置密码。
+                </p>
+              </div>
+            )
+          ) : linuxdoEnabled ? (
+            <a
+              href="/api/auth/oauth/linuxdo"
+              className="mt-4 inline-flex items-center justify-center gap-2 rounded-full bg-[var(--ink)] px-6 py-3 text-sm font-semibold text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-[var(--accent)]"
+            >
+              <Sparkles className="size-4" />
+              绑定 LinuxDo
+            </a>
+          ) : (
+            <p className="mt-4 text-xs text-[var(--ink-soft)]">
+              第三方登录暂未启用。
+            </p>
+          )}
         </div>
 
         {/* 积分卡 */}
@@ -270,6 +363,44 @@ export function ProfileForm({ user }: ProfileFormProps) {
           </ul>
         </div>
       </div>
+
+      {unlinkConfirm ? (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm"
+          onClick={() => { if (!unlinking) setUnlinkConfirm(false); }}
+        >
+          <div
+            className="studio-card w-full max-w-md rounded-[1.8rem] p-6"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <h3 className="text-lg font-semibold text-[var(--ink)]">解绑 LinuxDo</h3>
+            <p className="mt-2 text-sm leading-relaxed text-[var(--ink-soft)]">
+              解绑后将无法再通过 LinuxDo 登录本账号。积分、作品等数据不受影响。
+            </p>
+            {unlinkError ? (
+              <p className="mt-3 text-sm text-rose-600">{unlinkError}</p>
+            ) : null}
+            <div className="mt-6 flex flex-wrap justify-end gap-2">
+              <button
+                type="button"
+                disabled={unlinking}
+                onClick={() => setUnlinkConfirm(false)}
+                className="rounded-full border border-[var(--line)] px-4 py-2 text-sm text-[var(--ink-soft)] disabled:opacity-60"
+              >
+                取消
+              </button>
+              <button
+                type="button"
+                disabled={unlinking}
+                onClick={() => void handleUnlink()}
+                className="rounded-full bg-rose-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-rose-700 disabled:opacity-60"
+              >
+                {unlinking ? "解绑中..." : "确认解绑"}
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }

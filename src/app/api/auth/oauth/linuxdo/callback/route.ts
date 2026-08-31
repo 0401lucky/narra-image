@@ -7,8 +7,9 @@ import {
   findOrCreateOAuthUser,
   getLinuxDoCallbackUrl,
   getLinuxDoConfig,
+  linkLinuxDoAccount,
 } from "@/lib/auth/linuxdo-oauth";
-import { attachSessionCookie } from "@/lib/auth/session";
+import { attachSessionCookie, readSession } from "@/lib/auth/session";
 import { fromPrismaRole } from "@/lib/prisma-mappers";
 import { getEnv } from "@/lib/env";
 import { Role } from "@prisma/client";
@@ -61,13 +62,42 @@ export async function GET(request: Request) {
       return NextResponse.redirect(`${appUrl}/login?error=LinuxDo账号未激活`);
     }
 
-    // 查找或创建用户：新用户必须有有效邀请码
+    // 已登录态：把 LinuxDo 绑定到当前账号（个人设置发起）
+    const session = await readSession();
+    if (session) {
+      const linkResult = await linkLinuxDoAccount({
+        ldUser,
+        userId: session.userId,
+      });
+
+      if (!linkResult.ok) {
+        if (linkResult.reason === "banned") {
+          // 封禁用户访问 /settings 会被 getCurrentUserRecord 拦截跳登录，错误需直接带到登录页
+          return NextResponse.redirect(
+            `${appUrl}/login?error=${encodeURIComponent("账号已被封禁")}`,
+          );
+        }
+        const message =
+          linkResult.reason === "conflict"
+            ? "该 LinuxDo 账号已绑定其他 Narra 账号"
+            : "绑定失败，请重试";
+        return NextResponse.redirect(
+          `${appUrl}/settings?error=${encodeURIComponent(message)}`,
+        );
+      }
+
+      return NextResponse.redirect(`${appUrl}/settings?linked=linuxdo`);
+    }
+
+    // 未登录：查找或创建用户（新用户必须有有效邀请码）
     const result = await findOrCreateOAuthUser({ ldUser, inviteCode });
     if (!result.ok) {
       const message =
         result.reason === "invite_required"
           ? "首次使用 LinuxDo 登录需要填写邀请码"
-          : "邀请码已失效";
+          : result.reason === "banned"
+            ? "账号已被封禁"
+            : "邀请码已失效";
       return NextResponse.redirect(
         `${appUrl}/login?error=${encodeURIComponent(message)}`,
       );

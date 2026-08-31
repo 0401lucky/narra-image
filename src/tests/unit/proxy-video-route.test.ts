@@ -1,12 +1,12 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-const { mockFetchPublicHttpUrl, mockGetCurrentSession } = vi.hoisted(() => ({
+const { mockFetchPublicHttpUrl, mockGetCurrentUserRecord } = vi.hoisted(() => ({
   mockFetchPublicHttpUrl: vi.fn(),
-  mockGetCurrentSession: vi.fn(),
+  mockGetCurrentUserRecord: vi.fn(),
 }));
 
 vi.mock("@/lib/server/current-user", () => ({
-  getCurrentSession: mockGetCurrentSession,
+  getCurrentUserRecord: mockGetCurrentUserRecord,
 }));
 
 vi.mock("@/lib/server/safe-remote-url", () => ({
@@ -24,7 +24,7 @@ function proxyRequest() {
 describe("视频代理接口", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mockGetCurrentSession.mockResolvedValue({ userId: "user_1" });
+    mockGetCurrentUserRecord.mockResolvedValue({ id: "user_1" });
   });
 
   it("校验 MP4 文件头并安全返回视频流", async () => {

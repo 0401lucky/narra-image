@@ -80,6 +80,7 @@ model User {
   avatarUrl            String?
   oauthProvider        String?
   oauthId              String?
+  bannedAt             DateTime?
   role                 Role                 @default(USER)
   credits              Int                  @default(500)
   createdAt            DateTime             @default(now())

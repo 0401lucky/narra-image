@@ -1,4 +1,4 @@
-import { getCurrentSession } from "@/lib/server/current-user";
+import { getCurrentUserRecord } from "@/lib/server/current-user";
 import { getErrorMessage } from "@/lib/server/http";
 import { fetchPublicHttpUrl } from "@/lib/server/safe-remote-url";
 
@@ -69,8 +69,8 @@ function restoreLimitedStream(
 
 export async function GET(request: Request) {
   try {
-    const session = await getCurrentSession();
-    if (!session) {
+    const user = await getCurrentUserRecord();
+    if (!user) {
       return new Response("请先登录", { status: 403 });
     }
 

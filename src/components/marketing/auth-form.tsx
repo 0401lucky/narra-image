@@ -39,7 +39,7 @@ export function AuthForm({
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(oauthError);
-  const [oauthInviteCode, setOauthInviteCode] = useState("");
+  const [inviteCode, setInviteCode] = useState(initialInviteCode);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const turnstileRef = useRef<TurnstileWidgetHandle>(null);
 
@@ -106,12 +106,12 @@ export function AuthForm({
   }
 
   function buildOAuthHref(providerType: string) {
-    const trimmed = oauthInviteCode.trim();
+    const trimmed = inviteCode.trim();
     if (!trimmed) return `/api/auth/oauth/${providerType}`;
     return `/api/auth/oauth/${providerType}?inviteCode=${encodeURIComponent(trimmed)}`;
   }
 
-  const hasOAuth = mode === "login" && oauthProviders.length > 0;
+  const hasOAuth = oauthProviders.length > 0;
 
   return (
     <div className="grid gap-5">
@@ -139,7 +139,8 @@ export function AuthForm({
             <input
               id="auth-invite"
               name="inviteCode"
-              defaultValue={initialInviteCode}
+              value={inviteCode}
+              onChange={(event) => setInviteCode(event.target.value)}
               placeholder="请输入邀请码"
               className="auth-input uppercase"
             />
@@ -218,20 +219,27 @@ export function AuthForm({
               </a>
             ))}
 
-            <details className="auth-collapse">
-              <summary>
-                <span>需要邀请码？首次第三方登录请填写</span>
-              </summary>
-              <input
-                value={oauthInviteCode}
-                onChange={(event) => setOauthInviteCode(event.target.value)}
-                placeholder="请输入邀请码"
-                className="auth-input mt-3 w-full uppercase"
-              />
-              <p className="mt-2 text-[11px] leading-5 text-[var(--ink-soft)]/80">
-                老用户登录可留空；首次绑定第三方账号时邀请码用于消耗名额。
+            {mode === "register" ? (
+              <p className="text-[11px] leading-5 text-[var(--ink-soft)]/80">
+                新用户使用 {oauthProviders[0]?.displayName ?? "第三方账号"} 注册需先填写上方邀请码；
+                已绑定账号可直接登录，无需邀请码。
               </p>
-            </details>
+            ) : (
+              <details className="auth-collapse">
+                <summary>
+                  <span>需要邀请码？首次第三方登录请填写</span>
+                </summary>
+                <input
+                  value={inviteCode}
+                  onChange={(event) => setInviteCode(event.target.value)}
+                  placeholder="请输入邀请码"
+                  className="auth-input mt-3 w-full uppercase"
+                />
+                <p className="mt-2 text-[11px] leading-5 text-[var(--ink-soft)]/80">
+                  老用户登录可留空；首次绑定第三方账号时邀请码用于消耗名额。
+                </p>
+              </details>
+            )}
           </div>
         </>
       ) : null}

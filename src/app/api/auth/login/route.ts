@@ -16,6 +16,7 @@ export async function POST(request: Request) {
       where: { email: body.email.toLowerCase() },
       select: {
         avatarUrl: true,
+        bannedAt: true,
         credits: true,
         email: true,
         id: true,
@@ -27,6 +28,10 @@ export async function POST(request: Request) {
 
     if (!user) {
       return jsonError("邮箱或密码错误", 401);
+    }
+
+    if (user.bannedAt) {
+      return jsonError("账号已被封禁", 403);
     }
 
     if (!user.passwordHash) {
