@@ -182,3 +182,17 @@
 ### Status
 
 [DONE] 三子任务已实现/验证/归档,父任务同步归档。
+
+## 2026-09-01 内容审核(父任务 09-01-content-moderation,2 子任务)
+
+- 引擎:ContentReview + ModerationConfig 两表(Additive 迁移)。内置敏感词库中英文四分类,英文 `\b` 词边界 + 显式词形变体(pornographic/raped/porno),中文 includes;控制误杀(crack→crack cocaine;naked/nude/blood 不入库)。AI 审核独立配置 MODERATION_* env + 后台配置,OpenAI 兼容 /moderations,flagged 或 category_scores 最高≥阈值判定,异常/未配置自动放行。
+- 拦截:WEB /api/generate 与 v1 images/generations、edits 共享 checkGenerationInput(auth 后、扣积分/建 job 前);命中 jsonError(OpenAI 侧 openAiError(new Error(...)),注意 getErrorMessage 只认 Error 对象)+ 落库 + 用户标记。
+- 后台:/admin/moderation 审核记录(分页/类别过滤)+ 用户聚合(触发次数/最近触发)+ 一键封禁(复用 ban API,不可封禁自己);/admin/settings/moderation 配置表单(开关/端点/key/model/阈值滑块)+ 词库只读;admin-nav + settings-sub-nav 入口。
+- env 四件套 + runtime-environment-contract 增加 number 类型支持(MODERATION_THRESHOLD)。
+- trellis-check 复查:词形变体绕过与 crack 误杀实证问题已修;补 blocked 路径回归用例 + config 密钥不透出断言。
+- 验证:tsc/lint/build/verify:migrations 通过;全量 vitest 396 用例全绿(除 DB 哨兵按约定)。
+- 提交:feat(moderation) 单一提交;默认 MODERATION_ENABLED=false,上线零影响。
+
+### Status
+
+[DONE] 两子任务已实现/验证/归档,父任务归档。
