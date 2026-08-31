@@ -169,3 +169,16 @@
 ### Status
 
 [OK] 6 个前端 spec 已填充并带真实示例;待 finish + archive。
+
+## 2026-08-31 认证体验补全(父任务 08-31-auth-experience-completion,3 子任务)
+
+- 01 注册页第三方登录/邀请码:`auth-form.tsx` 放开 `hasOAuth` 的 login-only 限制,注册表单邀请码改受控(state),第三方按钮授权链接携带邀请码;`register/page.tsx` 补传 `oauthProviders`/`oauthError`。新增 auth-form 单测(注册模式入口 + 授权链接携带邀请码)。
+- 03 后台用户封禁:`User.bannedAt` Additive 迁移(`20260831214800_add_user_ban`);登录/OAuth 老用户路径(`reason:"banned"`)/已登录受保护请求(`getCurrentUserRecord` 对 bannedAt 返回 null,等效登出)/绑定路径四处拦截;新增 `PATCH /api/admin/users/[id]/ban`;admin 卡片加封禁徽章+封禁/解封按钮+确认弹窗(禁止封禁自己)。
+- 02 个人资料绑定 LinuxDo:OAuth 回调按 `readSession` 分流(已登录→`linkLinuxDoAccount` 绑定当前账号:conflict/banned/幂等;未登录→原 `findOrCreateOAuthUser`);`POST /api/me/oauth/linuxdo/unlink` 解绑(纯 OAuth 无 passwordHash 禁止解绑防呆);settings 账号绑定卡显示状态、只读提示、query 提示条。
+- trellis-check 复查修复:proxy-image/proxy-video 从 `getCurrentSession` 改为 `getCurrentUserRecord`(补全封禁覆盖);封禁绑定回调直接跳 `/login?error=账号已被封禁`(避免被 settings 拦截吞错);纯 OAuth 账号前端隐藏解绑按钮 + 只读提示;补 `unknown_user` 单测。
+- 验证:`tsc`/`eslint`/`pnpm build`/`pnpm verify:migrations` 通过;全量 vitest 374 用例全绿(除 DB 哨兵文件按约定排除)。
+- 提交:`9105e8d` feat(auth) + `5cf79a3` chore(task) archive。工作区仅剩既有的 `.gitignore` 本地改动。
+
+### Status
+
+[DONE] 三子任务已实现/验证/归档,父任务同步归档。
