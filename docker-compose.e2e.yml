@@ -61,7 +61,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        NODE_BASE_IMAGE: ${E2E_NODE_BASE_IMAGE:-node:24-alpine}
+        NODE_BASE_IMAGE: ${E2E_NODE_BASE_IMAGE:-node:24.22.1-alpine}
         GO_BASE_IMAGE: ${E2E_GO_BASE_IMAGE:-golang:1.25-alpine}
     restart: "no"
     labels:

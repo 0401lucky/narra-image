@@ -49,7 +49,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        NODE_BASE_IMAGE: ${NODE_BASE_IMAGE:-node:24-alpine}
+        NODE_BASE_IMAGE: ${NODE_BASE_IMAGE:-node:24.22.1-alpine}
         GO_BASE_IMAGE: ${GO_BASE_IMAGE:-golang:1.25-alpine}
     restart: "no"
     depends_on:

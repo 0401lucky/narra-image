@@ -20,6 +20,19 @@
 示例：密码 `pa@:#?/ss` 应写成 `pa%40%3A%23%3F%2Fss`，不要把完整 DSN
 复制到日志、工单或聊天记录中。
 
+### Node.js 安全更新
+
+Dockerfile、生产 Compose 与 E2E Compose 的默认 Node 基础镜像统一固定为
+`node:24.22.1-alpine`，包含 2026-10-21 的 Node.js 安全修复。自定义
+`NODE_BASE_IMAGE` / `E2E_NODE_BASE_IMAGE` 时，须使用同分支中包含这些修复的版本。
+已运行容器不会随基础镜像标签自动更新；更新时须重新拉取基础镜像、重建应用镜像，
+核对候选镜像中的 `node --version` 后再替换应用容器。保留旧镜像作为回滚点，
+上线后验证 `/api/healthz`、`/api/readyz` 及实际登录、生成流程。
+
+本次运行时修补应使用当前已部署的应用源码和锁文件，避免夹带未发布代码或新迁移。
+只升级宿主机 Node 或只重启旧容器不能修补容器中的 Node；Go Worker 无需因本次
+Node.js 公告更换运行时。
+
 ## 2. 两种运行拓扑
 
 ### Embedded

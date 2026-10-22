@@ -1,4 +1,4 @@
-ARG NODE_BASE_IMAGE=node:24-alpine
+ARG NODE_BASE_IMAGE=node:24.22.1-alpine
 ARG GO_BASE_IMAGE=golang:1.25-alpine
 
 FROM ${NODE_BASE_IMAGE} AS base
