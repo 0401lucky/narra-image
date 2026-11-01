@@ -32,7 +32,7 @@ it does not authorize force push, production deployment or service access.
   `checks/git-delivery-prior-tasks.md`; no unrecognized source family remains.
 - [x] Finish staged credential/temp/large-file/whitespace checks and recheck
   remote `main` divergence. The delivery plan preserves original evidence bytes.
-- [ ] Update specs/acceptance/handoff; group coherent work commits followed by
+- [x] Update specs/acceptance/handoff; group coherent work commits followed by
   Trellis bookkeeping, then push normal fast-forward commits to `origin main`.
   Stop and report conflicts/push protection rather than forcing or overwriting.
 
@@ -264,3 +264,5 @@ Neither is automatically credential-isolated from its caller; the E2E wrapper al
 ## Git Delivery Progress
 
 Source/spec work commit: `d1960ecc53ceadcda70e3bf9616cc8020c70b570` (`feat: deliver studio canvas and warm editorial homepage`). Exact staged source audit passes for 401 blobs plus the intended history-rail deletion. Task records, archive/journal and normal push follow; no deployment or live migration is performed.
+
+Final Git delivery: normal `origin main` push exited 0; remote head verified as `34d4297d0d57b56353378e4b9d2d19befcfc8338`. Source, earlier task work, evidence, archive and journal are delivered. `checks/git-delivery-result.json` records the observed push; subsequent receipt edits are bookkeeping only.

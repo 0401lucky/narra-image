@@ -398,5 +398,5 @@ Completed the approved long-prompt fallback and final homepage/privacy verificat
 
 ### Next Steps
 
-- Perform the user-authorized normal push to origin main; no force push or deployment.
+- Completed the user-authorized normal push to origin main; remote head verified as `34d4297d0d57b56353378e4b9d2d19befcfc8338`; no force push or deployment.
 - Physical mobile/nativeIME/OSdownloads, live-service E2E and actual GitHub CI remain unverified; CANVAS_ENABLED=false rollout default.

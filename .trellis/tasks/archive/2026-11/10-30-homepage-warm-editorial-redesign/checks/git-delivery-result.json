@@ -1,0 +1,23 @@
+{
+  "verifiedAt": "2026-11-01T06:25:29.037113+00:00",
+  "remote": "https://github.com/0401lucky/narra-image.git",
+  "branch": "main",
+  "remoteHeadAtDelivery": "34d4297d0d57b56353378e4b9d2d19befcfc8338",
+  "sourceCommit": "d1960ecc53ceadcda70e3bf9616cc8020c70b570",
+  "taskEvidenceCommit": "f689ff7d78eecba5864b334b50fe8b230c22aa5f",
+  "archiveCommit": "db1f5e76fc0682dbd1dd1f3559ce55ab64209dc3",
+  "journalCommit": "34d4297d0d57b56353378e4b9d2d19befcfc8338",
+  "pushExitCode": 0,
+  "forcePush": false,
+  "cleanWorkingTreeAfterPush": true,
+  "sourceInputs": 809,
+  "nonDbTests": 1704,
+  "browserChecksPassed": 103,
+  "deploymentOrMigrationExecuted": false,
+  "scope": "User-authorized current plus recognized prior uncommitted tasks delivered. This receipt is a subsequent bookkeeping-only commit.",
+  "limits": [
+    "Physicalmobile/nativeIME/OSdownloads",
+    "Live account/DB/Worker/provider/storage on combined revision",
+    "ActualGitHubCI and production rollout"
+  ]
+}

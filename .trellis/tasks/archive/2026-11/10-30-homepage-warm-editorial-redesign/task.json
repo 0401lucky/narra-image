@@ -2,7 +2,7 @@
   "id": "homepage-warm-editorial-redesign",
   "name": "homepage-warm-editorial-redesign",
   "title": "首页 UI 重构：暖调画纸与交互动效",
-  "description": "首页、隐私与已批准的长提示词降级全部完成；最终809输入在Node24.22.1下通过1704项测试、根lint、类型与生产构建，完整浏览器103/103通过。按用户授权将本任务及此前未提交任务共同提交并推送main。",
+  "description": "已完成首页、隐私与长提示词降级，并将本次及此前studio/history/canvas/mobile未提交成果共同提交、归档并正常推送GitHub main。最终1704测试/103浏览器检查通过，独立审查通过；无部署或真实业务服务操作。",
   "status": "completed",
   "dev_type": "frontend",
   "scope": "homepage",
@@ -53,8 +53,7 @@
     "automated_tests": "Final809 inputs: pinnedNode24.22.1,140files/1704nonDB pass with maxWorkers2;metadata-inclusive eslint.0errors9baselinewarnings;types;network-denied installedPrisma;unmodifiedNextbuild19.369s pass. All exact hashes unchanged. checks/validation-evidence/git-delivery-final/result.json.",
     "browser_tests": "Final unfiltered full-1793502794542:103/103 including43privacy+15longURL; wrapper20261101T031314-script-5cadc5 exit0,326.492s/900s. No unresolved acceptance; direct Chinese/emoji431 are truthful transport observations with independently verified entryfallback. Final809/declaredDBadapter/helper/build identities preserved; no owned processes/locks.",
     "pending": [
-      "Normal origin main push after archive/journal.",
-      "Physical mobile/nativeIME/OSdownloads, live services, actualGitHubCI and deployment remain separately unverified."
+      "Physical mobile/nativeIME/OSdownloads, live services, actualGitHubCI and deployment remain separately unverified; no local product or Git delivery blocker."
     ],
     "resume_automated_evidence": "checks/validation-evidence/asset-delivery-final/result.json",
     "hero_hit_automated_evidence": "checks/validation-evidence/hero-hit-final/result.json",
@@ -79,6 +78,9 @@
       "f689ff7d78eecba5864b334b50fe8b230c22aa5f"
     ],
     "local_acceptance": "complete_1704tests_103browser_independent_review_pass",
-    "archive_policy_review": "checks/validation-evidence/git-delivery-independent/archive-policy-verification.json"
+    "archive_policy_review": "checks/validation-evidence/git-delivery-independent/archive-policy-verification.json",
+    "git_delivery_status": "pushed_and_remote_main_verified",
+    "git_delivery_result": "checks/git-delivery-result.json",
+    "git_delivery_verified_head": "34d4297d0d57b56353378e4b9d2d19befcfc8338"
   }
 }
