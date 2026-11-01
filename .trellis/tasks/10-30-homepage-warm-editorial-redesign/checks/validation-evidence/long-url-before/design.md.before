@@ -1,0 +1,193 @@
+# Design: Warm Editorial Homepage And Image Detail Privacy
+
+- Status: Approved for implementation by the user on 2026-10-31; task is in progress.
+- Asset delivery amendment: the user explicitly authorized `https://chatgpt2api.204152.xyz/` with model `gpt-image-2.5-sunburst` for the three illustrations after the built-in tool failed. Use the supplied credential only in transient request memory, with verified TLS, bounded requests and explicit headers; never persist it or change the site's provider. This supersedes the built-in-only execution restriction for these assets, not any product data/privacy or test-isolation boundary.
+- Requirements: `prd.md` R1-R6 and AC1-AC14 are authoritative.
+- Runtime baseline: Next.js 16.2.4, React 19.2.4, Tailwind CSS 4, Motion 12.38, Zod 4 and the existing Prisma boundary.
+- This is one integrated homepage task with an ordered privacy prerequisite, not a new public gallery, authentication project or canvas task.
+- Verified lifecycle correction (2026-11-01, within existing R5): `HomeReveal` retains one-shot visibility, original stagger/duration/ease/offset, but animates scalar progress with guarded local DOM writes instead of a retained Motion DOM VisualElement. Cleanup invalidates callbacks before stop and settles readable final styles, preventing a queued render from restoring partial opacity. No CSS, business, URL handoff or runtime contract is expanded; exact red/green evidence is in `checks/reveal-lifecycle-implementation.md`.
+
+## 1. Selected Approach
+
+| Concern | Decision | Reason |
+| --- | --- | --- |
+| Application architecture | Keep Home as a dynamic Server Component; add small feature-local client islands | Preserve current user/data loading and avoid replacing SSR with client-only fake data |
+| Styling | A homepage wrapper, unique font aliases, CSS Modules and explicit home header variants | Shared CSS and fonts must not change other routes after navigating away |
+| Hero content | Three locally served fixed illustrations matching the approved bookshop, fox and rainy-lane scenes | Original URLs contain a 404 and subject mismatches; the user approved replacement |
+| Animation | Existing Motion plus bounded DOM/CSS-variable/canvas effects | No extra animation framework or per-pointer-frame React state |
+| Community data | Existing featured feed, like API, work links and cursor pagination | Keep actual business behavior and the 72-item homepage cap |
+| Prompt availability | Add a boolean `showPromptPublic` to the public featured DTO | A nonempty redaction placeholder is not an authorization signal |
+| Detail privacy | Separate allowlisted non-owner detail DTO before the client boundary | Preserve the owner/admin serializer instead of globally stripping its data |
+| Validation | Isolated unmodified-source checks plus real-Next/synthetic-service browser fixtures | No use of live dotenv, DB, provider or another task's running services |
+
+No database migration, schema change, new production environment flag, authentication continuation or generator behavior change is required.
+
+## 2. Code Boundaries And Reuse
+
+Planned files are responsibilities, not a requirement to introduce an abstraction for every visual effect:
+
+```text
+src/app/page.tsx                         existing SSR orchestration and home wrapper
+src/app/works/[id]/page.tsx              existing access gate + safe detail projection
+src/components/marketing/
+  site-header.tsx                       existing account/navigation logic; explicit variant
+  header-shell.tsx                      home sticky presentation; default behavior retained
+  mobile-nav.tsx                        home presentation/overlay integration only
+  featured-gallery.tsx                  existing exported gallery entry and state wiring
+  homepage/
+    constants.ts                       scenes, copy, footer groups, paging/motion constants
+    types.ts                           feature-only IDs and UI state
+    homepage.module.css                scoped composition, paper, depth and reduced motion
+    fonts.css                          local @font-face declarations with unique aliases
+    home-hero.tsx                      semantic hero composition and three client islands
+    hero-scene.tsx                     scene controls, image, prompt and decorative layers
+    hero-stats.tsx                     existing three counters
+    capability-section.tsx             four miniature interactive demonstrations
+    gallery-card.tsx                   image/detail link, like and prompt drawer
+    home-footer.tsx                    real routes and role-aware footer groups
+    hooks/                             scene, motion, paging and clipboard lifecycles
+src/lib/prisma-mappers.ts               public DTO flag and public-detail projection
+src/lib/validators.ts                   narrow response validation where needed
+src/tests/unit/                        behavior, page-boundary and regression coverage
+public/marketing/home/                  final scene images, font binaries and notices
+```
+
+- Keep named component exports, typed props/variants, `cn()` and existing feature conventions.
+- Reuse `getThumbUrl` / `getThumbSrcSet`, `canViewWorkDetail`, `canShowWorkPrompt`, existing prompt modal/manual-copy behavior, and the real check-in, logout and pet components. Do not duplicate their business state.
+- Use `import type` for client imports of serialized types; no Prisma or server-only runtime import in client bundles.
+- Do not touch `src/components/create/**`, mobile-canvas scripts/resources or the root layout to force a new mode, import a prompt, or share fixtures.
+- `src/app/globals.css` already contains others' edits. Prefer no change to it; never replace its theme variables or broad selectors. Existing third-party notices are append-only for this work.
+
+## 3. Server Data And Public Feed Contract
+
+```text
+current-user lookup -> serializeUser -> SiteHeader + home auth hint
+featured query -> serializeFeaturedWork -> Home first 16 records
+                                    \-> GET /api/works/featured -> next records
+fixed local scene constants -------------------------------> hero
+```
+
+- Keep `dynamic = "force-dynamic"`, the anonymous 60-second tagged cache and viewer-specific uncached data separate (`src/app/page.tsx:14`, `src/app/page.tsx:27`, `src/app/api/works/featured/route.ts:44`).
+- Keep service cursor ordering and API parameters unchanged. The initial Home request and page requests use 16; the gallery never renders more than 72 unique records.
+- Extend `SerializedFeaturedWork` and `serializeFeaturedWork` with `showPromptPublic: boolean`, derived from the existing database flag. Continue redacting the `prompt` string server-side when false. Do not add negative prompts or owner/reviewer fields to this DTO.
+- Remove the gallery's duplicated `Work` field list; use the shared serialized type. Initial and paginated records must carry the same permission contract.
+- Parse network responses before changing gallery state. Missing permission flags in old cached payloads become false, never true inferred from text. Malformed page/cursor/like data fails with visible retry/error feedback; it cannot silently corrupt the list.
+- An ordinary same-viewer `router.refresh()` must not discard paginated records or overwrite local interaction state. An actual viewer change resets the gallery via an owner-qualified React key; do not reuse another user's `likedByMe` snapshot.
+- Preserve the current account-read fallback. Differentiate a genuinely empty featured feed from a failed initial feed load using a small local bootstrap status; retry can request the existing first-page endpoint, without a new server API.
+
+## 4. Homepage Theme And Header Isolation
+
+- Apply warm colors, gradients, grain, typography and section spacing under one full-width, minimum-viewport-height home wrapper. Use `overflow-x: clip` or section-local clipping rather than a scroll container that disables sticky positioning.
+- Use the exact PRD palette. The wrapper's opaque paper background covers the old shared background on Home without changing `html`, `body`, `:root`, global selection styles or `.studio-card`.
+- Load actual Cormorant Garamond, Noto Serif SC and Plus Jakarta Sans binaries with homepage-only CSS family aliases, such as `NarraHomeCormorant`, `NarraHomeNotoSerifSC` and `NarraHomeJakarta`. The binaries/licenses remain unmodified. This prevents persisted route CSS from activating the global Noto fallback on unrelated pages.
+- Keep the reference distinction between serif English/editorial headings, Chinese serif emphasis and a sans-serif UI body. Do not redefine the root `--font-cormorant` / `--font-bricolage` variables.
+- Add `variant: "default" | "home"`, defaulting to existing behavior, to header presentation boundaries. `SiteHeader` continues to own the same links, conditional API/admin entries, credits, check-in and account actions.
+- The home variant uses a warm translucent sticky shell and reference-scale content width/height. It does not hide on downward scroll. The default variant retains current hide-on-scroll behavior.
+- With all real links and account controls, use the full menu only where it fits; the home drawer can serve intermediate widths. Never remove a real action merely to fit the prototype's fake account snapshot.
+- Fixed mobile overlays must not be trapped by a transformed/backdrop-filter ancestor. If a home-only portal is required, carry the home scope/font class onto the portal root. Preserve default route visuals and include escape, focus return, keyboard access and scroll cleanup.
+- Reference geometry: `max-w-7xl`, a two-column hero at large widths, 4:3 hero viewport, four capability cards, gallery `1 / 2 / 4` columns at the reference small/large breakpoints, fixed 4:5 gallery tiles. Do not shrink text until unusable to force two title lines on narrow phones.
+- Keep existing `#gallery` links valid. Add real `#hero`, `#capabilities` and `#footer` anchors; if the reference's `#exhibitions` is retained as an alias, it must land at the actual gallery, not an inert element.
+
+## 5. Fixed Assets And Font Delivery
+
+### Hero asset contract
+
+Each scene is a typed constant with stable `id`, visible style label, full reference prompt, local image source, dimensions, accurate alt text and decorative display labels. There is no link from a scene to the first live work.
+
+| Scene ID | Required illustration | Composition |
+| --- | --- | --- |
+| `film` | Old bookshop at dusk, warm shafts through blinds, atmospheric dust and cinematic grain | 4:3-friendly framing, visible light/subject above the lower prompt overlay |
+| `storybook` | Small fox carrying a warm lantern through misty forest, delicate watercolor and paper texture | Narrative illustration, warm focal light, room around subject for UI overlays |
+| `oriental` | Rainy Jiangnan lane, eaves, warm lantern reflection on stone, restrained ink-like negative space | Cool/warm contrast, recognizably eastern architecture, uncluttered framing |
+
+- Preserve the exact three prompt strings in `references/narra_image.html:760`. The reference's nominal preset/model/step labels are illustrative, not supported API parameters; make that distinction explicit in the UI and use no fake service-health claims.
+- Produce each bitmap through the expressly authorized external image API after the built-in tool failed, inspect the output, and copy the selected file into `public/marketing/home/` with descriptive versioned names. The external request may consume that provider's quota; it does not create any site generation record or use the site's billing/provider configuration.
+- Request images without embedded UI, text, logos or watermarks. Keep frames, paper noise, scanning rings, dust and text as real CSS/SVG/canvas/DOM rather than baking them into the images.
+- Record the production source, model alias, complete generation prompt and actual dimensions/hash in task evidence. A project asset must not remain only outside the workspace. Explicit external API approval now exists for this source/model only; no credential or signed download secret is recorded in evidence.
+- The first local hero image is eager/high priority; other scenes can decode in the background after first paint. Use a stable viewport, meaningful fallback and request-version guards. No third-party placeholder service in production.
+- Existing optimizer widths and qualities remain authoritative (`next.config.ts` supports 75/90, not the reference CDN's 85). Local images may use Next optimization without changing global configuration; gallery images retain original-URL fallback.
+
+### Font packaging
+
+- Use the official CSS/binaries already researched in `research/homepage-asset-delivery.md`. Download the full chosen Unicode coverage once during asset preparation, deduplicate binary URLs and keep weight/style/range declarations accurate.
+- Self-host the unmodified files and all three OFL/copyright notices. Use `font-display: swap`; preserve Chinese `unicode-range` splitting and do not assume the Latin sample supplies Chinese glyphs.
+- Do not use `next/font/google`, a runtime Google stylesheet or build-time external font downloads. Use the unique local CSS aliases from section 4; CSS aliasing does not rename or modify the font binaries.
+- Do not eagerly preload all Chinese shards. Verify actual first-screen fonts in the browser, use only justified preloads and retain legible fallbacks while loading. Record transferred bytes; no unsupported font-performance claim.
+
+## 6. Animation And Interaction Lifecycles
+
+All animation constants live with the feature. Each loop has an owner, a visible/active condition and cleanup. Respect `prefers-reduced-motion` at runtime as well as CSS; allow pausing continuous decorative movement without disabling meaningful controls.
+
+| Group | Implementation shape | Non-negotiable checks |
+| --- | --- | --- |
+| Hero tilt + dust | Fine-pointer coordinates update CSS variables through at most one pending frame; a separate canvas loop owns dust | No pointer tilt on coarse touch, bound pixel ratio/particle count, pause offscreen/hidden/reduced, dispose observers/frames |
+| Scene fade + typewriter | Separate requested and committed scene IDs; decode then atomically commit image, labels and prompt | Latest request wins; copy uses full committed prompt; failure keeps a coherent scene; cancel timers/ignore stale decode |
+| Count-up | Bounded easing over the existing display values | Stable SSR and reserved layout, final values under reduced motion, no statistics API |
+| Capabilities | CSS spotlight plus bounded word/version cycles, explicit pet-inspiration click and static API demonstration | Four distinct miniatures; no real pet preference, health or generation mutation; stop timers when inactive |
+| Gallery tilt/glare/depth | Entrance wrapper, separate preserve-3D tilt layer, image/depth/glare children | Do not animate the same transform twice; do not apply flattening/containment/backdrop filters to the depth root |
+| Reveal + cascade | Intersection activation and stable keyed per-page entrance | Appended cards animate without replaying all previous cards; missing observers or reduced motion never hide content |
+
+- The typewriter's partial text is visual only; expose the full prompt accessibly without announcing every character. The copy button always copies the entire scene prompt, even while typing.
+- On rapid scene changes, no old timer/image completion may restore an old image or mix its prompt with another scene. Unmount invalidates all generations of work.
+- Infinite scanning rings/dust/miniature cycles are decorative; reduced motion and pause make them static. Style tabs, copying, paging and likes still operate normally.
+- Do not run 72 independent idle RAF loops. Pointer effects are event-driven; small active overlays may blur, but the grid does not gain expensive full-card backdrop filters.
+- Test mount/unmount/remount, media preference changes, hidden tabs and late callbacks. Absence of a React warning is not proof of cleanup.
+
+## 7. Gallery, Clipboard And Remix
+
+### Paging and likes
+
+- Keep current automatic sentinel paging and add an explicit accessible Load More button. Both call one ordinary callback/command. Do not invoke `useEffectEvent` from a button handler; its current effect-only loader needs a shared command boundary.
+- Use a synchronous in-flight ref and request epoch, not only `isLoading`, to coalesce observer/button clicks in the same tick. Update the authoritative cursor/list snapshot before releasing the gate; a deferred React transition must not permit replay of the old cursor.
+- Merge by immutable ID, preserve order, clamp at 72, and detect a non-advancing cursor. Errors preserve successful records and the retry cursor. Suspend automatic retry after failure until explicit retry or a deliberate new valid state.
+- Loading, exhausted feed and reached-display-cap are different states. Never label a 72-item cap as the complete public collection. No fictitious total, classification or browse-all route.
+- Bound fetch duration, abort on unmount and ignore stale continuations. Like requests serialize per card, use the real endpoint result and preserve the prior state on failure; `401` keeps the current login behavior.
+
+### Card accessibility and full prompts
+
+- Thumbnail containers are 4:5 with centered `object-fit: cover`. Original work URLs, detail view and download remain untouched.
+- Keep detail link, like button, prompt disclosure, copy and remix as independent elements, not nested interactive controls. Glare/decorations are pointer-inert.
+- Hover/focus can reveal the drawer; an explicit disclosure button provides the same operations on touch and keyboard. Escape closes it and returns focus appropriately. The complete public prompt is readable in a bounded scroll area, not only a truncated excerpt.
+- `showPromptPublic === true` and usable text are required for prompt-based actions. False or absent flags show an explanation and retain the view/like actions. Never query hidden detail data to bypass the public DTO.
+- Reuse the public positive prompt verbatim for copying. Await Clipboard API success; on rejection/unavailability show selectable full text and truthful failure feedback. Bind feedback to the clicked scene/card and clean up timers.
+
+### Approved remix journey
+
+- Authenticated visitors use the existing encoded `/create?prompt=` route, with no automatic generator call, configuration clone, conversation creation or canvas import. Do not copy the detail modal's labeled positive/negative document into the URL.
+- Anonymous visitors see an explicit login-and-return instruction; their public copy action works without login. No pretend `next` parameter, pending-prompt store or auth changes.
+- A saved canvas preference remains respected. The prompt belongs to the conversation draft and is visible after the user switches back; no mode override or canvas node is added.
+- Verify actual Next navigation, successive selections, back/refresh, encoding and the existing 8000-unit limit. Preserve mounted local drafts. If current route caching prevents the approved prefill, report the concrete failure and revisit that boundary rather than globally synchronizing props or erasing drafts.
+
+## 8. Image Detail Privacy Contract
+
+```text
+getWorkById -> existing owner-shaped SerializedWork (server only)
+           -> existing canViewWorkDetail gate -> 404 for unauthorized visibility
+           -> owner: existing full DTO -> owner detail/management UI
+           -> non-owner: allowlisted public projection -> public client detail UI
+```
+
+- Add `SerializedPublicWorkDetail` next to existing serializers. The public allowlist is `id`, `url`, `authorNickname`, `createdAt`, `featuredAt`, `model`, `size`, `showcaseStatus`, `showPromptPublic`, `prompt` and `negativePrompt`.
+- Public `prompt`/`negativePrompt` are nullable. Evaluate the existing `canShowWorkPrompt` policy for a non-owner; when unavailable both values are null, not raw text hidden by a boolean. When permitted, retain the existing full positive/negative prompt detail behavior.
+- Never copy/spread the full object into public output. Omit `ownerId`, `jobId`, generation metadata, `submittedAt`, `reviewNote`, `reviewedAt`, `reviewedById` and `reviewer` entirely. Even published prompts do not make review metadata public.
+- The projection is pure and non-mutating. An owner request after a public request still receives the intact authorized data. Keep `serializeWork` / `serializeAdminWork` and their owner/admin consumers unchanged unless additive typing requires a narrow adjustment.
+- Make `WorkDetailPanelProps` a discriminated owner/public union using the trusted server `isOwner` value. Only the owner branch can render `WorkShowcaseControls`; do not coerce a public DTO back to `SerializedWork` with a cast.
+- `WorkDetailPage` performs the access gate and projection before creating any client props. No admin exception is added to the public route. Existing missing-image/video fallback is preserved, not broadened.
+- Tests inspect exact outgoing props/keys and sentinel strings in raw Next HTML/RSC, not only visible text. Cover guest and logged-in non-owner, public/hidden prompt, each showcase status, owner, admin-as-public-visitor and the existing admin flow.
+
+## 9. Footer And Business-Preserving Content
+
+- Keep the approved dark brand area and three-column composition. Creation links use `/create`, `/prompts`, `/video`; tools/account use `/works`, `/settings` and signed-in `/api-keys`; exploration uses actual home sections and the known GitHub repository.
+- Anonymous account navigation is clearly labeled as requiring login; do not promise cross-login continuation. Reuse existing role visibility where applicable; do not expose an admin link to everyone.
+- Remove the prototype's fake policy/status/model destinations. Do not repurpose the public gallery promise as `/works` or use a footer self-link for a non-existent legal page.
+- Preserve only the existing three numeric marketing values, explicitly as display copy rather than measured live telemetry. Capability examples and new illustrations are demonstrations, not actual account data.
+
+## 10. Validation, Compatibility And Rollback
+
+- Required evidence: isolated lint/types/full non-DB Vitest/build; focused data-boundary tests; browser screenshots and interactions on actual Next Home/detail components with clearly documented synthetic SSR dependencies.
+- The existing non-DB commands are not automatically credential-isolated. Prepare a task-owned source snapshot/launcher as described in `research/homepage-validation-plan.md`; actual env files, inherited secrets/preloads and shared generated/build outputs are excluded. The unmodified-source build is separate from browser fixture adapters.
+- A browser cannot intercept the server's Prisma calls. The primary UI fixture replaces only synthetic DB/auth/benefits boundaries while keeping actual pages, serializers, policy and components; use real local images/fonts and loopback-only fresh browser profiles. This proves UI/SSR behavior, not live-service readiness.
+- Actual Docker DB/Worker/S3/provider E2E and browser-on-container relay are not prerequisites invented by this UI task. Existing release wrappers may be run separately only with their prerequisites/approval; their absence must be reported, not bypassed through production credentials. No changes to release wrappers, Compose or production safety guards are planned.
+- Compare desktop 1440x1000 and touch 390x844 with 320/768/1024-width smoke checks, reduced motion, keyboard, empty/error data and non-home route baselines. Compare shared layout/style regions with a clean reference; image subjects and approved content changes are intentionally different. No unexplained similarity percentage.
+- Roll out as ordinary application code plus static assets, without schema/env changes. Revert only task-owned hunks if needed; keep the additive permission flag compatible with older clients. Preserve a verified privacy fix if reverting the cosmetic redesign.
+- Never reset the dirty worktree, reuse another task's scratch resources, or stage/commit/push/deploy/archive without separate authorization. Any material requirement change returns to planning review.

@@ -1,0 +1,10 @@
+{"file": ".trellis/spec/frontend/index.md", "reason": "Frontend pre-development routing and layer conventions."}
+{"file": ".trellis/spec/frontend/directory-structure.md", "reason": "Feature-local parts/hooks, server-only services and test ownership."}
+{"file": ".trellis/spec/frontend/component-guidelines.md", "reason": "Mounted container/renderer boundaries, Chinese UI, accessibility and lazy components."}
+{"file": ".trellis/spec/frontend/hook-guidelines.md", "reason": "Single-flight polling and timer/listener/object-URL cleanup."}
+{"file": ".trellis/spec/frontend/state-management.md", "reason": "Guarded bootstrap, account/workspace scope and no global-history fallback."}
+{"file": ".trellis/spec/frontend/type-safety.md", "reason": "Shared validators, serialized DTOs and runtime/server-only type boundaries."}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "Lint/types/Vitest/build, mocks, DB exclusions and truthful verification."}
+{"file": ".trellis/spec/guides/code-reuse-thinking-guide.md", "reason": "Reuse existing generation, settings and storage helpers instead of parallel pipelines."}
+{"file": ".trellis/tasks/10-28-studio-dual-mode-canvas/research/current-studio.md", "reason": "Exact desktop/phone history removal, shared query/actions and regression map."}
+{"file": ".trellis/spec/operations/media-storage.md", "reason": "Production S3 policy, legacy media compatibility and no implicit result deletion."}

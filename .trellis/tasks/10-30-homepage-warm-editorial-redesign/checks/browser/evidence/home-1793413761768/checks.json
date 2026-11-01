@@ -1,0 +1,73 @@
+[
+  {
+    "id": "G1-desktop-four-column-crop-and-original-detail",
+    "passed": true,
+    "durationMs": 2051,
+    "detail": {
+      "shapes": [
+        {
+          "x": 109,
+          "y": 581.009033203125,
+          "width": 287,
+          "height": 359.25,
+          "fit": "cover",
+          "position": "50% 50%",
+          "original": [
+            360,
+            240
+          ]
+        },
+        {
+          "x": 418,
+          "y": 584.3717041015625,
+          "width": 287,
+          "height": 359.2498779296875,
+          "fit": "cover",
+          "position": "50% 50%",
+          "original": [
+            360,
+            360
+          ]
+        },
+        {
+          "x": 727,
+          "y": 584.3717041015625,
+          "width": 287,
+          "height": 359.2498779296875,
+          "fit": "cover",
+          "position": "50% 50%",
+          "original": [
+            360,
+            540
+          ]
+        },
+        {
+          "x": 1036,
+          "y": 584.3717041015625,
+          "width": 287,
+          "height": 359.2498779296875,
+          "fit": "cover",
+          "position": "50% 50%",
+          "original": [
+            360,
+            240
+          ]
+        }
+      ],
+      "detail": {
+        "fit": "contain",
+        "ratio": 1.5
+      }
+    }
+  },
+  {
+    "id": "P2-same-viewer-refresh-preserves-pages-and-like",
+    "passed": true,
+    "durationMs": 2715,
+    "detail": {
+      "beforeRefresh": 32,
+      "preservedLike": "home-017",
+      "afterViewerChange": 16
+    }
+  }
+]

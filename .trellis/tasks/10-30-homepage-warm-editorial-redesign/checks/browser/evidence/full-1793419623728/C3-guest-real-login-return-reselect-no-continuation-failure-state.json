@@ -1,0 +1,148 @@
+{
+  "url": "http://127.0.0.1:58830/",
+  "hidden": false,
+  "motion": {},
+  "active": "<button type=\"button\" data-gallery-disclosure=\"true\" aria-expanded=\"false\" aria-controls=\"_r_1t_\" aria-label=\"查看提示词 纸上光影 005\" class=\"gallery-module__AxK02G__disclosure\"><span>灵感词</span><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-chevron-down gallery-module__AxK02G__smallIcon\" aria-hidden=\"true\"><path d=\"m6 9 6 6 6-6\"></path></svg></button>",
+  "reveals": [
+    {
+      "opacity": "0.957714",
+      "transform": "matrix(1, 0, 0, 1, 0, 1.01913)",
+      "rect": {
+        "x": 76,
+        "y": -1347.4808349609375,
+        "width": 1280,
+        "height": 593.7655639648438,
+        "top": -1347.4808349609375,
+        "right": 1356,
+        "bottom": -753.7152709960938,
+        "left": 76
+      }
+    },
+    {
+      "opacity": "1",
+      "transform": "none",
+      "rect": {
+        "x": 0,
+        "y": -674.734375,
+        "width": 1432,
+        "height": 3475.78125,
+        "top": -674.734375,
+        "right": 1432,
+        "bottom": 2801.046875,
+        "left": 0
+      }
+    },
+    {
+      "opacity": "0.236903",
+      "transform": "matrix(1, 0, 0, 1, 0, 18.2557)",
+      "rect": {
+        "x": 108,
+        "y": -379.69744873046875,
+        "width": 289,
+        "height": 361.25,
+        "top": -379.69744873046875,
+        "right": 397,
+        "bottom": -18.44744873046875,
+        "left": 108
+      }
+    },
+    {
+      "opacity": "0",
+      "transform": "matrix(1, 0, 0, 1, 0, 24)",
+      "rect": {
+        "x": 417,
+        "y": -373.953125,
+        "width": 289,
+        "height": 361.25,
+        "top": -373.953125,
+        "right": 706,
+        "bottom": -12.703125,
+        "left": 417
+      }
+    },
+    {
+      "opacity": "0",
+      "transform": "matrix(1, 0, 0, 1, 0, 24)",
+      "rect": {
+        "x": 726,
+        "y": -373.953125,
+        "width": 289,
+        "height": 361.25,
+        "top": -373.953125,
+        "right": 1015,
+        "bottom": -12.703125,
+        "left": 726
+      }
+    },
+    {
+      "opacity": "0",
+      "transform": "matrix(1, 0, 0, 1, 0, 24)",
+      "rect": {
+        "x": 1035,
+        "y": -373.953125,
+        "width": 289,
+        "height": 361.25,
+        "top": -373.953125,
+        "right": 1324,
+        "bottom": -12.703125,
+        "left": 1035
+      }
+    },
+    {
+      "opacity": "0",
+      "transform": "matrix(1, 0, 0, 1, 0, 24)",
+      "rect": {
+        "x": 108,
+        "y": 7.296875,
+        "width": 289,
+        "height": 361.25,
+        "top": 7.296875,
+        "right": 397,
+        "bottom": 368.546875,
+        "left": 108
+      }
+    },
+    {
+      "opacity": "0",
+      "transform": "matrix(1, 0, 0, 1, 0, 24)",
+      "rect": {
+        "x": 417,
+        "y": 7.296875,
+        "width": 289,
+        "height": 361.25,
+        "top": 7.296875,
+        "right": 706,
+        "bottom": 368.546875,
+        "left": 417
+      }
+    },
+    {
+      "opacity": "0",
+      "transform": "matrix(1, 0, 0, 1, 0, 24)",
+      "rect": {
+        "x": 726,
+        "y": 7.296875,
+        "width": 289,
+        "height": 361.25,
+        "top": 7.296875,
+        "right": 1015,
+        "bottom": 368.546875,
+        "left": 726
+      }
+    },
+    {
+      "opacity": "0",
+      "transform": "matrix(1, 0, 0, 1, 0, 24)",
+      "rect": {
+        "x": 1035,
+        "y": 7.296875,
+        "width": 289,
+        "height": 361.25,
+        "top": 7.296875,
+        "right": 1324,
+        "bottom": 368.546875,
+        "left": 1035
+      }
+    }
+  ]
+}

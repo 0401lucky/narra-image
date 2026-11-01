@@ -1,0 +1,27 @@
+{
+  "label": "mobile-impl-existing-01",
+  "mode": "test",
+  "command": [
+    "pnpm",
+    "exec",
+    "vitest",
+    "run",
+    "--testTimeout=30000",
+    "src/tests/unit/canvas-stage.test.tsx",
+    "src/tests/unit/generator-studio-canvas.test.tsx",
+    "src/tests/unit/use-canvas-runtime-lease.test.tsx",
+    "src/tests/unit/canvas-renderer-adapter.test.ts",
+    "src/tests/unit/canvas-controller-documents.test.ts",
+    "src/tests/unit/canvas-controller-runs.test.ts",
+    "src/tests/unit/chat-pane.test.tsx",
+    "src/tests/unit/generator-studio-feedback.test.tsx"
+  ],
+  "cwd": "E:/code/narra-image",
+  "timeoutMs": 180000,
+  "code": 1,
+  "signal": null,
+  "timedOut": false,
+  "durationMs": 10792,
+  "stdoutPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-impl-existing-01.stdout.log",
+  "stderrPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-impl-existing-01.stderr.log"
+}

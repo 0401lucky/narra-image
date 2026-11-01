@@ -1,0 +1,21 @@
+{
+  "label": "resume-back-sqlstate-red",
+  "mode": "test",
+  "command": [
+    "pnpm",
+    "exec",
+    "vitest",
+    "run",
+    "src/tests/unit/canvas-http.test.ts",
+    "src/tests/unit/canvas-generate-route.test.ts",
+    "--testTimeout=30000"
+  ],
+  "cwd": "E:/code/narra-image",
+  "timeoutMs": 120000,
+  "code": 1,
+  "signal": null,
+  "timedOut": false,
+  "durationMs": 2415,
+  "stdoutPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\resume-back-sqlstate-red.stdout.log",
+  "stderrPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\resume-back-sqlstate-red.stderr.log"
+}

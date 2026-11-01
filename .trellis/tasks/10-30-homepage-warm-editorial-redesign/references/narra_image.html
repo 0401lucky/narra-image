@@ -1,0 +1,1302 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NARRA Image — 在叙事性的光影中，编织属于你的灵感画面</title>
+  <!-- 引入 Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- 引入 Google Fonts 中文衬线体、英文经典衬线体与现代无衬线体 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Noto+Serif+SC:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            paper: {
+              bg: '#F6F2EB',       /* 主背景：温润燕麦画纸色 */
+              linen: '#EDE6DB',    /* 二屏容器：暖亚麻色 */
+              card: '#FAF8F4',     /* 卡片底色：柔光暖白，告别冷白塑料感 */
+              border: '#DFD5C7',   /* 暖调细描边 */
+              ink: '#1F1B18',      /* 主标题深暖墨色 */
+              muted: '#6E655C',    /* 正文次要暖灰 */
+              subtle: '#9C9184',   /* 辅助说明文字 */
+              accent: '#C85A32',   /* 叙事陶土橙红 */
+              gold: '#D49B54'      /* 丁达尔暖金 */
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', '"PingFang SC"', '"Hiragino Sans GB"', '"Microsoft YaHei"', 'sans-serif'],
+            serif: ['"Cormorant Garamond"', '"Noto Serif SC"', 'serif'],
+            cnserif: ['"Noto Serif SC"', 'serif']
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    /* 全局暖调纸张纹理与基础排版 */
+    body {
+      background-color: #F6F2EB;
+      color: #1F1B18;
+      overflow-x: hidden;
+      background-image:
+        radial-gradient(circle at 15% 12%, rgba(212, 155, 84, 0.12) 0%, transparent 45%),
+        radial-gradient(circle at 85% 28%, rgba(200, 90, 50, 0.08) 0%, transparent 45%),
+        radial-gradient(circle at 50% 75%, rgba(212, 155, 84, 0.09) 0%, transparent 55%);
+    }
+
+    /* 细腻纸张噪点叠层 */
+    .paper-grain {
+      background-image: radial-gradient(rgba(31, 27, 24, 0.03) 1px, transparent 0);
+      background-size: 24px 24px;
+    }
+
+    /* 首屏右侧画布 3D 视差过渡 */
+    .hero-stage-perspective {
+      perspective: 1200px;
+    }
+    .hero-canvas-card {
+      transform-style: preserve-3d;
+      transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease;
+      box-shadow:
+        0 24px 60px -15px rgba(58, 43, 28, 0.14),
+        0 4px 16px -2px rgba(58, 43, 28, 0.06),
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.8);
+    }
+
+    /* 局部重绘扫描光圈动画 */
+    @keyframes pulseRing {
+      0%, 100% { transform: scale(1); opacity: 0.85; }
+      50% { transform: scale(1.06); opacity: 0.45; }
+    }
+    @keyframes scanLine {
+      0% { top: 6%; opacity: 0; }
+      20% { opacity: 0.9; }
+      80% { opacity: 0.9; }
+      100% { top: 92%; opacity: 0; }
+    }
+    .inpaint-ring {
+      animation: pulseRing 3.2s ease-in-out infinite;
+    }
+    .inpaint-scan {
+      animation: scanLine 2.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    }
+
+    /* 打字机闪烁光标 */
+    @keyframes blinkCursor {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+    .type-cursor {
+      display: inline-block;
+      width: 2px;
+      height: 1em;
+      background-color: #E8A87C;
+      margin-left: 3px;
+      vertical-align: middle;
+      animation: blinkCursor 0.9s infinite;
+    }
+
+    /* 第二屏卡片鼠标追光效果 (Spotlight) */
+    .spotlight-card {
+      position: relative;
+      overflow: hidden;
+      background-color: #FAF8F4;
+      border: 1px solid rgba(215, 202, 184, 0.75);
+      transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.35s ease, box-shadow 0.35s ease;
+    }
+    .spotlight-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(
+        420px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+        rgba(200, 90, 50, 0.085),
+        transparent 45%
+      );
+      opacity: 0;
+      transition: opacity 0.35s ease;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .spotlight-card:hover::before {
+      opacity: 1;
+    }
+    .spotlight-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(200, 90, 50, 0.4);
+      box-shadow: 0 18px 40px -16px rgba(68, 48, 30, 0.11);
+    }
+
+    /* 滚动渐显动画 */
+    .reveal-section {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.75s cubic-bezier(0.22, 1, 0.36, 1), transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .reveal-section.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* 画廊卡片入场级联动画 */
+    @keyframes cardCascade {
+      from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.98);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+    .gallery-item-anim {
+      animation: cardCascade 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    /* 社区精选画廊卡片 3D 视差与动态画框反光 */
+    .gallery-card-3d {
+      transform-style: preserve-3d;
+      will-change: transform;
+      transition: transform 0.16s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease, border-color 0.35s ease;
+    }
+    .gallery-card-3d.is-resetting {
+      transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease, border-color 0.35s ease;
+    }
+    .gallery-card-3d:hover {
+      box-shadow:
+        0 22px 48px -12px rgba(31, 27, 24, 0.28),
+        0 4px 14px -2px rgba(200, 90, 50, 0.12);
+    }
+    .gallery-card-glare {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 15;
+      background: radial-gradient(
+        340px circle at var(--glare-x, 50%) var(--glare-y, 50%),
+        rgba(255, 236, 205, 0.24),
+        transparent 55%
+      );
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .gallery-card-3d:hover .gallery-card-glare {
+      opacity: 1;
+    }
+
+    /* 优化批注指示器呼吸灯 */
+    @keyframes badgePing {
+      0% { transform: scale(1); opacity: 0.8; }
+      75%, 100% { transform: scale(1.8); opacity: 0; }
+    }
+    .annot-ping::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 9999px;
+      background-color: #C85A32;
+      animation: badgePing 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+      z-index: -1;
+    }
+  </style>
+</head>
+
+<body class="paper-grain antialiased selection:bg-paper-accent/15 selection:text-paper-accent">
+
+  <!-- 顶部浮动改版说明开关条（可一键高亮查看优化点） -->
+  <div class="bg-[#231F1C] text-[#F6F2EB] text-xs py-2 px-4 border-b border-white/10">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
+      <div class="flex items-center gap-2">
+        <span class="inline-block w-2 h-2 rounded-full bg-paper-accent animate-pulse"></span>
+        <span class="font-medium text-white/90">视觉重构与动态光影预览版：</span>
+        <span class="text-white/65 hidden sm:inline">已统一「暖调纸感画布」、修复标题孤字、合并首屏数据条、加入 3D 视差粒子与画廊悬停降噪。</span>
+      </div>
+      <button id="toggleAnnotationsBtn" type="button" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 hover:bg-white/20 text-[#F6F2EB] transition text-xs font-medium cursor-pointer">
+        <span id="annotStatusDot" class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+        <span id="annotBtnText">隐藏优化批注点 (6)</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- 顶部主导航栏 -->
+  <header class="sticky top-0 z-40 backdrop-blur-md bg-[#F6F2EB]/85 border-b border-paper-border/70 transition-all">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+      <!-- 左侧品牌 Logo -->
+      <a href="#" class="flex items-center gap-2.5 group">
+        <span class="font-serif text-2xl font-bold tracking-wider text-paper-accent">NARRA</span>
+        <span class="font-serif text-xl font-medium text-paper-ink">Image</span>
+        <span class="w-5 h-5 rounded-full border border-paper-border flex items-center justify-center text-[10px] text-paper-muted group-hover:border-paper-accent group-hover:text-paper-accent transition">✦</span>
+      </a>
+
+      <!-- 中间胶囊导航菜单（暖调毛玻璃，告别冷白割裂） -->
+      <nav class="hidden md:flex items-center bg-[#EFEAE1]/90 border border-paper-border/80 rounded-full p-1 text-xs font-medium text-paper-muted">
+        <a href="#hero" class="px-4 py-1.5 rounded-full bg-paper-card text-paper-ink shadow-sm font-semibold transition">首页</a>
+        <a href="#capabilities" class="px-3.5 py-1.5 rounded-full hover:text-paper-ink transition">创作台</a>
+        <a href="#exhibitions" class="px-3.5 py-1.5 rounded-full hover:text-paper-ink transition">提示词库</a>
+        <a href="#exhibitions" class="px-3.5 py-1.5 rounded-full hover:text-paper-ink transition">画廊</a>
+        <a href="#exhibitions" class="px-3.5 py-1.5 rounded-full hover:text-paper-ink transition">作品</a>
+        <a href="#capabilities" class="px-3.5 py-1.5 rounded-full hover:text-paper-ink transition">API</a>
+        <a href="#footer" class="px-3.5 py-1.5 rounded-full hover:text-paper-ink transition">管理后台</a>
+      </nav>
+
+      <!-- 右侧用户积分与桌宠状态 -->
+      <div class="flex items-center gap-2.5">
+        <div class="hidden sm:flex items-center gap-2 bg-[#FAF8F4]/90 border border-paper-border/80 rounded-full px-3.5 py-1.5 text-xs">
+          <span class="text-paper-muted">剩余积分</span>
+          <span class="font-semibold text-paper-accent font-mono">8,451</span>
+          <span class="text-paper-border">|</span>
+          <span class="text-emerald-700 font-medium flex items-center gap-1">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            今日已签
+          </span>
+          <span class="text-paper-border">|</span>
+          <button id="navPetToggle" type="button" class="flex items-center gap-1 text-paper-ink hover:text-paper-accent transition cursor-pointer">
+            <span>🐾 宠物:</span>
+            <span id="navPetState" class="font-semibold text-paper-accent">伴途中</span>
+          </button>
+        </div>
+
+        <!-- 头像 -->
+        <div class="w-8 h-8 rounded-full overflow-hidden border border-paper-border shadow-sm shrink-0">
+          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80" alt="用户头像" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/80x80/D49B54/FFFFFF?text=U'">
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== 第一屏：HERO 叙事首屏 ==================== -->
+  <section id="hero" class="relative pt-10 pb-16 lg:pt-16 lg:pb-24 overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+
+        <!-- 左侧：品牌叙事主文案 + 合并后的核心数据指标 -->
+        <div class="lg:col-span-6 space-y-7 relative">
+
+          <!-- 批注点 1 -->
+          <div class="design-annotation inline-flex items-center gap-2 px-3 py-1 rounded-full bg-paper-accent/10 border border-paper-accent/30 text-paper-accent text-xs font-medium">
+            <span class="relative flex h-2 w-2 annot-ping rounded-full bg-paper-accent"></span>
+            <span>优化①：修复“中，”字单独成行的孤字断层，中文宋体强调“叙事性”</span>
+          </div>
+
+          <!-- 顶部胶囊标签 -->
+          <div>
+            <span class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#FAF8F4] border border-paper-border text-xs font-medium text-paper-muted shadow-sm">
+              <span class="text-paper-accent">✦</span>
+              <span>Narra Image 叙事级 AI 影像创作系统</span>
+            </span>
+          </div>
+
+          <!-- 主标题：严格控制两行节奏，杜绝孤字 -->
+          <h1 class="text-3xl sm:text-4xl xl:text-[44px] font-bold tracking-tight text-paper-ink leading-[1.28]">
+            <span class="block">
+              在<span class="font-cnserif font-semibold text-paper-accent px-1 relative inline-block">“叙事性”<svg class="absolute -bottom-1 left-0 w-full h-2 text-paper-accent/30" viewBox="0 0 100 12" preserveAspectRatio="none"><path d="M2 9 Q50 1 98 8" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round"/></svg></span>的光影中，
+            </span>
+            <span class="block mt-1.5">编织属于你的灵感画面</span>
+          </h1>
+
+          <!-- 叙事副文案 -->
+          <p class="text-sm sm:text-base text-paper-muted leading-relaxed max-w-xl">
+            Narra Image 融合了前沿的图像生成算法与极具人文温度的画布交互。无论是细腻入微的电影级胶片写实、天马行空的绘本插画，还是优雅直观的多轮局部细节修补，在这里，每一帧想象都有温度。
+          </p>
+
+          <!-- 主次行动按钮 -->
+          <div class="flex flex-wrap items-center gap-4 pt-1">
+            <button id="startCreateBtn" type="button" class="group inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full bg-paper-ink text-[#FAF8F4] text-sm font-medium shadow-lg shadow-paper-ink/15 hover:bg-paper-accent transition-all duration-300 cursor-pointer">
+              <span>开始我的创作</span>
+              <span class="inline-block transition-transform duration-300 group-hover:rotate-45 text-paper-gold">✦</span>
+            </button>
+            <a href="#exhibitions" class="inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-[#FAF8F4] hover:bg-[#EFEAE1] text-paper-ink border border-paper-border text-sm font-medium transition cursor-pointer">
+              <span>探索灵感画廊</span>
+              <span class="text-paper-muted">↗</span>
+            </a>
+          </div>
+
+          <!-- 批注点 2：合并原本卡在页面半腰的数据栏 -->
+          <div class="design-annotation inline-flex items-center gap-2 px-3 py-1 rounded-full bg-paper-accent/10 border border-paper-accent/30 text-paper-accent text-xs font-medium">
+            <span class="relative flex h-2 w-2 annot-ping rounded-full bg-paper-accent"></span>
+            <span>优化②：将原第二屏下方孤立的数据白框上提至此，消除长页断层</span>
+          </div>
+
+          <!-- 内嵌式轻量信任背书数据栏（带平滑数字递增动画） -->
+          <div class="pt-4 border-t border-paper-border/80 grid grid-cols-3 gap-4 max-w-lg">
+            <div>
+              <div class="font-serif text-2xl sm:text-3xl font-bold text-paper-accent tracking-tight">
+                <span class="stat-counter" data-target="150000" data-format="comma">0</span>+
+              </div>
+              <div class="text-xs text-paper-muted mt-0.5">累计生成叙事画作</div>
+            </div>
+            <div class="border-l border-paper-border/70 pl-4">
+              <div class="font-serif text-2xl sm:text-3xl font-bold text-paper-ink tracking-tight">
+                <span class="stat-counter" data-target="120" data-format="int">0</span>+
+              </div>
+              <div class="text-xs text-paper-muted mt-0.5">精调光影与胶片模型</div>
+            </div>
+            <div class="border-l border-paper-border/70 pl-4">
+              <div class="font-serif text-2xl sm:text-3xl font-bold text-paper-ink tracking-tight">
+                &lt; <span class="stat-counter" data-target="4.2" data-format="float">0.0</span>s
+              </div>
+              <div class="text-xs text-paper-muted mt-0.5">平均生成响应耗时</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 右侧：3D 视差交互式画布 + 丁达尔光影粒子 + 场景切换 -->
+        <div class="lg:col-span-6 relative hero-stage-perspective">
+
+          <!-- 批注点 3 -->
+          <div class="design-annotation mb-2.5 flex items-center justify-end">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-paper-accent/10 border border-paper-accent/30 text-paper-accent text-xs font-medium">
+              <span class="relative flex h-2 w-2 annot-ping rounded-full bg-paper-accent"></span>
+              <span>优化③：告别与下方重复的粉发图，支持 3D 视差、粒子光影与多场景切换</span>
+            </div>
+          </div>
+
+          <!-- 暖色画框主容器 -->
+          <div id="heroCanvasCard" class="hero-canvas-card rounded-3xl bg-[#FAF8F4] border border-paper-border p-3.5 sm:p-4 relative">
+
+            <!-- 画布顶部极简工具栏（取代生硬的红黄绿代码窗口头） -->
+            <div class="flex flex-wrap items-center justify-between gap-2 pb-3 mb-3 border-b border-paper-border/70 px-1">
+              <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-paper-accent"></span>
+                <span class="text-xs font-serif italic text-paper-muted">Narra Studio · 叙事光影画布</span>
+              </div>
+
+              <!-- 3 个叙事风格实时切换器 -->
+              <div class="flex items-center gap-1 bg-[#EFEAE1] p-1 rounded-full border border-paper-border/70">
+                <button type="button" data-scene="0" class="scene-tab px-3 py-1 rounded-full text-xs font-medium transition cursor-pointer bg-paper-ink text-[#FAF8F4] shadow-sm">
+                  胶片光影
+                </button>
+                <button type="button" data-scene="1" class="scene-tab px-3 py-1 rounded-full text-xs font-medium transition cursor-pointer text-paper-muted hover:text-paper-ink">
+                  绘本叙事
+                </button>
+                <button type="button" data-scene="2" class="scene-tab px-3 py-1 rounded-full text-xs font-medium transition cursor-pointer text-paper-muted hover:text-paper-ink">
+                  东方美学
+                </button>
+              </div>
+            </div>
+
+            <!-- 画作视口区域 -->
+            <div class="relative rounded-2xl overflow-hidden aspect-[4/3] bg-[#1F1B18] group">
+              <!-- 主视觉画作 -->
+              <img id="heroStageImg"
+                src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1200&q=85"
+                alt="叙事光影主视觉"
+                class="w-full h-full object-cover transition-all duration-700 ease-out scale-100 group-hover:scale-[1.03]"
+                onerror="this.src='https://placehold.co/900x675/2A211B/E8D8C8?text=Narra+Cinematic+Light'">
+
+              <!-- 暖调电影暗角叠层 -->
+              <div class="absolute inset-0 bg-gradient-to-t from-[#14110F]/80 via-transparent to-[#14110F]/20 pointer-events-none"></div>
+
+              <!-- 丁达尔浮尘粒子 Canvas -->
+              <canvas id="tyndallCanvas" class="absolute inset-0 w-full h-full pointer-events-none opacity-85"></canvas>
+
+              <!-- 左上角状态胶囊 -->
+              <div class="absolute top-3.5 left-3.5 flex items-center gap-2 px-3 py-1 rounded-full bg-black/45 backdrop-blur-md border border-white/15 text-[11px] text-white/90">
+                <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping"></span>
+                <span id="heroModelTag">Narra Film-35mm · 黄金时刻逆光</span>
+              </div>
+
+              <!-- 画布中央：局部重绘光圈（体现“多轮细节修补”能力） -->
+              <div class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-28 h-28 sm:w-32 sm:h-32 rounded-2xl border border-amber-200/60 bg-amber-100/5 backdrop-blur-[1px] inpaint-ring pointer-events-none flex items-end justify-center p-2 overflow-hidden">
+                <div class="absolute left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-amber-300 to-transparent inpaint-scan"></div>
+                <span class="text-[10px] px-2 py-0.5 rounded-full bg-black/60 text-amber-200 border border-amber-300/30 whitespace-nowrap">
+                  ✦ 局部光影微调中
+                </span>
+              </div>
+
+              <!-- 右侧悬浮图层参数小浮窗 -->
+              <div class="hidden sm:block absolute top-14 right-3.5 w-44 rounded-2xl bg-[#FAF8F4]/90 backdrop-blur-md border border-white/60 p-3 shadow-lg text-xs">
+                <div class="text-[10px] text-paper-muted uppercase tracking-wider">风格预设 · Style</div>
+                <div id="heroPresetTitle" class="font-semibold text-paper-ink mt-0.5 flex items-center gap-1.5">
+                  <span class="w-2 h-2 rounded-full bg-paper-accent"></span>
+                  <span>Narra Editorial 胶片</span>
+                </div>
+                <div class="mt-2 pt-2 border-t border-paper-border/60 flex items-center justify-between text-[11px] text-paper-muted">
+                  <span>Steps: 30</span>
+                  <span>CFG: 6.5</span>
+                </div>
+              </div>
+
+              <!-- 底部毛玻璃打字机 Prompt 浮层 -->
+              <div class="absolute bottom-3 left-3 right-3 rounded-2xl bg-black/55 backdrop-blur-md border border-white/15 p-3.5 text-white">
+                <div class="flex items-center justify-between gap-2 text-[11px] text-white/70 mb-1">
+                  <span id="heroAspectTag" class="px-2 py-0.5 rounded bg-white/15 text-white/90 font-mono text-[10px]">Aspect Ratio: 4:5 · 叙事画幅</span>
+                  <button id="copyHeroPromptBtn" type="button" class="text-amber-300 hover:text-amber-200 transition flex items-center gap-1 cursor-pointer">
+                    <span>复用画面灵感</span>
+                    <span>↗</span>
+                  </button>
+                </div>
+                <p class="text-xs sm:text-sm text-white/95 font-light leading-relaxed min-h-[2.5rem]">
+                  <span id="heroTypewriterText">黄昏穿过旧书店百叶窗的丁达尔光束，微尘在暖金空气中漂浮，王家卫电影胶片颗粒感，柔和景深，叙事感构图</span><span class="type-cursor"></span>
+                </p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 第二屏：核心能力（暖亚麻聚拢容器 + 微缩视觉示意） ==================== -->
+  <section id="capabilities" class="py-16 lg:py-20 reveal-section">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <!-- 暖亚麻色大圆角包裹容器：建立清晰的章节节奏 -->
+      <div class="rounded-[32px] bg-paper-linen/85 border border-paper-border/90 p-6 sm:p-10 lg:p-14 relative">
+
+        <!-- 批注点 4 -->
+        <div class="design-annotation mb-4 flex justify-center">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-paper-accent/10 border border-paper-accent/30 text-paper-accent text-xs font-medium">
+            <span class="relative flex h-2 w-2 annot-ping rounded-full bg-paper-accent"></span>
+            <span>优化④：去掉代码风“//”，纯白卡片改为暖米白 + 鼠标追光 + 底部动态微缩示意，告别文字荒漠</span>
+          </div>
+        </div>
+
+        <!-- 章节标题：采用画廊策展编号替代代码注释 // -->
+        <div class="text-center max-w-2xl mx-auto mb-10 lg:mb-12">
+          <div class="inline-flex items-center gap-2 text-xs tracking-widest uppercase text-paper-accent font-medium mb-2">
+            <span>01</span>
+            <span class="w-6 h-[1px] bg-paper-accent/50"></span>
+            <span>CORE CAPABILITIES · 严选核心能力</span>
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-bold text-paper-ink tracking-tight">
+            不止于画作生成，更是创作的无限延伸
+          </h2>
+          <p class="text-sm text-paper-muted mt-2.5 leading-relaxed">
+            我们致力于打破冰冷的技术参数，将叙事艺术感融入每一次涂抹与微调中，提供有温度的影像生成体验。
+          </p>
+        </div>
+
+        <!-- 四列核心能力卡片（带鼠标追光 + 底部自循环微缩组件） -->
+        <div id="capabilityGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+
+          <!-- 卡片 1：画笔写意 / 叙事生图 -->
+          <div class="spotlight-card rounded-2xl p-6 flex flex-col justify-between min-h-[270px]">
+            <div class="relative z-10">
+              <div class="w-10 h-10 rounded-xl bg-paper-accent/10 border border-paper-accent/20 flex items-center justify-center text-paper-accent mb-4">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+              </div>
+              <h3 class="text-base font-bold text-paper-ink mb-2">画笔写意 / 叙事生图</h3>
+              <p class="text-xs text-paper-muted leading-relaxed">
+                精准捕捉文字背后的情绪与光影明暗，支持多画幅与电影镜头语言，让画面自带故事张力。
+              </p>
+            </div>
+
+            <!-- 底部微缩视觉示意：动态呼吸轮替的灵感词胶囊 -->
+            <div class="relative z-10 mt-5 pt-3.5 border-t border-paper-border/60">
+              <div class="text-[11px] text-paper-subtle mb-2 flex items-center justify-between">
+                <span>光影语意自动解析</span>
+                <span class="text-paper-accent">● 实时生效</span>
+              </div>
+              <div id="promptPillsDemo" class="flex flex-wrap gap-1.5">
+                <span class="prompt-pill text-[11px] px-2.5 py-0.5 rounded-full border transition-all duration-300 bg-paper-accent text-white border-paper-accent">丁达尔夕阳</span>
+                <span class="prompt-pill text-[11px] px-2.5 py-0.5 rounded-full border transition-all duration-300 bg-[#EFEAE1] text-paper-muted border-paper-border">35mm 胶片</span>
+                <span class="prompt-pill text-[11px] px-2.5 py-0.5 rounded-full border transition-all duration-300 bg-[#EFEAE1] text-paper-muted border-paper-border">浅景深叙事</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 卡片 2：创作迭代台 / 画布微调 -->
+          <div class="spotlight-card rounded-2xl p-6 flex flex-col justify-between min-h-[270px]">
+            <div class="relative z-10">
+              <div class="w-10 h-10 rounded-xl bg-paper-accent/10 border border-paper-accent/20 flex items-center justify-center text-paper-accent mb-4">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"/></svg>
+              </div>
+              <h3 class="text-base font-bold text-paper-ink mb-2">创作迭代台 / 画布微调</h3>
+              <p class="text-xs text-paper-muted leading-relaxed">
+                告别盲盒式抽卡。支持多轮对话迭代与画布局部涂抹重绘，保留满意构图的同时精修每一处细节。
+              </p>
+            </div>
+
+            <!-- 底部微缩视觉示意：v1 -> v2 -> v3 版本演进树 -->
+            <div class="relative z-10 mt-5 pt-3.5 border-t border-paper-border/60">
+              <div class="text-[11px] text-paper-subtle mb-2 flex items-center justify-between">
+                <span>非破坏性图层历史</span>
+                <span id="versionLabelDemo" class="font-mono text-paper-ink font-medium">v2 · 局部补光</span>
+              </div>
+              <div class="flex items-center justify-between gap-1 bg-[#EFEAE1] p-1.5 rounded-xl border border-paper-border/70">
+                <div class="ver-node flex-1 text-center py-1 rounded-lg text-[11px] font-medium transition-all bg-paper-card text-paper-ink shadow-sm">v1 初稿</div>
+                <span class="text-paper-subtle text-xs">→</span>
+                <div class="ver-node flex-1 text-center py-1 rounded-lg text-[11px] font-medium transition-all text-paper-muted">v2 补光</div>
+                <span class="text-paper-subtle text-xs">→</span>
+                <div class="ver-node flex-1 text-center py-1 rounded-lg text-[11px] font-medium transition-all text-paper-muted">v3 终稿</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 卡片 3：灵动数字宠物伴途 -->
+          <div class="spotlight-card rounded-2xl p-6 flex flex-col justify-between min-h-[270px]">
+            <div class="relative z-10">
+              <div class="w-10 h-10 rounded-xl bg-paper-accent/10 border border-paper-accent/20 flex items-center justify-center text-paper-accent mb-4">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              </div>
+              <h3 class="text-base font-bold text-paper-ink mb-2">灵动数字宠物伴途</h3>
+              <p class="text-xs text-paper-muted leading-relaxed">
+                内置懂艺术的桌面小生灵，在等待渲染或灵感枯竭时主动递上构图巧思，让独自创作不再孤单。
+              </p>
+            </div>
+
+            <!-- 底部微缩视觉示意：可点击互动的桌宠状态条 -->
+            <div class="relative z-10 mt-5 pt-3.5 border-t border-paper-border/60">
+              <button id="petInteractBtn" type="button" class="w-full flex items-center justify-between bg-[#EFEAE1] hover:bg-[#E5DEC9] px-3 py-2 rounded-xl border border-paper-border/80 transition cursor-pointer group">
+                <div class="flex items-center gap-2 text-left">
+                  <span class="text-base group-hover:scale-125 transition-transform">🦊</span>
+                  <div>
+                    <div id="petSpeechText" class="text-[11px] font-medium text-paper-ink">“试试加入暖色侧逆光？”</div>
+                    <div class="text-[10px] text-paper-muted">点击摸摸头换条灵感</div>
+                  </div>
+                </div>
+                <span class="text-xs text-paper-accent font-medium">互动 ✦</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- 卡片 4：极速开发者 API -->
+          <div class="spotlight-card rounded-2xl p-6 flex flex-col justify-between min-h-[270px]">
+            <div class="relative z-10">
+              <div class="w-10 h-10 rounded-xl bg-paper-accent/10 border border-paper-accent/20 flex items-center justify-center text-paper-accent mb-4">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+              </div>
+              <h3 class="text-base font-bold text-paper-ink mb-2">极速开发者 API</h3>
+              <p class="text-xs text-paper-muted leading-relaxed">
+                高并发、低延迟的 RESTful 与流式接口，提供清晰的 SDK 与 Webhook，轻松将叙事影像力接入业务。
+              </p>
+            </div>
+
+            <!-- 底部微缩视觉示意：API 响应状态监控 -->
+            <div class="relative z-10 mt-5 pt-3.5 border-t border-paper-border/60">
+              <div class="bg-[#231F1C] text-[#F6F2EB] px-3 py-2 rounded-xl text-[11px] font-mono flex items-center justify-between">
+                <span class="text-amber-300">POST /v2/narra/render</span>
+                <span class="inline-flex items-center gap-1 text-emerald-400">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                  <span>200 OK</span>
+                </span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 第三屏：社区精选画廊（去分割线 + 悬停毛玻璃抽屉降噪） ==================== -->
+  <section id="exhibitions" class="py-12 lg:py-20 reveal-section">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <!-- 批注点 5 -->
+      <div class="design-annotation mb-4">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-paper-accent/10 border border-paper-accent/30 text-paper-accent text-xs font-medium">
+          <span class="relative flex h-2 w-2 annot-ping rounded-full bg-paper-accent"></span>
+          <span>优化⑤：移除突兀横线；画廊卡片加入 3D 视差倾斜与暖金追光，悬停时优雅展开毛玻璃灵感抽屉</span>
+        </div>
+      </div>
+
+      <!-- 画廊头部与风格筛选器（同处一个完整展厅区域，无割裂横线） -->
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+        <div>
+          <div class="inline-flex items-center gap-2 text-xs tracking-widest uppercase text-paper-accent font-medium mb-2">
+            <span>02</span>
+            <span class="w-6 h-[1px] bg-paper-accent/50"></span>
+            <span>CURATED WORKS · 佳作展映</span>
+          </div>
+          <div class="flex items-baseline gap-3">
+            <h2 class="text-2xl sm:text-3xl font-bold text-paper-ink tracking-tight">社区精选</h2>
+            <span class="font-serif italic text-2xl sm:text-3xl text-paper-muted">Exhibitions</span>
+          </div>
+          <p class="text-sm text-paper-muted mt-2">
+            浏览来自全球创作者使用 Narra Image 编织的光影故事，鼠标悬停即可查看或复用背后的生成灵感。
+          </p>
+        </div>
+
+        <!-- 分类筛选胶囊 + 开启创作按钮 -->
+        <div class="flex flex-wrap items-center gap-2">
+          <div class="flex items-center bg-[#EFEAE1] p-1 rounded-full border border-paper-border/80 text-xs">
+            <button type="button" data-filter="all" class="gallery-filter-btn px-3.5 py-1.5 rounded-full font-medium transition cursor-pointer bg-paper-ink text-[#FAF8F4] shadow-sm">全部展映</button>
+            <button type="button" data-filter="portrait" class="gallery-filter-btn px-3.5 py-1.5 rounded-full font-medium transition cursor-pointer text-paper-muted hover:text-paper-ink">光影人像</button>
+            <button type="button" data-filter="cinema" class="gallery-filter-btn px-3.5 py-1.5 rounded-full font-medium transition cursor-pointer text-paper-muted hover:text-paper-ink">电影叙事</button>
+            <button type="button" data-filter="still" class="gallery-filter-btn px-3.5 py-1.5 rounded-full font-medium transition cursor-pointer text-paper-muted hover:text-paper-ink">静物胶片</button>
+          </div>
+
+          <button type="button" id="galleryCreateBtn" class="px-5 py-2 rounded-full bg-paper-ink hover:bg-paper-accent text-[#FAF8F4] text-xs font-medium transition cursor-pointer">
+            开启灵感创作
+          </button>
+        </div>
+      </div>
+
+      <!-- 8 宫格策展画廊容器 -->
+      <div id="galleryGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <!-- 由下方 JS 动态渲染，确保干净默认态 + Hover 抽屉态 -->
+      </div>
+
+      <!-- 批注点 6 -->
+      <div class="design-annotation mt-10 flex justify-center">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-paper-accent/10 border border-paper-accent/30 text-paper-accent text-xs font-medium">
+          <span class="relative flex h-2 w-2 annot-ping rounded-full bg-paper-accent"></span>
+          <span>优化⑥：增加画廊底部收束引导与人文页脚，解决长截图滚到底部“戛然而止”的未完成感</span>
+        </div>
+      </div>
+
+      <!-- 画廊底部收束缓冲按钮 -->
+      <div class="mt-10 text-center">
+        <button id="loadMoreGalleryBtn" type="button" class="inline-flex items-center gap-2 px-7 py-3 rounded-full bg-[#FAF8F4] hover:bg-[#EFEAE1] text-paper-ink border border-paper-border text-xs sm:text-sm font-medium shadow-sm transition cursor-pointer">
+          <span>漫游全部 150,000+ 幅展映作品</span>
+          <span class="text-paper-accent">→</span>
+        </button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==================== 底部页脚（稳住长页面视觉重心） ==================== -->
+  <footer id="footer" class="mt-12 bg-[#1F1B18] text-[#EDE6DB] border-t border-paper-border/20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-8 pb-10 border-b border-white/10">
+        <div class="md:col-span-5 space-y-3">
+          <div class="flex items-center gap-2">
+            <span class="font-serif text-2xl font-bold tracking-wider text-[#E8A87C]">NARRA</span>
+            <span class="font-serif text-xl font-medium text-white">Image</span>
+          </div>
+          <p class="text-xs text-white/65 max-w-sm leading-relaxed">
+            在“叙事性”的光影中，编织属于你的灵感画面。融合前沿视觉生成模型与极具人文温度的画布交互体验。
+          </p>
+        </div>
+
+        <div class="md:col-span-7 grid grid-cols-2 sm:grid-cols-3 gap-6 text-xs">
+          <div class="space-y-2.5">
+            <div class="font-semibold text-white/90 uppercase tracking-wider">创作空间</div>
+            <ul class="space-y-2 text-white/60">
+              <li><a href="#hero" class="hover:text-white transition">光影创作台</a></li>
+              <li><a href="#capabilities" class="hover:text-white transition">多轮局部微调</a></li>
+              <li><a href="#exhibitions" class="hover:text-white transition">叙事提示词库</a></li>
+            </ul>
+          </div>
+          <div class="space-y-2.5">
+            <div class="font-semibold text-white/90 uppercase tracking-wider">模型与生态</div>
+            <ul class="space-y-2 text-white/60">
+              <li><a href="#capabilities" class="hover:text-white transition">Narra Film 胶片系</a></li>
+              <li><a href="#capabilities" class="hover:text-white transition">开发者 REST API</a></li>
+              <li><a href="#capabilities" class="hover:text-white transition">数字宠物伴途设定</a></li>
+            </ul>
+          </div>
+          <div class="space-y-2.5">
+            <div class="font-semibold text-white/90 uppercase tracking-wider">关于策展</div>
+            <ul class="space-y-2 text-white/60">
+              <li><a href="#exhibitions" class="hover:text-white transition">社区精选规范</a></li>
+              <li><a href="#footer" class="hover:text-white transition">创作者版权保护</a></li>
+              <li><a href="#footer" class="hover:text-white transition">服务状态监控</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-white/45">
+        <div>© 2026 NARRA Image Studio. All rights reserved.</div>
+        <div class="font-serif italic text-white/60">Crafted for visual storytellers &amp; dreamers.</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- 全局轻量通知 Toast（替代原生 alert） -->
+  <div id="narraToast" class="fixed bottom-6 right-6 z-50 max-w-sm bg-[#1F1B18] text-[#FAF8F4] px-4 py-3 rounded-2xl shadow-xl border border-white/15 flex items-center gap-3 text-xs pointer-events-none opacity-0 translate-y-3 transition-all duration-300">
+    <span class="w-2 h-2 rounded-full bg-paper-accent shrink-0"></span>
+    <span id="narraToastMsg">已复制灵感提示词</span>
+  </div>
+
+  <!-- ==================== 交互与动画脚本 ==================== -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+      // 1. 全局轻量 Toast 提示工具
+      var toastEl = document.getElementById('narraToast');
+      var toastMsgEl = document.getElementById('narraToastMsg');
+      var toastTimer = null;
+
+      function showToast(message) {
+        if (!toastEl || !toastMsgEl) return;
+        toastMsgEl.textContent = message;
+        toastEl.classList.remove('opacity-0', 'translate-y-3');
+        toastEl.classList.add('opacity-100', 'translate-y-0');
+        if (toastTimer) clearTimeout(toastTimer);
+        toastTimer = setTimeout(function () {
+          toastEl.classList.remove('opacity-100', 'translate-y-0');
+          toastEl.classList.add('opacity-0', 'translate-y-3');
+        }, 2600);
+      }
+
+      // 2. 顶部「显示/隐藏优化批注点」开关
+      var toggleAnnotationsBtn = document.getElementById('toggleAnnotationsBtn');
+      var annotBtnText = document.getElementById('annotBtnText');
+      var annotStatusDot = document.getElementById('annotStatusDot');
+      var annotationsVisible = true;
+
+      if (toggleAnnotationsBtn) {
+        toggleAnnotationsBtn.addEventListener('click', function () {
+          annotationsVisible = !annotationsVisible;
+          var badges = document.querySelectorAll('.design-annotation');
+          badges.forEach(function (el) {
+            el.style.display = annotationsVisible ? '' : 'none';
+          });
+          if (annotBtnText) {
+            annotBtnText.textContent = annotationsVisible ? '隐藏优化批注点 (6)' : '显示优化批注点 (6)';
+          }
+          if (annotStatusDot) {
+            annotStatusDot.className = annotationsVisible
+              ? 'w-1.5 h-1.5 rounded-full bg-emerald-400'
+              : 'w-1.5 h-1.5 rounded-full bg-stone-400';
+          }
+          showToast(annotationsVisible ? '已开启改版优化批注展示' : '已切换为纯净预览模式');
+        });
+      }
+
+      // 3. 首屏右侧画布：3 组叙事场景切换 + 打字机动态输入
+      var heroScenes = [
+        {
+          img: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1200&q=85',
+          modelTag: 'Narra Film-35mm · 黄金时刻逆光',
+          presetTitle: 'Narra Editorial 胶片',
+          aspect: 'Aspect Ratio: 4:5 · 叙事画幅',
+          prompt: '黄昏穿过旧书店百叶窗的丁达尔光束，微尘在暖金空气中漂浮，王家卫电影胶片颗粒感，柔和景深，叙事感构图'
+        },
+        {
+          img: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=1200&q=85',
+          modelTag: 'Narra Storybook · 手绘水彩肌理',
+          presetTitle: 'Warm Fable 绘本笔触',
+          aspect: 'Aspect Ratio: 16:10 · 绘本跨页',
+          prompt: '提着暖黄煤油灯穿过迷雾森林的小狐狸，宫崎骏式温暖手绘水彩质感，星光点缀夜空，细腻纸张纹理'
+        },
+        {
+          img: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=1200&q=85',
+          modelTag: 'Narra Oriental · 东方水墨留白',
+          presetTitle: 'Oriental Ink 东方韵味',
+          aspect: 'Aspect Ratio: 3:4 · 立轴构图',
+          prompt: '江南雨巷檐角滴落的雨水，远处暖黄灯笼倒映在青石板水面，宋代美学克制留白，电影级冷暖色调对比'
+        }
+      ];
+
+      var currentSceneIndex = 0;
+      var typewriterTimer = null;
+      var heroStageImg = document.getElementById('heroStageImg');
+      var heroModelTag = document.getElementById('heroModelTag');
+      var heroPresetTitle = document.getElementById('heroPresetTitle');
+      var heroAspectTag = document.getElementById('heroAspectTag');
+      var heroTypewriterText = document.getElementById('heroTypewriterText');
+      var sceneTabs = document.querySelectorAll('.scene-tab');
+
+      function runTypewriter(text) {
+        if (!heroTypewriterText) return;
+        if (typewriterTimer) clearInterval(typewriterTimer);
+        heroTypewriterText.textContent = '';
+        var idx = 0;
+        typewriterTimer = setInterval(function () {
+          if (idx < text.length) {
+            heroTypewriterText.textContent += text.charAt(idx);
+            idx++;
+          } else {
+            clearInterval(typewriterTimer);
+          }
+        }, 28);
+      }
+
+      function switchHeroScene(index) {
+        var scene = heroScenes[index];
+        if (!scene) return;
+        currentSceneIndex = index;
+
+        sceneTabs.forEach(function (btn, i) {
+          if (i === index) {
+            btn.className = 'scene-tab px-3 py-1 rounded-full text-xs font-medium transition cursor-pointer bg-paper-ink text-[#FAF8F4] shadow-sm';
+          } else {
+            btn.className = 'scene-tab px-3 py-1 rounded-full text-xs font-medium transition cursor-pointer text-paper-muted hover:text-paper-ink';
+          }
+        });
+
+        if (heroStageImg) {
+          heroStageImg.style.opacity = '0.35';
+          setTimeout(function () {
+            heroStageImg.src = scene.img;
+            heroStageImg.style.opacity = '1';
+          }, 180);
+        }
+        if (heroModelTag) heroModelTag.textContent = scene.modelTag;
+        if (heroPresetTitle) {
+          heroPresetTitle.innerHTML = '<span class="w-2 h-2 rounded-full bg-paper-accent"></span><span>' + scene.presetTitle + '</span>';
+        }
+        if (heroAspectTag) heroAspectTag.textContent = scene.aspect;
+        runTypewriter(scene.prompt);
+      }
+
+      sceneTabs.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var idx = parseInt(btn.getAttribute('data-scene'), 10);
+          switchHeroScene(idx);
+        });
+      });
+
+      // 4. 首屏画布 3D 视差悬浮交互
+      var heroCanvasCard = document.getElementById('heroCanvasCard');
+      if (heroCanvasCard) {
+        heroCanvasCard.addEventListener('mousemove', function (e) {
+          var rect = heroCanvasCard.getBoundingClientRect();
+          var x = e.clientX - rect.left;
+          var y = e.clientY - rect.top;
+          var centerX = rect.width / 2;
+          var centerY = rect.height / 2;
+          var rotateX = ((y - centerY) / centerY) * -4.5;
+          var rotateY = ((x - centerX) / centerX) * 4.5;
+          heroCanvasCard.style.transform = 'rotateX(' + rotateX.toFixed(2) + 'deg) rotateY(' + rotateY.toFixed(2) + 'deg)';
+        });
+
+        heroCanvasCard.addEventListener('mouseleave', function () {
+          heroCanvasCard.style.transform = 'rotateX(0deg) rotateY(0deg)';
+        });
+      }
+
+      // 5. 首屏画布内部：丁达尔暖金浮尘粒子渲染
+      var tyndallCanvas = document.getElementById('tyndallCanvas');
+      if (tyndallCanvas && tyndallCanvas.getContext) {
+        var ctx = tyndallCanvas.getContext('2d');
+        var particles = [];
+        var particleCount = 32;
+
+        function resizeTyndallCanvas() {
+          var rect = tyndallCanvas.parentElement.getBoundingClientRect();
+          tyndallCanvas.width = rect.width || 600;
+          tyndallCanvas.height = rect.height || 450;
+        }
+        resizeTyndallCanvas();
+        window.addEventListener('resize', resizeTyndallCanvas);
+
+        for (var i = 0; i < particleCount; i++) {
+          particles.push({
+            x: Math.random() * tyndallCanvas.width,
+            y: Math.random() * tyndallCanvas.height,
+            r: Math.random() * 2.2 + 0.8,
+            vx: (Math.random() - 0.3) * 0.35,
+            vy: -Math.random() * 0.45 - 0.15,
+            alpha: Math.random() * 0.65 + 0.2
+          });
+        }
+
+        function animateParticles() {
+          ctx.clearRect(0, 0, tyndallCanvas.width, tyndallCanvas.height);
+          for (var j = 0; j < particles.length; j++) {
+            var p = particles[j];
+            p.x += p.vx;
+            p.y += p.vy;
+
+            if (p.y < -10) p.y = tyndallCanvas.height + 10;
+            if (p.x > tyndallCanvas.width + 10) p.x = -10;
+            if (p.x < -10) p.x = tyndallCanvas.width + 10;
+
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(255, 224, 168, ' + p.alpha + ')';
+            ctx.fill();
+          }
+          requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+      }
+
+      // 6. 首屏数字指标平滑递增动画 (Count-up)
+      var statCounters = document.querySelectorAll('.stat-counter');
+      statCounters.forEach(function (counter) {
+        var target = parseFloat(counter.getAttribute('data-target') || '0');
+        var format = counter.getAttribute('data-format');
+        var duration = 1500;
+        var startTime = null;
+
+        function stepCount(timestamp) {
+          if (!startTime) startTime = timestamp;
+          var progress = Math.min((timestamp - startTime) / duration, 1);
+          var easeOut = 1 - Math.pow(1 - progress, 3);
+          var current = target * easeOut;
+
+          if (format === 'comma') {
+            counter.textContent = Math.floor(current).toLocaleString('en-US');
+          } else if (format === 'float') {
+            counter.textContent = current.toFixed(1);
+          } else {
+            counter.textContent = Math.floor(current).toString();
+          }
+
+          if (progress < 1) {
+            requestAnimationFrame(stepCount);
+          }
+        }
+        requestAnimationFrame(stepCount);
+      });
+
+      // 7. 第二屏卡片：鼠标追光坐标追踪 + 内部微缩示意自循环
+      var spotlightCards = document.querySelectorAll('.spotlight-card');
+      spotlightCards.forEach(function (card) {
+        card.addEventListener('mousemove', function (e) {
+          var rect = card.getBoundingClientRect();
+          card.style.setProperty('--mouse-x', (e.clientX - rect.left) + 'px');
+          card.style.setProperty('--mouse-y', (e.clientY - rect.top) + 'px');
+        });
+      });
+
+      // 微缩示意自动循环（灵感词胶囊 & 版本节点）
+      var promptPills = document.querySelectorAll('.prompt-pill');
+      var verNodes = document.querySelectorAll('.ver-node');
+      var versionLabelDemo = document.getElementById('versionLabelDemo');
+      var verDescriptions = ['v1 · 线稿构图', 'v2 · 局部补光', 'v3 · 胶片终稿'];
+      var activeMicroIdx = 0;
+
+      setInterval(function () {
+        activeMicroIdx = (activeMicroIdx + 1) % 3;
+        promptPills.forEach(function (pill, idx) {
+          if (idx === activeMicroIdx) {
+            pill.className = 'prompt-pill text-[11px] px-2.5 py-0.5 rounded-full border transition-all duration-300 bg-paper-accent text-white border-paper-accent';
+          } else {
+            pill.className = 'prompt-pill text-[11px] px-2.5 py-0.5 rounded-full border transition-all duration-300 bg-[#EFEAE1] text-paper-muted border-paper-border';
+          }
+        });
+        verNodes.forEach(function (node, idx) {
+          if (idx === activeMicroIdx) {
+            node.className = 'ver-node flex-1 text-center py-1 rounded-lg text-[11px] font-medium transition-all bg-paper-card text-paper-ink shadow-sm';
+          } else {
+            node.className = 'ver-node flex-1 text-center py-1 rounded-lg text-[11px] font-medium transition-all text-paper-muted';
+          }
+        });
+        if (versionLabelDemo) {
+          versionLabelDemo.textContent = verDescriptions[activeMicroIdx];
+        }
+      }, 2200);
+
+      // 桌宠互动按钮
+      var petInteractBtn = document.getElementById('petInteractBtn');
+      var petSpeechText = document.getElementById('petSpeechText');
+      var petIdeas = [
+        '“试试加入暖色侧逆光？”',
+        '“把画幅调成 2.35:1 更有电影感！”',
+        '“加一点雨后青石板的反光细节吧~”',
+        '“用柔焦镜头突出人物眼神的故事感！”'
+      ];
+      var petIdeaIndex = 0;
+
+      if (petInteractBtn) {
+        petInteractBtn.addEventListener('click', function () {
+          petIdeaIndex = (petIdeaIndex + 1) % petIdeas.length;
+          if (petSpeechText) petSpeechText.textContent = petIdeas[petIdeaIndex];
+          showToast('🐾 桌宠小狐狸递来了一条新的构图灵感');
+        });
+      }
+
+      // 8. 第三屏社区精选画廊数据与渲染（无重复图、默认态干净、Hover 毛玻璃抽屉）
+      var artworks = [
+        {
+          id: 1,
+          category: 'portrait',
+          title: '旧日百叶窗前的琥珀午后',
+          author: '林深见鹿',
+          avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80',
+          likes: 128,
+          model: 'Narra Film 35mm',
+          image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=700&q=80',
+          prompt: 'Warm afternoon sunlight filtering through wooden blinds onto a young woman face, Kodak Portra 400 film grain, poetic melancholy mood.'
+        },
+        {
+          id: 2,
+          category: 'cinema',
+          title: '末班地铁上的胶片独白',
+          author: 'Jekai_Visual',
+          avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&q=80',
+          likes: 94,
+          model: 'Narra Cine-2.4',
+          image: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=700&q=80',
+          prompt: 'Cinematic portrait of a young commuter standing inside a vintage subway car, warm tungsten light mixed with cool window reflections.'
+        },
+        {
+          id: 3,
+          category: 'still',
+          title: '薰衣草手账与夏日冰饮',
+          author: '白日梦收集者',
+          avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=100&q=80',
+          likes: 76,
+          model: 'Narra Editorial',
+          image: 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=700&q=80',
+          prompt: 'Artisanal iced blueberry lavender soda on a linen tablecloth surrounded by vintage botanical postcards, dappled morning sunlight.'
+        },
+        {
+          id: 4,
+          category: 'portrait',
+          title: '天鹅绒夜幕下的剧场侧影',
+          author: 'Autumn_11',
+          avatar: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=100&q=80',
+          likes: 215,
+          model: 'Narra Noir Pro',
+          image: 'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=700&q=80',
+          prompt: '24-year-old retro actress in a dark burgundy velvet dress, warm candlelit chandelier bokeh in background, classic oil painting chiaroscuro.'
+        },
+        {
+          id: 5,
+          category: 'cinema',
+          title: '雾霭山谷中的守灯人',
+          author: '叙事诗人',
+          avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=100&q=80',
+          likes: 163,
+          model: 'Narra Storybook',
+          image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=700&q=80',
+          prompt: 'Golden hour mist rolling over pine mountains, solitary cabin with warm glowing window, atmospheric perspective, narrative landscape.'
+        },
+        {
+          id: 6,
+          category: 'still',
+          title: '陶艺工坊的晨间第一缕光',
+          author: '器物志',
+          avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=100&q=80',
+          likes: 82,
+          model: 'Narra Craft 2.0',
+          image: 'https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?auto=format&fit=crop&w=700&q=80',
+          prompt: 'Handmade ceramic vases on raw wooden shelf, shaft of warm sunbeams illuminating clay dust particles, wabi-sabi aesthetic.'
+        },
+        {
+          id: 7,
+          category: 'portrait',
+          title: '雨夜霓虹与透明伞下的凝视',
+          author: 'Lucky_Art',
+          avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=100&q=80',
+          likes: 149,
+          model: 'Narra Film 35mm',
+          image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=700&q=80',
+          prompt: 'Close-up cinematic portrait under a clear umbrella in rainy Tokyo street, warm shop reflections on raindrops, expressive eyes.'
+        },
+        {
+          id: 8,
+          category: 'cinema',
+          title: '古典书房里的黄金乐章',
+          author: '弦外之音',
+          avatar: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=100&q=80',
+          likes: 108,
+          model: 'Narra Editorial',
+          image: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=700&q=80',
+          prompt: 'Vintage cello resting by a tall arched window, warm sunset beams casting long shadows across parquet floor, nostalgic atmosphere.'
+        }
+      ];
+
+      var galleryGrid = document.getElementById('galleryGrid');
+
+      // 为单张画廊卡片绑定 3D 视差倾斜与暖光跟随效果
+      function bindGalleryCard3D(card) {
+        var imgEl = card.querySelector('.gallery-parallax-img');
+        var infoEl = card.querySelector('.gallery-parallax-info');
+
+        // 入场级联动画结束后移除 forwards 类，避免阻塞后续 3D transform
+        card.addEventListener('animationend', function () {
+          card.classList.remove('gallery-item-anim');
+          card.style.animationDelay = '';
+        });
+
+        card.addEventListener('mousemove', function (e) {
+          card.classList.remove('is-resetting');
+          var rect = card.getBoundingClientRect();
+          var x = e.clientX - rect.left;
+          var y = e.clientY - rect.top;
+          var centerX = rect.width / 2;
+          var centerY = rect.height / 2;
+
+          // 计算 3D 旋转角度（控制在 ±7.5 度以内，兼具立体感与阅读舒适度）
+          var rotateX = ((y - centerY) / centerY) * -7.5;
+          var rotateY = ((x - centerX) / centerX) * 7.5;
+
+          card.style.transform =
+            'perspective(950px) rotateX(' + rotateX.toFixed(2) + 'deg) rotateY(' + rotateY.toFixed(2) + 'deg) scale3d(1.02, 1.02, 1.02)';
+
+          // 更新画框表面暖色反光坐标
+          card.style.setProperty('--glare-x', x.toFixed(0) + 'px');
+          card.style.setProperty('--glare-y', y.toFixed(0) + 'px');
+
+          // 内层画作反向微移 + 底部信息浮层正向微移，形成多层景深感
+          if (imgEl) {
+            var moveX = ((x - centerX) / centerX) * -6;
+            var moveY = ((y - centerY) / centerY) * -6;
+            imgEl.style.transform = 'scale(1.08) translate3d(' + moveX.toFixed(1) + 'px, ' + moveY.toFixed(1) + 'px, 0)';
+          }
+          if (infoEl) {
+            var infoX = ((x - centerX) / centerX) * 3.5;
+            var infoY = ((y - centerY) / centerY) * 3.5;
+            infoEl.style.transform = 'translate3d(' + infoX.toFixed(1) + 'px, ' + infoY.toFixed(1) + 'px, 24px)';
+          }
+        });
+
+        card.addEventListener('mouseleave', function () {
+          card.classList.add('is-resetting');
+          card.style.transform = 'perspective(950px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+          if (imgEl) {
+            imgEl.style.transform = 'scale(1) translate3d(0, 0, 0)';
+          }
+          if (infoEl) {
+            infoEl.style.transform = 'translate3d(0, 0, 0)';
+          }
+        });
+      }
+
+      function renderGallery(filterCategory) {
+        if (!galleryGrid) return;
+        galleryGrid.innerHTML = '';
+
+        var filtered = artworks.filter(function (item) {
+          return filterCategory === 'all' || item.category === filterCategory;
+        });
+
+        filtered.forEach(function (item, index) {
+          var card = document.createElement('article');
+          card.className = 'gallery-card-3d gallery-item-anim group relative rounded-2xl overflow-hidden bg-[#231F1C] border border-paper-border/80 hover:border-paper-accent/50 aspect-[4/5] shadow-sm';
+          card.style.animationDelay = (index * 70) + 'ms';
+
+          card.innerHTML =
+            '<img src="' + item.image + '" alt="' + item.title + '" class="gallery-parallax-img w-full h-full object-cover transition-transform duration-300 ease-out" onerror="this.src=\'https://placehold.co/600x750/2C2520/EDE6DB?text=Narra+Art\'">' +
+            /* 3D 画框动态暖金高光层 */
+            '<div class="gallery-card-glare"></div>' +
+            /* 默认态：仅保留极轻柔底部暗角、标题、作者与点赞，告别沉重黑块 */
+            '<div class="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent transition-opacity duration-300 pointer-events-none"></div>' +
+            /* 右上角点赞按钮 */
+            '<button type="button" data-like-id="' + item.id + '" class="like-btn absolute top-3.5 right-3.5 z-20 inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-black/40 hover:bg-black/65 backdrop-blur-md border border-white/15 text-white text-xs transition cursor-pointer">' +
+              '<span class="like-heart text-rose-400">♥</span>' +
+              '<span class="like-count">' + item.likes + '</span>' +
+            '</button>' +
+            /* 底部信息区：默认显示作品名与作者；Hover 时平滑升起毛玻璃灵感抽屉 */
+            '<div class="gallery-parallax-info absolute inset-x-0 bottom-0 p-4 flex flex-col justify-end z-20 transition-transform duration-200 ease-out">' +
+              '<div class="transform transition-transform duration-300 group-hover:-translate-y-1">' +
+                '<h3 class="text-sm font-bold text-white tracking-wide line-clamp-1">' + item.title + '</h3>' +
+                '<div class="flex items-center justify-between mt-1.5">' +
+                  '<div class="flex items-center gap-2">' +
+                    '<img src="' + item.avatar + '" alt="' + item.author + '" class="w-5 h-5 rounded-full object-cover border border-white/30">' +
+                    '<span class="text-xs text-white/85">' + item.author + '</span>' +
+                  '</div>' +
+                  '<span class="text-[10px] px-2 py-0.5 rounded-full bg-white/15 text-amber-200 backdrop-blur-sm">' + item.model + '</span>' +
+                '</div>' +
+              '</div>' +
+              /* 悬停态展开的 Prompt 抽屉 */
+              '<div class="max-h-0 opacity-0 group-hover:max-h-40 group-hover:opacity-100 overflow-hidden transition-all duration-300 ease-out">' +
+                '<div class="mt-3 pt-3 border-t border-white/15">' +
+                  '<p class="text-[11px] text-white/80 line-clamp-2 leading-relaxed font-light">' + item.prompt + '</p>' +
+                  '<div class="mt-2.5 flex items-center justify-between gap-2">' +
+                    '<button type="button" data-prompt="' + item.prompt.replace(/"/g, '&quot;') + '" class="copy-prompt-btn flex-1 py-1.5 px-3 rounded-lg bg-white/15 hover:bg-white/25 text-white text-[11px] font-medium backdrop-blur-md transition cursor-pointer text-center">' +
+                      '复制灵感词' +
+                    '</button>' +
+                    '<button type="button" data-title="' + item.title + '" class="remix-btn py-1.5 px-3 rounded-lg bg-paper-accent hover:bg-paper-accent/90 text-white text-[11px] font-medium transition cursor-pointer">' +
+                      '做同款 ↗' +
+                    '</button>' +
+                  '</div>' +
+                '</div>' +
+              '</div>' +
+            '</div>';
+
+          bindGalleryCard3D(card);
+          galleryGrid.appendChild(card);
+        });
+      }
+
+      renderGallery('all');
+
+      // 画廊分类筛选点击事件
+      var filterBtns = document.querySelectorAll('.gallery-filter-btn');
+      filterBtns.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var filter = btn.getAttribute('data-filter') || 'all';
+          filterBtns.forEach(function (b) {
+            b.className = 'gallery-filter-btn px-3.5 py-1.5 rounded-full font-medium transition cursor-pointer text-paper-muted hover:text-paper-ink';
+          });
+          btn.className = 'gallery-filter-btn px-3.5 py-1.5 rounded-full font-medium transition cursor-pointer bg-paper-ink text-[#FAF8F4] shadow-sm';
+          renderGallery(filter);
+        });
+      });
+
+      // 画廊内部事件委托（复制 Prompt、点赞、做同款）
+      if (galleryGrid) {
+        galleryGrid.addEventListener('click', function (e) {
+          var copyBtn = e.target.closest('.copy-prompt-btn');
+          if (copyBtn) {
+            var promptText = copyBtn.getAttribute('data-prompt') || '';
+            var tempInput = document.createElement('textarea');
+            tempInput.value = promptText;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            showToast('✦ 已复制该作品的叙事提示词');
+            return;
+          }
+
+          var remixBtn = e.target.closest('.remix-btn');
+          if (remixBtn) {
+            var artTitle = remixBtn.getAttribute('data-title') || '';
+            showToast('正在将《' + artTitle + '》的光影参数载入创作台...');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            return;
+          }
+
+          var likeBtn = e.target.closest('.like-btn');
+          if (likeBtn) {
+            var countEl = likeBtn.querySelector('.like-count');
+            if (countEl) {
+              var currentLikes = parseInt(countEl.textContent, 10) || 0;
+              countEl.textContent = (currentLikes + 1).toString();
+              showToast('♥ 已为该展映作品点亮喜欢');
+            }
+          }
+        });
+      }
+
+      // 首屏复用按钮与顶部桌宠切换
+      var copyHeroPromptBtn = document.getElementById('copyHeroPromptBtn');
+      if (copyHeroPromptBtn) {
+        copyHeroPromptBtn.addEventListener('click', function () {
+          var currentPrompt = heroScenes[currentSceneIndex].prompt;
+          var tempInput = document.createElement('textarea');
+          tempInput.value = currentPrompt;
+          document.body.appendChild(tempInput);
+          tempInput.select();
+          document.execCommand('copy');
+          document.body.removeChild(tempInput);
+          showToast('✦ 已复制首屏画布提示词');
+        });
+      }
+
+      var navPetToggle = document.getElementById('navPetToggle');
+      var navPetState = document.getElementById('navPetState');
+      var petEnabled = true;
+      if (navPetToggle && navPetState) {
+        navPetToggle.addEventListener('click', function () {
+          petEnabled = !petEnabled;
+          navPetState.textContent = petEnabled ? '伴途中' : '休息中';
+          navPetState.className = petEnabled ? 'font-semibold text-paper-accent' : 'font-semibold text-paper-muted';
+          showToast(petEnabled ? '🐾 数字宠物已唤醒伴途' : '🐾 数字宠物已进入安静休息模式');
+        });
+      }
+
+      // 9. 楼层滚动渐显观察器 (IntersectionObserver)
+      var revealSections = document.querySelectorAll('.reveal-section');
+      if ('IntersectionObserver' in window) {
+        var observer = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('is-visible');
+            }
+          });
+        }, { threshold: 0.12 });
+
+        revealSections.forEach(function (sec) {
+          observer.observe(sec);
+        });
+      } else {
+        revealSections.forEach(function (sec) {
+          sec.classList.add('is-visible');
+        });
+      }
+
+    });
+  </script>
+</body>
+</html>

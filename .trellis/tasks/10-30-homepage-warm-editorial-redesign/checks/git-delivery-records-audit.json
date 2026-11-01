@@ -1,0 +1,17 @@
+{
+  "checkedAt": "2026-11-01T06:14:14.562338+00:00",
+  "scope": "Exact staged added/modified blob bytes, not unstaged worktree contents",
+  "stagedBlobs": 1332,
+  "textBlobsScanned": 1332,
+  "totalBytes": 54017724,
+  "largestBytes": 493871,
+  "strongSecretFindings": [],
+  "forbiddenFiles": [],
+  "stagedWhitespaceExitCode": 0,
+  "whitespaceOutputSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "patternScanIsNotProofOfAbsence": true,
+  "passwordUrlContextsClassified": "21 known synthetic/fixture/before-image DSNs and URL-rejection cases; no real-service credential",
+  "fullLocalAuditSha256": "d4c02b9977d63620003c3824353f58e72daf78de60f2b74a7f1bc0b2cff1350a",
+  "sourceCommit": "d1960ecc53ceadcda70e3bf9616cc8020c70b570",
+  "newReportNotInOwnInitialAudit": true
+}

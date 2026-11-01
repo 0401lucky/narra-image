@@ -1,0 +1,21 @@
+{
+  "label": "resume-back-go-all",
+  "mode": "test",
+  "command": [
+    "go",
+    "-C",
+    "worker",
+    "test",
+    "-count=1",
+    "-timeout=50s",
+    "./..."
+  ],
+  "cwd": "E:/code/narra-image",
+  "timeoutMs": 180000,
+  "code": 0,
+  "signal": null,
+  "timedOut": false,
+  "durationMs": 7341,
+  "stdoutPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\resume-back-go-all.stdout.log",
+  "stderrPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\resume-back-go-all.stderr.log"
+}

@@ -1,0 +1,259 @@
+{
+  "samples": [
+    {
+      "label": "forward-first",
+      "modifiers": 0,
+      "before": "",
+      "active": "native-tab-first",
+      "clicks": 0,
+      "events": [
+        {
+          "type": "keydown",
+          "key": "Tab",
+          "code": "Tab",
+          "trusted": true,
+          "target": "",
+          "shift": false,
+          "alt": false,
+          "control": false,
+          "meta": false
+        },
+        {
+          "type": "focusin",
+          "trusted": true,
+          "target": "native-tab-first"
+        },
+        {
+          "type": "keyup",
+          "key": "Tab",
+          "code": "Tab",
+          "trusted": true,
+          "target": "native-tab-first",
+          "shift": false,
+          "alt": false,
+          "control": false,
+          "meta": false
+        }
+      ]
+    },
+    {
+      "label": "forward-middle",
+      "modifiers": 0,
+      "before": "native-tab-first",
+      "active": "native-tab-middle",
+      "clicks": 0,
+      "events": [
+        {
+          "type": "keydown",
+          "key": "Tab",
+          "code": "Tab",
+          "trusted": true,
+          "target": "native-tab-first",
+          "shift": false,
+          "alt": false,
+          "control": false,
+          "meta": false
+        },
+        {
+          "type": "focusin",
+          "trusted": true,
+          "target": "native-tab-middle"
+        },
+        {
+          "type": "keyup",
+          "key": "Tab",
+          "code": "Tab",
+          "trusted": true,
+          "target": "native-tab-middle",
+          "shift": false,
+          "alt": false,
+          "control": false,
+          "meta": false
+        }
+      ]
+    },
+    {
+      "label": "forward-skips-disabled",
+      "modifiers": 0,
+      "before": "native-tab-middle",
+      "active": "native-tab-last",
+      "clicks": 0,
+      "events": [
+        {
+          "type": "keydown",
+          "key": "Tab",
+          "code": "Tab",
+          "trusted": true,
+          "target": "native-tab-middle",
+          "shift": false,
+          "alt": false,
+          "control": false,
+          "meta": false
+        },
+        {
+          "type": "focusin",
+          "trusted": true,
+          "target": "native-tab-last"
+        },
+        {
+          "type": "keyup",
+          "key": "Tab",
+          "code": "Tab",
+          "trusted": true,
+          "target": "native-tab-last",
+          "shift": false,
+          "alt": false,
+          "control": false,
+          "meta": false
+        }
+      ]
+    },
+    {
+      "label": "reverse-skips-disabled",
+      "modifiers": 8,
+      "before": "native-tab-last",
+      "active": "native-tab-middle",
+      "clicks": 0,
+      "events": [
+        {
+          "type": "keydown",
+          "key": "Tab",
+          "code": "Tab",
+          "trusted": true,
+          "target": "native-tab-last",
+          "shift": true,
+          "alt": false,
+          "control": false,
+          "meta": false
+        },
+        {
+          "type": "focusin",
+          "trusted": true,
+          "target": "native-tab-middle"
+        },
+        {
+          "type": "keyup",
+          "key": "Tab",
+          "code": "Tab",
+          "trusted": true,
+          "target": "native-tab-middle",
+          "shift": true,
+          "alt": false,
+          "control": false,
+          "meta": false
+        }
+      ]
+    },
+    {
+      "label": "reverse-first",
+      "modifiers": 8,
+      "before": "native-tab-middle",
+      "active": "native-tab-first",
+      "clicks": 0,
+      "events": [
+        {
+          "type": "keydown",
+          "key": "Tab",
+          "code": "Tab",
+          "trusted": true,
+          "target": "native-tab-middle",
+          "shift": true,
+          "alt": false,
+          "control": false,
+          "meta": false
+        },
+        {
+          "type": "focusin",
+          "trusted": true,
+          "target": "native-tab-first"
+        },
+        {
+          "type": "keyup",
+          "key": "Tab",
+          "code": "Tab",
+          "trusted": true,
+          "target": "native-tab-first",
+          "shift": true,
+          "alt": false,
+          "control": false,
+          "meta": false
+        }
+      ]
+    },
+    {
+      "label": "forward-after-reverse",
+      "modifiers": 0,
+      "before": "native-tab-first",
+      "active": "native-tab-middle",
+      "clicks": 0,
+      "events": [
+        {
+          "type": "keydown",
+          "key": "Tab",
+          "code": "Tab",
+          "trusted": true,
+          "target": "native-tab-first",
+          "shift": false,
+          "alt": false,
+          "control": false,
+          "meta": false
+        },
+        {
+          "type": "focusin",
+          "trusted": true,
+          "target": "native-tab-middle"
+        },
+        {
+          "type": "keyup",
+          "key": "Tab",
+          "code": "Tab",
+          "trusted": true,
+          "target": "native-tab-middle",
+          "shift": false,
+          "alt": false,
+          "control": false,
+          "meta": false
+        }
+      ]
+    },
+    {
+      "label": "alt-is-not-reverse",
+      "modifiers": 1,
+      "before": "native-tab-middle",
+      "active": "native-tab-middle",
+      "clicks": 0,
+      "events": [
+        {
+          "type": "keydown",
+          "key": "Tab",
+          "code": "Tab",
+          "trusted": true,
+          "target": "native-tab-middle",
+          "shift": false,
+          "alt": true,
+          "control": false,
+          "meta": false
+        },
+        {
+          "type": "keyup",
+          "key": "Tab",
+          "code": "Tab",
+          "trusted": true,
+          "target": "native-tab-middle",
+          "shift": false,
+          "alt": true,
+          "control": false,
+          "meta": false
+        }
+      ]
+    }
+  ],
+  "modifiers": {
+    "Alt": 1,
+    "Control": 2,
+    "Meta": 4,
+    "Shift": 8
+  },
+  "disabledControlSkipped": true,
+  "programmaticClickOrFocus": false
+}

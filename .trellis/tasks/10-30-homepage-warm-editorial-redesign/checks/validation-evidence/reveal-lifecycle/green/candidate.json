@@ -1,0 +1,41 @@
+{
+  "recordedAt": "2026-11-01T01:31:56.037177+00:00",
+  "frozen": true,
+  "sourceFiles": 807,
+  "sourceHashes": {
+    "src/components/marketing/homepage/home-reveal.tsx": "cbfcc21f6039c0d3a01ebb2bc2edb59ce22a1c023997d7aa080506d4090ff073",
+    "src/tests/unit/homepage-motion.test.tsx": "55732e133ea17eeb8539b791183dc0fc8112220980ea1a74877e7ad4b28d9092",
+    "src/tests/unit/homepage-reveal.test.tsx": "8827b3f22fad96715027bd26a6395b9e44357e47d32c7bd859aa02a4d7a9a3fa"
+  },
+  "redToGreenChanges": [
+    "src/components/marketing/homepage/home-reveal.tsx",
+    "src/tests/unit/homepage-motion.test.tsx"
+  ],
+  "regressionIdenticalRedGreen": true,
+  "greenReceipts": [
+    "20261101T012831-test-226b04",
+    "20261101T012934-lint-9dadba",
+    "20261101T013007-types-afd526"
+  ],
+  "focusedFiles": 2,
+  "focusedTests": 19,
+  "semanticRed": {
+    "receipt": "20261101T012702-test-defdbc",
+    "expectedFailures": 5,
+    "passingControls": 2
+  },
+  "harnessCalibration": {
+    "receipt": "20261101T012450-test-0ad085",
+    "isSemanticRed": false
+  },
+  "lintErrors": 0,
+  "baselineLintWarnings": 9,
+  "snapshotAndWorkingTreeMatch": true,
+  "dependencyAuditPassed": true,
+  "ownedCommandsExited": true,
+  "activeLock": false,
+  "runtimeRetainedForEvidence": true,
+  "nodeVersion": "v24.11.1",
+  "requiredNodeVersion": "v24.22.1",
+  "pinnedRuntimeParity": false
+}

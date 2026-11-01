@@ -1,0 +1,17 @@
+{
+  "label": "resume-fixture-source-02",
+  "mode": "test",
+  "command": [
+    "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-history-cleanup-20261029\\node-v24.22.1-win-x64\\node.exe",
+    "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\prepare-studio-next-fixture.mjs",
+    "--source-only"
+  ],
+  "cwd": "E:\\code\\narra-image",
+  "timeoutMs": 120000,
+  "code": 0,
+  "signal": null,
+  "timedOut": false,
+  "durationMs": 500,
+  "stdoutPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\resume-fixture-source-02.stdout.log",
+  "stderrPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\resume-fixture-source-02.stderr.log"
+}

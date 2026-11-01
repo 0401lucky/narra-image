@@ -1,0 +1,342 @@
+import { act, cleanup, fireEvent, render, renderHook, screen } from "@testing-library/react";
+import { useEffect, type ReactNode } from "react";
+
+const reveal = vi.hoisted(() => ({
+  animate: vi.fn<(from: number, to: number, options: { onUpdate: (progress: number) => void }) => { stop: () => void }>(),
+  stop: vi.fn(),
+}));
+vi.mock("motion/react", () => ({ animate: reveal.animate }));
+
+import { CapabilitySection } from "@/components/marketing/homepage/capability-section";
+import { HOME_MEDIA, HOME_MOTION, PET_IDEAS } from "@/components/marketing/homepage/constants";
+import { HeroStats } from "@/components/marketing/homepage/hero-stats";
+import { HomeMotionProvider } from "@/components/marketing/homepage/home-motion-provider";
+import { HomeReveal } from "@/components/marketing/homepage/home-reveal";
+import { useHomeDust } from "@/components/marketing/homepage/hooks/use-home-dust";
+import { useHomeMotion } from "@/components/marketing/homepage/hooks/use-home-motion";
+import { useHomeVisibility } from "@/components/marketing/homepage/hooks/use-home-visibility";
+import { usePointerDepth } from "@/components/marketing/homepage/hooks/use-pointer-depth";
+import { usePromptClipboard } from "@/components/marketing/homepage/hooks/use-prompt-clipboard";
+import { PET_STORAGE_KEY, PET_SELECTED_STORAGE_KEY, PET_TOGGLE_EVENT } from "@/components/pet/pet-state";
+
+import { installHomeMotionEnvironment, pointerMove } from "./helpers/homepage-motion-fixtures";
+
+let environment: ReturnType<typeof installHomeMotionEnvironment>;
+let depthRenders = 0;
+
+beforeEach(() => {
+  vi.useFakeTimers();
+  environment = installHomeMotionEnvironment();
+  reveal.animate.mockReturnValue({ stop: reveal.stop });
+  depthRenders = 0;
+});
+
+afterEach(() => {
+  cleanup();
+  vi.useRealTimers();
+  vi.restoreAllMocks();
+  vi.unstubAllGlobals();
+  vi.clearAllMocks();
+});
+
+function PauseControl() {
+  const motion = useHomeMotion();
+  return <button type="button" onClick={motion.togglePaused}>{motion.paused ? "恢复" : "暂停"}</button>;
+}
+
+function Wrapper({ children }: { children: ReactNode }) {
+  return <HomeMotionProvider>{children}<PauseControl /></HomeMotionProvider>;
+}
+
+function DepthProbe() {
+  const ref = usePointerDepth<HTMLDivElement>({ enabled: true, maxTilt: 7.5, perspective: 950 });
+  useEffect(() => { depthRenders += 1; });
+  return <div ref={ref} data-testid="depth" />;
+}
+
+function DustProbe() {
+  const { ref, visible } = useHomeVisibility<HTMLDivElement>();
+  const canvasRef = useHomeDust(visible);
+  return <div ref={ref}><canvas ref={canvasRef} data-testid="dust" /></div>;
+}
+
+describe("shared homepage motion lifecycle", () => {
+  it("coalesces pointer events, writes separate depth variables, and stops on reduced motion/touch/unmount", () => {
+    const { unmount } = render(<Wrapper><DepthProbe /></Wrapper>);
+    const card = screen.getByTestId("depth");
+    vi.spyOn(card, "getBoundingClientRect").mockReturnValue(new DOMRect(0, 0, 200, 100));
+    const renders = depthRenders;
+    pointerMove(card, 180, 10);
+    pointerMove(card, 200, 0);
+    expect(environment.frames.size).toBe(1);
+    environment.frame(16);
+    expect(card.style.getPropertyValue("--rotate-x")).toBe("7.50deg");
+    expect(card.style.getPropertyValue("--rotate-y")).toBe("7.50deg");
+    expect(card.style.getPropertyValue("--pointer-perspective")).toBe("950px");
+    expect(card.style.getPropertyValue("--glare-x")).toBe("100.00%");
+    expect(depthRenders).toBe(renders);
+    expect(environment.frames.size).toBe(0);
+    pointerMove(card, 20, 90, "touch");
+    expect(environment.frames.size).toBe(0);
+    fireEvent.pointerLeave(card);
+    expect(card).toHaveAttribute("data-pointer-active", "false");
+    expect(card.style.getPropertyValue("--rotate-x")).toBe("0deg");
+    pointerMove(card, 190, 10);
+    const late = [...environment.frames.values()][0];
+    environment.setMedia(HOME_MEDIA.reduced, true);
+    expect(environment.frames.size).toBe(0);
+    act(() => late(32));
+    expect(card.style.getPropertyValue("--rotate-y")).toBe("0deg");
+    pointerMove(card, 100, 50);
+    expect(environment.frames.size).toBe(0);
+    unmount();
+    expect([...environment.media.values()].every((state) => state.callbacks.size === 0)).toBe(true);
+  });
+
+  it("stops fine pointer effects while the page is hidden, paused, or the pointer is coarse", () => {
+    render(<Wrapper><DepthProbe /></Wrapper>);
+    const card = screen.getByTestId("depth");
+    vi.spyOn(card, "getBoundingClientRect").mockReturnValue(new DOMRect(0, 0, 200, 100));
+    for (const suspend of [() => environment.setHidden(true), () => fireEvent.click(screen.getByRole("button", { name: "暂停" })), () => environment.setMedia(HOME_MEDIA.finePointer, false)]) {
+      suspend();
+      pointerMove(card, 200, 0);
+      expect(environment.frames.size).toBe(0);
+      expect(card).toHaveAttribute("data-pointer-active", "false");
+    }
+    environment.setHidden(false);
+    fireEvent.click(screen.getByRole("button", { name: "恢复" }));
+    environment.setMedia(HOME_MEDIA.finePointer, true);
+    pointerMove(card, 200, 0);
+    expect(environment.frames.size).toBe(1);
+  });
+
+  it("bounds dust particles and DPR and disposes actual frame/resize handles on every inactive state", () => {
+    const context = { clearRect: vi.fn(), setTransform: vi.fn(), beginPath: vi.fn(), arc: vi.fn(), fill: vi.fn(), fillStyle: "" };
+    vi.spyOn(HTMLCanvasElement.prototype, "getContext").mockReturnValue(context as unknown as CanvasRenderingContext2D);
+    vi.spyOn(HTMLCanvasElement.prototype, "getBoundingClientRect").mockReturnValue(new DOMRect(0, 0, 600, 450));
+    vi.stubGlobal("devicePixelRatio", 4);
+    const { unmount } = render(<Wrapper><DustProbe /></Wrapper>);
+    expect(environment.frames.size).toBe(0);
+    environment.visibility(true);
+    const canvas = screen.getByTestId("dust") as HTMLCanvasElement;
+    expect(canvas.width).toBe(1200);
+    expect(canvas.height).toBe(900);
+    expect(environment.frames.size).toBe(1);
+    environment.frame(16);
+    expect(context.arc).toHaveBeenCalledTimes(32);
+    expect(canvas).toHaveAttribute("data-dust-active", "true");
+    environment.visibility(false);
+    expect(environment.frames.size).toBe(0);
+    expect(canvas).toHaveAttribute("data-dust-active", "false");
+    environment.visibility(true);
+    environment.setHidden(true);
+    expect(environment.frames.size).toBe(0);
+    environment.setHidden(false);
+    fireEvent.click(screen.getByRole("button", { name: "暂停" }));
+    expect(environment.frames.size).toBe(0);
+    fireEvent.click(screen.getByRole("button", { name: "恢复" }));
+    const late = [...environment.frames.values()][0];
+    const draws = context.arc.mock.calls.length;
+    unmount();
+    expect(environment.frames.size).toBe(0);
+    act(() => late(40));
+    expect(context.arc).toHaveBeenCalledTimes(draws);
+    expect(environment.resizeObservers.every((observer) => observer.disconnected)).toBe(true);
+    expect(environment.observers.every((observer) => observer.disconnected)).toBe(true);
+  });
+
+  it("gracefully renders without a canvas context or browser observation support", () => {
+    vi.spyOn(HTMLCanvasElement.prototype, "getContext").mockReturnValue(null);
+    vi.stubGlobal("IntersectionObserver", undefined);
+    const { unmount } = render(<Wrapper><DustProbe /><HomeReveal><p>内容始终可读</p></HomeReveal></Wrapper>);
+    expect(screen.getByText("内容始终可读")).toBeVisible();
+    expect(environment.frames.size).toBe(0);
+    expect(reveal.animate).toHaveBeenCalled();
+    unmount();
+    expect(reveal.stop).toHaveBeenCalled();
+  });
+
+  it("does not replay completed section entrances and makes interrupted content visible", () => {
+    const { container, unmount } = render(<Wrapper><HomeReveal delay={0.14}><p>章节</p></HomeReveal></Wrapper>);
+    environment.visibility(true);
+    expect(reveal.animate).toHaveBeenCalledTimes(1);
+    expect(reveal.animate).toHaveBeenCalledWith(0, 1, {
+      delay: 0.14, duration: HOME_MOTION.revealDuration, ease: HOME_MOTION.ease, onUpdate: expect.any(Function),
+    });
+    const section = container.querySelector<HTMLElement>("[data-home-reveal]")!;
+    const update = reveal.animate.mock.calls[0][2].onUpdate;
+    act(() => update(0.5));
+    expect(section.style.opacity).toBe("0.5");
+    expect(section.style.transform).toBe(`translateY(${HOME_MOTION.revealOffset / 2}px)`);
+    environment.visibility(false);
+    expect(section.style.opacity).toBe("1");
+    expect(section.style.transform).toBe("none");
+    act(() => update(0.25));
+    expect(section.style.opacity).toBe("1");
+    expect(section.style.transform).toBe("none");
+    environment.visibility(true);
+    expect(reveal.animate).toHaveBeenCalledTimes(1);
+    const retainedObserver = environment.observers[0];
+    unmount();
+    const count = reveal.animate.mock.calls.length;
+    act(() => retainedObserver.emit(section, true));
+    expect(reveal.animate).toHaveBeenCalledTimes(count);
+  });
+
+  it("animates only newly appended keyed entries, without replaying an earlier page", () => {
+    const entries = (ids: string[]) => ids.map((id, index) => (
+      <HomeReveal key={id} id={id} delay={index * 0.07}><p>{id}</p></HomeReveal>
+    ));
+    const { container, rerender, unmount } = render(<Wrapper>{entries(["first", "second"])}</Wrapper>);
+    environment.visibility(true);
+    const first = container.querySelector<HTMLElement>("#first")!;
+    const second = container.querySelector<HTMLElement>("#second")!;
+    expect(reveal.animate).toHaveBeenCalledTimes(2);
+    act(() => {
+      reveal.animate.mock.calls[0][2].onUpdate(0.4);
+      reveal.animate.mock.calls[1][2].onUpdate(0.6);
+    });
+    expect(first.style.opacity).toBe("0.4");
+    expect(second.style.opacity).toBe("0.6");
+    rerender(<Wrapper>{entries(["first", "second", "appended"])}</Wrapper>);
+    environment.visibility(true);
+    const appended = container.querySelector<HTMLElement>("#appended")!;
+    expect(reveal.animate).toHaveBeenCalledTimes(3);
+    act(() => reveal.animate.mock.calls[2][2].onUpdate(0.2));
+    expect(container.querySelector("#first")).toBe(first);
+    expect(container.querySelector("#second")).toBe(second);
+    expect(first.style.opacity).toBe("0.4");
+    expect(second.style.opacity).toBe("0.6");
+    expect(appended.style.opacity).toBe("0.2");
+    environment.visibility(false);
+    for (const element of container.querySelectorAll<HTMLElement>("[data-home-reveal]")) {
+      expect(element.style.opacity).toBe("1");
+      expect(element.style.transform).toBe("none");
+    }
+    environment.visibility(true);
+    expect(reveal.animate).toHaveBeenCalledTimes(3);
+    unmount();
+    expect(environment.observers.every((observer) => observer.disconnected)).toBe(true);
+  });
+
+  it("uses one bounded counter loop and final marketing values under pause/reduced motion", () => {
+    const { container, unmount } = render(<Wrapper><HeroStats /></Wrapper>);
+    const value = (id: string) => container.querySelector(`[data-home-stat="${id}"]`)?.textContent;
+    expect(value("works")).toBe("150,000+");
+    environment.visibility(true);
+    expect(environment.frames.size).toBe(1);
+    environment.frame(0);
+    expect(value("works")).toBe("0+");
+    environment.frame(750);
+    expect(value("works")).toBe("131,250+");
+    environment.setHidden(true);
+    expect(environment.frames.size).toBe(0);
+    environment.setHidden(false);
+    environment.frame(2000);
+    environment.frame(2750);
+    expect(value("works")).toBe("150,000+");
+    expect(value("models")).toBe("120+");
+    expect(value("response")).toBe("< 4.2s");
+    expect(environment.frames.size).toBe(0);
+    environment.setMedia(HOME_MEDIA.reduced, true);
+    expect(value("works")).toBe("150,000+");
+    unmount();
+    expect(environment.frames.size).toBe(0);
+  });
+
+  it("cycles only visible capability demos; pet click remains local and API is explicitly illustrative", () => {
+    const fetch = vi.fn();
+    vi.stubGlobal("fetch", fetch);
+    const petSetting = localStorage.getItem(PET_STORAGE_KEY);
+    const petSelected = localStorage.getItem(PET_SELECTED_STORAGE_KEY);
+    const petEvent = vi.fn();
+    window.addEventListener(PET_TOGGLE_EVENT, petEvent);
+    const { container, unmount } = render(<Wrapper><CapabilitySection /></Wrapper>);
+    expect(container.querySelectorAll("[data-home-demo]")).toHaveLength(4);
+    expect(screen.getByText("POST /v1/images/generations")).toBeInTheDocument();
+    expect(screen.getByText("非实时请求")).toBeInTheDocument();
+    expect(container.querySelector("[data-home-version-label]")).toHaveTextContent("v1 · 线稿构图");
+    environment.visibility(true);
+    act(() => vi.advanceTimersByTime(HOME_MOTION.capabilityCycleMs));
+    expect(container.querySelector("[data-home-version-label]")).toHaveTextContent("v2 · 局部补光");
+    fireEvent.click(screen.getByRole("button", { name: "换一条构图灵感" }));
+    expect(screen.getByText(`“${PET_IDEAS[1]}”`)).toBeInTheDocument();
+    expect(fetch).not.toHaveBeenCalled();
+    expect(localStorage.getItem(PET_STORAGE_KEY)).toBe(petSetting);
+    expect(localStorage.getItem(PET_SELECTED_STORAGE_KEY)).toBe(petSelected);
+    expect(petEvent).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole("button", { name: "暂停" }));
+    expect(vi.getTimerCount()).toBe(0);
+    act(() => vi.advanceTimersByTime(HOME_MOTION.capabilityCycleMs * 3));
+    expect(container.querySelector("[data-home-version-label]")).toHaveTextContent("v2 · 局部补光");
+    unmount();
+    window.removeEventListener(PET_TOGGLE_EVENT, petEvent);
+    expect(vi.getTimerCount()).toBe(0);
+  });
+});
+
+describe("shared full-prompt clipboard lifecycle", () => {
+  it("expires success feedback only for its own identity and clears the new timer on unmount", async () => {
+    const write = vi.fn().mockResolvedValue(undefined);
+    vi.stubGlobal("navigator", Object.create(navigator, { clipboard: { value: { writeText: write }, configurable: true } }));
+    const { result, rerender, unmount } = renderHook((props) => usePromptClipboard(props), { initialProps: { text: "first prompt", identity: "one" } });
+    await act(async () => result.current.copy());
+    expect(result.current.status).toBe("copied");
+    act(() => vi.advanceTimersByTime(1000));
+    rerender({ text: "second prompt", identity: "two" });
+    expect(result.current.status).toBe("idle");
+    await act(async () => result.current.copy());
+    act(() => vi.advanceTimersByTime(HOME_MOTION.clipboardFeedbackMs - 1000));
+    expect(result.current.status).toBe("copied");
+    act(() => vi.advanceTimersByTime(1000));
+    expect(result.current.status).toBe("idle");
+    expect(write.mock.calls.map(([text]) => text)).toEqual(["first prompt", "second prompt"]);
+    await act(async () => result.current.copy());
+    unmount();
+    expect(vi.getTimerCount()).toBe(0);
+  });
+
+  it("falls back on a hanging clipboard permission and rejects late completion", async () => {
+    let complete: () => void = () => {};
+    const write = vi.fn(() => new Promise<void>((resolve) => { complete = resolve; }));
+    vi.stubGlobal("navigator", Object.create(navigator, { clipboard: { value: { writeText: write }, configurable: true } }));
+    const { result, unmount } = renderHook(() => usePromptClipboard({ text: "完整提示词\n &+%", identity: "one" }));
+    let copy: Promise<void>;
+    act(() => { copy = result.current.copy(); });
+    expect(result.current.status).toBe("copying");
+    await act(async () => { vi.advanceTimersByTime(HOME_MOTION.clipboardDeadlineMs); await copy; });
+    expect(result.current.status).toBe("manual");
+    await act(async () => complete());
+    expect(result.current.status).toBe("manual");
+    unmount();
+    expect(vi.getTimerCount()).toBe(0);
+  });
+
+  it("invalidates unresolved old identities, clears feedback on returning and disposes pending waits", async () => {
+    let complete: () => void = () => {};
+    const write = vi.fn(() => new Promise<void>((resolve) => { complete = resolve; }));
+    vi.stubGlobal("navigator", Object.create(navigator, { clipboard: { value: { writeText: write }, configurable: true } }));
+    const { result, rerender, unmount } = renderHook((props) => usePromptClipboard(props), { initialProps: { text: "甲", identity: "one" } });
+    let copy: Promise<void>;
+    act(() => { copy = result.current.copy(); });
+    rerender({ text: "乙", identity: "two" });
+    await act(async () => { await copy; complete(); });
+    expect(result.current.status).toBe("idle");
+    rerender({ text: "甲", identity: "one" });
+    expect(result.current.status).toBe("idle");
+    act(() => { copy = result.current.copy(); });
+    unmount();
+    await copy!;
+    expect(vi.getTimerCount()).toBe(0);
+  });
+
+  it("handles unavailable Clipboard API and resets the manual read state", async () => {
+    vi.stubGlobal("navigator", Object.create(navigator, { clipboard: { value: undefined, configurable: true } }));
+    const { result } = renderHook(() => usePromptClipboard({ text: "不加标签的原文", identity: "manual" }));
+    await act(async () => result.current.copy());
+    expect(result.current.status).toBe("manual");
+    act(() => result.current.reset());
+    expect(result.current.status).toBe("idle");
+    expect(vi.getTimerCount()).toBe(0);
+  });
+});

@@ -1,0 +1,30 @@
+{
+  "recordedAt": "2026-10-30T07:54:44.672119+00:00",
+  "phase": "accepted and document-reviewed; immediately before no-commit archive",
+  "sourceBaseline": "source-baseline.json",
+  "sourceBaselineSha256": "770818d412bc657207698559d31e07ef71e6d1edc3e6b71e0773c36889a7c9a1",
+  "sourcePathsChecked": 192,
+  "declaredSourceChanges": [
+    {
+      "file": "src/tests/integration/canvas-contracts/canvas-contracts-db.test.ts",
+      "before": "90bce42946f64e773bf3c93cc5b523b2e315f474ca7074c6131b21bcfc758c68",
+      "after": "c11543353646b5d61c4ec1170d02eecc9de4669774b9702f4b58e4b95da0c31c"
+    }
+  ],
+  "unexpectedChanges": [],
+  "additionalDirtySourcePaths": [],
+  "archivedChildFilesMatched": 277,
+  "parentReceiptFilesMatched": 60,
+  "head": "1f7948e334c589dc6db38ac045b584f0f5381481",
+  "indexEntriesSha256": "7c8fe028577eccc86a8bbb49396a16518c79db219f46096064c9be4cef2a1ff0",
+  "indexEntriesUnchanged": true,
+  "stagedPaths": [],
+  "finalIndependentReviewSha256": "005f994b4f66544e4c99c80da80b1296f00abc6797f9d19d6d9513c3bb638fff",
+  "priorIndependentReviewSha256": "ff06a2bd69cf5b74c3d1daa71c0c70951d5a6bda3b4bd90058acc9701e4cf323",
+  "mainSpecInventoryHashes": {
+    ".trellis/spec/frontend/canvas-studio.md": "bf2fbfcbeef4f1d4976231f3b6ae37d43a7d633ba5199d5ba05d8500ca4c2687",
+    ".trellis/spec/operations/canvas-contracts.md": "d1d610eb44aa9be45bafdccc650cdedfe51b384ecd1b2db7e835c73ee9d7fff4"
+  },
+  "realEnvironmentRead": false,
+  "applicationSourceChangedThisContinuation": false
+}

@@ -1,0 +1,9 @@
+{
+  "captured_at": "2026-10-31T02:21:11.2851672Z",
+  "reason": "Original pre receipt used Git default quotePath=true; seven non-ASCII image paths were quoted, not index mutations.",
+  "command": "git -c core.quotepath=false ls-files --stage",
+  "index_entries_match": true,
+  "diffs": [],
+  "head": "1f7948e334c589dc6db38ac045b584f0f5381481",
+  "staged_paths": []
+}

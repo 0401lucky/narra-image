@@ -219,3 +219,145 @@
 ### Status
 
 [OK] **Completed**
+
+
+## Session 3: 创作台历史展示清理：实施检查及画布交接
+
+**Date**: 2026-10-29
+**Task**: 创作台历史展示清理：实施检查及画布交接
+**Branch**: `main`
+
+### Summary
+
+用户确认上一会话最终规划后仅授权 history-cleanup。通过 trellis-implement 清理桌面 HistoryRail 与手机最近图片，独立 trellis-check 无 findings；既有查询/生成/图片保留规则未改。前端质量门通过，已记录验证范围和 studio-canvas-v1 交接。用户随后明确要求仅归档：通过 archive --no-commit 完成，代码仍未提交，未部署或启动后续任务。
+
+### Main Changes
+
+- 退役历史栏、手机图片标签/网格/props与专用CSS；中央回收空间，保留对话与图片操作、参考图和生成流程。
+- 更新两条前端spec、子任务HA1-HA4/执行记录及父任务第一阶段进度；保留上一会话全部规划研究。
+- 实际结果与边界见 .trellis/tasks/archive/2026-10/10-28-studio-history-cleanup/verification.md、checks/、handoff.md。
+
+### Git Commits
+
+(No commits - the user withheld commit authorization.)
+
+### Testing
+
+- [OK] Targeted四文件两次通过：4 files/32 tests；独立lint退出0，0 errors/10既有warnings；tsc退出0。
+- [OK] 全量非DB Vitest 79 files/411 tests通过；pnpm build生产编译、types、58静态页面与routes通过；diff/scope检查通过。
+- [OK] 隔离Chrome真实组件+模拟Next/API：9组桌面/md/手机布局与对话刷新/create失败检查通过，0页面异常；不代表真实认证整页/hydration。
+
+### Status
+
+[OK] 实施及独立前端质量检查完成；按用户后续授权仅归档，子任务现为 `completed`。代码仍未提交，真实整页与数据端到端检查未执行，后续任务未启动。
+
+### Next Steps
+
+- 仅在用户单独授权后提交当前代码；归档不等于已提交或已合并，不部署。
+- studio-canvas-v1可读取checked handoff，但父/画布/手机编辑仍planning，未经确认不得启动。
+- 真实认证Next整页/SSR hydration/F5、实际API/DB/供应商/对象存储端到端尚未执行；不连接生产存储做破坏性检查。
+
+
+## Session 4: Canvas v1 跨会话续接：恢复修复与最终本地验证
+
+**Date**: 2026-10-30
+**Task**: Canvas v1 跨会话续接：恢复修复与最终本地验证
+**Branch**: `main`
+
+### Summary
+
+复用已授权的 studio-canvas-v1，完成独立前后端复查及本地质量检查；正向数据库、GC并发与启用态拓扑验收仍缺基础设施，任务保持 in_progress，未提交或部署。
+
+### Main Changes
+
+- 修复SQLSTATE映射、Docker本地隔离、删除草稿复活、多任务终态恢复及会话读取超时；保留前置历史清理全部未提交改动。
+- 同步前后端/发布/Worker spec，更新 CA1-CA13 验证映射并增加 handoff；31份实际命令回执和红绿日志持久化至任务 checks/resume-2026-10-30。
+
+### Git Commits
+
+(No commits - planning session)
+
+### Testing
+
+- [OK] 全量非DB 118 files/1339 tests、types、lint通过（0 errors/9既有warnings）；生产构建、Node/Go契约/vet/test/build通过。
+- [OK] 真实Next/Chrome/native IndexedDB + fake HTTP 14组通过；5个Compose配置检查通过；不代表真实认证/DB/Worker/供应商/S3端到端。
+- [OK] Canvas/Worker DB因本地daemon探测超时退出2，migration缺PG镜像退出2，E2E缺四个基础镜像退出2；无容器/DB/迁移/镜像拉取。
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- 补齐经授权的本地测试镜像与可响应Linux Docker后，按handoff重跑DB/migrations/GC及两拓扑门禁；不使用真实数据或自动拉镜像。
+- 门禁未过前不完成/归档/启用/部署；父任务和手机编辑仍planning，提交需另行授权。
+
+
+## Session 5: Canvas v1：补齐真实数据库与运行时验证并归档
+
+**Date**: 2026-10-30
+**Task**: Canvas v1：补齐真实数据库与运行时验证并归档
+**Branch**: `main`
+
+### Summary
+
+用户授权补齐测试后归档；四个本地测试镜像显式准备，真实Canvas/Worker数据库、迁移、全部9个容器E2E场景及最终独立质量检查通过。仅归档canvas子任务，保留未提交代码与前置历史补丁，不部署。
+
+### Main Changes
+
+- 修复5处SQL测试夹具参数类型，补真实认证SSR/API/原任务重放与两拓扑managedGC失败重试/根保护验证；E2E内部stdin HTTP通道保留无host端口隔离。
+- 补CI显式基础镜像准备、Docker构建上下文排除本地配置及关闭telemetry；生产canvas/Worker/迁移语义不变。
+
+### Git Commits
+
+(No commits - archived with --no-commit; implementation remains uncommitted)
+
+### Testing
+
+- [OK] 最终非DB120files/1386tests、types/lint(0errors/9既有warnings)、生产构建、Node/Go契约/vet/test/build通过；既有14组真实Next/native浏览器源码未变。
+- [OK] Canvas真实SQL32full+32additive、Worker真实DB6TS+Go、5组migration通过；E2E9场景646.196s全部通过，含真实认证API、COMMITTED重放、GC失败退避及精确重试。
+- [OK] 独立审核无剩余确认缺陷；E2E17/17、browser10/10、DB3/3hash一致；最终owner资源/临时目录清理审核通过。
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- 已使用archive --no-commit归档studio-canvas-v1；父任务及手机任务仍待单独授权，不自动启动或归档。
+- 代码保持未提交；真实provider/S3/部署、物理手机与OS输入法检查不冒充已完成，后续上线操作需另行授权。
+
+
+## Session 6: Studio 双模式：恢复验收证据并完成无提交归档
+
+**Date**: 2026-10-30
+**Task**: Studio 双模式：恢复验收证据并完成无提交归档
+**Branch**: `main`
+
+### Summary
+
+续接会话 01a18ace-337c-7c83-9540-b4b49ac3dcec，恢复并独立核实真实数据库结果，完成父任务 AC1-AC17 验收、文档复核与 parent-only --no-commit 归档。保留全部未提交代码，不部署、不启动手机编辑。
+
+### Main Changes
+
+- 本轮仅同步验收/交接、两份 canvas spec 测试清单和手机任务的前置依赖；未改应用、测试、schema、配置或依赖源码。
+- 归档路径：.trellis/tasks/archive/2026-10/10-28-studio-dual-mode-canvas；历史失败回执与两个子任务全部保留，独立最终报告和 archive-audit.json 记录验证边界。
+
+### Git Commits
+
+(No commits - archived with --no-commit; implementation remains uncommitted)
+
+### Testing
+
+- [OK] 恢复的 SQL04 为 37 个用例分别通过 full/additive 两种历史，共 74 次执行；精确 owner 容器与临时目录清理已核实。本轮未重跑数据库。
+- [OK] 本轮独立 lint 0 errors/9 既有 warnings、非增量 types、7 files/124 tests、27/21 context 与 whitespace 检查通过；最终文档复核无待修问题。
+- [OK] 既有 1386 tests/build/Worker/迁移/9 组 runtime/14 组 browser 仅在源码一致的原证据范围内复用；192 源码路径、277 子任务文件、60 份父任务回执校验通过，HEAD/index 保持不变。
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- 所有实现仍未提交或部署；提交、生产数据库/真实 S3/provider、启用功能需另行授权。物理手机、原生输入法与实际 CI 仍未验证。
+- 手机编辑继续 planning/deferred，MA1-MA4 未验收；先明确触控/键盘设计与验证目标，再单独审阅实施计划。

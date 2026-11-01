@@ -1,0 +1,98 @@
+{
+  "checkedAt": "2026-11-01T03:13:52.762353+00:00",
+  "reviewer": "delivery_final_check",
+  "attribution": "Coordinator-executed final isolated commands; independently read every receipt and complete logs, recomputed original/promoted byte identities and all source identities. Not duplicate reviewer-run product gates.",
+  "passed": true,
+  "sourceManifestSha256": "c94793261bc0bf091e6f6c3e44a96960184fe973c09e760e56bd101a518fe150",
+  "sourceCount": 809,
+  "allSourceBeforeAfterAndLiveExact": true,
+  "tests": 1704,
+  "testFiles": 140,
+  "lintErrors": 0,
+  "lintWarnings": 9,
+  "metadataInputs": 31,
+  "supplementalGitPolicyInputs": 2,
+  "runtime": "v24.22.1",
+  "nodeSha256": "d702daa815eabbff763c7d3808e235cf031cf2ca70211b56847bc72f51e240e5",
+  "gates": [
+    {
+      "id": "20261101T030500-test-bounded-51b1e2",
+      "exitCode": 0,
+      "timeoutSeconds": 900,
+      "durationSeconds": 107.651,
+      "receiptSha256": "b632ece5c02416d4f50e1891b9f53521b65c54dbaf5016996736ff3673b31d12",
+      "stdout": {
+        "bytes": 15807,
+        "sha256": "7f5fc103a8eb26e4ad673948c049639d7bec8c1a49ee749be5578cad11748c40"
+      },
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "id": "20261101T030703-lint-66cf1d",
+      "exitCode": 0,
+      "timeoutSeconds": 180,
+      "durationSeconds": 12.681,
+      "receiptSha256": "95e5f06b31934c788c99161c5c211fcd7d39756cbf909a9c35ae7503dd883c64",
+      "stdout": {
+        "bytes": 1723,
+        "sha256": "96616bc9288e15368773b94cb90ce2b55870b552b74f0cebbcc73e1a869e2779"
+      },
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "id": "20261101T030732-types-53098f",
+      "exitCode": 0,
+      "timeoutSeconds": 180,
+      "durationSeconds": 2.612,
+      "receiptSha256": "180d92b6c904e5b6af0b19cd90ac77c90a10d6863207567096c154859b172f64",
+      "stdout": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "id": "20261101T030751-prisma-no-network-1fceeb",
+      "exitCode": 0,
+      "timeoutSeconds": 120,
+      "durationSeconds": 1.347,
+      "receiptSha256": "e8b13fa7ba1590e1709d7c1803a1889a43f73ecf14f0770bdb0b216c670e5db6",
+      "stdout": {
+        "bytes": 243,
+        "sha256": "0c2dc08dfcc5bd48bf30a6dededd16ce51457c9d045f4dd92afdd481ee17c950"
+      },
+      "stderr": {
+        "bytes": 93,
+        "sha256": "75066079154e16278b8bbb61e3a8fed567403e1667eda92ad7c8eeab0cda5879"
+      }
+    },
+    {
+      "id": "20261101T030808-build-c758b4",
+      "exitCode": 0,
+      "timeoutSeconds": 600,
+      "durationSeconds": 19.369,
+      "receiptSha256": "a567d92e4b1478eeca192e37e498dbbb92f30238a3d50dfe89e2e1ac5ef1927c",
+      "stdout": {
+        "bytes": 3915,
+        "sha256": "dff0ffd2f520a01a53eb051349f5d74e6453155140a6d8014b608235128ef9f4"
+      },
+      "stderr": {
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ],
+  "productionLaneUnlocked": true,
+  "noBrowserAdapterInProductionBuild": true,
+  "preservedPriorFailureRecords": true,
+  "noDatabaseMigrationOrLiveServices": true
+}

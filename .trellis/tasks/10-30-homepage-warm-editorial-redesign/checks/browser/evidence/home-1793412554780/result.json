@@ -1,0 +1,19 @@
+{
+  "runId": "home-1793412554780",
+  "mode": "home",
+  "evidence": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\browser\\evidence\\home-1793412554780",
+  "app": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\browser-home-6123bb41\\app",
+  "checks": [
+    {
+      "id": "runner",
+      "passed": false,
+      "error": "AssertionError [ERR_ASSERTION]: pre-browser source identities changed\n+ actual - expected\n\n+ [\n+   'live:src/app/page.tsx',\n+   'live:src/components/marketing/homepage/header.module.css',\n+   'live:src/components/marketing/homepage/hero-scene.tsx',\n+   'live:src/components/marketing/homepage/hooks/use-hero-scene.ts'\n+ ]\n- []\n\n    at sourceIdentity (file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/run-browser.mjs:54:10)\n    at async file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/run-browser.mjs:319:3"
+    }
+  ],
+  "passed": false,
+  "limitations": [
+    "Real Next/React/Chromium with synthetic DB only; not live DB/Worker/provider E2E.",
+    "Desktop Chrome CDP emulates viewport/touch; not physical mobile/native IME.",
+    "Local installed Node is not pinned Node24.22.1."
+  ]
+}

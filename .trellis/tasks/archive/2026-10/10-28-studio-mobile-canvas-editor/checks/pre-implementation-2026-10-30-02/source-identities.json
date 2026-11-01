@@ -1,0 +1,1008 @@
+[
+  {
+    "path": "src/components/create/canvas/client-api.ts",
+    "kind": "file",
+    "bytes": 11989,
+    "sha256": "8c02f2941d9a3eafbd5f43081483507f6cca97d3fee1738eabfdf4644f05d455"
+  },
+  {
+    "path": "src/components/create/canvas/commands.ts",
+    "kind": "file",
+    "bytes": 11284,
+    "sha256": "e4a9647e19fc2f9ce41b03e32593c6aadeb0fc9dd6b854e1c71cd09142e2bfe0"
+  },
+  {
+    "path": "src/components/create/canvas/controller-types.ts",
+    "kind": "file",
+    "bytes": 5908,
+    "sha256": "69dffe1bf35af26e7dd0a266ca16fd8434fc04aa5497d6272a63618409a93f74"
+  },
+  {
+    "path": "src/components/create/canvas/controller.ts",
+    "kind": "file",
+    "bytes": 52822,
+    "sha256": "cda538605642e9d12f6ae0ad0a2139abce4ba9de95c874a63f92e17fd919b2b0"
+  },
+  {
+    "path": "src/components/create/canvas/draft-store.ts",
+    "kind": "file",
+    "bytes": 22934,
+    "sha256": "beca5523b10346a24228ae35392ab3e0e7ad45a70f64f7bc5c6aa0e89d77ca93"
+  },
+  {
+    "path": "src/components/create/canvas/draft-types.ts",
+    "kind": "file",
+    "bytes": 4893,
+    "sha256": "4b5f48bbbd1d18fba8e9a0206572ec71d8aa2edfe3076f68d57a8fb5f1ceabb1"
+  },
+  {
+    "path": "src/components/create/canvas/reference-runtime.ts",
+    "kind": "file",
+    "bytes": 7724,
+    "sha256": "921669e7f5024f4493f9212c6e6c1fea94c203f540d114bfd362767fda5f43df"
+  },
+  {
+    "path": "src/components/create/canvas/renderer-adapter.ts",
+    "kind": "file",
+    "bytes": 6454,
+    "sha256": "448cf038c8b4eeeb8ecf875944d9b8235fb15a59d07bcab80d989cdafebafba4"
+  },
+  {
+    "path": "src/components/create/canvas/renderer-constants.ts",
+    "kind": "file",
+    "bytes": 2835,
+    "sha256": "9d9202586604e9049b890903c94da6387f1c81b9c1f8d25f57847ea684586741"
+  },
+  {
+    "path": "src/components/create/canvas/renderer-types.ts",
+    "kind": "file",
+    "bytes": 2772,
+    "sha256": "b1aadd6def62a2d20fbf87dfad1f7665fc869df64fb41116f488719a08d71fe9"
+  },
+  {
+    "path": "src/components/create/canvas/run-commands.ts",
+    "kind": "file",
+    "bytes": 9947,
+    "sha256": "b59c4fbfb423ae4776a1631fe4bcc90da9d5a1d2aafb37c1f0d0a3d84f7551e4"
+  },
+  {
+    "path": "src/components/create/canvas/studio-bridge.ts",
+    "kind": "file",
+    "bytes": 929,
+    "sha256": "a0487c8379819a0c8f6384af2afb3f2b5f54495847e657c88a456a3ca25d9cf2"
+  },
+  {
+    "path": "src/components/create/constants.ts",
+    "kind": "file",
+    "bytes": 2534,
+    "sha256": "19a3b49a461263d23b3ba04ca82f0d5a63dd89c73fc7d3a762810293a7d7ac72"
+  },
+  {
+    "path": "src/components/create/generation-item.ts",
+    "kind": "file",
+    "bytes": 3227,
+    "sha256": "82ebeacc6a4185851052197a6d8800dbe07de3b96a05d76f98e13f17cf28ef48"
+  },
+  {
+    "path": "src/components/create/generator-studio.tsx",
+    "kind": "file",
+    "bytes": 59976,
+    "sha256": "e6d8495981b33ecae1fa5e1b4f4ee54be775679f52b7e684ce80ab6494a4b218"
+  },
+  {
+    "path": "src/components/create/hooks/use-canvas-documents.ts",
+    "kind": "file",
+    "bytes": 2378,
+    "sha256": "4055c3d13558ad706b177505a7ebdacb49c19b5ebc70907fa848a532ff1fe71a"
+  },
+  {
+    "path": "src/components/create/hooks/use-canvas-image-viewer.ts",
+    "kind": "file",
+    "bytes": 5732,
+    "sha256": "eff113a277ce658046d898aa0896cd0cf16a7672255b527b94ac988b5810a298"
+  },
+  {
+    "path": "src/components/create/hooks/use-canvas-runtime-lease.ts",
+    "kind": "file",
+    "bytes": 10660,
+    "sha256": "043d07e03d046d462cf60f103b562f7d8938780a0117639872ecc00f93c1af9c"
+  },
+  {
+    "path": "src/components/create/hooks/use-conversation-generations.ts",
+    "kind": "file",
+    "bytes": 14620,
+    "sha256": "8b033beb557b88f8ef08dd89d8cb0aa9fa6d8c1d457325181898094db5d61ee1"
+  },
+  {
+    "path": "src/components/create/hooks/use-image-poller.ts",
+    "kind": "file",
+    "bytes": 7847,
+    "sha256": "cb0e7fa27a6a4e3a0a9a831051a98f3f3dfeebdf13f75d021965dde0b131d1bb"
+  },
+  {
+    "path": "src/components/create/hooks/use-reference-images.ts",
+    "kind": "file",
+    "bytes": 4856,
+    "sha256": "b07240da847f402b8684f054a5408c62801b24a495d54b77b12139203529f0c9"
+  },
+  {
+    "path": "src/components/create/hooks/use-sessions.ts",
+    "kind": "file",
+    "bytes": 9962,
+    "sha256": "9432887ef6e39d202db242bd8b55ed65282b9e691abcd115d798376f1d39a459"
+  },
+  {
+    "path": "src/components/create/hooks/use-studio-jobs.ts",
+    "kind": "file",
+    "bytes": 8227,
+    "sha256": "c1edf8fc75e05750afad279bc0ee85ca90920b88905ab5aa56dfec7c50ca2643"
+  },
+  {
+    "path": "src/components/create/hooks/use-studio-mode.ts",
+    "kind": "file",
+    "bytes": 1866,
+    "sha256": "7491700acf92c26cb43bcf04458155614ef07a77e86852314b8dac8bdd9e90af"
+  },
+  {
+    "path": "src/components/create/parts/advanced-settings.tsx",
+    "kind": "file",
+    "bytes": 20444,
+    "sha256": "8bdfff53673f7d7349b3036f887ed6a709e1dc233ffcdb5fb6ed48ff16e986cb"
+  },
+  {
+    "path": "src/components/create/parts/canvas-dialog.tsx",
+    "kind": "file",
+    "bytes": 3723,
+    "sha256": "640e0883a7c5fa69520d00904f8f5e457bcc1e0e7aa6d0ff183c81f1297e345f"
+  },
+  {
+    "path": "src/components/create/parts/canvas-lazy-pane.tsx",
+    "kind": "file",
+    "bytes": 2778,
+    "sha256": "460baabd4ecde6072e8b291052cb83564b176a2548c70f59dc1194424b038567"
+  },
+  {
+    "path": "src/components/create/parts/canvas-node-inspector.tsx",
+    "kind": "file",
+    "bytes": 14878,
+    "sha256": "4490c3e3c3b37eee1d95138dfafd45f45afa82517d3d9557dfb03640fb4be34e"
+  },
+  {
+    "path": "src/components/create/parts/canvas-nodes/generation-node.tsx",
+    "kind": "file",
+    "bytes": 4317,
+    "sha256": "9da80f3651428c642d4d6acc7ea1b6d5e8811896d07321dea76e6b05b5e620d5"
+  },
+  {
+    "path": "src/components/create/parts/canvas-nodes/node-shell.tsx",
+    "kind": "file",
+    "bytes": 2256,
+    "sha256": "1a4715964f85495b1004d14d04d294bc842a316b638dbca37c78ab7611eadcef"
+  },
+  {
+    "path": "src/components/create/parts/canvas-nodes/prompt-node.tsx",
+    "kind": "file",
+    "bytes": 2606,
+    "sha256": "e431b45477261f068c5af576e9d067573438541f0ffecc7f51595b204b8541dc"
+  },
+  {
+    "path": "src/components/create/parts/canvas-nodes/reference-node.tsx",
+    "kind": "file",
+    "bytes": 4008,
+    "sha256": "86da6d0fca8415925635fd10f6832412dfc06148fef0d12524a196bb4b521430"
+  },
+  {
+    "path": "src/components/create/parts/canvas-nodes/result-node.tsx",
+    "kind": "file",
+    "bytes": 2958,
+    "sha256": "932e0c9c92a8cf659e7ccbe817f2d9942338c84c678e0a93ffe6b427c35e6f90"
+  },
+  {
+    "path": "src/components/create/parts/canvas-runtime-dialog.tsx",
+    "kind": "file",
+    "bytes": 7061,
+    "sha256": "4ae58c380f5e9cf05da85ba3905971666d24cd2bde9bf428460b4be74f0ea31c"
+  },
+  {
+    "path": "src/components/create/parts/canvas-sidebar.tsx",
+    "kind": "file",
+    "bytes": 2952,
+    "sha256": "cf713bb659b50491a78da649c5fba50244937c16a263d337847dbf647ce944a2"
+  },
+  {
+    "path": "src/components/create/parts/canvas-stage.module.css",
+    "kind": "file",
+    "bytes": 17567,
+    "sha256": "44ab7309228d56027e152ef39a3133394d5ebd918c94ae17c2df7b19eedffed4"
+  },
+  {
+    "path": "src/components/create/parts/canvas-stage.tsx",
+    "kind": "file",
+    "bytes": 22092,
+    "sha256": "0062155425d3e56e79bbc3fd16a434c05b120bf6aa7e05c80d90c4df6c00470c"
+  },
+  {
+    "path": "src/components/create/parts/canvas-toolbar.tsx",
+    "kind": "file",
+    "bytes": 4667,
+    "sha256": "73737318830a759b4dc59b3864fddcdfb3ceb49360abba31c5deedd1ad0c3750"
+  },
+  {
+    "path": "src/components/create/parts/chat-pane.tsx",
+    "kind": "file",
+    "bytes": 4530,
+    "sha256": "e4a41cda3a854bfa074db0037375ef1c72a8fcf413b12e6b9c43d9f0521ff423"
+  },
+  {
+    "path": "src/components/create/parts/chat-stream.tsx",
+    "kind": "file",
+    "bytes": 2513,
+    "sha256": "29c11a02ed5f7ca8540911bd48aa303900e07d80164343d2a471d11f8f0e6c75"
+  },
+  {
+    "path": "src/components/create/parts/composer.tsx",
+    "kind": "file",
+    "bytes": 20028,
+    "sha256": "9b2bf30066cf0b07811a54d2fd22ac7afb2976d18f466401e3c311e827df0a7c"
+  },
+  {
+    "path": "src/components/create/parts/generation-bubble.tsx",
+    "kind": "file",
+    "bytes": 14986,
+    "sha256": "7ed7c41500d4a3ca68e2fecb307fa30d4550832c6dae2bd214b3e002049e55b3"
+  },
+  {
+    "path": "src/components/create/parts/history-rail.tsx",
+    "kind": "absent"
+  },
+  {
+    "path": "src/components/create/parts/image-zoom-modal.tsx",
+    "kind": "file",
+    "bytes": 4596,
+    "sha256": "fad3d27d3a31611cc703b76374475a33dfd28bf706c4d2e3f4a89ee530ecb071"
+  },
+  {
+    "path": "src/components/create/parts/session-sidebar.tsx",
+    "kind": "file",
+    "bytes": 5521,
+    "sha256": "ce3c84e7ab6921c2896c65e36bd0b695e8ca6c1b94dcdcd28277a74ee6967ce5"
+  },
+  {
+    "path": "src/components/create/parts/studio-mode-switch.tsx",
+    "kind": "file",
+    "bytes": 1607,
+    "sha256": "f45b07404bbe464637f613ac097bfa212775a83d05e7f748b40c2876070f3dbe"
+  },
+  {
+    "path": "src/components/create/types.ts",
+    "kind": "file",
+    "bytes": 3114,
+    "sha256": "863c00cabe0c2ce05d62fe5aa000d0d4db0f24a198dc18e0bb2d058ea5c9fe89"
+  },
+  {
+    "path": "src/components/create/utils.ts",
+    "kind": "file",
+    "bytes": 6498,
+    "sha256": "f965e9543ae733f4bd4940033938a7eaf3088dd567842ff84835b5f12e5702e7"
+  },
+  {
+    "path": "src/tests/unit/admin-channels-provider.test.ts",
+    "kind": "file",
+    "bytes": 4064,
+    "sha256": "01466976e6d0992fb387b2e2e909c969a2c19bff89a3f4586b0976a7edd1d086"
+  },
+  {
+    "path": "src/tests/unit/admin-channels-route.test.ts",
+    "kind": "file",
+    "bytes": 2904,
+    "sha256": "06b95ccc6aa0a95bc4f913599bc11387f4e78a14f573151dd0a8173ce1d06651"
+  },
+  {
+    "path": "src/tests/unit/admin-generations-cleanup-route.test.ts",
+    "kind": "file",
+    "bytes": 1299,
+    "sha256": "de06ed2ef37e1a6f3cbff8b1eb6d84ebca90bbd065217ee135b7acfc07a21e81"
+  },
+  {
+    "path": "src/tests/unit/admin-generations-page.test.tsx",
+    "kind": "file",
+    "bytes": 3322,
+    "sha256": "c6d226136e33c852226723822a29918f6be38380c77442f8c3cd2e910c570cd2"
+  },
+  {
+    "path": "src/tests/unit/admin-generations-route.test.ts",
+    "kind": "file",
+    "bytes": 5959,
+    "sha256": "8d16496e7642f65178f9c8fa8e3e38d5771b38972dbec653fecb9017b7edf13b"
+  },
+  {
+    "path": "src/tests/unit/admin-invite-batch-route.test.ts",
+    "kind": "file",
+    "bytes": 3987,
+    "sha256": "0478a9627b9dced78a48686f49b42302cc35033ceec8c3d39471d45ae00c78b0"
+  },
+  {
+    "path": "src/tests/unit/admin-user-delete-route.test.ts",
+    "kind": "file",
+    "bytes": 2853,
+    "sha256": "30963f87dfcf0291b53800b7ab6d9e28af97d150bec79f2581f798c93b72aad4"
+  },
+  {
+    "path": "src/tests/unit/api-config.test.ts",
+    "kind": "file",
+    "bytes": 2043,
+    "sha256": "62a4241bc6d133fa4aad979066ede3d9d9e06d84f79e6a585301d45d071e6ec3"
+  },
+  {
+    "path": "src/tests/unit/api-key-console.test.tsx",
+    "kind": "file",
+    "bytes": 2464,
+    "sha256": "12344e5aa0b6351ede3ca4d3726861e37e74464b1e4cd1e22c2a92f54732a826"
+  },
+  {
+    "path": "src/tests/unit/auth-form.test.tsx",
+    "kind": "file",
+    "bytes": 1756,
+    "sha256": "520719ba4213a872ee5d1c051447bbff59a3793a160f444fbfaed2c8b8f3a170"
+  },
+  {
+    "path": "src/tests/unit/built-in-provider.test.ts",
+    "kind": "file",
+    "bytes": 1707,
+    "sha256": "23bcd56164b493b503e126b430dc70a2e52746992cf7833647c0029913c582ed"
+  },
+  {
+    "path": "src/tests/unit/canvas-assets-api.test.ts",
+    "kind": "file",
+    "bytes": 17779,
+    "sha256": "299092be165d1012dcb8ec801bb32faabcd70b32fc47fa087b3d1a68018cd4fe"
+  },
+  {
+    "path": "src/tests/unit/canvas-client-api.test.ts",
+    "kind": "file",
+    "bytes": 14898,
+    "sha256": "cb799bb022e6de936ba6b4b93861b36a4015f029c3b34e5ae23fc219fe9e0d12"
+  },
+  {
+    "path": "src/tests/unit/canvas-controller-documents.test.ts",
+    "kind": "file",
+    "bytes": 39062,
+    "sha256": "5c30835dd208df3fcaa35a7e5f4f0a207dc69d06b8687628db3b8f94de9097bc"
+  },
+  {
+    "path": "src/tests/unit/canvas-controller-runs.test.ts",
+    "kind": "file",
+    "bytes": 45270,
+    "sha256": "856ac7bc4e3ac3d8d4652383c2cd1bcfc79b34c7424e57a093a2982b68441782"
+  },
+  {
+    "path": "src/tests/unit/canvas-disposable-runner.test.ts",
+    "kind": "file",
+    "bytes": 8000,
+    "sha256": "5b9380d0d5b8c325eadd4e7a3a454800faacbdfa5f4dbd9ec6ba9544b632b6a1"
+  },
+  {
+    "path": "src/tests/unit/canvas-documents-api.test.ts",
+    "kind": "file",
+    "bytes": 14163,
+    "sha256": "ddfe0ca78140be0698155379b9e54c2865d21256688f5e729ce2cf50d983610f"
+  },
+  {
+    "path": "src/tests/unit/canvas-draft-store.test.ts",
+    "kind": "file",
+    "bytes": 42605,
+    "sha256": "96d9dac828deff8619b2fe737aff0d5aa6d18739f3068e68e22b2d2be708384e"
+  },
+  {
+    "path": "src/tests/unit/canvas-e2e-http-fixture.test.ts",
+    "kind": "file",
+    "bytes": 5708,
+    "sha256": "0cea92ded962125302a11a45d6bc3861c19ab9090b3443afecc3c17f028b6c18"
+  },
+  {
+    "path": "src/tests/unit/canvas-e2e-runner.test.ts",
+    "kind": "file",
+    "bytes": 29172,
+    "sha256": "c38d9d5142779b0bb6c875931e48774399124f23a5b2004a61abc3bf0d42ff68"
+  },
+  {
+    "path": "src/tests/unit/canvas-e2e-runtime-fixture.test.ts",
+    "kind": "file",
+    "bytes": 8061,
+    "sha256": "2d7b585870c2ab7a9f953138c8b6d1b182736690d5cd0f81a0354c0e5b4f1748"
+  },
+  {
+    "path": "src/tests/unit/canvas-env.test.ts",
+    "kind": "file",
+    "bytes": 1875,
+    "sha256": "44e6d74d1cdfffa8bbf971f0b9e380504dde0019eafda8b06b46ee3a84cf082f"
+  },
+  {
+    "path": "src/tests/unit/canvas-generate-parser.test.ts",
+    "kind": "file",
+    "bytes": 8931,
+    "sha256": "e47c83436452813af60468ef77cec9767443f87e9148b928df71ad216844fc5e"
+  },
+  {
+    "path": "src/tests/unit/canvas-generate-route.test.ts",
+    "kind": "file",
+    "bytes": 52252,
+    "sha256": "8b442b8f9904f556caedcb972dd4f9afefe9791af931c1207cb7e47904589e80"
+  },
+  {
+    "path": "src/tests/unit/canvas-graph.test.ts",
+    "kind": "file",
+    "bytes": 8541,
+    "sha256": "c9bdf7a8f672305fe8daf8e38140e879353c58db2d2ae815a9be2af8fffef715"
+  },
+  {
+    "path": "src/tests/unit/canvas-http.test.ts",
+    "kind": "file",
+    "bytes": 14809,
+    "sha256": "729d77df5b1609157f0c8de6d33303a0b10013dd139b5f62c8af899869d66f06"
+  },
+  {
+    "path": "src/tests/unit/canvas-lazy-pane.test.tsx",
+    "kind": "file",
+    "bytes": 2822,
+    "sha256": "109874c54ddd3211f0a1b0f485fbb977a33bb3bbec3a63be4f6d92b603e48216"
+  },
+  {
+    "path": "src/tests/unit/canvas-object-store-fixture.test.ts",
+    "kind": "file",
+    "bytes": 13435,
+    "sha256": "a17754c70c517673243523b8a163981c203e8da20eec5193f0976085f103f78f"
+  },
+  {
+    "path": "src/tests/unit/canvas-readiness.test.ts",
+    "kind": "file",
+    "bytes": 8558,
+    "sha256": "378977b19f9c7bed4f64153ec164d588e4f439365fd3b653540021b7245760e5"
+  },
+  {
+    "path": "src/tests/unit/canvas-reference-runtime.test.ts",
+    "kind": "file",
+    "bytes": 9072,
+    "sha256": "dc972d628a8e727e547405543efa83afd45b2847ba5e165ec87b39d61d7d019b"
+  },
+  {
+    "path": "src/tests/unit/canvas-renderer-adapter.test.ts",
+    "kind": "file",
+    "bytes": 10772,
+    "sha256": "3704c09d98c50930f4bf77cee0815d3b13e0cfa8f280e29fd718f1ade368840c"
+  },
+  {
+    "path": "src/tests/unit/canvas-run-lookup.test.ts",
+    "kind": "file",
+    "bytes": 12964,
+    "sha256": "7014b0a96f78e410e1ebcebe108bff8c1cebb36d737135c487f7b78edbaceda3"
+  },
+  {
+    "path": "src/tests/unit/canvas-runtime-api.test.ts",
+    "kind": "file",
+    "bytes": 25070,
+    "sha256": "5aa668069237112beffb06b70e223db4049c1855fd89991d11638a45cda31fbf"
+  },
+  {
+    "path": "src/tests/unit/canvas-schema-probe.test.ts",
+    "kind": "file",
+    "bytes": 9800,
+    "sha256": "b2f858b7ad92fee4000ef20298f21549211e6e7272a82dae13dc6e39000273d7"
+  },
+  {
+    "path": "src/tests/unit/canvas-stage.test.tsx",
+    "kind": "file",
+    "bytes": 45018,
+    "sha256": "cafc3f2dab19c91ae9425a18966aa3fb33dd39532e8289bb2f3130101cd5bee6"
+  },
+  {
+    "path": "src/tests/unit/canvas-storage-capability-response.test.ts",
+    "kind": "file",
+    "bytes": 14938,
+    "sha256": "4b8778eb79af3958cf629defb4ceff4a72150f03cb9fa62482e76d95282fd4e3"
+  },
+  {
+    "path": "src/tests/unit/canvas-storage.test.ts",
+    "kind": "file",
+    "bytes": 9866,
+    "sha256": "c4a2fb5ef2296b24b6be8d3d9a107239e76e978159b05d6b41a14a8238ea9793"
+  },
+  {
+    "path": "src/tests/unit/canvas-terminal-placement.test.ts",
+    "kind": "file",
+    "bytes": 10414,
+    "sha256": "c7149b3f6f956a9f0fdcfbce6b2257167499148549b2ee23a22b7ea9b8a7e9c7"
+  },
+  {
+    "path": "src/tests/unit/channel-manager.test.tsx",
+    "kind": "file",
+    "bytes": 2043,
+    "sha256": "41045a6001d6614210e7050742918b3d16d0f9481e38042fc79219a14c12916f"
+  },
+  {
+    "path": "src/tests/unit/channel-validators.test.ts",
+    "kind": "file",
+    "bytes": 1093,
+    "sha256": "d078f496b139601a8812010b9ead1c84a2f0ef47851918a89cb6427a29a33055"
+  },
+  {
+    "path": "src/tests/unit/chat-pane.test.tsx",
+    "kind": "file",
+    "bytes": 7260,
+    "sha256": "8b412a92356b2f547b2823803160aa53c81bf187e56bc1cab38e454044e6af70"
+  },
+  {
+    "path": "src/tests/unit/check-in.test.ts",
+    "kind": "file",
+    "bytes": 1602,
+    "sha256": "db3c13c845b39b67914cd6ecf9f91594d36a58b88b7b3f6775f39ffc744f2875"
+  },
+  {
+    "path": "src/tests/unit/conversation-generations-api.test.ts",
+    "kind": "file",
+    "bytes": 11199,
+    "sha256": "1c803d846fffc82461e17ed12ee9109b2fd78db79139419677e486dad19c7900"
+  },
+  {
+    "path": "src/tests/unit/create-page-conversations.test.tsx",
+    "kind": "file",
+    "bytes": 5471,
+    "sha256": "aec2d71155358b4aa4aced35beb7ea8795684347ead6399f63dbf4c0d0c8fa2f"
+  },
+  {
+    "path": "src/tests/unit/credits.test.ts",
+    "kind": "file",
+    "bytes": 1581,
+    "sha256": "d18d18011ba912c37c4c59e142bf2991e3bddba8423446d340c8d64a4c385af0"
+  },
+  {
+    "path": "src/tests/unit/env-security.test.ts",
+    "kind": "file",
+    "bytes": 5052,
+    "sha256": "e7d809a4722c7465b6bc7b5540b729d77c35422f29fafc46b1aeee14dcfeacd1"
+  },
+  {
+    "path": "src/tests/unit/external-generation-service.test.ts",
+    "kind": "file",
+    "bytes": 9123,
+    "sha256": "72864c55c2cd8fc24655553409be4501ee4eba4838b8b8dc8d90a33d0a74e4e0"
+  },
+  {
+    "path": "src/tests/unit/external-source-images.test.ts",
+    "kind": "file",
+    "bytes": 2486,
+    "sha256": "c0828b9fa57c80907a86da200a1bcfa5fd2d089d508791e9a98f1288eea56ade"
+  },
+  {
+    "path": "src/tests/unit/external-v1-routes.test.ts",
+    "kind": "file",
+    "bytes": 24951,
+    "sha256": "179d606d61d86a12c34b4c37ae1d20f3234a1455f3b2c1861c0c2106a9279cc8"
+  },
+  {
+    "path": "src/tests/unit/featured-gallery.test.tsx",
+    "kind": "file",
+    "bytes": 3064,
+    "sha256": "94a6de3811a53ba393adf6de15c119dcd23e6cd2760db764cedda06889cfd305"
+  },
+  {
+    "path": "src/tests/unit/featured-route.test.ts",
+    "kind": "file",
+    "bytes": 2093,
+    "sha256": "7f3dfd173cef36e99e4a6ecc5dd7cef807fa13e3b8001f592396ee6c0a5430f0"
+  },
+  {
+    "path": "src/tests/unit/featured-video-serialization.test.ts",
+    "kind": "file",
+    "bytes": 2711,
+    "sha256": "8a0758a8ddc53e487605aa3602c8f82c21dffbf7d42fd66626c204e88e6a8e25"
+  },
+  {
+    "path": "src/tests/unit/featured-works.test.ts",
+    "kind": "file",
+    "bytes": 3775,
+    "sha256": "f1f3bcffe5134fd37aae204189a471025e10e395a2204ad3b28f3e7c236dd3e0"
+  },
+  {
+    "path": "src/tests/unit/gateway-client.test.ts",
+    "kind": "file",
+    "bytes": 12546,
+    "sha256": "ea181db8b1f085f6f29edc5fcf3172af23f41be87fae6d82b4c2de01361a31b9"
+  },
+  {
+    "path": "src/tests/unit/generate-route-security.test.ts",
+    "kind": "file",
+    "bytes": 8611,
+    "sha256": "92bcb878db1358fbe2ea70db20f29d4ea19326522447fced070c5052a2680443"
+  },
+  {
+    "path": "src/tests/unit/generation-admin-list.test.tsx",
+    "kind": "file",
+    "bytes": 6041,
+    "sha256": "7bc73fd1eff7e61e7eebad43403af1cba68b1152555c187688a5aafa95c42c1f"
+  },
+  {
+    "path": "src/tests/unit/generation-cancel-route.test.ts",
+    "kind": "file",
+    "bytes": 4579,
+    "sha256": "17131ba651b21b38cf383904b38174ab4ef4d3a2a8b02903ea5569a0fcddd887"
+  },
+  {
+    "path": "src/tests/unit/generation-item.test.ts",
+    "kind": "file",
+    "bytes": 2517,
+    "sha256": "3aa104e0e5888ff28b4c25684f5d1f920249f57a0710d825c3a7bf6826965e48"
+  },
+  {
+    "path": "src/tests/unit/generation-search-bar.test.tsx",
+    "kind": "file",
+    "bytes": 1409,
+    "sha256": "9ec5dc2332488f5e605884a462c4b65bfefa24a22713fc4bcdcd2f8de9ee445c"
+  },
+  {
+    "path": "src/tests/unit/generation-serialization.test.ts",
+    "kind": "file",
+    "bytes": 3892,
+    "sha256": "e0689bc4bf8bafa8b0b68205e9bb7cf4398308502fd994f7e26a56ea226bc799"
+  },
+  {
+    "path": "src/tests/unit/generation-sizes.test.ts",
+    "kind": "file",
+    "bytes": 1087,
+    "sha256": "1016f88cd213860a6b4bfe910171ee5533b6920dc2e96757ae66c86addf3988d"
+  },
+  {
+    "path": "src/tests/unit/generator-studio-canvas.test.tsx",
+    "kind": "file",
+    "bytes": 41423,
+    "sha256": "82c06fc132199e37410f499813a2fde470ab3544802897e730b4a6beecbc8ab2"
+  },
+  {
+    "path": "src/tests/unit/generator-studio-conversations.test.tsx",
+    "kind": "file",
+    "bytes": 10802,
+    "sha256": "d1451f36e314eafe5f33734deb4e2b04492fed80755f08a56d58933a27877805"
+  },
+  {
+    "path": "src/tests/unit/generator-studio-edit.test.tsx",
+    "kind": "file",
+    "bytes": 4257,
+    "sha256": "c53e26cbfce779e2b525271437d6069a99557f6f763c1735c447bc865805aed7"
+  },
+  {
+    "path": "src/tests/unit/generator-studio-feedback.test.tsx",
+    "kind": "file",
+    "bytes": 20531,
+    "sha256": "57ca78d15a83794b26e7b44e6ee67c249737925b89c7f53568ef8b5939633728"
+  },
+  {
+    "path": "src/tests/unit/generator-studio-origins.test.tsx",
+    "kind": "file",
+    "bytes": 27805,
+    "sha256": "9455a70a40792cb77c1f9fe7807bd33a49b98989bcb58814e7c93de0e056f3db"
+  },
+  {
+    "path": "src/tests/unit/generator-studio-ratio.test.tsx",
+    "kind": "file",
+    "bytes": 4348,
+    "sha256": "8601dd021e0516b80c7b840c48a52a90be3966f5877971534ede6d91786f5340"
+  },
+  {
+    "path": "src/tests/unit/generator-studio-retry-cancel.test.tsx",
+    "kind": "file",
+    "bytes": 10898,
+    "sha256": "fa99cd77bc114967b5bc740fae336c39772d8dc4e0c2519e48b77eb3ddd15ce8"
+  },
+  {
+    "path": "src/tests/unit/generator-studio-session-history.test.tsx",
+    "kind": "file",
+    "bytes": 13153,
+    "sha256": "0b647397a8d63852140d35de41797de3806d9cc4a6002852de5b83ee64a92e84"
+  },
+  {
+    "path": "src/tests/unit/health-routes.test.ts",
+    "kind": "file",
+    "bytes": 1791,
+    "sha256": "d7eac1a43c112387ebfedc303081ab481f944a79156162e2fd60b8ce9a008397"
+  },
+  {
+    "path": "src/tests/unit/helpers/canvas-api-fixtures.ts",
+    "kind": "file",
+    "bytes": 4177,
+    "sha256": "6a3d84dd8a4dbf75e7ec89cc7a17001841bc8014cb49e74b69c66d900f9e66f1"
+  },
+  {
+    "path": "src/tests/unit/helpers/canvas-controller-fixtures.ts",
+    "kind": "file",
+    "bytes": 14444,
+    "sha256": "9fd6675608752bc7c93f9ecb081cb162fc0fdcf770553965e86bc0ca6242eba7"
+  },
+  {
+    "path": "src/tests/unit/helpers/canvas-renderer-fixtures.tsx",
+    "kind": "file",
+    "bytes": 5350,
+    "sha256": "b5b82fb6dbdcc031f2caaf89733c3fb4ebe88e1bb3fa581691bbb090324756fb"
+  },
+  {
+    "path": "src/tests/unit/helpers/canvas-sql-error.ts",
+    "kind": "file",
+    "bytes": 763,
+    "sha256": "5e041160236259162c389bac8ebf54977d9122495ab6eeac37483a077b7c8b47"
+  },
+  {
+    "path": "src/tests/unit/helpers/conversation-fixtures.ts",
+    "kind": "file",
+    "bytes": 1280,
+    "sha256": "f9ee323454fb8e76ee85de9092a8a0ddf22919fb7615ae1d20bd5d46eca989ac"
+  },
+  {
+    "path": "src/tests/unit/image-dimensions.test.ts",
+    "kind": "file",
+    "bytes": 3089,
+    "sha256": "0a802e65033e26785070d081f0f2560a01f6c86176c1bf04352ed5aa2c86d44d"
+  },
+  {
+    "path": "src/tests/unit/image-lightbox.test.tsx",
+    "kind": "file",
+    "bytes": 1187,
+    "sha256": "be49b96bb891d66e5b8dc07c87cfec2c7c1c5629cba2c08862fa2e30e90a7bc1"
+  },
+  {
+    "path": "src/tests/unit/image-url.test.ts",
+    "kind": "file",
+    "bytes": 608,
+    "sha256": "46da4bcba46d82eaaa4b4dcabed6779483e1b6a526fcf1d51f9db0a9d72fa276"
+  },
+  {
+    "path": "src/tests/unit/invite-batch-view-button.test.tsx",
+    "kind": "file",
+    "bytes": 2779,
+    "sha256": "56aa90306bda10327e12fe6d58f9c1cab777540b65f1255a9a2375ea19763ae6"
+  },
+  {
+    "path": "src/tests/unit/invite-claim.test.ts",
+    "kind": "file",
+    "bytes": 995,
+    "sha256": "3e7def739b524ebc4ce5052e3faaffd41553dae02bc28c1f9866c0b14d8f477b"
+  },
+  {
+    "path": "src/tests/unit/job-refund.test.ts",
+    "kind": "file",
+    "bytes": 8376,
+    "sha256": "6d5f52abe49f54f5b0aef59320a43d27e27354569839e96b441b87a8330545da"
+  },
+  {
+    "path": "src/tests/unit/linuxdo-oauth.test.ts",
+    "kind": "file",
+    "bytes": 15025,
+    "sha256": "b1a0a1eab69fb0e814df967cc2eeb9970d9f8f6ff101e2fc470218468e1a0a1d"
+  },
+  {
+    "path": "src/tests/unit/local-docker-safety.test.ts",
+    "kind": "file",
+    "bytes": 11186,
+    "sha256": "2e13e744028e0e0575f2b51b6be13832b06f2f088acc3f0d7ce7e554ece55f7f"
+  },
+  {
+    "path": "src/tests/unit/log-redaction.test.ts",
+    "kind": "file",
+    "bytes": 1566,
+    "sha256": "9d8dc9e69c0b6cb3591910280e4fd7a4617093b88f9e68343b043fd45bea5230"
+  },
+  {
+    "path": "src/tests/unit/model-catalog-fetch.test.ts",
+    "kind": "file",
+    "bytes": 1948,
+    "sha256": "3153593749bbc6f0677a53b6143ec040b4cce16e01e2329f63e440219d3aa6fb"
+  },
+  {
+    "path": "src/tests/unit/model-catalog.test.ts",
+    "kind": "file",
+    "bytes": 1481,
+    "sha256": "61e5ed41d3f3c6693a363924777a6dd275f9c6c73fae914d97af41021ba5b8ac"
+  },
+  {
+    "path": "src/tests/unit/moderation-check.test.ts",
+    "kind": "file",
+    "bytes": 5219,
+    "sha256": "1152f37710adfe6118f8f3cbb92a68ff31d0065fe5aa7cae8b5c313ccc15bfbe"
+  },
+  {
+    "path": "src/tests/unit/moderation-config.test.ts",
+    "kind": "file",
+    "bytes": 3238,
+    "sha256": "b38c8e9828740de116bb0e33fef8755ad8ee431ee6609a69d70813d1968129b0"
+  },
+  {
+    "path": "src/tests/unit/my-works-board.test.tsx",
+    "kind": "file",
+    "bytes": 2468,
+    "sha256": "1a2f67a35d205500f92b3a8f85c3a240e7246e94e6d3910ef721d32b994b6d38"
+  },
+  {
+    "path": "src/tests/unit/parse-generate-request.test.ts",
+    "kind": "file",
+    "bytes": 11475,
+    "sha256": "65c0ba7ac9bd5a43784e4baf129e3f32205ea3c74882c580c72610a878b80f97"
+  },
+  {
+    "path": "src/tests/unit/persist-generated-image.test.ts",
+    "kind": "file",
+    "bytes": 1467,
+    "sha256": "9977403875558cb8f15904699011aa3e6b09df2564b881d9066dbe2f00538a58"
+  },
+  {
+    "path": "src/tests/unit/pet-companion.test.tsx",
+    "kind": "file",
+    "bytes": 5622,
+    "sha256": "4ae58180292693918f6f0f6aef5a3920859bb510d7314096e00cf7ad8b6dbdb6"
+  },
+  {
+    "path": "src/tests/unit/prisma-client.test.ts",
+    "kind": "file",
+    "bytes": 494,
+    "sha256": "414b5aff57abc41a31a86612c262bdd8bc5b49f6d30936029e3919fcfd942ba5"
+  },
+  {
+    "path": "src/tests/unit/prisma-mappers.test.ts",
+    "kind": "file",
+    "bytes": 1525,
+    "sha256": "6c602786d316d27439d3e15cee9089aeb66082b8d62f9748faabf8d2f66f2988"
+  },
+  {
+    "path": "src/tests/unit/prompt-modal-copy.test.tsx",
+    "kind": "file",
+    "bytes": 1075,
+    "sha256": "194843a611494e8c61842aa44bbf008e36e621d7f806220d597a390c5595a2c1"
+  },
+  {
+    "path": "src/tests/unit/prompt-preview.test.ts",
+    "kind": "file",
+    "bytes": 942,
+    "sha256": "5ae5ec48c302f0654526b36cb035c448bebb32f936bc2a42fd1ed4b15a84aeae"
+  },
+  {
+    "path": "src/tests/unit/prompt-sync-forwarder.test.ts",
+    "kind": "file",
+    "bytes": 2935,
+    "sha256": "59621ebcdec90a4113d6a2ceede144b2d4646ff8866fa1b0d4daa98405b70aea"
+  },
+  {
+    "path": "src/tests/unit/provider-models-probe-route.test.ts",
+    "kind": "file",
+    "bytes": 3649,
+    "sha256": "d6c3c977515ea36c25735e34563372f42390f3636926166ad2d4d675cbf5debe"
+  },
+  {
+    "path": "src/tests/unit/provider-secret.test.ts",
+    "kind": "file",
+    "bytes": 479,
+    "sha256": "86805253cfac2b08e28b7a3859e339cf6b7cf102f4fb915ccd45ee83216dcf13"
+  },
+  {
+    "path": "src/tests/unit/proxy-image-route.test.ts",
+    "kind": "file",
+    "bytes": 2290,
+    "sha256": "4739829e7f7ee497e433a90606f3bd907d8d0d0942559d329ef2d2d96ca45638"
+  },
+  {
+    "path": "src/tests/unit/proxy-video-route.test.ts",
+    "kind": "file",
+    "bytes": 1965,
+    "sha256": "b62c1568fbba23f4e29b98b24981111b7db7f8c975848c27e9795f68717d399e"
+  },
+  {
+    "path": "src/tests/unit/readiness.test.ts",
+    "kind": "file",
+    "bytes": 5445,
+    "sha256": "790f21e77a79f352d8c3367d8f2daca2ad1d4f5c702fe45bb0859f43108cf931"
+  },
+  {
+    "path": "src/tests/unit/redeem-code.test.ts",
+    "kind": "file",
+    "bytes": 3297,
+    "sha256": "5d7c86bf53af1b23ce24e130d4b17e69bafa088e8cedf269f6d66d68fe0b7b9f"
+  },
+  {
+    "path": "src/tests/unit/register-route-bootstrap.test.ts",
+    "kind": "file",
+    "bytes": 2384,
+    "sha256": "0b95ab9d1bd4e4126af039a16802b8207fecad47a375b17924c1f078af0407ef"
+  },
+  {
+    "path": "src/tests/unit/register-user.test.ts",
+    "kind": "file",
+    "bytes": 4023,
+    "sha256": "9f10debd70d5292881c599f7879086b3cf3dbbea58124c69ffc02975cd7f07c6"
+  },
+  {
+    "path": "src/tests/unit/safe-remote-url.test.ts",
+    "kind": "file",
+    "bytes": 4862,
+    "sha256": "3afe3ac77f61863548d4ff54368e37f57e939f8681114a8c2055dd09ecad8fa1"
+  },
+  {
+    "path": "src/tests/unit/sensitive-words.test.ts",
+    "kind": "file",
+    "bytes": 3476,
+    "sha256": "5b03397b3b9076f32491e36716f2ec49e220568a1c3db2260ff98e2cd714f5ca"
+  },
+  {
+    "path": "src/tests/unit/session-token.test.ts",
+    "kind": "file",
+    "bytes": 795,
+    "sha256": "cfcb3b67d05c5a004c16b039d9ab75132f3c84262c984d9547e53cb57a209180"
+  },
+  {
+    "path": "src/tests/unit/use-canvas-documents.test.tsx",
+    "kind": "file",
+    "bytes": 8213,
+    "sha256": "68681e89ad5940f4d35a7ccbc824dace43047ae26876962890681738784e925d"
+  },
+  {
+    "path": "src/tests/unit/use-canvas-runtime-lease.test.tsx",
+    "kind": "file",
+    "bytes": 9817,
+    "sha256": "0f141b59b2a0ef2b3b90a3f927a9f8af0a8648ab4a438e53827770084bf75d46"
+  },
+  {
+    "path": "src/tests/unit/use-conversation-generations.test.tsx",
+    "kind": "file",
+    "bytes": 18930,
+    "sha256": "607fe465851baa19381eaa21d74bc6d696c3617bd3fb96e1ab8ca2962f9dfa16"
+  },
+  {
+    "path": "src/tests/unit/use-image-poller.test.tsx",
+    "kind": "file",
+    "bytes": 16354,
+    "sha256": "6266e2b336047aa64fd5c6bda691b448e782227efd16afd7700e01dd0f6f4fe7"
+  },
+  {
+    "path": "src/tests/unit/use-sessions-origin.test.tsx",
+    "kind": "file",
+    "bytes": 7589,
+    "sha256": "686a1f6c6aed95cd5ce827a7f45ac7ceecf6f065b43e669b9fc3c7161ec408dc"
+  },
+  {
+    "path": "src/tests/unit/use-studio-jobs.test.tsx",
+    "kind": "file",
+    "bytes": 18442,
+    "sha256": "222cef56cc72c4b31504f7da488e8bd8e5ddfac4abb3c3c10226ebc9d54e4b26"
+  },
+  {
+    "path": "src/tests/unit/video-generating-progress.test.tsx",
+    "kind": "file",
+    "bytes": 1461,
+    "sha256": "4c9bd8da8872b93960a585dcf06b79b317723105e1ec49e2fce4a9113a2b19a7"
+  },
+  {
+    "path": "src/tests/unit/video-stage.test.tsx",
+    "kind": "file",
+    "bytes": 919,
+    "sha256": "49b0605b0ef2b2e2d8c5f37167ba056fc1875e4d6966495684f9afed11e08ec4"
+  },
+  {
+    "path": "src/tests/unit/work-delete-route.test.ts",
+    "kind": "file",
+    "bytes": 2045,
+    "sha256": "d53a79107534d1644d96fdb1e2666d11018c79dd653016e3c9fff244d37221df"
+  },
+  {
+    "path": "src/tests/unit/work-like-route.test.ts",
+    "kind": "file",
+    "bytes": 2944,
+    "sha256": "8579b5db36982ea74a4fec518de085f81892794a8335e946be5ff57799913613"
+  },
+  {
+    "path": "src/tests/unit/work-share-button.test.tsx",
+    "kind": "file",
+    "bytes": 1991,
+    "sha256": "68676fa29aab5fc5e2bed035457f091524676a3fbb5836ea2294cd329b394240"
+  },
+  {
+    "path": "src/tests/unit/work-showcase.test.ts",
+    "kind": "file",
+    "bytes": 7877,
+    "sha256": "bd46301e94c78db37df3cc652178ccb094c54f4396bbcf6dcfebc23bc7f1ccb5"
+  }
+]

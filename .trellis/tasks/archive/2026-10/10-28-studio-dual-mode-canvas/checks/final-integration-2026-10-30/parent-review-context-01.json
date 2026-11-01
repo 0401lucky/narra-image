@@ -1,0 +1,18 @@
+{
+  "label": "parent-review-context-01",
+  "mode": "test",
+  "command": [
+    "python",
+    ".trellis/scripts/task.py",
+    "validate",
+    ".trellis/tasks/10-28-studio-dual-mode-canvas"
+  ],
+  "cwd": "E:/code/narra-image",
+  "timeoutMs": 120000,
+  "code": 0,
+  "signal": null,
+  "timedOut": false,
+  "durationMs": 129,
+  "stdoutPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\parent-review-context-01.stdout.log",
+  "stderrPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\parent-review-context-01.stderr.log"
+}

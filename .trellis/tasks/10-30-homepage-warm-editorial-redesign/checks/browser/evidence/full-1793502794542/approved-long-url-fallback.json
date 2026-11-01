@@ -1,0 +1,25 @@
+{
+  "verified": [
+    "dto",
+    "chinese8000:member:accept",
+    "emoji8000units:member:accept",
+    "chinese8000:guest:accept",
+    "emoji8000units:guest:accept",
+    "chinese8000:member:reject",
+    "emoji8000units:guest:absent",
+    "manual-over-input-limit:member:accept",
+    "budget8193:member:accept",
+    "budget8191",
+    "budget8192",
+    "reserved-whitespace",
+    "ascii8000",
+    "ascii8001"
+  ],
+  "coveredHistoricalTransportLabels": [
+    "chinese8000",
+    "emoji8000units"
+  ],
+  "budget": 8192,
+  "actualPublicDtoAndGallery": true,
+  "physicalClipboardOrDeviceClaim": false
+}

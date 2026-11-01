@@ -1,0 +1,254 @@
+{
+  "recordedAt": "2026-10-30T07:57:38.530090+00:00",
+  "status": "PASS",
+  "source": "E:\\code\\narra-image\\.trellis\\tasks\\10-28-studio-dual-mode-canvas",
+  "destination": "E:\\code\\narra-image\\.trellis\\tasks\\archive\\2026-10\\10-28-studio-dual-mode-canvas",
+  "noCommit": true,
+  "hooks": {
+    "after_start": [],
+    "after_archive": []
+  },
+  "preArchiveManifest": "pre-archive-artifacts.json",
+  "archiveCommandReceipts": {
+    ".json": {
+      "file": "parent-archive-01.json",
+      "sha256": "a673dd58e5a33a95f018d6b21cbc80a932da2596f9093d1aaab5b35c307aa7b4"
+    },
+    ".stdout.log": {
+      "file": "parent-archive-01.stdout.log",
+      "sha256": "9a70ef4f46786d1e04f5520f52521e62387febc86bea3a5cedd2db461a01b805"
+    },
+    ".stderr.log": {
+      "file": "parent-archive-01.stderr.log",
+      "sha256": "d868490fd860ce96cc74daed202382c8b4ba75b8acd68b6a5dbb0cb780ab9c3f"
+    }
+  },
+  "updatedAt": "2026-10-30T08:00:57.338200+00:00",
+  "archiveCommandCode": 0,
+  "journalCommandCode": 0,
+  "journalCommandReceipts": {
+    ".json": {
+      "file": "parent-journal-01.json",
+      "sha256": "c2d1230311df6efcda30880b4474a0f07a5a66ff56f0507b7e846ea8581b129b"
+    },
+    ".stdout.log": {
+      "file": "parent-journal-01.stdout.log",
+      "sha256": "f8fa8c7f606d8c06d02d7917e9dc8947afa293b512b48b4f761371c0c7a73fde"
+    },
+    ".stderr.log": {
+      "file": "parent-journal-01.stderr.log",
+      "sha256": "d5a890a7d1b7e1f9dff218b0347af57de12c57abcb585d38b4859628284a1ed9"
+    }
+  },
+  "sourceAbsent": true,
+  "destinationExists": true,
+  "taskStatus": "completed",
+  "currentTask": null,
+  "mobileStatus": "planning",
+  "mobileAcceptanceUnchecked": 4,
+  "mobileIntegrationDependency": ".trellis/tasks/archive/2026-10/10-28-studio-dual-mode-canvas",
+  "contextReferenceUpdates": {
+    "implement.jsonl": 11,
+    "check.jsonl": 9
+  },
+  "preservation": {
+    "head": "1f7948e334c589dc6db38ac045b584f0f5381481",
+    "indexEntriesSha256": "7c8fe028577eccc86a8bbb49396a16518c79db219f46096064c9be4cef2a1ff0",
+    "stagedPaths": [],
+    "sourcePathsVerified": 192,
+    "archivedChildFilesVerified": 277,
+    "additionalDirtySourcePaths": []
+  },
+  "originalParentReceiptFilesVerified": 60,
+  "movedArtifactFilesVerified": 92,
+  "declaredArtifactChanges": {
+    "check.jsonl": {
+      "before": "e37854a4ae22116aca5eb923f514ed0d2ebeb196c0efcb64c9c35e4eaa0559e8",
+      "after": "d3cbc7b73c6850be351a043cfb58ae0bd5dbde1555fcb111ba8028b93fa1bb0d"
+    },
+    "handoff.md": {
+      "before": "ad29d3b1b5b60b13bb77ee8a382364d604870b53b28b61f63928e80d7aa41963",
+      "after": "10240f621715305a58e2f416aed4acaa95de27eafe926e3e1dd4b90db178fbcf"
+    },
+    "implement.jsonl": {
+      "before": "443ca3966473cf71a3fda65c451e9a19be7d27369a5358babdbb200b6156a086",
+      "after": "e0291bd693051ace63100e79f94941f272a077122dc1b6331932ffd48e30008e"
+    },
+    "implement.md": {
+      "before": "27af87d0b9ebed55def3b89e52d72e093e1273e0687cbd5aba1914a6865e95ac",
+      "after": "e9f8cb88b87f2abe11fc5cbd08e684683a569945e6df43c8bd970875e3b1d1ff"
+    },
+    "prd.md": {
+      "before": "3e9b994cb88b48c229050af0e6c52a90c18940cd97f606be9ff54790b90fc87b",
+      "after": "4112b64bbf5f20901094febf1124b8f3957e397468dde116970bded2eb9e75fb"
+    },
+    "task.json": {
+      "before": "7d7c1c0cb0c66b7211f968f5014ffd1942c8893ecb6fc1fef89dddd69ff72a53",
+      "after": "efba52c9502c8f46c9852216bb4a1d176d0d83b76522535534fd8ceb0a25ce1c"
+    },
+    "verification.md": {
+      "before": "9120aadd296edc2fcfba5d33140a6e11d8b5bcbe67205db6150e44d864468da0",
+      "after": "618e4aa1cee84239861097b1a980c2cbd84526eb1fb4510b3002c8bbef68b4ce"
+    },
+    "checks/final-integration-2026-10-30/evidence.json": {
+      "before": "0dd031fec4a9d8379125e247a7aa24c16eafc2fc11841a133d2c379391a3977f",
+      "after": "f8a2b4ba073aa1a64faedd6e26536b5d6a5b338b5ed5c9da9aa6e7350043f123"
+    }
+  },
+  "unexpectedArtifactChanges": [],
+  "finalArtifactHashes": {
+    "check.jsonl": "d3cbc7b73c6850be351a043cfb58ae0bd5dbde1555fcb111ba8028b93fa1bb0d",
+    "design.md": "6077069729977cbebe3f556945dab867f4e97f61c50efd54ee975f55f1310de4",
+    "handoff.md": "10240f621715305a58e2f416aed4acaa95de27eafe926e3e1dd4b90db178fbcf",
+    "implement.jsonl": "e0291bd693051ace63100e79f94941f272a077122dc1b6331932ffd48e30008e",
+    "implement.md": "e9f8cb88b87f2abe11fc5cbd08e684683a569945e6df43c8bd970875e3b1d1ff",
+    "prd.md": "4112b64bbf5f20901094febf1124b8f3957e397468dde116970bded2eb9e75fb",
+    "task.json": "efba52c9502c8f46c9852216bb4a1d176d0d83b76522535534fd8ceb0a25ce1c",
+    "verification.md": "618e4aa1cee84239861097b1a980c2cbd84526eb1fb4510b3002c8bbef68b4ce",
+    "checks/integration-db-implementation.md": "5e9d566f4a3c9be10ee2dad667a9fe17026f93bbef8635db86e2cb042f40b769",
+    "checks/integration-final-review.md": "ff06a2bd69cf5b74c3d1daa71c0c70951d5a6bda3b4bd90058acc9701e4cf323",
+    "checks/integration-sql-final-review.md": "005f994b4f66544e4c99c80da80b1296f00abc6797f9d19d6d9513c3bb638fff",
+    "research/ai-canvas-references.md": "5bb5d42b6436ccef56554e64406b74512ba46de52514407c0122e2b25d8eba2c",
+    "research/canvas-backend-contracts.md": "964e9d7784e1a33f98f75d9543b792e35e377786054e3637757fac27fc4205e4",
+    "research/canvas-backend-operations.md": "131854129232b8e3259b8912c593f4587dd801d60bfcb82b856a004cd6b1d696",
+    "research/canvas-frontend-contracts.md": "9e73ce7046af5101b6f8612bac0f83cafb22bb20258d567fa1fee21b76c0e02e",
+    "research/canvas-frontend-persistence.md": "f00ec87b62334777a71ba1195bb3812eecb70d4c35f826486f2bff95bb54b3db",
+    "research/canvas-library-comparison.md": "c7168dcd3078d262ac83ee39365ef24103fc1ebec9d86770e703aec2e8f46d8e",
+    "research/canvas-library-source-snapshot.json": "99fe93dd2a023c1384d3b67dfb61900cb83be036b602e34bd940a50868a8f06a",
+    "research/canvas-persistence-costs.md": "60a3c2ccb76f7fb03732b27cd3b37f03de1cf957d5e2a96968b8183cb0b11797",
+    "research/canvas-reference-retention.md": "3803d84fee2128382d3508448f9a8bfbba695b0d698d5beecd9bd737954d47c8",
+    "research/current-studio.md": "8a933aff71be2839592011a7f0760ec9314a2e5b0bb3adc7c9ada0fa2d95b1da",
+    "research/final-integration-closeout-2026-10-30.md": "611315a1bb6bb66e87feb9813f990caeae29a5393a7aff3529a88eece1acfa78",
+    "research/final-integration-evidence-audit-2026-10-30.json": "51b7edb9f3f33a322cf9cf9fb612580bdce8a4d79d672a507dc86a88e15b30bf",
+    "research/product-decision-inventory.md": "230402fb2a0524839f35306f031ec1d2b32516fdd880a16f064df3ea221b12b3",
+    "research/recommendation.md": "d6b8d72e083c87c0f07d457dfb2434d6d16805a123c5255b259da950c8ffb081",
+    "checks/final-integration-2026-10-30/docker-start-01.json": "2d6928eefab56849a574d54965a60ea1584912324b503ce9f800501fd02a7127",
+    "checks/final-integration-2026-10-30/evidence.json": "f8a2b4ba073aa1a64faedd6e26536b5d6a5b338b5ed5c9da9aa6e7350043f123",
+    "checks/final-integration-2026-10-30/parent-archive-01.json": "a673dd58e5a33a95f018d6b21cbc80a932da2596f9093d1aaab5b35c307aa7b4",
+    "checks/final-integration-2026-10-30/parent-archive-01.stderr.log": "d868490fd860ce96cc74daed202382c8b4ba75b8acd68b6a5dbb0cb780ab9c3f",
+    "checks/final-integration-2026-10-30/parent-archive-01.stdout.log": "9a70ef4f46786d1e04f5520f52521e62387febc86bea3a5cedd2db461a01b805",
+    "checks/final-integration-2026-10-30/parent-closeout-review-context-01.json": "9837840252f55fe0ec93ab363d4312a21c85748bf5783468de7d2725d02852be",
+    "checks/final-integration-2026-10-30/parent-closeout-review-context-01.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "checks/final-integration-2026-10-30/parent-closeout-review-context-01.stdout.log": "c06699364296ddcbf1a8ca88f0b60dd279e9828563f5d67735404a82a9fdbe8d",
+    "checks/final-integration-2026-10-30/parent-closeout-review-diff-01.json": "483d4e2fdb9bdb45838c76bab4988e83b0f3f970195f633dd6ad4df53084ce26",
+    "checks/final-integration-2026-10-30/parent-closeout-review-diff-01.stderr.log": "fc9f4bb36e2799e0beec4628e94345348a982d69fdc5e3cb22fe04c4c8b17966",
+    "checks/final-integration-2026-10-30/parent-closeout-review-diff-01.stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "checks/final-integration-2026-10-30/parent-db-contracts-01.json": "a78e86cc36bc16bf7ecfcbe7a53ce432f8556fe584d3958399f13bd875eae6db",
+    "checks/final-integration-2026-10-30/parent-db-contracts-01.stderr.log": "4bfcbe8bceee4b8efc21a53686426ee282ccd4201fba7c9084db22c8e111247b",
+    "checks/final-integration-2026-10-30/parent-db-contracts-01.stdout.log": "36e7abffffad3178ddd80e80d85a6a8053a8c3467ebc3078ffa21c537ef093d8",
+    "checks/final-integration-2026-10-30/parent-db-contracts-02.json": "a96b89c4e4913ef009a5e728dfd78185a75e598b8f11ab68a3ffcf215c8d87f6",
+    "checks/final-integration-2026-10-30/parent-db-contracts-02.stderr.log": "c31748a58d103ccb33e59d1e8c48ae620da68d6aad2e47969e51bb050c4b6e32",
+    "checks/final-integration-2026-10-30/parent-db-contracts-02.stdout.log": "b22960cc20570dc0c913ef07b6008828e9fabcffe9193bb5f596434a0bda03c9",
+    "checks/final-integration-2026-10-30/parent-db-contracts-03.json": "927a81118e9012ff1a5554dc9cacf93b91116275026325e8df1692d4e6a0a616",
+    "checks/final-integration-2026-10-30/parent-db-contracts-03.stderr.log": "c31748a58d103ccb33e59d1e8c48ae620da68d6aad2e47969e51bb050c4b6e32",
+    "checks/final-integration-2026-10-30/parent-db-contracts-03.stdout.log": "27e12b227d1f132a00b6b34c18483e9b322c34d509495d854f30d5dd55e41d6f",
+    "checks/final-integration-2026-10-30/parent-db-contracts-04.json": "f35a6dc114fe3a35805f3b35f15167c99a4629c70d78f83c8c1283e94fbbce4a",
+    "checks/final-integration-2026-10-30/parent-db-contracts-04.stderr.log": "1e5d335bac7e2ea6f5a1528839abe25f1bc4f9c6f3df7cda8b31970115ecad0f",
+    "checks/final-integration-2026-10-30/parent-db-contracts-04.stdout.log": "43181b1602be2a9798bfd7e8313407adbbe6403e99402b48b2e1c74e04b518d9",
+    "checks/final-integration-2026-10-30/parent-db-lint-01.json": "14be1c6175d67b6934c27415b0afd3b9b7281baaf3abda3ce0d292a391be1ae7",
+    "checks/final-integration-2026-10-30/parent-db-lint-01.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "checks/final-integration-2026-10-30/parent-db-lint-01.stdout.log": "5daf1d190f6e7a6339ad91d4ba48ff8657acaf01ac8c313e8213cfb2743df12a",
+    "checks/final-integration-2026-10-30/parent-db-types-01.json": "9c64ebe0ef4e35a03877aa1b4dc1822a4cff87671955bf6a93ce78886f402ddf",
+    "checks/final-integration-2026-10-30/parent-db-types-01.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "checks/final-integration-2026-10-30/parent-db-types-01.stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "checks/final-integration-2026-10-30/parent-docker-ready-01.json": "897d61e7def4e696711ba58dce8f83337055343f74e37ff2d6169f3c9f82dde0",
+    "checks/final-integration-2026-10-30/parent-docker-ready-01.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "checks/final-integration-2026-10-30/parent-docker-ready-01.stdout.log": "3795a4b1e2c6937a65f1be5ac40e8c7998963c6077c5cb1d19874a2d2474db02",
+    "checks/final-integration-2026-10-30/parent-final-review-context-01.json": "9ca0b4bc03e545f19e0ac4b475127b0518b87d38c246d447644fa65ae6a24beb",
+    "checks/final-integration-2026-10-30/parent-final-review-context-01.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "checks/final-integration-2026-10-30/parent-final-review-context-01.stdout.log": "c06699364296ddcbf1a8ca88f0b60dd279e9828563f5d67735404a82a9fdbe8d",
+    "checks/final-integration-2026-10-30/parent-final-review-diff-01.json": "4a57af32cc051ea70686cc4fc6205f5cc05b305a6fb8d3b197753a51062950b6",
+    "checks/final-integration-2026-10-30/parent-final-review-diff-01.stderr.log": "fc9f4bb36e2799e0beec4628e94345348a982d69fdc5e3cb22fe04c4c8b17966",
+    "checks/final-integration-2026-10-30/parent-final-review-diff-01.stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "checks/final-integration-2026-10-30/parent-final-review-lint-01.json": "5e23c3c8a9dcfa316cd16cc1e2536cc26917d0b821188fdc78149308a8312bd6",
+    "checks/final-integration-2026-10-30/parent-final-review-lint-01.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "checks/final-integration-2026-10-30/parent-final-review-lint-01.stdout.log": "5daf1d190f6e7a6339ad91d4ba48ff8657acaf01ac8c313e8213cfb2743df12a",
+    "checks/final-integration-2026-10-30/parent-final-review-studio-01.json": "ac034a7b2f1d99b6666e87a18c5397dbf779711d9479744da5dbaec12abdbc2b",
+    "checks/final-integration-2026-10-30/parent-final-review-studio-01.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "checks/final-integration-2026-10-30/parent-final-review-studio-01.stdout.log": "6ede326b7e90da560d370ba9415be089b95c01db492b9b28693b3a52ccab4008",
+    "checks/final-integration-2026-10-30/parent-final-review-types-01.json": "31b88ad69d3d646b7eed3c87e6b1236eadce58dc681753c177aeef8560c6fc38",
+    "checks/final-integration-2026-10-30/parent-final-review-types-01.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "checks/final-integration-2026-10-30/parent-final-review-types-01.stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "checks/final-integration-2026-10-30/parent-integration-studio-01.json": "5a5e647f9096422acd19ee1189f2d4d14929953ffec0d303e3e69c1697af6e1b",
+    "checks/final-integration-2026-10-30/parent-integration-studio-01.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "checks/final-integration-2026-10-30/parent-integration-studio-01.stdout.log": "ec32c95bff1d37aae410c4ddc6f3d1e84f9924b7b2f286b5e48ecb9ab823e68e",
+    "checks/final-integration-2026-10-30/parent-journal-01.json": "c2d1230311df6efcda30880b4474a0f07a5a66ff56f0507b7e846ea8581b129b",
+    "checks/final-integration-2026-10-30/parent-journal-01.stderr.log": "d5a890a7d1b7e1f9dff218b0347af57de12c57abcb585d38b4859628284a1ed9",
+    "checks/final-integration-2026-10-30/parent-journal-01.stdout.log": "f8fa8c7f606d8c06d02d7917e9dc8947afa293b512b48b4f761371c0c7a73fde",
+    "checks/final-integration-2026-10-30/parent-review-context-01.json": "cf578837ddf8b9fa7814dc753c0c9360f90d71af721371ad10025ec822cdfb6a",
+    "checks/final-integration-2026-10-30/parent-review-context-01.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "checks/final-integration-2026-10-30/parent-review-context-01.stdout.log": "c06699364296ddcbf1a8ca88f0b60dd279e9828563f5d67735404a82a9fdbe8d",
+    "checks/final-integration-2026-10-30/parent-review-diff-01.json": "a06254bf6f81fa6260c0b7b160af05ed502b75e21474a1815a0c073656a42b45",
+    "checks/final-integration-2026-10-30/parent-review-diff-01.stderr.log": "fc9f4bb36e2799e0beec4628e94345348a982d69fdc5e3cb22fe04c4c8b17966",
+    "checks/final-integration-2026-10-30/parent-review-diff-01.stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "checks/final-integration-2026-10-30/parent-review-lint-01.json": "bc88760e708cb2a0b443fbb10ead8458342dfbaf815d3e1efcb0128dbfd23835",
+    "checks/final-integration-2026-10-30/parent-review-lint-01.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "checks/final-integration-2026-10-30/parent-review-lint-01.stdout.log": "5daf1d190f6e7a6339ad91d4ba48ff8657acaf01ac8c313e8213cfb2743df12a",
+    "checks/final-integration-2026-10-30/parent-review-studio-01.json": "5192c5120a9469623c6bf474de4e39f1566ddeaad73c1f388e499616564d84d3",
+    "checks/final-integration-2026-10-30/parent-review-studio-01.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "checks/final-integration-2026-10-30/parent-review-studio-01.stdout.log": "e643917eedf2fdaafcd16ee7825cc99fc7c385525bf8c5769839d3a1b911d0f5",
+    "checks/final-integration-2026-10-30/parent-review-types-01.json": "be13568e3d7986005bc0b730c7db43e7b94356087a161413e3954ced51d62b5f",
+    "checks/final-integration-2026-10-30/parent-review-types-01.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "checks/final-integration-2026-10-30/parent-review-types-01.stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "checks/final-integration-2026-10-30/pre-archive-artifacts.json": "900acfa7cc2fc2835993db6d60684851cb667b0fb95323acf763f4dabdeefbcc",
+    "checks/final-integration-2026-10-30/source-audit-closeout-01.json": "ad03010ee16aed5d0f5de87c4e061017689e530ef3fb126fa215a0b89b5705c2",
+    "checks/final-integration-2026-10-30/source-audit-implemented-01.json": "e083962b5661c53725d9c08636b2854dbb3c2ff72e70d096b7533b76ffd82936",
+    "checks/final-integration-2026-10-30/source-audit-resumed-01.json": "32750673b3ca5e1e8eca9f877ca960f6974fef961593e499b17069f071eb0eb4",
+    "checks/final-integration-2026-10-30/source-baseline.json": "770818d412bc657207698559d31e07ef71e6d1edc3e6b71e0773c36889a7c9a1"
+  },
+  "selfExcludedFromFinalArtifactHashes": true,
+  "finalValidations": [
+    {
+      "command": [
+        "C:\\Python314\\python.exe",
+        ".trellis/scripts/task.py",
+        "current",
+        "--json"
+      ],
+      "code": 1,
+      "durationMs": 97,
+      "stdout": "{\"current_task\": null, \"source\": \"none\", \"stale\": false}\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "C:\\Python314\\python.exe",
+        ".trellis/scripts/task.py",
+        "validate",
+        ".trellis/tasks/archive/2026-10/10-28-studio-dual-mode-canvas"
+      ],
+      "code": 0,
+      "durationMs": 100,
+      "stdout": "\u001b[0;34m=== Validating Context Files ===\u001b[0m\nTarget dir: E:\\code\\narra-image\\.trellis\\tasks\\archive\\2026-10\\10-28-studio-dual-mode-canvas\n\n  \u001b[0;32mimplement.jsonl: ✓ (27 entries)\u001b[0m\n  \u001b[0;32mcheck.jsonl: ✓ (21 entries)\u001b[0m\n\n\u001b[0;32m✓ All validations passed\u001b[0m\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "code": 0,
+      "durationMs": 77,
+      "stdout": "",
+      "stderr": "warning: in the working copy of 'package.json', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'pnpm-lock.yaml', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'scripts/verify-e2e.mjs', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'worker/internal/worker/config.go', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'worker/internal/worker/config_test.go', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'worker/internal/worker/runtime_state.go', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'worker/internal/worker/server.go', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'worker/internal/worker/worker.go', LF will be replaced by CRLF the next time Git touches it\n"
+    }
+  ],
+  "journal": {
+    "file": ".trellis/workspace/0401lucky/journal-1.md",
+    "session": 6,
+    "sha256": "88cf20073594c1a713df94bef534337ae1a960fc936078961688c8a4f35222ec",
+    "existingContentPreservedByteForByte": true,
+    "priorContentVerification": "Append-time byte-prefix assertion passed before the task-current exit-code check; journal append was not repeated.",
+    "indexAfterSha256": "953abb6abb59f68875a59bb0ed7784e7c5f891930d123eb48a3f14a212af9337"
+  },
+  "auditRecovery": {
+    "reason": "The local audit wrapper initially expected exit 0 for task.py current --json. Inspection of cmd_current confirms that exit 1 with current_task null and stale false is the normal empty-task result.",
+    "archiveOrJournalRepeated": false,
+    "currentCommandExitCode": 1
+  },
+  "realDotenvRead": false,
+  "newApplicationResourcesCreated": false,
+  "stagingCommitPushDeploy": false,
+  "productionOrMobileEnabled": false
+}

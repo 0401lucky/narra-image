@@ -1,0 +1,148 @@
+{
+  "url": "http://127.0.0.1:58830/",
+  "hidden": false,
+  "motion": {},
+  "active": "<button type=\"button\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-arrow-up-right\" aria-hidden=\"true\"><path d=\"M7 7h10v10\"></path><path d=\"M7 17 17 7\"></path></svg>复用画面灵感</button>",
+  "reveals": [
+    {
+      "opacity": "1",
+      "transform": "none",
+      "rect": {
+        "x": 76,
+        "y": 856.5,
+        "width": 1280,
+        "height": 593.765625,
+        "top": 856.5,
+        "right": 1356,
+        "bottom": 1450.265625,
+        "left": 76
+      }
+    },
+    {
+      "opacity": "1",
+      "transform": "none",
+      "rect": {
+        "x": 0,
+        "y": 1530.265625,
+        "width": 1432,
+        "height": 1973.578125,
+        "top": 1530.265625,
+        "right": 1432,
+        "bottom": 3503.84375,
+        "left": 0
+      }
+    },
+    {
+      "opacity": "1",
+      "transform": "none",
+      "rect": {
+        "x": 108,
+        "y": 1829.84375,
+        "width": 289,
+        "height": 361.25,
+        "top": 1829.84375,
+        "right": 397,
+        "bottom": 2191.09375,
+        "left": 108
+      }
+    },
+    {
+      "opacity": "1",
+      "transform": "none",
+      "rect": {
+        "x": 417,
+        "y": 1829.84375,
+        "width": 289,
+        "height": 361.25,
+        "top": 1829.84375,
+        "right": 706,
+        "bottom": 2191.09375,
+        "left": 417
+      }
+    },
+    {
+      "opacity": "1",
+      "transform": "none",
+      "rect": {
+        "x": 726,
+        "y": 1829.84375,
+        "width": 289,
+        "height": 361.25,
+        "top": 1829.84375,
+        "right": 1015,
+        "bottom": 2191.09375,
+        "left": 726
+      }
+    },
+    {
+      "opacity": "1",
+      "transform": "none",
+      "rect": {
+        "x": 1035,
+        "y": 1829.84375,
+        "width": 289,
+        "height": 361.25,
+        "top": 1829.84375,
+        "right": 1324,
+        "bottom": 2191.09375,
+        "left": 1035
+      }
+    },
+    {
+      "opacity": "1",
+      "transform": "none",
+      "rect": {
+        "x": 108,
+        "y": 2211.09375,
+        "width": 289,
+        "height": 361.25,
+        "top": 2211.09375,
+        "right": 397,
+        "bottom": 2572.34375,
+        "left": 108
+      }
+    },
+    {
+      "opacity": "1",
+      "transform": "none",
+      "rect": {
+        "x": 417,
+        "y": 2211.09375,
+        "width": 289,
+        "height": 361.25,
+        "top": 2211.09375,
+        "right": 706,
+        "bottom": 2572.34375,
+        "left": 417
+      }
+    },
+    {
+      "opacity": "1",
+      "transform": "none",
+      "rect": {
+        "x": 726,
+        "y": 2211.09375,
+        "width": 289,
+        "height": 361.25,
+        "top": 2211.09375,
+        "right": 1015,
+        "bottom": 2572.34375,
+        "left": 726
+      }
+    },
+    {
+      "opacity": "1",
+      "transform": "none",
+      "rect": {
+        "x": 1035,
+        "y": 2211.09375,
+        "width": 289,
+        "height": 361.25,
+        "top": 2211.09375,
+        "right": 1324,
+        "bottom": 2572.34375,
+        "left": 1035
+      }
+    }
+  ]
+}

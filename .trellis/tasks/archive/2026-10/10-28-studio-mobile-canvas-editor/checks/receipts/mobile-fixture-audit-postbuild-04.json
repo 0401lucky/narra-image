@@ -1,0 +1,18 @@
+{
+  "label": "mobile-fixture-audit-postbuild-04",
+  "mode": "test",
+  "command": [
+    "node",
+    ".trellis/tasks/10-28-studio-mobile-canvas-editor/checks/verify-mobile-fixture.mjs",
+    "04",
+    "postbuild"
+  ],
+  "cwd": "E:/code/narra-image",
+  "timeoutMs": 60000,
+  "code": 0,
+  "signal": null,
+  "timedOut": false,
+  "durationMs": 180,
+  "stdoutPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-audit-postbuild-04.stdout.log",
+  "stderrPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-audit-postbuild-04.stderr.log"
+}

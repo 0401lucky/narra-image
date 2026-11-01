@@ -1,0 +1,30 @@
+import assert from "node:assert/strict";
+
+export async function calibrateNativeEnter(tab) {
+  // Calibrate browser input on a separate blank fixture, never product controls.
+  await tab.cdp.evaluate(`void (()=>{
+    const button=document.createElement('button');button.type='button';button.textContent='Native Enter calibration';button.id='native-enter-calibration';
+    document.body.replaceChildren(button);window.__nativeEnterCalibration={clicks:0,events:[]};
+    button.addEventListener('click',()=>{window.__nativeEnterCalibration.clicks++});
+    for(const type of ['keydown','keypress','keyup','click'])document.addEventListener(type,event=>{window.__nativeEnterCalibration.events.push({type,key:event.key,code:event.code,trusted:event.isTrusted,target:event.target.id})},true);
+  })()`);
+  await tab.key("Tab");
+  assert.equal(await tab.cdp.evaluate("document.activeElement.id"), "native-enter-calibration");
+  for (const type of ["keyDown", "keyUp"]) {
+    await tab.cdp.send("Input.dispatchKeyEvent", { type, key: "Enter", modifiers: 0, windowsVirtualKeyCode: 13, nativeVirtualKeyCode: 13 });
+  }
+  const incompleteKey = await tab.cdp.evaluate("window.__nativeEnterCalibration");
+  await tab.key("Enter");
+  const completeKey = await tab.cdp.evaluate("window.__nativeEnterCalibration");
+  assert.equal(completeKey.clicks, incompleteKey.clicks + 1, "Complete native Enter must activate a plain enabled button exactly once");
+  const acceptedEvents = completeKey.events.slice(incompleteKey.events.length);
+  assert(acceptedEvents.some((event) => event.type === "keypress" && event.trusted));
+  assert(acceptedEvents.some((event) => event.type === "click" && event.trusted && event.target === "native-enter-calibration"));
+  await tab.cdp.evaluate("void (document.getElementById('native-enter-calibration').disabled=true)");
+  await tab.key("Tab");
+  await tab.key("Enter");
+  const disabledKey = await tab.cdp.evaluate("window.__nativeEnterCalibration");
+  assert.equal(disabledKey.clicks, completeKey.clicks, "Native keyboard input cannot activate a disabled button");
+  assert.notEqual(await tab.cdp.evaluate("document.activeElement.id"), "native-enter-calibration");
+  return { incompleteKey, completeKey, disabledKey, programmaticClickOrFocus: false };
+}

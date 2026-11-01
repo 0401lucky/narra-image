@@ -1,0 +1,8 @@
+import Link from "next/link";
+
+export default function FixtureLinksPage() {
+  return <main><h1>Fixture navigation targets</h1><Link href="/" prefetch={false}>Home</Link>{["featured", "private", "pending", "takedown_pending"].flatMap((status) => ["public", "hidden"].map((permission) => {
+    const id = `fixture-${status}-${permission}`;
+    return <p key={id}><Link href={`/works/${id}`} prefetch={false}>{id}</Link></p>;
+  }))}</main>;
+}

@@ -1,0 +1,275 @@
+import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
+import { writeFile } from "node:fs/promises";
+import path from "node:path";
+
+import { CDP_MODIFIERS, delay, waitFor } from "./cdp.mjs";
+import { LONG_URL_CASES, REQUEST_TARGET_BUDGET, requestTarget } from "./long-url-contract.mjs";
+import { calibrateNativeEnter, calibrateNativeTabTraversal } from "./native-keyboard-calibration.mjs";
+
+const card = (id) => `[data-gallery-card][data-work-id="${id}"]`;
+const field = (id, name) => `${card(id)} [data-gallery-${name}]`;
+const variant = (label) => {
+  const found = LONG_URL_CASES.find((item) => item.label === label);
+  assert(found, `Unknown finite fixture ${label}`);
+  return found;
+};
+const identity = (text) => ({ units: text.length, utf16Sha256: createHash("sha256").update(Buffer.from(text, "utf16le")).digest("hex") });
+const encodedBytes = (text) => { const target = requestTarget(text); return target === null ? null : Buffer.byteLength(target); };
+
+async function storage(tab) {
+  return tab.cdp.evaluate("({local:Object.entries(localStorage).sort(),session:Object.entries(sessionStorage).sort()})");
+}
+
+async function installClipboard(tab, mode = "accept") {
+  assert(["accept", "reject", "absent"].includes(mode));
+  await tab.cdp.evaluate(`void (()=>{
+    window.__longUrlCopies=[];window.__longUrlEvents=[];
+    Object.defineProperty(navigator,'clipboard',{configurable:true,value:${mode === "absent" ? "undefined" : `{writeText:async(text)=>{window.__longUrlCopies.push(text);${mode === "reject" ? "throw new DOMException('Deliberately denied','NotAllowedError')" : ""}}}`}});
+    for(const type of ['keydown','keyup','keypress','click','focusin','touchstart','touchend'])document.addEventListener(type,event=>{
+      const target=event.target,owner=target.closest?.('[data-gallery-card]');
+      if(owner)window.__longUrlEvents.push({type,trusted:event.isTrusted,key:event.key,shift:event.shiftKey,control:event.ctrlKey,card:owner.dataset.workId,tag:target.tagName,copy:target.closest?.('[data-gallery-copy]')!==null,manual:target.closest?.('[data-gallery-manual-create]')!==null});
+    },true);
+  })()`);
+}
+
+async function nativeTabTo(tab, selector) {
+  const visited = [];
+  for (let index = 0; index < 150; index += 1) {
+    const state = await tab.cdp.evaluate(`({match:document.activeElement?.matches(${JSON.stringify(selector)}),tag:document.activeElement?.tagName,label:document.activeElement?.getAttribute('aria-label'),card:document.activeElement?.closest('[data-gallery-card]')?.dataset.workId})`);
+    if (state.match) return visited;
+    visited.push(state);
+    await tab.key("Tab");
+  }
+  throw new Error(`Native Tab could not reach ${selector}; last targets ${JSON.stringify(visited.slice(-8))}`);
+}
+
+async function currentCard(tab, item) {
+  return tab.cdp.evaluate(`(()=>{
+    const root=document.querySelector(${JSON.stringify(card(item.id))});
+    const text=root.querySelector('[data-gallery-prompt]'),copy=root.querySelector('[data-gallery-copy]'),direct=root.querySelector('[data-gallery-remix]'),manual=root.querySelector('[data-gallery-manual-create]'),explanation=root.querySelector('[data-gallery-remix-fallback]');
+    return {public:root.dataset.promptPublic,value:text?.value??null,readOnly:text?.readOnly,copy:!!copy,direct:direct?.getAttribute('href')??null,manual:manual?.getAttribute('href')??null,explanation:explanation?.textContent??null,associated:explanation?[text,copy,manual].every(el=>el?.getAttribute('aria-describedby')?.split(/\\s+/).includes(explanation.id)):null,allText:root.textContent};
+  })()`);
+}
+
+function assertNoPromptRequests(tab) {
+  const requests = tab.requests.filter((entry) => new URL(entry.url).searchParams.has("prompt"));
+  assert.equal(requests.length, 0, "The fallback must not issue even a prefetched prompt-bearing request");
+}
+
+async function noMutations(tab, control) {
+  assert.deepEqual(tab.requests.filter((entry) => entry.method !== "GET"), [], "Copy and navigation must not send a business write");
+  const summary = await control();
+  assert.deepEqual(summary.calls.filter((entry) => entry.mutation), [], "Actual server bootstrap must stay read-only");
+  return { browserWrites: 0, serverWrites: 0 };
+}
+
+export async function longUrlChecks({ page, check, control, request, evidence, openCard, homeReady }) {
+  const verified = new Set();
+  const transportCoverage = new Set();
+  let calibrated = false;
+
+  await check("L0-native-long-url-keyboard-calibration", async () => {
+    const tab = await page();
+    const enter = await calibrateNativeEnter(tab);
+    const traversal = await calibrateNativeTabTraversal(tab);
+    calibrated = true;
+    return { enter, traversal };
+  });
+
+  await check("L1-actual-public-DTO-entry-budget-permission-matrix", async () => {
+    await control({ mode: "long-url" });
+    const response = await request("/api/works/featured?limit=16");
+    assert.equal(response.status, 200);
+    const dto = await response.json();
+    await writeFile(path.join(evidence, "long-url-public-featured-dto.json"), JSON.stringify(dto, null, 2));
+    assert.equal(dto.items.length, 16);
+    for (const item of LONG_URL_CASES) {
+      const row = dto.items.find((entry) => entry.id === item.id);
+      assert.equal(row.showPromptPublic, true);
+      assert.equal(row.prompt, item.prompt, "Real public serialization must preserve the complete original prompt");
+    }
+    assert.equal(dto.items.find((entry) => entry.id === "home-003").showPromptPublic, false);
+    assert(!JSON.stringify(dto).includes("HOME_PRIVATE_POSITIVE_SECRET"));
+    const rows = [];
+    for (const user of [null, "home-member"]) {
+      const tab = await page(user);
+      await tab.navigate("/");
+      await homeReady(tab);
+      for (const item of LONG_URL_CASES) {
+        const state = await currentCard(tab, item);
+        if (item.unavailable) {
+          assert.equal(state.public, "false");
+          assert.equal(state.value, null);
+          assert.equal(state.copy, false);
+          assert.equal(state.manual, null);
+          assert.equal(state.direct, null);
+        } else {
+          assert.equal(state.public, "true");
+          assert.equal(state.value, item.prompt);
+          assert.equal(state.readOnly, true);
+          assert.equal(state.copy, true);
+          if (item.manual) {
+            assert.equal(state.direct, null);
+            assert.equal(state.manual, user ? "/create" : "/login");
+            assert(state.associated, "Full text/copy/plain navigation must identify their fallback explanation");
+            assert(/手动粘贴/.test(state.explanation) && /不会携带提示词/.test(state.explanation));
+            assert(/画布/.test(state.explanation) && /对话/.test(state.explanation));
+            if (item.prompt.length > 8000) assert(/8000/.test(state.explanation) && /缩短/.test(state.explanation));
+          } else {
+            assert.equal(state.direct, user ? requestTarget(item.prompt) : "/login");
+            assert.equal(state.manual, null);
+          }
+        }
+        rows.push({ user, label: item.label, ...identity(item.prompt), requestTargetBytes: encodedBytes(item.prompt), manual: state.manual, directTargetBytes: state.direct ? Buffer.byteLength(state.direct) : null, associated: state.associated });
+      }
+      const hidden = await currentCard(tab, { id: "home-003" });
+      assert.equal(hidden.public, "false");
+      assert.equal(hidden.value, null);
+      assert.equal(hidden.copy, false);
+      assert.equal(hidden.manual, null);
+      assert.equal(hidden.direct, null);
+      await tab.flushBodies();
+      for (const body of tab.responses.filter((entry) => entry.type === "Document")) assert(!body.body?.includes("HOME_PRIVATE_POSITIVE_SECRET"));
+      assertNoPromptRequests(tab);
+      await noMutations(tab, control);
+    }
+    verified.add("dto");
+    return { budget: REQUEST_TARGET_BUDGET, rows, actualSourceToDtoToHome: true, hiddenAndBlankFailClosed: true };
+  });
+
+  async function manualCase({ label, user, keyboard = false, width = 390, clipboardMode = "accept", login = false }) {
+    const item = variant(label);
+    if (keyboard) assert(calibrated, "Ordinary-control native keyboard calibration must pass first");
+    await control({ mode: "long-url" });
+    const tab = await page(user);
+    await tab.viewport(keyboard ? 1440 : width, keyboard ? 1000 : 844, !keyboard);
+    await tab.navigate("/");
+    await homeReady(tab);
+    await installClipboard(tab, clipboardMode);
+    if (user) await tab.cdp.evaluate("void localStorage.setItem('narra_studio_mode_v1:home-member','canvas')");
+    const beforeStorage = await storage(tab);
+    const beforeLocation = await tab.cdp.evaluate("location.href");
+    let traversal = [];
+    if (keyboard) traversal = await nativeTabTo(tab, field(item.id, "copy"));
+    else await openCard(tab, item.id, true);
+    const state = await currentCard(tab, item);
+    assert.equal(state.value, item.prompt);
+    assert.equal(state.direct, null);
+    assert.equal(state.manual, user ? "/create" : "/login");
+    if (keyboard) await tab.key("Enter");
+    else await tab.click(field(item.id, "copy"), null, 0, true);
+    if (clipboardMode === "accept") {
+      await waitFor(() => tab.cdp.evaluate(`document.querySelector(${JSON.stringify(field(item.id, "copy"))}).textContent.includes('已复制')`));
+    } else {
+      await waitFor(() => tab.cdp.evaluate(`document.querySelector(${JSON.stringify(card(item.id))}).textContent.includes('无法自动复制')`));
+    }
+    assert.deepEqual(await tab.cdp.evaluate("window.__longUrlCopies"), clipboardMode === "absent" ? [] : [item.prompt]);
+    assert.equal(await tab.cdp.evaluate("location.href"), beforeLocation, "Copy must not navigate");
+    assert.deepEqual(await storage(tab), beforeStorage, "Copy must not save or change any draft/mode/continuation storage");
+    assertNoPromptRequests(tab);
+    await noMutations(tab, control);
+    if (keyboard && clipboardMode === "accept") {
+      await tab.key("Tab", CDP_MODIFIERS.Shift);
+      assert(await tab.cdp.evaluate(`document.activeElement?.matches(${JSON.stringify(field(item.id, "prompt"))})`));
+      await tab.key("a", CDP_MODIFIERS.Control);
+    } else if (clipboardMode === "accept") {
+      await tab.click(field(item.id, "prompt"), null, 0, true);
+      await tab.key("a", CDP_MODIFIERS.Control);
+    }
+    const selection = await tab.cdp.evaluate(`(()=>{const el=document.querySelector(${JSON.stringify(field(item.id, "prompt"))});return {value:el.value,start:el.selectionStart,end:el.selectionEnd,active:document.activeElement===el}})()`);
+    assert.equal(selection.value, item.prompt);
+    assert.equal(selection.start, 0);
+    assert.equal(selection.end, item.prompt.length, "Manual selection must cover full original text");
+    assert(selection.active);
+    const overflow = await tab.cdp.evaluate("document.documentElement.scrollWidth>innerWidth");
+    assert.equal(overflow, false);
+    if (keyboard) await nativeTabTo(tab, field(item.id, "manual-create"));
+    else await tab.point(field(item.id, "manual-create"));
+    const screenshot = `long-url-${label}-${user ? "member" : "guest"}-${keyboard ? "keyboard" : width}-${clipboardMode}.png`;
+    await tab.screenshot(path.join(evidence, screenshot));
+    const native = await tab.cdp.evaluate("window.__longUrlEvents");
+    assert(native.some((event) => event.type === "click" && event.copy && event.trusted), "The real copy control must receive a trusted native click");
+    if (keyboard) await tab.key("Enter");
+    else await tab.click(field(item.id, "manual-create"), null, 0, true);
+    await waitFor(() => tab.cdp.evaluate(`location.pathname===${JSON.stringify(user ? "/create" : "/login")}`));
+    assert.equal(await tab.cdp.evaluate("location.search"), "");
+    assertNoPromptRequests(tab);
+    await noMutations(tab, control);
+    if (user) {
+      await waitFor(() => tab.cdp.evaluate("[...document.querySelectorAll('[aria-label=创作模式] button')].some(el=>el.textContent==='画布'&&el.getAttribute('aria-pressed')==='true')"));
+      assert.equal(await tab.cdp.evaluate("localStorage.getItem('narra_studio_mode_v1:home-member')"), "canvas");
+      assert.equal(await tab.cdp.evaluate("document.querySelectorAll('.react-flow__node').length"), 0);
+      if (keyboard) {
+        await nativeTabTo(tab, '[aria-label="创作模式"] button:first-child');
+        await tab.key("Enter");
+      } else await tab.click('[aria-label="创作模式"] button', "对话", 0, true);
+      await tab.ready("textarea");
+      assert.equal(await tab.cdp.evaluate("document.querySelector('textarea').value"), "", "Manual navigation must not prefill the copied text");
+      await noMutations(tab, control);
+    } else if (login) {
+      await tab.ready("input[name=email]");
+      await tab.type("input[name=email]", "member@homepage.invalid");
+      await tab.type("input[name=password]", "homepage-fixture-password");
+      await tab.click("button[type=submit]", null, 0, true);
+      await waitFor(() => tab.cdp.evaluate("location.pathname==='/create'"));
+      if (await tab.cdp.evaluate("[...document.querySelectorAll('[aria-label=创作模式] button')].some(el=>el.textContent==='画布'&&el.getAttribute('aria-pressed')==='true')")) await tab.click('[aria-label="创作模式"] button', "对话", 0, true);
+      await tab.ready("textarea");
+      assert.equal(await tab.cdp.evaluate("document.querySelector('textarea').value"), "", "Successful real fixture login must not resume the old oversized selection");
+      assert.equal(await tab.cdp.evaluate("location.search"), "");
+      assertNoPromptRequests(tab);
+      assert.equal(tab.requests.filter((entry) => entry.method !== "GET" && !entry.url.endsWith("/api/auth/login")).length, 0);
+    }
+    verified.add(`${label}:${user ? "member" : "guest"}:${clipboardMode}`);
+    return { label, user, keyboard, width: keyboard ? 1440 : width, clipboardMode, ...identity(item.prompt), requestTargetBytes: encodedBytes(item.prompt), selectedUnits: selection.end, manualTarget: state.manual, noPromptRequest: true, noCopyStorageChange: true, savedCanvasPreserved: Boolean(user), emptyComposerAfterNavigation: Boolean(user || login), screenshot, traversal, native };
+  }
+
+  for (const input of [
+    { id: "L2-chinese-member-native-keyboard-copy-manual-canvas", label: "chinese8000", user: "home-member", keyboard: true },
+    { id: "L3-emoji-member-native-touch-copy-manual-canvas", label: "emoji8000units", user: "home-member" },
+    { id: "L4-chinese-guest-touch-login-no-continuation", label: "chinese8000", user: null, login: true },
+    { id: "L5-emoji-guest-native-keyboard-copy-promptless-login", label: "emoji8000units", user: null, keyboard: true },
+    { id: "L6-chinese-clipboard-rejection-full-selection", label: "chinese8000", user: "home-member", clipboardMode: "reject" },
+    { id: "L7-emoji-clipboard-absent-320-full-selection", label: "emoji8000units", user: null, width: 320, clipboardMode: "absent" },
+    { id: "L8-over-input-limit-full-copy-warning", label: "manual-over-input-limit", user: "home-member" },
+    { id: "L9-budget8193-native-manual-no-prefill", label: "budget8193", user: "home-member" },
+  ]) await check(input.id, () => manualCase(input));
+
+  for (const label of ["budget8191", "budget8192", "reserved-whitespace", "ascii8000", "ascii8001"]) {
+    await check(`L10-actual-gallery-direct-navigation-${label}`, async () => {
+      const item = variant(label);
+      await control({ mode: "long-url" });
+      const tab = await page("home-member");
+      await tab.navigate("/");
+      await homeReady(tab);
+      await tab.cdp.evaluate("void localStorage.setItem('narra_studio_mode_v1:home-member','conversation')");
+      await installClipboard(tab);
+      await openCard(tab, item.id);
+      await tab.click(field(item.id, "copy"));
+      assert.deepEqual(await tab.cdp.evaluate("window.__longUrlCopies"), [item.prompt]);
+      const state = await currentCard(tab, item);
+      assert.equal(state.direct, requestTarget(item.prompt));
+      assert(Buffer.byteLength(state.direct) <= REQUEST_TARGET_BUDGET);
+      await tab.click(field(item.id, "remix"));
+      await waitFor(() => tab.cdp.evaluate("location.pathname==='/create'"));
+      await tab.ready("textarea");
+      const decoded = await tab.cdp.evaluate("new URLSearchParams(location.search).get('prompt')");
+      const input = await tab.cdp.evaluate("document.querySelector('textarea').value");
+      assert.equal(decoded, item.prompt);
+      assert.equal(input, item.prompt.slice(0, 8000));
+      assert(tab.requests.some((entry) => new URL(entry.url).pathname === "/create" && new URL(entry.url).searchParams.get("prompt") === item.prompt), "Use actual Next gallery navigation, not a hand-built document request");
+      await noMutations(tab, control);
+      verified.add(label);
+      return { label, ...identity(item.prompt), requestTargetBytes: encodedBytes(item.prompt), inputUnits: input.length, actualNextNavigation: true, noMutation: true };
+    });
+  }
+
+  await control({ mode: "data" });
+  for (const label of ["chinese8000", "emoji8000units"]) {
+    if (verified.has("dto") && verified.has(`${label}:member:accept`) && verified.has(`${label}:guest:accept`)
+      && verified.has("chinese8000:member:reject") && verified.has("emoji8000units:guest:absent")
+      && verified.has("budget8192") && verified.has("budget8193:member:accept") && verified.has("manual-over-input-limit:member:accept")) transportCoverage.add(label);
+  }
+  await writeFile(path.join(evidence, "approved-long-url-fallback.json"), JSON.stringify({ verified: [...verified], coveredHistoricalTransportLabels: [...transportCoverage], budget: REQUEST_TARGET_BUDGET, actualPublicDtoAndGallery: true, physicalClipboardOrDeviceClaim: false }, null, 2));
+  return transportCoverage;
+}

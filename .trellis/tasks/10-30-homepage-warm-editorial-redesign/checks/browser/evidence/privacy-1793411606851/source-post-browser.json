@@ -1,0 +1,12 @@
+{
+  "stage": "post-browser",
+  "productInputs": 612,
+  "liveScope": [
+    "src/app/works/[id]/page.tsx",
+    "src/components/works/work-detail-panel.tsx",
+    "src/lib/prisma-mappers.ts",
+    "src/lib/server/works.ts",
+    "src/lib/work-showcase.ts"
+  ],
+  "drift": []
+}

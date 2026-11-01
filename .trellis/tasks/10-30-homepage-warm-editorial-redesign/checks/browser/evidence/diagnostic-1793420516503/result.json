@@ -1,0 +1,21 @@
+{
+  "runId": "diagnostic-1793420516503",
+  "mode": "diagnostic",
+  "filter": null,
+  "evidence": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\browser\\evidence\\diagnostic-1793420516503",
+  "app": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\browser-hero-resume-72e89a9f\\app",
+  "checks": [
+    {
+      "id": "diagnostic-hero-native-painted-control",
+      "passed": false,
+      "durationMs": 5904,
+      "error": "AssertionError [ERR_ASSERTION]: A native press at the painted hero copy control was obstructed\n\n0 !== 1\n\n    at file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/diagnose-hero-hit.mjs:37:12\n    at async check (file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/run-browser.mjs:79:20)\n    at async diagnoseHeroHit (file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/diagnose-hero-hit.mjs:8:3)\n    at async file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/run-browser.mjs:372:5"
+    }
+  ],
+  "passed": false,
+  "limitations": [
+    "Real Next/React/Chromium with synthetic DB only; not live DB/Worker/provider E2E.",
+    "Desktop Chrome CDP emulates viewport/touch; not physical mobile/native IME.",
+    "Local installed Node is not pinned Node24.22.1."
+  ]
+}

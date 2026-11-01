@@ -1,0 +1,20 @@
+import assert from "node:assert/strict";
+import { spawnSync } from "node:child_process";
+import { realpath } from "node:fs/promises";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const here = path.dirname(fileURLToPath(import.meta.url));
+const app = await realpath(process.cwd());
+assert.equal(app, await realpath(process.env.NARRA_CHECK_ROOT));
+assert.equal(path.dirname(app), await realpath(process.env.NARRA_CHECK_OWNER_ROOT));
+const entry = path.join(app, "node_modules/prisma/build/index.js");
+const resolved = await realpath(entry);
+assert(!path.relative(path.join(app, "node_modules"), resolved).startsWith(".."));
+const noNetwork = path.join(here, "../prisma_no_network.cjs").replaceAll("\\", "/");
+const environment = { ...process.env, NODE_OPTIONS: `${process.env.NODE_OPTIONS} --require "${noNetwork}"` };
+const result = spawnSync(process.execPath, [entry, "generate"], { cwd: app, env: environment, windowsHide: true, timeout: 110000, encoding: "utf8" });
+process.stdout.write(result.stdout ?? "");
+process.stderr.write(result.stderr ?? "");
+if (result.error) throw result.error;
+process.exitCode = result.status ?? 1;

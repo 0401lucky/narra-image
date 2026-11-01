@@ -1,0 +1,34 @@
+[
+  {
+    "label": "ascii8000",
+    "units": 8000,
+    "requestTargetBytes": 8015,
+    "status": 200,
+    "inputUnits": 8000,
+    "matchesExistingSlice": true
+  },
+  {
+    "label": "ascii8001",
+    "units": 8001,
+    "requestTargetBytes": 8016,
+    "status": 200,
+    "inputUnits": 8000,
+    "matchesExistingSlice": true
+  },
+  {
+    "label": "chinese8000",
+    "units": 8000,
+    "requestTargetBytes": 72015,
+    "status": 431,
+    "inputUnits": null,
+    "matchesExistingSlice": false
+  },
+  {
+    "label": "emoji8000units",
+    "units": 8000,
+    "requestTargetBytes": 56019,
+    "status": 431,
+    "inputUnits": null,
+    "matchesExistingSlice": false
+  }
+]

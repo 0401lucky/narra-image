@@ -1,0 +1,12 @@
+{
+  "observedAt": "2026-11-01T01:45:20.6449807Z",
+  "ownerRoots": [
+    "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\hero-hit-independent-8725c17e",
+    "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\hhi-d6837226",
+    "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90"
+  ],
+  "survivingProcesses": [],
+  "activeLocks": [],
+  "processesStoppedByThisAudit": [],
+  "passed": true
+}

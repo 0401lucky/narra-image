@@ -1,0 +1,25 @@
+{"file": ".trellis/spec/frontend/index.md", "reason": "Frontend checklist and scope; preserve the established studio design system."}
+{"file": ".trellis/spec/frontend/directory-structure.md", "reason": "Keep new editor/hooks/tests in existing feature boundaries."}
+{"file": ".trellis/spec/frontend/component-guidelines.md", "reason": "Named components, Chinese accessible controls, reuse and visual consistency."}
+{"file": ".trellis/spec/frontend/hook-guidelines.md", "reason": "Mounted editor/viewport listeners, cleanup and imperative captured commands."}
+{"file": ".trellis/spec/frontend/state-management.md", "reason": "Owner lifetime, no global store or refresh-driven draft replacement."}
+{"file": ".trellis/spec/frontend/type-safety.md", "reason": "Shared schemas/types and runtime-only nonsecret field draft boundary."}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "Real component/native-setter tests, isolated lint/types/build and honest DB exclusions."}
+{"file": ".trellis/spec/frontend/canvas-studio.md", "reason": "Accepted save/run/draft/origin/measurement safeguards; PRD intentionally replaces phone read-only presentation only."}
+{"file": ".trellis/spec/frontend/generation-worker-contracts.md", "reason": "Preserve existing generation/cancel/refund authority and safe contract validation."}
+{"file": ".trellis/spec/operations/index.md", "reason": "Operations scope and no implicit rollout/database authorization."}
+{"file": ".trellis/spec/operations/canvas-contracts.md", "reason": "Unchanged account/CAS/input/idempotency/reference/retention and default-off contracts."}
+{"file": ".trellis/spec/operations/release-hardening.md", "reason": "Deny real dotenv/endpoints; use audited wrappers and owned cleanup only."}
+{"file": ".trellis/spec/guides/index.md", "reason": "Cross-layer and reuse checklist entry points."}
+{"file": ".trellis/spec/guides/cross-layer-thinking-guide.md", "reason": "Trace editor fields to captured scene/input/save without another authority."}
+{"file": ".trellis/spec/guides/code-reuse-thinking-guide.md", "reason": "Reuse prompt/parameter/preview/connection code instead of duplicating policies."}
+{"file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/research/mobile-planning-foundation-2026-10-30.md", "reason": "Predecessor/source provenance, uncommitted preservation and user-approved unrelated UI concurrency."}
+{"file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/research/mobile-touch-connections-audit-2026-10-30.md", "reason": "Exact current gesture/connection/command anchors and test gaps; alternatives are historical."}
+{"file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/research/mobile-keyboard-verification-audit-2026-10-30.md", "reason": "IME/viewport/field lifecycle/chat/viewer safeguards and physical-evidence distinctions."}
+{"file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/research/mobile-final-planning-decisions-2026-10-30.md", "reason": "Current delegated choices, scope, helper inspection and final-context priority over initial research."}
+{"file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/verification.md", "reason": "Verified code/automated scope, layer-attributed receipts and explicit unaccepted physical/native/service/CI gates; no new start or rollout approval."}
+{"file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/handoff.md", "reason": "Resume this existing in-progress task with all uncommitted work retained; corrections use current exact mobile source ownership and fresh affected gates."}
+{"file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/source-freeze-after-zoom-2026-10-30.json", "reason": "Final 35-path product/test source identity baseline; do not attribute earlier untracked files wholesale or overwrite reviewed source without coordination."}
+{"file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/resume-user-approval-2026-10-31.md", "reason": "Preserve ongoing homepage concurrency; complete only mobile records, no shared config/source cleanup or new acceptance"}
+{"file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/mobile-resume-verification-2026-10-31.md", "reason": "Current scoped mobile verdict, dated whole-tree snapshots, retained root-lint failure and pending physical gates"}
+{"file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/closure.md", "reason": "Explicit administrative archive only; device/global-quality gates deferred and no-commit policy preserved"}

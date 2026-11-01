@@ -1,0 +1,26 @@
+{
+  "gate": "privacy-red",
+  "exitCode": 1,
+  "files": 4,
+  "tests": 49,
+  "failedTests": 16,
+  "passedTests": 33,
+  "semanticFailures": [
+    "missing featured showPromptPublic flag",
+    "non-owner outgoing client props include review/owner/internal fields",
+    "hidden raw positive prompt reaches client props"
+  ],
+  "unchangedSnapshot": true,
+  "nodeVersion": "v24.11.1",
+  "pinnedRuntimeParity": false,
+  "receipt": "20261031T013723-test-73689f",
+  "preservedBeforeFiles": [
+    "src/lib/prisma-mappers.ts",
+    "src/app/works/[id]/page.tsx",
+    "src/components/works/work-detail-panel.tsx",
+    "src/tests/unit/work-detail-page-privacy.test.tsx",
+    "src/tests/unit/featured-public-contract.test.tsx",
+    "src/tests/unit/prisma-mappers.test.ts",
+    "src/tests/unit/featured-route.test.ts"
+  ]
+}

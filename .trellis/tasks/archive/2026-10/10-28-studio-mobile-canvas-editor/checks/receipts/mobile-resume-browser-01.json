@@ -1,0 +1,18 @@
+{
+  "label": "mobile-resume-browser-01",
+  "mode": "test",
+  "command": [
+    "node",
+    "E:\\code\\narra-image\\.trellis\\tasks\\10-28-studio-mobile-canvas-editor\\checks\\mobile-browser-check.mjs",
+    "08-resume",
+    "05-resume"
+  ],
+  "cwd": "E:/code/narra-image",
+  "timeoutMs": 600000,
+  "code": 0,
+  "signal": null,
+  "timedOut": false,
+  "durationMs": 161238,
+  "stdoutPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-resume-browser-01.stdout.log",
+  "stderrPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-resume-browser-01.stderr.log"
+}

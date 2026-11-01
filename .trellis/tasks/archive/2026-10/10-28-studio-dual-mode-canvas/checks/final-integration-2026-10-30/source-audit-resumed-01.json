@@ -1,0 +1,22 @@
+{
+  "recordedAt": "2026-10-30T06:50:20.891181+00:00",
+  "phase": "continuation after recovered passing SQL; final reconciliation pending",
+  "sourceBaseline": "source-baseline.json",
+  "sourcePathsChecked": 192,
+  "declaredSourceChanges": [
+    {
+      "file": "src/tests/integration/canvas-contracts/canvas-contracts-db.test.ts",
+      "before": "90bce42946f64e773bf3c93cc5b523b2e315f474ca7074c6131b21bcfc758c68",
+      "after": "c11543353646b5d61c4ec1170d02eecc9de4669774b9702f4b58e4b95da0c31c"
+    }
+  ],
+  "unexpectedChanges": [],
+  "archivedChildFilesMatched": 277,
+  "head": "1f7948e334c589dc6db38ac045b584f0f5381481",
+  "indexEntriesSha256": "7c8fe028577eccc86a8bbb49396a16518c79db219f46096064c9be4cef2a1ff0",
+  "indexEntriesUnchanged": true,
+  "stagedPaths": [],
+  "priorParentReceiptFilesMatched": 27,
+  "priorIndependentReviewSha256": "ff06a2bd69cf5b74c3d1daa71c0c70951d5a6bda3b4bd90058acc9701e4cf323",
+  "realEnvironmentRead": false
+}

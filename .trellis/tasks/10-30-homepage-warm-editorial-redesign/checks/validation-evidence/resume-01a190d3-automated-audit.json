@@ -1,0 +1,144 @@
+{
+  "checkedAt": "2026-10-31T07:25:08.985856+00:00",
+  "session": "01a190d3-6686-7372-942b-ffab5da03839",
+  "recoveredEvidence": "checks/validation-evidence/hero-hit-final/result.json",
+  "commandsRerunInThisSession": false,
+  "sourceFiles": 806,
+  "added": [],
+  "missing": [],
+  "changed": [],
+  "manifestHashMatches": true,
+  "guardHashMatches": true,
+  "gates": [
+    {
+      "id": "20261031T044809-test-397730",
+      "receiptSha256": "168973e7b587fccd00e5dd8ecf2811d38245534b198dfc75ed796e3321c18089",
+      "exitCode": 0,
+      "timedOut": false,
+      "sourceInputs": 806,
+      "sourceBeforeEqualsAfter": true,
+      "sourceIdentitiesMatchFinalManifest": true,
+      "sourceChanges": [],
+      "snapshotModifications": [],
+      "logs": [
+        {
+          "kind": "stdout",
+          "sha256": "5764d4cfa94601e423ebb6bcc04edffec2d1786a9fad1e4aeb1cf26c7c0348e8",
+          "bytes": 24696,
+          "matchesOriginal": true
+        },
+        {
+          "kind": "stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0,
+          "matchesOriginal": true
+        }
+      ]
+    },
+    {
+      "id": "20261031T044932-lint-645c52",
+      "receiptSha256": "a0fb7101f6437bd02b357e3daae203e6e34f7481be315cc1d2802ad5e31316b9",
+      "exitCode": 0,
+      "timedOut": false,
+      "sourceInputs": 806,
+      "sourceBeforeEqualsAfter": true,
+      "sourceIdentitiesMatchFinalManifest": true,
+      "sourceChanges": [],
+      "snapshotModifications": [],
+      "logs": [
+        {
+          "kind": "stdout",
+          "sha256": "96616bc9288e15368773b94cb90ce2b55870b552b74f0cebbcc73e1a869e2779",
+          "bytes": 1723,
+          "matchesOriginal": true
+        },
+        {
+          "kind": "stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0,
+          "matchesOriginal": true
+        }
+      ]
+    },
+    {
+      "id": "20261031T045007-types-5e7a1e",
+      "receiptSha256": "e81f100b79ad5559cabe6fa6fbb03e27a44c677679395db7aac68247b23c1917",
+      "exitCode": 0,
+      "timedOut": false,
+      "sourceInputs": 806,
+      "sourceBeforeEqualsAfter": true,
+      "sourceIdentitiesMatchFinalManifest": true,
+      "sourceChanges": [],
+      "snapshotModifications": [],
+      "logs": [
+        {
+          "kind": "stdout",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0,
+          "matchesOriginal": true
+        },
+        {
+          "kind": "stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0,
+          "matchesOriginal": true
+        }
+      ]
+    },
+    {
+      "id": "20261031T045029-prisma-no-network-ca0425",
+      "receiptSha256": "7e8c68c77acf82c06cc4ab47250e3e433db1fe227dea71f9f15142c990dc4804",
+      "exitCode": 0,
+      "timedOut": false,
+      "sourceInputs": 806,
+      "sourceBeforeEqualsAfter": true,
+      "sourceIdentitiesMatchFinalManifest": true,
+      "sourceChanges": [],
+      "snapshotModifications": [],
+      "logs": [
+        {
+          "kind": "stdout",
+          "sha256": "41354d1d371879e63bb7639be9666a01123fa71ef8ddf1ab614e8f2d1b9858d0",
+          "bytes": 243,
+          "matchesOriginal": true
+        },
+        {
+          "kind": "stderr",
+          "sha256": "75066079154e16278b8bbb61e3a8fed567403e1667eda92ad7c8eeab0cda5879",
+          "bytes": 93,
+          "matchesOriginal": true
+        }
+      ]
+    },
+    {
+      "id": "20261031T045050-build-f5293e",
+      "receiptSha256": "51197bb285d54dd3da2d1c748773c0dcb2bbc5e456526082eaebabbe7c92d9da",
+      "exitCode": 0,
+      "timedOut": false,
+      "sourceInputs": 806,
+      "sourceBeforeEqualsAfter": true,
+      "sourceIdentitiesMatchFinalManifest": true,
+      "sourceChanges": [],
+      "snapshotModifications": [],
+      "logs": [
+        {
+          "kind": "stdout",
+          "sha256": "fad1a4d13e5d85be94b9c0fa3ebaf82e98db3206580fc294cabf48f45379380e",
+          "bytes": 3915,
+          "matchesOriginal": true
+        },
+        {
+          "kind": "stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0,
+          "matchesOriginal": true
+        }
+      ]
+    }
+  ],
+  "nonDbTestFiles": 137,
+  "nonDbTestsPassed": 1626,
+  "lintErrors": 0,
+  "lintBaselineWarnings": 9,
+  "passed": true
+}

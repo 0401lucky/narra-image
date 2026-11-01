@@ -1,0 +1,146 @@
+{
+  "startedAt": "2026-11-01T01:30:23.644330+00:00",
+  "overallTaskComplete": false,
+  "automatedGatePassed": true,
+  "sourceFiles": 807,
+  "frozenSource": {
+    "src/components/marketing/homepage/home-reveal.tsx": "cbfcc21f6039c0d3a01ebb2bc2edb59ce22a1c023997d7aa080506d4090ff073",
+    "src/tests/unit/homepage-motion.test.tsx": "55732e133ea17eeb8539b791183dc0fc8112220980ea1a74877e7ad4b28d9092",
+    "src/tests/unit/homepage-reveal.test.tsx": "8827b3f22fad96715027bd26a6395b9e44357e47d32c7bd859aa02a4d7a9a3fa"
+  },
+  "gates": [
+    {
+      "id": "20261101T013043-test-1760dc",
+      "command": [
+        "D:\\node\\node.exe",
+        "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\app\\node_modules\\vitest\\vitest.mjs",
+        "run",
+        "--testTimeout=30000"
+      ],
+      "cwd": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\app",
+      "finishedAt": "2026-11-01T01:31:39.735214+00:00",
+      "exitCode": 0,
+      "timedOut": false,
+      "timeoutSeconds": 300,
+      "durationSeconds": 56.589,
+      "stdout": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\receipts\\20261101T013043-test-1760dc.stdout.log",
+      "stderr": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\receipts\\20261101T013043-test-1760dc.stderr.log",
+      "nodeEnv": "test",
+      "buildOnlyAppUrl": null,
+      "inheritedCallerConfiguration": false,
+      "sourceChanges": [],
+      "snapshotModifications": [],
+      "sourceManifest": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\source-manifest.json"
+    },
+    {
+      "id": "20261101T013201-lint-e7a709",
+      "command": [
+        "D:\\node\\node.exe",
+        "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\app\\node_modules\\eslint\\bin\\eslint.js",
+        "."
+      ],
+      "cwd": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\app",
+      "finishedAt": "2026-11-01T01:32:17.358541+00:00",
+      "exitCode": 0,
+      "timedOut": false,
+      "timeoutSeconds": 180,
+      "durationSeconds": 15.524,
+      "stdout": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\receipts\\20261101T013201-lint-e7a709.stdout.log",
+      "stderr": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\receipts\\20261101T013201-lint-e7a709.stderr.log",
+      "nodeEnv": "test",
+      "buildOnlyAppUrl": null,
+      "inheritedCallerConfiguration": false,
+      "sourceChanges": [],
+      "snapshotModifications": [],
+      "sourceManifest": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\source-manifest.json"
+    },
+    {
+      "id": "20261101T013234-types-343302",
+      "command": [
+        "D:\\node\\node.exe",
+        "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\app\\node_modules\\typescript\\bin\\tsc",
+        "--noEmit"
+      ],
+      "cwd": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\app",
+      "finishedAt": "2026-11-01T01:32:40.699316+00:00",
+      "exitCode": 0,
+      "timedOut": false,
+      "timeoutSeconds": 180,
+      "durationSeconds": 6.061,
+      "stdout": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\receipts\\20261101T013234-types-343302.stdout.log",
+      "stderr": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\receipts\\20261101T013234-types-343302.stderr.log",
+      "nodeEnv": "test",
+      "buildOnlyAppUrl": null,
+      "inheritedCallerConfiguration": false,
+      "sourceChanges": [],
+      "snapshotModifications": [],
+      "sourceManifest": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\source-manifest.json"
+    },
+    {
+      "id": "20261101T013300-prisma-no-network-c65d61",
+      "command": [
+        "D:\\node\\node.exe",
+        "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\app\\node_modules\\prisma\\build\\index.js",
+        "generate"
+      ],
+      "cwd": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\app",
+      "finishedAt": "2026-11-01T01:33:03.512460+00:00",
+      "exitCode": 0,
+      "timedOut": false,
+      "timeoutSeconds": 120,
+      "durationSeconds": 3.163,
+      "stdout": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\receipts\\20261101T013300-prisma-no-network-c65d61.stdout.log",
+      "stderr": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\receipts\\20261101T013300-prisma-no-network-c65d61.stderr.log",
+      "nodeEnv": "production",
+      "buildOnlyAppUrl": "https://homepage-validation.invalid",
+      "inheritedCallerConfiguration": false,
+      "sourceChanges": [],
+      "snapshotModifications": [],
+      "sourceManifest": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\source-manifest.json"
+    },
+    {
+      "id": "20261101T013321-build-0a0faf",
+      "command": [
+        "D:\\node\\node.exe",
+        "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\app\\node_modules\\next\\dist\\bin\\next",
+        "build"
+      ],
+      "cwd": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\app",
+      "finishedAt": "2026-11-01T01:33:44.179225+00:00",
+      "exitCode": 0,
+      "timedOut": false,
+      "timeoutSeconds": 600,
+      "durationSeconds": 23.086,
+      "stdout": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\receipts\\20261101T013321-build-0a0faf.stdout.log",
+      "stderr": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\receipts\\20261101T013321-build-0a0faf.stderr.log",
+      "nodeEnv": "production",
+      "buildOnlyAppUrl": "https://homepage-validation.invalid",
+      "inheritedCallerConfiguration": false,
+      "sourceChanges": [],
+      "snapshotModifications": [],
+      "sourceManifest": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\source-manifest.json"
+    }
+  ],
+  "browser": "Separate independent lane; pending",
+  "unresolved": [
+    "Unapproved oversized Unicode remix URL fallback; existing HTTP431."
+  ],
+  "notRun": [
+    "real account/DB/Worker/provider/storage E2E",
+    "physical mobile/IME",
+    "actual CI/deployment",
+    "pinned Node24.22.1 parity"
+  ],
+  "sourceManifestSha256": "6f8fc0829168d61e3446a817ad4b86c2a9707b92b63b66dae04237b1442cb6fa",
+  "guardSha256": "bd9ec3da5da5787ffc8378f8ed97835428d4b5a9c80a21a099ccca2c4d077e55",
+  "runtime": "v24.11.1",
+  "pinnedRuntimeParity": false,
+  "nonDbTestFiles": 138,
+  "nonDbTestsPassed": 1633,
+  "lintErrors": 0,
+  "lintWarnings": 9,
+  "checkedAt": "2026-11-01T01:33:54.293382+00:00",
+  "liveSourceDrift": [],
+  "prismaGenerate": "pass; installed engine/client with diagnostic network denial",
+  "nextBuild": "pass; unmodified production source, no browser adapters"
+}

@@ -1,0 +1,279 @@
+{
+  "status": "Intermediate implementation and bounded review checkpoints, not final canvas acceptance",
+  "recordedAt": "2026-10-29T08:06:58.4768140Z",
+  "results": [
+    {
+      "label": "canvas-api-combined-03",
+      "mode": "test",
+      "command": [
+        "pnpm",
+        "exec",
+        "vitest",
+        "run",
+        "src/tests/unit/canvas-http.test.ts",
+        "src/tests/unit/canvas-documents-api.test.ts",
+        "src/tests/unit/canvas-storage.test.ts",
+        "src/tests/unit/canvas-assets-api.test.ts",
+        "src/tests/unit/canvas-run-lookup.test.ts",
+        "src/tests/unit/canvas-runtime-api.test.ts",
+        "--testTimeout=30000"
+      ],
+      "cwd": "E:\\code\\narra-image",
+      "timeoutMs": 120000,
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "durationMs": 2146,
+      "stdoutPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\canvas-api-combined-03.stdout.log",
+      "stderrPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\canvas-api-combined-03.stderr.log"
+    },
+    {
+      "label": "canvas-api-types-04",
+      "mode": "test",
+      "command": [
+        "pnpm",
+        "exec",
+        "tsc",
+        "--noEmit"
+      ],
+      "cwd": "E:\\code\\narra-image",
+      "timeoutMs": 120000,
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "durationMs": 4791,
+      "stdoutPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\canvas-api-types-04.stdout.log",
+      "stderrPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\canvas-api-types-04.stderr.log"
+    },
+    {
+      "label": "canvas-api-lint-02",
+      "mode": "test",
+      "command": [
+        "pnpm",
+        "lint"
+      ],
+      "cwd": "E:\\code\\narra-image",
+      "timeoutMs": 180000,
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "durationMs": 10547,
+      "stdoutPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\canvas-api-lint-02.stdout.log",
+      "stderrPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\canvas-api-lint-02.stderr.log"
+    },
+    {
+      "label": "canvas-api-full-01",
+      "mode": "test",
+      "command": [
+        "pnpm",
+        "exec",
+        "vitest",
+        "run",
+        "--testTimeout=30000",
+        "--exclude",
+        "**/worker-contracts-db.test.ts",
+        "--exclude",
+        "**/canvas-contracts-db.test.ts"
+      ],
+      "cwd": "E:\\code\\narra-image",
+      "timeoutMs": 300000,
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "durationMs": 20610,
+      "stdoutPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\canvas-api-full-01.stdout.log",
+      "stderrPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\canvas-api-full-01.stderr.log"
+    },
+    {
+      "label": "canvas-read-api-tests-2",
+      "mode": "test",
+      "command": [
+        "pnpm",
+        "exec",
+        "vitest",
+        "run",
+        "src/tests/unit/canvas-run-lookup.test.ts",
+        "src/tests/unit/canvas-runtime-api.test.ts",
+        "--testTimeout=30000"
+      ],
+      "cwd": "E:\\code\\narra-image",
+      "timeoutMs": 57000,
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "durationMs": 1741,
+      "stdoutPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\canvas-read-api-tests-2.stdout.log",
+      "stderrPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\canvas-read-api-tests-2.stderr.log"
+    },
+    {
+      "label": "canvas-read-api-types-2",
+      "mode": "test",
+      "command": [
+        "pnpm",
+        "exec",
+        "tsc",
+        "--noEmit"
+      ],
+      "cwd": "E:\\code\\narra-image",
+      "timeoutMs": 120000,
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "durationMs": 4971,
+      "stdoutPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\canvas-read-api-types-2.stdout.log",
+      "stderrPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\canvas-read-api-types-2.stderr.log"
+    },
+    {
+      "label": "canvas-check5-final-targeted-01",
+      "mode": "test",
+      "command": [
+        "pnpm",
+        "exec",
+        "vitest",
+        "run",
+        "src/tests/unit/canvas-http.test.ts",
+        "src/tests/unit/canvas-documents-api.test.ts",
+        "src/tests/unit/canvas-storage.test.ts",
+        "src/tests/unit/canvas-assets-api.test.ts",
+        "src/tests/unit/canvas-run-lookup.test.ts",
+        "src/tests/unit/canvas-runtime-api.test.ts",
+        "--testTimeout=30000"
+      ],
+      "cwd": "E:\\code\\narra-image",
+      "timeoutMs": 90000,
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "durationMs": 2381,
+      "stdoutPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\canvas-check5-final-targeted-01.stdout.log",
+      "stderrPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\canvas-check5-final-targeted-01.stderr.log"
+    },
+    {
+      "label": "canvas-check5-final-types-01",
+      "mode": "test",
+      "command": [
+        "pnpm",
+        "exec",
+        "tsc",
+        "--noEmit"
+      ],
+      "cwd": "E:\\code\\narra-image",
+      "timeoutMs": 120000,
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "durationMs": 3349,
+      "stdoutPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\canvas-check5-final-types-01.stdout.log",
+      "stderrPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\canvas-check5-final-types-01.stderr.log"
+    },
+    {
+      "label": "canvas-check5-final-lint-01",
+      "mode": "test",
+      "command": [
+        "pnpm",
+        "lint"
+      ],
+      "cwd": "E:\\code\\narra-image",
+      "timeoutMs": 180000,
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "durationMs": 10762,
+      "stdoutPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\canvas-check5-final-lint-01.stdout.log",
+      "stderrPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\canvas-check5-final-lint-01.stderr.log"
+    },
+    {
+      "label": "canvas-generate-tests-2",
+      "mode": "test",
+      "command": [
+        "pnpm",
+        "exec",
+        "vitest",
+        "run",
+        "src/tests/unit/canvas-generate-parser.test.ts",
+        "src/tests/unit/canvas-generate-route.test.ts",
+        "src/tests/unit/parse-generate-request.test.ts",
+        "src/tests/unit/generate-route-security.test.ts",
+        "src/tests/unit/canvas-run-lookup.test.ts",
+        "src/tests/unit/canvas-runtime-api.test.ts",
+        "--testTimeout=30000"
+      ],
+      "cwd": "E:\\code\\narra-image",
+      "timeoutMs": 90000,
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "durationMs": 3481,
+      "stdoutPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\canvas-generate-tests-2.stdout.log",
+      "stderrPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\canvas-generate-tests-2.stderr.log"
+    },
+    {
+      "label": "canvas-generate-types-3",
+      "mode": "test",
+      "command": [
+        "pnpm",
+        "exec",
+        "tsc",
+        "--noEmit"
+      ],
+      "cwd": "E:\\code\\narra-image",
+      "timeoutMs": 120000,
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "durationMs": 5052,
+      "stdoutPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\canvas-generate-types-3.stdout.log",
+      "stderrPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\canvas-generate-types-3.stderr.log"
+    },
+    {
+      "label": "canvas-generate-lint-2",
+      "mode": "test",
+      "command": [
+        "pnpm",
+        "lint"
+      ],
+      "cwd": "E:\\code\\narra-image",
+      "timeoutMs": 180000,
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "durationMs": 11283,
+      "stdoutPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\canvas-generate-lint-2.stdout.log",
+      "stderrPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\canvas-generate-lint-2.stderr.log"
+    },
+    {
+      "label": "canvas-generate-ordinary-1",
+      "mode": "test",
+      "command": [
+        "pnpm",
+        "exec",
+        "vitest",
+        "run",
+        "--testTimeout=30000",
+        "--exclude",
+        "**/worker-contracts-db.test.ts",
+        "--exclude",
+        "**/canvas-contracts-db.test.ts"
+      ],
+      "cwd": "E:\\code\\narra-image",
+      "timeoutMs": 300000,
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "durationMs": 19980,
+      "stdoutPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\canvas-generate-ordinary-1.stdout.log",
+      "stderrPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\canvas-generate-ordinary-1.stderr.log"
+    }
+  ],
+  "apiIndependent": {
+    "tests": 160,
+    "files": 6
+  },
+  "generationImplementation": {
+    "targetedFiles": 6,
+    "ordinaryFiles": 91,
+    "ordinaryTests": 691,
+    "targetedTests": 160
+  },
+  "positiveDatabaseTestsExecuted": false
+}

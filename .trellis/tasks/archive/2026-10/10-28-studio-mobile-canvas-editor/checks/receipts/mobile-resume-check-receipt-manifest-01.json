@@ -1,0 +1,224 @@
+{
+  "captured_at": "2026-10-31T03:13:19.5586582Z",
+  "runs": [
+    {
+      "label": "mobile-resume-check-full-01",
+      "mode": "test",
+      "command": [
+        "C:/Users/Administrator/AppData/Local/Temp/narra-history-cleanup-20261029/node-v24.22.1-win-x64/node.exe",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "--testTimeout=30000"
+      ],
+      "cwd": "E:/code/narra-image",
+      "deadline_ms": 300000,
+      "code": 0,
+      "timed_out": false,
+      "duration_ms": 45755,
+      "stderr_bytes": 0,
+      "copied_identities": [
+        {
+          "path": ".trellis\\tasks\\10-28-studio-mobile-canvas-editor\\checks\\receipts\\mobile-resume-check-full-01.json",
+          "sha256": "d1dd1f6472de8d8ca1000b8d67143e50d0f4df8c2bf357e3df2ef100094afa77",
+          "bytes": 758
+        },
+        {
+          "path": ".trellis\\tasks\\10-28-studio-mobile-canvas-editor\\checks\\receipts\\mobile-resume-check-full-01.stdout.log",
+          "sha256": "7120f7f8b812a20e0a96305aa5b9f08585339ef4e0eb7790dcba37f2e81877a2",
+          "bytes": 38996
+        },
+        {
+          "path": ".trellis\\tasks\\10-28-studio-mobile-canvas-editor\\checks\\receipts\\mobile-resume-check-full-01.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      ]
+    },
+    {
+      "label": "mobile-resume-check-types-01",
+      "mode": "test",
+      "command": [
+        "C:/Users/Administrator/AppData/Local/Temp/narra-history-cleanup-20261029/node-v24.22.1-win-x64/node.exe",
+        "node_modules/typescript/bin/tsc",
+        "--noEmit",
+        "--incremental",
+        "false"
+      ],
+      "cwd": "E:/code/narra-image",
+      "deadline_ms": 120000,
+      "code": 0,
+      "timed_out": false,
+      "duration_ms": 28705,
+      "stderr_bytes": 0,
+      "copied_identities": [
+        {
+          "path": ".trellis\\tasks\\10-28-studio-mobile-canvas-editor\\checks\\receipts\\mobile-resume-check-types-01.json",
+          "sha256": "3815eb8da8e6b8d5203d88c20640d78de05d5e26e8e56312bac663998b3f0762",
+          "bytes": 774
+        },
+        {
+          "path": ".trellis\\tasks\\10-28-studio-mobile-canvas-editor\\checks\\receipts\\mobile-resume-check-types-01.stdout.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        {
+          "path": ".trellis\\tasks\\10-28-studio-mobile-canvas-editor\\checks\\receipts\\mobile-resume-check-types-01.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      ]
+    },
+    {
+      "label": "mobile-resume-check-lint-01",
+      "mode": "test",
+      "command": [
+        "C:/Users/Administrator/AppData/Local/Temp/narra-history-cleanup-20261029/node-v24.22.1-win-x64/node.exe",
+        "node_modules/eslint/bin/eslint.js",
+        "."
+      ],
+      "cwd": "E:/code/narra-image",
+      "deadline_ms": 180000,
+      "code": 1,
+      "timed_out": false,
+      "duration_ms": 124926,
+      "stderr_bytes": 0,
+      "copied_identities": [
+        {
+          "path": ".trellis\\tasks\\10-28-studio-mobile-canvas-editor\\checks\\receipts\\mobile-resume-check-lint-01.json",
+          "sha256": "52d5a944ea8571b3dc327f96563227e2e46e9358bb5ab70c9d81a8d4f7540e11",
+          "bytes": 733
+        },
+        {
+          "path": ".trellis\\tasks\\10-28-studio-mobile-canvas-editor\\checks\\receipts\\mobile-resume-check-lint-01.stdout.log",
+          "sha256": "fc645a3ca80cb3c8491f1d96d5faeb0bd3f01a2bffebdbaf49a2d5045eb60ef3",
+          "bytes": 6101514
+        },
+        {
+          "path": ".trellis\\tasks\\10-28-studio-mobile-canvas-editor\\checks\\receipts\\mobile-resume-check-lint-01.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      ]
+    },
+    {
+      "label": "mobile-resume-check-focused-lint-01",
+      "mode": "test",
+      "command": [
+        "C:/Users/Administrator/AppData/Local/Temp/narra-history-cleanup-20261029/node-v24.22.1-win-x64/node.exe",
+        "node_modules/eslint/bin/eslint.js",
+        "src/components/create/canvas/commands.ts",
+        "src/components/create/canvas/controller-types.ts",
+        "src/components/create/canvas/controller.ts",
+        "src/components/create/canvas/editor-state.ts",
+        "src/components/create/canvas/mobile-interaction.ts",
+        "src/components/create/canvas/renderer-adapter.ts",
+        "src/components/create/canvas/renderer-constants.ts",
+        "src/components/create/canvas/renderer-types.ts",
+        "src/components/create/generator-studio.tsx",
+        "src/components/create/hooks/use-canvas-editor.ts",
+        "src/components/create/hooks/use-canvas-mobile-viewport.ts",
+        "src/components/create/hooks/use-studio-mode.ts",
+        "src/components/create/parts/canvas-dialog.tsx",
+        "src/components/create/parts/canvas-node-editor.tsx",
+        "src/components/create/parts/canvas-node-inspector.tsx",
+        "src/components/create/parts/canvas-node-picker.tsx",
+        "src/components/create/parts/canvas-nodes/generation-node.tsx",
+        "src/components/create/parts/canvas-nodes/node-shell.tsx",
+        "src/components/create/parts/canvas-nodes/prompt-node.tsx",
+        "src/components/create/parts/canvas-nodes/reference-node.tsx",
+        "src/components/create/parts/canvas-nodes/result-node.tsx",
+        "src/components/create/parts/canvas-prompt-field.tsx",
+        "src/components/create/parts/canvas-runtime-dialog.tsx",
+        "src/components/create/parts/canvas-stage.tsx",
+        "src/components/create/parts/canvas-toolbar.tsx",
+        "src/components/create/parts/image-zoom-modal.tsx",
+        "src/tests/unit/canvas-controller-connections.test.ts",
+        "src/tests/unit/canvas-controller-documents.test.ts",
+        "src/tests/unit/canvas-mobile-interaction.test.ts",
+        "src/tests/unit/canvas-mobile-viewport.test.tsx",
+        "src/tests/unit/canvas-node-editor.test.tsx",
+        "src/tests/unit/canvas-stage.test.tsx",
+        "src/tests/unit/generator-studio-canvas.test.tsx",
+        "src/tests/unit/use-canvas-editor.test.tsx"
+      ],
+      "cwd": "E:/code/narra-image",
+      "deadline_ms": 180000,
+      "code": 0,
+      "timed_out": false,
+      "duration_ms": 5618,
+      "stderr_bytes": 0,
+      "copied_identities": [
+        {
+          "path": ".trellis\\tasks\\10-28-studio-mobile-canvas-editor\\checks\\receipts\\mobile-resume-check-focused-lint-01.json",
+          "sha256": "e376f6903658b13a9a79942d977cd723236d25124ad9e8d746a33bc17f6569b7",
+          "bytes": 2667
+        },
+        {
+          "path": ".trellis\\tasks\\10-28-studio-mobile-canvas-editor\\checks\\receipts\\mobile-resume-check-focused-lint-01.stdout.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        {
+          "path": ".trellis\\tasks\\10-28-studio-mobile-canvas-editor\\checks\\receipts\\mobile-resume-check-focused-lint-01.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      ]
+    },
+    {
+      "label": "mobile-resume-check-focused-tests-01",
+      "mode": "test",
+      "command": [
+        "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-history-cleanup-20261029\\node-v24.22.1-win-x64\\node.exe",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "--testTimeout=30000",
+        "src/tests/unit/canvas-controller-connections.test.ts",
+        "src/tests/unit/use-canvas-editor.test.tsx",
+        "src/tests/unit/canvas-node-editor.test.tsx",
+        "src/tests/unit/canvas-mobile-interaction.test.ts",
+        "src/tests/unit/canvas-mobile-viewport.test.tsx",
+        "src/tests/unit/canvas-stage.test.tsx",
+        "src/tests/unit/generator-studio-canvas.test.tsx",
+        "src/tests/unit/use-canvas-runtime-lease.test.tsx",
+        "src/tests/unit/canvas-controller-documents.test.ts",
+        "src/tests/unit/canvas-controller-runs.test.ts",
+        "src/tests/unit/canvas-graph.test.ts",
+        "src/tests/unit/canvas-draft-store.test.ts",
+        "src/tests/unit/canvas-reference-runtime.test.ts",
+        "src/tests/unit/canvas-renderer-adapter.test.ts",
+        "src/tests/unit/canvas-terminal-placement.test.ts",
+        "src/tests/unit/use-canvas-documents.test.tsx",
+        "src/tests/unit/use-studio-jobs.test.tsx",
+        "src/tests/unit/use-image-poller.test.tsx",
+        "src/tests/unit/chat-pane.test.tsx",
+        "src/tests/unit/generator-studio-feedback.test.tsx",
+        "src/tests/unit/generator-studio-origins.test.tsx",
+        "src/tests/unit/canvas-lazy-pane.test.tsx"
+      ],
+      "cwd": "E:/code/narra-image",
+      "deadline_ms": 180000,
+      "code": 0,
+      "timed_out": false,
+      "duration_ms": 13792,
+      "stderr_bytes": 0,
+      "copied_identities": [
+        {
+          "path": ".trellis\\tasks\\10-28-studio-mobile-canvas-editor\\checks\\receipts\\mobile-resume-check-focused-tests-01.json",
+          "sha256": "2e921af12194a30e9f9e8dec2ed1bd9c26f801c5dfd4d33cae2ce34b94d5ff9e",
+          "bytes": 1934
+        },
+        {
+          "path": ".trellis\\tasks\\10-28-studio-mobile-canvas-editor\\checks\\receipts\\mobile-resume-check-focused-tests-01.stdout.log",
+          "sha256": "ed628fc5acc5b56bd54a6d933283d012c8c65fd2db7ba436b70a1d6acd2a76ed",
+          "bytes": 8605
+        },
+        {
+          "path": ".trellis\\tasks\\10-28-studio-mobile-canvas-editor\\checks\\receipts\\mobile-resume-check-focused-tests-01.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      ]
+    }
+  ]
+}

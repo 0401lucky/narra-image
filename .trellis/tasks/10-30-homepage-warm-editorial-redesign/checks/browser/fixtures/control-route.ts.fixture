@@ -1,0 +1,26 @@
+import { revalidatePath, revalidateTag } from "next/cache";
+import { fixtureSummary, resetFixture } from "@/lib/db";
+import config from "@/lib/homepage-fixture-config.json";
+
+function allowed(request: Request) {
+  const url = new URL(request.url);
+  return ["127.0.0.1", "localhost"].includes(url.hostname) && request.headers.get("x-homepage-fixture") === config.controlToken;
+}
+
+export async function GET(request: Request) {
+  if (!allowed(request)) return new Response("Not found", { status: 404 });
+  return Response.json(fixtureSummary(), { headers: { "Cache-Control": "no-store" } });
+}
+
+export async function POST(request: Request) {
+  if (!allowed(request)) return new Response("Not found", { status: 404 });
+  const body = await request.text();
+  if (body.length > 1024) return new Response("Too large", { status: 413 });
+  let value: unknown;
+  try { value = JSON.parse(body); } catch { return new Response("Invalid JSON", { status: 400 }); }
+  if (!value || typeof value !== "object" || Array.isArray(value)) return new Response("Invalid input", { status: 400 });
+  const result = resetFixture(value as Record<string, unknown>);
+  revalidateTag("featured-works", { expire: 0 });
+  revalidatePath("/");
+  return Response.json(result, { headers: { "Cache-Control": "no-store" } });
+}

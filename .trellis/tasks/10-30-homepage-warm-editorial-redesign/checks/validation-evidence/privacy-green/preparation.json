@@ -1,0 +1,11 @@
+{
+  "kind": "homepage-warm-editorial-redesign-g0-v1",
+  "token": "fa4bca90b8613530f1aca6f0",
+  "workspace": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\app",
+  "createdAt": "2026-10-31T01:37:54.263791+00:00",
+  "node": "D:\\node\\node.exe",
+  "sourceFiles": 643,
+  "nodeVersion": "v24.11.1",
+  "requiredNodeVersion": "v24.22.1",
+  "pinnedRuntimeParity": false
+}

@@ -1,0 +1,124 @@
+import assert from "node:assert/strict";
+import { createHash, randomBytes } from "node:crypto";
+import { createRequire } from "node:module";
+import { mkdir, readFile, readdir, realpath, unlink, writeFile } from "node:fs/promises";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+import { HERO_SCENE_CONTRACT } from "./hero-scene-contract.mjs";
+import { FIXED_GUARD_SHA256, helperIdentity } from "./input-identity.mjs";
+import { LONG_URL_CASES } from "./long-url-contract.mjs";
+
+const here = path.dirname(fileURLToPath(import.meta.url));
+const app = await realpath(process.cwd());
+const runtime = await realpath(path.resolve(here, "../.runtime"));
+const relative = path.relative(runtime, app);
+assert(relative && !relative.startsWith("..") && !path.isAbsolute(relative) && path.basename(app) === "app", "Fixture preparation requires an owned G0 snapshot, never the product workspace");
+const mode = process.argv.includes("--baseline") ? "baseline" : process.argv.includes("--privacy") ? "privacy" : "final";
+const require = createRequire(path.join(app, "package.json"));
+const bcrypt = require("bcryptjs");
+const sharp = createRequire(require.resolve("next/package.json"))("sharp");
+const sha = (bytes) => createHash("sha256").update(bytes).digest("hex");
+const guardHash = sha(await readFile(path.join(path.dirname(app), "tools/deny_env.cjs")));
+assert.equal(guardHash, FIXED_GUARD_SHA256, "Use the corrected G0 guard, including fs.exists custom promisification");
+const helperInputs = await helperIdentity(here);
+const read = (file) => readFile(path.join(app, file));
+const put = async (file, bytes) => {
+  const target = path.join(app, file);
+  await mkdir(path.dirname(target), { recursive: true });
+  await writeFile(target, bytes);
+};
+const previous = await readFile(path.join(app, "homepage-fixture-manifest.json"), "utf8").then(JSON.parse).catch((error) => { if (error.code === "ENOENT") return null; throw error; });
+const production = previous?.production ?? {};
+if (previous) {
+  assert.equal(previous.mode, mode, "Use separate snapshots for baseline and final fixtures");
+  for (const [file, hash] of Object.entries(production)) {
+    if (!previous.replacements[file]) assert.equal(sha(await read(file)), hash, `Existing fixture product input changed: ${file}`);
+  }
+  for (const file of ["src/app/__fixture/control/route.ts", "src/app/__fixture/links/page.tsx"]) {
+    if (previous.replacements[file]) await unlink(path.join(app, file)).catch((error) => { if (error.code !== "ENOENT") throw error; });
+  }
+}
+async function identity(directory) {
+  for (const entry of await readdir(path.join(app, directory), { withFileTypes: true })) {
+    const name = path.posix.join(directory, entry.name);
+    if (entry.isDirectory()) await identity(name);
+    else if (entry.isFile()) production[name] = sha(await read(name));
+    else throw new Error(`Unexpected product input link ${name}`);
+  }
+}
+
+if (mode === "baseline" || mode === "privacy") {
+  const baseline = JSON.parse(await readFile(path.join(here, "baseline-inputs/manifest.json"), "utf8"));
+  for (const [file, expected] of Object.entries(baseline)) {
+    const bytes = await readFile(path.join(here, "baseline-inputs", `${file}.before`));
+    assert.equal(sha(bytes), expected.sha256, `Baseline checksum ${file}`);
+    await put(file, bytes);
+  }
+}
+if (!previous) {
+  await identity("src");
+  await identity("public");
+  for (const file of ["next.config.ts", "package.json", "pnpm-lock.yaml", "tsconfig.json", "postcss.config.mjs"]) production[file] = sha(await read(file));
+}
+
+const palettes = [
+  ["#edb969", "#5b4938", "#f6ecda"],
+  ["#879d91", "#304847", "#e7dfca"],
+  ["#b3654c", "#523c35", "#efe0cf"],
+];
+const dimensions = [[1200, 800], [900, 900], [800, 1200]];
+const media = [];
+for (let index = 0; index < dimensions.length; index += 1) {
+  const [width, height] = dimensions[index];
+  const [warm, dark, paper] = palettes[index];
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"><defs><linearGradient id="g" x2="1" y2="1"><stop stop-color="${paper}"/><stop offset="1" stop-color="${warm}"/></linearGradient><pattern id="p" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M0 32 32 0" stroke="${dark}" opacity=".06"/></pattern></defs><rect width="100%" height="100%" fill="url(#g)"/><circle cx="${width * 0.67}" cy="${height * 0.29}" r="${width * 0.2}" fill="${paper}" opacity=".8"/><path d="M0 ${height * 0.72} Q${width * 0.3} ${height * 0.3} ${width * 0.55} ${height * 0.65} T${width} ${height * 0.59} V${height} H0Z" fill="${dark}" opacity=".65"/><path d="M0 ${height * 0.8} Q${width * 0.55} ${height * 0.52} ${width} ${height * 0.8} V${height}H0Z" fill="${warm}"/><rect width="100%" height="100%" fill="url(#p)"/><path d="M${width * 0.11} ${height * 0.15}H${width * 0.42}M${width * 0.11} ${height * 0.17}H${width * 0.35}" stroke="${dark}" opacity=".28" stroke-width="3"/></svg>`;
+  const bytes = await sharp(Buffer.from(svg)).png().toBuffer();
+  const url = `/homepage-fixtures/gallery-${index + 1}.png`;
+  await put(`public${url}`, bytes);
+  media.push({ url, width, height, sha256: sha(bytes), bytes: bytes.length });
+}
+const avatar = await sharp(Buffer.from('<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96"><rect width="96" height="96" rx="48" fill="#cc7654"/><circle cx="48" cy="36" r="16" fill="#f5e7d6"/><path d="M17 88a31 31 0 0 1 62 0" fill="#f5e7d6"/></svg>')).png().toBuffer();
+await put("public/homepage-fixtures/avatar.png", avatar);
+const assets = [];
+async function assetPaths(directory = "public") {
+  for (const entry of await readdir(path.join(app, directory), { withFileTypes: true })) {
+    const name = path.posix.join(directory, entry.name);
+    if (entry.isDirectory()) await assetPaths(name);
+    else if (entry.isFile()) assets.push(`/${name.slice(7)}`);
+  }
+}
+await assetPaths();
+const heroAssets = [];
+for (const scene of HERO_SCENE_CONTRACT) {
+  const bytes = await read(`public${scene.image}`).catch((error) => { if (error.code === "ENOENT") return null; throw error; });
+  if (!bytes) { heroAssets.push({ id: scene.id, url: scene.image, available: false }); continue; }
+  const metadata = await sharp(bytes).metadata();
+  assert(metadata.width && metadata.height && ["png", "jpeg", "webp"].includes(metadata.format), "Hero must be a real decodable bitmap");
+  assert.equal(sha(bytes), scene.sha256, `Use the accepted original file for ${scene.id}, never a success surrogate`);
+  assert.deepEqual([metadata.width, metadata.height], [scene.width, scene.height]);
+  heroAssets.push({ id: scene.id, url: scene.image, available: true, sha256: sha(bytes), bytes: bytes.length, width: metadata.width, height: metadata.height, format: metadata.format });
+}
+if (process.argv.includes("--require-hero-assets")) assert(heroAssets.every((asset) => asset.available), "Actual delivered hero images are required; no surrogate is allowed");
+const config = { controlToken: randomBytes(24).toString("hex"), passwordHash: await bcrypt.hash("homepage-fixture-password", 10), media, assets, heroAssets, longUrlCases: LONG_URL_CASES };
+await put("src/lib/homepage-fixture-config.json", JSON.stringify(config, null, 2));
+const replacements = {};
+for (const [input, output] of [
+  ["db.ts.fixture", "src/lib/db.ts"],
+  ["control-route.ts.fixture", "src/app/homepage-fixture/control/route.ts"],
+  ["links-page.tsx.fixture", "src/app/homepage-fixture/links/page.tsx"],
+  ["proxy.ts.fixture", "src/proxy.ts"],
+]) {
+  const bytes = await readFile(path.join(here, "fixtures", input));
+  replacements[output] = { source: input, sha256: sha(bytes), priorSha256: production[output] ?? null };
+  await put(output, bytes);
+}
+const manifest = {
+  version: 1, mode, preparedAt: new Date().toISOString(), app, production, replacements, media, heroAssets, helperInputs, guardHash,
+  boundaries: "Only db.ts is replaced. Auth, current-user, benefits, featured/like/check-in/login/logout routes, pages, layout, serializers and access policies are actual production source. Fixture-only control and route allowlist are added; data are entirely synthetic.",
+};
+await put("homepage-fixture-manifest.json", JSON.stringify(manifest, null, 2));
+await mkdir(path.join(here, "evidence"), { recursive: true });
+const receipt = path.join(here, "evidence", `${mode}-prepare-${Date.now()}.json`);
+await writeFile(receipt, JSON.stringify(manifest, null, 2));
+console.log(JSON.stringify({ mode, app, replacementCount: Object.keys(replacements).length, productInputs: Object.keys(production).length, receipt }));

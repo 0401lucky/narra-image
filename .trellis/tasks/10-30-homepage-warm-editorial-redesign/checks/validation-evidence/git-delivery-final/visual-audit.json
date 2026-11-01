@@ -1,0 +1,32 @@
+{
+  "checkedAt": "2026-11-01T06:06:08.867564+00:00",
+  "reviewer": "root coordinator",
+  "source": "full-1793502794542",
+  "frames": [
+    {
+      "file": "home-1440.png",
+      "sha256": "7bc2fe51a46219e24168f93e10659586e7f06317861080b339bf4ece1335b81f"
+    },
+    {
+      "file": "home-390.png",
+      "sha256": "54bf9f0a80925785b7b2763fe0fadf97f7702af961b9bb4a91545804de0c169f"
+    },
+    {
+      "file": "long-url-emoji8000units-guest-320-absent.png",
+      "sha256": "0044450c1b6b90b49c528850f2a28d433313b0e95d8b2f05a9e0df0959bf37fe"
+    },
+    {
+      "file": "long-url-chinese8000-guest-390-accept.png",
+      "sha256": "cd5021e7aee0e5f23f7bf40717cda7347a7fb4bbbc050e10a1966cdcaec3948d"
+    }
+  ],
+  "observations": [
+    "Desktop/phone warm-paper layout, title rhythm, real local bookshop image and controls retain the approved composition.",
+    "390px long-Chinese guest fallback shows original selectable prompt, full-copy status, truthful manual instruction and promptless login action.",
+    "320px absent-clipboard frame is inside the existing vertically scrollable card info panel; textarea focus scroll position is not proof of inaccessible lower controls. Native copy/full selection is separately recorded by L7."
+  ],
+  "limitations": [
+    "Static frames do not prove motion/native actions; final103 executable checks supply those assertions.",
+    "Not physical mobile, native IME or real account/provider E2E."
+  ]
+}

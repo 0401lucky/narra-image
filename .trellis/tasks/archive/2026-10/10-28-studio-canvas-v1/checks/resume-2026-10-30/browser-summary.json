@@ -1,0 +1,375 @@
+{
+  "attempt": "resume02",
+  "fixture": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\studio-next-fixture-v2",
+  "scope": "Actual Next 16.2.4 production App Router SSR/hydration and unmodified GeneratorStudio/React Flow/controller/native IndexedDB. Serialized auth/catalogue and HTTP APIs are isolated loopback fixtures, not actual auth, database, provider, Worker, S3, billing or infrastructure E2E.",
+  "pass": true,
+  "sourceEvidence": {
+    "recordedAt": "2026-10-30T01:08:09.958Z",
+    "repo": "E:/code/narra-image",
+    "fixture": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\studio-next-fixture-v2",
+    "hashes": {
+      "src/components/create/generator-studio.tsx": "e6d8495981b33ecae1fa5e1b4f4ee54be775679f52b7e684ce80ab6494a4b218",
+      "src/components/create/hooks/use-canvas-documents.ts": "4055c3d13558ad706b177505a7ebdacb49c19b5ebc70907fa848a532ff1fe71a",
+      "src/components/create/canvas/controller.ts": "cda538605642e9d12f6ae0ad0a2139abce4ba9de95c874a63f92e17fd919b2b0",
+      "src/components/create/canvas/commands.ts": "e4a9647e19fc2f9ce41b03e32593c6aadeb0fc9dd6b854e1c71cd09142e2bfe0",
+      "src/components/create/canvas/draft-store.ts": "beca5523b10346a24228ae35392ab3e0e7ad45a70f64f7bc5c6aa0e89d77ca93",
+      "src/components/create/parts/canvas-stage.tsx": "0062155425d3e56e79bbc3fd16a434c05b120bf6aa7e05c80d90c4df6c00470c",
+      "src/components/create/parts/canvas-lazy-pane.tsx": "460baabd4ecde6072e8b291052cb83564b176a2548c70f59dc1194424b038567",
+      "src/components/create/parts/canvas-nodes/prompt-node.tsx": "e431b45477261f068c5af576e9d067573438541f0ffecc7f51595b204b8541dc",
+      "src/components/create/canvas/renderer-adapter.ts": "448cf038c8b4eeeb8ecf875944d9b8235fb15a59d07bcab80d989cdafebafba4",
+      "src/app/globals.css": "e870d5b65cdddb382509011d1ef1bae5797248732baa392572d6e5124ea1a111"
+    },
+    "sourceFileCount": 215,
+    "sourceTreeSha256": "7f2a08d9998317ba95fcec368b7b233930840c40e29f4614adb005bb437e1c95",
+    "scope": "Unmodified production GeneratorStudio/components/controllers/native IDB and CSS; synthetic serialized identity/catalogue, minimal non-authenticated Next page/layout, API supplied only by loopback fake harness. No real database/storage/provider."
+  },
+  "results": [
+    {
+      "check": "Actual Next SSR hydration, lazy canvas and separate empty-new navigation",
+      "pass": true,
+      "measured": {
+        "width": 1200,
+        "height": 701.453125,
+        "documentWidth": 1440
+      },
+      "lazyChunks": [
+        "/_next/static/chunks/0ewsk3hhr~ty~.js"
+      ],
+      "actualRootAndNativeStore": true
+    },
+    {
+      "check": "Chinese CDP composition, textarea wheel/focus and actual typed handle connection",
+      "pass": true,
+      "chineseMethod": "Chrome CDP IME composition, not native OS candidate UI",
+      "promptId": "fbbaa3be-d519-47f9-9021-1b8baa918ca6",
+      "genId": "c19009f5-ad42-4754-a002-5c0e52207c6a",
+      "noAutomaticSubmission": true
+    },
+    {
+      "check": "Native original import, explicit disconnected-reference Save and captured Save while editing",
+      "pass": true,
+      "savedUnsubmittedOriginals": 2,
+      "originalAssetIds": [
+        "asset-8cc6a7fb-ba96-4375-9f57-43d8116520e6",
+        "asset-7058aa61-9ce9-44df-9b0b-67ef464091b1"
+      ],
+      "capturedSnapshotPreservesNewerDirtyEdit": true,
+      "nativeBlobs": [
+        {
+          "blobId": "8dba9c59-d93e-4e4c-a041-49ac50d51d26",
+          "size": 12218,
+          "assetId": "asset-8cc6a7fb-ba96-4375-9f57-43d8116520e6",
+          "fileName": "original-a.png"
+        },
+        {
+          "blobId": "c25b9118-dd95-49ee-83a6-89675911600a",
+          "size": 39666,
+          "assetId": "asset-7058aa61-9ce9-44df-9b0b-67ef464091b1",
+          "fileName": "original-b.png"
+        }
+      ]
+    },
+    {
+      "check": "Separate browser restores saved originals, explicit reference ordering/manual Run and cloud CAS conflict",
+      "pass": true,
+      "independentProfileNoLocalBlob": true,
+      "orderedAssetIds": [
+        "asset-7058aa61-9ce9-44df-9b0b-67ef464091b1",
+        "asset-8cc6a7fb-ba96-4375-9f57-43d8116520e6"
+      ],
+      "reusedUploads": 2,
+      "fakeServerCASPreservesDraft": true
+    },
+    {
+      "check": "Manual rerun stable nonoverlapping results, reference viewer/download, focused keyboard isolation",
+      "pass": true,
+      "renderedResultBoxes": [
+        {
+          "id": "result:canvas-2b760077-f1cf-4615-b531-1e1f0269e25b-image-0",
+          "kind": "result",
+          "x": 827.7064819335938,
+          "y": 297.546875,
+          "w": 170.4892578125,
+          "h": 179.63711547851562
+        },
+        {
+          "id": "result:canvas-bf5de1cf-8a24-4331-893e-ff129ac82793-image-0",
+          "kind": "result",
+          "x": 827.7064819335938,
+          "y": 510.6584167480469,
+          "w": 170.4892578125,
+          "h": 179.63711547851562
+        }
+      ],
+      "noCanvasAddToChatAction": true,
+      "originalDownloadBytesMatch": true,
+      "downloadFile": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\studio-browser-resume02\\desktop-downloads\\narra-image.png"
+    },
+    {
+      "check": "Slow ACK across canvas switch and refresh recovery after lost ACK without POST replay",
+      "pass": true,
+      "originCanvasId": "fd25e4ff-9059-4f3a-be28-9183085209ff",
+      "emptyOtherCanvasId": "68b642df-1e41-430f-a918-dd14f56615d0",
+      "postCountBeforeRefresh": 4,
+      "postCountAfterRefresh": 4,
+      "recoveredViaReadOnlyLookup": true
+    },
+    {
+      "check": "Organization deletion keeps canonical fake works and suppresses late/remounted results",
+      "pass": true,
+      "canonicalFakeJobsRetained": 5,
+      "deletedResultId": "result:canvas-2b760077-f1cf-4615-b531-1e1f0269e25b-image-0",
+      "deletedGenerationLateResultNotAttached": true,
+      "canvasTombstoneRetained": "68b642df-1e41-430f-a918-dd14f56615d0",
+      "cancellationCalls": 0
+    },
+    {
+      "check": "Cross-account mode/local-IDB isolation and independent chat draft on mode return",
+      "pass": true,
+      "accountsUseDistinctNativeKeys": true,
+      "noGenerationDuringSwitch": true
+    },
+    {
+      "check": "Real drag handle at zoom 0.25/1/2 and native persisted negative-coordinate geometry",
+      "pass": true,
+      "dragResults": [
+        {
+          "canvasId": "1c6bd13a-4c73-4353-a9e1-f3d38abaa6ef",
+          "zoom": 0.25,
+          "before": {
+            "x": -100,
+            "y": -70
+          },
+          "after": {
+            "x": -20,
+            "y": -22
+          },
+          "expectedWorldDelta": {
+            "x": 80,
+            "y": 48
+          }
+        },
+        {
+          "canvasId": "810121db-af62-4155-bf1f-5d3e29a19430",
+          "zoom": 1,
+          "before": {
+            "x": -100,
+            "y": -70
+          },
+          "after": {
+            "x": -80,
+            "y": -58
+          },
+          "expectedWorldDelta": {
+            "x": 20,
+            "y": 12
+          }
+        },
+        {
+          "canvasId": "9ae94312-3722-47c8-9a31-e5c7dc049176",
+          "zoom": 2,
+          "before": {
+            "x": -100,
+            "y": -70
+          },
+          "after": {
+            "x": -90,
+            "y": -64
+          },
+          "expectedWorldDelta": {
+            "x": 10,
+            "y": 6
+          }
+        }
+      ],
+      "nativeIdbPositionsMatch": true
+    },
+    {
+      "check": "50/200-card actual layout observations, finite negative world positions and zoomed restore",
+      "pass": true,
+      "stress": [
+        {
+          "count": 50,
+          "observedSelectAndSettleMs": 1388,
+          "measures": {
+            "width": 1200,
+            "height": 701.453125,
+            "nodes": 50,
+            "world": "translate(110px, 90px) scale(0.25)",
+            "documentWidth": 1440
+          }
+        },
+        {
+          "count": 200,
+          "observedSelectAndSettleMs": 1385,
+          "measures": {
+            "width": 1200,
+            "height": 701.453125,
+            "nodes": 200,
+            "world": "translate(110px, 90px) scale(0.25)",
+            "documentWidth": 1440
+          }
+        }
+      ],
+      "capacityClaim": false
+    },
+    {
+      "check": "Phone read-only selection/pan/pinch/view, no graph mutations, phone chat manual generation",
+      "pass": true,
+      "device": "Chrome CDP 390x844 touch emulation, not physical phone/keyboard",
+      "cameraBefore": "translate(10.874px, 34.2395px) scale(0.322519)",
+      "cameraPanned": "translate(-37.126px, -5.7605px) scale(0.322519)",
+      "cameraPinched": "translate(-140.955px, -171.158px) scale(0.469956)",
+      "noReadonlyGraphMutation": true,
+      "phoneMeasures": {
+        "width": 390,
+        "documentWidth": 390,
+        "textareaWidth": 250
+      },
+      "phoneChatCalls": 1
+    },
+    {
+      "check": "Real lazy chunk failure, honest recovery guidance, preserved chat and explicit manual reload",
+      "pass": true,
+      "failedChunk": "/_next/static/chunks/0ewsk3hhr~ty~.js",
+      "manualReloadRequired": true,
+      "automaticReload": false,
+      "chatPreservedBeforeManualReload": true,
+      "acknowledgedDraftsRecovered": 1,
+      "generationReplay": false
+    },
+    {
+      "check": "Authoritative server deletion overrides a stale native draft without rematerializing results",
+      "pass": true,
+      "staleNativeCanvasId": "fd25e4ff-9059-4f3a-be28-9183085209ff",
+      "localTombstoneAcknowledged": true,
+      "noRunLookupOrRuntimeMaterialization": true,
+      "canonicalFakeJobsRetained": 68,
+      "generationReplay": false
+    },
+    {
+      "check": "New-device saved multi-run hydration reconciles every complete terminal batch once",
+      "pass": true,
+      "newDeviceWithoutLocalDraft": true,
+      "canvasId": "e707d0c1-ee81-42f6-a353-0a7dfb459397",
+      "terminalImageCounts": [
+        2,
+        1
+      ],
+      "stableResults": 3,
+      "outputsHandledTogether": true,
+      "generationReplay": false
+    }
+  ],
+  "apiErrors": [],
+  "rawReport": {
+    "path": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\studio-browser-resume02\\results.json",
+    "sha256": "ba045dfbd868b9442ccc5ee41b598248a44498741fdbfba703ed9ab21b05a10f"
+  },
+  "browsers": [
+    {
+      "name": "desktop",
+      "chrome": "Chrome/156.0.8078.48",
+      "exceptions": [],
+      "consoleErrors": [],
+      "blocked": [],
+      "downloads": [
+        {
+          "guid": "c3d78fcd-298b-41d0-9998-52d459941e34",
+          "totalBytes": 12218,
+          "receivedBytes": 0,
+          "state": "inProgress"
+        },
+        {
+          "guid": "c3d78fcd-298b-41d0-9998-52d459941e34",
+          "totalBytes": 12218,
+          "receivedBytes": 12218,
+          "state": "inProgress"
+        },
+        {
+          "guid": "c3d78fcd-298b-41d0-9998-52d459941e34",
+          "totalBytes": 12218,
+          "receivedBytes": 12218,
+          "state": "inProgress"
+        },
+        {
+          "guid": "c3d78fcd-298b-41d0-9998-52d459941e34",
+          "totalBytes": 12218,
+          "receivedBytes": 12218,
+          "state": "inProgress"
+        },
+        {
+          "guid": "c3d78fcd-298b-41d0-9998-52d459941e34",
+          "totalBytes": 12218,
+          "receivedBytes": 12218,
+          "state": "inProgress"
+        },
+        {
+          "guid": "c3d78fcd-298b-41d0-9998-52d459941e34",
+          "totalBytes": 12218,
+          "receivedBytes": 12218,
+          "state": "completed",
+          "filePath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\studio-browser-resume02\\desktop-downloads\\narra-image.png"
+        }
+      ],
+      "screenshots": [
+        "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\studio-browser-resume02\\desktop-desktop.png",
+        "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\studio-browser-resume02\\desktop-stress-200.png",
+        "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\studio-browser-resume02\\desktop-phone.png"
+      ]
+    },
+    {
+      "name": "separate-device",
+      "chrome": "Chrome/156.0.8078.48",
+      "exceptions": [],
+      "consoleErrors": [],
+      "blocked": [],
+      "downloads": [],
+      "screenshots": []
+    },
+    {
+      "name": "lazy-network",
+      "chrome": "Chrome/156.0.8078.48",
+      "exceptions": [],
+      "consoleErrors": [
+        {
+          "stage": "Real lazy chunk failure, honest recovery guidance, preserved chat and explicit manual reload",
+          "args": [
+            "ChunkLoadError: Failed to load chunk /_next/static/chunks/0ewsk3hhr~ty~.js from module 27521\n    at http://127.0.0.1:55838/_next/static/chunks/turbopack-13wsag-_6jjyr.js:1:6096\n    at async Promise.all (index 0)"
+          ]
+        }
+      ],
+      "blocked": [
+        {
+          "stage": "Real lazy chunk failure, honest recovery guidance, preserved chat and explicit manual reload",
+          "url": "http://127.0.0.1:55838/_next/static/chunks/0ewsk3hhr~ty~.js",
+          "reason": "intentional lazy chunk failure"
+        }
+      ],
+      "downloads": [],
+      "screenshots": [
+        "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\studio-browser-resume02\\lazy-network-chunk-recovery-guidance.png",
+        "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\studio-browser-resume02\\lazy-network-manual-reload-recovered.png"
+      ]
+    }
+  ],
+  "screenshotsVisuallyInspected": [
+    {
+      "path": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\studio-browser-resume02\\desktop-desktop.png",
+      "sha256": "3b88424340eee001840f60dc7491b7436ecfea12503387efd2824acacfbb4844"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\studio-browser-resume02\\desktop-phone.png",
+      "sha256": "fab726a0c5f2f5ac5992e65ff002742458987b72b441466984e4cdbc2008bbab"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\studio-browser-resume02\\lazy-network-chunk-recovery-guidance.png",
+      "sha256": "285559cea07f5861bfaee7fcf7b5ef8709bf3f4b3568f6dbbb81964fbc1da763"
+    }
+  ],
+  "notes": [
+    "Final resume02 desktop, phone and caught-chunk recovery screenshots were visually inspected by the coordinator.",
+    "Loopback fake HTTP and serialized identity, not authenticated real DB/Worker/provider/object-store/billing E2E.",
+    "Only the deliberately blocked chunk emits one caught console error; no normal page errors or unexpected external requests."
+  ]
+}

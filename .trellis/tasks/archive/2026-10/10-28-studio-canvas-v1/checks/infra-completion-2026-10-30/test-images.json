@@ -1,0 +1,51 @@
+{
+  "purpose": "User-authorized explicit provisioning of the four isolated test images; verification runners still forbid automatic pulls.",
+  "endpoint": "npipe:////./pipe/dockerDesktopLinuxEngine",
+  "verifiedImages": [
+    {
+      "image": "postgres:17-alpine",
+      "existed": false,
+      "id": "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b",
+      "digests": [
+        "postgres@sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b"
+      ],
+      "architecture": "amd64",
+      "os": "linux"
+    },
+    {
+      "image": "node:24.22.1-alpine",
+      "existed": false,
+      "id": "sha256:06d7adf3e0ef61a13f1d28682726366f97a15aa1888c934d3ecec86c33918b53",
+      "digests": [
+        "node@sha256:06d7adf3e0ef61a13f1d28682726366f97a15aa1888c934d3ecec86c33918b53"
+      ],
+      "architecture": "amd64",
+      "os": "linux"
+    },
+    {
+      "image": "golang:1.25-alpine",
+      "existed": false,
+      "id": "sha256:1ae0735f00daffa3aaf1363a5184c0d2dc55c78e3db4ec70241cdac97bf84b59",
+      "digests": [
+        "golang@sha256:1ae0735f00daffa3aaf1363a5184c0d2dc55c78e3db4ec70241cdac97bf84b59"
+      ],
+      "architecture": "amd64",
+      "os": "linux"
+    },
+    {
+      "image": "alpine:3.22",
+      "existed": false,
+      "id": "sha256:2e0b81d60597f449baa56dc25d355367869d2dca4cd57e866f1e2b52af3eb55f",
+      "digests": [
+        "alpine@sha256:2e0b81d60597f449baa56dc25d355367869d2dca4cd57e866f1e2b52af3eb55f"
+      ],
+      "architecture": "amd64",
+      "os": "linux"
+    }
+  ],
+  "containersCreated": false,
+  "pass": true,
+  "scratchRemoved": true,
+  "sourceReceipt": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\provision-test-images-01.json",
+  "sourceReceiptSha256": "5d1d1c53003a657d1398ccfda8ff69fc45239cd4a2e73fbb7ee29d55df0b98bc"
+}

@@ -1,0 +1,14 @@
+{
+  "owner": "5cade8be-30f4-4852-a181-da5f39fa8b82",
+  "root": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-5cade8be-30f4-4852-a181-da5f39fa8b82",
+  "predecessor": "C:/Users/Administrator/AppData/Local/Temp/narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea",
+  "repo": "E:/code/narra-image",
+  "createdAt": "2026-10-30T13:37:32.887Z",
+  "fixtures": [
+    {
+      "label": "01",
+      "fixture": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-5cade8be-30f4-4852-a181-da5f39fa8b82\\fixture-01",
+      "sourceIdentityCount": 224
+    }
+  ]
+}

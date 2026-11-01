@@ -1,0 +1,82 @@
+{
+  "time": "2026-10-31T02:03:50.552Z",
+  "app": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\browser-home-6123bb41\\app",
+  "changes": [
+    {
+      "file": "src/components/marketing/homepage/github-mark.tsx",
+      "from": null,
+      "to": "51ef3767e816a6aadad5b17b5eb6fb9287b6c1e2690b1839f8e00814cc7ff2dc"
+    },
+    {
+      "file": "src/components/marketing/homepage/home-header.tsx",
+      "from": "8ab846998659699ae7ca3bdf2250ae2dff1b82c32cd4475105bb5d380e6ab2dd",
+      "to": "1a3c642a88d8a1fda0d384efdcbb19f559e7b02f104caa961e366f0b7e3b2bdb"
+    },
+    {
+      "file": "src/components/marketing/homepage/home-mobile-nav.tsx",
+      "from": "b4b719d41b3084e396f821f10660ef1929f3283a200ae08b10781760632d2e3c",
+      "to": "2fc6565035b449c3592c1d54cff5dde63fef0fa376174acf5e7220559502df81"
+    },
+    {
+      "file": "src/components/marketing/homepage/home-motion-provider.tsx",
+      "from": "891100e030729ecef6ce3f0ecf57eed1e90c44a1b7d72c4f16b7d4ef5f57e914",
+      "to": "e20e96cd3ca4bd357383a0448ee9511c1dc7e3b330ccbbc5e48cbe2650dbba60"
+    },
+    {
+      "file": "src/components/marketing/homepage/hooks/use-featured-gallery.ts",
+      "from": "f28efdb66b1f0c4d0b5f3e733000eb8e8223bbd0f0b801b6ca22f8e3c9a983cc",
+      "to": "ee84e3dc46c6eac7548c4039d2a7884bdab9dcefdb65dd7c29a634a67674f95e"
+    },
+    {
+      "file": "src/components/marketing/homepage/hooks/use-hero-scene.ts",
+      "from": "cc603a6def8367599230f7a94eba97d85f08577a6f218c973685bf2bd9364796",
+      "to": "f8b7aea6b7ed073cbf57386c67a50fc99e81016b3016d8efcdf5ce33ca555d20"
+    },
+    {
+      "file": "src/tests/unit/featured-gallery-likes.test.tsx",
+      "from": null,
+      "to": "f5e8b104426677edb1b23c01eef1361e0dd27e1e23b438f6c3373df9dce0c20b"
+    },
+    {
+      "file": "src/tests/unit/featured-response-validation.test.ts",
+      "from": null,
+      "to": "ff255a964935b072d1ef8b8fff3cdf4de5e69c42b8f1ba854386204d5730664b"
+    },
+    {
+      "file": "src/tests/unit/helpers/gallery-fixtures.ts",
+      "from": "e7cd607d94195045aefd162b2738bad504348d4b0822dd58a84e8db31405c6aa",
+      "to": "9ddf2826258a3d7df997e0b8d683b995138ed1ecc5c837e1e739d51490a45e8e"
+    },
+    {
+      "file": "src/tests/unit/helpers/homepage-motion-fixtures.ts",
+      "from": null,
+      "to": "ee6f8fa7e8076caddd16dbdbcd09bdab503b12f8889701103b1852de5b8897e6"
+    },
+    {
+      "file": "src/tests/unit/homepage-header-footer.test.tsx",
+      "from": null,
+      "to": "8c8f364ae7da03fa91454b2977c85ccf2009ddb50f02c3c99e69cee89979587a"
+    },
+    {
+      "file": "src/tests/unit/homepage-hero.test.tsx",
+      "from": null,
+      "to": "e479fa4f5ad05e75ea3e7427b1372ed785a4ce586fa01f7177e04dfffbb5849d"
+    },
+    {
+      "file": "src/tests/unit/homepage-motion.test.tsx",
+      "from": null,
+      "to": "2ed2b11d18644deca5771ff31d5bb6356caba240692b8399976bee5d6ab53621"
+    },
+    {
+      "file": "src/tests/unit/homepage-page.test.tsx",
+      "from": null,
+      "to": "4649b8704f0ad34f239ea18f3dce8b44ba6375d6140f10e285a93066fcf8bdd5"
+    },
+    {
+      "file": "src/tests/unit/use-featured-gallery.test.tsx",
+      "from": "192392e30b11a9ad34f5ec811eb9d02353eaf1eea16b876adc0d46c4acdb3ee8",
+      "to": "34043aed1856726a7deb000b1d4175f191ca2d39d16a8d8abff941bb9a58bfe3"
+    }
+  ],
+  "note": "Controlled production-source refresh. All prior build/browser verdicts invalid until rebuilt and rerun."
+}

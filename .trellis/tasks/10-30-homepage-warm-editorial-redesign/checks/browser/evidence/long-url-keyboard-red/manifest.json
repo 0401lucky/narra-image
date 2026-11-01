@@ -1,0 +1,7 @@
+{
+  "runId": "home-1793501011855",
+  "receiptId": "20261101T024331-script-ee48ab",
+  "sha256": "6175ddddd1136bd980ac53a7785dc4e2b505e5d445f5c86a3b4407ccd3fe0a32",
+  "bytes": 17823,
+  "finding": "New nativeTabTo helper sent successive native keys without waiting for observable drawer expansion; prior calibrated CDP helpers and product untouched. Cause awaits focused rerun."
+}

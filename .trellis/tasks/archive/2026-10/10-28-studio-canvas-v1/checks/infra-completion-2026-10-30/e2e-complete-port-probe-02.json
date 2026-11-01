@@ -1,0 +1,16 @@
+{
+  "label": "e2e-complete-port-probe-02",
+  "mode": "test",
+  "command": [
+    "node",
+    "C:/Users/Administrator/AppData/Local/Temp/narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea/react-flow-spike/e2e-port-probe.mjs"
+  ],
+  "cwd": "E:/code/narra-image",
+  "timeoutMs": 150000,
+  "code": 1,
+  "signal": null,
+  "timedOut": false,
+  "durationMs": 12762,
+  "stdoutPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\e2e-complete-port-probe-02.stdout.log",
+  "stderrPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\e2e-complete-port-probe-02.stderr.log"
+}

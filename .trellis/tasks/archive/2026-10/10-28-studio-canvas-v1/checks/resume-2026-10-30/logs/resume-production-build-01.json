@@ -1,0 +1,16 @@
+{
+  "label": "resume-production-build-01",
+  "mode": "build",
+  "command": [
+    "pnpm",
+    "build"
+  ],
+  "cwd": "E:\\code\\narra-image",
+  "timeoutMs": 600000,
+  "code": 1,
+  "signal": null,
+  "timedOut": false,
+  "durationMs": 46832,
+  "stdoutPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\resume-production-build-01.stdout.log",
+  "stderrPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\resume-production-build-01.stderr.log"
+}

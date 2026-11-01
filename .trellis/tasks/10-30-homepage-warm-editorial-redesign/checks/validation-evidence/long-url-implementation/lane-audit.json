@@ -1,0 +1,13 @@
+{
+  "checkedAt": "2026-11-01T02:30:31.371375+00:00",
+  "workspace": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\hhi-d6837226\\app",
+  "ownerMarkerValid": true,
+  "directTaskRuntimeChild": true,
+  "activeLock": false,
+  "dependencyLinksContained": true,
+  "existingSnapshotInputs": 807,
+  "snapshotModifications": [],
+  "liveGuardSha256": "bd9ec3da5da5787ffc8378f8ed97835428d4b5a9c80a21a099ccca2c4d077e55",
+  "copiedGuardSha256": "bd9ec3da5da5787ffc8378f8ed97835428d4b5a9c80a21a099ccca2c4d077e55",
+  "node": "D:\\node\\node.exe"
+}

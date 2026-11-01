@@ -1,0 +1,826 @@
+{
+  "recordedAt": "2026-10-30T04:12:52.637607+00:00",
+  "task": ".trellis/tasks/archive/2026-10/10-28-studio-dual-mode-canvas",
+  "status": "completed_archived_no_commit",
+  "sourceBaseline": "source-baseline.json",
+  "runs": [
+    {
+      "label": "parent-integration-studio-01",
+      "mode": "test",
+      "command": [
+        "pnpm",
+        "exec",
+        "vitest",
+        "run",
+        "src/tests/unit/generator-studio-session-history.test.tsx",
+        "src/tests/unit/generator-studio-conversations.test.tsx",
+        "src/tests/unit/generator-studio-origins.test.tsx",
+        "src/tests/unit/generator-studio-canvas.test.tsx",
+        "src/tests/unit/conversation-generations-api.test.ts",
+        "src/tests/unit/create-page-conversations.test.tsx",
+        "src/tests/unit/use-conversation-generations.test.tsx",
+        "--testTimeout=30000"
+      ],
+      "cwd": "E:/code/narra-image",
+      "timeoutMs": 180000,
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "durationMs": 11032,
+      "files": 7,
+      "tests": 124,
+      "archived": {
+        ".json": {
+          "file": "parent-integration-studio-01.json",
+          "sha256": "5a5e647f9096422acd19ee1189f2d4d14929953ffec0d303e3e69c1697af6e1b",
+          "bytes": 1063
+        },
+        ".stdout.log": {
+          "file": "parent-integration-studio-01.stdout.log",
+          "sha256": "ec32c95bff1d37aae410c4ddc6f3d1e84f9924b7b2f286b5e48ecb9ab823e68e",
+          "bytes": 2518
+        },
+        ".stderr.log": {
+          "file": "parent-integration-studio-01.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      }
+    },
+    {
+      "label": "parent-db-types-01",
+      "mode": "test",
+      "command": [
+        "pnpm",
+        "exec",
+        "tsc",
+        "--noEmit",
+        "--incremental",
+        "false"
+      ],
+      "cwd": "E:/code/narra-image",
+      "timeoutMs": 180000,
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "durationMs": 10285,
+      "archived": {
+        ".json": {
+          "file": "parent-db-types-01.json",
+          "sha256": "9c64ebe0ef4e35a03877aa1b4dc1822a4cff87671955bf6a93ce78886f402ddf",
+          "bytes": 629
+        },
+        ".stdout.log": {
+          "file": "parent-db-types-01.stdout.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        ".stderr.log": {
+          "file": "parent-db-types-01.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      }
+    },
+    {
+      "label": "parent-db-lint-01",
+      "mode": "test",
+      "command": [
+        "pnpm",
+        "lint"
+      ],
+      "cwd": "E:/code/narra-image",
+      "timeoutMs": 180000,
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "durationMs": 13136,
+      "archived": {
+        ".json": {
+          "file": "parent-db-lint-01.json",
+          "sha256": "14be1c6175d67b6934c27415b0afd3b9b7281baaf3abda3ce0d292a391be1ae7",
+          "bytes": 565
+        },
+        ".stdout.log": {
+          "file": "parent-db-lint-01.stdout.log",
+          "sha256": "5daf1d190f6e7a6339ad91d4ba48ff8657acaf01ac8c313e8213cfb2743df12a",
+          "bytes": 1405
+        },
+        ".stderr.log": {
+          "file": "parent-db-lint-01.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      }
+    },
+    {
+      "label": "parent-db-contracts-01",
+      "mode": "test",
+      "command": [
+        "pnpm",
+        "verify:canvas-contracts:db"
+      ],
+      "cwd": "E:/code/narra-image",
+      "timeoutMs": 420000,
+      "code": 2,
+      "signal": null,
+      "timedOut": false,
+      "durationMs": 24561,
+      "archived": {
+        ".json": {
+          "file": "parent-db-contracts-01.json",
+          "sha256": "a78e86cc36bc16bf7ecfcbe7a53ce432f8556fe584d3958399f13bd875eae6db",
+          "bytes": 602
+        },
+        ".stdout.log": {
+          "file": "parent-db-contracts-01.stdout.log",
+          "sha256": "36e7abffffad3178ddd80e80d85a6a8053a8c3467ebc3078ffa21c537ef093d8",
+          "bytes": 1152
+        },
+        ".stderr.log": {
+          "file": "parent-db-contracts-01.stderr.log",
+          "sha256": "4bfcbe8bceee4b8efc21a53686426ee282ccd4201fba7c9084db22c8e111247b",
+          "bytes": 142
+        }
+      },
+      "outcome": "UNMET: local Docker preflight",
+      "fullSqlCasesExecuted": 0,
+      "additiveSqlCasesExecuted": 0,
+      "resourcesCreated": false
+    },
+    {
+      "label": "parent-db-contracts-02",
+      "mode": "test",
+      "command": [
+        "pnpm",
+        "verify:canvas-contracts:db"
+      ],
+      "cwd": "E:/code/narra-image",
+      "timeoutMs": 420000,
+      "code": 2,
+      "signal": null,
+      "timedOut": false,
+      "durationMs": 1504,
+      "archived": {
+        ".json": {
+          "file": "parent-db-contracts-02.json",
+          "sha256": "a96b89c4e4913ef009a5e728dfd78185a75e598b8f11ab68a3ffcf215c8d87f6",
+          "bytes": 601
+        },
+        ".stdout.log": {
+          "file": "parent-db-contracts-02.stdout.log",
+          "sha256": "b22960cc20570dc0c913ef07b6008828e9fabcffe9193bb5f596434a0bda03c9",
+          "bytes": 1147
+        },
+        ".stderr.log": {
+          "file": "parent-db-contracts-02.stderr.log",
+          "sha256": "c31748a58d103ccb33e59d1e8c48ae620da68d6aad2e47969e51bb050c4b6e32",
+          "bytes": 285
+        }
+      },
+      "outcome": "UNMET: local Docker preflight",
+      "fullSqlCasesExecuted": 0,
+      "additiveSqlCasesExecuted": 0,
+      "resourcesCreated": false
+    },
+    {
+      "label": "parent-review-lint-01",
+      "mode": "test",
+      "command": [
+        "pnpm",
+        "lint"
+      ],
+      "cwd": "E:/code/narra-image",
+      "timeoutMs": 180000,
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "durationMs": 12551,
+      "reviewer": "independent trellis-check",
+      "archived": {
+        ".json": {
+          "file": "parent-review-lint-01.json",
+          "sha256": "bc88760e708cb2a0b443fbb10ead8458342dfbaf815d3e1efcb0128dbfd23835",
+          "bytes": 577
+        },
+        ".stdout.log": {
+          "file": "parent-review-lint-01.stdout.log",
+          "sha256": "5daf1d190f6e7a6339ad91d4ba48ff8657acaf01ac8c313e8213cfb2743df12a",
+          "bytes": 1405
+        },
+        ".stderr.log": {
+          "file": "parent-review-lint-01.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      }
+    },
+    {
+      "label": "parent-review-types-01",
+      "mode": "test",
+      "command": [
+        "pnpm",
+        "exec",
+        "tsc",
+        "--noEmit",
+        "--incremental",
+        "false"
+      ],
+      "cwd": "E:/code/narra-image",
+      "timeoutMs": 180000,
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "durationMs": 11248,
+      "reviewer": "independent trellis-check",
+      "archived": {
+        ".json": {
+          "file": "parent-review-types-01.json",
+          "sha256": "be13568e3d7986005bc0b730c7db43e7b94356087a161413e3954ced51d62b5f",
+          "bytes": 641
+        },
+        ".stdout.log": {
+          "file": "parent-review-types-01.stdout.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        ".stderr.log": {
+          "file": "parent-review-types-01.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      }
+    },
+    {
+      "label": "parent-review-studio-01",
+      "mode": "test",
+      "command": [
+        "pnpm",
+        "exec",
+        "vitest",
+        "run",
+        "src/tests/unit/generator-studio-session-history.test.tsx",
+        "src/tests/unit/generator-studio-conversations.test.tsx",
+        "src/tests/unit/generator-studio-origins.test.tsx",
+        "src/tests/unit/generator-studio-canvas.test.tsx",
+        "src/tests/unit/conversation-generations-api.test.ts",
+        "src/tests/unit/create-page-conversations.test.tsx",
+        "src/tests/unit/use-conversation-generations.test.tsx",
+        "--testTimeout=30000"
+      ],
+      "cwd": "E:/code/narra-image",
+      "timeoutMs": 180000,
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "durationMs": 10328,
+      "reviewer": "independent trellis-check",
+      "archived": {
+        ".json": {
+          "file": "parent-review-studio-01.json",
+          "sha256": "5192c5120a9469623c6bf474de4e39f1566ddeaad73c1f388e499616564d84d3",
+          "bytes": 1048
+        },
+        ".stdout.log": {
+          "file": "parent-review-studio-01.stdout.log",
+          "sha256": "e643917eedf2fdaafcd16ee7825cc99fc7c385525bf8c5769839d3a1b911d0f5",
+          "bytes": 3114
+        },
+        ".stderr.log": {
+          "file": "parent-review-studio-01.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      },
+      "files": 7,
+      "tests": 124
+    },
+    {
+      "label": "parent-db-contracts-03",
+      "mode": "test",
+      "command": [
+        "pnpm",
+        "verify:canvas-contracts:db"
+      ],
+      "cwd": "E:/code/narra-image",
+      "timeoutMs": 420000,
+      "code": 2,
+      "signal": null,
+      "timedOut": false,
+      "durationMs": 1386,
+      "archived": {
+        ".json": {
+          "file": "parent-db-contracts-03.json",
+          "sha256": "927a81118e9012ff1a5554dc9cacf93b91116275026325e8df1692d4e6a0a616",
+          "bytes": 601
+        },
+        ".stdout.log": {
+          "file": "parent-db-contracts-03.stdout.log",
+          "sha256": "27e12b227d1f132a00b6b34c18483e9b322c34d509495d854f30d5dd55e41d6f",
+          "bytes": 1147
+        },
+        ".stderr.log": {
+          "file": "parent-db-contracts-03.stderr.log",
+          "sha256": "c31748a58d103ccb33e59d1e8c48ae620da68d6aad2e47969e51bb050c4b6e32",
+          "bytes": 285
+        }
+      },
+      "outcome": "UNMET: local Docker Linux engine pipe absent",
+      "fullSqlCasesExecuted": 0,
+      "additiveSqlCasesExecuted": 0,
+      "resourcesCreated": false
+    },
+    {
+      "label": "parent-review-context-01",
+      "mode": "test",
+      "command": [
+        "python",
+        ".trellis/scripts/task.py",
+        "validate",
+        ".trellis/tasks/10-28-studio-dual-mode-canvas"
+      ],
+      "cwd": "E:/code/narra-image",
+      "timeoutMs": 120000,
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "durationMs": 129,
+      "archived": {
+        ".json": {
+          "file": "parent-review-context-01.json",
+          "sha256": "cf578837ddf8b9fa7814dc753c0c9360f90d71af721371ad10025ec822cdfb6a",
+          "bytes": 674
+        },
+        ".stdout.log": {
+          "file": "parent-review-context-01.stdout.log",
+          "sha256": "c06699364296ddcbf1a8ca88f0b60dd279e9828563f5d67735404a82a9fdbe8d",
+          "bytes": 258
+        },
+        ".stderr.log": {
+          "file": "parent-review-context-01.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      },
+      "recoveredAt": "2026-10-30T06:50:20.891181+00:00",
+      "executionSession": "01a18ace-337c-7c83-9540-b4b49ac3dcec"
+    },
+    {
+      "label": "parent-review-diff-01",
+      "mode": "test",
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "cwd": "E:/code/narra-image",
+      "timeoutMs": 120000,
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "durationMs": 94,
+      "archived": {
+        ".json": {
+          "file": "parent-review-diff-01.json",
+          "sha256": "a06254bf6f81fa6260c0b7b160af05ed502b75e21474a1815a0c073656a42b45",
+          "bytes": 588
+        },
+        ".stdout.log": {
+          "file": "parent-review-diff-01.stdout.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        ".stderr.log": {
+          "file": "parent-review-diff-01.stderr.log",
+          "sha256": "fc9f4bb36e2799e0beec4628e94345348a982d69fdc5e3cb22fe04c4c8b17966",
+          "bytes": 964
+        }
+      },
+      "recoveredAt": "2026-10-30T06:50:20.891181+00:00",
+      "executionSession": "01a18ace-337c-7c83-9540-b4b49ac3dcec"
+    },
+    {
+      "label": "parent-docker-ready-01",
+      "mode": "test",
+      "command": [
+        "docker",
+        "--host",
+        "npipe:////./pipe/dockerDesktopLinuxEngine",
+        "info",
+        "--format",
+        "{{.ServerVersion}}"
+      ],
+      "cwd": "E:/code/narra-image",
+      "timeoutMs": 20000,
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "durationMs": 2033,
+      "archived": {
+        ".json": {
+          "file": "parent-docker-ready-01.json",
+          "sha256": "897d61e7def4e696711ba58dce8f83337055343f74e37ff2d6169f3c9f82dde0",
+          "bytes": 685
+        },
+        ".stdout.log": {
+          "file": "parent-docker-ready-01.stdout.log",
+          "sha256": "3795a4b1e2c6937a65f1be5ac40e8c7998963c6077c5cb1d19874a2d2474db02",
+          "bytes": 7
+        },
+        ".stderr.log": {
+          "file": "parent-docker-ready-01.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      },
+      "recoveredAt": "2026-10-30T06:50:20.891181+00:00",
+      "executionSession": "01a18ace-337c-7c83-9540-b4b49ac3dcec"
+    },
+    {
+      "label": "parent-db-contracts-04",
+      "mode": "test",
+      "command": [
+        "pnpm",
+        "verify:canvas-contracts:db"
+      ],
+      "cwd": "E:/code/narra-image",
+      "timeoutMs": 420000,
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "durationMs": 26780,
+      "archived": {
+        ".json": {
+          "file": "parent-db-contracts-04.json",
+          "sha256": "f35a6dc114fe3a35805f3b35f15167c99a4629c70d78f83c8c1283e94fbbce4a",
+          "bytes": 602
+        },
+        ".stdout.log": {
+          "file": "parent-db-contracts-04.stdout.log",
+          "sha256": "43181b1602be2a9798bfd7e8313407adbbe6403e99402b48b2e1c74e04b518d9",
+          "bytes": 27205
+        },
+        ".stderr.log": {
+          "file": "parent-db-contracts-04.stderr.log",
+          "sha256": "1e5d335bac7e2ea6f5a1528839abe25f1bc4f9c6f3df7cda8b31970115ecad0f",
+          "bytes": 865
+        }
+      },
+      "recoveredAt": "2026-10-30T06:50:20.891181+00:00",
+      "executionSession": "01a18ace-337c-7c83-9540-b4b49ac3dcec",
+      "outcome": "PASS: full and additive PostgreSQL histories plus exact owned cleanup",
+      "fullSqlCasesExecuted": 37,
+      "additiveSqlCasesExecuted": 37,
+      "resourcesCreated": true,
+      "cleanup": {
+        "wrapperExitCode": 0,
+        "containerName": "narra-canvas-contracts-42fe535ec6cf753d",
+        "containerId": "54bcce3a43dfe37a7a10244fdf26fe7bae4d8524ba509cef2ebc8eee5ffd454a",
+        "ownerToken": "e6eb4df4-e651-4ff0-9475-5aa7eb37357e",
+        "exactContainerRemovalAndAbsenceLogged": true,
+        "volumesDeleted": false,
+        "scratchPathsVerifiedAbsent": [
+          "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-contracts-prisma-4wYPel",
+          "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-contracts-prisma-fPiObn",
+          "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-local-docker-u3fHqC"
+        ],
+        "scratchCheckedAt": "2026-10-30T06:50:20.891181+00:00",
+        "liveDockerProbeRepeated": false
+      }
+    },
+    {
+      "label": "parent-final-review-lint-01",
+      "mode": "test",
+      "command": [
+        "pnpm",
+        "lint"
+      ],
+      "cwd": "E:/code/narra-image",
+      "timeoutMs": 180000,
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "durationMs": 18379,
+      "archived": {
+        ".json": {
+          "file": "parent-final-review-lint-01.json",
+          "sha256": "5e23c3c8a9dcfa316cd16cc1e2536cc26917d0b821188fdc78149308a8312bd6",
+          "bytes": 595
+        },
+        ".stdout.log": {
+          "file": "parent-final-review-lint-01.stdout.log",
+          "sha256": "5daf1d190f6e7a6339ad91d4ba48ff8657acaf01ac8c313e8213cfb2743df12a",
+          "bytes": 1405
+        },
+        ".stderr.log": {
+          "file": "parent-final-review-lint-01.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      },
+      "reviewer": "final_sql_review",
+      "outcome": "PASS",
+      "parentSession": "01a18bb2-c738-73a2-8981-78e9bc08b772"
+    },
+    {
+      "label": "parent-final-review-types-01",
+      "mode": "test",
+      "command": [
+        "pnpm",
+        "exec",
+        "tsc",
+        "--noEmit",
+        "--incremental",
+        "false"
+      ],
+      "cwd": "E:/code/narra-image",
+      "timeoutMs": 180000,
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "durationMs": 15864,
+      "archived": {
+        ".json": {
+          "file": "parent-final-review-types-01.json",
+          "sha256": "31b88ad69d3d646b7eed3c87e6b1236eadce58dc681753c177aeef8560c6fc38",
+          "bytes": 659
+        },
+        ".stdout.log": {
+          "file": "parent-final-review-types-01.stdout.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        ".stderr.log": {
+          "file": "parent-final-review-types-01.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      },
+      "reviewer": "final_sql_review",
+      "outcome": "PASS",
+      "parentSession": "01a18bb2-c738-73a2-8981-78e9bc08b772"
+    },
+    {
+      "label": "parent-final-review-studio-01",
+      "mode": "test",
+      "command": [
+        "pnpm",
+        "exec",
+        "vitest",
+        "run",
+        "src/tests/unit/generator-studio-session-history.test.tsx",
+        "src/tests/unit/generator-studio-conversations.test.tsx",
+        "src/tests/unit/generator-studio-origins.test.tsx",
+        "src/tests/unit/generator-studio-canvas.test.tsx",
+        "src/tests/unit/conversation-generations-api.test.ts",
+        "src/tests/unit/create-page-conversations.test.tsx",
+        "src/tests/unit/use-conversation-generations.test.tsx",
+        "--testTimeout=30000"
+      ],
+      "cwd": "E:/code/narra-image",
+      "timeoutMs": 180000,
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "durationMs": 15358,
+      "archived": {
+        ".json": {
+          "file": "parent-final-review-studio-01.json",
+          "sha256": "ac034a7b2f1d99b6666e87a18c5397dbf779711d9479744da5dbaec12abdbc2b",
+          "bytes": 1066
+        },
+        ".stdout.log": {
+          "file": "parent-final-review-studio-01.stdout.log",
+          "sha256": "6ede326b7e90da560d370ba9415be089b95c01db492b9b28693b3a52ccab4008",
+          "bytes": 3482
+        },
+        ".stderr.log": {
+          "file": "parent-final-review-studio-01.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      },
+      "reviewer": "final_sql_review",
+      "outcome": "PASS",
+      "parentSession": "01a18bb2-c738-73a2-8981-78e9bc08b772"
+    },
+    {
+      "label": "parent-final-review-context-01",
+      "mode": "test",
+      "command": [
+        "python",
+        ".trellis/scripts/task.py",
+        "validate",
+        ".trellis/tasks/10-28-studio-dual-mode-canvas"
+      ],
+      "cwd": "E:/code/narra-image",
+      "timeoutMs": 30000,
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "durationMs": 139,
+      "archived": {
+        ".json": {
+          "file": "parent-final-review-context-01.json",
+          "sha256": "9ca0b4bc03e545f19e0ac4b475127b0518b87d38c246d447644fa65ae6a24beb",
+          "bytes": 691
+        },
+        ".stdout.log": {
+          "file": "parent-final-review-context-01.stdout.log",
+          "sha256": "c06699364296ddcbf1a8ca88f0b60dd279e9828563f5d67735404a82a9fdbe8d",
+          "bytes": 258
+        },
+        ".stderr.log": {
+          "file": "parent-final-review-context-01.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      },
+      "reviewer": "final_sql_review",
+      "outcome": "PASS",
+      "parentSession": "01a18bb2-c738-73a2-8981-78e9bc08b772"
+    },
+    {
+      "label": "parent-final-review-diff-01",
+      "mode": "test",
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "cwd": "E:/code/narra-image",
+      "timeoutMs": 30000,
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "durationMs": 111,
+      "archived": {
+        ".json": {
+          "file": "parent-final-review-diff-01.json",
+          "sha256": "4a57af32cc051ea70686cc4fc6205f5cc05b305a6fb8d3b197753a51062950b6",
+          "bytes": 606
+        },
+        ".stdout.log": {
+          "file": "parent-final-review-diff-01.stdout.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        ".stderr.log": {
+          "file": "parent-final-review-diff-01.stderr.log",
+          "sha256": "fc9f4bb36e2799e0beec4628e94345348a982d69fdc5e3cb22fe04c4c8b17966",
+          "bytes": 964
+        }
+      },
+      "reviewer": "final_sql_review",
+      "outcome": "PASS",
+      "parentSession": "01a18bb2-c738-73a2-8981-78e9bc08b772"
+    },
+    {
+      "label": "parent-closeout-review-context-01",
+      "mode": "test",
+      "command": [
+        "python",
+        ".trellis/scripts/task.py",
+        "validate",
+        ".trellis/tasks/10-28-studio-dual-mode-canvas"
+      ],
+      "cwd": "E:/code/narra-image",
+      "timeoutMs": 30000,
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "durationMs": 120,
+      "archived": {
+        ".json": {
+          "file": "parent-closeout-review-context-01.json",
+          "sha256": "9837840252f55fe0ec93ab363d4312a21c85748bf5783468de7d2725d02852be",
+          "bytes": 700
+        },
+        ".stdout.log": {
+          "file": "parent-closeout-review-context-01.stdout.log",
+          "sha256": "c06699364296ddcbf1a8ca88f0b60dd279e9828563f5d67735404a82a9fdbe8d",
+          "bytes": 258
+        },
+        ".stderr.log": {
+          "file": "parent-closeout-review-context-01.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      },
+      "parentSession": "01a18bb2-c738-73a2-8981-78e9bc08b772",
+      "reviewer": "final_sql_review",
+      "outcome": "PASS"
+    },
+    {
+      "label": "parent-closeout-review-diff-01",
+      "mode": "test",
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "cwd": "E:/code/narra-image",
+      "timeoutMs": 30000,
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "durationMs": 99,
+      "archived": {
+        ".json": {
+          "file": "parent-closeout-review-diff-01.json",
+          "sha256": "483d4e2fdb9bdb45838c76bab4988e83b0f3f970195f633dd6ad4df53084ce26",
+          "bytes": 614
+        },
+        ".stdout.log": {
+          "file": "parent-closeout-review-diff-01.stdout.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        ".stderr.log": {
+          "file": "parent-closeout-review-diff-01.stderr.log",
+          "sha256": "fc9f4bb36e2799e0beec4628e94345348a982d69fdc5e3cb22fe04c4c8b17966",
+          "bytes": 964
+        }
+      },
+      "parentSession": "01a18bb2-c738-73a2-8981-78e9bc08b772",
+      "reviewer": "final_sql_review",
+      "outcome": "PASS"
+    }
+  ],
+  "browserSourceApplicability": {
+    "checked": 215,
+    "mismatches": [],
+    "rerun": false
+  },
+  "isolation": {
+    "realDotenvRead": false,
+    "developmentOrProductionDb": false,
+    "realProviderOrS3": false,
+    "phoneEditorActivated": false,
+    "commitPushDeploy": false
+  },
+  "pending": [],
+  "updatedAt": "2026-10-30T07:57:38.728423+00:00",
+  "latestSourceAudit": "source-audit-closeout-01.json",
+  "implementedSqlCases": {
+    "preservedOriginalCases": 32,
+    "addedCases": 5,
+    "expectedPerHistory": 37,
+    "fullExecuted": 37,
+    "additiveExecuted": 37,
+    "gate": "PASS",
+    "receipt": "parent-db-contracts-04"
+  },
+  "independentQualitySourceSha256": "c11543353646b5d61c4ec1170d02eecc9de4669774b9702f4b58e4b95da0c31c",
+  "sqlPreflightAttempts": 3,
+  "resumedFromSession": "01a18ace-337c-7c83-9540-b4b49ac3dcec",
+  "sqlWrapperAttempts": 4,
+  "continuationSession": "01a18bb2-c738-73a2-8981-78e9bc08b772",
+  "completedAcceptanceCriteria": [
+    "AC1",
+    "AC2",
+    "AC3",
+    "AC4",
+    "AC5",
+    "AC6",
+    "AC7",
+    "AC8",
+    "AC9",
+    "AC10",
+    "AC11",
+    "AC12",
+    "AC13",
+    "AC14",
+    "AC15",
+    "AC16",
+    "AC17"
+  ],
+  "acceptanceScope": "approved local/automated gates and source-matching reused child evidence; manual/real-service/release limits retained",
+  "finalIndependentReview": {
+    "file": "../integration-sql-final-review.md",
+    "verdict": "PASS",
+    "confirmedSourceDefects": 0,
+    "unresolvedRequiredGates": 0
+  },
+  "specSync": {
+    "files": [
+      ".trellis/spec/frontend/canvas-studio.md",
+      ".trellis/spec/operations/canvas-contracts.md"
+    ],
+    "change": "real pagination and deletion-to-works regression inventory only; no product contract change"
+  },
+  "closeoutDocumentReview": {
+    "verdict": "PASS",
+    "file": "../integration-sql-final-review.md",
+    "sha256": "005f994b4f66544e4c99c80da80b1296f00abc6797f9d19d6d9513c3bb638fff"
+  },
+  "archiveAudit": "archive-audit.json",
+  "activeTaskAtExecution": ".trellis/tasks/10-28-studio-dual-mode-canvas",
+  "archive": {
+    "path": ".trellis/tasks/archive/2026-10/10-28-studio-dual-mode-canvas",
+    "noCommit": true,
+    "archiveReceipt": "parent-archive-01.json",
+    "journalReceipt": "parent-journal-01.json",
+    "audit": "archive-audit.json"
+  }
+}

@@ -1,0 +1,256 @@
+{
+  "runId": "home-1793420304347",
+  "mode": "home",
+  "filter": "^(H3|H4|C2-C3|C3-guest|H2-real-three-scene-decode-layout-390)",
+  "evidence": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\browser\\evidence\\home-1793420304347",
+  "app": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\browser-hero-resume-72e89a9f\\app",
+  "checks": [
+    {
+      "id": "C2-C3-actual-remix-saved-canvas-then-chat",
+      "passed": true,
+      "durationMs": 10351,
+      "detail": {
+        "selected": "公开作品 001：晨光穿过纸窗，温暖的纹理与安静的空气。\n完整正向提示词 + & # / ? = %，不包含模型或负向提示词。",
+        "preservedCanvas": true,
+        "noMutation": true,
+        "successive": "作者未公开提示词"
+      }
+    },
+    {
+      "id": "C3-guest-real-login-return-reselect-no-continuation",
+      "passed": true,
+      "durationMs": 10070,
+      "detail": {
+        "guestSelectionResumed": false,
+        "reselected": "home-005",
+        "actualAuthRoute": true
+      }
+    },
+    {
+      "id": "H2-real-three-scene-decode-layout-390",
+      "passed": true,
+      "durationMs": 9760,
+      "detail": {
+        "states": [
+          {
+            "id": "film",
+            "state": "ready",
+            "source": "/marketing/home/bookshop-light-v1.png",
+            "alt": "旧书店里，黄昏光束穿过百叶窗，照亮暖金色的浮尘",
+            "natural": [
+              1448,
+              1086
+            ],
+            "attributes": [
+              1448,
+              1086
+            ],
+            "rendered": {
+              "x": 31,
+              "y": 741.9375,
+              "width": 328,
+              "height": 246,
+              "top": 741.9375,
+              "right": 359,
+              "bottom": 987.9375,
+              "left": 31
+            },
+            "layout": [
+              328,
+              246
+            ],
+            "objectFit": "cover",
+            "objectPosition": "50% 50%",
+            "complete": true,
+            "selected": [
+              "胶片光影"
+            ],
+            "prompt": "黄昏穿过旧书店百叶窗的丁达尔光束，微尘在暖金空气中漂浮，王家卫电影胶片颗粒感，柔和景深，叙事感构图",
+            "typed": "黄昏穿过旧书店百叶窗的丁达尔光束，微尘在暖金空气中",
+            "frameText": "Narra Studio · 叙事光影画布胶片光影绘本叙事东方美学风格示意 · 黄金时刻逆光局部补光 · 示意视觉语言 · StyleEditorial · 胶片光影固定示意图 · 非模型参数4:3 · 叙事示意画幅复用画面灵感黄昏穿过旧书店百叶窗的丁达尔光束，微尘在暖金空气中漂浮，王家卫电影胶片颗粒感，柔和景深，叙事感构图黄昏穿过旧书店百叶窗的丁达尔光束，微尘在暖金空气中",
+            "opacity": 1,
+            "animation": "homepage-module__tSg5yW__sceneAppear",
+            "animationState": "running",
+            "viewport": {
+              "width": 328,
+              "height": 246,
+              "left": 31,
+              "right": 359
+            },
+            "overflow": false
+          },
+          {
+            "id": "storybook",
+            "state": "ready",
+            "source": "/marketing/home/lantern-fox-v1.png",
+            "alt": "小狐狸提着暖黄灯笼走过迷雾森林，水彩纸纹中点缀着星光",
+            "natural": [
+              1448,
+              1086
+            ],
+            "attributes": [
+              1448,
+              1086
+            ],
+            "rendered": {
+              "x": 27.738143920898438,
+              "y": 194.49111938476562,
+              "width": 334.523681640625,
+              "height": 250.89276123046875,
+              "top": 194.49111938476562,
+              "right": 362.26182556152344,
+              "bottom": 445.3838806152344,
+              "left": 27.738143920898438
+            },
+            "layout": [
+              328,
+              246
+            ],
+            "objectFit": "cover",
+            "objectPosition": "50% 50%",
+            "complete": true,
+            "selected": [
+              "绘本叙事"
+            ],
+            "prompt": "提着暖黄煤油灯穿过迷雾森林的小狐狸，宫崎骏式温暖手绘水彩质感，星光点缀夜空，细腻纸张纹理",
+            "typed": "提着暖黄",
+            "frameText": "Narra Studio · 叙事光影画布胶片光影绘本叙事东方美学风格示意 · 手绘水彩肌理局部补光 · 示意视觉语言 · StyleWarm Fable · 绘本笔触固定示意图 · 非模型参数4:3 · 叙事示意画幅复用画面灵感提着暖黄煤油灯穿过迷雾森林的小狐狸，宫崎骏式温暖手绘水彩质感，星光点缀夜空，细腻纸张纹理提着暖黄",
+            "opacity": 0.562435,
+            "animation": "homepage-module__tSg5yW__sceneAppear",
+            "animationState": "running",
+            "viewport": {
+              "width": 328,
+              "height": 246,
+              "left": 31,
+              "right": 359
+            },
+            "overflow": false
+          },
+          {
+            "id": "oriental",
+            "state": "ready",
+            "source": "/marketing/home/jiangnan-rain-v2.png",
+            "alt": "江南雨巷的檐角滴着雨，远处暖黄灯笼倒映在青石板上",
+            "natural": [
+              1448,
+              1086
+            ],
+            "attributes": [
+              1448,
+              1086
+            ],
+            "rendered": {
+              "x": 27.676849365234375,
+              "y": 194.4451446533203,
+              "width": 334.64630126953125,
+              "height": 250.98472595214844,
+              "top": 194.4451446533203,
+              "right": 362.3231506347656,
+              "bottom": 445.42987060546875,
+              "left": 27.676849365234375
+            },
+            "layout": [
+              328,
+              246
+            ],
+            "objectFit": "cover",
+            "objectPosition": "50% 50%",
+            "complete": true,
+            "selected": [
+              "东方美学"
+            ],
+            "prompt": "江南雨巷檐角滴落的雨水，远处暖黄灯笼倒映在青石板水面，宋代美学克制留白，电影级冷暖色调对比",
+            "typed": "江南雨",
+            "frameText": "Narra Studio · 叙事光影画布胶片光影绘本叙事东方美学风格示意 · 东方水墨留白局部补光 · 示意视觉语言 · StyleOriental Ink · 东方韵味固定示意图 · 非模型参数4:3 · 叙事示意画幅复用画面灵感江南雨巷檐角滴落的雨水，远处暖黄灯笼倒映在青石板水面，宋代美学克制留白，电影级冷暖色调对比江南雨",
+            "opacity": 0.554211,
+            "animation": "homepage-module__tSg5yW__sceneAppear",
+            "animationState": "running",
+            "viewport": {
+              "width": 328,
+              "height": 246,
+              "left": 31,
+              "right": 359
+            },
+            "overflow": false
+          }
+        ],
+        "imageReceipts": [
+          {
+            "id": "film",
+            "url": "/marketing/home/bookshop-light-v1.png",
+            "available": true,
+            "sha256": "2813ac8f0db954142f0f4d7827150cd029bdfebc92818c111fa6cf3199c65387",
+            "bytes": 2335873,
+            "width": 1448,
+            "height": 1086,
+            "format": "png"
+          },
+          {
+            "id": "storybook",
+            "url": "/marketing/home/lantern-fox-v1.png",
+            "available": true,
+            "sha256": "dcc683910d1d92a4860068be8857db0204a74ff37895df5b5cebe9c2ec973cde",
+            "bytes": 3373661,
+            "width": 1448,
+            "height": 1086,
+            "format": "png"
+          },
+          {
+            "id": "oriental",
+            "url": "/marketing/home/jiangnan-rain-v2.png",
+            "available": true,
+            "sha256": "f3ded79890deb46ccafe50e13419dcab0626970f6a77790652b221f1e73354d4",
+            "bytes": 2638230,
+            "width": 1448,
+            "height": 1086,
+            "format": "png"
+          }
+        ],
+        "externalRequests": []
+      }
+    },
+    {
+      "id": "H3-current-full-copy-during-typewriter-1440",
+      "passed": false,
+      "durationMs": 3326,
+      "error": "Error: Control is occluded/clipped: [data-home-hero-frame] button 复用画面灵感 {\"left\":1195.536376953125,\"top\":512.822021484375,\"right\":1275.659423828125,\"bottom\":540.9119873046875,\"width\":80.123046875,\"height\":28.0899658203125,\"x\":1235.597900390625,\"y\":526.8670043945312,\"visible\":true,\"hit\":false,\"hitTag\":\"IMG\",\"hitText\":\"\",\"text\":\"复用画面灵感\",\"disabled\":false}\n    at BrowserPage.point (file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/cdp.mjs:232:11)\n    at async fastClick (file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/hero-image-checks.mjs:64:13)\n    at async file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/hero-image-checks.mjs:151:9\n    at async check (file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/run-browser.mjs:79:20)\n    at async heroImageChecks (file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/hero-image-checks.mjs:139:5)\n    at async fullHomepageChecks (file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/homepage-checks.mjs:576:3)\n    at async file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/run-browser.mjs:374:7"
+    },
+    {
+      "id": "H3-current-full-copy-during-typewriter-390",
+      "passed": true,
+      "durationMs": 2686,
+      "detail": {
+        "samples": [
+          {
+            "text": "提着暖黄煤油灯穿过迷雾森林的小狐狸，宫崎骏式温暖手绘水彩质感，星光点缀夜空，细腻纸张纹理",
+            "id": "storybook",
+            "typed": "提着暖黄煤油灯穿过迷"
+          },
+          {
+            "text": "江南雨巷檐角滴落的雨水，远处暖黄灯笼倒映在青石板水面，宋代美学克制留白，电影级冷暖色调对比",
+            "id": "oriental",
+            "typed": "江南雨"
+          },
+          {
+            "text": "黄昏穿过旧书店百叶窗的丁达尔光束，微尘在暖金空气中漂浮，王家卫电影胶片颗粒感，柔和景深，叙事感构图",
+            "id": "film",
+            "typed": "黄昏穿过"
+          }
+        ],
+        "pointApproaches": []
+      }
+    },
+    {
+      "id": "H4-rapid-requests-latest-committed-image-prompt",
+      "passed": false,
+      "durationMs": 10360,
+      "error": "Error: Control is occluded/clipped: [data-home-hero-frame] button 复用画面灵感 {\"left\":1195.536376953125,\"top\":512.822021484375,\"right\":1275.659423828125,\"bottom\":540.9119873046875,\"width\":80.123046875,\"height\":28.0899658203125,\"x\":1235.597900390625,\"y\":526.8670043945312,\"visible\":true,\"hit\":false,\"hitTag\":\"IMG\",\"hitText\":\"\",\"text\":\"复用画面灵感\",\"disabled\":false}\n    at BrowserPage.point (file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/cdp.mjs:232:11)\n    at async fastClick (file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/hero-image-checks.mjs:57:15)\n    at async file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/hero-image-checks.mjs:185:5\n    at async check (file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/run-browser.mjs:79:20)\n    at async heroImageChecks (file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/hero-image-checks.mjs:162:3)\n    at async fullHomepageChecks (file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/homepage-checks.mjs:576:3)\n    at async file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/run-browser.mjs:374:7"
+    }
+  ],
+  "passed": false,
+  "limitations": [
+    "Real Next/React/Chromium with synthetic DB only; not live DB/Worker/provider E2E.",
+    "Desktop Chrome CDP emulates viewport/touch; not physical mobile/native IME.",
+    "Local installed Node is not pinned Node24.22.1."
+  ]
+}

@@ -1,0 +1,266 @@
+"use client";
+
+import { Background, BackgroundVariant, ReactFlow, ReactFlowProvider, useReactFlow, type NodeTypes } from "@xyflow/react";
+import { ArrowLeft, Layers3, LoaderCircle, Plus, RefreshCw } from "lucide-react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+
+import { Alert } from "@/components/ui/alert";
+import { CanvasContractError, type CanvasPositionV1 } from "@/lib/canvas/contracts";
+import { cn } from "@/lib/utils";
+
+import type { CanvasController } from "../canvas/controller";
+import { canvasControllerErrorMessage, type CanvasActiveView } from "../canvas/controller-types";
+import { canvasFlowEdges, canvasFlowNodes, canvasInsertionPosition, canvasNodeViewChanges, isCanvasPortConnection, isCanvasSaveShortcut, isCanvasTextControl, updateCanvasNodeMeasurements } from "../canvas/renderer-adapter";
+import { CANVAS_ARIA_LABELS, CANVAS_CAMERA, CANVAS_CARD_SPACING } from "../canvas/renderer-constants";
+import type { CanvasFlowEdge, CanvasFlowNode, CanvasNodeActions, CanvasNodeMeasurements, CanvasStageProps } from "../canvas/renderer-types";
+import { CanvasDialog, type CanvasDialogIntent } from "./canvas-dialog";
+import { CanvasNodeInspector } from "./canvas-node-inspector";
+import { CanvasGenerationNode } from "./canvas-nodes/generation-node";
+import { CanvasPromptNode } from "./canvas-nodes/prompt-node";
+import { CanvasReferenceNode } from "./canvas-nodes/reference-node";
+import { CanvasResultNode } from "./canvas-nodes/result-node";
+import { CanvasSidebar } from "./canvas-sidebar";
+import { CanvasToolbar } from "./canvas-toolbar";
+
+import "@xyflow/react/dist/style.css";
+import styles from "./canvas-stage.module.css";
+
+export type { CanvasStageProps, CanvasImageTarget, CanvasNodeTarget } from "../canvas/renderer-types";
+
+const NODE_TYPES = { prompt: CanvasPromptNode, reference: CanvasReferenceNode, generation: CanvasGenerationNode, result: CanvasResultNode } satisfies NodeTypes;
+type Command = () => unknown;
+type CanvasErrorView = { ownerId: string; canvasId: string | null; message: string };
+type CanvasEditorProps = CanvasStageProps & {
+  controller: CanvasController;
+  active: CanvasActiveView;
+  report: (error: unknown, canvasId: string | null) => void;
+  execute: (canvasId: string, command: Command) => boolean;
+  invoke: (canvasId: string | null, command: Command) => Promise<boolean>;
+  onDialog: (intent: CanvasDialogIntent) => void;
+};
+
+function CanvasEditor({ snapshot, active, controller, channels, onViewImage, onDownloadImage, onOpenProviderSettings, report, execute, invoke, onDialog }: CanvasEditorProps) {
+  const canvasId = active.document.id;
+  const readOnly = snapshot.readOnly;
+  const editable = !readOnly && !active.document.deleting;
+  const viewportElement = useRef<HTMLDivElement>(null);
+  const clickConnectionAttempted = useRef(false);
+  const flow = useReactFlow<CanvasFlowNode, CanvasFlowEdge>();
+  const [selectedEdgeId, setSelectedEdgeId] = useState<string | null>(null);
+  const [closedInspector, setClosedInspector] = useState<string | null>(null);
+  const [measurements, setMeasurements] = useState<CanvasNodeMeasurements>(() => new Map());
+  const liveNodeIds = useMemo(() => new Set(active.scene.nodes.map((node) => node.id)), [active.scene.nodes]);
+  const liveMeasurements = updateCanvasNodeMeasurements(measurements, liveNodeIds);
+  if (liveMeasurements !== measurements) setMeasurements(liveMeasurements);
+  const reportError = useCallback((error: unknown) => report(error, canvasId), [canvasId, report]);
+  const acquirePreview = useCallback((nodeId: string) => controller.acquirePreview(canvasId, nodeId), [canvasId, controller]);
+  const actions = useMemo<CanvasNodeActions>(() => ({
+    updatePrompt: (nodeId, text) => editable && execute(canvasId, () => controller.updatePrompt(canvasId, nodeId, text)),
+    replaceReference: (nodeId, file) => { if (editable) execute(canvasId, () => controller.replaceReference(canvasId, nodeId, file)); },
+    acquirePreview,
+    removeNode: (nodeId) => { if (editable) execute(canvasId, () => controller.removeNode(canvasId, nodeId)); },
+    inspectNode: (nodeId) => { execute(canvasId, () => controller.selectNode(canvasId, nodeId)); setClosedInspector(null); },
+    runNode: (nodeId) => { if (editable) void invoke(canvasId, () => controller.runNode(canvasId, nodeId)); },
+    retryTransport: (runId) => { if (editable) void invoke(canvasId, () => controller.retryTransport(canvasId, runId)); },
+    recoverRuns: () => { void invoke(canvasId, () => controller.recoverRuns(canvasId)); },
+    refreshRuntime: () => { void invoke(canvasId, () => controller.refreshRuntime(canvasId)); },
+    viewImage: onViewImage,
+    downloadImage: onDownloadImage,
+    reportError,
+  }), [acquirePreview, canvasId, controller, editable, execute, invoke, onDownloadImage, onViewImage, reportError]);
+  const nodes = useMemo(() => canvasFlowNodes(active, !editable, actions, liveMeasurements), [active, editable, actions, liveMeasurements]);
+  const edges = useMemo(() => canvasFlowEdges(active.scene, !editable, selectedEdgeId), [active.scene, editable, selectedEdgeId]);
+  const selectedNode = active.scene.nodes.find((node) => node.id === active.selectedNodeId);
+  const inspectorNode = editable && selectedNode?.kind === "generation" && closedInspector !== selectedNode.id ? selectedNode : null;
+
+  const newPosition = (kind: "prompt" | "reference" | "generation"): CanvasPositionV1 => {
+    const bounds = viewportElement.current?.getBoundingClientRect();
+    const start = flow.screenToFlowPosition({ x: (bounds?.left ?? 0) + 50, y: (bounds?.top ?? 0) + 55 });
+    const prompt = active.scene.nodes.findLast((node) => node.kind === "prompt");
+    const preferred = kind === "generation" ? { x: (prompt?.position.x ?? start.x) + CANVAS_CARD_SPACING.column, y: prompt?.position.y ?? start.y }
+      : kind === "reference" && prompt ? { x: prompt.position.x, y: prompt.position.y + CANVAS_CARD_SPACING.height } : start;
+    return canvasInsertionPosition(active.scene.nodes.map((node) => node.position), preferred);
+  };
+  const importFiles = (files: File[], position = newPosition("reference")) => {
+    if (!editable) return;
+    const occupied = active.scene.nodes.map((node) => node.position);
+    for (const file of files) {
+      const next = canvasInsertionPosition(occupied, position);
+      if (!execute(canvasId, () => controller.importReference(canvasId, file, next))) break;
+      occupied.push(next);
+    }
+  };
+  const save = () => { if (editable) void invoke(canvasId, () => controller.saveCanvas(canvasId)); };
+  const addPrompt = () => { if (editable) execute(canvasId, () => controller.addPrompt(canvasId, newPosition("prompt"))); };
+  const connect = (sourceId: string, targetId: string) => editable && execute(canvasId, () => controller.connect(canvasId, sourceId, targetId));
+
+  return (
+    <div className={styles.editor} onKeyDownCapture={(event) => {
+      if (event.nativeEvent.isComposing || event.keyCode === 229) return;
+      const modifier = event.ctrlKey || event.metaKey;
+      if (!editable && isCanvasSaveShortcut(event)) { event.preventDefault(); event.stopPropagation(); }
+      else if (!editable && !isCanvasTextControl(event.target) && (["Delete", "Backspace"].includes(event.key) || (modifier && ["n", "v", "x", "z", "y"].includes(event.key.toLowerCase())))) { event.preventDefault(); event.stopPropagation(); }
+    }} onKeyDown={(event) => {
+      if (event.defaultPrevented || event.nativeEvent.isComposing || event.keyCode === 229 || !isCanvasSaveShortcut(event)) return;
+      // Bubble after a focused inspector field has committed or rejected its draft.
+      event.preventDefault(); event.stopPropagation(); save();
+    }}>
+      <CanvasToolbar document={active.document} readOnly={readOnly} zoom={active.viewport.zoom}
+        onRename={() => onDialog({ kind: "rename", canvasId, title: active.document.title })}
+        onDelete={() => onDialog({ kind: "delete", canvasId, title: active.document.title })}
+        onSave={save} onAddPrompt={addPrompt}
+        onAddGeneration={() => { if (editable) execute(canvasId, () => controller.addGeneration(canvasId, newPosition("generation"))); }}
+        onImport={importFiles}
+        onFit={() => { void invoke(canvasId, () => flow.fitView({ padding: CANVAS_CAMERA.fitPadding, minZoom: CANVAS_CAMERA.minZoom, maxZoom: 1 })); }}
+        onZoomIn={() => { void invoke(canvasId, () => flow.zoomIn()); }} onZoomOut={() => { void invoke(canvasId, () => flow.zoomOut()); }} />
+      <div className={styles.workspace}>
+        <div ref={viewportElement} className={styles.viewport} data-testid="canvas-viewport"
+          onKeyDownCapture={(event) => {
+            if (!editable || event.nativeEvent.isComposing || event.keyCode === 229 || event.ctrlKey || event.metaKey || event.altKey
+              || !["Delete", "Backspace"].includes(event.key) || isCanvasTextControl(event.target)
+              || (event.target instanceof Element && event.target.closest(".nokey, button, a"))) return;
+            event.preventDefault(); event.stopPropagation();
+            // React Flow's default Delete listener is document-global. Only a
+            // focused viewport may request removal through the controller adapter.
+            void invoke(canvasId, () => flow.deleteElements({ nodes: nodes.filter((node) => node.selected), edges: edges.filter((edge) => edge.selected) }));
+          }}
+          onDragOver={(event) => { if (Array.from(event.dataTransfer.types).includes("Files")) { event.preventDefault(); event.dataTransfer.dropEffect = editable ? "copy" : "none"; } }}
+          onDrop={(event) => {
+            const files = Array.from(event.dataTransfer.files);
+            if (!files.length && isCanvasTextControl(event.target)) return;
+            event.preventDefault(); event.stopPropagation();
+            if (editable && files.length) importFiles(files, flow.screenToFlowPosition({ x: event.clientX, y: event.clientY }));
+          }}
+          onPaste={(event) => {
+            const files = Array.from(event.clipboardData.files);
+            if (files.length || !editable) { event.preventDefault(); event.stopPropagation(); }
+            if (editable && files.length) importFiles(files);
+          }}>
+          <ReactFlow<CanvasFlowNode, CanvasFlowEdge> className={styles.flow} aria-label="节点画布" nodes={nodes} edges={edges} nodeTypes={NODE_TYPES}
+            viewport={active.viewport} onViewportChange={(viewport) => { execute(canvasId, () => controller.setViewport(canvasId, viewport)); }}
+            onNodesChange={(changes) => {
+              // Controlled Flow nodes must retain measured dimensions across
+              // snapshots. This cache belongs only to the mounted canvas renderer.
+              setMeasurements((current) => updateCanvasNodeMeasurements(current, liveNodeIds, changes));
+              for (const change of canvasNodeViewChanges(changes, active.selectedNodeId, !editable)) {
+                if (change.kind === "select") { execute(canvasId, () => controller.selectNode(canvasId, change.nodeId)); if (change.nodeId) setSelectedEdgeId(null); }
+                else if (change.kind === "move") execute(canvasId, () => controller.moveNode(canvasId, change.nodeId, change.position));
+                else execute(canvasId, () => controller.removeNode(canvasId, change.nodeId));
+              }
+            }}
+            onEdgesChange={(changes) => {
+              if (!editable) return;
+              for (const change of changes) {
+                if (change.type === "select") setSelectedEdgeId((current) => change.selected ? change.id : current === change.id ? null : current);
+                else if (change.type === "remove" && active.scene.edges.some((edge) => edge.id === change.id && edge.kind !== "output-provenance")) execute(canvasId, () => controller.disconnect(canvasId, change.id));
+              }
+            }}
+            onNodeClick={(_, node) => { execute(canvasId, () => controller.selectNode(canvasId, node.id)); setSelectedEdgeId(null); }}
+            onPaneClick={() => { execute(canvasId, () => controller.selectNode(canvasId, null)); setSelectedEdgeId(null); }}
+            onConnect={(connection) => {
+              clickConnectionAttempted.current = true;
+              if (!editable) return;
+              if (!isCanvasPortConnection(active.scene, connection)) { reportError(new CanvasContractError("CANVAS_INVALID_CONNECTION")); return; }
+              connect(connection.source, connection.target);
+            }}
+            isValidConnection={(connection) => editable && isCanvasPortConnection(active.scene, { source: connection.source, target: connection.target, sourceHandle: connection.sourceHandle ?? null, targetHandle: connection.targetHandle ?? null })}
+            onConnectEnd={(_, state) => { if (editable && !state.isValid && state.toNode) reportError(new CanvasContractError("CANVAS_INVALID_CONNECTION")); }}
+            onClickConnectStart={() => { clickConnectionAttempted.current = false; }}
+            onClickConnectEnd={(event) => {
+              if (editable && !clickConnectionAttempted.current && event.target instanceof Element && event.target.closest(".react-flow__handle")) reportError(new CanvasContractError("CANVAS_INVALID_CONNECTION"));
+            }}
+            nodesDraggable={editable} nodesConnectable={editable} nodesFocusable elementsSelectable edgesFocusable={editable} edgesReconnectable={false}
+            deleteKeyCode={null} selectionKeyCode={null} multiSelectionKeyCode={null}
+            connectOnClick={editable} panOnDrag zoomOnPinch zoomOnScroll preventScrolling
+            minZoom={CANVAS_CAMERA.minZoom} maxZoom={CANVAS_CAMERA.maxZoom} nodeDragThreshold={3}
+            autoPanOnNodeDrag={editable} autoPanOnConnect={editable}
+            ariaLabelConfig={readOnly ? { ...CANVAS_ARIA_LABELS, "node.a11yDescription.default": CANVAS_ARIA_LABELS["node.a11yDescription.keyboardDisabled"] } : CANVAS_ARIA_LABELS}>
+            <Background variant={BackgroundVariant.Dots} gap={24} size={1} color="rgba(113, 82, 58, 0.22)" />
+          </ReactFlow>
+          {active.scene.nodes.length === 0 && <div className={styles.emptyCanvas}>
+            <div className={styles.emptyCanvasIcon}><Layers3 aria-hidden className="size-8" /></div>
+            <p className={styles.emptyEyebrow}>一张空白，独立的灵感空间</p>
+            <h3>把想法连成画面</h3>
+            <p>{readOnly ? "此画布还没有节点。请在桌面端添加内容，手机可以查看已保存的画布。" : "添加提示词和生成节点，将它们连接后手动运行。参考图可选，画布不会导入其他对话或历史作品。"}</p>
+            {!readOnly && <button type="button" className={styles.saveButton} onClick={addPrompt} disabled={!editable}><Plus aria-hidden className="size-4" />添加第一个提示词</button>}
+          </div>}
+          <div className={styles.viewportHint}>{readOnly ? "双指缩放 · 拖动画布平移" : "拖动空白处平移 · 滚轮缩放 · 拖动卡片顶栏移动"}</div>
+          {active.hydrating && <p className={styles.hydrating} role="status"><LoaderCircle aria-hidden className="size-3 animate-spin" />正在读取图片与任务</p>}
+        </div>
+        {inspectorNode && <CanvasNodeInspector key={inspectorNode.id} active={active} node={inspectorNode} channels={channels}
+          onClose={() => setClosedInspector(inspectorNode.id)}
+          onParameters={(patch) => editable && execute(canvasId, () => controller.updateParameters(canvasId, inspectorNode.id, patch))}
+          onConnect={(sourceId) => connect(sourceId, inspectorNode.id)}
+          onDisconnect={(edgeId) => { if (editable) execute(canvasId, () => controller.disconnect(canvasId, edgeId)); }}
+          onReorder={(sourceIds) => { if (editable) execute(canvasId, () => controller.reorderInputs(canvasId, inspectorNode.id, sourceIds)); }}
+          onOpenProviderSettings={() => { if (editable) onOpenProviderSettings({ canvasId, nodeId: inspectorNode.id }); }} />}
+      </div>
+    </div>
+  );
+}
+
+export function CanvasStage(props: CanvasStageProps) {
+  const { snapshot, controller, onReturnToChat } = props;
+  const [failure, setFailure] = useState<CanvasErrorView | null>(null);
+  const [dialog, setDialog] = useState<CanvasDialogIntent | null>(null);
+  const lifetime = useRef({ live: false });
+  useEffect(() => { const scope = lifetime.current; scope.live = true; return () => { scope.live = false; }; }, []);
+  const report = useCallback((error: unknown, canvasId: string | null) => {
+    if (lifetime.current.live) setFailure({ ownerId: snapshot.ownerId, canvasId, message: canvasControllerErrorMessage(error) });
+  }, [snapshot.ownerId]);
+  const execute = useCallback((canvasId: string, command: Command): boolean => {
+    try { command(); return true; } catch (error) { report(error, canvasId); return false; }
+  }, [report]);
+  const invoke = useCallback(async (canvasId: string | null, command: Command): Promise<boolean> => {
+    if (lifetime.current.live) setFailure((current) => current?.ownerId === snapshot.ownerId && current.canvasId === canvasId ? null : current);
+    try { await command(); return true; } catch (error) { report(error, canvasId); return false; }
+  }, [report, snapshot.ownerId]);
+  const active = snapshot.active;
+  const activeError = failure?.ownerId === snapshot.ownerId && (failure.canvasId === null || failure.canvasId === snapshot.activeCanvasId) ? failure.message : null;
+  const errors = [...new Set([snapshot.error, active?.document.error, activeError].filter((message): message is string => Boolean(message)))];
+  const warnings = [...new Set([snapshot.warning, active?.document.warning].filter((message): message is string => Boolean(message)))];
+
+  if (!snapshot.enabled) return <section className={styles.unavailable}><Layers3 aria-hidden className="size-8" /><h2>画布暂未开放</h2><button type="button" className={styles.smallButton} onClick={onReturnToChat}><ArrowLeft aria-hidden className="size-4" />返回对话</button></section>;
+
+  return (
+    <section aria-label="画布工作区" className={cn(styles.stage, snapshot.readOnly && styles.readOnlyStage)}>
+      <CanvasSidebar snapshot={snapshot}
+        onNew={() => {
+          if (!controller || snapshot.readOnly) return;
+          const previousId = controller.getSnapshot().activeCanvasId;
+          const creation = controller.newCanvas();
+          // New publishes its local UUID before awaiting the account shell ACK.
+          const createdId = controller.getSnapshot().activeCanvasId;
+          void invoke(createdId !== previousId ? createdId : null, () => creation);
+        }}
+        onSelect={(canvasId) => { if (controller) void invoke(canvasId, () => controller.selectCanvas(canvasId)); }}
+        onLoadMore={() => { if (controller) void invoke(null, () => controller.loadMore()); }} />
+      <div className={styles.main}>
+        {(errors.length > 0 || warnings.length > 0) && <div className={styles.alerts}>
+          {errors.map((message) => <Alert key={message} onDismiss={message === activeError ? () => setFailure(null) : undefined}>{message}</Alert>)}
+          {warnings.map((message) => <Alert key={message} variant="warning">{message}</Alert>)}
+        </div>}
+        {active && controller ? <>
+          {!snapshot.readOnly && (active.document.cloudState === "conflict" || active.document.localState === "conflict") && <div className={styles.recoveryBar}><span>本地草稿已保留，不会自动覆盖账户版本。</span><button type="button" className={styles.smallButton} onClick={() => setDialog({ kind: "reload", canvasId: active.document.id, title: active.document.title })}>重新载入账户快照</button></div>}
+          {!snapshot.readOnly && active.document.shell !== "registered" && <div className={styles.recoveryBar}><span>此画布的账户登记尚未确认，草稿仍保留在此浏览器。</span><button type="button" className={styles.smallButton} onClick={() => { void invoke(active.document.id, () => controller.registerCanvas(active.document.id)); }}>重试登记</button></div>}
+          <ReactFlowProvider key={`${snapshot.ownerId}:${active.document.id}`}><CanvasEditor {...props} controller={controller} active={active} report={report} execute={execute} invoke={invoke} onDialog={setDialog} /></ReactFlowProvider>
+        </> : <div className={styles.unavailable}>
+          {!snapshot.ready || snapshot.loading ? <><LoaderCircle aria-hidden className="size-8 animate-spin" /><p role="status">正在读取画布…</p></> : <>
+            <Layers3 aria-hidden className="size-8" /><h2>{snapshot.activeCanvasId ? "画布暂时无法读取" : "选择一张画布开始"}</h2>
+            <p>{snapshot.readOnly ? "手机可以浏览已有画布，添加和生成请使用桌面端。" : "每张画布拥有独立的节点与草稿，不会加入其他对话内容。"}</p>
+            {snapshot.activeCanvasId && controller && <button type="button" className={styles.smallButton} onClick={() => { const canvasId = snapshot.activeCanvasId; if (canvasId) void invoke(canvasId, () => controller.selectCanvas(canvasId)); }}><RefreshCw aria-hidden className="size-4" />重试读取</button>}
+            <button type="button" className={styles.smallButton} onClick={onReturnToChat}><ArrowLeft aria-hidden className="size-4" />返回对话</button>
+          </>}
+        </div>}
+      </div>
+      {dialog && controller && !snapshot.readOnly && <CanvasDialog key={`${dialog.kind}:${dialog.canvasId}`} intent={dialog}
+        error={failure?.canvasId === dialog.canvasId ? failure.message : null}
+        onClose={() => setDialog((current) => current === dialog ? null : current)}
+        onConfirm={(title) => invoke(dialog.canvasId, () => {
+          if (dialog.kind === "rename") return controller.renameCanvas(dialog.canvasId, title);
+          if (dialog.kind === "delete") return controller.deleteCanvas(dialog.canvasId, true);
+          return controller.reloadAccountCanvas(dialog.canvasId, true);
+        })} />}
+    </section>
+  );
+}

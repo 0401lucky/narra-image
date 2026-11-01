@@ -1,0 +1,22 @@
+{
+  "time": "2026-11-01T01:30:17.645Z",
+  "app": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\hero-hit-independent-8725c17e\\app",
+  "changes": [
+    {
+      "file": "src/components/marketing/homepage/home-reveal.tsx",
+      "from": "8e44ba16847a3e503fed68638588dd2ff1bc28e199aaafa006d7db044f411762",
+      "to": "cbfcc21f6039c0d3a01ebb2bc2edb59ce22a1c023997d7aa080506d4090ff073"
+    },
+    {
+      "file": "src/tests/unit/homepage-motion.test.tsx",
+      "from": "1918e7063a4572d23b45b0898aca26861e4e665492b06ccf3d29c85d6d642ef0",
+      "to": "55732e133ea17eeb8539b791183dc0fc8112220980ea1a74877e7ad4b28d9092"
+    },
+    {
+      "file": "src/tests/unit/homepage-reveal.test.tsx",
+      "from": null,
+      "to": "8827b3f22fad96715027bd26a6395b9e44357e47d32c7bd859aa02a4d7a9a3fa"
+    }
+  ],
+  "note": "Controlled production-source refresh. All prior build/browser verdicts invalid until rebuilt and rerun."
+}

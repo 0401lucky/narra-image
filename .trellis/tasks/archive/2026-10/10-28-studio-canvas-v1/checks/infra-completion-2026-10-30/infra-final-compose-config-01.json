@@ -1,0 +1,16 @@
+{
+  "label": "infra-final-compose-config-01",
+  "mode": "test",
+  "command": [
+    "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-history-cleanup-20261029\\node-v24.22.1-win-x64\\node.exe",
+    "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\resume-compose-audit.mjs"
+  ],
+  "cwd": "E:\\code\\narra-image",
+  "timeoutMs": 100000,
+  "code": 0,
+  "signal": null,
+  "timedOut": false,
+  "durationMs": 4716,
+  "stdoutPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\infra-final-compose-config-01.stdout.log",
+  "stderrPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\infra-final-compose-config-01.stderr.log"
+}

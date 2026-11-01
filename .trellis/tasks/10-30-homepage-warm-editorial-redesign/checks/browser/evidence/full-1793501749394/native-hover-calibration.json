@@ -1,0 +1,304 @@
+[
+  {
+    "label": "viewport-sliver",
+    "before": {
+      "rect": {
+        "x": 80,
+        "y": 980,
+        "width": 400,
+        "height": 240,
+        "top": 980,
+        "right": 480,
+        "bottom": 1220,
+        "left": 80
+      },
+      "clip": {
+        "x": 80,
+        "y": 980,
+        "width": 440,
+        "height": 500,
+        "top": 980,
+        "right": 520,
+        "bottom": 1480,
+        "left": 80
+      },
+      "innerWidth": 1440,
+      "innerHeight": 1000,
+      "scrollY": 0,
+      "scrollTop": 0,
+      "events": []
+    },
+    "oldPoint": {
+      "x": 400,
+      "y": 1040
+    },
+    "after": {
+      "rect": {
+        "x": 80,
+        "y": 660,
+        "width": 400,
+        "height": 240,
+        "top": 660,
+        "right": 480,
+        "bottom": 900,
+        "left": 80
+      },
+      "clip": {
+        "x": 80,
+        "y": 660,
+        "width": 440,
+        "height": 500,
+        "top": 660,
+        "right": 520,
+        "bottom": 1160,
+        "left": 80
+      },
+      "innerWidth": 1440,
+      "innerHeight": 1000,
+      "scrollY": 320,
+      "scrollTop": 0,
+      "events": [
+        {
+          "type": "wheel",
+          "target": "",
+          "x": 1416,
+          "y": 500,
+          "trusted": true
+        },
+        {
+          "type": "pointermove",
+          "target": "calibration-hover",
+          "x": 400,
+          "y": 720,
+          "trusted": true
+        },
+        {
+          "type": "pointermove",
+          "target": "calibration-hover",
+          "x": 400,
+          "y": 720,
+          "trusted": true
+        }
+      ]
+    }
+  },
+  {
+    "label": "nested-clipping",
+    "before": {
+      "rect": {
+        "x": 80,
+        "y": 280,
+        "width": 400,
+        "height": 240,
+        "top": 280,
+        "right": 480,
+        "bottom": 520,
+        "left": 80
+      },
+      "clip": {
+        "x": 80,
+        "y": 120,
+        "width": 440,
+        "height": 180,
+        "top": 120,
+        "right": 520,
+        "bottom": 300,
+        "left": 80
+      },
+      "innerWidth": 1440,
+      "innerHeight": 1000,
+      "scrollY": 0,
+      "scrollTop": 0,
+      "events": []
+    },
+    "oldPoint": {
+      "x": 400,
+      "y": 340
+    },
+    "after": {
+      "rect": {
+        "x": 80,
+        "y": 132,
+        "width": 400,
+        "height": 240,
+        "top": 132,
+        "right": 480,
+        "bottom": 372,
+        "left": 80
+      },
+      "clip": {
+        "x": 80,
+        "y": 120,
+        "width": 440,
+        "height": 180,
+        "top": 120,
+        "right": 520,
+        "bottom": 300,
+        "left": 80
+      },
+      "innerWidth": 1440,
+      "innerHeight": 1000,
+      "scrollY": 0,
+      "scrollTop": 148,
+      "events": [
+        {
+          "type": "wheel",
+          "target": "calibration-hover",
+          "x": 300,
+          "y": 210,
+          "trusted": true
+        },
+        {
+          "type": "wheel",
+          "target": "calibration-hover",
+          "x": 300,
+          "y": 210,
+          "trusted": true
+        },
+        {
+          "type": "pointermove",
+          "target": "calibration-hover",
+          "x": 400,
+          "y": 192,
+          "trusted": true
+        },
+        {
+          "type": "pointermove",
+          "target": "calibration-hover",
+          "x": 400,
+          "y": 192,
+          "trusted": true
+        }
+      ]
+    }
+  },
+  {
+    "label": "cover-negative-control",
+    "before": {
+      "rect": {
+        "x": 80,
+        "y": 280,
+        "width": 400,
+        "height": 240,
+        "top": 280,
+        "right": 480,
+        "bottom": 520,
+        "left": 80
+      },
+      "clip": {
+        "x": 80,
+        "y": 120,
+        "width": 440,
+        "height": 180,
+        "top": 120,
+        "right": 520,
+        "bottom": 300,
+        "left": 80
+      },
+      "innerWidth": 1440,
+      "innerHeight": 1000,
+      "scrollY": 0,
+      "scrollTop": 0,
+      "events": []
+    },
+    "after": {
+      "rect": {
+        "x": 80,
+        "y": -1120,
+        "width": 400,
+        "height": 240,
+        "top": -1120,
+        "right": 480,
+        "bottom": -880,
+        "left": 80
+      },
+      "clip": {
+        "x": 80,
+        "y": -1280,
+        "width": 440,
+        "height": 180,
+        "top": -1280,
+        "right": 520,
+        "bottom": -1100,
+        "left": 80
+      },
+      "innerWidth": 1440,
+      "innerHeight": 1000,
+      "scrollY": 1400,
+      "scrollTop": 0,
+      "events": [
+        {
+          "type": "wheel",
+          "target": "calibration-cover",
+          "x": 300,
+          "y": 210,
+          "trusted": true
+        },
+        {
+          "type": "wheel",
+          "target": "calibration-cover",
+          "x": 300,
+          "y": 1,
+          "trusted": true
+        },
+        {
+          "type": "wheel",
+          "target": "calibration-cover",
+          "x": 300,
+          "y": 1,
+          "trusted": true
+        },
+        {
+          "type": "wheel",
+          "target": "calibration-cover",
+          "x": 300,
+          "y": 1,
+          "trusted": true
+        },
+        {
+          "type": "wheel",
+          "target": "calibration-cover",
+          "x": 300,
+          "y": 1,
+          "trusted": true
+        },
+        {
+          "type": "wheel",
+          "target": "calibration-cover",
+          "x": 300,
+          "y": 1,
+          "trusted": true
+        },
+        {
+          "type": "wheel",
+          "target": "calibration-cover",
+          "x": 300,
+          "y": 1,
+          "trusted": true
+        },
+        {
+          "type": "wheel",
+          "target": "calibration-cover",
+          "x": 300,
+          "y": 1,
+          "trusted": true
+        },
+        {
+          "type": "wheel",
+          "target": "calibration-cover",
+          "x": 300,
+          "y": 1,
+          "trusted": true
+        },
+        {
+          "type": "wheel",
+          "target": "calibration-cover",
+          "x": 300,
+          "y": 1,
+          "trusted": true
+        }
+      ]
+    },
+    "rejected": true
+  }
+]

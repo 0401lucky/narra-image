@@ -1,0 +1,16 @@
+[
+  {
+    "id": "C2-long-multibyte-url",
+    "label": "chinese8000",
+    "units": 8000,
+    "requestTargetBytes": 72015,
+    "status": 431,
+    "inputUnits": null,
+    "matchesExistingSlice": false,
+    "directNavigationPassed": false,
+    "approvedGalleryFallbackVerified": false,
+    "classification": "unresolved-entry-acceptance",
+    "passed": false,
+    "reason": "Raw direct URL remains untransportable and the approved gallery fallback has not independently passed all required checks in this run."
+  }
+]

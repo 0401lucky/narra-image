@@ -1,0 +1,89 @@
+# Session Handoff: 2026-10-31
+
+## Current Native Hero Correction
+
+Session `01a19012-4c1c-78c3-a256-c449e820adcb` stopped on an agent-provider
+HTTP 403 quota failure, after publishing the images and completing 1624
+non-DB tests. Its browser review continued long enough to confirm that native
+clicks on the tilted hero copy button hit the image instead. The next session
+resumes this narrow correction and phone prompt occlusion under the existing
+approval. See `resume-hero-hit-20261031.md` for ownership, current baseline and
+verification status. Do not treat the older missing-image handoff as current.
+
+## Resumed Revision In Progress
+
+The source session `01a18f8e-7232-7d82-8dc8-c3429f801773` continued beyond the
+older handoff below and stopped on agent-transport HTTP 413, not an application
+error. Three successful original bitmaps and a replacement rainy-lane candidate
+were recovered. The selected bookshop v1, fox v1 and rain v2 are now inspected
+and published at actual 1448x1086 dimensions. Fresh tests/browser evidence and
+the final continuation handoff are still pending. See `resume-20261031.md` and
+`assets/image-manifest.json`; do not interpret the historical 503/no-image
+statements below as the current provider or filesystem state.
+
+## Earlier Completed Implementation Session
+
+The user approved the complete existing task and implementation was activated
+in this session. Current status remains `in_progress`, not complete.
+
+## Implemented And Verified
+
+- Minimal image-detail privacy projection, explicit featured prompt permission,
+  retained owner/admin/access behavior and actual outgoing HTML/RSC tests.
+- Homepage-local warm-paper theme and real fonts, header variants/account
+  controls, fixed-scene state machine, capability demos, bounded motion and real
+  footer links. Missing images have an honest, retryable error state.
+- Real 16-item / 72-unique-item gallery, centered 4:5 thumbnails, guarded paging,
+  like/copy/disclosure/remix, guest return/reselect and saved canvas preference.
+- Independent review added five regressions, without further production fixes.
+- Final corrected-guard checks: 136 files / 1610 non-DB tests, lint zero errors
+  and nine baseline warnings, types, offline installed Prisma generation and
+  unmodified-source Next build all pass. `validation-evidence/final-automated/`.
+- Final browser: 71 executed checks pass, eight unresolved records separate.
+  `browser/evidence/full-1793413804860/`. Actual custom glyph rendering verified;
+  first desktop font transfers: eight requests / 418,652 bytes.
+- `final-source-audit.json`: all 802 source/test inputs still match the final
+  checks; 60 scoped text files have no whitespace issues.
+- `protected-source-audit.json`: 185 protected create/canvas/worker/config
+  inputs remain identical to the session baseline. No unrelated edits reverted.
+
+## Resume Only The Remaining Work
+
+1. User has now authorized the named external API and `gpt-image-2.5-sunburst`
+   alias after the built-in calls failed. Authentication/model listing succeeds,
+   but two bounded bookshop requests return `503 / no_available_account`, even
+   with browser headers. No image exists; provider account availability or a
+   newly authorized model is required. Exact prompts/key-free receipts live in
+   `assets/`; never persist credentials, silently swap models or use the site's
+   provider. Publish and inspect actual bookshop/fox/Jiangnan outputs when
+   available, updating dimensions to match real files.
+2. Await the user's decision on oversized encoded remix links. The current
+   unchanged create route rejects 8000-unit Chinese/emoji URLs with HTTP 431.
+   Proposed narrow fallback: prevent the oversized link and explain copying
+   the full public prompt into the studio manually. No threshold, continuation
+   store, create/draft change or server-limit workaround has been approved.
+   Persist any approved adjustment in the plan before implementing it.
+3. After those changes, rerun affected tests plus full final gates and actual
+   image-success/scene-motion/reference browser acceptance. Current missing-
+   image tests cannot complete AC1/AC2/AC5/AC7.
+4. Available local Node is 24.11.1. Pinned 24.22.1 validation remains separate;
+   no runtime download is authorized or performed. Browser uses real Next and
+   a synthetic DB boundary, not live-account/DB/Worker/provider/storage E2E.
+
+## Safe Reuse And Ownership
+
+- Read `validation-environment.md` before any product command. Reusable
+  production source lane: `checks/.runtime/production-fa4bca90/app`; use its
+  owner/path/lock checks and `refresh` before testing changed source. Do not
+  build/run in the live workspace or borrow the mobile task's resources.
+- Final `deny_env.cjs` hash:
+  `bd9ec3da5da5787ffc8378f8ed97835428d4b5a9c80a21a099ccca2c4d077e55`.
+  The `fs.exists` custom-promisification regression is fixed, with eight safety
+  tests. See `prisma-guard-retrospective.md`; do not relax dotenv rules.
+- Browser runbook and exact fixture adaptations are in `browser-acceptance.md`.
+  All owned Next/Chrome helpers are stopped; snapshots and evidence remain.
+- New reusable specs: `frontend/public-work-data.md`,
+  `frontend/homepage-interactions.md`, plus additive quality-guideline notes.
+- No staging, commit, push, deployment or automatic archive occurred. The
+  finish-work/archive/journal auto-commit flow is deliberately not invoked:
+  task acceptance is incomplete and those actions are explicitly unauthorized.

@@ -1,0 +1,45 @@
+{
+  "capturedAt": "2026-11-01T02:23:49.637996+00:00",
+  "records": {
+    ".trellis/tasks/10-30-homepage-warm-editorial-redesign/task.json": {
+      "sha256": "0431bd68016281d61159cfe347ee1ccf2e2e883df61ab63c4ed54d1317273ade",
+      "bytes": 5528
+    },
+    ".trellis/tasks/10-30-homepage-warm-editorial-redesign/prd.md": {
+      "sha256": "b00a2ee6d806c3908da009d5b4a236aa27109c625cf5518c35b59701a0a5fd9f",
+      "bytes": 17023
+    },
+    ".trellis/tasks/10-30-homepage-warm-editorial-redesign/design.md": {
+      "sha256": "b4c0ec24c37b1aae9acd91bcb3b4409792a404fc5f37a7e59855673ef4548d93",
+      "bytes": 24339
+    },
+    ".trellis/tasks/10-30-homepage-warm-editorial-redesign/implement.md": {
+      "sha256": "8410b42ed073b84861170a1bf5c1da1a9cc206db38557491ff6426200874eda2",
+      "bytes": 20000
+    },
+    ".trellis/tasks/10-30-homepage-warm-editorial-redesign/implement.jsonl": {
+      "sha256": "5bf849522828054718263a71e82de9a0959c5065726b771978f0bda8ed189661",
+      "bytes": 2939
+    },
+    ".trellis/tasks/10-30-homepage-warm-editorial-redesign/check.jsonl": {
+      "sha256": "22255e5b9e87557518501f8da41029cd4501ac3816bbdee80e5d210cd1454150",
+      "bytes": 2829
+    },
+    ".trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/acceptance-status.md": {
+      "sha256": "fb23c1831cfca72562688987ba3cacbfba50acc63f34a8cb424c8e931d164f28",
+      "bytes": 7682
+    },
+    ".trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/session-handoff.md": {
+      "sha256": "0f93c3128e654449b2fb51ab87b5ec6e0794a86e33e6198d87f78b7b449bd1bc",
+      "bytes": 7735
+    },
+    ".trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser-acceptance.md": {
+      "sha256": "059228afefc3b09b1567dfa7864ada72a881479f4cc85f2b802e7bc5f2f5152e",
+      "bytes": 20351
+    },
+    ".trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/final-continuation-review.md": {
+      "sha256": "9bfaa3f4cb00d81c93e60de021a584b9114c73e23382a44fc7600a708d3f217f",
+      "bytes": 6761
+    }
+  }
+}

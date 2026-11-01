@@ -1,0 +1,16 @@
+{
+  "label": "db-complete-canvas-01",
+  "mode": "test",
+  "command": [
+    "pnpm",
+    "verify:canvas-contracts:db"
+  ],
+  "cwd": "E:/code/narra-image",
+  "timeoutMs": 390000,
+  "code": 4,
+  "signal": null,
+  "timedOut": false,
+  "durationMs": 9397,
+  "stdoutPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\db-complete-canvas-01.stdout.log",
+  "stderrPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\db-complete-canvas-01.stderr.log"
+}

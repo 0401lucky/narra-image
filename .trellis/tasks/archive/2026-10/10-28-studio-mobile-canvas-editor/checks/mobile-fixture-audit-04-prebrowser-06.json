@@ -1,0 +1,66 @@
+{
+  "checkedAt": "2026-10-30T16:03:31.316Z",
+  "label": "04",
+  "phase": "prebrowser-06",
+  "exactSourceIdentityCount": 224,
+  "changed": [],
+  "inventories": {
+    "src/components": {
+      "productionCount": 116,
+      "copiedCount": 116,
+      "recordedCount": 116,
+      "equal": true
+    },
+    "src/lib": {
+      "productionCount": 78,
+      "copiedCount": 78,
+      "recordedCount": 78,
+      "equal": true
+    },
+    "contracts": {
+      "productionCount": 28,
+      "copiedCount": 28,
+      "recordedCount": 28,
+      "equal": true
+    }
+  },
+  "packageLinks": [
+    {
+      "name": "next",
+      "version": "16.2.4",
+      "actual": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\.installed-packages\\next@16.2.4-67c9d3db\\node_modules\\next",
+      "expected": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\.installed-packages\\next@16.2.4-67c9d3db\\node_modules\\next",
+      "equal": true
+    },
+    {
+      "name": "react",
+      "version": "19.2.4",
+      "actual": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\.installed-packages\\react@19.2.4-57327555\\node_modules\\react",
+      "expected": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\.installed-packages\\react@19.2.4-57327555\\node_modules\\react",
+      "equal": true
+    },
+    {
+      "name": "react-dom",
+      "version": "19.2.4",
+      "actual": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\.installed-packages\\react-dom@19.2.4-1c255038\\node_modules\\react-dom",
+      "expected": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\.installed-packages\\react-dom@19.2.4-1c255038\\node_modules\\react-dom",
+      "equal": true
+    },
+    {
+      "name": "@xyflow/react",
+      "version": "12.12.0",
+      "actual": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\.installed-packages\\@xyflow+react@12.12.0-70218edc\\node_modules\\@xyflow\\react",
+      "expected": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\.installed-packages\\@xyflow+react@12.12.0-70218edc\\node_modules\\@xyflow\\react",
+      "equal": true
+    },
+    {
+      "name": "typescript",
+      "version": "5.9.3",
+      "actual": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\.installed-packages\\typescript@5.9.3-94a23c16\\node_modules\\typescript",
+      "expected": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\.installed-packages\\typescript@5.9.3-94a23c16\\node_modules\\typescript",
+      "equal": true
+    }
+  ],
+  "pass": true,
+  "scope": "Source provenance only; not browser/device/service acceptance"
+}

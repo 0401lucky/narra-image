@@ -1,0 +1,112 @@
+{
+  "recordedAt": "2026-10-30T15:06:25.894025+00:00",
+  "scope": "Planning-only public-source fetches and local inspection; no product runtime started.",
+  "referenceHeroUrls": [
+    "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1200&q=85",
+    "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=1200&q=85",
+    "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=1200&q=85"
+  ],
+  "referenceHeroStatus": [
+    200,
+    404,
+    200
+  ],
+  "notes": [
+    "Second original URL also returned 404 without resize parameters; removal of parameters does not recover it.",
+    "Suffix b6a5 candidate is a different reachable floral painting, not verified as the intended missing image.",
+    "Visual inspection: first original is a castle; third original is a game controller above a hand.",
+    "Downloaded images and font files are research samples, not approved production assets.",
+    "WOFF2 signature/header verified only. fontTools parsing unavailable because its optional brotli module is absent. No dependencies installed."
+  ],
+  "files": [
+    {
+      "file": "cormorant-garamond-latin-italic.woff2",
+      "bytes": 39260,
+      "sha256": "6f2f5c3b1abc3d0bb035a927f66a90ca873f94fc31c4966c8d024142c2036e55",
+      "header": {
+        "signature": "wOF2",
+        "reportedLength": 39260,
+        "tableCount": 20
+      }
+    },
+    {
+      "file": "cormorant-garamond-latin-normal.woff2",
+      "bytes": 37640,
+      "sha256": "d80df8ff5aecd299a61549f9e29ab1ed0b9b05f4ea71d50fe978e07d5240b235",
+      "header": {
+        "signature": "wOF2",
+        "reportedLength": 37640,
+        "tableCount": 20
+      }
+    },
+    {
+      "file": "cormorant-garamond-OFL.txt",
+      "bytes": 4387,
+      "sha256": "60700d351cac4650c51f3f9db318d2a420f8b45052dba2715eb5fec41f0f6956"
+    },
+    {
+      "file": "google-fonts.css",
+      "bytes": 354976,
+      "sha256": "18961066288023ed2376b6da8639b45d48d05f65205ab49eac1b18e6b347b5a4"
+    },
+    {
+      "file": "hero-film.jpg",
+      "bytes": 296253,
+      "sha256": "a0b751b9c89127514e73e64cf042a0963f1535974de276c96fcb4c919302456d",
+      "format": "JPEG",
+      "width": 1200,
+      "height": 1816
+    },
+    {
+      "file": "hero-oriental.jpg",
+      "bytes": 382271,
+      "sha256": "83c88d6a8952e2f7f513e07536a78c5ca8ecd2ab2f6fa7a51444a2dea4a359be",
+      "format": "JPEG",
+      "width": 1200,
+      "height": 2011
+    },
+    {
+      "file": "hero-storybook-candidate.jpg",
+      "bytes": 503287,
+      "sha256": "974d2212ee3749ecefb319d9f35843ee79d5b7f5ece817a28c1a41e84522ae7a",
+      "format": "JPEG",
+      "width": 1200,
+      "height": 1567
+    },
+    {
+      "file": "noto-serif-sc-chinese-sample.woff2",
+      "bytes": 81652,
+      "sha256": "1066b4dc2f377882adc40e8501b1fdf1ab020a6aed5522503e5b1fadfe36281a",
+      "header": {
+        "signature": "wOF2",
+        "reportedLength": 81652,
+        "tableCount": 23
+      }
+    },
+    {
+      "file": "noto-serif-sc-OFL.txt",
+      "bytes": 4350,
+      "sha256": "5e0da210fb04058a8c0087985d2d456b931c2579811a49655721d3cf0c36b6d6"
+    },
+    {
+      "file": "plus-jakarta-sans-latin.woff2",
+      "bytes": 27348,
+      "sha256": "153fc85b70298beeb1d61a5f723331649e7f23bb77302a66e61cb3e2fbdb5e79",
+      "header": {
+        "signature": "wOF2",
+        "reportedLength": 27348,
+        "tableCount": 20
+      }
+    },
+    {
+      "file": "plus-jakarta-sans-OFL.txt",
+      "bytes": 4402,
+      "sha256": "995c7199cab65954f545996326755daee7b63cc6b42b06c13da1f9502ab08a99"
+    },
+    {
+      "file": "unsplash-license.html",
+      "bytes": 158626,
+      "sha256": "eb8392d0ef5489246585e980f75dfe6ea161ada6cd99cb4358651080a54ae2de"
+    }
+  ]
+}

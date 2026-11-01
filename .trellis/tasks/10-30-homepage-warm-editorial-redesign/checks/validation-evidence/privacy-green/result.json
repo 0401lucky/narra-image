@@ -1,0 +1,12 @@
+{
+  "gate": "privacy-green",
+  "exitCode": 0,
+  "testFiles": 10,
+  "tests": 99,
+  "failedTests": 0,
+  "passedTests": 99,
+  "unchangedSnapshot": true,
+  "nodeVersion": "v24.11.1",
+  "pinnedRuntimeParity": false,
+  "receipt": "20261031T014013-test-d58fe1"
+}

@@ -1,0 +1,70 @@
+{
+  "checkedAt": "2026-10-31T06:39:03.119855+00:00",
+  "processAudit": "resume-20261031-pre-adoption-processes.json",
+  "sourceManifest": ".trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\validation-evidence\\hero-hit-final\\source-manifest.json",
+  "sourceManifestSha256": "dc982bd1eca62a63c1687864f62c6e6f7301a2b09c14b064a1a881a546d02db5",
+  "currentSourceInputs": 806,
+  "currentSourceDrift": [],
+  "lanes": [
+    {
+      "app": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\hero-hit-independent-8725c17e\\app",
+      "ownerKind": "homepage-warm-editorial-redesign-g0-v1",
+      "ownerMarkerSha256": "5c9632dd0c9aa9c19f3f3c903e03e2d3f5abb7ff8ee63acac7fe261e4dabecdc",
+      "activeLock": false,
+      "dependencyAudit": "all internal links remain in physical owned node_modules",
+      "dependencies": {
+        "regularFiles": 46664,
+        "bytes": 856682032,
+        "internalLinks": 2342,
+        "source": "E:\\code\\narra-image\\node_modules"
+      },
+      "sourceCompared": 809,
+      "allowedGeneratedDifferences": [],
+      "sourceDrift": [],
+      "guardSha256": "bd9ec3da5da5787ffc8378f8ed97835428d4b5a9c80a21a099ccca2c4d077e55",
+      "build": {
+        "buildId": "RFxxJNFv7J1x3WCk3AIZj",
+        "sha256": "ec494286c2c72800f5792d522ef08cf1ff633157232b8e9957c21872f275c891",
+        "verifiedArtifacts": 1808,
+        "fixtureManifestSha256": "320c6cf9d7bf65a948d057148e21076bfca3629493a20cd6568922be87cbd270",
+        "fixtureConfigSha256": "21455380ef58b01573abda0ada1a4c94f3b8309cfa54c6a404f7453f3acc15d4"
+      }
+    },
+    {
+      "app": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\hhi-d6837226\\app",
+      "ownerKind": "homepage-warm-editorial-redesign-g0-v1",
+      "ownerMarkerSha256": "386d54ae3d55b371d4ad0fa792dc973faff75ccdcecc54aec9c2cfd51d63650c",
+      "activeLock": false,
+      "dependencyAudit": "all internal links remain in physical owned node_modules",
+      "dependencies": {
+        "regularFiles": 46664,
+        "bytes": 856682032,
+        "internalLinks": 2342,
+        "source": "E:\\code\\narra-image\\node_modules"
+      },
+      "sourceCompared": 806,
+      "allowedGeneratedDifferences": [],
+      "sourceDrift": [],
+      "guardSha256": "bd9ec3da5da5787ffc8378f8ed97835428d4b5a9c80a21a099ccca2c4d077e55",
+      "build": null
+    }
+  ],
+  "helperBefore": {
+    "cdp.mjs": {
+      "bytes": 17106,
+      "sha256": "766df3a3c9e474ebe17bd5b8cc80c23f1bf5efd41629229d0e91644b48f6a073",
+      "beforeImage": ".trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\browser\\evidence\\resume-native-before\\cdp.mjs.before"
+    },
+    "native-keyboard-calibration.mjs": {
+      "bytes": 2266,
+      "sha256": "b5c6dc85f13d0253dde24ddb424bbd8224a32874f8e656990f49d7bc4a167474",
+      "beforeImage": ".trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\browser\\evidence\\resume-native-before\\native-keyboard-calibration.mjs.before"
+    },
+    "hero-image-checks.mjs": {
+      "bytes": 28644,
+      "sha256": "46a3d1ce0c350f311cacfaa597d5a417c653dd09552a66063539a7a0a631fb01",
+      "beforeImage": ".trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\browser\\evidence\\resume-native-before\\hero-image-checks.mjs.before"
+    }
+  },
+  "adoption": "Coordinator grants these two stopped task-owned lanes to hero_browser_check; no deletion, refresh, build or Node startup occurred during audit."
+}

@@ -1,0 +1,18 @@
+{
+  "label": "resume-back-release-tests",
+  "mode": "test",
+  "command": [
+    "node",
+    "--test",
+    "scripts/tests/migration-safety.test.mjs",
+    "scripts/tests/release-startup.test.mjs"
+  ],
+  "cwd": "E:/code/narra-image",
+  "timeoutMs": 180000,
+  "code": 0,
+  "signal": null,
+  "timedOut": false,
+  "durationMs": 952,
+  "stdoutPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\resume-back-release-tests.stdout.log",
+  "stderrPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\resume-back-release-tests.stderr.log"
+}

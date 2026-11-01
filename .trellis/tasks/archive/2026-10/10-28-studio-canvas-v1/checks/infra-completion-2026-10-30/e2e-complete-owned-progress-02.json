@@ -1,0 +1,26 @@
+{
+  "label": "e2e-complete-owned-progress-02",
+  "mode": "test",
+  "command": [
+    "docker",
+    "--host",
+    "npipe:////./pipe/dockerDesktopLinuxEngine",
+    "--config",
+    "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-e2e-ja9H0y\\docker",
+    "container",
+    "ls",
+    "--all",
+    "--filter",
+    "label=com.narra.e2e.owner=11b6415f-45c1-472e-bd9a-c8aa5955f825",
+    "--format",
+    "{{.Names}} {{.State}} {{.Image}}"
+  ],
+  "cwd": "E:/code/narra-image",
+  "timeoutMs": 20000,
+  "code": 0,
+  "signal": null,
+  "timedOut": false,
+  "durationMs": 99,
+  "stdoutPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\e2e-complete-owned-progress-02.stdout.log",
+  "stderrPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\e2e-complete-owned-progress-02.stderr.log"
+}

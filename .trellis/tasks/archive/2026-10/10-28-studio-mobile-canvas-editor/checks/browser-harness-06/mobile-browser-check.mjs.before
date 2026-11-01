@@ -1,0 +1,495 @@
+import assert from 'node:assert/strict';
+import { spawn } from 'node:child_process';
+import { once } from 'node:events';
+import fs from 'node:fs/promises';
+import http from 'node:http';
+import net from 'node:net';
+import path from 'node:path';
+import { fileURLToPath, pathToFileURL } from 'node:url';
+import { createHash, randomUUID } from 'node:crypto';
+import { repo, safeEnvironment } from "file:///C:/Users/Administrator/AppData/Local/Temp/narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea/react-flow-spike/safe-environment.mjs";
+import { mobilePhoneChecks } from './mobile-phone-browser-checks.mjs';
+
+const checks = path.dirname(fileURLToPath(import.meta.url));
+const tooling = JSON.parse(await fs.readFile(path.join(checks, 'mobile-browser-tooling.json'), 'utf8'));
+const root = tooling.root;
+const { createStudioApi, defaults, emptyScene, fixturePng } = await import(pathToFileURL(path.join(root, 'support/studio-browser-api.mjs')));
+const { openBrowser: openNativeBrowser, sleep } = await import(pathToFileURL(path.join(root, 'support/studio-browser-cdp.mjs')));
+const openBrowser = async (...args) => {
+  const browser = await openNativeBrowser(...args);
+  browser.evidence.controlActions = [];
+  browser.controlPoint = async (selector) => {
+    await browser.evaluate(`document.querySelector(${JSON.stringify(selector)})?.scrollIntoView({block:'nearest',inline:'nearest'})`);
+    await sleep(100);
+    const geometry = await browser.evaluate(`(()=>{
+      const element=document.querySelector(${JSON.stringify(selector)});
+      if(!element)return {error:'Missing control'};
+      const r=element.getBoundingClientRect();
+      let left=Math.max(0,r.left),right=Math.min(innerWidth,r.right),top=Math.max(0,r.top),bottom=Math.min(innerHeight,r.bottom);
+      for(let parent=getComputedStyle(element).position==='fixed'?null:element.parentElement;parent;parent=parent.parentElement){
+        const style=getComputedStyle(parent),bounds=parent.getBoundingClientRect();
+        if(style.overflowX!=='visible'){left=Math.max(left,bounds.left);right=Math.min(right,bounds.right)}
+        if(style.overflowY!=='visible'){top=Math.max(top,bounds.top);bottom=Math.min(bottom,bounds.bottom)}
+        if(style.position==='fixed')break;
+      }
+      const x=(left+right)/2,y=(top+bottom)/2,hit=document.elementFromPoint(x,y);
+      return {x,y,width:right-left,height:bottom-top,visibility:getComputedStyle(element).visibility,
+        hit:hit===element||element.contains(hit),hitLabel:hit?.getAttribute('aria-label')??hit?.textContent?.slice(0,80),
+        label:element.getAttribute('aria-label')??element.textContent?.trim(),disabled:Boolean(element.disabled)};
+    })()`);
+    assert.ok(geometry.width > 0 && geometry.height > 0, 'Visible clipped control: ' + selector + ' ' + JSON.stringify(geometry));
+    assert.equal(geometry.visibility, 'visible', 'Not hidden: ' + selector);
+    assert.ok(geometry.hit, 'Actual hit target: ' + selector + ' ' + JSON.stringify(geometry));
+    browser.evidence.controlActions.push({ stage: browser.state.stage, selector, ...geometry });
+    return geometry;
+  };
+  browser.click = async (selector) => {
+    const point = await browser.controlPoint(selector);
+    await browser.mouse('mouseMoved', point.x, point.y);
+    await browser.mouse('mousePressed', point.x, point.y, { button: 'left', buttons: 1, clickCount: 1 });
+    await browser.mouse('mouseReleased', point.x, point.y, { button: 'left', buttons: 0, clickCount: 1 });
+    await sleep(160);
+  };
+  browser.byText = async (text, parent = 'body') => {
+    await browser.evaluate(`(()=>{const root=document.querySelector(${JSON.stringify(parent)});const button=[...root.querySelectorAll('button')].find(e=>e.textContent.trim()===${JSON.stringify(text)}&&e.getBoundingClientRect().width>0);if(!button)throw new Error('Missing button: '+${JSON.stringify(text)});document.querySelectorAll('[data-fixture-click]').forEach(e=>e.removeAttribute('data-fixture-click'));button.setAttribute('data-fixture-click','true')})()`);
+    await browser.click('[data-fixture-click=true]');
+  };
+  browser.replaceText = async (selector, text) => {
+    await browser.click(selector);
+    await browser.key('a', 'KeyA', 65, 2);
+    await browser.send('Input.insertText', { text });
+    await sleep(120);
+  };
+  const nativeSelect = browser.select;
+  browser.select = async (selector, value) => {
+    const point = await browser.controlPoint(selector);
+    assert.equal(point.disabled, false, 'Enabled native selection: ' + selector);
+    assert.ok(await browser.evaluate(`(()=>{const element=document.querySelector(${JSON.stringify(selector)});return [...element.options].some(option=>option.value===${JSON.stringify(value)}&&!option.disabled)})()`), 'Available selection option');
+    await nativeSelect(selector, value);
+  };
+  return browser;
+};
+const fixtureLabel = process.argv[3] ?? '01'; assert.match(fixtureLabel, /^[a-z0-9-]+$/);
+const fixture = path.join(root, 'fixture-' + fixtureLabel);
+const attempt = process.argv[2] ?? '01'; assert.match(attempt, /^[a-z0-9-]+$/);
+const output = path.join(root, 'mobile-browser-' + attempt); await fs.mkdir(output, { recursive: false });
+const { terminateProcessTree } = await import(pathToFileURL(path.join(repo, 'scripts/lib/command-runner.mjs')));
+const api = createStudioApi(), apiErrors = [], browsers = [], results = [];
+const harnessIdentities = [];
+for (const filename of ['mobile-browser-check.mjs', 'mobile-phone-browser-checks.mjs']) {
+  harnessIdentities.push({ path: filename, sha256: createHash('sha256').update(await fs.readFile(path.join(checks, filename))).digest('hex') });
+}
+const report = { attempt, fixture, scope: 'Actual Next 16.2.4 production App Router SSR/hydration and unmodified GeneratorStudio/React Flow/controller/native IndexedDB. Serialized auth/catalogue and HTTP APIs are isolated loopback fixtures, not actual auth, database, provider, Worker, S3, billing or infrastructure E2E.', results, browsers: [], apiErrors, harnessIdentities, sourceEvidence: JSON.parse(await fs.readFile(path.join(fixture, 'source-evidence.json'), 'utf8')) };
+const freePort = async () => { const server = net.createServer(); server.listen(0, '127.0.0.1'); await once(server, 'listening'); const port = server.address().port; await new Promise((resolve) => server.close(resolve)); return port; };
+const nextPort = await freePort();
+const app = spawn(process.execPath, [path.join(fixture, 'node_modules/next/dist/bin/next'), 'start', '-H', '127.0.0.1', '-p', String(nextPort)], { cwd: fixture, env: safeEnvironment('build'), windowsHide: true, stdio: ['ignore', 'pipe', 'pipe'] });
+let appStdout = '', appStderr = '', stage = 'startup';
+app.stdout.on('data', (chunk) => { appStdout += chunk; }); app.stderr.on('data', (chunk) => { appStderr += chunk; });
+const facade = http.createServer(async (request, response) => {
+  if (request.url.startsWith('/_next/image?')) {
+    response.writeHead(200, { 'content-type': 'image/png', 'cache-control': 'no-store' }); response.end(fixturePng()); return;
+  }
+  if (request.url.startsWith('/api/') || request.url.startsWith('/fixture-media/')) {
+    try {
+      const answer = await api.handle(request);
+      if (answer.destroy) { response.destroy(); return; }
+      response.writeHead(answer.status, { 'content-type': answer.type, 'cache-control': 'no-store' }); response.end(answer.body);
+    } catch (error) { apiErrors.push(String(error.stack ?? error)); if (!response.destroyed) { response.writeHead(500); response.end('isolated fixture failure'); } }
+    return;
+  }
+  const upstream = http.request({ hostname: '127.0.0.1', port: nextPort, path: request.url, method: request.method, headers: { ...request.headers, host: '127.0.0.1:' + nextPort } }, (incoming) => {
+    response.writeHead(incoming.statusCode, incoming.headers); incoming.pipe(response);
+  });
+  upstream.on('error', (error) => { if (!response.headersSent) response.writeHead(502); response.end('Next fixture unavailable'); apiErrors.push(String(error)); });
+  request.pipe(upstream);
+});
+facade.listen(0, '127.0.0.1'); await once(facade, 'listening');
+const origin = 'http://127.0.0.1:' + facade.address().port;
+const L = {
+  canvas: '\u753b\u5e03', chat: '\u5bf9\u8bdd', new: '\u65b0\u5efa\u7a7a\u767d\u753b\u5e03', prompt: '\u63d0\u793a\u8bcd', gen: '\u751f\u6210\u8282\u70b9', save: '\u4fdd\u5b58\u5230\u8d26\u6237',
+  promptInput: '[aria-label="\u8282\u70b9\u63d0\u793a\u8bcd"]', mode: '[aria-label="\u521b\u4f5c\u6a21\u5f0f"]', region: '[aria-label="\u753b\u5e03\u5de5\u4f5c\u533a"]',
+  fit: '[aria-label="\u9002\u5e94\u5168\u90e8\u8282\u70b9"]', settings: '[aria-label="\u8bbe\u7f6e\u751f\u6210\u8282\u70b9\u53c2\u6570"]', closeSettings: '[aria-label="\u5173\u95ed\u8282\u70b9\u8bbe\u7f6e"]',
+  refPicker: '[aria-label="\u9009\u62e9\u53c2\u8003\u56fe\u6216\u7ed3\u679c"]', connectRef: '[aria-label="\u8fde\u63a5\u9009\u62e9\u53c2\u8003\u56fe\u6216\u7ed3\u679c"]',
+  rename: '[aria-label="\u91cd\u547d\u540d\u753b\u5e03"]', nameInput: '[aria-label="\u753b\u5e03\u540d\u79f0"]', renameConfirm: '\u786e\u8ba4\u91cd\u547d\u540d',
+  run: '\u8fd0\u884c\u6b64\u8282\u70b9', import: '[aria-label="\u5bfc\u5165\u753b\u5e03\u53c2\u8003\u56fe\u6587\u4ef6"]',
+};
+const sends = () => api.requests.filter((request) => request.path === '/api/generate');
+const uploads = () => api.requests.filter((request) => request.path === '/api/me/canvas-assets' && request.method === 'POST');
+const saves = () => api.requests.filter((request) => request.method === 'PUT');
+const until = async (condition, label, timeoutMs = 15_000) => { const end = Date.now() + timeoutMs; while (Date.now() < end) { if (await condition()) return; await sleep(100); } throw new Error('Fixture wait deadline: ' + label); };
+const setStage = (name) => { stage = name; for (const browser of browsers) browser.state.stage = name; console.log('[studio-browser] ' + name); };
+const pass = (evidence = {}) => { results.push({ check: stage, pass: true, ...evidence }); };
+const domGeometry = (browser) => browser.evaluate(`({nodes:[...document.querySelectorAll('.react-flow__node')].map(e=>({id:e.dataset.id,transform:e.style.transform})),viewport:document.querySelector('.react-flow__viewport')?.style.transform})`);
+const fit = async (browser) => { await browser.click(L.fit); await sleep(400); };
+const currentScene = async (browser) => { await sleep(650); const scene = await browser.scene(); assert.ok(scene, 'Native acknowledged scene exists'); return scene; };
+const canvasMode = async (browser) => { await browser.byText(L.canvas, L.mode); await browser.wait(`Boolean(document.querySelector(${JSON.stringify(L.region)}))`); await sleep(400); };
+const selectTitle = async (browser, title) => {
+  await browser.evaluate(`(()=>{const b=[...document.querySelectorAll('[aria-label="\u72ec\u7acb\u753b\u5e03\u5217\u8868"] button')].find(e=>e.textContent.includes(${JSON.stringify(title)}));if(!b)throw new Error('Missing canvas title');document.querySelectorAll('[data-fixture-title]').forEach(e=>e.removeAttribute('data-fixture-title'));b.setAttribute('data-fixture-title','true')})()`);
+  await browser.click('[data-fixture-title=true]'); await sleep(500);
+};
+const rename = async (browser, title) => { await browser.click(L.rename); await browser.replaceText(L.nameInput, title); await browser.byText(L.renameConfirm); await browser.wait('!document.querySelector("[role=dialog]")'); };
+const closeInspector = async (browser) => { if (await browser.evaluate(`Boolean(document.querySelector(${JSON.stringify(L.closeSettings)}))`)) await browser.click(L.closeSettings); };
+const prepareGeneration = async (browser) => { await closeInspector(browser); await fit(browser); await browser.click(L.settings); await sleep(250); };
+
+try {
+  for (let count = 0; count < 200; count += 1) {
+    try { if ((await fetch('http://127.0.0.1:' + nextPort + '/create', { signal: AbortSignal.timeout(1000) })).ok) break; } catch { }
+    if (count === 199) throw new Error('Next fixture startup failed: ' + appStderr); await sleep(100);
+  }
+  const html = await (await fetch(origin + '/create')).text();
+  assert.ok(html.includes('Chat seed only')); assert.ok(!html.includes('class="react-flow'));
+  const browser = await openBrowser(output, origin, 'desktop'); browsers.push(browser); await browser.navigate();
+
+  setStage('Actual Next SSR hydration, lazy canvas and separate empty-new navigation');
+  const chatTextarea = 'textarea[placeholder]';
+  await browser.replaceText(chatTextarea, 'Independent unsent chat draft');
+  const initialRequests = browser.evidence.requested.length;
+  await canvasMode(browser);
+  assert.equal(await browser.evaluate('document.querySelectorAll(".react-flow__node").length'), 0);
+  assert.equal(sends().length, 0); assert.equal(api.requests.filter((request) => request.method !== 'GET').length, 0);
+  await browser.byText(L.new); await browser.wait('Boolean(document.querySelector(".react-flow"))');
+  const canvasA = await browser.activeId(); assert.ok(canvasA); assert.deepEqual((await currentScene(browser)).nodes, []);
+  await rename(browser, 'Fixture A');
+  assert.equal(api.account().documents.get(canvasA).scene, null, 'Rename does not account-save empty/dirty scene');
+  const measured = await browser.evaluate(`(()=>{const r=document.querySelector('[data-testid=canvas-viewport]').getBoundingClientRect();return {width:r.width,height:r.height,documentWidth:document.documentElement.scrollWidth}})()`);
+  assert.ok(measured.width > 300 && measured.height > 300 && measured.documentWidth <= 1440);
+  const lazyChunks = browser.evidence.requested.slice(initialRequests).filter((request) => request.type === 'Script').map((request) => new URL(request.url).pathname);
+  assert.ok(lazyChunks.length > 0); assert.equal(browser.evidence.exceptions.length, 0); assert.equal(browser.evidence.consoleErrors.length, 0);
+  pass({ measured, lazyChunks, actualRootAndNativeStore: true });
+
+  setStage('Chinese CDP composition, textarea wheel/focus and actual typed handle connection');
+  await browser.evaluate(`(()=>{const t=document.createElement('textarea');t.id='fixture-native-control';t.style.cssText='position:fixed;left:550px;top:100px;width:200px;height:70px;z-index:100';document.body.appendChild(t)})()`);
+  await browser.click('#fixture-native-control');
+  await browser.send('Input.imeSetComposition', { text: '\u4e2d\u6587', selectionStart: 2, selectionEnd: 2 }); await sleep(180); await browser.send('Input.insertText', { text: '\u4e2d\u6587' });
+  console.log('native-composition', await browser.evaluate("document.getElementById('fixture-native-control').value"));
+  await browser.evaluate("document.getElementById('fixture-native-control').remove()");
+  await browser.byText(L.prompt, '[aria-label="\u753b\u5e03\u5de5\u5177\u680f"]'); await browser.wait(`Boolean(document.querySelector(${JSON.stringify(L.promptInput)}))`);
+  const beforeIme = await domGeometry(browser);
+  await browser.click(L.promptInput);
+  await browser.evaluate(`window.__fixtureComposition=[];window.__fixtureFocus=[];const t=document.querySelector(${JSON.stringify(L.promptInput)});window.__fixturePrompt=t;for(const name of ['compositionstart','compositionend','beforeinput','input'])t.addEventListener(name,e=>window.__fixtureComposition.push({name,data:e.data,value:t.value,composing:e.isComposing}));for(const name of ['focusin','focusout'])document.addEventListener(name,e=>window.__fixtureFocus.push({type:name,tag:e.target.tagName,aria:e.target.getAttribute('aria-label')}));`);
+  await browser.send('Input.insertText', { text: 'plain test' }); await sleep(600);
+  console.log('plain-focus', await browser.evaluate(`({value:document.querySelector(${JSON.stringify(L.promptInput)}).value,active:document.activeElement.tagName,connected:window.__fixturePrompt.isConnected,same:window.__fixturePrompt===document.querySelector(${JSON.stringify(L.promptInput)}),focus:window.__fixtureFocus})`));
+  await browser.replaceText(L.promptInput, '');
+  await browser.evaluate(`(()=>{window.__fixtureSetterWrites=[];const descriptor=Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype,'value');Object.defineProperty(HTMLTextAreaElement.prototype,'value',{...descriptor,set(value){if(this===window.__fixturePrompt)window.__fixtureSetterWrites.push({value,at:performance.now()});descriptor.set.call(this,value)}})})()`);
+  const chinese = '\u4e2d\u6587\u521b\u4f5c\u6d4b\u8bd5';
+  await browser.send('Input.imeSetComposition', { text: chinese, selectionStart: chinese.length, selectionEnd: chinese.length });
+  await sleep(180);
+  await browser.send('Input.insertText', { text: chinese }); await sleep(200);
+  assert.equal(await browser.evaluate(`document.querySelector(${JSON.stringify(L.promptInput)}).value`), chinese, JSON.stringify(await browser.evaluate(`({active:document.activeElement.tagName,connected:window.__fixturePrompt.isConnected,same:window.__fixturePrompt===document.querySelector(${JSON.stringify(L.promptInput)}),focus:window.__fixtureFocus,composition:window.__fixtureComposition})`)));
+  assert.equal(await browser.evaluate(`document.activeElement===document.querySelector(${JSON.stringify(L.promptInput)})`), true, JSON.stringify(await browser.evaluate(`({tag:document.activeElement.tagName,html:document.activeElement.outerHTML.slice(0,700),connected:window.__fixturePrompt.isConnected,same:window.__fixturePrompt===document.querySelector(${JSON.stringify(L.promptInput)}),focus:window.__fixtureFocus})`)));
+  assert.ok((await browser.evaluate('window.__fixtureComposition')).some((event) => event.name === 'compositionend'));
+  assert.equal((await browser.evaluate('window.__fixtureSetterWrites')).some(write=>write.value===''), false, 'No script restores the prior empty value during native CDP composition');
+  assert.deepEqual((await domGeometry(browser)).nodes, beforeIme.nodes);
+  await browser.replaceText(L.promptInput, Array.from({ length: 35 }, (_, index) => chinese + ' ' + index).join('\n'));
+  const beforeWheel = await domGeometry(browser), p = await browser.point(L.promptInput);
+  await browser.mouse('mouseWheel', p.x, p.y, { deltaX: 0, deltaY: 250 }); await sleep(250);
+  assert.ok(await browser.evaluate(`document.querySelector(${JSON.stringify(L.promptInput)}).scrollTop>0`)); assert.deepEqual(await domGeometry(browser), beforeWheel);
+  await browser.replaceText(L.promptInput, 'Connected canvas prompt');
+  await browser.byText(L.gen); await closeInspector(browser); await fit(browser);
+  const promptId = await browser.evaluate('document.querySelector(".react-flow__node-prompt").dataset.id');
+  const genId = await browser.evaluate('document.querySelector(".react-flow__node-generation").dataset.id');
+  const port = (id, handle) => `.react-flow__node[data-id="${id}"] [data-handleid="${handle}"]`;
+  await browser.drag(await browser.point(port(promptId, 'prompt-out')), await browser.point(port(genId, 'prompt-in')), 22);
+  await browser.wait('document.querySelectorAll(".react-flow__edge").length===1');
+  assert.equal(sends().length, 0);
+  const geometryBeforeButtonKeys = await domGeometry(browser);
+  await browser.evaluate(`document.querySelector(${JSON.stringify(L.fit)}).focus()`); await browser.key('Delete', 'Delete', 46); await browser.key('ArrowRight', 'ArrowRight', 39);
+  assert.deepEqual(await domGeometry(browser), geometryBeforeButtonKeys);
+  pass({ chineseMethod: 'Chrome CDP IME composition, not native OS candidate UI', promptId, genId, noAutomaticSubmission: sends().length === 0 });
+
+  setStage('Native original import, explicit disconnected-reference Save and captured Save while editing');
+  const files = [path.join(output, 'original-a.png'), path.join(output, 'original-b.png')];
+  await fs.writeFile(files[0], fixturePng()); await fs.writeFile(files[1], fixturePng(true));
+  const dom = await browser.send('DOM.getDocument'); const fileNode = await browser.send('DOM.querySelector', { nodeId: dom.root.nodeId, selector: L.import });
+  await browser.send('DOM.setFileInputFiles', { nodeId: fileNode.nodeId, files });
+  await browser.wait('document.querySelectorAll(".react-flow__node-reference").length===2');
+  assert.equal(uploads().length, 0, 'Import is local until explicit Save/Run');
+  await browser.byText(L.save); await until(() => uploads().length === 2 && saves().length === 1, 'Two original uploads and snapshot');
+  await browser.wait('document.body.textContent.includes("\u8d26\u6237\u5feb\u7167\u5df2\u4fdd\u5b58")');
+  const savedA = api.account().documents.get(canvasA);
+  assert.equal(savedA.scene.nodes.filter((node) => node.kind === 'reference').length, 2); assert.equal(savedA.scene.edges.filter((edge) => edge.kind === 'image-input').length, 0);
+  assert.ok(savedA.scene.nodes.filter((node) => node.kind === 'reference').every((node) => node.source.kind === 'imported'));
+  const originalAssetIds = savedA.scene.nodes.filter((node) => node.kind === 'reference').map((node) => node.source.assetId);
+  await fit(browser); await browser.replaceText(L.promptInput, 'Captured cloud prompt'); api.controls.nextSave = 'delay';
+  await browser.byText(L.save); await until(() => api.pendingGates.some((gate) => gate.kind === 'save'), 'Delayed save captured');
+  await browser.replaceText(L.promptInput, 'Newer local prompt during Save'); api.pendingGates.find((gate) => gate.kind === 'save').resolve();
+  await browser.wait('document.body.textContent.includes("\u6709\u672a\u540c\u6b65\u4fee\u6539")');
+  assert.equal(api.account().documents.get(canvasA).scene.nodes.find((node) => node.kind === 'prompt').text, 'Captured cloud prompt');
+  assert.equal((await currentScene(browser)).nodes.find((node) => node.kind === 'prompt').text, 'Newer local prompt during Save');
+  assert.equal(uploads().length, 2); assert.equal(sends().length, 0);
+  const nativeRow = (await browser.nativeDrafts()).find((row) => row.canvasId === canvasA);
+  assert.equal(nativeRow.fixtureBlobs.length, 2); assert.ok(nativeRow.fixtureBlobs.every((blob) => blob.size > 0 && originalAssetIds.includes(blob.assetId)));
+  pass({ savedUnsubmittedOriginals: 2, originalAssetIds, capturedSnapshotPreservesNewerDirtyEdit: true, nativeBlobs: nativeRow.fixtureBlobs });
+
+  setStage('Separate browser restores saved originals, explicit reference ordering/manual Run and cloud CAS conflict');
+  const second = await openBrowser(output, origin, 'separate-device'); browsers.push(second); second.state.stage = stage; await second.navigate(); await canvasMode(second);
+  await second.wait('document.querySelectorAll(".react-flow__node").length===4');
+  assert.equal(await second.evaluate(`document.querySelector(${JSON.stringify(L.promptInput)}).value`), 'Captured cloud prompt');
+  assert.equal((await second.nativeDrafts()).find((row) => row.canvasId === canvasA).fixtureBlobs.length, 0);
+  await prepareGeneration(second);
+  const referenceIds = api.account().documents.get(canvasA).scene.nodes.filter((node) => node.kind === 'reference').map((node) => node.id);
+  const beforeReferenceConnections = sends().length;
+  for (const [index, id] of referenceIds.entries()) {
+    await second.select(L.refPicker, id); await second.click(L.connectRef);
+    await until(async () => (await currentScene(second)).edges.filter((edge) => edge.kind === 'image-input').length === index + 1, 'Explicit reference connection');
+    assert.equal(sends().length, beforeReferenceConnections, 'Connecting never runs a node');
+  }
+  await second.click('[aria-label="\u4e0a\u79fb\u53c2\u8003\u56fe 2"]');
+  await closeInspector(second); await fit(second); assert.equal(sends().length, 0);
+  await second.byText(L.run); await second.wait('document.querySelectorAll(".react-flow__node-result").length===1');
+  const firstWire = sends()[0].body.canvasRun;
+  assert.equal(firstWire.canvasId, canvasA); assert.equal(firstWire.nodeId, genId); assert.equal(firstWire.input.prompt.text, 'Captured cloud prompt');
+  assert.deepEqual(firstWire.input.references.map((reference) => reference.assetId), [...originalAssetIds].reverse());
+  assert.equal(firstWire.parameters.count, 1); assert.equal(uploads().length, 2);
+  await second.byText(L.save); await until(() => saves().length === 3, 'Second-device snapshot');
+  await second.wait('document.body.textContent.includes("\u8d26\u6237\u5feb\u7247\u5df2\u4fdd\u5b58") || document.body.textContent.includes("\u8d26\u6237\u5feb\u7167\u5df2\u4fdd\u5b58")');
+  await browser.byText(L.save); await browser.wait('document.body.textContent.includes("\u8d26\u6237\u7248\u672c\u51b2\u7a81")');
+  assert.equal(await browser.evaluate(`document.querySelector(${JSON.stringify(L.promptInput)}).value`), 'Newer local prompt during Save');
+  await browser.byText('\u91cd\u65b0\u8f7d\u5165\u8d26\u6237\u5feb\u7167'); await browser.byText('\u653e\u5f03\u672c\u5730\u5e76\u8f7d\u5165');
+  await browser.wait('!document.querySelector("[role=dialog]") && document.querySelectorAll(".react-flow__node-result").length===1');
+  assert.equal(await browser.evaluate(`document.querySelector(${JSON.stringify(L.promptInput)}).value`), 'Captured cloud prompt');
+  pass({ independentProfileNoLocalBlob: true, orderedAssetIds: firstWire.input.references.map((reference) => reference.assetId), reusedUploads: uploads().length, fakeServerCASPreservesDraft: true });
+
+  setStage('Manual rerun stable nonoverlapping results, reference viewer/download, focused keyboard isolation');
+  await closeInspector(browser); await fit(browser);
+  const oldResult = await browser.evaluate('document.querySelector(".react-flow__node-result").dataset.id');
+  await browser.byText(L.run); await browser.wait('document.querySelectorAll(".react-flow__node-result").length===2'); await fit(browser);
+  const boxes = await browser.evaluate(`Array.from(document.querySelectorAll('.react-flow__node')).map(e=>{const r=e.getBoundingClientRect();return {id:e.dataset.id,kind:e.querySelector('article').dataset.nodeKind,x:r.x,y:r.y,w:r.width,h:r.height}})`);
+  const resultBoxes = boxes.filter((box) => box.kind === 'result');
+  assert.ok(resultBoxes.some((box) => box.id === oldResult));
+  for (const box of resultBoxes) for (const other of boxes) if (other.id !== box.id) assert.ok(box.x + box.w <= other.x + 0.5 || other.x + other.w <= box.x + 0.5 || box.y + box.h <= other.y + 0.5 || other.y + other.h <= box.y + 0.5, 'Default result cards do not overlap: ' + box.id);
+  await browser.click('.react-flow__node-reference [aria-label="\u67e5\u770b\u53c2\u8003\u539f\u56fe"]'); await browser.wait('Boolean(document.querySelector("img[alt=\\"\u653e\u5927\u67e5\u770b\\"]"))');
+  assert.equal(await browser.evaluate('Array.from(document.querySelectorAll("button")).some(e=>e.textContent.includes("\u52a0\u5165\u7f16\u8f91"))'), false);
+  const beforeDeleteKey = await domGeometry(browser); await browser.evaluate('document.querySelector("button[aria-label=\\"\u5173\u95ed\\"]").focus()'); await browser.key('Delete', 'Delete', 46); assert.deepEqual(await domGeometry(browser), beforeDeleteKey);
+  await browser.byText('\u4fdd\u5b58\u9ad8\u6e05\u539f\u56fe'); await browser.click('[aria-label="\u5173\u95ed"]');
+  await until(async () => (await fs.readdir(path.join(output, 'desktop-downloads'))).some((name) => !name.endsWith('.crdownload')), 'Fixture image download');
+  await until(() => browser.evidence.downloads.some((entry) => entry.state === 'completed'), 'Browser confirms original download completion');
+  const completedDownload = browser.evidence.downloads.find((entry) => entry.state === 'completed');
+  assert.equal(path.dirname(completedDownload.filePath), path.join(output, 'desktop-downloads'));
+  assert.deepEqual(await fs.readFile(completedDownload.filePath), await fs.readFile(files[0]), 'Download is the exact original, not a viewer thumbnail or error page');
+  pass({ renderedResultBoxes: resultBoxes, noCanvasAddToChatAction: true, originalDownloadBytesMatch: true, downloadFile: completedDownload.filePath }); await browser.shot('desktop');
+
+  setStage('Slow ACK across canvas switch and refresh recovery after lost ACK without POST replay');
+  const beforeSlow = sends().length; api.controls.nextGenerate = 'delay'; await browser.byText(L.run);
+  await until(() => sends().length === beforeSlow + 1 && api.pendingGates.some((gate) => gate.kind === 'generate'), 'Delayed committed run');
+  await browser.byText(L.new); await browser.wait('document.querySelectorAll(".react-flow__node").length===0'); const canvasB = await browser.activeId(); assert.notEqual(canvasB, canvasA); await rename(browser, 'Fixture B');
+  api.pendingGates.find((gate) => gate.kind === 'generate').resolve(); await sleep(600);
+  assert.equal(await browser.evaluate('document.querySelectorAll(".react-flow__node").length'), 0); assert.equal(sends().length, beforeSlow + 1);
+  await selectTitle(browser, 'Fixture A'); await browser.wait('document.querySelectorAll(".react-flow__node-result").length===3'); await closeInspector(browser); await fit(browser);
+  const beforeLoss = sends().length; api.controls.nextGenerate = 'lose'; await browser.byText(L.run); await until(() => sends().length === beforeLoss + 1, 'Lost ACK request');
+  await browser.wait('document.body.textContent.includes("\u8bf7\u6c42\u7ed3\u679c\u5f85\u786e\u8ba4")'); await sleep(600);
+  await browser.send('Page.reload', { ignoreCache: true }); await browser.wait('Boolean(window.__CANVAS_FIXTURE?.ready) && document.querySelectorAll(".react-flow__node-result").length===4');
+  assert.equal(sends().length, beforeLoss + 1); assert.ok(api.requests.some((request) => request.path.startsWith('/api/me/canvas-runs/')));
+  assert.equal((await currentScene(browser)).runBindings.every((binding) => binding.outputsHandled), true);
+  pass({ originCanvasId: canvasA, emptyOtherCanvasId: canvasB, postCountBeforeRefresh: beforeLoss + 1, postCountAfterRefresh: sends().length, recoveredViaReadOnlyLookup: true });
+
+  setStage('Organization deletion keeps canonical fake works and suppresses late/remounted results');
+  await fit(browser); const removedResult = await browser.evaluate('document.querySelector(".react-flow__node-result").dataset.id');
+  await browser.click('.react-flow__node-result [aria-label="\u5220\u9664\u7ed3\u679c\u56fe\u8282\u70b9"]'); await sleep(600);
+  assert.ok(!(await currentScene(browser)).nodes.some((node) => node.id === removedResult));
+  await browser.send('Page.reload', { ignoreCache: true }); await browser.wait('Boolean(document.querySelector(".react-flow"))'); await sleep(800);
+  assert.equal(await browser.evaluate(`Boolean(document.querySelector('.react-flow__node[data-id="${removedResult}"]'))`), false);
+  const jobCount = api.account().jobs.size; const beforeDeleteRace = sends().length; api.controls.nextGenerate = 'delay'; await fit(browser); await browser.byText(L.run);
+  await until(() => sends().length === beforeDeleteRace + 1 && api.pendingGates.filter((gate) => gate.kind === 'generate').length === 2, 'Delete-race accepted request');
+  await browser.click('.react-flow__node-generation [aria-label="\u5220\u9664\u751f\u6210\u8282\u70b9"]');
+  api.pendingGates.filter((gate) => gate.kind === 'generate').at(-1).resolve(); await sleep(650);
+  assert.equal(await browser.evaluate('document.querySelectorAll(".react-flow__node-generation").length'), 0);
+  assert.equal(await browser.evaluate('document.querySelectorAll(".react-flow__node-result").length'), 3);
+  assert.equal(api.account().jobs.size, jobCount + 1);
+  assert.ok(!api.requests.some((request) => request.path.includes('/generations/') && request.method !== 'GET'));
+  await selectTitle(browser, 'Fixture B'); await browser.click('[aria-label="\u5220\u9664\u753b\u5e03"]'); await browser.byText('\u786e\u8ba4\u5220\u9664\u753b\u5e03'); await browser.wait('!document.querySelector("[role=dialog]")');
+  await sleep(600); assert.ok(api.account().deleted.has(canvasB));
+  await browser.send('Page.reload', { ignoreCache: true }); await browser.wait('Boolean(window.__CANVAS_FIXTURE?.ready)'); await sleep(700);
+  assert.equal(await browser.evaluate('document.body.textContent.includes("Fixture B")'), false);
+  pass({ canonicalFakeJobsRetained: api.account().jobs.size, deletedResultId: removedResult, deletedGenerationLateResultNotAttached: true, canvasTombstoneRetained: canvasB, cancellationCalls: 0 });
+
+  setStage('Cross-account mode/local-IDB isolation and independent chat draft on mode return');
+  const beforeAccount = sends().length; await browser.evaluate('window.__CANVAS_FIXTURE.switchOwner("fixture-owner-b")');
+  await browser.wait('window.__CANVAS_FIXTURE.owner==="fixture-owner-b"'); await canvasMode(browser); await sleep(350);
+  assert.equal(await browser.evaluate('document.querySelectorAll(".react-flow__node").length'), 0); assert.equal(await browser.evaluate('document.body.textContent.includes("Fixture A")'), false);
+  await browser.evaluate('window.__CANVAS_FIXTURE.switchOwner("fixture-owner-a")'); await browser.wait('window.__CANVAS_FIXTURE.owner==="fixture-owner-a" && Boolean(document.querySelector(".react-flow"))');
+  assert.equal(sends().length, beforeAccount);
+  await browser.byText(L.chat, L.mode); await browser.wait('Boolean(document.querySelector("textarea[placeholder]"))');
+  await browser.replaceText(chatTextarea, 'Chat preserved through canvas viewing'); await canvasMode(browser); await browser.byText(L.chat, L.mode);
+  assert.equal(await browser.evaluate('document.querySelector("textarea[placeholder]").value'), 'Chat preserved through canvas viewing');
+  pass({ accountsUseDistinctNativeKeys: true, noGenerationDuringSwitch: sends().length === beforeAccount });
+
+  setStage('Real drag handle at zoom 0.25/1/2 and native persisted negative-coordinate geometry');
+  await canvasMode(browser);
+  const dragResults = [];
+  for (const zoom of [0.25, 1, 2]) {
+    const scene = emptyScene(); scene.viewport = { x: 380, y: 260, zoom };
+    const nodeId = randomUUID(); scene.nodes.push({ id: nodeId, kind: 'prompt', position: { x: -100, y: -70 }, text: 'Negative geometry fixture' });
+    const canvasId = api.seed('fixture-owner-a', 'Drag ' + zoom, scene);
+    await browser.send('Page.reload', { ignoreCache: true }); await browser.wait('Boolean(window.__CANVAS_FIXTURE?.ready)'); await canvasMode(browser); await selectTitle(browser, 'Drag ' + zoom);
+    const selector = `.react-flow__node[data-id="${nodeId}"]`;
+    await browser.wait(`document.querySelector(${JSON.stringify(selector)})?.style.visibility==='visible'`);
+    const p = await browser.point(selector + ' .canvas-node-drag-handle', 0.4, 0.5);
+    await browser.mouse('mouseMoved', p.x, p.y); await browser.mouse('mousePressed', p.x, p.y, { button: 'left', buttons: 1, clickCount: 1 });
+    await browser.mouse('mouseMoved', p.x + 5, p.y, { button: 'left', buttons: 1 }); await sleep(160);
+    const position = () => browser.evaluate(`(()=>{const t=document.querySelector(${JSON.stringify(selector)}).style.transform.match(/translate\\(([-.\\d]+)px,\\s*([-.\\d]+)px\\)/);return {x:Number(t[1]),y:Number(t[2])}})()`);
+    const before = await position();
+    for (let count = 1; count <= 10; count += 1) { await browser.mouse('mouseMoved', p.x + 5 + 20 * count / 10, p.y + 12 * count / 10, { button: 'left', buttons: 1 }); await sleep(20); }
+    await browser.mouse('mouseReleased', p.x + 25, p.y + 12, { button: 'left', buttons: 0, clickCount: 1 }); await sleep(200);
+    const after = await position();
+    assert.ok(Math.abs(after.x - before.x - 20 / zoom) < 0.05); assert.ok(Math.abs(after.y - before.y - 12 / zoom) < 0.05);
+    const durable = await currentScene(browser); assert.deepEqual(durable.nodes[0].position, after); assert.ok(Number.isFinite(after.x) && Number.isFinite(after.y));
+    assert.ok(after.x < 0 || after.y < 0); assert.equal(durable.viewport.zoom, zoom);
+    dragResults.push({ canvasId, zoom, before, after, expectedWorldDelta: { x: 20 / zoom, y: 12 / zoom } });
+  }
+  pass({ dragResults, nativeIdbPositionsMatch: true });
+
+  setStage('24-node/32-edge representative scene and 200-node capacity smoke');
+  const stress = [];
+  for (const count of [24, 200]) {
+    const scene = emptyScene(); scene.viewport = { x: 110, y: 90, zoom: 0.25 };
+    for (let index = 0; index < count; index += 1) {
+      const position = { x: (index % 10) * 380 - 380, y: Math.floor(index / 10) * 400 - 80 };
+      const id = randomUUID();
+      if (index % 4 === 0) scene.nodes.push({ id, kind: 'prompt', position, text: ('A composed illustration with lighting and texture.\n').repeat(5) });
+      else if (index % 4 === 1) {
+        const assetId = 'representative-asset-' + id;
+        const png = fixturePng(Boolean(index % 2));
+        api.account().assets.set(assetId, { id: assetId, uploadId: randomUUID(), state: 'READY', byteLength: png.length, mimeType: 'image/png', sha256: 'a'.repeat(64), readyAt: '2026-10-30T00:00:00.000Z', url: '/fixture-media/' + assetId + '.png' });
+        api.account().bytes.set(assetId, png);
+        scene.nodes.push({ id, kind: 'reference', position, source: { kind: 'imported', assetId } });
+      }
+      else if (index % 4 === 2) scene.nodes.push({ id, kind: 'generation', position, parameters: defaults });
+      else { const job = api.makeJob('stress-' + id, 'stress fixture'); api.account().jobs.set(job.id, job); scene.nodes.push({ id: 'result:' + job.images[0].id, kind: 'result', position, jobId: job.id, imageId: job.images[0].id }); }
+    }
+    if (count === 24) {
+      const prompts = scene.nodes.filter(n => n.kind === 'prompt'), refs = scene.nodes.filter(n => n.kind === 'reference');
+      const gens = scene.nodes.filter(n => n.kind === 'generation'), results = scene.nodes.filter(n => n.kind === 'result');
+      for (let i = 0; i < gens.length; i += 1) {
+        scene.edges.push({ id: randomUUID(), kind: 'prompt-input', source: prompts[i].id, target: gens[i].id });
+        const inputs = [refs[i], refs[(i+1)%6], results[i], results[(i+1)%6]];
+        if (i < 2) inputs.push(refs[(i+2)%6]);
+        inputs.forEach((input, ordinal) => scene.edges.push({ id: randomUUID(), kind: 'image-input', source: input.id, target: gens[i].id, ordinal: ordinal + 1 }));
+      }
+      assert.equal(scene.edges.length, 32);
+    }
+    api.seed('fixture-owner-a', 'Stress ' + count, scene);
+    await browser.send('Page.reload', { ignoreCache: true }); await browser.wait('Boolean(window.__CANVAS_FIXTURE?.ready)'); await canvasMode(browser);
+    const start = Date.now(); await selectTitle(browser, 'Stress ' + count); await browser.wait(`document.querySelectorAll('.react-flow__node').length===${count}`, 25_000); await sleep(700);
+    const measures = await browser.evaluate(`(()=>{const e=document.querySelector('[data-testid=canvas-viewport]');const r=e.getBoundingClientRect();return {width:r.width,height:r.height,nodes:document.querySelectorAll('.react-flow__node').length,world:document.querySelector('.react-flow__viewport').style.transform,documentWidth:document.documentElement.scrollWidth}})()`);
+    assert.ok(measures.width > 0 && measures.height > 0 && measures.documentWidth <= 1440); assert.ok(measures.world.includes('0.25'));
+    stress.push({ count, observedSelectAndSettleMs: Date.now() - start, measures });
+  }
+  pass({ stress, capacityClaim: false }); await browser.shot('stress-200');
+
+  report.phone = await mobilePhoneChecks({ browser, second, api, output, L, sends, uploads, saves, currentScene, domGeometry, fit, canvasMode, selectTitle, rename, setStage, pass, until, fixturePng, emptyScene, defaults });
+
+  setStage('Real lazy chunk failure, honest recovery guidance, preserved chat and explicit manual reload');
+  const retryBrowser = await openBrowser(output, origin, 'lazy-network'); browsers.push(retryBrowser); retryBrowser.state.stage = stage; await retryBrowser.navigate();
+  await retryBrowser.replaceText(chatTextarea, 'Unsent across real lazy network error');
+  retryBrowser.state.blockChunk = lazyChunks.find((chunk) => chunk.endsWith('.js'));
+  assert.ok(retryBrowser.state.blockChunk);
+  await retryBrowser.byText(L.canvas, L.mode);
+  await retryBrowser.wait('document.body.textContent.includes("\u753b\u5e03\u6682\u65f6\u65e0\u6cd5\u663e\u793a")', 25_000);
+  const beforeRetrySends = sends().length;
+  const pageTimeOrigin = await retryBrowser.evaluate('performance.timeOrigin');
+  assert.equal(await retryBrowser.evaluate('Array.from(document.querySelectorAll("button")).some(e=>e.textContent.trim()==="\u91cd\u8bd5\u52a0\u8f7d\u753b\u5e03")'), false);
+  assert.equal(await retryBrowser.evaluate('document.body.textContent.includes("\u624b\u52a8\u5237\u65b0") && document.body.textContent.includes("\u4ec5\u5728\u5185\u5b58\u4e2d\u7684\u5185\u5bb9")'), true);
+  await retryBrowser.shot('chunk-recovery-guidance');
+  retryBrowser.state.blockChunk = null; await sleep(700);
+  assert.equal(await retryBrowser.evaluate('performance.timeOrigin'), pageTimeOrigin, 'No automatic reload can discard the unsent chat draft');
+  await retryBrowser.byText('\u8fd4\u56de\u5bf9\u8bdd');
+  await retryBrowser.wait('Boolean(document.querySelector("textarea[placeholder]"))');
+  assert.equal(await retryBrowser.evaluate('document.querySelector("textarea[placeholder]").value'), 'Unsent across real lazy network error');
+  assert.equal(sends().length, beforeRetrySends);
+  const durableBeforeReload = await retryBrowser.nativeDrafts();
+  await retryBrowser.send('Page.reload', { ignoreCache: true });
+  await retryBrowser.wait('Boolean(window.__CANVAS_FIXTURE?.ready)');
+  await canvasMode(retryBrowser);
+  const durableAfterReload = await retryBrowser.nativeDrafts();
+  for (const entry of durableBeforeReload) {
+    const restored = durableAfterReload.find((candidate) => candidate.ownerId === entry.ownerId && candidate.canvasId === entry.canvasId);
+    assert.ok(restored, 'Explicit manual reload keeps acknowledged local canvas records');
+    assert.deepEqual(restored.envelope.scene, entry.envelope.scene);
+  }
+  assert.equal(sends().length, beforeRetrySends);
+  assert.equal(retryBrowser.evidence.exceptions.length, 0);
+  assert.equal(retryBrowser.evidence.consoleErrors.length, 1, 'Only the intentional caught ChunkLoadError is logged');
+  assert.ok(retryBrowser.evidence.consoleErrors[0].args.some((message) => String(message).includes('ChunkLoadError')));
+  assert.equal(retryBrowser.evidence.blocked.filter((entry) => entry.reason !== 'intentional lazy chunk failure').length, 0);
+  await retryBrowser.shot('manual-reload-recovered');
+  pass({ failedChunk: lazyChunks.find((chunk) => chunk.endsWith('.js')), manualReloadRequired: true, automaticReload: false, chatPreservedBeforeManualReload: true, acknowledgedDraftsRecovered: durableBeforeReload.length, generationReplay: false });
+
+  setStage('Authoritative server deletion overrides a stale native draft without rematerializing results');
+  await browser.send('Emulation.setDeviceMetricsOverride', { width: 1440, height: 950, deviceScaleFactor: 1, mobile: false });
+  await browser.send('Emulation.setTouchEmulationEnabled', { enabled: false });
+  await canvasMode(browser); await selectTitle(browser, 'Fixture A');
+  const beforeRemoteDelete = (await browser.nativeDrafts()).find((row) => row.canvasId === canvasA);
+  assert.ok(beforeRemoteDelete && !beforeRemoteDelete.envelope.deletedAt && beforeRemoteDelete.envelope.scene.nodes.length > 0);
+  const retainedJobs = api.account().jobs.size;
+  const beforeRemoteDeleteRequests = api.requests.length;
+  const beforeRemoteDeleteSends = sends().length;
+  // Another device's acknowledged cloud deletion leaves this profile's native
+  // record stale, just as a failed local tombstone write would after a reload.
+  api.account().deleted.add(canvasA);
+  await browser.send('Page.reload', { ignoreCache: true });
+  await browser.wait('Boolean(window.__CANVAS_FIXTURE?.ready)');
+  await canvasMode(browser);
+  await until(async () => (await browser.nativeDrafts()).find((row) => row.canvasId === canvasA)?.envelope.deletedAt, 'Server deletion repairs native tombstone without force writing');
+  assert.equal(await browser.evaluate('document.querySelectorAll(".react-flow__node").length'), 0);
+  assert.equal(await browser.evaluate('document.body.textContent.includes("Fixture A")'), false);
+  assert.equal(api.account().jobs.size, retainedJobs);
+  assert.equal(sends().length, beforeRemoteDeleteSends);
+  const afterRemoteDeleteRequests = api.requests.slice(beforeRemoteDeleteRequests);
+  assert.ok(afterRemoteDeleteRequests.some((request) => request.path === '/api/me/canvases/' + canvasA && request.method === 'GET'));
+  assert.equal(afterRemoteDeleteRequests.some((request) => request.path.startsWith('/api/me/canvas-runs/') || (request.path === '/api/me/canvas-runtime/resolve' && request.body?.canvasId === canvasA)), false);
+  pass({ staleNativeCanvasId: canvasA, localTombstoneAcknowledged: true, noRunLookupOrRuntimeMaterialization: true, canonicalFakeJobsRetained: retainedJobs, generationReplay: false });
+
+  setStage('New-device saved multi-run hydration reconciles every complete terminal batch once');
+  const recoveredPromptId = randomUUID(), generationAId = randomUUID(), generationBId = randomUUID();
+  const recoveredScene = emptyScene();
+  recoveredScene.nodes.push(
+    { id: recoveredPromptId, kind: 'prompt', position: { x: -350, y: 10 }, text: 'Saved independent terminal runs' },
+    { id: generationAId, kind: 'generation', position: { x: 20, y: 10 }, parameters: { ...defaults, count: 2 } },
+    { id: generationBId, kind: 'generation', position: { x: 20, y: 400 }, parameters: { ...defaults, count: 1 } },
+  );
+  for (const target of [generationAId, generationBId]) recoveredScene.edges.push({ id: randomUUID(), kind: 'prompt-input', source: recoveredPromptId, target });
+  const recoveredRuns = [
+    { runId: randomUUID(), nodeId: generationAId, job: api.makeJob('restore-' + randomUUID(), 'Saved independent terminal runs', { ...defaults, count: 2 }) },
+    { runId: randomUUID(), nodeId: generationBId, job: api.makeJob('restore-' + randomUUID(), 'Saved independent terminal runs', { ...defaults, count: 1 }) },
+  ];
+  recoveredScene.runBindings = recoveredRuns.map((run) => ({ runId: run.runId, nodeId: run.nodeId, jobId: run.job.id, outputsHandled: false }));
+  const recoveredCanvasId = api.seed('fixture-owner-a', 'Saved multi-run recovery', recoveredScene);
+  for (const run of recoveredRuns) {
+    api.account().jobs.set(run.job.id, run.job);
+    api.account().runs.set(run.runId, { state: 'COMMITTED', origin: { canvasId: recoveredCanvasId, nodeId: run.nodeId, runId: run.runId }, jobId: run.job.id, generation: run.job, unavailable: null });
+  }
+  assert.equal((await second.nativeDrafts()).some((row) => row.canvasId === recoveredCanvasId), false);
+  const beforeSavedHydrationSends = sends().length;
+  await second.send('Page.reload', { ignoreCache: true });
+  await second.wait('Boolean(window.__CANVAS_FIXTURE?.ready)');
+  await canvasMode(second); await selectTitle(second, 'Saved multi-run recovery');
+  await second.wait('document.querySelectorAll(".react-flow__node-result").length===3');
+  const hydratedScene = await currentScene(second);
+  assert.equal(hydratedScene.runBindings.length, 2);
+  assert.ok(hydratedScene.runBindings.every((binding) => binding.outputsHandled));
+  assert.deepEqual(hydratedScene.nodes.filter((node) => node.kind === 'result').map((node) => node.imageId).sort(), recoveredRuns.flatMap((run) => run.job.images.map((image) => image.id)).sort());
+  assert.equal(sends().length, beforeSavedHydrationSends);
+  await second.send('Page.reload', { ignoreCache: true });
+  await second.wait('Boolean(window.__CANVAS_FIXTURE?.ready) && document.querySelectorAll(".react-flow__node-result").length===3');
+  assert.equal((await currentScene(second)).nodes.filter((node) => node.kind === 'result').length, 3);
+  assert.equal(sends().length, beforeSavedHydrationSends);
+  pass({ newDeviceWithoutLocalDraft: true, canvasId: recoveredCanvasId, terminalImageCounts: [2, 1], stableResults: 3, outputsHandledTogether: true, generationReplay: false });
+
+  assert.equal(apiErrors.length, 0);
+  for (const client of [browser, second]) { assert.equal(client.evidence.exceptions.length, 0); assert.equal(client.evidence.consoleErrors.length, 0); assert.equal(client.evidence.blocked.length, 0); }
+  report.pass = true;
+} catch (error) {
+  report.pass = false; report.failedStage = stage; report.error = String(error.stack ?? error); console.error(report.error);
+  report.failureStates = [];
+  for (const browser of browsers) { try { await browser.shot('failure'); report.failureStates.push({ name: browser.evidence.name, dom: await browser.evaluate('document.body.innerText'), geometry: await browser.evaluate(`({active:document.activeElement.outerHTML.slice(0,1000),flow:document.querySelector('.react-flow__viewport')?.getAttribute('style'),nodes:[...document.querySelectorAll('.react-flow__node')].map(e=>({id:e.dataset.id,style:e.getAttribute('style'),rect:e.getBoundingClientRect().toJSON(),text:e.textContent})),textarea:document.querySelector('textarea[aria-label]')?.value})`), nativeDrafts: await browser.nativeDrafts() }); } catch { } }
+  process.exitCode = 1;
+} finally {
+  api.releaseAll();
+  report.browsers = browsers.map((browser) => browser.evidence); report.requests = api.requests;
+  await fs.writeFile(path.join(output, 'results.json'), JSON.stringify(report, null, 2));
+  await fs.writeFile(path.join(output, 'next.stdout.log'), appStdout); await fs.writeFile(path.join(output, 'next.stderr.log'), appStderr);
+  for (const browser of browsers.reverse()) await browser.close();
+  facade.closeAllConnections(); await new Promise((resolve) => facade.close(resolve)); await terminateProcessTree(app, { graceMs: 1500 });
+  console.log(JSON.stringify({ pass: report.pass, checks: results.length, failedStage: report.failedStage ?? null, evidence: path.join(output, 'results.json') }));
+}

@@ -1,0 +1,54 @@
+{
+  "scope": "11 targeted unit suites (153 tests), lint, types; not final full-suite/build gate",
+  "runtime": "Node 24.11.1; not pinned 24.22.1",
+  "receipts": [
+    {
+      "command": [
+        "D:\\node\\node.exe",
+        "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\app\\node_modules\\vitest\\vitest.mjs",
+        "run",
+        "--testTimeout=30000",
+        "src/tests/unit/homepage-hero.test.tsx",
+        "src/tests/unit/homepage-motion.test.tsx",
+        "src/tests/unit/homepage-header-footer.test.tsx",
+        "src/tests/unit/homepage-page.test.tsx",
+        "src/tests/unit/featured-gallery.test.tsx",
+        "src/tests/unit/use-featured-gallery.test.tsx",
+        "src/tests/unit/featured-gallery-likes.test.tsx",
+        "src/tests/unit/featured-response-validation.test.ts",
+        "src/tests/unit/featured-public-contract.test.tsx",
+        "src/tests/unit/prisma-mappers.test.ts",
+        "src/tests/unit/work-detail-page-privacy.test.tsx"
+      ],
+      "exitCode": 0,
+      "timedOut": false,
+      "durationSeconds": 14.518,
+      "sourceChanges": [],
+      "snapshotModifications": []
+    },
+    {
+      "command": [
+        "D:\\node\\node.exe",
+        "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\app\\node_modules\\eslint\\bin\\eslint.js",
+        "."
+      ],
+      "exitCode": 0,
+      "timedOut": false,
+      "durationSeconds": 19.005,
+      "sourceChanges": [],
+      "snapshotModifications": []
+    },
+    {
+      "command": [
+        "D:\\node\\node.exe",
+        "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\app\\node_modules\\typescript\\bin\\tsc",
+        "--noEmit"
+      ],
+      "exitCode": 0,
+      "timedOut": false,
+      "durationSeconds": 3.151,
+      "sourceChanges": [],
+      "snapshotModifications": []
+    }
+  ]
+}

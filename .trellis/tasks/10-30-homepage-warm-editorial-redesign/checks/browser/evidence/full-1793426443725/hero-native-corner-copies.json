@@ -1,0 +1,1814 @@
+[
+  {
+    "scene": "film",
+    "corner": "top-left",
+    "tilted": {
+      "at": 1527.4000000059605,
+      "x": 1242.5936279296875,
+      "y": 530.5690612792969,
+      "rect": {
+        "x": 1200.289794921875,
+        "y": 516.1307373046875,
+        "width": 84.607666015625,
+        "height": 28.87664794921875,
+        "top": 516.1307373046875,
+        "right": 1284.8974609375,
+        "bottom": 545.0073852539062,
+        "left": 1200.289794921875
+      },
+      "clip": {
+        "left": 0,
+        "top": 0,
+        "right": 1432,
+        "bottom": 1000
+      },
+      "visible": true,
+      "hit": true,
+      "hitTag": "BUTTON",
+      "disabled": false,
+      "scene": "film",
+      "ready": true,
+      "frameTransform": "matrix3d(0.998027, -0.00394265, 0.0626666, 0, 0, 0.998027, 0.0627905, 0, -0.0627905, -0.0626666, 0.996057, 0, 0, 0, 0, 1)",
+      "pointerActive": "true",
+      "rotateX": 3.6,
+      "rotateY": -3.6,
+      "paused": "false",
+      "reduced": "false",
+      "copyCount": 0
+    },
+    "copy": {
+      "before": {
+        "at": 1529.5,
+        "x": 1242.5936279296875,
+        "y": 530.5690612792969,
+        "rect": {
+          "x": 1200.289794921875,
+          "y": 516.1307373046875,
+          "width": 84.607666015625,
+          "height": 28.87664794921875,
+          "top": 516.1307373046875,
+          "right": 1284.8974609375,
+          "bottom": 545.0073852539062,
+          "left": 1200.289794921875
+        },
+        "clip": {
+          "left": 0,
+          "top": 0,
+          "right": 1432,
+          "bottom": 1000
+        },
+        "visible": true,
+        "hit": true,
+        "hitTag": "BUTTON",
+        "disabled": false,
+        "scene": "film",
+        "ready": true,
+        "frameTransform": "matrix3d(0.998027, -0.00394265, 0.0626666, 0, 0, 0.998027, 0.0627905, 0, -0.0627905, -0.0626666, 0.996057, 0, 0, 0, 0, 1)",
+        "pointerActive": "true",
+        "rotateX": 3.6,
+        "rotateY": -3.6,
+        "paused": "false",
+        "reduced": "false",
+        "copyCount": 0
+      },
+      "pressed": {
+        "at": 1832.1000000089407,
+        "x": 1235.62255859375,
+        "y": 526.8822631835938,
+        "rect": {
+          "x": 1195.552734375,
+          "y": 512.839111328125,
+          "width": 80.1396484375,
+          "height": 28.0863037109375,
+          "top": 512.839111328125,
+          "right": 1275.6923828125,
+          "bottom": 540.9254150390625,
+          "left": 1195.552734375
+        },
+        "clip": {
+          "left": 0,
+          "top": 0,
+          "right": 1432,
+          "bottom": 1000
+        },
+        "visible": true,
+        "hit": true,
+        "hitTag": "BUTTON",
+        "disabled": false,
+        "scene": "film",
+        "ready": true,
+        "frameTransform": "matrix3d(0.998499, -0.00241794, -0.0547225, 0, 0, 0.999025, -0.0441425, 0, 0.0547759, 0.0440762, 0.997525, 0, 0, 0, 0, 1)",
+        "pointerActive": "true",
+        "rotateX": -2.53,
+        "rotateY": 3.14,
+        "paused": "false",
+        "reduced": "false",
+        "copyCount": 0
+      },
+      "copied": {
+        "text": "黄昏穿过旧书店百叶窗的丁达尔光束，微尘在暖金空气中漂浮，王家卫电影胶片颗粒感，柔和景深，叙事感构图",
+        "id": "film",
+        "typed": "黄昏穿过旧书店百叶窗的丁达尔光束，微尘在暖金空气中漂浮，王家卫电影胶片颗粒感，柔和景深，叙事感构图"
+      },
+      "events": [
+        {
+          "type": "pointerdown",
+          "at": 1833.7000000029802,
+          "x": 1235.62255859375,
+          "y": 526.8822631835938,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "heroCopy": true,
+          "target": "<button type=\"button\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-arrow-up-right\" aria-hidden=\"true\"><path d=\"M7 7h10v10\"></path><path d=\"M7 1",
+          "scene": "film"
+        },
+        {
+          "type": "pointerup",
+          "at": 1834.7999999970198,
+          "x": 1235.62255859375,
+          "y": 526.8822631835938,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "heroCopy": true,
+          "target": "<button type=\"button\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-arrow-up-right\" aria-hidden=\"true\"><path d=\"M7 7h10v10\"></path><path d=\"M7 1",
+          "scene": "film"
+        },
+        {
+          "type": "click",
+          "at": 1834.9000000059605,
+          "x": 1235,
+          "y": 526,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 1,
+          "heroCopy": true,
+          "target": "<button type=\"button\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-arrow-up-right\" aria-hidden=\"true\"><path d=\"M7 7h10v10\"></path><path d=\"M7 1",
+          "scene": "film"
+        }
+      ]
+    }
+  },
+  {
+    "scene": "film",
+    "corner": "top-right",
+    "tilted": {
+      "at": 2302.9000000059605,
+      "x": 1226.8548583984375,
+      "y": 529.5029296875,
+      "rect": {
+        "x": 1175.516845703125,
+        "y": 515.40234375,
+        "width": 102.676025390625,
+        "height": 28.201171875,
+        "top": 515.40234375,
+        "right": 1278.19287109375,
+        "bottom": 543.603515625,
+        "left": 1175.516845703125
+      },
+      "clip": {
+        "left": 0,
+        "top": 0,
+        "right": 1432,
+        "bottom": 1000
+      },
+      "visible": true,
+      "hit": true,
+      "hitTag": "BUTTON",
+      "disabled": false,
+      "scene": "film",
+      "ready": true,
+      "frameTransform": "matrix3d(0.998027, 0.00394265, -0.0626666, 0, 0, 0.998027, 0.0627905, 0, 0.0627905, -0.0626666, 0.996057, 0, 0, 0, 0, 1)",
+      "pointerActive": "true",
+      "rotateX": 3.6,
+      "rotateY": 3.6,
+      "paused": "false",
+      "reduced": "false",
+      "copyCount": 1
+    },
+    "copy": {
+      "before": {
+        "at": 2305.6000000089407,
+        "x": 1226.8548583984375,
+        "y": 529.5029296875,
+        "rect": {
+          "x": 1175.516845703125,
+          "y": 515.40234375,
+          "width": 102.676025390625,
+          "height": 28.201171875,
+          "top": 515.40234375,
+          "right": 1278.19287109375,
+          "bottom": 543.603515625,
+          "left": 1175.516845703125
+        },
+        "clip": {
+          "left": 0,
+          "top": 0,
+          "right": 1432,
+          "bottom": 1000
+        },
+        "visible": true,
+        "hit": true,
+        "hitTag": "BUTTON",
+        "disabled": false,
+        "scene": "film",
+        "ready": true,
+        "frameTransform": "matrix3d(0.998027, 0.00394265, -0.0626666, 0, 0, 0.998027, 0.0627905, 0, 0.0627905, -0.0626666, 0.996057, 0, 0, 0, 0, 1)",
+        "pointerActive": "true",
+        "rotateX": 3.6,
+        "rotateY": 3.6,
+        "paused": "false",
+        "reduced": "false",
+        "copyCount": 1
+      },
+      "pressed": {
+        "at": 2609.5,
+        "x": 1225.172119140625,
+        "y": 527.4830627441406,
+        "rect": {
+          "x": 1174.2529296875,
+          "y": 513.3678588867188,
+          "width": 101.83837890625,
+          "height": 28.23040771484375,
+          "top": 513.3678588867188,
+          "right": 1276.09130859375,
+          "bottom": 541.5982666015625,
+          "left": 1174.2529296875
+        },
+        "clip": {
+          "left": 0,
+          "top": 0,
+          "right": 1432,
+          "bottom": 1000
+        },
+        "visible": true,
+        "hit": true,
+        "hitTag": "BUTTON",
+        "disabled": false,
+        "scene": "film",
+        "ready": true,
+        "frameTransform": "matrix3d(0.998593, -0.00197108, -0.0529965, 0, 0, 0.999309, -0.037167, 0, 0.0530331, 0.0371146, 0.997903, 0, 0, 0, 0, 1)",
+        "pointerActive": "true",
+        "rotateX": -2.13,
+        "rotateY": 3.04,
+        "paused": "false",
+        "reduced": "false",
+        "copyCount": 1
+      },
+      "copied": {
+        "text": "黄昏穿过旧书店百叶窗的丁达尔光束，微尘在暖金空气中漂浮，王家卫电影胶片颗粒感，柔和景深，叙事感构图",
+        "id": "film",
+        "typed": "黄昏穿过旧书店百叶窗的丁达尔光束，微尘在暖金空气中漂浮，王家卫电影胶片颗粒感，柔和景深，叙事感构图"
+      },
+      "events": [
+        {
+          "type": "pointerdown",
+          "at": 2610.7999999970198,
+          "x": 1225.172119140625,
+          "y": 527.4830322265625,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "heroCopy": true,
+          "target": "<button type=\"button\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-check\" aria-hidden=\"true\"><path d=\"M20 6 9 17l-5-5\"></path></svg>已复制完整提示词</b",
+          "scene": "film"
+        },
+        {
+          "type": "pointerup",
+          "at": 2611.7000000029802,
+          "x": 1225.172119140625,
+          "y": 527.4830322265625,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "heroCopy": true,
+          "target": "<button type=\"button\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-check\" aria-hidden=\"true\"><path d=\"M20 6 9 17l-5-5\"></path></svg>已复制完整提示词</b",
+          "scene": "film"
+        },
+        {
+          "type": "click",
+          "at": 2611.7999999970198,
+          "x": 1225,
+          "y": 527,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 1,
+          "heroCopy": true,
+          "target": "<button type=\"button\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-check\" aria-hidden=\"true\"><path d=\"M20 6 9 17l-5-5\"></path></svg>已复制完整提示词</b",
+          "scene": "film"
+        }
+      ]
+    }
+  },
+  {
+    "scene": "film",
+    "corner": "bottom-left",
+    "tilted": {
+      "at": 3073.7999999970198,
+      "x": 1228.4571533203125,
+      "y": 530.2294311523438,
+      "rect": {
+        "x": 1175.70458984375,
+        "y": 515.782958984375,
+        "width": 105.505126953125,
+        "height": 28.8929443359375,
+        "top": 515.782958984375,
+        "right": 1281.209716796875,
+        "bottom": 544.6759033203125,
+        "left": 1175.70458984375
+      },
+      "clip": {
+        "left": 0,
+        "top": 0,
+        "right": 1432,
+        "bottom": 1000
+      },
+      "visible": true,
+      "hit": true,
+      "hitTag": "BUTTON",
+      "disabled": false,
+      "scene": "film",
+      "ready": true,
+      "frameTransform": "matrix3d(0.998027, 0.00394265, 0.0626666, 0, 0, 0.998027, -0.0627905, 0, -0.0627905, 0.0626666, 0.996057, 0, 0, 0, 0, 1)",
+      "pointerActive": "true",
+      "rotateX": -3.6,
+      "rotateY": -3.6,
+      "paused": "false",
+      "reduced": "false",
+      "copyCount": 2
+    },
+    "copy": {
+      "before": {
+        "at": 3076,
+        "x": 1228.4571533203125,
+        "y": 530.2294311523438,
+        "rect": {
+          "x": 1175.70458984375,
+          "y": 515.782958984375,
+          "width": 105.505126953125,
+          "height": 28.8929443359375,
+          "top": 515.782958984375,
+          "right": 1281.209716796875,
+          "bottom": 544.6759033203125,
+          "left": 1175.70458984375
+        },
+        "clip": {
+          "left": 0,
+          "top": 0,
+          "right": 1432,
+          "bottom": 1000
+        },
+        "visible": true,
+        "hit": true,
+        "hitTag": "BUTTON",
+        "disabled": false,
+        "scene": "film",
+        "ready": true,
+        "frameTransform": "matrix3d(0.998027, 0.00394265, 0.0626666, 0, 0, 0.998027, -0.0627905, 0, -0.0627905, 0.0626666, 0.996057, 0, 0, 0, 0, 1)",
+        "pointerActive": "true",
+        "rotateX": -3.6,
+        "rotateY": -3.6,
+        "paused": "false",
+        "reduced": "false",
+        "copyCount": 2
+      },
+      "pressed": {
+        "at": 3382.7000000029802,
+        "x": 1225.2276000976562,
+        "y": 527.4869384765625,
+        "rect": {
+          "x": 1174.2740478515625,
+          "y": 513.3818359375,
+          "width": 101.9071044921875,
+          "height": 28.210205078125,
+          "top": 513.3818359375,
+          "right": 1276.18115234375,
+          "bottom": 541.592041015625,
+          "left": 1174.2740478515625
+        },
+        "clip": {
+          "left": 0,
+          "top": 0,
+          "right": 1432,
+          "bottom": 1000
+        },
+        "visible": true,
+        "hit": true,
+        "hitTag": "BUTTON",
+        "disabled": false,
+        "scene": "film",
+        "ready": true,
+        "frameTransform": "matrix3d(0.998702, -0.00198219, -0.050903, 0, 0, 0.999243, -0.038911, 0, 0.0509416, 0.0388605, 0.997945, 0, 0, 0, 0, 1)",
+        "pointerActive": "true",
+        "rotateX": -2.23,
+        "rotateY": 2.92,
+        "paused": "false",
+        "reduced": "false",
+        "copyCount": 2
+      },
+      "copied": {
+        "text": "黄昏穿过旧书店百叶窗的丁达尔光束，微尘在暖金空气中漂浮，王家卫电影胶片颗粒感，柔和景深，叙事感构图",
+        "id": "film",
+        "typed": "黄昏穿过旧书店百叶窗的丁达尔光束，微尘在暖金空气中漂浮，王家卫电影胶片颗粒感，柔和景深，叙事感构图"
+      },
+      "events": [
+        {
+          "type": "pointerdown",
+          "at": 3383.7999999970198,
+          "x": 1225.2275390625,
+          "y": 527.4869384765625,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "heroCopy": true,
+          "target": "<button type=\"button\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-check\" aria-hidden=\"true\"><path d=\"M20 6 9 17l-5-5\"></path></svg>已复制完整提示词</b",
+          "scene": "film"
+        },
+        {
+          "type": "pointerup",
+          "at": 3385.2000000029802,
+          "x": 1225.2275390625,
+          "y": 527.4869384765625,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "heroCopy": true,
+          "target": "<button type=\"button\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-check\" aria-hidden=\"true\"><path d=\"M20 6 9 17l-5-5\"></path></svg>已复制完整提示词</b",
+          "scene": "film"
+        },
+        {
+          "type": "click",
+          "at": 3385.2999999970198,
+          "x": 1225,
+          "y": 527,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 1,
+          "heroCopy": true,
+          "target": "<button type=\"button\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-check\" aria-hidden=\"true\"><path d=\"M20 6 9 17l-5-5\"></path></svg>已复制完整提示词</b",
+          "scene": "film"
+        }
+      ]
+    }
+  },
+  {
+    "scene": "film",
+    "corner": "bottom-right",
+    "tilted": {
+      "at": 3844.7999999970198,
+      "x": 1224.2254638671875,
+      "y": 526.4725036621094,
+      "rect": {
+        "x": 1173.575439453125,
+        "y": 512.3241577148438,
+        "width": 101.300048828125,
+        "height": 28.29669189453125,
+        "top": 512.3241577148438,
+        "right": 1274.87548828125,
+        "bottom": 540.620849609375,
+        "left": 1173.575439453125
+      },
+      "clip": {
+        "left": 0,
+        "top": 0,
+        "right": 1432,
+        "bottom": 1000
+      },
+      "visible": true,
+      "hit": true,
+      "hitTag": "BUTTON",
+      "disabled": false,
+      "scene": "film",
+      "ready": true,
+      "frameTransform": "matrix3d(0.998027, -0.00394265, -0.0626666, 0, 0, 0.998027, -0.0627905, 0, 0.0627905, 0.0626666, 0.996057, 0, 0, 0, 0, 1)",
+      "pointerActive": "true",
+      "rotateX": -3.6,
+      "rotateY": 3.6,
+      "paused": "false",
+      "reduced": "false",
+      "copyCount": 3
+    },
+    "copy": {
+      "before": {
+        "at": 3846.5,
+        "x": 1224.2254638671875,
+        "y": 526.4725036621094,
+        "rect": {
+          "x": 1173.575439453125,
+          "y": 512.3241577148438,
+          "width": 101.300048828125,
+          "height": 28.29669189453125,
+          "top": 512.3241577148438,
+          "right": 1274.87548828125,
+          "bottom": 540.620849609375,
+          "left": 1173.575439453125
+        },
+        "clip": {
+          "left": 0,
+          "top": 0,
+          "right": 1432,
+          "bottom": 1000
+        },
+        "visible": true,
+        "hit": true,
+        "hitTag": "BUTTON",
+        "disabled": false,
+        "scene": "film",
+        "ready": true,
+        "frameTransform": "matrix3d(0.998027, -0.00394265, -0.0626666, 0, 0, 0.998027, -0.0627905, 0, 0.0627905, 0.0626666, 0.996057, 0, 0, 0, 0, 1)",
+        "pointerActive": "true",
+        "rotateX": -3.6,
+        "rotateY": 3.6,
+        "paused": "false",
+        "reduced": "false",
+        "copyCount": 3
+      },
+      "pressed": {
+        "at": 4151.70000000298,
+        "x": 1225.1883544921875,
+        "y": 527.4811096191406,
+        "rect": {
+          "x": 1174.258056640625,
+          "y": 513.3693237304688,
+          "width": 101.860595703125,
+          "height": 28.22357177734375,
+          "top": 513.3693237304688,
+          "right": 1276.11865234375,
+          "bottom": 541.5928955078125,
+          "left": 1174.258056640625
+        },
+        "clip": {
+          "left": 0,
+          "top": 0,
+          "right": 1432,
+          "bottom": 1000
+        },
+        "visible": true,
+        "hit": true,
+        "hitTag": "BUTTON",
+        "disabled": false,
+        "scene": "film",
+        "ready": true,
+        "frameTransform": "matrix3d(0.99863, -0.00198168, -0.0522984, 0, 0, 0.999283, -0.0378646, 0, 0.052336, 0.0378127, 0.997913, 0, 0, 0, 0, 1)",
+        "pointerActive": "true",
+        "rotateX": -2.17,
+        "rotateY": 3,
+        "paused": "false",
+        "reduced": "false",
+        "copyCount": 3
+      },
+      "copied": {
+        "text": "黄昏穿过旧书店百叶窗的丁达尔光束，微尘在暖金空气中漂浮，王家卫电影胶片颗粒感，柔和景深，叙事感构图",
+        "id": "film",
+        "typed": "黄昏穿过旧书店百叶窗的丁达尔光束，微尘在暖金空气中漂浮，王家卫电影胶片颗粒感，柔和景深，叙事感构图"
+      },
+      "events": [
+        {
+          "type": "pointerdown",
+          "at": 4153.100000008941,
+          "x": 1225.1883544921875,
+          "y": 527.4810791015625,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "heroCopy": true,
+          "target": "<button type=\"button\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-check\" aria-hidden=\"true\"><path d=\"M20 6 9 17l-5-5\"></path></svg>已复制完整提示词</b",
+          "scene": "film"
+        },
+        {
+          "type": "pointerup",
+          "at": 4154.100000008941,
+          "x": 1225.1883544921875,
+          "y": 527.4810791015625,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "heroCopy": true,
+          "target": "<button type=\"button\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-check\" aria-hidden=\"true\"><path d=\"M20 6 9 17l-5-5\"></path></svg>已复制完整提示词</b",
+          "scene": "film"
+        },
+        {
+          "type": "click",
+          "at": 4154.29999999702,
+          "x": 1225,
+          "y": 527,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 1,
+          "heroCopy": true,
+          "target": "<button type=\"button\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-check\" aria-hidden=\"true\"><path d=\"M20 6 9 17l-5-5\"></path></svg>已复制完整提示词</b",
+          "scene": "film"
+        }
+      ]
+    }
+  },
+  {
+    "scene": "storybook",
+    "corner": "top-left",
+    "tilted": {
+      "at": 5679.100000008941,
+      "x": 1242.5936279296875,
+      "y": 530.5690612792969,
+      "rect": {
+        "x": 1200.289794921875,
+        "y": 516.1307373046875,
+        "width": 84.607666015625,
+        "height": 28.87664794921875,
+        "top": 516.1307373046875,
+        "right": 1284.8974609375,
+        "bottom": 545.0073852539062,
+        "left": 1200.289794921875
+      },
+      "clip": {
+        "left": 0,
+        "top": 0,
+        "right": 1432,
+        "bottom": 1000
+      },
+      "visible": true,
+      "hit": true,
+      "hitTag": "BUTTON",
+      "disabled": false,
+      "scene": "storybook",
+      "ready": true,
+      "frameTransform": "matrix3d(0.998027, -0.00394265, 0.0626666, 0, 0, 0.998027, 0.0627905, 0, -0.0627905, -0.0626666, 0.996057, 0, 0, 0, 0, 1)",
+      "pointerActive": "true",
+      "rotateX": 3.6,
+      "rotateY": -3.6,
+      "paused": "false",
+      "reduced": "false",
+      "copyCount": 4
+    },
+    "copy": {
+      "before": {
+        "at": 5681.20000000298,
+        "x": 1242.5936279296875,
+        "y": 530.5690612792969,
+        "rect": {
+          "x": 1200.289794921875,
+          "y": 516.1307373046875,
+          "width": 84.607666015625,
+          "height": 28.87664794921875,
+          "top": 516.1307373046875,
+          "right": 1284.8974609375,
+          "bottom": 545.0073852539062,
+          "left": 1200.289794921875
+        },
+        "clip": {
+          "left": 0,
+          "top": 0,
+          "right": 1432,
+          "bottom": 1000
+        },
+        "visible": true,
+        "hit": true,
+        "hitTag": "BUTTON",
+        "disabled": false,
+        "scene": "storybook",
+        "ready": true,
+        "frameTransform": "matrix3d(0.998027, -0.00394265, 0.0626666, 0, 0, 0.998027, 0.0627905, 0, -0.0627905, -0.0626666, 0.996057, 0, 0, 0, 0, 1)",
+        "pointerActive": "true",
+        "rotateX": 3.6,
+        "rotateY": -3.6,
+        "paused": "false",
+        "reduced": "false",
+        "copyCount": 4
+      },
+      "pressed": {
+        "at": 5986.100000008941,
+        "x": 1235.62255859375,
+        "y": 526.8822631835938,
+        "rect": {
+          "x": 1195.552734375,
+          "y": 512.839111328125,
+          "width": 80.1396484375,
+          "height": 28.0863037109375,
+          "top": 512.839111328125,
+          "right": 1275.6923828125,
+          "bottom": 540.9254150390625,
+          "left": 1195.552734375
+        },
+        "clip": {
+          "left": 0,
+          "top": 0,
+          "right": 1432,
+          "bottom": 1000
+        },
+        "visible": true,
+        "hit": true,
+        "hitTag": "BUTTON",
+        "disabled": false,
+        "scene": "storybook",
+        "ready": true,
+        "frameTransform": "matrix3d(0.998499, -0.00241794, -0.0547225, 0, 0, 0.999025, -0.0441425, 0, 0.0547759, 0.0440762, 0.997525, 0, 0, 0, 0, 1)",
+        "pointerActive": "true",
+        "rotateX": -2.53,
+        "rotateY": 3.14,
+        "paused": "false",
+        "reduced": "false",
+        "copyCount": 4
+      },
+      "copied": {
+        "text": "提着暖黄煤油灯穿过迷雾森林的小狐狸，宫崎骏式温暖手绘水彩质感，星光点缀夜空，细腻纸张纹理",
+        "id": "storybook",
+        "typed": "提着暖黄煤油灯穿过迷雾森林的小狐狸，宫崎骏式温暖手绘水彩质感，星光点缀夜空，细腻纸张纹理"
+      },
+      "events": [
+        {
+          "type": "pointerdown",
+          "at": 5987.9000000059605,
+          "x": 1235.62255859375,
+          "y": 526.8822631835938,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "heroCopy": true,
+          "target": "<button type=\"button\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-arrow-up-right\" aria-hidden=\"true\"><path d=\"M7 7h10v10\"></path><path d=\"M7 1",
+          "scene": "storybook"
+        },
+        {
+          "type": "pointerup",
+          "at": 5990.29999999702,
+          "x": 1235.62255859375,
+          "y": 526.8822631835938,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "heroCopy": true,
+          "target": "<button type=\"button\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-arrow-up-right\" aria-hidden=\"true\"><path d=\"M7 7h10v10\"></path><path d=\"M7 1",
+          "scene": "storybook"
+        },
+        {
+          "type": "click",
+          "at": 5990.600000008941,
+          "x": 1235,
+          "y": 526,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 1,
+          "heroCopy": true,
+          "target": "<button type=\"button\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-arrow-up-right\" aria-hidden=\"true\"><path d=\"M7 7h10v10\"></path><path d=\"M7 1",
+          "scene": "storybook"
+        }
+      ]
+    }
+  },
+  {
+    "scene": "storybook",
+    "corner": "top-right",
+    "tilted": {
+      "at": 6464.600000008941,
+      "x": 1226.8548583984375,
+      "y": 529.5029296875,
+      "rect": {
+        "x": 1175.516845703125,
+        "y": 515.40234375,
+        "width": 102.676025390625,
+        "height": 28.201171875,
+        "top": 515.40234375,
+        "right": 1278.19287109375,
+        "bottom": 543.603515625,
+        "left": 1175.516845703125
+      },
+      "clip": {
+        "left": 0,
+        "top": 0,
+        "right": 1432,
+        "bottom": 1000
+      },
+      "visible": true,
+      "hit": true,
+      "hitTag": "BUTTON",
+      "disabled": false,
+      "scene": "storybook",
+      "ready": true,
+      "frameTransform": "matrix3d(0.998027, 0.00394265, -0.0626666, 0, 0, 0.998027, 0.0627905, 0, 0.0627905, -0.0626666, 0.996057, 0, 0, 0, 0, 1)",
+      "pointerActive": "true",
+      "rotateX": 3.6,
+      "rotateY": 3.6,
+      "paused": "false",
+      "reduced": "false",
+      "copyCount": 5
+    },
+    "copy": {
+      "before": {
+        "at": 6474.20000000298,
+        "x": 1226.8548583984375,
+        "y": 529.5029296875,
+        "rect": {
+          "x": 1175.516845703125,
+          "y": 515.40234375,
+          "width": 102.676025390625,
+          "height": 28.201171875,
+          "top": 515.40234375,
+          "right": 1278.19287109375,
+          "bottom": 543.603515625,
+          "left": 1175.516845703125
+        },
+        "clip": {
+          "left": 0,
+          "top": 0,
+          "right": 1432,
+          "bottom": 1000
+        },
+        "visible": true,
+        "hit": true,
+        "hitTag": "BUTTON",
+        "disabled": false,
+        "scene": "storybook",
+        "ready": true,
+        "frameTransform": "matrix3d(0.998027, 0.00394265, -0.0626666, 0, 0, 0.998027, 0.0627905, 0, 0.0627905, -0.0626666, 0.996057, 0, 0, 0, 0, 1)",
+        "pointerActive": "true",
+        "rotateX": 3.6,
+        "rotateY": 3.6,
+        "paused": "false",
+        "reduced": "false",
+        "copyCount": 5
+      },
+      "pressed": {
+        "at": 6785.79999999702,
+        "x": 1225.172119140625,
+        "y": 527.4830627441406,
+        "rect": {
+          "x": 1174.2529296875,
+          "y": 513.3678588867188,
+          "width": 101.83837890625,
+          "height": 28.23040771484375,
+          "top": 513.3678588867188,
+          "right": 1276.09130859375,
+          "bottom": 541.5982666015625,
+          "left": 1174.2529296875
+        },
+        "clip": {
+          "left": 0,
+          "top": 0,
+          "right": 1432,
+          "bottom": 1000
+        },
+        "visible": true,
+        "hit": true,
+        "hitTag": "BUTTON",
+        "disabled": false,
+        "scene": "storybook",
+        "ready": true,
+        "frameTransform": "matrix3d(0.998593, -0.00197108, -0.0529965, 0, 0, 0.999309, -0.037167, 0, 0.0530331, 0.0371146, 0.997903, 0, 0, 0, 0, 1)",
+        "pointerActive": "true",
+        "rotateX": -2.13,
+        "rotateY": 3.04,
+        "paused": "false",
+        "reduced": "false",
+        "copyCount": 5
+      },
+      "copied": {
+        "text": "提着暖黄煤油灯穿过迷雾森林的小狐狸，宫崎骏式温暖手绘水彩质感，星光点缀夜空，细腻纸张纹理",
+        "id": "storybook",
+        "typed": "提着暖黄煤油灯穿过迷雾森林的小狐狸，宫崎骏式温暖手绘水彩质感，星光点缀夜空，细腻纸张纹理"
+      },
+      "events": [
+        {
+          "type": "pointerdown",
+          "at": 6790.100000008941,
+          "x": 1225.172119140625,
+          "y": 527.4830322265625,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "heroCopy": true,
+          "target": "<button type=\"button\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-check\" aria-hidden=\"true\"><path d=\"M20 6 9 17l-5-5\"></path></svg>已复制完整提示词</b",
+          "scene": "storybook"
+        },
+        {
+          "type": "pointerup",
+          "at": 6792.4000000059605,
+          "x": 1225.172119140625,
+          "y": 527.4830322265625,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "heroCopy": true,
+          "target": "<button type=\"button\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-check\" aria-hidden=\"true\"><path d=\"M20 6 9 17l-5-5\"></path></svg>已复制完整提示词</b",
+          "scene": "storybook"
+        },
+        {
+          "type": "click",
+          "at": 6792.5,
+          "x": 1225,
+          "y": 527,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 1,
+          "heroCopy": true,
+          "target": "<button type=\"button\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-check\" aria-hidden=\"true\"><path d=\"M20 6 9 17l-5-5\"></path></svg>已复制完整提示词</b",
+          "scene": "storybook"
+        }
+      ]
+    }
+  },
+  {
+    "scene": "storybook",
+    "corner": "bottom-left",
+    "tilted": {
+      "at": 7270.5,
+      "x": 1228.4571533203125,
+      "y": 530.2294311523438,
+      "rect": {
+        "x": 1175.70458984375,
+        "y": 515.782958984375,
+        "width": 105.505126953125,
+        "height": 28.8929443359375,
+        "top": 515.782958984375,
+        "right": 1281.209716796875,
+        "bottom": 544.6759033203125,
+        "left": 1175.70458984375
+      },
+      "clip": {
+        "left": 0,
+        "top": 0,
+        "right": 1432,
+        "bottom": 1000
+      },
+      "visible": true,
+      "hit": true,
+      "hitTag": "BUTTON",
+      "disabled": false,
+      "scene": "storybook",
+      "ready": true,
+      "frameTransform": "matrix3d(0.998027, 0.00394265, 0.0626666, 0, 0, 0.998027, -0.0627905, 0, -0.0627905, 0.0626666, 0.996057, 0, 0, 0, 0, 1)",
+      "pointerActive": "true",
+      "rotateX": -3.6,
+      "rotateY": -3.6,
+      "paused": "false",
+      "reduced": "false",
+      "copyCount": 6
+    },
+    "copy": {
+      "before": {
+        "at": 7272.70000000298,
+        "x": 1228.4571533203125,
+        "y": 530.2294311523438,
+        "rect": {
+          "x": 1175.70458984375,
+          "y": 515.782958984375,
+          "width": 105.505126953125,
+          "height": 28.8929443359375,
+          "top": 515.782958984375,
+          "right": 1281.209716796875,
+          "bottom": 544.6759033203125,
+          "left": 1175.70458984375
+        },
+        "clip": {
+          "left": 0,
+          "top": 0,
+          "right": 1432,
+          "bottom": 1000
+        },
+        "visible": true,
+        "hit": true,
+        "hitTag": "BUTTON",
+        "disabled": false,
+        "scene": "storybook",
+        "ready": true,
+        "frameTransform": "matrix3d(0.998027, 0.00394265, 0.0626666, 0, 0, 0.998027, -0.0627905, 0, -0.0627905, 0.0626666, 0.996057, 0, 0, 0, 0, 1)",
+        "pointerActive": "true",
+        "rotateX": -3.6,
+        "rotateY": -3.6,
+        "paused": "false",
+        "reduced": "false",
+        "copyCount": 6
+      },
+      "pressed": {
+        "at": 7582.79999999702,
+        "x": 1225.2276000976562,
+        "y": 527.4869384765625,
+        "rect": {
+          "x": 1174.2740478515625,
+          "y": 513.3818359375,
+          "width": 101.9071044921875,
+          "height": 28.210205078125,
+          "top": 513.3818359375,
+          "right": 1276.18115234375,
+          "bottom": 541.592041015625,
+          "left": 1174.2740478515625
+        },
+        "clip": {
+          "left": 0,
+          "top": 0,
+          "right": 1432,
+          "bottom": 1000
+        },
+        "visible": true,
+        "hit": true,
+        "hitTag": "BUTTON",
+        "disabled": false,
+        "scene": "storybook",
+        "ready": true,
+        "frameTransform": "matrix3d(0.998702, -0.00198219, -0.050903, 0, 0, 0.999243, -0.038911, 0, 0.0509416, 0.0388605, 0.997945, 0, 0, 0, 0, 1)",
+        "pointerActive": "true",
+        "rotateX": -2.23,
+        "rotateY": 2.92,
+        "paused": "false",
+        "reduced": "false",
+        "copyCount": 6
+      },
+      "copied": {
+        "text": "提着暖黄煤油灯穿过迷雾森林的小狐狸，宫崎骏式温暖手绘水彩质感，星光点缀夜空，细腻纸张纹理",
+        "id": "storybook",
+        "typed": "提着暖黄煤油灯穿过迷雾森林的小狐狸，宫崎骏式温暖手绘水彩质感，星光点缀夜空，细腻纸张纹理"
+      },
+      "events": [
+        {
+          "type": "pointerdown",
+          "at": 7584.100000008941,
+          "x": 1225.2275390625,
+          "y": 527.4869384765625,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "heroCopy": true,
+          "target": "<button type=\"button\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-check\" aria-hidden=\"true\"><path d=\"M20 6 9 17l-5-5\"></path></svg>已复制完整提示词</b",
+          "scene": "storybook"
+        },
+        {
+          "type": "pointerup",
+          "at": 7585,
+          "x": 1225.2275390625,
+          "y": 527.4869384765625,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "heroCopy": true,
+          "target": "<button type=\"button\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-check\" aria-hidden=\"true\"><path d=\"M20 6 9 17l-5-5\"></path></svg>已复制完整提示词</b",
+          "scene": "storybook"
+        },
+        {
+          "type": "click",
+          "at": 7585.100000008941,
+          "x": 1225,
+          "y": 527,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 1,
+          "heroCopy": true,
+          "target": "<button type=\"button\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-check\" aria-hidden=\"true\"><path d=\"M20 6 9 17l-5-5\"></path></svg>已复制完整提示词</b",
+          "scene": "storybook"
+        }
+      ]
+    }
+  },
+  {
+    "scene": "storybook",
+    "corner": "bottom-right",
+    "tilted": {
+      "at": 8053.79999999702,
+      "x": 1224.2254638671875,
+      "y": 526.4725036621094,
+      "rect": {
+        "x": 1173.575439453125,
+        "y": 512.3241577148438,
+        "width": 101.300048828125,
+        "height": 28.29669189453125,
+        "top": 512.3241577148438,
+        "right": 1274.87548828125,
+        "bottom": 540.620849609375,
+        "left": 1173.575439453125
+      },
+      "clip": {
+        "left": 0,
+        "top": 0,
+        "right": 1432,
+        "bottom": 1000
+      },
+      "visible": true,
+      "hit": true,
+      "hitTag": "BUTTON",
+      "disabled": false,
+      "scene": "storybook",
+      "ready": true,
+      "frameTransform": "matrix3d(0.998027, -0.00394265, -0.0626666, 0, 0, 0.998027, -0.0627905, 0, 0.0627905, 0.0626666, 0.996057, 0, 0, 0, 0, 1)",
+      "pointerActive": "true",
+      "rotateX": -3.6,
+      "rotateY": 3.6,
+      "paused": "false",
+      "reduced": "false",
+      "copyCount": 7
+    },
+    "copy": {
+      "before": {
+        "at": 8056,
+        "x": 1224.2254638671875,
+        "y": 526.4725036621094,
+        "rect": {
+          "x": 1173.575439453125,
+          "y": 512.3241577148438,
+          "width": 101.300048828125,
+          "height": 28.29669189453125,
+          "top": 512.3241577148438,
+          "right": 1274.87548828125,
+          "bottom": 540.620849609375,
+          "left": 1173.575439453125
+        },
+        "clip": {
+          "left": 0,
+          "top": 0,
+          "right": 1432,
+          "bottom": 1000
+        },
+        "visible": true,
+        "hit": true,
+        "hitTag": "BUTTON",
+        "disabled": false,
+        "scene": "storybook",
+        "ready": true,
+        "frameTransform": "matrix3d(0.998027, -0.00394265, -0.0626666, 0, 0, 0.998027, -0.0627905, 0, 0.0627905, 0.0626666, 0.996057, 0, 0, 0, 0, 1)",
+        "pointerActive": "true",
+        "rotateX": -3.6,
+        "rotateY": 3.6,
+        "paused": "false",
+        "reduced": "false",
+        "copyCount": 7
+      },
+      "pressed": {
+        "at": 8361.60000000894,
+        "x": 1225.1883544921875,
+        "y": 527.4811096191406,
+        "rect": {
+          "x": 1174.258056640625,
+          "y": 513.3693237304688,
+          "width": 101.860595703125,
+          "height": 28.22357177734375,
+          "top": 513.3693237304688,
+          "right": 1276.11865234375,
+          "bottom": 541.5928955078125,
+          "left": 1174.258056640625
+        },
+        "clip": {
+          "left": 0,
+          "top": 0,
+          "right": 1432,
+          "bottom": 1000
+        },
+        "visible": true,
+        "hit": true,
+        "hitTag": "BUTTON",
+        "disabled": false,
+        "scene": "storybook",
+        "ready": true,
+        "frameTransform": "matrix3d(0.99863, -0.00198168, -0.0522984, 0, 0, 0.999283, -0.0378646, 0, 0.052336, 0.0378127, 0.997913, 0, 0, 0, 0, 1)",
+        "pointerActive": "true",
+        "rotateX": -2.17,
+        "rotateY": 3,
+        "paused": "false",
+        "reduced": "false",
+        "copyCount": 7
+      },
+      "copied": {
+        "text": "提着暖黄煤油灯穿过迷雾森林的小狐狸，宫崎骏式温暖手绘水彩质感，星光点缀夜空，细腻纸张纹理",
+        "id": "storybook",
+        "typed": "提着暖黄煤油灯穿过迷雾森林的小狐狸，宫崎骏式温暖手绘水彩质感，星光点缀夜空，细腻纸张纹理"
+      },
+      "events": [
+        {
+          "type": "pointerdown",
+          "at": 8363,
+          "x": 1225.1883544921875,
+          "y": 527.4810791015625,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "heroCopy": true,
+          "target": "<button type=\"button\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-check\" aria-hidden=\"true\"><path d=\"M20 6 9 17l-5-5\"></path></svg>已复制完整提示词</b",
+          "scene": "storybook"
+        },
+        {
+          "type": "pointerup",
+          "at": 8365.40000000596,
+          "x": 1225.1883544921875,
+          "y": 527.4810791015625,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "heroCopy": true,
+          "target": "<button type=\"button\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-check\" aria-hidden=\"true\"><path d=\"M20 6 9 17l-5-5\"></path></svg>已复制完整提示词</b",
+          "scene": "storybook"
+        },
+        {
+          "type": "click",
+          "at": 8365.60000000894,
+          "x": 1225,
+          "y": 527,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 1,
+          "heroCopy": true,
+          "target": "<button type=\"button\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-check\" aria-hidden=\"true\"><path d=\"M20 6 9 17l-5-5\"></path></svg>已复制完整提示词</b",
+          "scene": "storybook"
+        }
+      ]
+    }
+  },
+  {
+    "scene": "oriental",
+    "corner": "top-left",
+    "tilted": {
+      "at": 9904.10000000894,
+      "x": 1242.5936279296875,
+      "y": 530.5690612792969,
+      "rect": {
+        "x": 1200.289794921875,
+        "y": 516.1307373046875,
+        "width": 84.607666015625,
+        "height": 28.87664794921875,
+        "top": 516.1307373046875,
+        "right": 1284.8974609375,
+        "bottom": 545.0073852539062,
+        "left": 1200.289794921875
+      },
+      "clip": {
+        "left": 0,
+        "top": 0,
+        "right": 1432,
+        "bottom": 1000
+      },
+      "visible": true,
+      "hit": true,
+      "hitTag": "BUTTON",
+      "disabled": false,
+      "scene": "oriental",
+      "ready": true,
+      "frameTransform": "matrix3d(0.998027, -0.00394265, 0.0626666, 0, 0, 0.998027, 0.0627905, 0, -0.0627905, -0.0626666, 0.996057, 0, 0, 0, 0, 1)",
+      "pointerActive": "true",
+      "rotateX": 3.6,
+      "rotateY": -3.6,
+      "paused": "false",
+      "reduced": "false",
+      "copyCount": 8
+    },
+    "copy": {
+      "before": {
+        "at": 9908.10000000894,
+        "x": 1242.5936279296875,
+        "y": 530.5690612792969,
+        "rect": {
+          "x": 1200.289794921875,
+          "y": 516.1307373046875,
+          "width": 84.607666015625,
+          "height": 28.87664794921875,
+          "top": 516.1307373046875,
+          "right": 1284.8974609375,
+          "bottom": 545.0073852539062,
+          "left": 1200.289794921875
+        },
+        "clip": {
+          "left": 0,
+          "top": 0,
+          "right": 1432,
+          "bottom": 1000
+        },
+        "visible": true,
+        "hit": true,
+        "hitTag": "BUTTON",
+        "disabled": false,
+        "scene": "oriental",
+        "ready": true,
+        "frameTransform": "matrix3d(0.998027, -0.00394265, 0.0626666, 0, 0, 0.998027, 0.0627905, 0, -0.0627905, -0.0626666, 0.996057, 0, 0, 0, 0, 1)",
+        "pointerActive": "true",
+        "rotateX": 3.6,
+        "rotateY": -3.6,
+        "paused": "false",
+        "reduced": "false",
+        "copyCount": 8
+      },
+      "pressed": {
+        "at": 10214.90000000596,
+        "x": 1235.62255859375,
+        "y": 526.8822631835938,
+        "rect": {
+          "x": 1195.552734375,
+          "y": 512.839111328125,
+          "width": 80.1396484375,
+          "height": 28.0863037109375,
+          "top": 512.839111328125,
+          "right": 1275.6923828125,
+          "bottom": 540.9254150390625,
+          "left": 1195.552734375
+        },
+        "clip": {
+          "left": 0,
+          "top": 0,
+          "right": 1432,
+          "bottom": 1000
+        },
+        "visible": true,
+        "hit": true,
+        "hitTag": "BUTTON",
+        "disabled": false,
+        "scene": "oriental",
+        "ready": true,
+        "frameTransform": "matrix3d(0.998499, -0.00241794, -0.0547225, 0, 0, 0.999025, -0.0441425, 0, 0.0547759, 0.0440762, 0.997525, 0, 0, 0, 0, 1)",
+        "pointerActive": "true",
+        "rotateX": -2.53,
+        "rotateY": 3.14,
+        "paused": "false",
+        "reduced": "false",
+        "copyCount": 8
+      },
+      "copied": {
+        "text": "江南雨巷檐角滴落的雨水，远处暖黄灯笼倒映在青石板水面，宋代美学克制留白，电影级冷暖色调对比",
+        "id": "oriental",
+        "typed": "江南雨巷檐角滴落的雨水，远处暖黄灯笼倒映在青石板水面，宋代美学克制留白，电影级冷暖色调对比"
+      },
+      "events": [
+        {
+          "type": "pointerdown",
+          "at": 10216.70000000298,
+          "x": 1235.62255859375,
+          "y": 526.8822631835938,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "heroCopy": true,
+          "target": "<button type=\"button\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-arrow-up-right\" aria-hidden=\"true\"><path d=\"M7 7h10v10\"></path><path d=\"M7 1",
+          "scene": "oriental"
+        },
+        {
+          "type": "pointerup",
+          "at": 10219.20000000298,
+          "x": 1235.62255859375,
+          "y": 526.8822631835938,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "heroCopy": true,
+          "target": "<button type=\"button\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-arrow-up-right\" aria-hidden=\"true\"><path d=\"M7 7h10v10\"></path><path d=\"M7 1",
+          "scene": "oriental"
+        },
+        {
+          "type": "click",
+          "at": 10219.40000000596,
+          "x": 1235,
+          "y": 526,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 1,
+          "heroCopy": true,
+          "target": "<button type=\"button\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-arrow-up-right\" aria-hidden=\"true\"><path d=\"M7 7h10v10\"></path><path d=\"M7 1",
+          "scene": "oriental"
+        }
+      ]
+    }
+  },
+  {
+    "scene": "oriental",
+    "corner": "top-right",
+    "tilted": {
+      "at": 10701.20000000298,
+      "x": 1226.8548583984375,
+      "y": 529.5029296875,
+      "rect": {
+        "x": 1175.516845703125,
+        "y": 515.40234375,
+        "width": 102.676025390625,
+        "height": 28.201171875,
+        "top": 515.40234375,
+        "right": 1278.19287109375,
+        "bottom": 543.603515625,
+        "left": 1175.516845703125
+      },
+      "clip": {
+        "left": 0,
+        "top": 0,
+        "right": 1432,
+        "bottom": 1000
+      },
+      "visible": true,
+      "hit": true,
+      "hitTag": "BUTTON",
+      "disabled": false,
+      "scene": "oriental",
+      "ready": true,
+      "frameTransform": "matrix3d(0.998027, 0.00394265, -0.0626666, 0, 0, 0.998027, 0.0627905, 0, 0.0627905, -0.0626666, 0.996057, 0, 0, 0, 0, 1)",
+      "pointerActive": "true",
+      "rotateX": 3.6,
+      "rotateY": 3.6,
+      "paused": "false",
+      "reduced": "false",
+      "copyCount": 9
+    },
+    "copy": {
+      "before": {
+        "at": 10703,
+        "x": 1226.8548583984375,
+        "y": 529.5029296875,
+        "rect": {
+          "x": 1175.516845703125,
+          "y": 515.40234375,
+          "width": 102.676025390625,
+          "height": 28.201171875,
+          "top": 515.40234375,
+          "right": 1278.19287109375,
+          "bottom": 543.603515625,
+          "left": 1175.516845703125
+        },
+        "clip": {
+          "left": 0,
+          "top": 0,
+          "right": 1432,
+          "bottom": 1000
+        },
+        "visible": true,
+        "hit": true,
+        "hitTag": "BUTTON",
+        "disabled": false,
+        "scene": "oriental",
+        "ready": true,
+        "frameTransform": "matrix3d(0.998027, 0.00394265, -0.0626666, 0, 0, 0.998027, 0.0627905, 0, 0.0627905, -0.0626666, 0.996057, 0, 0, 0, 0, 1)",
+        "pointerActive": "true",
+        "rotateX": 3.6,
+        "rotateY": 3.6,
+        "paused": "false",
+        "reduced": "false",
+        "copyCount": 9
+      },
+      "pressed": {
+        "at": 11008.20000000298,
+        "x": 1225.172119140625,
+        "y": 527.4830627441406,
+        "rect": {
+          "x": 1174.2529296875,
+          "y": 513.3678588867188,
+          "width": 101.83837890625,
+          "height": 28.23040771484375,
+          "top": 513.3678588867188,
+          "right": 1276.09130859375,
+          "bottom": 541.5982666015625,
+          "left": 1174.2529296875
+        },
+        "clip": {
+          "left": 0,
+          "top": 0,
+          "right": 1432,
+          "bottom": 1000
+        },
+        "visible": true,
+        "hit": true,
+        "hitTag": "BUTTON",
+        "disabled": false,
+        "scene": "oriental",
+        "ready": true,
+        "frameTransform": "matrix3d(0.998593, -0.00197108, -0.0529965, 0, 0, 0.999309, -0.037167, 0, 0.0530331, 0.0371146, 0.997903, 0, 0, 0, 0, 1)",
+        "pointerActive": "true",
+        "rotateX": -2.13,
+        "rotateY": 3.04,
+        "paused": "false",
+        "reduced": "false",
+        "copyCount": 9
+      },
+      "copied": {
+        "text": "江南雨巷檐角滴落的雨水，远处暖黄灯笼倒映在青石板水面，宋代美学克制留白，电影级冷暖色调对比",
+        "id": "oriental",
+        "typed": "江南雨巷檐角滴落的雨水，远处暖黄灯笼倒映在青石板水面，宋代美学克制留白，电影级冷暖色调对比"
+      },
+      "events": [
+        {
+          "type": "pointerdown",
+          "at": 11010.20000000298,
+          "x": 1225.172119140625,
+          "y": 527.4830322265625,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "heroCopy": true,
+          "target": "<button type=\"button\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-check\" aria-hidden=\"true\"><path d=\"M20 6 9 17l-5-5\"></path></svg>已复制完整提示词</b",
+          "scene": "oriental"
+        },
+        {
+          "type": "pointerup",
+          "at": 11012.70000000298,
+          "x": 1225.172119140625,
+          "y": 527.4830322265625,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "heroCopy": true,
+          "target": "<button type=\"button\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-check\" aria-hidden=\"true\"><path d=\"M20 6 9 17l-5-5\"></path></svg>已复制完整提示词</b",
+          "scene": "oriental"
+        },
+        {
+          "type": "click",
+          "at": 11012.90000000596,
+          "x": 1225,
+          "y": 527,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 1,
+          "heroCopy": true,
+          "target": "<button type=\"button\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-check\" aria-hidden=\"true\"><path d=\"M20 6 9 17l-5-5\"></path></svg>已复制完整提示词</b",
+          "scene": "oriental"
+        }
+      ]
+    }
+  },
+  {
+    "scene": "oriental",
+    "corner": "bottom-left",
+    "tilted": {
+      "at": 11484.10000000894,
+      "x": 1228.4571533203125,
+      "y": 530.2294311523438,
+      "rect": {
+        "x": 1175.70458984375,
+        "y": 515.782958984375,
+        "width": 105.505126953125,
+        "height": 28.8929443359375,
+        "top": 515.782958984375,
+        "right": 1281.209716796875,
+        "bottom": 544.6759033203125,
+        "left": 1175.70458984375
+      },
+      "clip": {
+        "left": 0,
+        "top": 0,
+        "right": 1432,
+        "bottom": 1000
+      },
+      "visible": true,
+      "hit": true,
+      "hitTag": "BUTTON",
+      "disabled": false,
+      "scene": "oriental",
+      "ready": true,
+      "frameTransform": "matrix3d(0.998027, 0.00394265, 0.0626666, 0, 0, 0.998027, -0.0627905, 0, -0.0627905, 0.0626666, 0.996057, 0, 0, 0, 0, 1)",
+      "pointerActive": "true",
+      "rotateX": -3.6,
+      "rotateY": -3.6,
+      "paused": "false",
+      "reduced": "false",
+      "copyCount": 10
+    },
+    "copy": {
+      "before": {
+        "at": 11486.40000000596,
+        "x": 1228.4571533203125,
+        "y": 530.2294311523438,
+        "rect": {
+          "x": 1175.70458984375,
+          "y": 515.782958984375,
+          "width": 105.505126953125,
+          "height": 28.8929443359375,
+          "top": 515.782958984375,
+          "right": 1281.209716796875,
+          "bottom": 544.6759033203125,
+          "left": 1175.70458984375
+        },
+        "clip": {
+          "left": 0,
+          "top": 0,
+          "right": 1432,
+          "bottom": 1000
+        },
+        "visible": true,
+        "hit": true,
+        "hitTag": "BUTTON",
+        "disabled": false,
+        "scene": "oriental",
+        "ready": true,
+        "frameTransform": "matrix3d(0.998027, 0.00394265, 0.0626666, 0, 0, 0.998027, -0.0627905, 0, -0.0627905, 0.0626666, 0.996057, 0, 0, 0, 0, 1)",
+        "pointerActive": "true",
+        "rotateX": -3.6,
+        "rotateY": -3.6,
+        "paused": "false",
+        "reduced": "false",
+        "copyCount": 10
+      },
+      "pressed": {
+        "at": 11791.20000000298,
+        "x": 1225.2276000976562,
+        "y": 527.4869384765625,
+        "rect": {
+          "x": 1174.2740478515625,
+          "y": 513.3818359375,
+          "width": 101.9071044921875,
+          "height": 28.210205078125,
+          "top": 513.3818359375,
+          "right": 1276.18115234375,
+          "bottom": 541.592041015625,
+          "left": 1174.2740478515625
+        },
+        "clip": {
+          "left": 0,
+          "top": 0,
+          "right": 1432,
+          "bottom": 1000
+        },
+        "visible": true,
+        "hit": true,
+        "hitTag": "BUTTON",
+        "disabled": false,
+        "scene": "oriental",
+        "ready": true,
+        "frameTransform": "matrix3d(0.998702, -0.00198219, -0.050903, 0, 0, 0.999243, -0.038911, 0, 0.0509416, 0.0388605, 0.997945, 0, 0, 0, 0, 1)",
+        "pointerActive": "true",
+        "rotateX": -2.23,
+        "rotateY": 2.92,
+        "paused": "false",
+        "reduced": "false",
+        "copyCount": 10
+      },
+      "copied": {
+        "text": "江南雨巷檐角滴落的雨水，远处暖黄灯笼倒映在青石板水面，宋代美学克制留白，电影级冷暖色调对比",
+        "id": "oriental",
+        "typed": "江南雨巷檐角滴落的雨水，远处暖黄灯笼倒映在青石板水面，宋代美学克制留白，电影级冷暖色调对比"
+      },
+      "events": [
+        {
+          "type": "pointerdown",
+          "at": 11792.60000000894,
+          "x": 1225.2275390625,
+          "y": 527.4869384765625,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "heroCopy": true,
+          "target": "<button type=\"button\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-check\" aria-hidden=\"true\"><path d=\"M20 6 9 17l-5-5\"></path></svg>已复制完整提示词</b",
+          "scene": "oriental"
+        },
+        {
+          "type": "pointerup",
+          "at": 11793.70000000298,
+          "x": 1225.2275390625,
+          "y": 527.4869384765625,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "heroCopy": true,
+          "target": "<button type=\"button\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-check\" aria-hidden=\"true\"><path d=\"M20 6 9 17l-5-5\"></path></svg>已复制完整提示词</b",
+          "scene": "oriental"
+        },
+        {
+          "type": "click",
+          "at": 11793.70000000298,
+          "x": 1225,
+          "y": 527,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 1,
+          "heroCopy": true,
+          "target": "<button type=\"button\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-check\" aria-hidden=\"true\"><path d=\"M20 6 9 17l-5-5\"></path></svg>已复制完整提示词</b",
+          "scene": "oriental"
+        }
+      ]
+    }
+  },
+  {
+    "scene": "oriental",
+    "corner": "bottom-right",
+    "tilted": {
+      "at": 12261.79999999702,
+      "x": 1224.2254638671875,
+      "y": 526.4725036621094,
+      "rect": {
+        "x": 1173.575439453125,
+        "y": 512.3241577148438,
+        "width": 101.300048828125,
+        "height": 28.29669189453125,
+        "top": 512.3241577148438,
+        "right": 1274.87548828125,
+        "bottom": 540.620849609375,
+        "left": 1173.575439453125
+      },
+      "clip": {
+        "left": 0,
+        "top": 0,
+        "right": 1432,
+        "bottom": 1000
+      },
+      "visible": true,
+      "hit": true,
+      "hitTag": "BUTTON",
+      "disabled": false,
+      "scene": "oriental",
+      "ready": true,
+      "frameTransform": "matrix3d(0.998027, -0.00394265, -0.0626666, 0, 0, 0.998027, -0.0627905, 0, 0.0627905, 0.0626666, 0.996057, 0, 0, 0, 0, 1)",
+      "pointerActive": "true",
+      "rotateX": -3.6,
+      "rotateY": 3.6,
+      "paused": "false",
+      "reduced": "false",
+      "copyCount": 11
+    },
+    "copy": {
+      "before": {
+        "at": 12264.20000000298,
+        "x": 1224.2254638671875,
+        "y": 526.4725036621094,
+        "rect": {
+          "x": 1173.575439453125,
+          "y": 512.3241577148438,
+          "width": 101.300048828125,
+          "height": 28.29669189453125,
+          "top": 512.3241577148438,
+          "right": 1274.87548828125,
+          "bottom": 540.620849609375,
+          "left": 1173.575439453125
+        },
+        "clip": {
+          "left": 0,
+          "top": 0,
+          "right": 1432,
+          "bottom": 1000
+        },
+        "visible": true,
+        "hit": true,
+        "hitTag": "BUTTON",
+        "disabled": false,
+        "scene": "oriental",
+        "ready": true,
+        "frameTransform": "matrix3d(0.998027, -0.00394265, -0.0626666, 0, 0, 0.998027, -0.0627905, 0, 0.0627905, 0.0626666, 0.996057, 0, 0, 0, 0, 1)",
+        "pointerActive": "true",
+        "rotateX": -3.6,
+        "rotateY": 3.6,
+        "paused": "false",
+        "reduced": "false",
+        "copyCount": 11
+      },
+      "pressed": {
+        "at": 12569.40000000596,
+        "x": 1225.1883544921875,
+        "y": 527.4811096191406,
+        "rect": {
+          "x": 1174.258056640625,
+          "y": 513.3693237304688,
+          "width": 101.860595703125,
+          "height": 28.22357177734375,
+          "top": 513.3693237304688,
+          "right": 1276.11865234375,
+          "bottom": 541.5928955078125,
+          "left": 1174.258056640625
+        },
+        "clip": {
+          "left": 0,
+          "top": 0,
+          "right": 1432,
+          "bottom": 1000
+        },
+        "visible": true,
+        "hit": true,
+        "hitTag": "BUTTON",
+        "disabled": false,
+        "scene": "oriental",
+        "ready": true,
+        "frameTransform": "matrix3d(0.99863, -0.00198168, -0.0522984, 0, 0, 0.999283, -0.0378646, 0, 0.052336, 0.0378127, 0.997913, 0, 0, 0, 0, 1)",
+        "pointerActive": "true",
+        "rotateX": -2.17,
+        "rotateY": 3,
+        "paused": "false",
+        "reduced": "false",
+        "copyCount": 11
+      },
+      "copied": {
+        "text": "江南雨巷檐角滴落的雨水，远处暖黄灯笼倒映在青石板水面，宋代美学克制留白，电影级冷暖色调对比",
+        "id": "oriental",
+        "typed": "江南雨巷檐角滴落的雨水，远处暖黄灯笼倒映在青石板水面，宋代美学克制留白，电影级冷暖色调对比"
+      },
+      "events": [
+        {
+          "type": "pointerdown",
+          "at": 12570.79999999702,
+          "x": 1225.1883544921875,
+          "y": 527.4810791015625,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "heroCopy": true,
+          "target": "<button type=\"button\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-check\" aria-hidden=\"true\"><path d=\"M20 6 9 17l-5-5\"></path></svg>已复制完整提示词</b",
+          "scene": "oriental"
+        },
+        {
+          "type": "pointerup",
+          "at": 12571.79999999702,
+          "x": 1225.1883544921875,
+          "y": 527.4810791015625,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "heroCopy": true,
+          "target": "<button type=\"button\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-check\" aria-hidden=\"true\"><path d=\"M20 6 9 17l-5-5\"></path></svg>已复制完整提示词</b",
+          "scene": "oriental"
+        },
+        {
+          "type": "click",
+          "at": 12571.90000000596,
+          "x": 1225,
+          "y": 527,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 1,
+          "heroCopy": true,
+          "target": "<button type=\"button\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-check\" aria-hidden=\"true\"><path d=\"M20 6 9 17l-5-5\"></path></svg>已复制完整提示词</b",
+          "scene": "oriental"
+        }
+      ]
+    }
+  }
+]

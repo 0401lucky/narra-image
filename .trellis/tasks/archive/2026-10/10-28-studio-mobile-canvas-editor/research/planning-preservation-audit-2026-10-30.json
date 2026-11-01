@@ -1,0 +1,28 @@
+{
+  "date": "2026-10-30",
+  "scope": "final planning artifact/provenance check, not product verification",
+  "head_matches": true,
+  "index_matches": true,
+  "baseline_identities": 1337,
+  "changed_baseline_paths": [],
+  "authorized_concurrent_ui_additions": 8,
+  "other_additions": [],
+  "task_status": "planning",
+  "priority": "P3",
+  "implement_context_entries": 19,
+  "check_context_entries": 19,
+  "artifact_errors": [],
+  "prd_convergence_pass": true,
+  "application_tests_executed": false,
+  "browser_or_device_checks_executed": false,
+  "task_start_executed": false,
+  "latest_final_summary_approval": "pending",
+  "artifact_sha256": {
+    ".trellis/tasks/10-28-studio-mobile-canvas-editor/task.json": "eb29a4e62d3fb9ef462a54d45a3e385b01752df8e298f2be9d6a6e82fd037427",
+    ".trellis/tasks/10-28-studio-mobile-canvas-editor/prd.md": "788a6976c8623193a828ed7460668e3c00b91da90832c657c625150835322efd",
+    ".trellis/tasks/10-28-studio-mobile-canvas-editor/design.md": "5594249ad7dae3f4de13dd1808b76598a27f354bf014118c222ba92f81289659",
+    ".trellis/tasks/10-28-studio-mobile-canvas-editor/implement.md": "e8fc59451f409ece5e49e55189cb64c6fac67beef7b31e0d8d5bddf3765136f9",
+    ".trellis/tasks/10-28-studio-mobile-canvas-editor/implement.jsonl": "524a099093c1f8018cd2f2a4fbc03966a1cd2264efc5da1d4e5bbcb2b9a50a91",
+    ".trellis/tasks/10-28-studio-mobile-canvas-editor/check.jsonl": "c671662a716063f4937ce4255d65031a7847329c0c3407a71dbf19507dafe01f"
+  }
+}

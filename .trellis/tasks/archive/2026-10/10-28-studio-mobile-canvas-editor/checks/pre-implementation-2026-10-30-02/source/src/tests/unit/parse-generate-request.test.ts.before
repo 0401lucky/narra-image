@@ -1,0 +1,297 @@
+import { parseGenerateRequest } from "@/lib/generation/parse-generate-request";
+
+describe("生成请求解析", () => {
+  it("解析 JSON 文生图请求", async () => {
+    const request = new Request("https://example.com/api/generate", {
+      body: JSON.stringify({
+        count: 1,
+        generationType: "text_to_image",
+        model: "gpt-image-1",
+        prompt: "电影感夜景肖像",
+        providerMode: "built_in",
+        replaceGenerationId: "job_failed",
+        size: "1024x1024",
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+    });
+
+    const result = await parseGenerateRequest(request);
+
+    expect(result.generationType).toBe("text_to_image");
+    expect(result.image).toBeNull();
+    expect(result.prompt).toBe("电影感夜景肖像");
+    expect(result.replaceGenerationId).toBe("job_failed");
+    expect(result.size).toBe("1024x1024");
+  });
+
+  it("解析 JSON 文生图请求时把比例 token 规整成像素尺寸", async () => {
+    const request = new Request("https://example.com/api/generate", {
+      body: JSON.stringify({
+        count: 1,
+        generationType: "text_to_image",
+        model: "gpt-image-1",
+        prompt: "电影感夜景肖像",
+        providerMode: "built_in",
+        size: "16:9",
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+    });
+
+    const result = await parseGenerateRequest(request);
+
+    expect(result.size).toBe("1824x1024");
+  });
+
+  it("解析 JSON 文生图请求时兼容旧像素值", async () => {
+    const request = new Request("https://example.com/api/generate", {
+      body: JSON.stringify({
+        count: 1,
+        generationType: "text_to_image",
+        model: "gpt-image-1",
+        prompt: "电影感夜景肖像",
+        providerMode: "built_in",
+        size: "1536x1024",
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+    });
+
+    const result = await parseGenerateRequest(request);
+
+    expect(result.size).toBe("1536x1024");
+  });
+
+  it("解析 form-data 图生图请求并提取参考图", async () => {
+    const formData = new FormData();
+    formData.append("generationType", "image_to_image");
+    formData.append("model", "gpt-image-1");
+    formData.append("prompt", "把这张图调成胶片质感");
+    formData.append("providerMode", "built_in");
+    formData.append("replaceGenerationId", "job_failed");
+    formData.append("size", "9:16");
+    formData.append("image", new File(["fake-image"], "source.png", { type: "image/png" }));
+
+    const result = await parseGenerateRequest(formData);
+
+    expect(result.generationType).toBe("image_to_image");
+    expect(result.image?.name).toBe("source.png");
+    expect(result.images).toHaveLength(1);
+    expect(result.replaceGenerationId).toBe("job_failed");
+    expect(result.count).toBe(1);
+    expect(result.size).toBe("1024x1824");
+  });
+
+  it("解析 JSON 文生图请求时保留高分辨率与输出参数", async () => {
+    const request = new Request("https://example.com/api/generate", {
+      body: JSON.stringify({
+        count: 1,
+        generationType: "text_to_image",
+        model: "gpt-image-2",
+        moderation: "low",
+        outputCompression: 82,
+        outputFormat: "webp",
+        prompt: "电影感夜景肖像",
+        providerMode: "built_in",
+        quality: "high",
+        size: "3840x2160",
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+    });
+
+    const result = await parseGenerateRequest(request);
+
+    expect(result.model).toBe("gpt-image-2");
+    expect(result.size).toBe("3840x2160");
+    expect(result.quality).toBe("high");
+    expect(result.outputFormat).toBe("webp");
+    expect(result.outputCompression).toBe(82);
+    expect(result.moderation).toBe("low");
+  });
+
+  it("解析 form-data 图生图请求时支持多张参考图", async () => {
+    const formData = new FormData();
+    formData.append("generationType", "image_to_image");
+    formData.append("model", "gpt-image-1");
+    formData.append("prompt", "融合两张参考图的角色和背景");
+    formData.append("providerMode", "built_in");
+    formData.append("referenceImages", new File(["fake-image-a"], "source-a.png", { type: "image/png" }));
+    formData.append("referenceImages", new File(["fake-image-b"], "source-b.png", { type: "image/png" }));
+
+    const result = await parseGenerateRequest(formData);
+
+    expect(result.images.map((image) => image.name)).toEqual(["source-a.png", "source-b.png"]);
+    expect(result.image?.name).toBe("source-a.png");
+  });
+
+  it("解析 form-data 自填 API 图生图请求", async () => {
+    const formData = new FormData();
+    formData.append("customApiKey", "sk-custom-key");
+    formData.append("customBaseUrl", "https://api.custom.test/v1");
+    formData.append("customLabel", "测试渠道");
+    formData.append("customModel", "custom-image-model");
+    formData.append("customModels", JSON.stringify(["custom-image-model", "custom-image-large"]));
+    formData.append("generationType", "image_to_image");
+    formData.append("model", "custom-image-model");
+    formData.append("prompt", "把这张图调成胶片质感");
+    formData.append("providerMode", "custom");
+    formData.append("rememberProvider", "true");
+    formData.append("image", new File(["fake-image"], "source.png", { type: "image/png" }));
+
+    const result = await parseGenerateRequest(formData);
+
+    expect(result.providerMode).toBe("custom");
+    expect(result.customProvider).toMatchObject({
+      apiKey: "sk-custom-key",
+      baseUrl: "https://api.custom.test/v1",
+      label: "测试渠道",
+      model: "custom-image-model",
+      models: ["custom-image-model", "custom-image-large"],
+      remember: true,
+    });
+  });
+
+  it("解析 form-data 自填 API 图生图请求时允许留空 Key 复用已保存配置", async () => {
+    const formData = new FormData();
+    formData.append("customBaseUrl", "https://api.custom.test/v1");
+    formData.append("customModel", "custom-image-model");
+    formData.append("generationType", "image_to_image");
+    formData.append("model", "custom-image-model");
+    formData.append("prompt", "把这张图调成胶片质感");
+    formData.append("providerMode", "custom");
+    formData.append("image", new File(["fake-image"], "source.png", { type: "image/png" }));
+
+    const result = await parseGenerateRequest(formData);
+
+    expect(result.providerMode).toBe("custom");
+    expect(result.customProvider).toBeNull();
+    expect(result.model).toBe("custom-image-model");
+  });
+
+  it("图生图 form-data 未传 size 时默认使用 auto", async () => {
+    const formData = new FormData();
+    formData.append("generationType", "image_to_image");
+    formData.append("model", "gpt-image-1");
+    formData.append("prompt", "把这张图调成胶片质感");
+    formData.append("providerMode", "built_in");
+    formData.append("image", new File(["fake-image"], "source.png", { type: "image/png" }));
+
+    const result = await parseGenerateRequest(formData);
+
+    expect(result.size).toBe("auto");
+  });
+
+  it("图生图缺少参考图时直接报错", async () => {
+    const formData = new FormData();
+    formData.append("generationType", "image_to_image");
+    formData.append("model", "gpt-image-1");
+    formData.append("prompt", "把这张图调成胶片质感");
+    formData.append("providerMode", "built_in");
+
+    await expect(parseGenerateRequest(formData)).rejects.toThrow("请先上传参考图");
+  });
+
+  it("图生图参考图超过 16 张时报错", async () => {
+    const formData = new FormData();
+    formData.append("generationType", "image_to_image");
+    formData.append("model", "gpt-image-1");
+    formData.append("prompt", "融合大量参考图");
+    formData.append("providerMode", "built_in");
+    Array.from({ length: 17 }, (_, index) => {
+      formData.append("referenceImages", new File(["fake-image"], `source-${index}.png`, { type: "image/png" }));
+    });
+
+    await expect(parseGenerateRequest(formData)).rejects.toThrow("参考图最多支持 16 张");
+  });
+
+  it("解析 JSON 文生视频请求并保留时长与比例", async () => {
+    const request = new Request("https://example.com/api/generate", {
+      body: JSON.stringify({
+        aspectRatio: "16:9",
+        durationSeconds: 8,
+        generationType: "text_to_video",
+        model: "sora-2",
+        prompt: "海浪拍打礁石的慢镜头",
+        providerMode: "built_in",
+        size: "1280x720",
+      }),
+      headers: { "Content-Type": "application/json" },
+      method: "POST",
+    });
+
+    const result = await parseGenerateRequest(request);
+
+    expect(result.generationType).toBe("text_to_video");
+    expect(result.durationSeconds).toBe(8);
+    expect(result.aspectRatio).toBe("16:9");
+    expect(result.size).toBe("1280x720");
+  });
+
+  it("解析 form-data 图生视频请求并提取首帧参考图", async () => {
+    const formData = new FormData();
+    formData.append("aspectRatio", "9:16");
+    formData.append("durationSeconds", "4");
+    formData.append("generationType", "image_to_video");
+    formData.append("model", "sora-2");
+    formData.append("prompt", "让这张照片里的人物挥手");
+    formData.append("providerMode", "built_in");
+    formData.append("size", "720x1280");
+    formData.append("image", new File(["fake-image"], "frame.png", { type: "image/png" }));
+
+    const result = await parseGenerateRequest(formData);
+
+    expect(result.generationType).toBe("image_to_video");
+    expect(result.durationSeconds).toBe(4);
+    expect(result.aspectRatio).toBe("9:16");
+    expect(result.image?.name).toBe("frame.png");
+    expect(result.images).toHaveLength(1);
+  });
+
+  it("解析 JSON 请求中的 turnstileToken", async () => {
+    const request = new Request("https://example.com/api/generate", {
+      body: JSON.stringify({
+        count: 1,
+        generationType: "text_to_image",
+        model: "gpt-image-1",
+        prompt: "带人机验证的请求",
+        providerMode: "built_in",
+        size: "1024x1024",
+        turnstileToken: "tok_json",
+      }),
+      headers: { "Content-Type": "application/json" },
+      method: "POST",
+    });
+
+    const result = await parseGenerateRequest(request);
+
+    expect(result.turnstileToken).toBe("tok_json");
+  });
+
+  it("解析 form-data 请求中的 turnstileToken，缺省时为 undefined", async () => {
+    const build = (withToken: boolean) => {
+      const formData = new FormData();
+      formData.append("generationType", "image_to_image");
+      formData.append("model", "gpt-image-1");
+      formData.append("prompt", "编辑这张图");
+      formData.append("image", new File(["fake-image"], "ref.png", { type: "image/png" }));
+      if (withToken) formData.append("turnstileToken", "tok_form");
+      return formData;
+    };
+
+    const withToken = await parseGenerateRequest(build(true));
+    expect(withToken.turnstileToken).toBe("tok_form");
+
+    const withoutToken = await parseGenerateRequest(build(false));
+    expect(withoutToken.turnstileToken).toBeUndefined();
+  });
+});

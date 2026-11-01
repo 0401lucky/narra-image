@@ -1,0 +1,189 @@
+{
+  "incompleteKey": {
+    "clicks": 0,
+    "events": [
+      {
+        "type": "keydown",
+        "key": "Tab",
+        "code": "Tab",
+        "trusted": true,
+        "target": ""
+      },
+      {
+        "type": "keyup",
+        "key": "Tab",
+        "code": "Tab",
+        "trusted": true,
+        "target": "native-enter-calibration"
+      },
+      {
+        "type": "keydown",
+        "key": "Enter",
+        "code": "",
+        "trusted": true,
+        "target": "native-enter-calibration"
+      },
+      {
+        "type": "keyup",
+        "key": "Enter",
+        "code": "",
+        "trusted": true,
+        "target": "native-enter-calibration"
+      }
+    ]
+  },
+  "completeKey": {
+    "clicks": 1,
+    "events": [
+      {
+        "type": "keydown",
+        "key": "Tab",
+        "code": "Tab",
+        "trusted": true,
+        "target": ""
+      },
+      {
+        "type": "keyup",
+        "key": "Tab",
+        "code": "Tab",
+        "trusted": true,
+        "target": "native-enter-calibration"
+      },
+      {
+        "type": "keydown",
+        "key": "Enter",
+        "code": "",
+        "trusted": true,
+        "target": "native-enter-calibration"
+      },
+      {
+        "type": "keyup",
+        "key": "Enter",
+        "code": "",
+        "trusted": true,
+        "target": "native-enter-calibration"
+      },
+      {
+        "type": "keydown",
+        "key": "Enter",
+        "code": "Enter",
+        "trusted": true,
+        "target": "native-enter-calibration"
+      },
+      {
+        "type": "keypress",
+        "key": "Enter",
+        "code": "Enter",
+        "trusted": true,
+        "target": "native-enter-calibration"
+      },
+      {
+        "type": "click",
+        "trusted": true,
+        "target": "native-enter-calibration"
+      },
+      {
+        "type": "keyup",
+        "key": "Enter",
+        "code": "Enter",
+        "trusted": true,
+        "target": "native-enter-calibration"
+      }
+    ]
+  },
+  "disabledKey": {
+    "clicks": 1,
+    "events": [
+      {
+        "type": "keydown",
+        "key": "Tab",
+        "code": "Tab",
+        "trusted": true,
+        "target": ""
+      },
+      {
+        "type": "keyup",
+        "key": "Tab",
+        "code": "Tab",
+        "trusted": true,
+        "target": "native-enter-calibration"
+      },
+      {
+        "type": "keydown",
+        "key": "Enter",
+        "code": "",
+        "trusted": true,
+        "target": "native-enter-calibration"
+      },
+      {
+        "type": "keyup",
+        "key": "Enter",
+        "code": "",
+        "trusted": true,
+        "target": "native-enter-calibration"
+      },
+      {
+        "type": "keydown",
+        "key": "Enter",
+        "code": "Enter",
+        "trusted": true,
+        "target": "native-enter-calibration"
+      },
+      {
+        "type": "keypress",
+        "key": "Enter",
+        "code": "Enter",
+        "trusted": true,
+        "target": "native-enter-calibration"
+      },
+      {
+        "type": "click",
+        "trusted": true,
+        "target": "native-enter-calibration"
+      },
+      {
+        "type": "keyup",
+        "key": "Enter",
+        "code": "Enter",
+        "trusted": true,
+        "target": "native-enter-calibration"
+      },
+      {
+        "type": "keydown",
+        "key": "Tab",
+        "code": "Tab",
+        "trusted": true,
+        "target": "native-enter-calibration"
+      },
+      {
+        "type": "keyup",
+        "key": "Tab",
+        "code": "Tab",
+        "trusted": true,
+        "target": ""
+      },
+      {
+        "type": "keydown",
+        "key": "Enter",
+        "code": "Enter",
+        "trusted": true,
+        "target": ""
+      },
+      {
+        "type": "keypress",
+        "key": "Enter",
+        "code": "Enter",
+        "trusted": true,
+        "target": ""
+      },
+      {
+        "type": "keyup",
+        "key": "Enter",
+        "code": "Enter",
+        "trusted": true,
+        "target": ""
+      }
+    ]
+  },
+  "programmaticClickOrFocus": false
+}

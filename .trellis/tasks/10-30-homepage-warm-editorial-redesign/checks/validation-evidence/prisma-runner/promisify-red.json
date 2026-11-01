@@ -1,0 +1,7 @@
+{
+  "exitCode": 1,
+  "expectedFailure": "guard fs.exists loses custom promisify; missing/denied file resolves undefined rather than false",
+  "nodeVersion": "v24.11.1",
+  "codeChanged": false,
+  "finishedAt": "2026-10-31T02:32:00.459086+00:00"
+}

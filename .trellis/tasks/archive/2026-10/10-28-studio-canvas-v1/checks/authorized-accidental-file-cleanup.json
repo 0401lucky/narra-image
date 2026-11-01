@@ -1,0 +1,12 @@
+{
+  "authorizedByUser": true,
+  "removedPath": "E:\\code\\narra-image\\console.log(format",
+  "sha256": "A1AC864D084E2A563542DE1F5E8AC34C92C8C32822AEE2F637059276F97118DC",
+  "bytes": 629,
+  "createdUtc": "2026-10-29T07:12:59.3195221Z",
+  "evidenceCopy": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\accidental-redirection-evidence.txt",
+  "failedCommandLog": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\canvas-api-image-fixtures-01.json",
+  "cause": "Windows pnpm shell interpreted the inline JavaScript arrow as output redirection",
+  "action": "Removed only the verified accidental regular file; no recursive cleanup or other code edit",
+  "completedAt": "2026-10-29T07:25:34.6488212Z"
+}

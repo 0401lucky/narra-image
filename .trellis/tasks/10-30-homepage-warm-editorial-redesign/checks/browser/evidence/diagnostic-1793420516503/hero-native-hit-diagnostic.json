@@ -1,0 +1,340 @@
+{
+  "before": {
+    "x": 1238.0433349609375,
+    "y": 529.5558471679688,
+    "rect": {
+      "x": 1197.491943359375,
+      "y": 515.4310302734375,
+      "width": 81.102783203125,
+      "height": 28.2496337890625,
+      "top": 515.4310302734375,
+      "right": 1278.5947265625,
+      "bottom": 543.6806640625,
+      "left": 1197.491943359375
+    },
+    "hit": {
+      "tag": "IMG",
+      "text": "",
+      "classes": "homepage-module__tSg5yW__sceneImage"
+    },
+    "all": [
+      {
+        "tag": "BUTTON",
+        "text": "复用画面灵感",
+        "classes": ""
+      },
+      {
+        "tag": "DIV",
+        "text": "4:3 · 叙事示意画幅复用画面灵感",
+        "classes": "homepage-module__tSg5yW__promptToolbar"
+      },
+      {
+        "tag": "DIV",
+        "text": "4:3 · 叙事示意画幅复用画面灵感江南雨巷檐角滴落的雨水，",
+        "classes": "homepage-module__tSg5yW__promptOverlay"
+      },
+      {
+        "tag": "IMG",
+        "text": "",
+        "classes": "homepage-module__tSg5yW__sceneImage"
+      },
+      {
+        "tag": "DIV",
+        "text": "风格示意 · 东方水墨留白局部补光 · 示意视觉语言 · S",
+        "classes": "homepage-module__tSg5yW__sceneViewport"
+      },
+      {
+        "tag": "DIV",
+        "text": "风格示意 · 东方水墨留白局部补光 · 示意视觉语言 · S",
+        "classes": "homepage-module__tSg5yW__sceneStage"
+      }
+    ],
+    "after": {
+      "tag": "IMG",
+      "text": "",
+      "classes": "homepage-module__tSg5yW__sceneImage"
+    },
+    "copies": [],
+    "trace": [
+      {
+        "type": "pointerdown",
+        "at": 2451.4000000059605,
+        "x": 1188.044189453125,
+        "y": 170.15228271484375,
+        "target": "<button id=\"_R_j5fnbb_-tab-storybook\" type=\"button\" role=\"tab\" aria-selected=\"false\" aria-controls=\"_R_j5fnbb_-scene\" tabindex=\"-1\" data-pending=\"false\" class=\"homepage-module__tSg5yW__sceneTab\">绘本叙事</button>",
+        "scene": "film"
+      },
+      {
+        "type": "pointerup",
+        "at": 2454.7000000029802,
+        "x": 1188.044189453125,
+        "y": 170.15228271484375,
+        "target": "<button id=\"_R_j5fnbb_-tab-storybook\" type=\"button\" role=\"tab\" aria-selected=\"false\" aria-controls=\"_R_j5fnbb_-scene\" tabindex=\"-1\" data-pending=\"false\" class=\"homepage-module__tSg5yW__sceneTab\">绘本叙事</button>",
+        "scene": "film"
+      },
+      {
+        "type": "click",
+        "at": 2455.1000000089407,
+        "x": 1188,
+        "y": 170,
+        "target": "<button id=\"_R_j5fnbb_-tab-storybook\" type=\"button\" role=\"tab\" aria-selected=\"false\" aria-controls=\"_R_j5fnbb_-scene\" tabindex=\"-1\" data-pending=\"false\" class=\"homepage-module__tSg5yW__sceneTab\">绘本叙事</button>",
+        "scene": "film"
+      },
+      {
+        "type": "pointerdown",
+        "at": 2901.2000000029802,
+        "x": 1258.1536865234375,
+        "y": 171.9351043701172,
+        "target": "<button id=\"_R_j5fnbb_-tab-oriental\" type=\"button\" role=\"tab\" aria-selected=\"false\" aria-controls=\"_R_j5fnbb_-scene\" tabindex=\"-1\" data-pending=\"false\" class=\"homepage-module__tSg5yW__sceneTab\">东方美学</button>",
+        "scene": "storybook"
+      },
+      {
+        "type": "pointerup",
+        "at": 2902.300000011921,
+        "x": 1258.1536865234375,
+        "y": 171.9351043701172,
+        "target": "<button id=\"_R_j5fnbb_-tab-oriental\" type=\"button\" role=\"tab\" aria-selected=\"false\" aria-controls=\"_R_j5fnbb_-scene\" tabindex=\"-1\" data-pending=\"false\" class=\"homepage-module__tSg5yW__sceneTab\">东方美学</button>",
+        "scene": "storybook"
+      },
+      {
+        "type": "click",
+        "at": 2902.5,
+        "x": 1258,
+        "y": 171,
+        "target": "<button id=\"_R_j5fnbb_-tab-oriental\" type=\"button\" role=\"tab\" aria-selected=\"false\" aria-controls=\"_R_j5fnbb_-scene\" tabindex=\"-1\" data-pending=\"false\" class=\"homepage-module__tSg5yW__sceneTab\">东方美学</button>",
+        "scene": "storybook"
+      }
+    ]
+  },
+  "approached": {
+    "x": 1235.5814208984375,
+    "y": 526.8629760742188,
+    "rect": {
+      "x": 1195.52734375,
+      "y": 512.815673828125,
+      "width": 80.108154296875,
+      "height": 28.0946044921875,
+      "top": 512.815673828125,
+      "right": 1275.635498046875,
+      "bottom": 540.9102783203125,
+      "left": 1195.52734375
+    },
+    "hit": {
+      "tag": "IMG",
+      "text": "",
+      "classes": "homepage-module__tSg5yW__sceneImage"
+    },
+    "all": [
+      {
+        "tag": "BUTTON",
+        "text": "复用画面灵感",
+        "classes": ""
+      },
+      {
+        "tag": "DIV",
+        "text": "4:3 · 叙事示意画幅复用画面灵感",
+        "classes": "homepage-module__tSg5yW__promptToolbar"
+      },
+      {
+        "tag": "DIV",
+        "text": "4:3 · 叙事示意画幅复用画面灵感江南雨巷檐角滴落的雨水，",
+        "classes": "homepage-module__tSg5yW__promptOverlay"
+      },
+      {
+        "tag": "IMG",
+        "text": "",
+        "classes": "homepage-module__tSg5yW__sceneImage"
+      },
+      {
+        "tag": "DIV",
+        "text": "风格示意 · 东方水墨留白局部补光 · 示意视觉语言 · S",
+        "classes": "homepage-module__tSg5yW__sceneViewport"
+      },
+      {
+        "tag": "DIV",
+        "text": "风格示意 · 东方水墨留白局部补光 · 示意视觉语言 · S",
+        "classes": "homepage-module__tSg5yW__sceneStage"
+      }
+    ],
+    "after": {
+      "tag": "IMG",
+      "text": "",
+      "classes": "homepage-module__tSg5yW__sceneImage"
+    },
+    "copies": [],
+    "trace": [
+      {
+        "type": "pointerdown",
+        "at": 2451.4000000059605,
+        "x": 1188.044189453125,
+        "y": 170.15228271484375,
+        "target": "<button id=\"_R_j5fnbb_-tab-storybook\" type=\"button\" role=\"tab\" aria-selected=\"false\" aria-controls=\"_R_j5fnbb_-scene\" tabindex=\"-1\" data-pending=\"false\" class=\"homepage-module__tSg5yW__sceneTab\">绘本叙事</button>",
+        "scene": "film"
+      },
+      {
+        "type": "pointerup",
+        "at": 2454.7000000029802,
+        "x": 1188.044189453125,
+        "y": 170.15228271484375,
+        "target": "<button id=\"_R_j5fnbb_-tab-storybook\" type=\"button\" role=\"tab\" aria-selected=\"false\" aria-controls=\"_R_j5fnbb_-scene\" tabindex=\"-1\" data-pending=\"false\" class=\"homepage-module__tSg5yW__sceneTab\">绘本叙事</button>",
+        "scene": "film"
+      },
+      {
+        "type": "click",
+        "at": 2455.1000000089407,
+        "x": 1188,
+        "y": 170,
+        "target": "<button id=\"_R_j5fnbb_-tab-storybook\" type=\"button\" role=\"tab\" aria-selected=\"false\" aria-controls=\"_R_j5fnbb_-scene\" tabindex=\"-1\" data-pending=\"false\" class=\"homepage-module__tSg5yW__sceneTab\">绘本叙事</button>",
+        "scene": "film"
+      },
+      {
+        "type": "pointerdown",
+        "at": 2901.2000000029802,
+        "x": 1258.1536865234375,
+        "y": 171.9351043701172,
+        "target": "<button id=\"_R_j5fnbb_-tab-oriental\" type=\"button\" role=\"tab\" aria-selected=\"false\" aria-controls=\"_R_j5fnbb_-scene\" tabindex=\"-1\" data-pending=\"false\" class=\"homepage-module__tSg5yW__sceneTab\">东方美学</button>",
+        "scene": "storybook"
+      },
+      {
+        "type": "pointerup",
+        "at": 2902.300000011921,
+        "x": 1258.1536865234375,
+        "y": 171.9351043701172,
+        "target": "<button id=\"_R_j5fnbb_-tab-oriental\" type=\"button\" role=\"tab\" aria-selected=\"false\" aria-controls=\"_R_j5fnbb_-scene\" tabindex=\"-1\" data-pending=\"false\" class=\"homepage-module__tSg5yW__sceneTab\">东方美学</button>",
+        "scene": "storybook"
+      },
+      {
+        "type": "click",
+        "at": 2902.5,
+        "x": 1258,
+        "y": 171,
+        "target": "<button id=\"_R_j5fnbb_-tab-oriental\" type=\"button\" role=\"tab\" aria-selected=\"false\" aria-controls=\"_R_j5fnbb_-scene\" tabindex=\"-1\" data-pending=\"false\" class=\"homepage-module__tSg5yW__sceneTab\">东方美学</button>",
+        "scene": "storybook"
+      }
+    ]
+  },
+  "pressed": {
+    "x": 1235.5814208984375,
+    "y": 526.8629760742188,
+    "rect": {
+      "x": 1195.52734375,
+      "y": 512.815673828125,
+      "width": 80.108154296875,
+      "height": 28.0946044921875,
+      "top": 512.815673828125,
+      "right": 1275.635498046875,
+      "bottom": 540.9102783203125,
+      "left": 1195.52734375
+    },
+    "hit": {
+      "tag": "IMG",
+      "text": "",
+      "classes": "homepage-module__tSg5yW__sceneImage"
+    },
+    "all": [
+      {
+        "tag": "BUTTON",
+        "text": "复用画面灵感",
+        "classes": ""
+      },
+      {
+        "tag": "DIV",
+        "text": "4:3 · 叙事示意画幅复用画面灵感",
+        "classes": "homepage-module__tSg5yW__promptToolbar"
+      },
+      {
+        "tag": "DIV",
+        "text": "4:3 · 叙事示意画幅复用画面灵感江南雨巷檐角滴落的雨水，",
+        "classes": "homepage-module__tSg5yW__promptOverlay"
+      },
+      {
+        "tag": "IMG",
+        "text": "",
+        "classes": "homepage-module__tSg5yW__sceneImage"
+      },
+      {
+        "tag": "DIV",
+        "text": "风格示意 · 东方水墨留白局部补光 · 示意视觉语言 · S",
+        "classes": "homepage-module__tSg5yW__sceneViewport"
+      },
+      {
+        "tag": "DIV",
+        "text": "风格示意 · 东方水墨留白局部补光 · 示意视觉语言 · S",
+        "classes": "homepage-module__tSg5yW__sceneStage"
+      }
+    ],
+    "after": {
+      "tag": "IMG",
+      "text": "",
+      "classes": "homepage-module__tSg5yW__sceneImage"
+    },
+    "copies": [],
+    "trace": [
+      {
+        "type": "pointerdown",
+        "at": 2901.2000000029802,
+        "x": 1258.1536865234375,
+        "y": 171.9351043701172,
+        "target": "<button id=\"_R_j5fnbb_-tab-oriental\" type=\"button\" role=\"tab\" aria-selected=\"false\" aria-controls=\"_R_j5fnbb_-scene\" tabindex=\"-1\" data-pending=\"false\" class=\"homepage-module__tSg5yW__sceneTab\">东方美学</button>",
+        "scene": "storybook"
+      },
+      {
+        "type": "pointerup",
+        "at": 2902.300000011921,
+        "x": 1258.1536865234375,
+        "y": 171.9351043701172,
+        "target": "<button id=\"_R_j5fnbb_-tab-oriental\" type=\"button\" role=\"tab\" aria-selected=\"false\" aria-controls=\"_R_j5fnbb_-scene\" tabindex=\"-1\" data-pending=\"false\" class=\"homepage-module__tSg5yW__sceneTab\">东方美学</button>",
+        "scene": "storybook"
+      },
+      {
+        "type": "click",
+        "at": 2902.5,
+        "x": 1258,
+        "y": 171,
+        "target": "<button id=\"_R_j5fnbb_-tab-oriental\" type=\"button\" role=\"tab\" aria-selected=\"false\" aria-controls=\"_R_j5fnbb_-scene\" tabindex=\"-1\" data-pending=\"false\" class=\"homepage-module__tSg5yW__sceneTab\">东方美学</button>",
+        "scene": "storybook"
+      },
+      {
+        "type": "pointerdown",
+        "at": 4443.20000000298,
+        "x": 1235.5814208984375,
+        "y": 526.8629760742188,
+        "target": "<img data-home-scene-image=\"true\" alt=\"江南雨巷的檐角滴着雨，远处暖黄灯笼倒映在青石板上\" width=\"1448\" height=\"1086\" loading=\"eager\" fetchpriority=\"auto\" decoding=\"async\" draggable=\"false\" class=\"homepage-module__tSg5yW__sceneImage\" src=\"/marketing/home/jiangnan-rain-v2.png\">",
+        "scene": "oriental"
+      },
+      {
+        "type": "pointerup",
+        "at": 4444.20000000298,
+        "x": 1235.5814208984375,
+        "y": 526.8629760742188,
+        "target": "<img data-home-scene-image=\"true\" alt=\"江南雨巷的檐角滴着雨，远处暖黄灯笼倒映在青石板上\" width=\"1448\" height=\"1086\" loading=\"eager\" fetchpriority=\"auto\" decoding=\"async\" draggable=\"false\" class=\"homepage-module__tSg5yW__sceneImage\" src=\"/marketing/home/jiangnan-rain-v2.png\">",
+        "scene": "oriental"
+      },
+      {
+        "type": "click",
+        "at": 4444.4000000059605,
+        "x": 1235,
+        "y": 526,
+        "target": "<img data-home-scene-image=\"true\" alt=\"江南雨巷的檐角滴着雨，远处暖黄灯笼倒映在青石板上\" width=\"1448\" height=\"1086\" loading=\"eager\" fetchpriority=\"auto\" decoding=\"async\" draggable=\"false\" class=\"homepage-module__tSg5yW__sceneImage\" src=\"/marketing/home/jiangnan-rain-v2.png\">",
+        "scene": "oriental"
+      }
+    ]
+  },
+  "helper": {
+    "left": 1195.52734375,
+    "top": 512.815673828125,
+    "right": 1275.635498046875,
+    "bottom": 540.9102783203125,
+    "width": 80.108154296875,
+    "height": 28.0946044921875,
+    "x": 1235.5814208984375,
+    "y": 526.8629760742188,
+    "visible": true,
+    "hit": false,
+    "hitTag": "IMG",
+    "hitText": "",
+    "text": "复用画面灵感",
+    "disabled": false
+  },
+  "noProgrammaticClick": true
+}

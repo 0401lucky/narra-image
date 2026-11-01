@@ -1,0 +1,18 @@
+{
+  "command": [
+    "C:\\Python314\\python.exe",
+    ".trellis/scripts/task.py",
+    "archive",
+    ".trellis/tasks/10-28-studio-dual-mode-canvas",
+    "--no-commit"
+  ],
+  "cwd": "E:\\code\\narra-image",
+  "timeoutMs": 30000,
+  "code": 0,
+  "durationMs": 113,
+  "label": "parent-archive-01",
+  "mode": "lifecycle",
+  "recordedAt": "2026-10-30T07:57:38.528171+00:00",
+  "stdoutPath": "parent-archive-01.stdout.log",
+  "stderrPath": "parent-archive-01.stderr.log"
+}

@@ -1,0 +1,63 @@
+import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
+import { readFile, writeFile } from "node:fs/promises";
+import path from "node:path";
+
+import { delay, waitFor } from "./cdp.mjs";
+
+const sha = (bytes) => createHash("sha256").update(bytes).digest("hex");
+
+export async function referenceChecks({ page, check, evidence, here }) {
+  const task = path.resolve(here, "../..");
+  const assets = path.join(here, "reference-assets");
+  const html = await readFile(path.join(task, "references/narra_image.html"));
+  const css = await readFile(path.join(task, "research/asset-evidence/google-fonts.css"));
+  const cdn = JSON.parse(await readFile(path.join(assets, "tailwind-cdn.json"), "utf8"));
+  const cdnBytes = await readFile(path.join(assets, "tailwind-cdn.js"));
+  assert.equal(sha(cdnBytes), cdn.sha256);
+  const fonts = JSON.parse(await readFile(path.join(task, "checks/assets/font-manifest.json"), "utf8"));
+  assert.equal(sha(css), fonts.sourceCssSha256);
+  const images = JSON.parse(await readFile(path.join(assets, "images-manifest.json"), "utf8"));
+  const cssUrl = /<link href="(https:\/\/fonts\.googleapis\.com[^\"]+)"/.exec(html.toString("utf8"))[1];
+  const receipts = [];
+  for (const [width, height, touch] of [[1440, 1000, false], [390, 844, true]]) {
+    await check(`R-reference-clean-${width}`, async () => {
+      const tab = await page();
+      await tab.viewport(width, height, touch);
+      tab.serve("/homepage-fixture/reference", html, "text/html; charset=utf-8");
+      tab.serve("https://cdn.tailwindcss.com/", cdnBytes, "text/javascript");
+      tab.serve("https://cdn.tailwindcss.com", cdnBytes, "text/javascript");
+      tab.serve(cssUrl, css, "text/css");
+      for (const font of fonts.files) {
+        const bytes = await readFile(path.join(task, "checks/assets/font-package", font.file));
+        assert.equal(sha(bytes), font.sha256);
+        tab.serve(font.url, bytes, "font/woff2");
+      }
+      for (const image of images.images) {
+        if (image.status === 200) {
+          const bytes = await readFile(path.join(assets, image.file));
+          assert.equal(sha(bytes), image.sha256);
+          tab.serve(image.url, bytes, image.contentType);
+        } else tab.serve(image.url, "Original reference source unavailable", "text/plain", image.status ?? 502);
+      }
+      await tab.navigate("/homepage-fixture/reference");
+      await waitFor(() => tab.cdp.evaluate("getComputedStyle(document.querySelector('#hero')).paddingTop !== '0px'"));
+      // External screenshot-only cleanup; the reference snapshot and DOM content
+      // remain otherwise unchanged, including the originally mismatched imagery.
+      await tab.cdp.evaluate("void (()=>{const style=document.createElement('style');style.textContent='.design-annotation,body>div:first-child{display:none!important}';document.head.append(style)})()");
+      await tab.settledFonts();
+      await delay(1800);
+      const measured = await tab.cdp.evaluate("({font:getComputedStyle(document.body).fontFamily,paper:getComputedStyle(document.body).backgroundColor,hero:document.querySelector('#hero').getBoundingClientRect().toJSON(),title:document.querySelector('h1').getBoundingClientRect().toJSON(),frame:document.querySelector('#heroCanvasCard').getBoundingClientRect().toJSON(),overflow:document.documentElement.scrollWidth>innerWidth,imageLoaded:document.querySelector('#heroStageImg').naturalWidth>0,fonts:[...document.fonts].filter(f=>f.status==='loaded').map(f=>f.family)})");
+      assert(measured.imageLoaded, "Actual original bookshop-labelled reference image must load");
+      assert(measured.fonts.some((family) => family.includes("Noto Serif SC")), "Reference Chinese serif must load");
+      await tab.screenshot(path.join(evidence, `reference-clean-${width}.png`));
+      const capabilities = await tab.inspect("#capabilities");
+      await tab.cdp.send("Input.dispatchMouseEvent", { type: "mouseWheel", x: width - 20, y: height / 2, deltaX: 0, deltaY: capabilities.top - 80 });
+      await delay(1100);
+      await tab.screenshot(path.join(evidence, `reference-capabilities-${width}.png`));
+      receipts.push({ width, height, measured, htmlSha256: sha(html), cdnSha256: cdn.sha256, externalNetworkBlocked: tab.externalRequests });
+      return receipts.at(-1);
+    });
+  }
+  await writeFile(path.join(evidence, "reference-evidence.json"), JSON.stringify({ receipts, originalReferenceImages: "Kept original resolved reference subjects. Original storybook URL remains a recorded 404. Product replacement illustrations are an approved difference.", sourceMutation: false }, null, 2));
+}

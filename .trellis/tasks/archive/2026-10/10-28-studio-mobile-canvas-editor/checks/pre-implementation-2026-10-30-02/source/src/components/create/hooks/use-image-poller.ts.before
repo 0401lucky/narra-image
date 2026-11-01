@@ -1,0 +1,204 @@
+"use client";
+
+// 单个 generation 任务的轮询 Hook。
+// 1) setTimeout + 退避（POLL_DELAYS_MS）替代固定 setInterval；
+// 2) 监听 visibilitychange/focus/pageshow，标签页隐藏时挂起，恢复后立即补拉；
+// 3) 每个订阅只保留一个请求，账户/挂载/请求轮次共同拒绝迟到响应；
+// 4) 终态或尝试上限停止，只有移除后重新订阅才能重启。
+import { useEffect, useRef } from "react";
+
+import { POLL_DELAYS_MS, POLL_MAX_ATTEMPTS, POLL_REQUEST_TIMEOUT_MS } from "../constants";
+import { isGenerationItem } from "../generation-item";
+import type { GenerationItem } from "../types";
+
+type PollerEntry = {
+  id: string;
+  handle: ReturnType<typeof setTimeout> | null;
+  requestTimeout: ReturnType<typeof setTimeout> | null;
+  attempts: number;
+  requestEpoch: number;
+  controller: AbortController | null;
+  stopped: boolean;
+};
+
+type PollerContext = {
+  ownerId: string | undefined;
+  active: boolean;
+  mountEpoch: number;
+  entries: Map<string, PollerEntry>;
+  sync: (generations: GenerationItem[]) => void;
+};
+
+type UseImagePollerOptions = {
+  generations: GenerationItem[];
+  onUpdate: (updated: GenerationItem) => void;
+  ownerId?: string;
+};
+
+function nextDelay(attempts: number) {
+  return POLL_DELAYS_MS[Math.min(attempts, POLL_DELAYS_MS.length - 1)];
+}
+
+export function useImagePoller({ generations, onUpdate, ownerId }: UseImagePollerOptions) {
+  const contextRef = useRef<PollerContext | null>(null);
+  const mountEpochRef = useRef(0);
+  const onUpdateRef = useRef(onUpdate);
+
+  useEffect(() => {
+    onUpdateRef.current = onUpdate;
+  }, [onUpdate]);
+
+  useEffect(() => {
+    const context: PollerContext = {
+      ownerId, active: true, mountEpoch: ++mountEpochRef.current,
+      entries: new Map(), sync: syncGenerations,
+    };
+    contextRef.current = context;
+
+    function isSubscribed(entry: PollerEntry) {
+      return context.active && contextRef.current === context
+        && mountEpochRef.current === context.mountEpoch
+        && context.entries.get(entry.id) === entry && !entry.stopped;
+    }
+
+    function clearTimer(entry: PollerEntry) {
+      if (entry.handle !== null) {
+        clearTimeout(entry.handle);
+        entry.handle = null;
+      }
+    }
+
+    function stopEntry(entry: PollerEntry) {
+      entry.stopped = true;
+      entry.requestEpoch += 1;
+      clearTimer(entry);
+      if (entry.requestTimeout !== null) clearTimeout(entry.requestTimeout);
+      entry.requestTimeout = null;
+      entry.controller?.abort();
+      entry.controller = null;
+    }
+
+    function isHidden() {
+      return typeof document !== "undefined" && document.hidden;
+    }
+
+    function schedule(entry: PollerEntry, delay = nextDelay(entry.attempts)) {
+      if (!isSubscribed(entry) || entry.controller) return;
+      clearTimer(entry);
+      if (isHidden()) return;
+      entry.handle = setTimeout(() => {
+        entry.handle = null;
+        void pollOnce(entry);
+      }, delay);
+    }
+
+    async function pollOnce(entry: PollerEntry) {
+      if (!isSubscribed(entry) || entry.controller || isHidden()) return;
+      if (entry.attempts >= POLL_MAX_ATTEMPTS) {
+        stopEntry(entry);
+        return;
+      }
+      const controller = new AbortController();
+      const requestEpoch = ++entry.requestEpoch;
+      entry.controller = controller;
+      entry.attempts += 1;
+      const matchesRequest = () => isSubscribed(entry) && entry.requestEpoch === requestEpoch && entry.controller === controller;
+      const isCurrentRequest = () => matchesRequest() && !controller.signal.aborted;
+      let rejectAbort: (reason?: unknown) => void = () => {};
+      const interrupted = new Promise<never>((_resolve, reject) => { rejectAbort = reject; });
+      const onAbort = () => rejectAbort(controller.signal.reason);
+      controller.signal.addEventListener("abort", onAbort, { once: true });
+      const timeout = setTimeout(() => controller.abort(), POLL_REQUEST_TIMEOUT_MS);
+      entry.requestTimeout = timeout;
+      const read = async () => {
+        const response = await fetch(`/api/me/generations/${encodeURIComponent(entry.id)}`, {
+          cache: "no-store", credentials: "same-origin", signal: controller.signal,
+        });
+        if (!isCurrentRequest() || !response.ok) return;
+        const json = await response.json() as { data?: { generation?: unknown } } | null;
+        if (!isCurrentRequest()) return;
+        return json?.data?.generation;
+      };
+      try {
+        // Bound fetch AND JSON, even if a transport ignores abort; late reads still face the request epoch.
+        const updated = await Promise.race([read(), interrupted]);
+        if (!isCurrentRequest()) return;
+        if (!isGenerationItem(updated) || updated.id !== entry.id
+          || (updated.status !== "succeeded" && updated.status !== "failed")) return;
+        // Retain the stopped entry until unsubscribe, even if the caller keeps a stale pending DTO.
+        stopEntry(entry);
+        onUpdateRef.current(updated);
+      } catch {
+        // 单次网络/解析失败按下一档延时继续，已失效的请求不得重启订阅。
+      } finally {
+        clearTimeout(timeout);
+        controller.signal.removeEventListener("abort", onAbort);
+        if (entry.requestTimeout === timeout) entry.requestTimeout = null;
+        if (matchesRequest()) {
+          entry.requestEpoch += 1;
+          entry.controller = null;
+          if (entry.attempts >= POLL_MAX_ATTEMPTS) stopEntry(entry);
+          else schedule(entry);
+        }
+      }
+    }
+
+    function syncGenerations(current: GenerationItem[]) {
+      const pendingIds = new Set(current.filter((job) => job.status === "pending").map((job) => job.id));
+      for (const [id, entry] of context.entries) {
+        if (pendingIds.has(id)) continue;
+        stopEntry(entry);
+        context.entries.delete(id);
+      }
+      for (const id of pendingIds) {
+        if (context.entries.has(id)) continue;
+        const entry: PollerEntry = {
+          id, handle: null, requestTimeout: null, attempts: 0, requestEpoch: 0, controller: null, stopped: false,
+        };
+        context.entries.set(id, entry);
+        schedule(entry);
+      }
+    }
+
+    function pauseAllPollers() {
+      for (const entry of context.entries.values()) clearTimer(entry);
+    }
+
+    function resumePendingPollers() {
+      if (isHidden()) return;
+      for (const entry of context.entries.values()) schedule(entry, 0);
+    }
+
+    function handleVisibilityChange() {
+      if (isHidden()) pauseAllPollers();
+      else resumePendingPollers();
+    }
+
+    if (typeof document !== "undefined") {
+      document.addEventListener("visibilitychange", handleVisibilityChange);
+    }
+    if (typeof window !== "undefined") {
+      window.addEventListener("focus", resumePendingPollers);
+      window.addEventListener("pageshow", resumePendingPollers);
+    }
+    return () => {
+      context.active = false;
+      mountEpochRef.current += 1;
+      for (const entry of context.entries.values()) stopEntry(entry);
+      context.entries.clear();
+      if (contextRef.current === context) contextRef.current = null;
+      if (typeof document !== "undefined") {
+        document.removeEventListener("visibilitychange", handleVisibilityChange);
+      }
+      if (typeof window !== "undefined") {
+        window.removeEventListener("focus", resumePendingPollers);
+        window.removeEventListener("pageshow", resumePendingPollers);
+      }
+    };
+  }, [ownerId]);
+
+  useEffect(() => {
+    const context = contextRef.current;
+    if (context?.active && context.ownerId === ownerId) context.sync(generations);
+  }, [generations, ownerId]);
+}

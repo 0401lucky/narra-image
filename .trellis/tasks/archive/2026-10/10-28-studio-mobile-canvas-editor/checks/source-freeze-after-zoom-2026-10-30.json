@@ -1,0 +1,389 @@
+{
+  "captured_at": "2026-10-30T15:37:29.034819+00:00",
+  "scope": "Final source freeze after the scoped accessibility-zoom correction; not MA/device/service acceptance.",
+  "source_baseline": ".trellis/tasks/10-28-studio-mobile-canvas-editor/checks/preservation-after-review-01.json",
+  "source_baseline_sha256": "b368c8d02a070542439e70b74a654dd420036464807688a8674cd28e30260097",
+  "head": "1f7948e334c589dc6db38ac045b584f0f5381481",
+  "head_matches": true,
+  "index_entries_match_unchanged_head": true,
+  "staged_paths": [],
+  "baseline_identities": 1337,
+  "current_mobile_identities": [
+    {
+      "path": "src/components/create/canvas/commands.ts",
+      "kind": "file",
+      "bytes": 11781,
+      "sha256": "c6af5a2afd2711fe30d215a81cac7c16472e055b6245d6e73c94d081a1cd4a01"
+    },
+    {
+      "path": "src/components/create/canvas/controller-types.ts",
+      "kind": "file",
+      "bytes": 5902,
+      "sha256": "beaf96e20dc7592b1e42b125b098c8ec0d985ae210c1bef5b4a8de2eea66ea26"
+    },
+    {
+      "path": "src/components/create/canvas/controller.ts",
+      "kind": "file",
+      "bytes": 53775,
+      "sha256": "5b5487a51ffd8ac40b8ba7655addc563678f5f4aa28efb2b8805b6d3d5974711"
+    },
+    {
+      "path": "src/components/create/canvas/editor-state.ts",
+      "kind": "file",
+      "bytes": 9063,
+      "sha256": "cf58379993bf449887c052ad1d5cb8db39f4d01c72542329bc5dfbfbac73ab95"
+    },
+    {
+      "path": "src/components/create/canvas/mobile-interaction.ts",
+      "kind": "file",
+      "bytes": 3669,
+      "sha256": "6a3060ef5dab27700ed6890fcbfb99e45c63101fdd1a95e17a1bfa963cce6c99"
+    },
+    {
+      "path": "src/components/create/canvas/renderer-adapter.ts",
+      "kind": "file",
+      "bytes": 7938,
+      "sha256": "28c65ca58b1e3d95bd4b2de692bc1a3db78c67d6e88cbc25a573b38563685a9b"
+    },
+    {
+      "path": "src/components/create/canvas/renderer-constants.ts",
+      "kind": "file",
+      "bytes": 2850,
+      "sha256": "df328737336ff49f7ce12fe25213747063aecc02ea70293c53dc158990a008bf"
+    },
+    {
+      "path": "src/components/create/canvas/renderer-types.ts",
+      "kind": "file",
+      "bytes": 2937,
+      "sha256": "1dff26422efb81b448684926d8ab8c4bfe39d9cbf6e49e2417e38dd655766f68"
+    },
+    {
+      "path": "src/components/create/generator-studio.tsx",
+      "kind": "file",
+      "bytes": 60192,
+      "sha256": "b3a3ec2094ace13160c1fa532993728bcacb9085977b7dbdb9fbf95347816fac"
+    },
+    {
+      "path": "src/components/create/hooks/use-canvas-editor.ts",
+      "kind": "file",
+      "bytes": 862,
+      "sha256": "4c6a9e6382c0e0703313ef6943f435c298e72d984b7a074ea4522d1a3670231d"
+    },
+    {
+      "path": "src/components/create/hooks/use-canvas-mobile-viewport.ts",
+      "kind": "file",
+      "bytes": 2699,
+      "sha256": "63bdd56b42f59da6a4b0f7ec10b244795a26619503aec0c0996b92f24ca1a10e"
+    },
+    {
+      "path": "src/components/create/hooks/use-studio-mode.ts",
+      "kind": "file",
+      "bytes": 2198,
+      "sha256": "cc89a172799bbfc5525a16bf9e43bdaf725a140b22e6c21687bada28279db6b3"
+    },
+    {
+      "path": "src/components/create/parts/canvas-dialog.tsx",
+      "kind": "file",
+      "bytes": 4647,
+      "sha256": "e6664bcbdd45aff31c53b6ed2e6f6c8b7946453bdedc837578db6999711c3840"
+    },
+    {
+      "path": "src/components/create/parts/canvas-node-editor.tsx",
+      "kind": "file",
+      "bytes": 4348,
+      "sha256": "c8eff43005b7437a0e8f9b465cb5b200e0ee6ad5711efbcd71dd0d18d8059f1b"
+    },
+    {
+      "path": "src/components/create/parts/canvas-node-inspector.tsx",
+      "kind": "file",
+      "bytes": 16517,
+      "sha256": "8724ee0db77a35d70617c0a7326c7336fa1ed18447a1d6e2ff8935c4dee11e35"
+    },
+    {
+      "path": "src/components/create/parts/canvas-node-picker.tsx",
+      "kind": "file",
+      "bytes": 2924,
+      "sha256": "822c1636f48624b92b57bb008c7f94966092aa4de756f5a4e5d726148e84c47a"
+    },
+    {
+      "path": "src/components/create/parts/canvas-nodes/generation-node.tsx",
+      "kind": "file",
+      "bytes": 5422,
+      "sha256": "e1a5475559151a68ab536ec8847afb6606bb82364e3e50817dc13bc6daeb72bf"
+    },
+    {
+      "path": "src/components/create/parts/canvas-nodes/node-shell.tsx",
+      "kind": "file",
+      "bytes": 2350,
+      "sha256": "d0525b7414ed93ef774180256429b485f6a7a750c2784923308c0cee4a017f0e"
+    },
+    {
+      "path": "src/components/create/parts/canvas-nodes/prompt-node.tsx",
+      "kind": "file",
+      "bytes": 1793,
+      "sha256": "43af3d21cff18e478c9e17097d85e097fec6309ff8c679790148e3b5c3fc21b1"
+    },
+    {
+      "path": "src/components/create/parts/canvas-nodes/reference-node.tsx",
+      "kind": "file",
+      "bytes": 5232,
+      "sha256": "54c34520567c3a6aa6f0b941eae0d823fef4222e4426079bb243c7b90671357d"
+    },
+    {
+      "path": "src/components/create/parts/canvas-nodes/result-node.tsx",
+      "kind": "file",
+      "bytes": 3690,
+      "sha256": "65cf3608bdf02eaed15af9e805947c00bc107e6707f06fc7c0624eb396ebfb8d"
+    },
+    {
+      "path": "src/components/create/parts/canvas-prompt-field.tsx",
+      "kind": "file",
+      "bytes": 2085,
+      "sha256": "782d1ea6f084c6a0f406b3cf50c59ec9d71b34427044310110fe3f55342b98a3"
+    },
+    {
+      "path": "src/components/create/parts/canvas-runtime-dialog.tsx",
+      "kind": "file",
+      "bytes": 7792,
+      "sha256": "9697a8181344b5f1880a8c537e87a9e86acc0cb6dd052824b63e56c3034bc73c"
+    },
+    {
+      "path": "src/components/create/parts/canvas-stage.module.css",
+      "kind": "file",
+      "bytes": 24551,
+      "sha256": "f6c2af7423851f4f44fdb54004c089395303286bc215d20e8dcd87d829b1b889"
+    },
+    {
+      "path": "src/components/create/parts/canvas-stage.tsx",
+      "kind": "file",
+      "bytes": 33770,
+      "sha256": "4f8697f5abe5467d72b5b12cd98571ce17c94cc32dc52c8835598ecadcd9ba09"
+    },
+    {
+      "path": "src/components/create/parts/canvas-toolbar.tsx",
+      "kind": "file",
+      "bytes": 5289,
+      "sha256": "b5fa2dbfd855f8d8b02920c56a6d8c711e0a51c09bd9f72545899231221e02c2"
+    },
+    {
+      "path": "src/components/create/parts/image-zoom-modal.tsx",
+      "kind": "file",
+      "bytes": 4979,
+      "sha256": "937b10bedba126fb4c11ccd4302940b2c582926d5d8392112318dfde80842077"
+    },
+    {
+      "path": "src/tests/unit/canvas-controller-connections.test.ts",
+      "kind": "file",
+      "bytes": 8826,
+      "sha256": "b9a4698db682c475f66b2cffe194b6e5bb1a468c6c740d3d953cf0afd607d321"
+    },
+    {
+      "path": "src/tests/unit/canvas-controller-documents.test.ts",
+      "kind": "file",
+      "bytes": 39077,
+      "sha256": "008fb98500097353c42f0244fe9be87267f1cde60dcd621a62ac5a8d11dd9ebe"
+    },
+    {
+      "path": "src/tests/unit/canvas-mobile-interaction.test.ts",
+      "kind": "file",
+      "bytes": 2400,
+      "sha256": "256be2e50323d918c798ae424b07e5650ea516c155c9d09693186badec0bce43"
+    },
+    {
+      "path": "src/tests/unit/canvas-mobile-viewport.test.tsx",
+      "kind": "file",
+      "bytes": 4506,
+      "sha256": "c9f76aa48e37a720e28b3d1bce1f0f89e2c013a3a8c8757d5364a88c95160869"
+    },
+    {
+      "path": "src/tests/unit/canvas-node-editor.test.tsx",
+      "kind": "file",
+      "bytes": 33223,
+      "sha256": "3a359f64483297305d7e2959593a9e717a719592180407cacb43b55a06da58e4"
+    },
+    {
+      "path": "src/tests/unit/canvas-stage.test.tsx",
+      "kind": "file",
+      "bytes": 45062,
+      "sha256": "ee4a4777dc82515d9b17013d62787146bb77a3f06657e45a566cad3012f57e89"
+    },
+    {
+      "path": "src/tests/unit/generator-studio-canvas.test.tsx",
+      "kind": "file",
+      "bytes": 45778,
+      "sha256": "c3d2631cda1c32a6ab0435d102518f5275434527dfcad4930d9d077746eb75c8"
+    },
+    {
+      "path": "src/tests/unit/use-canvas-editor.test.tsx",
+      "kind": "file",
+      "bytes": 6196,
+      "sha256": "52beb04b514d1f166578fa34e60fa41d029cd3e61fbfa8b7888f38094e6da571"
+    }
+  ],
+  "changed_from_review_baseline": [
+    "src/components/create/parts/canvas-stage.module.css",
+    "src/tests/unit/canvas-node-editor.test.tsx"
+  ],
+  "unchanged_mobile_count": 33,
+  "mobile_changed_baseline_paths": [
+    "src/components/create/canvas/commands.ts",
+    "src/components/create/canvas/controller-types.ts",
+    "src/components/create/canvas/controller.ts",
+    "src/components/create/canvas/renderer-adapter.ts",
+    "src/components/create/canvas/renderer-constants.ts",
+    "src/components/create/canvas/renderer-types.ts",
+    "src/components/create/generator-studio.tsx",
+    "src/components/create/hooks/use-studio-mode.ts",
+    "src/components/create/parts/canvas-dialog.tsx",
+    "src/components/create/parts/canvas-node-inspector.tsx",
+    "src/components/create/parts/canvas-nodes/generation-node.tsx",
+    "src/components/create/parts/canvas-nodes/node-shell.tsx",
+    "src/components/create/parts/canvas-nodes/prompt-node.tsx",
+    "src/components/create/parts/canvas-nodes/reference-node.tsx",
+    "src/components/create/parts/canvas-nodes/result-node.tsx",
+    "src/components/create/parts/canvas-runtime-dialog.tsx",
+    "src/components/create/parts/canvas-stage.module.css",
+    "src/components/create/parts/canvas-stage.tsx",
+    "src/components/create/parts/canvas-toolbar.tsx",
+    "src/components/create/parts/image-zoom-modal.tsx",
+    "src/tests/unit/canvas-controller-documents.test.ts",
+    "src/tests/unit/canvas-stage.test.tsx",
+    "src/tests/unit/generator-studio-canvas.test.tsx"
+  ],
+  "unexpected_mobile_changes": [],
+  "unexpected_baseline_changes": [],
+  "unexpected_additions": [],
+  "authorized_concurrent_ui_scope": ".trellis/tasks/10-30-homepage-warm-editorial-redesign/",
+  "tooling_identities_match": true,
+  "finding_fixed": "Unscaled nodeEditor, inspectorScroll and editable/read-only prompts allow pan-y pinch-zoom. Transformed prompt, viewport:none, previewText, Flow routing and geometry remain unchanged.",
+  "verification_receipts": [
+    {
+      "label": "mobile-zoom-regression-01",
+      "mode": "test",
+      "command": [
+        "pnpm",
+        "exec",
+        "vitest",
+        "run",
+        "--testTimeout=30000",
+        "src/tests/unit/canvas-node-editor.test.tsx"
+      ],
+      "cwd": "E:/code/narra-image",
+      "timeoutMs": 180000,
+      "code": 1,
+      "timedOut": false,
+      "durationMs": 7594,
+      "summary": "Expected red before CSS correction: 25 passed / 2 failed; new test also needed async renderer settlement.",
+      "receipt_path": "C:/Users/Administrator/AppData/Local/Temp/narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea/react-flow-spike/logs/mobile-zoom-regression-01.json",
+      "receipt_sha256": "abd081a30f339e73a49fb60ba093773c2203d216bfac17eae9b189525710723b",
+      "stdout_sha256": "508bcc940b65034e908c4e71a57601938dd92b83d2691de74ba5f26091f8abf9",
+      "stderr_sha256": "0fe71dee5961cabcbbc588fe0cade4886d6993a48c8216a3ba9e932623fc40a8"
+    },
+    {
+      "label": "mobile-zoom-focused-01",
+      "mode": "test",
+      "command": [
+        "pnpm",
+        "exec",
+        "vitest",
+        "run",
+        "--testTimeout=30000",
+        "src/tests/unit/canvas-node-editor.test.tsx",
+        "src/tests/unit/canvas-stage.test.tsx",
+        "src/tests/unit/canvas-mobile-interaction.test.ts",
+        "src/tests/unit/canvas-mobile-viewport.test.tsx",
+        "src/tests/unit/generator-studio-canvas.test.tsx",
+        "src/tests/unit/canvas-renderer-adapter.test.ts",
+        "src/tests/unit/use-canvas-editor.test.tsx"
+      ],
+      "cwd": "E:/code/narra-image",
+      "timeoutMs": 180000,
+      "code": 0,
+      "timedOut": false,
+      "durationMs": 9984,
+      "summary": "7 files / 117 tests passed.",
+      "receipt_path": "C:/Users/Administrator/AppData/Local/Temp/narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea/react-flow-spike/logs/mobile-zoom-focused-01.json",
+      "receipt_sha256": "35d619d4fd60339ca5ada0ad943a323b50e950b07e64549a8c9992d118055f70",
+      "stdout_sha256": "53c0af1d3d4217172ab08e3fd8150c1b2f4b90f8e2f3c804e13eb2799ab3a6f0",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "mobile-zoom-types-01",
+      "mode": "test",
+      "command": [
+        "pnpm",
+        "exec",
+        "tsc",
+        "--noEmit",
+        "--incremental",
+        "false"
+      ],
+      "cwd": "E:/code/narra-image",
+      "timeoutMs": 120000,
+      "code": 0,
+      "timedOut": false,
+      "durationMs": 10841,
+      "summary": "Nonincremental tsc --noEmit passed.",
+      "receipt_path": "C:/Users/Administrator/AppData/Local/Temp/narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea/react-flow-spike/logs/mobile-zoom-types-01.json",
+      "receipt_sha256": "ac2266eb3b5b5631943381c56e6cf5d4fb4712143af94c72038c314101813752",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "mobile-zoom-lint-01",
+      "mode": "test",
+      "command": [
+        "pnpm",
+        "lint"
+      ],
+      "cwd": "E:/code/narra-image",
+      "timeoutMs": 180000,
+      "code": 0,
+      "timedOut": false,
+      "durationMs": 12857,
+      "summary": "Zero errors; nine unchanged baseline warnings.",
+      "receipt_path": "C:/Users/Administrator/AppData/Local/Temp/narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea/react-flow-spike/logs/mobile-zoom-lint-01.json",
+      "receipt_sha256": "31607f1420dc372fbf2be7ee15aabfbdec7fb90f6d52d545f6142994a8bc2c3c",
+      "stdout_sha256": "5daf1d190f6e7a6339ad91d4ba48ff8657acaf01ac8c313e8213cfb2743df12a",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "mobile-zoom-full-01",
+      "mode": "test",
+      "command": [
+        "pnpm",
+        "exec",
+        "vitest",
+        "run",
+        "--testTimeout=30000"
+      ],
+      "cwd": "E:/code/narra-image",
+      "timeoutMs": 300000,
+      "code": 0,
+      "timedOut": false,
+      "durationMs": 33260,
+      "summary": "125 files / 1442 tests passed; sentinelled DB suites excluded.",
+      "receipt_path": "C:/Users/Administrator/AppData/Local/Temp/narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea/react-flow-spike/logs/mobile-zoom-full-01.json",
+      "receipt_sha256": "3401ed8cc66feee158d75e4940ba8455ca76c04dbc16b07f6f80927675be224f",
+      "stdout_sha256": "988965a70ef7f98ca5b4d1e2d53e89b1b5187889974d0777cd1ea043a6950853",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "git_diff_check": {
+    "code": 0,
+    "existing_crlf_notices_only": true
+  },
+  "changed_file_trailing_whitespace": false,
+  "final_source_frozen": true,
+  "prior_source_receipts": "Earlier independent review and main fixture/build receipts remain historical for their old source; affected browser/build receipts must be regenerated after this freeze.",
+  "pending_verification": [
+    "Main-owned final repository build",
+    "Main-owned fresh fixture build and hit-tested browser/native IndexedDB verification",
+    "Physical iOS Safari/Android Chrome accessibility zoom, touch, Chinese IME, keyboard, chooser and downloads",
+    "Real service and actual CI verification are unperformed and outside this role authorization"
+  ],
+  "browser_executed_by_this_role": false,
+  "real_dotenv_read": false,
+  "product_quality_checks_pass": true,
+  "full_ma_accepted": false
+}

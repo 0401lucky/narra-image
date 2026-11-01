@@ -1,0 +1,22 @@
+[
+  {
+    "id": "C2-long-multibyte-url",
+    "label": "chinese8000",
+    "units": 8000,
+    "requestTargetBytes": 72015,
+    "status": 431,
+    "inputUnits": null,
+    "matchesExistingSlice": false,
+    "reason": "Existing URL-prefill transport limit; needs root scope decision, no create/environment workaround applied."
+  },
+  {
+    "id": "C2-long-multibyte-url",
+    "label": "emoji8000units",
+    "units": 8000,
+    "requestTargetBytes": 56019,
+    "status": 431,
+    "inputUnits": null,
+    "matchesExistingSlice": false,
+    "reason": "Existing URL-prefill transport limit; needs root scope decision, no create/environment workaround applied."
+  }
+]

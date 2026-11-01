@@ -1,0 +1,180 @@
+import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
+
+import { HERO_SCENES, HOME_MOTION } from "@/components/marketing/homepage/constants";
+import { HeroScene } from "@/components/marketing/homepage/hero-scene";
+import { HomeHero } from "@/components/marketing/homepage/home-hero";
+import { HomeMotionProvider } from "@/components/marketing/homepage/home-motion-provider";
+
+import { installControlledImages, installHomeMotionEnvironment } from "./helpers/homepage-motion-fixtures";
+
+let environment: ReturnType<typeof installHomeMotionEnvironment>;
+let images: ReturnType<typeof installControlledImages>;
+
+beforeEach(() => {
+  vi.useFakeTimers();
+  environment = installHomeMotionEnvironment();
+  images = installControlledImages();
+  vi.spyOn(HTMLCanvasElement.prototype, "getContext").mockReturnValue(null);
+});
+
+afterEach(() => {
+  cleanup();
+  vi.useRealTimers();
+  vi.restoreAllMocks();
+  vi.unstubAllGlobals();
+});
+
+async function resolveImage(index: number) {
+  await act(async () => {
+    images[index].load();
+    images[index].resolveDecode();
+    await Promise.resolve();
+  });
+}
+
+function renderScene() {
+  return render(<HomeMotionProvider><HeroScene /></HomeMotionProvider>);
+}
+
+describe("fixed editorial hero", () => {
+  it("keeps the three exact reference prompts and only approved local illustration paths", () => {
+    expect(HERO_SCENES.map((scene) => scene.prompt)).toEqual([
+      "黄昏穿过旧书店百叶窗的丁达尔光束，微尘在暖金空气中漂浮，王家卫电影胶片颗粒感，柔和景深，叙事感构图",
+      "提着暖黄煤油灯穿过迷雾森林的小狐狸，宫崎骏式温暖手绘水彩质感，星光点缀夜空，细腻纸张纹理",
+      "江南雨巷檐角滴落的雨水，远处暖黄灯笼倒映在青石板水面，宋代美学克制留白，电影级冷暖色调对比",
+    ]);
+    expect(HERO_SCENES.map((scene) => scene.image)).toEqual([
+      "/marketing/home/bookshop-light-v1.png", "/marketing/home/lantern-fox-v1.png", "/marketing/home/jiangnan-rain-v1.png",
+    ]);
+  });
+
+  it("uses two semantic title lines, real routes and stats under the hero actions", () => {
+    const { container } = render(<HomeMotionProvider><HomeHero /></HomeMotionProvider>);
+    const heading = screen.getByRole("heading", { level: 1 });
+    expect([...heading.children].map((element) => element.textContent)).toEqual(["在“叙事性”的光影中，", "编织属于你的灵感画面"]);
+    expect(screen.getByRole("link", { name: /开始我的创作/ })).toHaveAttribute("href", "/create");
+    expect(screen.getByRole("link", { name: /探索灵感画廊/ })).toHaveAttribute("href", "#gallery");
+    expect(container.querySelectorAll("[data-home-stat]")).toHaveLength(3);
+    expect(screen.getByText("沿用首页展示文案，非实时统计或服务测速。")).toBeInTheDocument();
+  });
+
+  it("types the first scene but copies the full committed prompt before typing finishes", async () => {
+    const write = vi.fn().mockResolvedValue(undefined);
+    vi.stubGlobal("navigator", Object.create(navigator, { clipboard: { value: { writeText: write }, configurable: true } }));
+    const { container } = renderScene();
+    await resolveImage(0);
+    environment.visibility(true);
+    act(() => vi.advanceTimersByTime(HOME_MOTION.typewriterMs * 3));
+    expect(container.querySelector("[data-home-typewriter]")?.textContent).toBe(HERO_SCENES[0].prompt.slice(0, 3));
+    await act(async () => fireEvent.click(screen.getByRole("button", { name: "复用画面灵感" })));
+    expect(write).toHaveBeenCalledWith(HERO_SCENES[0].prompt);
+    expect(screen.getByRole("button", { name: "已复制完整提示词" })).toBeInTheDocument();
+  });
+
+  it("commits image, label and prompt only after decode and rejects a late older scene", async () => {
+    const { container } = renderScene();
+    await resolveImage(0);
+    expect(container.querySelector("[data-home-scene-image]")).toHaveAttribute("width", String(HERO_SCENES[0].width));
+    expect(container.querySelector("[data-home-scene-image]")).toHaveAttribute("height", String(HERO_SCENES[0].height));
+    fireEvent.click(screen.getByRole("tab", { name: "绘本叙事" }));
+    act(() => images[1].load());
+    expect(container.querySelector("[data-home-hero-frame]")).toHaveAttribute("data-scene-id", "film");
+    expect(screen.getByRole("tab", { name: "胶片光影" })).toHaveAttribute("aria-selected", "true");
+    fireEvent.click(screen.getByRole("tab", { name: "东方美学" }));
+    await resolveImage(2);
+    expect(container.querySelector("[data-home-scene-image]")).toHaveAttribute("src", HERO_SCENES[2].image);
+    expect(container.querySelector("[data-home-scene-image]")).toHaveAttribute("width", String(HERO_SCENES[2].width));
+    expect(container.querySelector("[data-home-scene-image]")).toHaveAttribute("height", String(HERO_SCENES[2].height));
+    expect(container.querySelector("[data-home-hero-frame]")).toHaveAttribute("data-scene-id", "oriental");
+    expect(screen.getByRole("tab", { name: "东方美学" })).toHaveAttribute("aria-selected", "true");
+    await act(async () => images[1].resolveDecode());
+    expect(container.querySelector("[data-home-scene-image]")).toHaveAttribute("src", HERO_SCENES[2].image);
+    expect(container.querySelector("[data-home-typewriter]")?.textContent).toBe(HERO_SCENES[2].prompt);
+  });
+
+  it("cancels every pending scene when returning rapidly to the already committed scene", async () => {
+    const { container, unmount } = renderScene();
+    await resolveImage(0);
+    fireEvent.click(screen.getByRole("tab", { name: "绘本叙事" }));
+    act(() => images[1].load());
+    fireEvent.click(screen.getByRole("tab", { name: "东方美学" }));
+    act(() => images[2].load());
+    fireEvent.click(screen.getByRole("tab", { name: "胶片光影" }));
+    await act(async () => {
+      images[2].resolveDecode();
+      images[1].resolveDecode();
+      await Promise.resolve();
+    });
+    expect(container.querySelector("[data-home-hero-frame]")).toHaveAttribute("data-scene-id", "film");
+    expect(container.querySelector("[data-home-scene-image]")).toHaveAttribute("src", HERO_SCENES[0].image);
+    expect(screen.getByRole("tab", { name: "胶片光影" })).toHaveAttribute("aria-selected", "true");
+    expect(screen.getByRole("tabpanel")).toHaveAttribute("aria-busy", "false");
+    expect(screen.getByRole("status")).toBeEmptyDOMElement();
+    expect(container.querySelector("[data-home-typewriter]")?.textContent).toBe(HERO_SCENES[0].prompt);
+    unmount();
+    expect(vi.getTimerCount()).toBe(0);
+  });
+
+  it("keeps a coherent previous scene on decode failure, supports keyboard retry, and never reports false readiness", async () => {
+    const { container } = renderScene();
+    await resolveImage(0);
+    fireEvent.keyDown(screen.getByRole("tab", { name: "胶片光影" }), { key: "ArrowRight" });
+    expect(screen.getByRole("tab", { name: "绘本叙事" })).toHaveFocus();
+    act(() => images[1].fail());
+    expect(container.querySelector("[data-home-hero-frame]")).toHaveAttribute("data-scene-id", "film");
+    expect(screen.getByRole("status")).toHaveTextContent("绘本叙事示意图加载失败，已保留当前场景");
+    fireEvent.click(screen.getByRole("button", { name: "重试" }));
+    await resolveImage(2);
+    expect(container.querySelector("[data-home-hero-frame]")).toHaveAttribute("data-scene-id", "storybook");
+  });
+
+  it("times out absent assets honestly and leaves the complete prompt usable", () => {
+    const { container } = renderScene();
+    act(() => vi.advanceTimersByTime(HOME_MOTION.imageDeadlineMs));
+    expect(container.querySelector("[data-home-hero-frame]")).toHaveAttribute("data-image-state", "error");
+    expect(screen.getByText("示意图暂时无法加载")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "重试图片" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "复用画面灵感" })).toBeEnabled();
+    expect(screen.getAllByText(HERO_SCENES[0].prompt, { selector: "span" }).some((element) => !element.hasAttribute("aria-hidden"))).toBe(true);
+  });
+
+  it("exposes selectable complete text on denied clipboard and resets feedback on scene commit", async () => {
+    vi.stubGlobal("navigator", Object.create(navigator, { clipboard: { value: { writeText: vi.fn().mockRejectedValue(new Error("denied")) }, configurable: true } }));
+    renderScene();
+    await resolveImage(0);
+    await act(async () => fireEvent.click(screen.getByRole("button", { name: "复用画面灵感" })));
+    const textarea = screen.getByRole("textbox", { name: "完整场景提示词" });
+    expect(textarea).toHaveValue(HERO_SCENES[0].prompt);
+    fireEvent.focus(textarea);
+    expect((textarea as HTMLTextAreaElement).selectionEnd).toBe(HERO_SCENES[0].prompt.length);
+    fireEvent.click(screen.getByRole("tab", { name: "东方美学" }));
+    await resolveImage(1);
+    expect(screen.queryByRole("textbox")).not.toBeInTheDocument();
+  });
+
+  it("replaces the failed image element when retrying the same local URL", async () => {
+    const { container } = renderScene();
+    act(() => images[0].fail());
+    const failedImage = container.querySelector("[data-home-scene-image]");
+    fireEvent.click(screen.getByRole("button", { name: "重试图片" }));
+    await resolveImage(1);
+    expect(container.querySelector("[data-home-scene-image]")).not.toBe(failedImage);
+    expect(container.querySelector("[data-home-scene-image]")).toHaveAttribute("src", HERO_SCENES[0].image);
+    expect(container.querySelector("[data-home-hero-frame]")).toHaveAttribute("data-image-state", "ready");
+    expect(screen.queryByText("示意图暂时无法加载")).not.toBeInTheDocument();
+  });
+
+  it("disposes image deadlines/listeners and ignores late decode across unmount/remount", async () => {
+    const first = renderScene();
+    act(() => images[0].load());
+    first.unmount();
+    expect(images[0].onload).toBeNull();
+    expect(images[0].onerror).toBeNull();
+    expect(vi.getTimerCount()).toBe(0);
+    const second = renderScene();
+    await act(async () => images[0].resolveDecode());
+    expect(second.container.querySelector("[data-home-hero-frame]")).toHaveAttribute("data-image-state", "loading");
+    await resolveImage(1);
+    expect(second.container.querySelector("[data-home-hero-frame]")).toHaveAttribute("data-image-state", "ready");
+  });
+});

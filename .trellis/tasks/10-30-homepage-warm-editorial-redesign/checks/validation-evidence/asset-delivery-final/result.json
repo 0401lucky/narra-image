@@ -1,0 +1,109 @@
+{
+  "checkedAt": "2026-10-31T04:10:45.017535+00:00",
+  "automatedGatePassed": true,
+  "overallTaskComplete": false,
+  "runtime": "Node24.11.1 (not pinned24.22.1)",
+  "sourceFiles": 806,
+  "sourceManifestSha256": "1e21711375aa3bc76f9fc5d05442e900e52ad423ffcb41add39b910f8ce3ef22",
+  "nonDbTestFiles": 137,
+  "nonDbTestsPassed": 1624,
+  "lintErrors": 0,
+  "lintBaselineWarnings": 9,
+  "typecheck": "pass",
+  "prismaGenerate": "pass; installed engine, diagnostic network disabled",
+  "nextBuild": "pass; unmodified production source, no browser fixture adapters",
+  "guardSha256": "bd9ec3da5da5787ffc8378f8ed97835428d4b5a9c80a21a099ccca2c4d077e55",
+  "gates": [
+    {
+      "id": "20261031T040517-test-53473d",
+      "exitCode": 0,
+      "timedOut": false,
+      "durationSeconds": 56.637,
+      "timeoutSeconds": 300,
+      "command": [
+        "D:\\node\\node.exe",
+        "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\app\\node_modules\\vitest\\vitest.mjs",
+        "run",
+        "--testTimeout=30000"
+      ],
+      "nodeEnv": "test",
+      "buildOnlyAppUrl": null,
+      "sourceChanges": [],
+      "snapshotModifications": []
+    },
+    {
+      "id": "20261031T040701-lint-66dc10",
+      "exitCode": 0,
+      "timedOut": false,
+      "durationSeconds": 15.331,
+      "timeoutSeconds": 180,
+      "command": [
+        "D:\\node\\node.exe",
+        "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\app\\node_modules\\eslint\\bin\\eslint.js",
+        "."
+      ],
+      "nodeEnv": "test",
+      "buildOnlyAppUrl": null,
+      "sourceChanges": [],
+      "snapshotModifications": []
+    },
+    {
+      "id": "20261031T040737-types-da0801",
+      "exitCode": 0,
+      "timedOut": false,
+      "durationSeconds": 2.96,
+      "timeoutSeconds": 180,
+      "command": [
+        "D:\\node\\node.exe",
+        "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\app\\node_modules\\typescript\\bin\\tsc",
+        "--noEmit"
+      ],
+      "nodeEnv": "test",
+      "buildOnlyAppUrl": null,
+      "sourceChanges": [],
+      "snapshotModifications": []
+    },
+    {
+      "id": "20261031T040901-prisma-no-network-caa916",
+      "exitCode": 0,
+      "timedOut": false,
+      "durationSeconds": 2.242,
+      "timeoutSeconds": 120,
+      "command": [
+        "D:\\node\\node.exe",
+        "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\app\\node_modules\\prisma\\build\\index.js",
+        "generate"
+      ],
+      "nodeEnv": "production",
+      "buildOnlyAppUrl": "https://homepage-validation.invalid",
+      "sourceChanges": [],
+      "snapshotModifications": []
+    },
+    {
+      "id": "20261031T040922-build-dd79ad",
+      "exitCode": 0,
+      "timedOut": false,
+      "durationSeconds": 29.255,
+      "timeoutSeconds": 600,
+      "command": [
+        "D:\\node\\node.exe",
+        "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\app\\node_modules\\next\\dist\\bin\\next",
+        "build"
+      ],
+      "nodeEnv": "production",
+      "buildOnlyAppUrl": "https://homepage-validation.invalid",
+      "sourceChanges": [],
+      "snapshotModifications": []
+    }
+  ],
+  "browser": "Pending independent real-Next/synthetic-DB final report.",
+  "notRun": [
+    "real-account/DB/Worker/provider/storage E2E",
+    "physical mobile/IME",
+    "pinned Node runtime parity",
+    "actual CI/deployment"
+  ],
+  "unresolved": [
+    "User decision on oversized Chinese/emoji remix URL manual-copy fallback; unchanged HTTP431 transport boundary."
+  ]
+}

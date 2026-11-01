@@ -1,0 +1,23 @@
+{
+  "runId": "diagnostic-1793432333207",
+  "mode": "diagnostic",
+  "filter": null,
+  "evidence": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\browser\\evidence\\diagnostic-1793432333207",
+  "app": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\hero-hit-independent-8725c17e\\app",
+  "checks": [
+    {
+      "id": "diagnostic-gallery-entrance-native-viewport",
+      "passed": false,
+      "durationMs": 8016,
+      "error": "AssertionError [ERR_ASSERTION]: Fully visible native-hovered card must finish its unchanged opacity contract\n    at file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/diagnose-gallery-entrance.mjs:60:7\n    at async check (file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/run-browser.mjs:79:20)\n    at async diagnoseGalleryEntrance (file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/diagnose-gallery-entrance.mjs:8:3)\n    at async file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/run-browser.mjs:373:7"
+    }
+  ],
+  "passed": false,
+  "passedScope": "Executable checks only; unresolved acceptance is separate and never a passing navigation case.",
+  "unresolvedAcceptance": [],
+  "limitations": [
+    "Real Next/React/Chromium with synthetic DB only; not live DB/Worker/provider E2E.",
+    "Desktop Chrome CDP emulates viewport/touch; not physical mobile/native IME.",
+    "Local installed Node is not pinned Node24.22.1."
+  ]
+}

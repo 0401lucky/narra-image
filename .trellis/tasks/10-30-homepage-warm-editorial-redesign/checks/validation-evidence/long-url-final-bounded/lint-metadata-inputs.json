@@ -1,0 +1,162 @@
+{
+  "taskAndNonTaskTooling": [
+    {
+      "file": ".trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/cdp.mjs",
+      "bytes": 18035,
+      "sha256": "6b6a08cf6adaf6d18418eb79dc0f841b72d6114d3c453db9d06d480023290f28"
+    },
+    {
+      "file": ".trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/diagnose-gallery-entrance.mjs",
+      "bytes": 4825,
+      "sha256": "a33a7406757dd68a0676157825a47b7e9e51e3a2cc9c87b3c762f1e067b8f72d"
+    },
+    {
+      "file": ".trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/diagnose-hero-hit.mjs",
+      "bytes": 2886,
+      "sha256": "ec4e580ba304e4aa4368942c285005366380194eed389fd03e56ca46cff9bf5b"
+    },
+    {
+      "file": ".trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/generate-prisma.mjs",
+      "bytes": 1159,
+      "sha256": "54707ec4d1571529648b553044960e9d44e1f3b03c2a8222ba0590c5c1befbd9"
+    },
+    {
+      "file": ".trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/hero-image-checks.mjs",
+      "bytes": 29068,
+      "sha256": "1f7790948cc646468985776cb8d988e6016084b85eb69fc3208d25661e543aea"
+    },
+    {
+      "file": ".trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/hero-scene-contract.mjs",
+      "bytes": 1663,
+      "sha256": "e0d5a470fdb834f270ea193ca914a0a705dec0e692527390aa7cb44d1e30c705"
+    },
+    {
+      "file": ".trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/homepage-checks.mjs",
+      "bytes": 43213,
+      "sha256": "1025f4389bf650d0c1a0f42b2775feda30ac4eced28a248d896bf800077155d8"
+    },
+    {
+      "file": ".trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/input-identity.mjs",
+      "bytes": 2117,
+      "sha256": "cc8655f672d344737404076e330fe739fae34e1307f0f9bb1e98bb9081bac038"
+    },
+    {
+      "file": ".trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/long-url-checks.mjs",
+      "bytes": 18831,
+      "sha256": "7abfd9c5da08b6f467baceee19e6eb2b9f68484bbafbd8e25e54d7fd9bad32b5"
+    },
+    {
+      "file": ".trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/long-url-contract.mjs",
+      "bytes": 2175,
+      "sha256": "e107c233d4230411a8a3c042a0c7b8b24065304ab00d0ea9e9129fa6f2d9e638"
+    },
+    {
+      "file": ".trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/native-hover-calibration.mjs",
+      "bytes": 4091,
+      "sha256": "31aa02ab046001ced1fac2c483b4f883b37545ae73500dc051d1265f3c9c964a"
+    },
+    {
+      "file": ".trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/native-keyboard-calibration.mjs",
+      "bytes": 5531,
+      "sha256": "e4b40f6814fae9eb38a33a2e446307cc4ecdc6be1813df0e7cd6874da9eae3e9"
+    },
+    {
+      "file": ".trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/prepare-fixture.mjs",
+      "bytes": 9026,
+      "sha256": "5423b5e2fb8d7e30a2b27e1ae1c3acc09a5af993997c5eb8b87836406321debe"
+    },
+    {
+      "file": ".trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/reference-checks.mjs",
+      "bytes": 4691,
+      "sha256": "c6bd5700efdb030c6b76735238b7f9ef8524796027f10b99e52ac556c87a0a3e"
+    },
+    {
+      "file": ".trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/reveal-interruption-checks.mjs",
+      "bytes": 4015,
+      "sha256": "1bd73cbbacf111d03bda5ab31c9b814c7dc8034e053dee02a7c38d33f5b50e81"
+    },
+    {
+      "file": ".trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/run-browser.mjs",
+      "bytes": 27382,
+      "sha256": "2c0743069d14015bded5d8fdf56470d64abb9b25b897b010ccec6759ad1927e4"
+    },
+    {
+      "file": ".trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/run-hover-calibration.mjs",
+      "bytes": 3849,
+      "sha256": "c591925a0735564973ed6ad40acacc6296435a35d1f362c23604807c4cd2a03a"
+    },
+    {
+      "file": ".trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/sync-fixture.mjs",
+      "bytes": 2836,
+      "sha256": "2e0e9881ea6871cb3b4451108679ccb097dec30bf07b88e941516b066f3bac59"
+    },
+    {
+      "file": ".trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/verify-helpers.mjs",
+      "bytes": 1304,
+      "sha256": "d86a29cbde410b948cd285e8de1fabf947264870f226cd3fc88c9022812b0432"
+    },
+    {
+      "file": ".trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/deny_env.cjs",
+      "bytes": 3082,
+      "sha256": "bd9ec3da5da5787ffc8378f8ed97835428d4b5a9c80a21a099ccca2c4d077e55"
+    },
+    {
+      "file": ".trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/eslint-scope-probe.mjs",
+      "bytes": 1690,
+      "sha256": "efb1bb3e8b7f822f532568f4152d44375058af39897f6ea1be4af86dc3b5d171"
+    },
+    {
+      "file": ".trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/guard_selftest.cjs",
+      "bytes": 3640,
+      "sha256": "5887c6ce750196e5faf476803bb31864b06aa413207ac4fa6d4d8c9446855489"
+    },
+    {
+      "file": ".trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/prisma_exists_probe.cjs",
+      "bytes": 949,
+      "sha256": "e7539ea58f0f0d53e8330792b052499f246cb07907dd802476fb9c5291e3109c"
+    },
+    {
+      "file": ".trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/prisma_no_network.cjs",
+      "bytes": 594,
+      "sha256": "2445a292a89413835d8a756c7646df3a6984ff66d465378f49775c354c3a6697"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/mobile-browser-check.mjs",
+      "bytes": 50226,
+      "sha256": "4ef4af4300dd24bc1635d2b07675d6321affe01563fd9d1401c139cf57d7a43c"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/mobile-phone-browser-checks.mjs",
+      "bytes": 39015,
+      "sha256": "e51606313d41ada52ca590ec81ace295e151a53ec7dfddbca07a74c6d40f9d1e"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/prepare-mobile-fixture.mjs",
+      "bytes": 13711,
+      "sha256": "c0cf09c36f3e96ac17adba4aaa4061be1d89320e0049b77efba565c731ca2666"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/probe-native-pinch.mjs",
+      "bytes": 4743,
+      "sha256": "6932294dcc40d839cfc5466c505477619269d40c6f811e3bebc0754f8310fe1c"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/verify-mobile-fixture.mjs",
+      "bytes": 3950,
+      "sha256": "75c2d835315b2758930b9952cf7a1b0d325fec0a1d6f63301d283e7c70eaee46"
+    },
+    {
+      "file": ".pi/extensions/trellis/index.ts",
+      "bytes": 65460,
+      "sha256": "0ed748fb339013d0c684134508624dc71ab4ca80e0f214623281c0a5e5ddab81"
+    },
+    {
+      "file": ".trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/reference-assets/tailwind-cdn.js",
+      "bytes": 407279,
+      "sha256": "176e894661aa9cdc9a5cba6c720044cbbf7b8bd80d1c9a142a7c24b1b6c50d15"
+    }
+  ],
+  "runtimeCopied": false,
+  "dependencyCopyUnchanged": true,
+  "purpose": "Actual eslint . with current candidate task/non-task tooling; vendor reference intentionally proves narrow task exclusion."
+}

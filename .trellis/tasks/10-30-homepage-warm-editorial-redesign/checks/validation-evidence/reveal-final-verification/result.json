@@ -1,0 +1,151 @@
+{
+  "checkedAt": "2026-11-01T01:45:05.212542+00:00",
+  "coordinatorEvidenceAuditPassed": true,
+  "independentFinalSignoff": false,
+  "independentReviewLimit": "Reviewer confirmed candidate/helper correctness but provider quota interrupted the complete final report. See final-continuation-review.md.",
+  "automated": {
+    "evidence": "validation-evidence/reveal-final/result.json",
+    "sha256": "97743cfda320ebf2b8d2ee95a378fd7bcd19ebd91911ac9b638dc7731e46314c",
+    "sourceInputs": 807,
+    "sourceManifestSha256": "6f8fc0829168d61e3446a817ad4b86c2a9707b92b63b66dae04237b1442cb6fa",
+    "testFiles": 138,
+    "tests": 1633,
+    "lintErrors": 0,
+    "lintWarnings": 9,
+    "gates": [
+      {
+        "id": "20261101T013043-test-1760dc",
+        "sha256": "068268e56ad8a231a0ef6c54104e65dbd4b667dafd9a9c238b973607e529f45c",
+        "logs": {
+          "stdout": {
+            "sha256": "3c5dbe9049705ac3e4a2f08ab34ad64649314cf0a1b7e558246d981a63f8c063",
+            "bytes": 25693
+          },
+          "stderr": {
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "bytes": 0
+          }
+        }
+      },
+      {
+        "id": "20261101T013201-lint-e7a709",
+        "sha256": "8e1fe1e42820a49b11f96b9325cbf92effae9321485a662f69c8d34bfd3334dc",
+        "logs": {
+          "stdout": {
+            "sha256": "96616bc9288e15368773b94cb90ce2b55870b552b74f0cebbcc73e1a869e2779",
+            "bytes": 1723
+          },
+          "stderr": {
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "bytes": 0
+          }
+        }
+      },
+      {
+        "id": "20261101T013234-types-343302",
+        "sha256": "0c59cbab8897ebf2c25892ed6890b164ac474c1f1e70d48c62bba748f999ff76",
+        "logs": {
+          "stdout": {
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "bytes": 0
+          },
+          "stderr": {
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "bytes": 0
+          }
+        }
+      },
+      {
+        "id": "20261101T013300-prisma-no-network-c65d61",
+        "sha256": "fcdd57d1de30e1133af3a1251db54ccb60074565c93d2da6461bf6513f6e32db",
+        "logs": {
+          "stdout": {
+            "sha256": "dac9493bb0e5404113cae51700876851c362d4587ca55c2af9d128c736f9d754",
+            "bytes": 243
+          },
+          "stderr": {
+            "sha256": "75066079154e16278b8bbb61e3a8fed567403e1667eda92ad7c8eeab0cda5879",
+            "bytes": 93
+          }
+        }
+      },
+      {
+        "id": "20261101T013321-build-0a0faf",
+        "sha256": "44acbadbb5ff32f4ad007344b9ce8a732c7ea5660d908e1335d0153920a60a2b",
+        "logs": {
+          "stdout": {
+            "sha256": "f891119b8a7883e4646f07e3f7e10d191e4b9ec9df7c235ff18b2b160bbcc271",
+            "bytes": 3915
+          },
+          "stderr": {
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "bytes": 0
+          }
+        }
+      }
+    ],
+    "liveSourceDrift": []
+  },
+  "browser": {
+    "evidence": "browser/evidence/full-1793496819932/result.json",
+    "sha256": "e717b8f27ad28b491c4e960920a38650bce26d48ca531a8ca68e48354a9ea0d8",
+    "mode": "full",
+    "filter": null,
+    "passedChecks": 88,
+    "totalChecks": 88,
+    "privacyChecks": 43,
+    "unresolvedAcceptance": [
+      {
+        "id": "C2-long-multibyte-url",
+        "label": "chinese8000",
+        "units": 8000,
+        "requestTargetBytes": 72015,
+        "status": 431,
+        "inputUnits": null,
+        "matchesExistingSlice": false,
+        "passed": false,
+        "reason": "Existing URL-prefill transport limit; needs root scope decision, no create/environment workaround applied."
+      },
+      {
+        "id": "C2-long-multibyte-url",
+        "label": "emoji8000units",
+        "units": 8000,
+        "requestTargetBytes": 56019,
+        "status": 431,
+        "inputUnits": null,
+        "matchesExistingSlice": false,
+        "passed": false,
+        "reason": "Existing URL-prefill transport limit; needs root scope decision, no create/environment workaround applied."
+      }
+    ],
+    "wrapperId": "20261101T013339-script-0a5ab5",
+    "exitCode": 0,
+    "timedOut": false,
+    "durationSeconds": 285.735,
+    "buildId": "nv9kRKXZGzJNvng63T7AG",
+    "immutableBuildInputs": 1808,
+    "buildSha256": "ccd781c7a93252fa83087e4087ba2b77acd280fea5783177d9900582e6f106f8",
+    "helperInputs": 21,
+    "fixtureProductionInputs": 657,
+    "prePostIdentityMatch": true,
+    "currentSourceHelperFixtureBuildDrift": []
+  },
+  "deltaSinceOriginalFullScopeReview": {
+    "added": [
+      "public/marketing/home/bookshop-light-v1.png",
+      "public/marketing/home/jiangnan-rain-v2.png",
+      "public/marketing/home/lantern-fox-v1.png",
+      "src/tests/contracts/homepage-assets.test.ts",
+      "src/tests/unit/homepage-reveal.test.tsx"
+    ],
+    "missing": [],
+    "changed": [
+      "src/components/marketing/homepage/constants.ts",
+      "src/components/marketing/homepage/home-reveal.tsx",
+      "src/components/marketing/homepage/homepage.module.css",
+      "src/tests/unit/homepage-hero.test.tsx",
+      "src/tests/unit/homepage-motion.test.tsx"
+    ]
+  },
+  "allOwnedLaneLocksAbsent": true
+}

@@ -1,0 +1,69 @@
+{
+  "recordedAt": "2026-10-30T15:38:51.498456+00:00",
+  "scope": "Planning/document checks only; no product implementation or application checks.",
+  "taskStatus": "planning",
+  "reviewStatus": "awaiting_user_approval",
+  "requirementCount": 6,
+  "acceptanceCount": 14,
+  "openProductQuestions": 0,
+  "originalPrdSourceAnchorsPreserved": 23,
+  "unchangedProductFilesChecked": 18,
+  "contextEntries": {
+    "implement.jsonl": 15,
+    "check.jsonl": 14
+  },
+  "taskContextValidationExitCode": 0,
+  "originalReferenceSnapshotsVerified": 2,
+  "assetEvidenceHashesVerified": 12,
+  "applicationTestsRun": false,
+  "applicationBuildRun": false,
+  "browserChecksRun": false,
+  "finalHeroImagesGenerated": false,
+  "implementationStarted": false,
+  "artifacts": [
+    {
+      "file": ".trellis/tasks/10-30-homepage-warm-editorial-redesign/task.json",
+      "sha256": "5104411e131fe2b232246d89ea1b2cfe380ad8549d001344f7cbf455cfe4cfbf"
+    },
+    {
+      "file": ".trellis/tasks/10-30-homepage-warm-editorial-redesign/prd.md",
+      "sha256": "d6cb724a679ab74ebbf161fa8d1fc7614bba2780eae8fdb1c1bf9e7a0da54bce"
+    },
+    {
+      "file": ".trellis/tasks/10-30-homepage-warm-editorial-redesign/design.md",
+      "sha256": "003db13297dde3ac4932a625af59d121c256349383569e70b36a934918066e81"
+    },
+    {
+      "file": ".trellis/tasks/10-30-homepage-warm-editorial-redesign/implement.md",
+      "sha256": "af8ee209303ae919f84f0679ad6684db40301071610136c04b44dfd906c8e5fe"
+    },
+    {
+      "file": ".trellis/tasks/10-30-homepage-warm-editorial-redesign/implement.jsonl",
+      "sha256": "a99a3a18cb815968760fdbe6fc7e16619cd6eea20e16cffc51382e648b88f831"
+    },
+    {
+      "file": ".trellis/tasks/10-30-homepage-warm-editorial-redesign/check.jsonl",
+      "sha256": "9633d54f376fed00aab224e2370b13c5c8fc34e06f1aa719f49f21ee97a8e902"
+    },
+    {
+      "file": ".trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/planning-review.md",
+      "sha256": "043c1bc104b356da7ab7e41aea89c31d347a1cafd698858a5cab7d13b9350446"
+    },
+    {
+      "file": ".trellis/tasks/10-30-homepage-warm-editorial-redesign/research/homepage-asset-delivery.md",
+      "sha256": "6507ce40094fde23206d639871610a568d831dafd3d987529e7569b4c35e1eee"
+    },
+    {
+      "file": ".trellis/tasks/10-30-homepage-warm-editorial-redesign/research/homepage-reference-analysis.md",
+      "sha256": "c2587226868ae3b8455d26992fe1a1cf9f843da5968f28820274ec48ed12509a"
+    },
+    {
+      "file": ".trellis/tasks/10-30-homepage-warm-editorial-redesign/research/homepage-validation-plan.md",
+      "sha256": "8ad6b7c7c1db1a49a997ad6c049c7c9c2270e1de1e409dc0820e2821ef187103"
+    },
+    {
+      "file": ".trellis/tasks/10-30-homepage-warm-editorial-redesign/research/prompt-reuse-contracts.md",
+      "sha256": "9ec8b1eb3e10e8bee7b7fd44c724068a6839d4caf234a122dbfd397377a24518"
+    }
+  ]
+}

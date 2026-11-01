@@ -1,0 +1,20 @@
+{
+  "label": "mobile-check-regression-03",
+  "mode": "test",
+  "command": [
+    "pnpm",
+    "exec",
+    "vitest",
+    "run",
+    "--testTimeout=30000",
+    "src/tests/unit/canvas-node-editor.test.tsx"
+  ],
+  "cwd": "E:/code/narra-image",
+  "timeoutMs": 180000,
+  "code": 1,
+  "signal": null,
+  "timedOut": false,
+  "durationMs": 7187,
+  "stdoutPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-check-regression-03.stdout.log",
+  "stderrPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-check-regression-03.stderr.log"
+}

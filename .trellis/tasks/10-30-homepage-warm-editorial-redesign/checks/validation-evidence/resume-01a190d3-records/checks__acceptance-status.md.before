@@ -1,0 +1,103 @@
+# Implementation Acceptance Status
+
+## Current Revision
+
+The three accepted original 1448x1086 PNGs are published. The tilted-hero
+copy obstruction and phone prompt occlusion are corrected. All 806 product,
+test and asset inputs match the successful 137-file / 1626-test automated
+revision, including its unmodified production build.
+
+The browser continuation is checking the remaining H10 keyboard traversal
+failure. The recovered latest run is 85/86, not green: Enter copies correctly,
+but the helper sends Alt+Tab (`1`) instead of Shift+Tab (`8`). The correction
+is test-helper-only; independent native calibration and the full rerun are
+pending. `resume-browser-20261031.md` records current progress and ownership.
+
+Task status remains `in_progress`. No staging, commit, push, deployment or
+archive is authorized. The historical version of this status document is
+retained byte-for-byte in `validation-evidence/browser-resume-records/`.
+
+## Remaining Product Decision And Verification Limits
+
+1. The existing query-string prefill cannot carry every 8000-unit Unicode
+   prompt. ASCII 8000/8001 succeeds with the existing 8000-unit slice; 8000
+   Chinese units encode to 72,015 request-target bytes and return HTTP 431;
+   the tested emoji input encodes to 56,019 bytes and also returns 431.
+   An explicit oversized-link/manual-copy fallback at the gallery entry is
+   proposed but not approved. No threshold, storage, create/auth/draft or
+   HTTP-limit workaround is implemented.
+2. Local Node is 24.11.1, not pinned 24.22.1. No runtime is downloaded, and
+   local checks do not establish pinned-runtime parity.
+3. Actual Next/React/Chromium with a synthetic DB proves the tested UI and
+   transfer contracts, not live-account/DB/Worker/provider/storage E2E,
+   physical mobile/IME, actual CI or release readiness.
+
+## Acceptance Matrix
+
+| AC | Current Evidence | Status |
+| --- | --- | --- |
+| AC1 | Real fonts/images at 320/390/768/1024/1440 and clean-reference comparison; final independent rerun pending | Partial / browser gate pending |
+| AC2 | Six motion groups and real-image effects pass in the recovered run; final keyboard gate pending | Partial / browser gate pending |
+| AC3 | Actual API/account/like/paging/copy contracts pass; oversized remix URL remains unresolved | Partial / long-URL decision pending |
+| AC4 | Empty/error retry, keyboard/touch disclosure and manual copy tests plus actual Next browser checks | Passed |
+| AC5 | Real-image pause/reduced/hidden/unmount and rapid-switch checks pass; final keyboard gate pending | Partial / browser gate pending |
+| AC6 | 185 protected source hashes unchanged; default route baseline and actual navigation comparisons pass | Passed |
+| AC7 | Original bookshop/fox/rain-v2 PNGs, all-scene decode, native tilted/touch copies and failure/retry pass; H10 pending | Partial / browser gate pending |
+| AC8 | Four-column 4:5 thumbnail grid and centered crop; original/detail preserved | Passed |
+| AC9 | 16-to-72 paging, synchronous command gate, retry/dedup/cap tests and real API browser checks | Passed |
+| AC10 | Positive-only URL payload with no generation/config cloning; long Unicode URL baseline fails | Partial / user decision pending |
+| AC11 | Actual guest login without continuation, return/reselect, saved-canvas/manual-chat and successive selections | Passed |
+| AC12 | Actual page props plus real Next raw HTML and navigation/refresh Flight secret-sentinel checks | Passed |
+| AC13 | Owner/admin controls/data intact, access policy unchanged; raw transfer matrix | Passed |
+| AC14 | Real existing-route footer/header links; no invented policy/status pages | Passed |
+
+## Automated And Browser Evidence
+
+- Current product revision: 137 files / 1626 non-DB tests pass, lint has zero
+  errors and nine baseline warnings, TypeScript passes, installed Prisma
+  generation passes with a diagnostic network block, and the unmodified
+  production Next build passes in 23.656 seconds. DB exclusions are unchanged;
+  no migration, fixture adapter or download enters the production build.
+- These are recovered exact-revision gates, not commands rerun in this
+  continuation. `validation-evidence/browser-resume-automated-audit.json`
+  verifies complete current allowlist membership, all 806 byte identities,
+  manifest hash, five stage receipts and original/retained stdout/stderr.
+  Source evidence: `validation-evidence/hero-hit-final/result.json`.
+- Latest recovered browser: `browser/evidence/full-1793426443725/result.json`,
+  85/86 executable checks, two separate unresolved multibyte-URL records and
+  no source/helper/build drift. Do not count unresolved navigation as passed.
+- The new independent review, native-keyboard calibration, full browser run
+  and owned-process cleanup remain pending; their actual receipts will
+  supersede the browser verdict, not erase earlier failures.
+
+## Verified Privacy Slice
+
+- Before fix: 49 unit tests, 16 expected semantic failures and 33 passes.
+- After fix: 10 suites / 99 tests pass; actual outgoing client props retain only
+  the 11 allowed public fields. Hidden positive and negative prompts are null;
+  internal management fields never cross the non-owner boundary.
+- Actual Next with a synthetic DB-only boundary: 43 / 43 raw transfer checks
+  pass, including 32 visibility/permission combinations and 8 real navigation
+  plus refresh transfers; retained in the latest 85/86 combined browser run.
+- The existing Next streaming denial may use transport HTTP 200 with
+  `NEXT_HTTP_ERROR_FALLBACK;404` and noindex. Before/after evidence confirms the
+  existing behavior, with no client detail props or secret sentinels. Do not
+  equate that transport detail with an authorization exception.
+
+## Safety And Test Scope
+
+- `validation-environment.md` documents owned snapshots, OS-essential sanitized
+  child environments, exact public `.env.example` exception, independent
+  dependency copies, generated outputs, deadlines and cleanup. Eight final
+  safety self-tests pass. A task-preload `fs.exists` custom-promisification bug
+  was fixed without weakening dotenv rules; red/green evidence is preserved.
+  No real dotenv is read.
+- Source ownership starts at `implementation-baseline.json`; each continuation
+  preserves a fresh byte-identity baseline. Create/canvas, root layout, global
+  styles, package/lock/schema/config and service access edits belonging to
+  other work are preserved, not reset or attributed to this continuation.
+- Final full-suite/build results supplement, rather than substitute for,
+  per-slice evidence and independent review.
+- Browser evidence uses actual Next/React/Chromium with deterministic synthetic
+  service data. It is not live-account/database/Worker/provider/storage E2E,
+  physical iOS/Android testing or production release approval.

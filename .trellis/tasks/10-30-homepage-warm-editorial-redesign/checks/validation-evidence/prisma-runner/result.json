@@ -1,0 +1,21 @@
+{
+  "rootCause": "Guard replacement of fs.exists dropped util.promisify.custom, causing Prisma promisify(fs.exists) to reject with boolean true for existing schema and report Error: undefined",
+  "productionSourceModified": false,
+  "sourceChanges": [],
+  "snapshotModifications": [],
+  "guardFix": "Explicit custom promisify calls guarded fs.exists and resolves Promise<boolean> with identical denial semantics",
+  "probeRedExitCode": 1,
+  "probeGreenExitCode": 0,
+  "safetyTests": 8,
+  "safetyExitCode": 0,
+  "prismaGenerateExitCode": 0,
+  "prismaReceipt": "20261031T023444-prisma-no-network-cee3c7",
+  "prismaNetworkConnectionsForbidden": true,
+  "engineDownloaded": false,
+  "nodeVersion": "v24.11.1",
+  "pinnedRuntimeParity": false,
+  "productionLaneReleased": true,
+  "taskGuardSha256": "bd9ec3da5da5787ffc8378f8ed97835428d4b5a9c80a21a099ccca2c4d077e55",
+  "copiedGuardSha256": "bd9ec3da5da5787ffc8378f8ed97835428d4b5a9c80a21a099ccca2c4d077e55",
+  "guardHashesMatch": true
+}

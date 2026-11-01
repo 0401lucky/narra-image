@@ -1,0 +1,44 @@
+{
+  "completedAt": "2026-11-01T03:03:32.735139+00:00",
+  "status": "completed-and-frozen",
+  "authorization": "Explicit coordinator RELEASE after browser receipt 20261101T025549-script-8c8104 completed and its owned processes/lock were cleared.",
+  "scope": "Exactly one final LF deleted from each of two assigned files; every retained byte is identical.",
+  "totalFilesChanged": 2,
+  "totalBytesDeleted": 2,
+  "nodeOrTestsStarted": false,
+  "gitActionsPerformed": false,
+  "licensesOrBeforeImagesModified": false,
+  "postChangeFullGatesOwner": "coordinator; final browser rebind/full run owned by delivery_final_check",
+  "files": [
+    {
+      "path": "THIRD_PARTY_NOTICES.md",
+      "beforeSnapshot": "THIRD_PARTY_NOTICES.md.before",
+      "beforeBytes": 10746,
+      "beforeSha256": "9c91c915a2f8220034295085baa29525ed80730cba73994812b9dcce98396851",
+      "afterBytes": 10745,
+      "afterSha256": "33f503831942a0c7003f6fe29f7f2fb803d75bd7ee8e15a93b8e649aec7a90b1",
+      "deletedBytesHex": "0a",
+      "deletedOffset": 10745,
+      "afterEqualsExactBeforePrefix": true,
+      "beforeEqualsAfterPlusOneLf": true,
+      "beforeTrailingLfBytes": 2,
+      "afterTrailingLfBytes": 1,
+      "beforeSnapshotUnchanged": true
+    },
+    {
+      "path": "src/components/create/canvas/controller-types.ts",
+      "beforeSnapshot": "src__components__create__canvas__controller-types.ts.before",
+      "beforeBytes": 5902,
+      "beforeSha256": "beaf96e20dc7592b1e42b125b098c8ec0d985ae210c1bef5b4a8de2eea66ea26",
+      "afterBytes": 5901,
+      "afterSha256": "039db7b877e61aa9fc8ece2b54fe8df027294303d4e2b26e84435360d83c80f6",
+      "deletedBytesHex": "0a",
+      "deletedOffset": 5901,
+      "afterEqualsExactBeforePrefix": true,
+      "beforeEqualsAfterPlusOneLf": true,
+      "beforeTrailingLfBytes": 2,
+      "afterTrailingLfBytes": 1,
+      "beforeSnapshotUnchanged": true
+    }
+  ]
+}

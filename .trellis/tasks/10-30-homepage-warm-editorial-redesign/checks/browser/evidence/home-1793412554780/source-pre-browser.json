@@ -1,0 +1,11 @@
+{
+  "stage": "pre-browser",
+  "productInputs": 652,
+  "liveScope": "all recorded production inputs",
+  "drift": [
+    "live:src/app/page.tsx",
+    "live:src/components/marketing/homepage/header.module.css",
+    "live:src/components/marketing/homepage/hero-scene.tsx",
+    "live:src/components/marketing/homepage/hooks/use-hero-scene.ts"
+  ]
+}

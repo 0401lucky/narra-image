@@ -1,0 +1,264 @@
+{
+  "trace": [
+    {
+      "type": "click",
+      "at": 1238.8999999910593,
+      "x": 0,
+      "y": 0,
+      "trusted": true,
+      "pointerType": "",
+      "detail": 0,
+      "heroCopy": true,
+      "target": "<button type=\"button\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-arrow-up-right\" aria-hidden=\"true\"><path d=\"M7 7h10v10\"></path><path d=\"M7 1",
+      "scene": "film"
+    }
+  ],
+  "copies": [
+    {
+      "text": "黄昏穿过旧书店百叶窗的丁达尔光束，微尘在暖金空气中漂浮，王家卫电影胶片颗粒感，柔和景深，叙事感构图",
+      "id": "film",
+      "typed": "黄昏穿过旧书店百叶窗的丁达尔光束，微尘在暖金空气中漂浮，"
+    }
+  ],
+  "motion": {
+    "active": "true",
+    "paused": "false",
+    "reduced": "false"
+  },
+  "frame": {
+    "transform": "matrix(1, 0, 0, 1, 0, 0)",
+    "pointer": "false",
+    "rx": "0deg",
+    "ry": "0deg"
+  },
+  "buttons": [
+    {
+      "text": "胶片光影",
+      "rect": {
+        "x": 1083,
+        "y": 150,
+        "width": 70,
+        "height": 30,
+        "top": 150,
+        "right": 1153,
+        "bottom": 180,
+        "left": 1083
+      },
+      "stack": [
+        {
+          "tag": "BUTTON",
+          "classes": "homepage-module__feCg0G__sceneTab",
+          "text": "胶片光影",
+          "transform": "none",
+          "z": "auto"
+        },
+        {
+          "tag": "DIV",
+          "classes": "homepage-module__feCg0G__sceneTabs",
+          "text": "胶片光影绘本叙事东方美学",
+          "transform": "none",
+          "z": "auto"
+        },
+        {
+          "tag": "DIV",
+          "classes": "homepage-module__feCg0G__sceneToolbar",
+          "text": "Narra Studio · 叙事光影画布胶片光影绘本叙事东方美学",
+          "transform": "none",
+          "z": "auto"
+        },
+        {
+          "tag": "DIV",
+          "classes": "homepage-module__feCg0G__heroFrame",
+          "text": "Narra Studio · 叙事光影画布胶片光影绘本叙事东方美学风格示意 · 黄金时刻逆光局部补光 · 示意视觉语言 · StyleEditorial · 胶",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "z": "auto"
+        },
+        {
+          "tag": "DIV",
+          "classes": "homepage-module__feCg0G__heroArt",
+          "text": "Narra Studio · 叙事光影画布胶片光影绘本叙事东方美学风格示意 · 黄金时刻逆光局部补光 · 示意视觉语言 · StyleEditorial · 胶",
+          "transform": "none",
+          "z": "auto"
+        },
+        {
+          "tag": "DIV",
+          "classes": "homepage-module__feCg0G__heroGrid",
+          "text": "Narra Image 叙事级 AI 影像创作系统在“叙事性”的光影中，编织属于你的灵感画面Narra Image 融合了前沿的图像生成算法与极具人文温度的画布",
+          "transform": "none",
+          "z": "auto"
+        }
+      ]
+    },
+    {
+      "text": "绘本叙事",
+      "rect": {
+        "x": 1156,
+        "y": 150,
+        "width": 70,
+        "height": 30,
+        "top": 150,
+        "right": 1226,
+        "bottom": 180,
+        "left": 1156
+      },
+      "stack": [
+        {
+          "tag": "BUTTON",
+          "classes": "homepage-module__feCg0G__sceneTab",
+          "text": "绘本叙事",
+          "transform": "none",
+          "z": "auto"
+        },
+        {
+          "tag": "DIV",
+          "classes": "homepage-module__feCg0G__sceneTabs",
+          "text": "胶片光影绘本叙事东方美学",
+          "transform": "none",
+          "z": "auto"
+        },
+        {
+          "tag": "DIV",
+          "classes": "homepage-module__feCg0G__sceneToolbar",
+          "text": "Narra Studio · 叙事光影画布胶片光影绘本叙事东方美学",
+          "transform": "none",
+          "z": "auto"
+        },
+        {
+          "tag": "DIV",
+          "classes": "homepage-module__feCg0G__heroFrame",
+          "text": "Narra Studio · 叙事光影画布胶片光影绘本叙事东方美学风格示意 · 黄金时刻逆光局部补光 · 示意视觉语言 · StyleEditorial · 胶",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "z": "auto"
+        },
+        {
+          "tag": "DIV",
+          "classes": "homepage-module__feCg0G__heroArt",
+          "text": "Narra Studio · 叙事光影画布胶片光影绘本叙事东方美学风格示意 · 黄金时刻逆光局部补光 · 示意视觉语言 · StyleEditorial · 胶",
+          "transform": "none",
+          "z": "auto"
+        },
+        {
+          "tag": "DIV",
+          "classes": "homepage-module__feCg0G__heroGrid",
+          "text": "Narra Image 叙事级 AI 影像创作系统在“叙事性”的光影中，编织属于你的灵感画面Narra Image 融合了前沿的图像生成算法与极具人文温度的画布",
+          "transform": "none",
+          "z": "auto"
+        }
+      ]
+    },
+    {
+      "text": "东方美学",
+      "rect": {
+        "x": 1229,
+        "y": 150,
+        "width": 70,
+        "height": 30,
+        "top": 150,
+        "right": 1299,
+        "bottom": 180,
+        "left": 1229
+      },
+      "stack": [
+        {
+          "tag": "BUTTON",
+          "classes": "homepage-module__feCg0G__sceneTab",
+          "text": "东方美学",
+          "transform": "none",
+          "z": "auto"
+        },
+        {
+          "tag": "DIV",
+          "classes": "homepage-module__feCg0G__sceneTabs",
+          "text": "胶片光影绘本叙事东方美学",
+          "transform": "none",
+          "z": "auto"
+        },
+        {
+          "tag": "DIV",
+          "classes": "homepage-module__feCg0G__sceneToolbar",
+          "text": "Narra Studio · 叙事光影画布胶片光影绘本叙事东方美学",
+          "transform": "none",
+          "z": "auto"
+        },
+        {
+          "tag": "DIV",
+          "classes": "homepage-module__feCg0G__heroFrame",
+          "text": "Narra Studio · 叙事光影画布胶片光影绘本叙事东方美学风格示意 · 黄金时刻逆光局部补光 · 示意视觉语言 · StyleEditorial · 胶",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "z": "auto"
+        },
+        {
+          "tag": "DIV",
+          "classes": "homepage-module__feCg0G__heroArt",
+          "text": "Narra Studio · 叙事光影画布胶片光影绘本叙事东方美学风格示意 · 黄金时刻逆光局部补光 · 示意视觉语言 · StyleEditorial · 胶",
+          "transform": "none",
+          "z": "auto"
+        },
+        {
+          "tag": "DIV",
+          "classes": "homepage-module__feCg0G__heroGrid",
+          "text": "Narra Image 叙事级 AI 影像创作系统在“叙事性”的光影中，编织属于你的灵感画面Narra Image 融合了前沿的图像生成算法与极具人文温度的画布",
+          "transform": "none",
+          "z": "auto"
+        }
+      ]
+    },
+    {
+      "text": "已复制完整提示词",
+      "rect": {
+        "x": 1176,
+        "y": 515.3125,
+        "width": 104,
+        "height": 28,
+        "top": 515.3125,
+        "right": 1280,
+        "bottom": 543.3125,
+        "left": 1176
+      },
+      "stack": [
+        {
+          "tag": "BUTTON",
+          "classes": "",
+          "text": "已复制完整提示词",
+          "transform": "none",
+          "z": "auto"
+        },
+        {
+          "tag": "DIV",
+          "classes": "homepage-module__feCg0G__promptToolbar",
+          "text": "4:3 · 叙事示意画幅已复制完整提示词",
+          "transform": "none",
+          "z": "auto"
+        },
+        {
+          "tag": "DIV",
+          "classes": "homepage-module__feCg0G__promptOverlay",
+          "text": "4:3 · 叙事示意画幅已复制完整提示词黄昏穿过旧书店百叶窗的丁达尔光束，微尘在暖金空气中漂浮，王家卫电影胶片颗粒感，柔和景深，叙事感构图黄昏穿过旧书店百叶窗的",
+          "transform": "none",
+          "z": "1"
+        },
+        {
+          "tag": "IMG",
+          "classes": "homepage-module__feCg0G__sceneImage",
+          "text": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "z": "auto"
+        },
+        {
+          "tag": "DIV",
+          "classes": "homepage-module__feCg0G__sceneViewport",
+          "text": "风格示意 · 黄金时刻逆光局部补光 · 示意视觉语言 · StyleEditorial · 胶片光影固定示意图 · 非模型参数",
+          "transform": "none",
+          "z": "0"
+        },
+        {
+          "tag": "DIV",
+          "classes": "homepage-module__feCg0G__sceneStage",
+          "text": "风格示意 · 黄金时刻逆光局部补光 · 示意视觉语言 · StyleEditorial · 胶片光影固定示意图 · 非模型参数4:3 · 叙事示意画幅已复制完整",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "z": "auto"
+        }
+      ]
+    }
+  ]
+}

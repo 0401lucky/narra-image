@@ -1,0 +1,15 @@
+{
+  "checkedAt": "2026-10-31T03:56:33.647724+00:00",
+  "workspace": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\app",
+  "ownerKindVerified": "homepage-warm-editorial-redesign-g0-v1",
+  "ownerPathVerified": true,
+  "activeLockBefore": false,
+  "rootAndCopiedGuardSha256": "bd9ec3da5da5787ffc8378f8ed97835428d4b5a9c80a21a099ccca2c4d077e55",
+  "dependencyLinksAudited": true,
+  "inputsMatchedResumeBaseline": [
+    "src/components/marketing/homepage/constants.ts",
+    "src/tests/contracts/homepage-assets.test.ts",
+    "src/tests/unit/homepage-hero.test.tsx"
+  ],
+  "beforeImages": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\asset-delivery-implementation"
+}

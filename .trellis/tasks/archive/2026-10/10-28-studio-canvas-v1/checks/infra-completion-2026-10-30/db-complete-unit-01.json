@@ -1,0 +1,24 @@
+{
+  "label": "db-complete-unit-01",
+  "mode": "test",
+  "command": [
+    "pnpm",
+    "exec",
+    "vitest",
+    "run",
+    "src/tests/contracts/canvas-contract.test.ts",
+    "src/tests/unit/canvas-schema-probe.test.ts",
+    "src/tests/unit/canvas-disposable-runner.test.ts",
+    "src/tests/unit/local-docker-safety.test.ts",
+    "src/tests/unit/canvas-http.test.ts",
+    "--testTimeout=30000"
+  ],
+  "cwd": "E:/code/narra-image",
+  "timeoutMs": 120000,
+  "code": 0,
+  "signal": null,
+  "timedOut": false,
+  "durationMs": 1967,
+  "stdoutPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\db-complete-unit-01.stdout.log",
+  "stderrPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\db-complete-unit-01.stderr.log"
+}

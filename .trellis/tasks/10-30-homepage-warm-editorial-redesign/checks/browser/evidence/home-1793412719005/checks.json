@@ -1,0 +1,1277 @@
+[
+  {
+    "id": "S1-home-geometry-fonts-1440",
+    "passed": true,
+    "durationMs": 2938,
+    "detail": {
+      "paper": "rgb(246, 242, 235)",
+      "font": "NarraHomeJakarta, \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", sans-serif",
+      "title": {
+        "width": 584,
+        "right": 692,
+        "left": 108,
+        "font": "NarraHomeJakarta, \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", sans-serif",
+        "fontSize": "44px"
+      },
+      "overflow": false,
+      "sections": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "stats": 3,
+      "frames": 1,
+      "ratio": 1.3333333333333333,
+      "columns": 4,
+      "fonts": [
+        "NarraHomeCormorant",
+        "NarraHomeCormorant",
+        "NarraHomeCormorant",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeJakarta",
+        "NarraHomeJakarta",
+        "NarraHomeJakarta",
+        "NarraHomeJakarta"
+      ],
+      "fontRequests": [
+        {
+          "url": "http://127.0.0.1:49938/marketing/home/fonts/plus-jakarta-sans-d8c30647abfeffe6.woff2",
+          "bytes": 27648,
+          "decodedBytes": 27348
+        },
+        {
+          "url": "http://127.0.0.1:49938/marketing/home/fonts/cormorant-garamond-d9ec821052ff94a7.woff2",
+          "bytes": 37940,
+          "decodedBytes": 37640
+        },
+        {
+          "url": "http://127.0.0.1:49938/marketing/home/fonts/noto-serif-sc-d8c61f0c834f348a.woff2",
+          "bytes": 33264,
+          "decodedBytes": 32964
+        },
+        {
+          "url": "http://127.0.0.1:49938/marketing/home/fonts/cormorant-garamond-291655adcb38b6b4.woff2",
+          "bytes": 39560,
+          "decodedBytes": 39260
+        },
+        {
+          "url": "http://127.0.0.1:49938/marketing/home/fonts/noto-serif-sc-f63d970a7b2b5321.woff2",
+          "bytes": 58524,
+          "decodedBytes": 58224
+        },
+        {
+          "url": "http://127.0.0.1:49938/marketing/home/fonts/noto-serif-sc-2ef4d8c6c25aaa84.woff2",
+          "bytes": 66956,
+          "decodedBytes": 66656
+        },
+        {
+          "url": "http://127.0.0.1:49938/marketing/home/fonts/noto-serif-sc-71139ee70c1b1fce.woff2",
+          "bytes": 81952,
+          "decodedBytes": 81652
+        },
+        {
+          "url": "http://127.0.0.1:49938/marketing/home/fonts/noto-serif-sc-5849283072442ca2.woff2",
+          "bytes": 72808,
+          "decodedBytes": 72508
+        }
+      ],
+      "imageState": "error",
+      "refinements": {
+        "gate": "hidden",
+        "statTops": [
+          581.609375,
+          581.609375,
+          581.609375
+        ],
+        "descriptionLineHeight": "26px"
+      }
+    }
+  },
+  {
+    "id": "S1-home-geometry-fonts-390",
+    "passed": true,
+    "durationMs": 3709,
+    "detail": {
+      "paper": "rgb(246, 242, 235)",
+      "font": "NarraHomeJakarta, \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", sans-serif",
+      "title": {
+        "width": 358,
+        "right": 374,
+        "left": 16,
+        "font": "NarraHomeJakarta, \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", sans-serif",
+        "fontSize": "30px"
+      },
+      "overflow": false,
+      "sections": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "stats": 3,
+      "frames": 1,
+      "ratio": 1.3333333333333333,
+      "columns": 1,
+      "fonts": [
+        "NarraHomeCormorant",
+        "NarraHomeCormorant",
+        "NarraHomeCormorant",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeJakarta",
+        "NarraHomeJakarta",
+        "NarraHomeJakarta",
+        "NarraHomeJakarta"
+      ],
+      "fontRequests": [
+        {
+          "url": "http://127.0.0.1:49938/marketing/home/fonts/cormorant-garamond-d9ec821052ff94a7.woff2",
+          "bytes": 300,
+          "decodedBytes": 37640
+        },
+        {
+          "url": "http://127.0.0.1:49938/marketing/home/fonts/plus-jakarta-sans-d8c30647abfeffe6.woff2",
+          "bytes": 300,
+          "decodedBytes": 27348
+        },
+        {
+          "url": "http://127.0.0.1:49938/marketing/home/fonts/noto-serif-sc-d8c61f0c834f348a.woff2",
+          "bytes": 300,
+          "decodedBytes": 32964
+        },
+        {
+          "url": "http://127.0.0.1:49938/marketing/home/fonts/cormorant-garamond-291655adcb38b6b4.woff2",
+          "bytes": 300,
+          "decodedBytes": 39260
+        },
+        {
+          "url": "http://127.0.0.1:49938/marketing/home/fonts/noto-serif-sc-f63d970a7b2b5321.woff2",
+          "bytes": 300,
+          "decodedBytes": 58224
+        },
+        {
+          "url": "http://127.0.0.1:49938/marketing/home/fonts/noto-serif-sc-2ef4d8c6c25aaa84.woff2",
+          "bytes": 300,
+          "decodedBytes": 66656
+        },
+        {
+          "url": "http://127.0.0.1:49938/marketing/home/fonts/noto-serif-sc-71139ee70c1b1fce.woff2",
+          "bytes": 300,
+          "decodedBytes": 81652
+        },
+        {
+          "url": "http://127.0.0.1:49938/marketing/home/fonts/noto-serif-sc-5849283072442ca2.woff2",
+          "bytes": 300,
+          "decodedBytes": 72508
+        }
+      ],
+      "imageState": "error",
+      "refinements": {
+        "gate": "hidden",
+        "statTops": [
+          494.96875,
+          494.96875,
+          494.96875
+        ],
+        "descriptionLineHeight": "22.75px"
+      }
+    }
+  },
+  {
+    "id": "S1-home-geometry-fonts-320",
+    "passed": true,
+    "durationMs": 2712,
+    "detail": {
+      "paper": "rgb(246, 242, 235)",
+      "font": "NarraHomeJakarta, \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", sans-serif",
+      "title": {
+        "width": 288,
+        "right": 304,
+        "left": 16,
+        "font": "NarraHomeJakarta, \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", sans-serif",
+        "fontSize": "27px"
+      },
+      "overflow": false,
+      "sections": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "stats": 3,
+      "frames": 1,
+      "ratio": 1.3333333333333333,
+      "columns": 1,
+      "fonts": [
+        "NarraHomeCormorant",
+        "NarraHomeCormorant",
+        "NarraHomeCormorant",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeJakarta",
+        "NarraHomeJakarta",
+        "NarraHomeJakarta",
+        "NarraHomeJakarta"
+      ],
+      "fontRequests": [
+        {
+          "url": "http://127.0.0.1:49938/marketing/home/fonts/cormorant-garamond-d9ec821052ff94a7.woff2",
+          "bytes": 300,
+          "decodedBytes": 37640
+        },
+        {
+          "url": "http://127.0.0.1:49938/marketing/home/fonts/plus-jakarta-sans-d8c30647abfeffe6.woff2",
+          "bytes": 300,
+          "decodedBytes": 27348
+        },
+        {
+          "url": "http://127.0.0.1:49938/marketing/home/fonts/noto-serif-sc-d8c61f0c834f348a.woff2",
+          "bytes": 300,
+          "decodedBytes": 32964
+        },
+        {
+          "url": "http://127.0.0.1:49938/marketing/home/fonts/cormorant-garamond-291655adcb38b6b4.woff2",
+          "bytes": 300,
+          "decodedBytes": 39260
+        },
+        {
+          "url": "http://127.0.0.1:49938/marketing/home/fonts/noto-serif-sc-f63d970a7b2b5321.woff2",
+          "bytes": 300,
+          "decodedBytes": 58224
+        },
+        {
+          "url": "http://127.0.0.1:49938/marketing/home/fonts/noto-serif-sc-2ef4d8c6c25aaa84.woff2",
+          "bytes": 300,
+          "decodedBytes": 66656
+        },
+        {
+          "url": "http://127.0.0.1:49938/marketing/home/fonts/noto-serif-sc-71139ee70c1b1fce.woff2",
+          "bytes": 300,
+          "decodedBytes": 81652
+        },
+        {
+          "url": "http://127.0.0.1:49938/marketing/home/fonts/noto-serif-sc-5849283072442ca2.woff2",
+          "bytes": 300,
+          "decodedBytes": 72508
+        }
+      ],
+      "imageState": "error",
+      "refinements": {
+        "gate": "hidden",
+        "statTops": [
+          599.390625,
+          599.390625,
+          599.390625
+        ],
+        "descriptionLineHeight": "22.75px"
+      }
+    }
+  },
+  {
+    "id": "S1-home-geometry-fonts-768",
+    "passed": true,
+    "durationMs": 4218,
+    "detail": {
+      "paper": "rgb(246, 242, 235)",
+      "font": "NarraHomeJakarta, \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", sans-serif",
+      "title": {
+        "width": 712,
+        "right": 736,
+        "left": 24,
+        "font": "NarraHomeJakarta, \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", sans-serif",
+        "fontSize": "36px"
+      },
+      "overflow": false,
+      "sections": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "stats": 3,
+      "frames": 1,
+      "ratio": 1.3333333333333333,
+      "columns": 2,
+      "fonts": [
+        "NarraHomeCormorant",
+        "NarraHomeCormorant",
+        "NarraHomeCormorant",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeJakarta",
+        "NarraHomeJakarta",
+        "NarraHomeJakarta",
+        "NarraHomeJakarta"
+      ],
+      "fontRequests": [
+        {
+          "url": "http://127.0.0.1:49938/marketing/home/fonts/cormorant-garamond-d9ec821052ff94a7.woff2",
+          "bytes": 300,
+          "decodedBytes": 37640
+        },
+        {
+          "url": "http://127.0.0.1:49938/marketing/home/fonts/plus-jakarta-sans-d8c30647abfeffe6.woff2",
+          "bytes": 300,
+          "decodedBytes": 27348
+        },
+        {
+          "url": "http://127.0.0.1:49938/marketing/home/fonts/noto-serif-sc-d8c61f0c834f348a.woff2",
+          "bytes": 300,
+          "decodedBytes": 32964
+        },
+        {
+          "url": "http://127.0.0.1:49938/marketing/home/fonts/cormorant-garamond-291655adcb38b6b4.woff2",
+          "bytes": 300,
+          "decodedBytes": 39260
+        },
+        {
+          "url": "http://127.0.0.1:49938/marketing/home/fonts/noto-serif-sc-f63d970a7b2b5321.woff2",
+          "bytes": 300,
+          "decodedBytes": 58224
+        },
+        {
+          "url": "http://127.0.0.1:49938/marketing/home/fonts/noto-serif-sc-2ef4d8c6c25aaa84.woff2",
+          "bytes": 300,
+          "decodedBytes": 66656
+        },
+        {
+          "url": "http://127.0.0.1:49938/marketing/home/fonts/noto-serif-sc-71139ee70c1b1fce.woff2",
+          "bytes": 300,
+          "decodedBytes": 81652
+        },
+        {
+          "url": "http://127.0.0.1:49938/marketing/home/fonts/noto-serif-sc-5849283072442ca2.woff2",
+          "bytes": 300,
+          "decodedBytes": 72508
+        }
+      ],
+      "imageState": "error",
+      "refinements": {
+        "gate": "hidden",
+        "statTops": [
+          497.34375,
+          497.34375,
+          497.34375
+        ],
+        "descriptionLineHeight": "26px"
+      }
+    }
+  },
+  {
+    "id": "S1-home-geometry-fonts-1024",
+    "passed": true,
+    "durationMs": 2442,
+    "detail": {
+      "paper": "rgb(246, 242, 235)",
+      "font": "NarraHomeJakarta, \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", sans-serif",
+      "title": {
+        "width": 452,
+        "right": 484,
+        "left": 32,
+        "font": "NarraHomeJakarta, \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", sans-serif",
+        "fontSize": "36px"
+      },
+      "overflow": false,
+      "sections": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "stats": 3,
+      "frames": 1,
+      "ratio": 1.3333333333333333,
+      "columns": 4,
+      "fonts": [
+        "NarraHomeCormorant",
+        "NarraHomeCormorant",
+        "NarraHomeCormorant",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeJakarta",
+        "NarraHomeJakarta",
+        "NarraHomeJakarta",
+        "NarraHomeJakarta"
+      ],
+      "fontRequests": [
+        {
+          "url": "http://127.0.0.1:49938/marketing/home/fonts/cormorant-garamond-d9ec821052ff94a7.woff2",
+          "bytes": 300,
+          "decodedBytes": 37640
+        },
+        {
+          "url": "http://127.0.0.1:49938/marketing/home/fonts/plus-jakarta-sans-d8c30647abfeffe6.woff2",
+          "bytes": 300,
+          "decodedBytes": 27348
+        },
+        {
+          "url": "http://127.0.0.1:49938/marketing/home/fonts/noto-serif-sc-d8c61f0c834f348a.woff2",
+          "bytes": 300,
+          "decodedBytes": 32964
+        },
+        {
+          "url": "http://127.0.0.1:49938/marketing/home/fonts/cormorant-garamond-291655adcb38b6b4.woff2",
+          "bytes": 300,
+          "decodedBytes": 39260
+        },
+        {
+          "url": "http://127.0.0.1:49938/marketing/home/fonts/noto-serif-sc-f63d970a7b2b5321.woff2",
+          "bytes": 300,
+          "decodedBytes": 58224
+        },
+        {
+          "url": "http://127.0.0.1:49938/marketing/home/fonts/noto-serif-sc-2ef4d8c6c25aaa84.woff2",
+          "bytes": 300,
+          "decodedBytes": 66656
+        },
+        {
+          "url": "http://127.0.0.1:49938/marketing/home/fonts/noto-serif-sc-71139ee70c1b1fce.woff2",
+          "bytes": 300,
+          "decodedBytes": 81652
+        },
+        {
+          "url": "http://127.0.0.1:49938/marketing/home/fonts/noto-serif-sc-5849283072442ca2.woff2",
+          "bytes": 300,
+          "decodedBytes": 72508
+        }
+      ],
+      "imageState": "error",
+      "refinements": {
+        "gate": "hidden",
+        "statTops": [
+          547.34375,
+          547.34375,
+          547.34375
+        ],
+        "descriptionLineHeight": "26px"
+      }
+    }
+  },
+  {
+    "id": "S1-real-navigation-theme-isolation-create",
+    "passed": true,
+    "durationMs": 2312,
+    "detail": {
+      "body": {
+        "fontFamily": "\"Avenir Next\", \"Segoe UI\", \"PingFang SC\", \"Hiragino Sans GB\", \"Noto Sans SC\", sans-serif, \"PingFang SC\", \"Microsoft YaHei\", sans-serif",
+        "fontSize": "16px",
+        "fontWeight": "400",
+        "color": "rgb(33, 23, 15)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderColor": "rgb(33, 23, 15)",
+        "height": 1000,
+        "width": 1440
+      },
+      "main": {
+        "fontFamily": "\"Avenir Next\", \"Segoe UI\", \"PingFang SC\", \"Hiragino Sans GB\", \"Noto Sans SC\", sans-serif, \"PingFang SC\", \"Microsoft YaHei\", sans-serif",
+        "fontSize": "16px",
+        "fontWeight": "400",
+        "color": "rgb(33, 23, 15)",
+        "backgroundColor": "rgb(245, 239, 230)",
+        "borderColor": "rgb(33, 23, 15)",
+        "height": 1000,
+        "width": 1440
+      },
+      "header": {
+        "fontFamily": "\"Avenir Next\", \"Segoe UI\", \"PingFang SC\", \"Hiragino Sans GB\", \"Noto Sans SC\", sans-serif, \"PingFang SC\", \"Microsoft YaHei\", sans-serif",
+        "fontSize": "16px",
+        "fontWeight": "400",
+        "color": "rgb(33, 23, 15)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderColor": "rgb(33, 23, 15)",
+        "height": 72,
+        "width": 1440
+      },
+      "h1": null,
+      "overflow": false,
+      "links": [
+        {
+          "href": "/",
+          "text": "NarraImage"
+        },
+        {
+          "href": "https://github.com/0401lucky/narra-image",
+          "text": ""
+        },
+        {
+          "href": "/",
+          "text": "首页"
+        },
+        {
+          "href": "/create",
+          "text": "创作台"
+        },
+        {
+          "href": "/prompts",
+          "text": "提示词库"
+        },
+        {
+          "href": "/video",
+          "text": "视频"
+        },
+        {
+          "href": "/works",
+          "text": "作品"
+        },
+        {
+          "href": "/api-keys",
+          "text": "API"
+        },
+        {
+          "href": "/settings",
+          "text": ""
+        }
+      ]
+    }
+  },
+  {
+    "id": "S1-real-navigation-theme-isolation-works",
+    "passed": true,
+    "durationMs": 2356,
+    "detail": {
+      "body": {
+        "fontFamily": "\"Avenir Next\", \"Segoe UI\", \"PingFang SC\", \"Hiragino Sans GB\", \"Noto Sans SC\", sans-serif, \"PingFang SC\", \"Microsoft YaHei\", sans-serif",
+        "fontSize": "16px",
+        "fontWeight": "400",
+        "color": "rgb(33, 23, 15)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderColor": "rgb(33, 23, 15)",
+        "height": 1000,
+        "width": 1440
+      },
+      "main": {
+        "fontFamily": "\"Avenir Next\", \"Segoe UI\", \"PingFang SC\", \"Hiragino Sans GB\", \"Noto Sans SC\", sans-serif, \"PingFang SC\", \"Microsoft YaHei\", sans-serif",
+        "fontSize": "16px",
+        "fontWeight": "400",
+        "color": "rgb(33, 23, 15)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderColor": "rgb(33, 23, 15)",
+        "height": 704.5,
+        "width": 1440
+      },
+      "header": {
+        "fontFamily": "\"Avenir Next\", \"Segoe UI\", \"PingFang SC\", \"Hiragino Sans GB\", \"Noto Sans SC\", sans-serif, \"PingFang SC\", \"Microsoft YaHei\", sans-serif",
+        "fontSize": "16px",
+        "fontWeight": "400",
+        "color": "rgb(33, 23, 15)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderColor": "rgb(33, 23, 15)",
+        "height": 84,
+        "width": 1440
+      },
+      "h1": {
+        "fontFamily": "\"Avenir Next\", \"Segoe UI\", \"PingFang SC\", \"Hiragino Sans GB\", \"Noto Sans SC\", sans-serif, \"PingFang SC\", \"Microsoft YaHei\", sans-serif",
+        "fontSize": "36px",
+        "fontWeight": "600",
+        "color": "rgb(33, 23, 15)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderColor": "rgb(33, 23, 15)",
+        "height": 40,
+        "width": 70.203125
+      },
+      "overflow": false,
+      "links": [
+        {
+          "href": "/",
+          "text": "NarraImage"
+        },
+        {
+          "href": "https://github.com/0401lucky/narra-image",
+          "text": ""
+        },
+        {
+          "href": "/",
+          "text": "首页"
+        },
+        {
+          "href": "/create",
+          "text": "创作台"
+        },
+        {
+          "href": "/prompts",
+          "text": "提示词库"
+        },
+        {
+          "href": "/video",
+          "text": "视频"
+        },
+        {
+          "href": "/works",
+          "text": "作品"
+        },
+        {
+          "href": "/api-keys",
+          "text": "API"
+        },
+        {
+          "href": "/settings",
+          "text": ""
+        }
+      ]
+    }
+  },
+  {
+    "id": "S1-real-navigation-theme-isolation-settings",
+    "passed": true,
+    "durationMs": 2410,
+    "detail": {
+      "body": {
+        "fontFamily": "\"Avenir Next\", \"Segoe UI\", \"PingFang SC\", \"Hiragino Sans GB\", \"Noto Sans SC\", sans-serif, \"PingFang SC\", \"Microsoft YaHei\", sans-serif",
+        "fontSize": "16px",
+        "fontWeight": "400",
+        "color": "rgb(33, 23, 15)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderColor": "rgb(33, 23, 15)",
+        "height": 1044.75,
+        "width": 1432
+      },
+      "main": {
+        "fontFamily": "\"Avenir Next\", \"Segoe UI\", \"PingFang SC\", \"Hiragino Sans GB\", \"Noto Sans SC\", sans-serif, \"PingFang SC\", \"Microsoft YaHei\", sans-serif",
+        "fontSize": "16px",
+        "fontWeight": "400",
+        "color": "rgb(33, 23, 15)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderColor": "rgb(33, 23, 15)",
+        "height": 1044.75,
+        "width": 1432
+      },
+      "header": {
+        "fontFamily": "\"Avenir Next\", \"Segoe UI\", \"PingFang SC\", \"Hiragino Sans GB\", \"Noto Sans SC\", sans-serif, \"PingFang SC\", \"Microsoft YaHei\", sans-serif",
+        "fontSize": "16px",
+        "fontWeight": "400",
+        "color": "rgb(33, 23, 15)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderColor": "rgb(33, 23, 15)",
+        "height": 84,
+        "width": 1432
+      },
+      "h1": {
+        "fontFamily": "\"Avenir Next\", \"Segoe UI\", \"PingFang SC\", \"Hiragino Sans GB\", \"Noto Sans SC\", sans-serif, \"PingFang SC\", \"Microsoft YaHei\", sans-serif",
+        "fontSize": "36px",
+        "fontWeight": "600",
+        "color": "rgb(33, 23, 15)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderColor": "rgb(33, 23, 15)",
+        "height": 40,
+        "width": 1216
+      },
+      "overflow": false,
+      "links": [
+        {
+          "href": "/",
+          "text": "NarraImage"
+        },
+        {
+          "href": "https://github.com/0401lucky/narra-image",
+          "text": ""
+        },
+        {
+          "href": "/",
+          "text": "首页"
+        },
+        {
+          "href": "/create",
+          "text": "创作台"
+        },
+        {
+          "href": "/prompts",
+          "text": "提示词库"
+        },
+        {
+          "href": "/video",
+          "text": "视频"
+        },
+        {
+          "href": "/works",
+          "text": "作品"
+        },
+        {
+          "href": "/api-keys",
+          "text": "API"
+        },
+        {
+          "href": "/settings",
+          "text": ""
+        }
+      ]
+    }
+  },
+  {
+    "id": "S1-real-navigation-theme-isolation-admin",
+    "passed": true,
+    "durationMs": 2432,
+    "detail": {
+      "body": {
+        "fontFamily": "\"Avenir Next\", \"Segoe UI\", \"PingFang SC\", \"Hiragino Sans GB\", \"Noto Sans SC\", sans-serif, \"PingFang SC\", \"Microsoft YaHei\", sans-serif",
+        "fontSize": "16px",
+        "fontWeight": "400",
+        "color": "rgb(33, 23, 15)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderColor": "rgb(33, 23, 15)",
+        "height": 1119.3125,
+        "width": 1432
+      },
+      "main": {
+        "fontFamily": "\"Avenir Next\", \"Segoe UI\", \"PingFang SC\", \"Hiragino Sans GB\", \"Noto Sans SC\", sans-serif, \"PingFang SC\", \"Microsoft YaHei\", sans-serif",
+        "fontSize": "16px",
+        "fontWeight": "400",
+        "color": "rgb(33, 23, 15)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderColor": "rgb(33, 23, 15)",
+        "height": 1052.3125,
+        "width": 1144
+      },
+      "header": {
+        "fontFamily": "\"Avenir Next\", \"Segoe UI\", \"PingFang SC\", \"Hiragino Sans GB\", \"Noto Sans SC\", sans-serif, \"PingFang SC\", \"Microsoft YaHei\", sans-serif",
+        "fontSize": "16px",
+        "fontWeight": "400",
+        "color": "rgb(33, 23, 15)",
+        "backgroundColor": "rgba(252, 249, 244, 0.75)",
+        "borderColor": "rgba(73, 48, 27, 0.08)",
+        "height": 67,
+        "width": 1144
+      },
+      "h1": {
+        "fontFamily": "\"Avenir Next\", \"Segoe UI\", \"PingFang SC\", \"Hiragino Sans GB\", \"Noto Sans SC\", sans-serif, \"PingFang SC\", \"Microsoft YaHei\", sans-serif",
+        "fontSize": "16px",
+        "fontWeight": "600",
+        "color": "rgb(33, 23, 15)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderColor": "rgb(33, 23, 15)",
+        "height": 24,
+        "width": 119.84375
+      },
+      "overflow": false,
+      "links": [
+        {
+          "href": "/",
+          "text": "返回主页"
+        },
+        {
+          "href": "/create",
+          "text": "创作台"
+        }
+      ]
+    }
+  },
+  {
+    "id": "S2-header-mobile-drawer-native-touch-keyboard",
+    "passed": true,
+    "durationMs": 2105,
+    "detail": {
+      "left": 30,
+      "right": 390,
+      "top": 0,
+      "bottom": 844,
+      "height": 844,
+      "modal": "true",
+      "activeInside": true,
+      "links": [
+        "/",
+        "/create",
+        "/prompts",
+        "/video",
+        "/works",
+        "/api-keys",
+        "/admin",
+        "https://github.com/0401lucky/narra-image",
+        "/settings"
+      ],
+      "bodyOverflow": "hidden"
+    }
+  },
+  {
+    "id": "M1-M4-real-pointer-count-miniatures-pause",
+    "passed": true,
+    "durationMs": 7786,
+    "detail": {
+      "tilt": {
+        "transform": "matrix3d(0.998932, 0.00213533, -0.0461603, 0, 0, 0.998932, 0.0462097, 0, 0.0462097, -0.0461603, 0.997865, 0, 0, 0, 0, 1)",
+        "x": "2.70deg",
+        "y": "2.70deg"
+      },
+      "stats": [
+        "150,000+",
+        "120+",
+        "< 4.2s"
+      ],
+      "before": [
+        {
+          "kind": "prompt",
+          "text": "画笔写意 / 叙事生图捕捉文字背后的情绪与光影明暗，用多种画幅与镜头语言，为每一帧想象写下故事。从词语开始一束光灵感示意丁达尔夕阳35mm 胶片浅景深叙事",
+          "active": "丁达尔夕阳"
+        },
+        {
+          "kind": "versions",
+          "text": "创作迭代台 / 画布微调在多轮对话与画布中延伸灵感。参考已有画面继续创作，让构图与细节一步步接近心中所想。迭代示意v1 · 线稿构图v1 初稿v2 补光v3 终稿",
+          "active": "v1 初稿"
+        },
+        {
+          "kind": "pet",
+          "text": "灵动数字宠物伴途让桌面小生灵陪你一起等待灵感、庆祝创作。在独自构思的片刻，也有轻盈温暖的陪伴。“试试加入暖色侧逆光？”点击换条灵感 · 不改变宠物设置"
+        },
+        {
+          "kind": "api",
+          "text": "开发者 API通过兼容 OpenAI 风格的图像接口，将影像生成接入自己的应用。调用方式与密钥在 API 控制台查看。接口响应示意非实时请求POST /v1/images/generations200 OK 示例响应"
+        }
+      ],
+      "after": [
+        {
+          "kind": "prompt",
+          "text": "画笔写意 / 叙事生图捕捉文字背后的情绪与光影明暗，用多种画幅与镜头语言，为每一帧想象写下故事。从词语开始一束光灵感示意丁达尔夕阳35mm 胶片浅景深叙事",
+          "active": "35mm 胶片"
+        },
+        {
+          "kind": "versions",
+          "text": "创作迭代台 / 画布微调在多轮对话与画布中延伸灵感。参考已有画面继续创作，让构图与细节一步步接近心中所想。迭代示意v2 · 局部补光v1 初稿v2 补光v3 终稿",
+          "active": "v2 补光"
+        },
+        {
+          "kind": "pet",
+          "text": "灵动数字宠物伴途让桌面小生灵陪你一起等待灵感、庆祝创作。在独自构思的片刻，也有轻盈温暖的陪伴。“试试加入暖色侧逆光？”点击换条灵感 · 不改变宠物设置"
+        },
+        {
+          "kind": "api",
+          "text": "开发者 API通过兼容 OpenAI 风格的图像接口，将影像生成接入自己的应用。调用方式与密钥在 API 控制台查看。接口响应示意非实时请求POST /v1/images/generations200 OK 示例响应"
+        }
+      ],
+      "petBefore": "灵动数字宠物伴途让桌面小生灵陪你一起等待灵感、庆祝创作。在独自构思的片刻，也有轻盈温暖的陪伴。“试试加入暖色侧逆光？”点击换条灵感 · 不改变宠物设置",
+      "petAfter": "灵动数字宠物伴途让桌面小生灵陪你一起等待灵感、庆祝创作。在独自构思的片刻，也有轻盈温暖的陪伴。“加一点雨后青石板的反光细节吧。”点击换条灵感 · 不改变宠物设置"
+    }
+  },
+  {
+    "id": "H1-M2-missing-scene-failure-is-coherent-copy-complete",
+    "passed": true,
+    "durationMs": 4406,
+    "detail": {
+      "state": "error",
+      "coherentScene": "film",
+      "fullPrompt": true
+    }
+  },
+  {
+    "id": "G1-desktop-four-column-crop-and-original-detail",
+    "passed": true,
+    "durationMs": 1668,
+    "detail": {
+      "shapes": [
+        {
+          "x": 109,
+          "y": 565.364501953125,
+          "width": 287,
+          "height": 359.25,
+          "fit": "cover",
+          "position": "50% 50%",
+          "original": [
+            360,
+            240
+          ]
+        },
+        {
+          "x": 418,
+          "y": 573.73193359375,
+          "width": 287,
+          "height": 359.25,
+          "fit": "cover",
+          "position": "50% 50%",
+          "original": [
+            360,
+            360
+          ]
+        },
+        {
+          "x": 727,
+          "y": 576.5494384765625,
+          "width": 287,
+          "height": 359.2498779296875,
+          "fit": "cover",
+          "position": "50% 50%",
+          "original": [
+            360,
+            540
+          ]
+        },
+        {
+          "x": 1036,
+          "y": 576.5494384765625,
+          "width": 287,
+          "height": 359.2498779296875,
+          "fit": "cover",
+          "position": "50% 50%",
+          "original": [
+            360,
+            240
+          ]
+        }
+      ],
+      "detail": {
+        "fit": "contain",
+        "ratio": 1.5
+      }
+    }
+  },
+  {
+    "id": "C1-C3-guest-public-copy-hidden-permission-clipboard-denial",
+    "passed": true,
+    "durationMs": 3972,
+    "detail": {
+      "manual": {
+        "value": "作者未公开提示词",
+        "selected": 8
+      },
+      "guestHint": "02CURATED WORKS · 佳作展映社区精选Exhibitions浏览创作者用 Narra Image 编织的光影故事，展开作品卡片，阅读与复用获准公开的灵感。开启灵感创作做同款需先登录。登录后请返回首页社区精选，重新选择作品；公开提示词可直接复制。做同款只预填公开的正向提示词，不复制模型或参数，也不会自动生成。如已保存画布模式，请手动切回「对话」查看预填内容。0110纸上光影 001纸间旅人收起公开提示词 · 完整内容公开作品 001：晨光穿过纸"
+    }
+  },
+  {
+    "id": "P1-P2-real-api-pagination16-to72",
+    "passed": true,
+    "durationMs": 2327,
+    "detail": {
+      "counts": [
+        16,
+        72,
+        72,
+        72,
+        72
+      ],
+      "observed": [
+        16,
+        32,
+        48,
+        64,
+        72
+      ],
+      "requests": [
+        {
+          "url": "http://127.0.0.1:49938/api/works/featured?cursor=eyJmZWF0dXJlZEF0IjoiMjAyNi0xMC0yMFQwNTo1OTo0NS4wMDBaIiwiaWQiOiJob21lLTAxNiJ9&limit=16",
+          "method": "GET",
+          "type": "Fetch",
+          "requestId": "22348.576"
+        },
+        {
+          "url": "http://127.0.0.1:49938/api/works/featured?cursor=eyJmZWF0dXJlZEF0IjoiMjAyNi0xMC0yMFQwNTo1OToyOS4wMDBaIiwiaWQiOiJob21lLTAzMiJ9&limit=16",
+          "method": "GET",
+          "type": "Fetch",
+          "requestId": "22348.657"
+        },
+        {
+          "url": "http://127.0.0.1:49938/api/works/featured?cursor=eyJmZWF0dXJlZEF0IjoiMjAyNi0xMC0yMFQwNTo1OToxMy4wMDBaIiwiaWQiOiJob21lLTA0OCJ9&limit=16",
+          "method": "GET",
+          "type": "Fetch",
+          "requestId": "22348.738"
+        },
+        {
+          "url": "http://127.0.0.1:49938/api/works/featured?cursor=eyJmZWF0dXJlZEF0IjoiMjAyNi0xMC0yMFQwNTo1ODo1Ny4wMDBaIiwiaWQiOiJob21lLTA2NCJ9&limit=16",
+          "method": "GET",
+          "type": "Fetch",
+          "requestId": "22348.819"
+        }
+      ],
+      "status": "已展示 72 件精选作品，已达首页展示上限。"
+    }
+  },
+  {
+    "id": "P2-page-failure-keeps-records-explicit-retry",
+    "passed": true,
+    "durationMs": 3129,
+    "detail": {
+      "preserved": 16,
+      "afterRetry": 32,
+      "autoRetrySuppressed": true
+    }
+  },
+  {
+    "id": "M5-M6-gallery-depth-glare-reveal-and-reduced-motion",
+    "passed": false,
+    "durationMs": 3274,
+    "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n'0.869991' !== '1'\n\n    at file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/homepage-checks.mjs:277:12\n    at async check (file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/run-browser.mjs:60:20)\n    at async fullHomepageChecks (file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/homepage-checks.mjs:261:3)\n    at async file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/run-browser.mjs:347:7"
+  },
+  {
+    "id": "M4-home-observers-and-timers-dispose-on-route-exit",
+    "passed": true,
+    "durationMs": 4854,
+    "detail": {
+      "active": {
+        "timers": 0,
+        "frames": 1,
+        "observed": 38
+      },
+      "disposed": {
+        "timers": 0,
+        "frames": 0,
+        "observed": 0
+      },
+      "limit": "Captured the known2200ms miniature loop and active-home RAFs; complete lifecycle contract also requires focused unit instrumentation."
+    }
+  },
+  {
+    "id": "S2-real-like-checkin-pet-logout",
+    "passed": true,
+    "durationMs": 3145,
+    "detail": {
+      "credited": 550,
+      "checkedIn": true,
+      "loggedOut": true,
+      "network": [
+        {
+          "url": "http://127.0.0.1:49938/api/works/home-001/like",
+          "method": "PUT",
+          "type": "Fetch",
+          "requestId": "22348.657"
+        },
+        {
+          "url": "http://127.0.0.1:49938/api/works/home-001/like",
+          "method": "PUT",
+          "type": "Fetch",
+          "requestId": "22348.658"
+        },
+        {
+          "url": "http://127.0.0.1:49938/api/me/check-in",
+          "method": "POST",
+          "type": "Fetch",
+          "requestId": "22348.659"
+        },
+        {
+          "url": "http://127.0.0.1:49938/api/auth/logout",
+          "method": "POST",
+          "type": "Fetch",
+          "requestId": "22348.686"
+        }
+      ]
+    }
+  },
+  {
+    "id": "C2-C3-actual-remix-saved-canvas-then-chat",
+    "passed": true,
+    "durationMs": 4694,
+    "detail": {
+      "selected": "公开作品 001：晨光穿过纸窗，温暖的纹理与安静的空气。\n完整正向提示词 + & # / ? = %，不包含模型或负向提示词。",
+      "preservedCanvas": true,
+      "noMutation": true,
+      "successive": "作者未公开提示词"
+    }
+  },
+  {
+    "id": "C2-long-url-existing8000-unit-boundary",
+    "passed": true,
+    "durationMs": 3069,
+    "detail": [
+      {
+        "label": "ascii8000",
+        "units": 8000,
+        "requestTargetBytes": 8015,
+        "status": 200,
+        "inputUnits": 8000,
+        "matchesExistingSlice": true
+      },
+      {
+        "label": "ascii8001",
+        "units": 8001,
+        "requestTargetBytes": 8016,
+        "status": 200,
+        "inputUnits": 8000,
+        "matchesExistingSlice": true
+      },
+      {
+        "label": "chinese8000",
+        "units": 8000,
+        "requestTargetBytes": 72015,
+        "status": 431,
+        "inputUnits": null,
+        "matchesExistingSlice": false
+      },
+      {
+        "label": "emoji8000units",
+        "units": 8000,
+        "requestTargetBytes": 56019,
+        "status": 431,
+        "inputUnits": null,
+        "matchesExistingSlice": false
+      }
+    ]
+  },
+  {
+    "id": "H1-P2-initial-empty-fixed-hero-first-page-retry",
+    "passed": true,
+    "durationMs": 2946,
+    "detail": {
+      "initialItems": 0,
+      "heroScene": "film",
+      "recoveredItems": 0
+    }
+  },
+  {
+    "id": "H1-P2-initial-error-fixed-hero-first-page-retry",
+    "passed": true,
+    "durationMs": 1899,
+    "detail": {
+      "initialItems": 0,
+      "heroScene": "film",
+      "recoveredItems": 16
+    }
+  },
+  {
+    "id": "F1-footer-valid-links-anchors-role-visibility",
+    "passed": true,
+    "durationMs": 2403,
+    "detail": [
+      {
+        "user": null,
+        "links": [
+          {
+            "href": "#hero",
+            "text": "NARRAImage"
+          },
+          {
+            "href": "/create",
+            "text": "光影创作台"
+          },
+          {
+            "href": "/prompts",
+            "text": "叙事提示词库"
+          },
+          {
+            "href": "/video",
+            "text": "视频创作"
+          },
+          {
+            "href": "/works",
+            "text": "个人作品（需登录）"
+          },
+          {
+            "href": "/settings",
+            "text": "账户设置（需登录）"
+          },
+          {
+            "href": "/login",
+            "text": "登录账号"
+          },
+          {
+            "href": "#capabilities",
+            "text": "核心能力"
+          },
+          {
+            "href": "#gallery",
+            "text": "社区精选"
+          },
+          {
+            "href": "https://github.com/0401lucky/narra-image",
+            "text": "GitHub 开源项目"
+          }
+        ]
+      },
+      {
+        "user": "home-member",
+        "links": [
+          {
+            "href": "#hero",
+            "text": "NARRAImage"
+          },
+          {
+            "href": "/create",
+            "text": "光影创作台"
+          },
+          {
+            "href": "/prompts",
+            "text": "叙事提示词库"
+          },
+          {
+            "href": "/video",
+            "text": "视频创作"
+          },
+          {
+            "href": "/works",
+            "text": "个人作品"
+          },
+          {
+            "href": "/settings",
+            "text": "账户设置"
+          },
+          {
+            "href": "/api-keys",
+            "text": "开发者 API"
+          },
+          {
+            "href": "#capabilities",
+            "text": "核心能力"
+          },
+          {
+            "href": "#gallery",
+            "text": "社区精选"
+          },
+          {
+            "href": "https://github.com/0401lucky/narra-image",
+            "text": "GitHub 开源项目"
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -1,0 +1,29 @@
+{
+  "owner": "1d478cd6-97d5-4b12-9a49-795e7767f071",
+  "root": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071",
+  "predecessor": "C:/Users/Administrator/AppData/Local/Temp/narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea",
+  "repo": "E:/code/narra-image",
+  "createdAt": "2026-10-30T15:02:32.304Z",
+  "fixtures": [
+    {
+      "label": "02",
+      "fixture": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\fixture-02",
+      "sourceIdentityCount": 224
+    },
+    {
+      "label": "03",
+      "fixture": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\fixture-03",
+      "sourceIdentityCount": 224
+    },
+    {
+      "label": "04",
+      "fixture": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\fixture-04",
+      "sourceIdentityCount": 224
+    },
+    {
+      "label": "05-resume",
+      "fixture": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\fixture-05-resume",
+      "sourceIdentityCount": 256
+    }
+  ]
+}

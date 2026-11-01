@@ -1,0 +1,27 @@
+{
+  "capturedAt": "2026-11-01T02:32:09.667668+00:00",
+  "priorRun": "full-1793496819932",
+  "allTouchedFilesMatchPriorFrozenHelpers": true,
+  "files": {
+    "homepage-checks.mjs": {
+      "sha256": "30d6d158839e9a55f49c29432df2c4dde17a9a869da1d51fc1200be1de3db609",
+      "bytes": 42454,
+      "before": "evidence\\long-url-helper-before-20261101\\homepage-checks.mjs.before"
+    },
+    "prepare-fixture.mjs": {
+      "sha256": "4ba66a6b049be9dfb8ede783f54e6c2336f2f7e1ae56bc859b192fa121ac9c40",
+      "bytes": 8629,
+      "before": "evidence\\long-url-helper-before-20261101\\prepare-fixture.mjs.before"
+    },
+    "fixtures/db.ts.fixture": {
+      "sha256": "591f36b65b9d95a8e92b3a7df54dbf8f708104ac836b06ea9903be4a4e2d2411",
+      "bytes": 12526,
+      "before": "evidence\\long-url-helper-before-20261101\\fixtures\\db.ts.fixture.before"
+    },
+    "run-browser.mjs": {
+      "sha256": "5fe1359b6e20d9f6f1b60faf32faf11ca3beef8844b5a9af0731422fc74c7807",
+      "bytes": 27201,
+      "before": "evidence\\long-url-helper-before-20261101\\run-browser.mjs.before"
+    }
+  }
+}

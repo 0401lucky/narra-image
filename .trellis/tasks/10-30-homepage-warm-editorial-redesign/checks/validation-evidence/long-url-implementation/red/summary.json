@@ -1,0 +1,19 @@
+{
+  "id": "20261101T023425-test-44f3f7",
+  "files": 2,
+  "tests": 81,
+  "failed": 34,
+  "passed": 47,
+  "newFileTests": 62,
+  "existingFileTests": 19,
+  "exitCode": 1,
+  "timedOut": false,
+  "durationSeconds": 10.929,
+  "sourceChanges": [],
+  "snapshotModifications": [],
+  "errorKinds": [
+    "AssertionError"
+  ],
+  "semanticFailure": "Oversized member targets still emit query links; guests still expose direct-remix state; malformed text lacks an ordinary manual-create link.",
+  "noProductEditsBeforeRed": true
+}

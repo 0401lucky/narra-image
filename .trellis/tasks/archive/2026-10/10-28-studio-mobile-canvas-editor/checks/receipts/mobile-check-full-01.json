@@ -1,0 +1,19 @@
+{
+  "label": "mobile-check-full-01",
+  "mode": "test",
+  "command": [
+    "pnpm",
+    "exec",
+    "vitest",
+    "run",
+    "--testTimeout=30000"
+  ],
+  "cwd": "E:/code/narra-image",
+  "timeoutMs": 300000,
+  "code": 0,
+  "signal": null,
+  "timedOut": false,
+  "durationMs": 36240,
+  "stdoutPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-check-full-01.stdout.log",
+  "stderrPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-check-full-01.stderr.log"
+}

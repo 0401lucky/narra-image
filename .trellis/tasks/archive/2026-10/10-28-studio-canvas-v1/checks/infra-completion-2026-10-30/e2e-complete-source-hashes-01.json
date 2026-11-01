@@ -1,0 +1,75 @@
+{
+  "capturedAt": "2026-10-30T02:28:02.2242137Z",
+  "runtimeReceipt": "e2e-complete-runtime-03",
+  "owner": "ba10161f-caf2-4d21-a922-f6a84ce1ebc9",
+  "files": [
+    {
+      "path": ".github/workflows/verify.yml",
+      "sha256": "8461ad059e4c9912512f5305b85cb33c197b870ee5be7a59ef1924cc3f5a23fd"
+    },
+    {
+      "path": ".dockerignore",
+      "sha256": "feb679417204e8a6dd62f29c76c00367e7f1a4ccea97f11d7278d686980fb86f"
+    },
+    {
+      "path": "Dockerfile",
+      "sha256": "32a77cf6f79605504039b75804bc1571da73b99ec559ff325d9116cb7039a5fe"
+    },
+    {
+      "path": "worker/Dockerfile",
+      "sha256": "14a260874aa3dbfbd6e027e478473dac161a8e97fe9a640a953ca0f1bc0877c2"
+    },
+    {
+      "path": "docker-compose.e2e.yml",
+      "sha256": "2d3104a2100bab8be6740cdbe4c8b98dbd4e8c2b2c03c0423530f8d86ccf66fd"
+    },
+    {
+      "path": "scripts/verify-e2e.mjs",
+      "sha256": "b36d6adfc9341394846233e2d50c0f4524117ee4c88d136f26fa4f51c931176c"
+    },
+    {
+      "path": "scripts/lib/e2e-safety.mjs",
+      "sha256": "292fac44264ad9edabf9ddd5b8aab196b0cd46086701fcf668a38b421e445068"
+    },
+    {
+      "path": "scripts/fixtures/canvas-object-store.mjs",
+      "sha256": "ee58bf50e709fab385210797d63ae176709ec56c2a297969ae5759db8100985f"
+    },
+    {
+      "path": "scripts/fixtures/canvas-runtime.mjs",
+      "sha256": "e2afc2ec34c841c22dced8a78b9ed810fa756687bbe42f016d380df090c2b3d4"
+    },
+    {
+      "path": "src/tests/unit/canvas-e2e-runner.test.ts",
+      "sha256": "c38d9d5142779b0bb6c875931e48774399124f23a5b2004a61abc3bf0d42ff68"
+    },
+    {
+      "path": "src/tests/unit/canvas-object-store-fixture.test.ts",
+      "sha256": "a17754c70c517673243523b8a163981c203e8da20eec5193f0976085f103f78f"
+    },
+    {
+      "path": "src/tests/unit/canvas-e2e-runtime-fixture.test.ts",
+      "sha256": "2d7b585870c2ab7a9f953138c8b6d1b182736690d5cd0f81a0354c0e5b4f1748"
+    },
+    {
+      "path": "src/tests/unit/canvas-e2e-http-fixture.test.ts",
+      "sha256": "0cea92ded962125302a11a45d6bc3861c19ab9090b3443afecc3c17f028b6c18"
+    },
+    {
+      "path": "package.json",
+      "sha256": "af404da2a44b7b994016bfc7e67bfc4cf945e16d80b8698df2a44b7943d2144b"
+    },
+    {
+      "path": "pnpm-lock.yaml",
+      "sha256": "5201950763cc0d98b0a08473efd4cbbb1e4900f641e4edf36313e51e25cd6283"
+    },
+    {
+      "path": "prisma/schema.prisma",
+      "sha256": "437a94a88d89ce46b6a93092e7e132b20eb5d8d5b61721eff0b2b97dcdbd8304"
+    },
+    {
+      "path": "contracts/canvas/v1/schema.json",
+      "sha256": "e69179542807fd6ecf8899df831ee5be5e90074b2b8a9489b5c455cc204da254"
+    }
+  ]
+}

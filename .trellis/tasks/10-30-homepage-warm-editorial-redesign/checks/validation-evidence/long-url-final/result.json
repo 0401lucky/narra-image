@@ -1,0 +1,51 @@
+{
+  "startedAt": "2026-11-01T02:39:40.980074+00:00",
+  "overallTaskComplete": false,
+  "automatedGatePassed": false,
+  "sourceFiles": 809,
+  "frozenSource": {
+    "src/components/marketing/homepage/gallery-card.tsx": "4f6c2fde255fdb2a587b1a73c9115f81e136668d0226673224cab3357b9a30c2",
+    "src/components/marketing/homepage/gallery-constants.ts": "6b7653b264d811fd0ba9446f9ec5d3470d6c30e20789243c812af081b5cd3e42",
+    "src/tests/unit/featured-gallery.test.tsx": "6d93dfcd4526fb81602e8c5d7c79a0ac9aa6f9dba070b55bffa64545c889b9fd",
+    "src/tests/unit/gallery-remix-fallback.test.tsx": "84365dacd70ae738715a5446cea4c8124eba9699d1eaa9bd3381a3b7b4b2b977",
+    "eslint.config.mjs": "116700928b90fd58cbcd005e5be1c9edf181d58f609c58fbaa31a433452ad694",
+    "src/tests/unit/eslint-scope.test.ts": "63c2d02437e90f7dbf8553fd388529dca2c5c6d7fc37b084cc76425023940cf7"
+  },
+  "runtime": "v24.22.1",
+  "nodeSha256": "d702daa815eabbff763c7d3808e235cf031cf2ca70211b56847bc72f51e240e5",
+  "pinnedRuntimeParity": true,
+  "gates": [
+    {
+      "id": "20261101T023953-test-3c54a9",
+      "command": [
+        "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-history-cleanup-20261029\\node-v24.22.1-win-x64\\node.exe",
+        "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\app\\node_modules\\vitest\\vitest.mjs",
+        "run",
+        "--testTimeout=30000"
+      ],
+      "cwd": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\app",
+      "finishedAt": "2026-11-01T02:41:15.008753+00:00",
+      "exitCode": 1,
+      "timedOut": false,
+      "timeoutSeconds": 300,
+      "durationSeconds": 81.104,
+      "stdout": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\receipts\\20261101T023953-test-3c54a9.stdout.log",
+      "stderr": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\receipts\\20261101T023953-test-3c54a9.stderr.log",
+      "nodeEnv": "test",
+      "buildOnlyAppUrl": null,
+      "inheritedCallerConfiguration": false,
+      "sourceChanges": [],
+      "snapshotModifications": [],
+      "sourceManifest": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\source-manifest.json"
+    }
+  ],
+  "browser": "Separate independent lane; pending",
+  "notRun": [
+    "real account/DB/Worker/provider/storage E2E on combined revision",
+    "physical mobile/IME",
+    "actual GitHub CI/deployment"
+  ],
+  "sourceManifestSha256": "f5b5f889df0e5c42c0cedae1c7aac57efc10385ee66db75e66334a3f1fd364fe",
+  "guardSha256": "bd9ec3da5da5787ffc8378f8ed97835428d4b5a9c80a21a099ccca2c4d077e55",
+  "metadataInclusiveLintInputs": 31
+}

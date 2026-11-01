@@ -1,0 +1,47 @@
+{
+  "checkedAt": "2026-11-01T03:07:08.159055+00:00",
+  "temporaryIndexOnly": true,
+  "actualIndexUnchangedAndUnstaged": true,
+  "previewChangedFiles": 1689,
+  "stagedWhitespaceExitCode": 0,
+  "receipts": [
+    {
+      "label": "read-head",
+      "command": [
+        "git",
+        "read-tree",
+        "HEAD"
+      ],
+      "exitCode": 0,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "stage-preview",
+      "command": [
+        "git",
+        "add",
+        "-A",
+        "--",
+        "."
+      ],
+      "exitCode": 0,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "d9e744d9dff5724ba6ee9a6deba5e883becc31b10a43eb6dc6644ae5421cd66a"
+    },
+    {
+      "label": "whitespace",
+      "command": [
+        "git",
+        "diff",
+        "--cached",
+        "--check"
+      ],
+      "exitCode": 0,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "rawReceiptsLocal": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\git-index-preview-dd3ed02c",
+  "scope": "Preview of all recognized source/task candidates; actual final staged-content audit follows final browser sign-off. Original-byte attribute exceptions only; no source whitespace exception."
+}

@@ -1,0 +1,34 @@
+[
+  {
+    "label": "ascii8000",
+    "promptUnits": 8000,
+    "requestTargetBytes": 8015,
+    "transportStatus": 200,
+    "inputUnits": 8000,
+    "correctlyPrefilled": true
+  },
+  {
+    "label": "ascii8001",
+    "promptUnits": 8001,
+    "requestTargetBytes": 8016,
+    "transportStatus": 200,
+    "inputUnits": 8000,
+    "correctlyPrefilled": true
+  },
+  {
+    "label": "chinese8000",
+    "promptUnits": 8000,
+    "requestTargetBytes": 72015,
+    "transportStatus": 431,
+    "inputUnits": null,
+    "correctlyPrefilled": false
+  },
+  {
+    "label": "emoji8000units",
+    "promptUnits": 8000,
+    "requestTargetBytes": 56019,
+    "transportStatus": 431,
+    "inputUnits": null,
+    "correctlyPrefilled": false
+  }
+]

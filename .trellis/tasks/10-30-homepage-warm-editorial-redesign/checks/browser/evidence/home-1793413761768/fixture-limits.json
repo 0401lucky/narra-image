@@ -1,0 +1,6 @@
+{
+  "browserConnection": "owned fresh Chrome loopback CDP",
+  "clipboardTests": "explicit controlled Clipboard API accept/deny; OS clipboard not used",
+  "noAssetSubstitution": true,
+  "unresolved": []
+}

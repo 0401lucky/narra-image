@@ -1,0 +1,1609 @@
+{
+  "recordedAt": "2026-10-30T02:24:30.239257+00:00",
+  "task": "studio-canvas-v1",
+  "baseline": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\infra-completion-baseline-20261030.json",
+  "head": "1f7948e334c589dc6db38ac045b584f0f5381481",
+  "checks": [
+    {
+      "label": "db-complete-canvas-01",
+      "mode": "test",
+      "command": [
+        "pnpm",
+        "verify:canvas-contracts:db"
+      ],
+      "timeoutMs": 390000,
+      "code": 4,
+      "timedOut": false,
+      "durationMs": 9397,
+      "archived": {
+        ".json": {
+          "file": "db-complete-canvas-01.json",
+          "sha256": "adae1dae7b973a5be14c06836e58a160d9388d4c00b08e4006ef5807020da298",
+          "bytes": 598
+        },
+        ".stdout.log": {
+          "file": "db-complete-canvas-01.stdout.log",
+          "sha256": "21e24b75fde11231e46d4e17ff91eb9253d255c58f4e76ddbb0a41786f0f6fc4",
+          "bytes": 15343
+        },
+        ".stderr.log": {
+          "file": "db-complete-canvas-01.stderr.log",
+          "sha256": "fe665967aead4a497e0ecdd53c50758806d39090f39e16f405750f982e21ba43",
+          "bytes": 22439
+        }
+      }
+    },
+    {
+      "label": "db-complete-canvas-02",
+      "mode": "test",
+      "command": [
+        "pnpm",
+        "verify:canvas-contracts:db"
+      ],
+      "timeoutMs": 390000,
+      "code": 4,
+      "timedOut": false,
+      "durationMs": 13414,
+      "archived": {
+        ".json": {
+          "file": "db-complete-canvas-02.json",
+          "sha256": "3b9cc58b338d02b3c28c8c21317876c11c2fcd0493f151d0635d9b546f03549a",
+          "bytes": 599
+        },
+        ".stdout.log": {
+          "file": "db-complete-canvas-02.stdout.log",
+          "sha256": "ab5222a804a4d40a2af8f9cca0fc5ed1c097854bfc7ada4b7705a72fb424c8a5",
+          "bytes": 16304
+        },
+        ".stderr.log": {
+          "file": "db-complete-canvas-02.stderr.log",
+          "sha256": "3fd1b30617ddecaab661276fe128b3610d22648e31e69b9df69119b66144a88a",
+          "bytes": 1306
+        }
+      }
+    },
+    {
+      "label": "db-complete-canvas-03",
+      "mode": "test",
+      "command": [
+        "pnpm",
+        "verify:canvas-contracts:db"
+      ],
+      "timeoutMs": 390000,
+      "code": 0,
+      "timedOut": false,
+      "durationMs": 19332,
+      "archived": {
+        ".json": {
+          "file": "db-complete-canvas-03.json",
+          "sha256": "be8aad0a15772447c48fe27824bb1a960b221640ddf4548f452e190d78c09a0a",
+          "bytes": 599
+        },
+        ".stdout.log": {
+          "file": "db-complete-canvas-03.stdout.log",
+          "sha256": "5fd85e0db5098ac6f5f3748469f4d72d9e82fbee5e72c1f5f7b1fac62cffd0e8",
+          "bytes": 24559
+        },
+        ".stderr.log": {
+          "file": "db-complete-canvas-03.stderr.log",
+          "sha256": "adb9b3f7f909e41c11e5a38aab7b9dea3ae4f3b93e96da8bc319745bb9838f43",
+          "bytes": 865
+        }
+      }
+    },
+    {
+      "label": "db-complete-cleanup-audit-01",
+      "mode": "test",
+      "command": [
+        "node",
+        "C:/Users/Administrator/AppData/Local/Temp/narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea/react-flow-spike/db-gates-cleanup-audit.mjs"
+      ],
+      "timeoutMs": 35000,
+      "code": 0,
+      "timedOut": false,
+      "durationMs": 928,
+      "archived": {
+        ".json": {
+          "file": "db-complete-cleanup-audit-01.json",
+          "sha256": "1bb23623782b90d3634c33eb66fd2567365a1795e39199904846749fd9d6d400",
+          "bytes": 725
+        },
+        ".stdout.log": {
+          "file": "db-complete-cleanup-audit-01.stdout.log",
+          "sha256": "bf358b43592edb1596b92e837d7d77cd350f1d229126c35cff404e2df0e1072c",
+          "bytes": 4985
+        },
+        ".stderr.log": {
+          "file": "db-complete-cleanup-audit-01.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      }
+    },
+    {
+      "label": "db-complete-diff-check-01",
+      "mode": "test",
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "timeoutMs": 60000,
+      "code": 0,
+      "timedOut": false,
+      "durationMs": 106,
+      "archived": {
+        ".json": {
+          "file": "db-complete-diff-check-01.json",
+          "sha256": "94d0b632f9d723d4643a33e3502ca0ad8df0946915dd1b0d5bb2765fdc72fc7d",
+          "bytes": 600
+        },
+        ".stdout.log": {
+          "file": "db-complete-diff-check-01.stdout.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        ".stderr.log": {
+          "file": "db-complete-diff-check-01.stderr.log",
+          "sha256": "fc9f4bb36e2799e0beec4628e94345348a982d69fdc5e3cb22fe04c4c8b17966",
+          "bytes": 964
+        }
+      }
+    },
+    {
+      "label": "db-complete-lint-01",
+      "mode": "test",
+      "command": [
+        "pnpm",
+        "exec",
+        "eslint",
+        "src/tests/integration/canvas-contracts/canvas-contracts-db.test.ts"
+      ],
+      "timeoutMs": 120000,
+      "code": 0,
+      "timedOut": false,
+      "durationMs": 2609,
+      "archived": {
+        ".json": {
+          "file": "db-complete-lint-01.json",
+          "sha256": "b005f0e0be278caa82a67a10862a33215f26f99657332533f9adccfeeb21d880",
+          "bytes": 658
+        },
+        ".stdout.log": {
+          "file": "db-complete-lint-01.stdout.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        ".stderr.log": {
+          "file": "db-complete-lint-01.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      }
+    },
+    {
+      "label": "db-complete-migrations-01",
+      "mode": "test",
+      "command": [
+        "pnpm",
+        "verify:migrations"
+      ],
+      "timeoutMs": 270000,
+      "code": 0,
+      "timedOut": false,
+      "durationMs": 43773,
+      "archived": {
+        ".json": {
+          "file": "db-complete-migrations-01.json",
+          "sha256": "556421da7c3edd4b5aaef01a5039ce4c5d7b743fb0c73a0c4a1ac96fb89db900",
+          "bytes": 602
+        },
+        ".stdout.log": {
+          "file": "db-complete-migrations-01.stdout.log",
+          "sha256": "f37cb2a4a6a67287a5eb4a2c07e9ee3e2df260c95699a43425cba13697fb5ae9",
+          "bytes": 56255
+        },
+        ".stderr.log": {
+          "file": "db-complete-migrations-01.stderr.log",
+          "sha256": "35530dc170cb06c6ac859a22c1f02ce83c59358c20e719bac8a4ac3d5c6886e2",
+          "bytes": 2604
+        }
+      }
+    },
+    {
+      "label": "db-complete-types-01",
+      "mode": "test",
+      "command": [
+        "pnpm",
+        "exec",
+        "tsc",
+        "--noEmit",
+        "--incremental",
+        "false"
+      ],
+      "timeoutMs": 120000,
+      "code": 0,
+      "timedOut": false,
+      "durationMs": 9693,
+      "archived": {
+        ".json": {
+          "file": "db-complete-types-01.json",
+          "sha256": "90b5d0662390d37b0bf613bea12bfa4f8cc2a33d261489bf457f6ac4296a0e83",
+          "bytes": 634
+        },
+        ".stdout.log": {
+          "file": "db-complete-types-01.stdout.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        ".stderr.log": {
+          "file": "db-complete-types-01.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      }
+    },
+    {
+      "label": "db-complete-unit-01",
+      "mode": "test",
+      "command": [
+        "pnpm",
+        "exec",
+        "vitest",
+        "run",
+        "src/tests/contracts/canvas-contract.test.ts",
+        "src/tests/unit/canvas-schema-probe.test.ts",
+        "src/tests/unit/canvas-disposable-runner.test.ts",
+        "src/tests/unit/local-docker-safety.test.ts",
+        "src/tests/unit/canvas-http.test.ts",
+        "--testTimeout=30000"
+      ],
+      "timeoutMs": 120000,
+      "code": 0,
+      "timedOut": false,
+      "durationMs": 1967,
+      "archived": {
+        ".json": {
+          "file": "db-complete-unit-01.json",
+          "sha256": "edde44b1351f4c94ebe7982a7cb84fd2a52e8824ab9c50d77f77d86955eb9234",
+          "bytes": 870
+        },
+        ".stdout.log": {
+          "file": "db-complete-unit-01.stdout.log",
+          "sha256": "2e21dc4849ef0608c1d291f45d8dc60f59c632abcd7a9b9f117e7332e20faff9",
+          "bytes": 959
+        },
+        ".stderr.log": {
+          "file": "db-complete-unit-01.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      }
+    },
+    {
+      "label": "db-complete-worker-01",
+      "mode": "test",
+      "command": [
+        "pnpm",
+        "verify:worker-contracts:db"
+      ],
+      "timeoutMs": 90000,
+      "code": 0,
+      "timedOut": false,
+      "durationMs": 13236,
+      "archived": {
+        ".json": {
+          "file": "db-complete-worker-01.json",
+          "sha256": "b1c4da315b748458f8e2c89ab15aa6cef9faae4a0072050204cb5a6c9ade90cf",
+          "bytes": 598
+        },
+        ".stdout.log": {
+          "file": "db-complete-worker-01.stdout.log",
+          "sha256": "5b0d52a9b8e049f9d185fccb81fcdacf01ac21107e78792336afd5923d276b00",
+          "bytes": 2748
+        },
+        ".stderr.log": {
+          "file": "db-complete-worker-01.stderr.log",
+          "sha256": "444350b52cb5d224c20cfb469d9f51bdd86a717fe5a0c5402503f88bc6ccfc15",
+          "bytes": 519
+        }
+      }
+    },
+    {
+      "label": "e2e-complete-build-progress-01",
+      "mode": "test",
+      "command": [
+        "docker",
+        "--host",
+        "npipe:////./pipe/dockerDesktopLinuxEngine",
+        "--config",
+        "C:/Users/Administrator/AppData/Local/Temp/narra-e2e-67Lv09/docker",
+        "container",
+        "ls",
+        "--no-trunc",
+        "--format",
+        "{{json .}}"
+      ],
+      "timeoutMs": 20000,
+      "code": 0,
+      "timedOut": false,
+      "durationMs": 147,
+      "archived": {
+        ".json": {
+          "file": "e2e-complete-build-progress-01.json",
+          "sha256": "b7d39d71774ec378c605d6f78427b4c7b120fc2d733a1032b26ebab9aa56bcbd",
+          "bytes": 822
+        },
+        ".stdout.log": {
+          "file": "e2e-complete-build-progress-01.stdout.log",
+          "sha256": "88b947642264b5f1b76d9b3a1057afeff9492af1f1ae88bb141e7615fd5d53c7",
+          "bytes": 109
+        },
+        ".stderr.log": {
+          "file": "e2e-complete-build-progress-01.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      }
+    },
+    {
+      "label": "e2e-complete-final-resource-audit-01",
+      "mode": "test",
+      "command": [
+        "node",
+        "C:/Users/Administrator/AppData/Local/Temp/narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea/react-flow-spike/e2e-final-resource-audit.mjs"
+      ],
+      "timeoutMs": 150000,
+      "code": 0,
+      "timedOut": false,
+      "durationMs": 3591,
+      "archived": {
+        ".json": {
+          "file": "e2e-complete-final-resource-audit-01.json",
+          "sha256": "d614819d06b50b3773dc9a40b664d2959cfa28695265049bbdfbe49643930fa4",
+          "bytes": 753
+        },
+        ".stdout.log": {
+          "file": "e2e-complete-final-resource-audit-01.stdout.log",
+          "sha256": "7f2dd58bc3335124f8c68f1f0a3430ef773f13fc04731bede243cbea386e29c7",
+          "bytes": 6384
+        },
+        ".stderr.log": {
+          "file": "e2e-complete-final-resource-audit-01.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      }
+    },
+    {
+      "label": "e2e-complete-lint-01",
+      "mode": "test",
+      "command": [
+        "pnpm",
+        "exec",
+        "eslint",
+        "scripts/verify-e2e.mjs",
+        "scripts/lib/e2e-safety.mjs",
+        "scripts/fixtures/canvas-object-store.mjs",
+        "scripts/fixtures/canvas-runtime.mjs",
+        "src/tests/unit/canvas-e2e-runner.test.ts",
+        "src/tests/unit/canvas-e2e-runtime-fixture.test.ts",
+        "src/tests/unit/canvas-object-store-fixture.test.ts"
+      ],
+      "timeoutMs": 180000,
+      "code": 0,
+      "timedOut": false,
+      "durationMs": 2938,
+      "archived": {
+        ".json": {
+          "file": "e2e-complete-lint-01.json",
+          "sha256": "c53034b7640acac7fb3661ff06fc0755eb6a78d2a0d947203d48bbed04b4263b",
+          "bytes": 905
+        },
+        ".stdout.log": {
+          "file": "e2e-complete-lint-01.stdout.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        ".stderr.log": {
+          "file": "e2e-complete-lint-01.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      }
+    },
+    {
+      "label": "e2e-complete-lint-02",
+      "mode": "test",
+      "command": [
+        "pnpm",
+        "exec",
+        "eslint",
+        "scripts/verify-e2e.mjs",
+        "scripts/lib/e2e-safety.mjs",
+        "scripts/fixtures/canvas-object-store.mjs",
+        "scripts/fixtures/canvas-runtime.mjs",
+        "src/tests/unit/canvas-e2e-runner.test.ts",
+        "src/tests/unit/canvas-e2e-runtime-fixture.test.ts",
+        "src/tests/unit/canvas-e2e-http-fixture.test.ts",
+        "src/tests/unit/canvas-object-store-fixture.test.ts"
+      ],
+      "timeoutMs": 180000,
+      "code": 0,
+      "timedOut": false,
+      "durationMs": 4693,
+      "archived": {
+        ".json": {
+          "file": "e2e-complete-lint-02.json",
+          "sha256": "5fda1b6b464879d8ae699f5959039b3a1d7921e3862b2ab5f38ea0af28a42254",
+          "bytes": 959
+        },
+        ".stdout.log": {
+          "file": "e2e-complete-lint-02.stdout.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        ".stderr.log": {
+          "file": "e2e-complete-lint-02.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      }
+    },
+    {
+      "label": "e2e-complete-lint-03",
+      "mode": "test",
+      "command": [
+        "pnpm",
+        "exec",
+        "eslint",
+        "scripts/verify-e2e.mjs",
+        "scripts/lib/e2e-safety.mjs",
+        "scripts/fixtures/canvas-object-store.mjs",
+        "scripts/fixtures/canvas-runtime.mjs",
+        "src/tests/unit/canvas-e2e-runner.test.ts",
+        "src/tests/unit/canvas-e2e-runtime-fixture.test.ts",
+        "src/tests/unit/canvas-e2e-http-fixture.test.ts",
+        "src/tests/unit/canvas-object-store-fixture.test.ts"
+      ],
+      "timeoutMs": 180000,
+      "code": 0,
+      "timedOut": false,
+      "durationMs": 4070,
+      "archived": {
+        ".json": {
+          "file": "e2e-complete-lint-03.json",
+          "sha256": "72f0c6daf55c6d6bc3f202ee8e13cad65a305893f0a18a324c06b0e8e2b745f5",
+          "bytes": 959
+        },
+        ".stdout.log": {
+          "file": "e2e-complete-lint-03.stdout.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        ".stderr.log": {
+          "file": "e2e-complete-lint-03.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      }
+    },
+    {
+      "label": "e2e-complete-owned-progress-02",
+      "mode": "test",
+      "command": [
+        "docker",
+        "--host",
+        "npipe:////./pipe/dockerDesktopLinuxEngine",
+        "--config",
+        "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-e2e-ja9H0y\\docker",
+        "container",
+        "ls",
+        "--all",
+        "--filter",
+        "label=com.narra.e2e.owner=11b6415f-45c1-472e-bd9a-c8aa5955f825",
+        "--format",
+        "{{.Names}} {{.State}} {{.Image}}"
+      ],
+      "timeoutMs": 20000,
+      "code": 0,
+      "timedOut": false,
+      "durationMs": 99,
+      "archived": {
+        ".json": {
+          "file": "e2e-complete-owned-progress-02.json",
+          "sha256": "cc613fadfd565218f447874596794c5a0c58752f1cccc2623949d1e827c25d8b",
+          "bytes": 931
+        },
+        ".stdout.log": {
+          "file": "e2e-complete-owned-progress-02.stdout.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        ".stderr.log": {
+          "file": "e2e-complete-owned-progress-02.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      }
+    },
+    {
+      "label": "e2e-complete-owned-progress-03",
+      "mode": "test",
+      "command": [
+        "docker",
+        "--host",
+        "npipe:////./pipe/dockerDesktopLinuxEngine",
+        "--config",
+        "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-e2e-ja9H0y\\docker",
+        "container",
+        "ls",
+        "--all",
+        "--filter",
+        "label=com.narra.e2e.owner=11b6415f-45c1-472e-bd9a-c8aa5955f825",
+        "--format",
+        "{{.Names}} {{.State}} {{.Image}}"
+      ],
+      "timeoutMs": 20000,
+      "code": 0,
+      "timedOut": false,
+      "durationMs": 117,
+      "archived": {
+        ".json": {
+          "file": "e2e-complete-owned-progress-03.json",
+          "sha256": "2f5107749d7e70aff4e41b5c54025a1e6a5d44b928d2d89a76957b59d16b0587",
+          "bytes": 932
+        },
+        ".stdout.log": {
+          "file": "e2e-complete-owned-progress-03.stdout.log",
+          "sha256": "e81fc8d0658efd0ae0794e3f04999998b11127788dfae51650e81feda2f7d271",
+          "bytes": 558
+        },
+        ".stderr.log": {
+          "file": "e2e-complete-owned-progress-03.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      }
+    },
+    {
+      "label": "e2e-complete-owned-progress-04",
+      "mode": "test",
+      "command": [
+        "docker",
+        "--host",
+        "npipe:////./pipe/dockerDesktopLinuxEngine",
+        "--config",
+        "C:/Users/Administrator/AppData/Local/Temp/narra-e2e-aMwtal/docker",
+        "container",
+        "ls",
+        "--all",
+        "--filter",
+        "label=com.narra.e2e.owner=ba10161f-caf2-4d21-a922-f6a84ce1ebc9",
+        "--format",
+        "{{.Names}} {{.State}} {{.Image}}"
+      ],
+      "timeoutMs": 20000,
+      "code": 0,
+      "timedOut": false,
+      "durationMs": 100,
+      "archived": {
+        ".json": {
+          "file": "e2e-complete-owned-progress-04.json",
+          "sha256": "8a0633598803c18e0ce45f900f62cbca392dfe8bfe1e2c86bf320748fad13384",
+          "bytes": 925
+        },
+        ".stdout.log": {
+          "file": "e2e-complete-owned-progress-04.stdout.log",
+          "sha256": "1004a5f358acfdf5539cd7a41798877d826961a3309cedbc41fa4940cc6041e4",
+          "bytes": 445
+        },
+        ".stderr.log": {
+          "file": "e2e-complete-owned-progress-04.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      }
+    },
+    {
+      "label": "e2e-complete-port-probe-01",
+      "mode": "test",
+      "command": [
+        "node",
+        "C:/Users/Administrator/AppData/Local/Temp/narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea/react-flow-spike/e2e-port-probe.mjs"
+      ],
+      "timeoutMs": 150000,
+      "code": 1,
+      "timedOut": false,
+      "durationMs": 21874,
+      "archived": {
+        ".json": {
+          "file": "e2e-complete-port-probe-01.json",
+          "sha256": "878199d634be292f10963ac8db1dd3dccd05b45c0d41609d406a46b9381f028b",
+          "bytes": 714
+        },
+        ".stdout.log": {
+          "file": "e2e-complete-port-probe-01.stdout.log",
+          "sha256": "b701acf0e1f94a073ed877cfe8a1e3549761477c4b6b14a3c00dbe3fb676bead",
+          "bytes": 708
+        },
+        ".stderr.log": {
+          "file": "e2e-complete-port-probe-01.stderr.log",
+          "sha256": "275102e6f81c0aa70aa4969f291cc5bf4f1a6ac05e840b5c8015c3c83d2cb5c6",
+          "bytes": 880
+        }
+      }
+    },
+    {
+      "label": "e2e-complete-port-probe-02",
+      "mode": "test",
+      "command": [
+        "node",
+        "C:/Users/Administrator/AppData/Local/Temp/narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea/react-flow-spike/e2e-port-probe.mjs"
+      ],
+      "timeoutMs": 150000,
+      "code": 1,
+      "timedOut": false,
+      "durationMs": 12762,
+      "archived": {
+        ".json": {
+          "file": "e2e-complete-port-probe-02.json",
+          "sha256": "949d97fbb19c02c4cf98401215b64db72173e6c15be373e2768c1ab93d0c4b54",
+          "bytes": 714
+        },
+        ".stdout.log": {
+          "file": "e2e-complete-port-probe-02.stdout.log",
+          "sha256": "5815994ecf69803d08d009f000addf19f31f827d032a759cd0ed1d3474da585b",
+          "bytes": 11436
+        },
+        ".stderr.log": {
+          "file": "e2e-complete-port-probe-02.stderr.log",
+          "sha256": "63cc08286c6dca03f50e53e0947a54f3d1334ba2ffd07e0d50646b9c830a9182",
+          "bytes": 666
+        }
+      }
+    },
+    {
+      "label": "e2e-complete-runtime-01",
+      "mode": "test",
+      "command": [
+        "pnpm",
+        "verify:e2e"
+      ],
+      "timeoutMs": 1920000,
+      "code": 1,
+      "timedOut": false,
+      "durationMs": 353083,
+      "archived": {
+        ".json": {
+          "file": "e2e-complete-runtime-01.json",
+          "sha256": "ccdd54cbcb37fafee11a946d3f0b202b78b917188a27574128f246cd2cb40328",
+          "bytes": 591
+        },
+        ".stdout.log": {
+          "file": "e2e-complete-runtime-01.stdout.log",
+          "sha256": "dc2a4a007e96c72e548efb262d45684ea403ea7a75bfaab23c4906383472aaf5",
+          "bytes": 40298
+        },
+        ".stderr.log": {
+          "file": "e2e-complete-runtime-01.stderr.log",
+          "sha256": "530380d4ef40c8f52712415902af219a6fe7f080f84cf68e155fc3636ec2a8e7",
+          "bytes": 6704
+        }
+      }
+    },
+    {
+      "label": "e2e-complete-runtime-02",
+      "mode": "test",
+      "command": [
+        "pnpm",
+        "verify:e2e"
+      ],
+      "timeoutMs": 1920000,
+      "code": 1,
+      "timedOut": false,
+      "durationMs": 390024,
+      "archived": {
+        ".json": {
+          "file": "e2e-complete-runtime-02.json",
+          "sha256": "b59fa2255860aa6d99cb119f1086c07fb94601f99fe6fcb89db35f23adc8f4a4",
+          "bytes": 591
+        },
+        ".stdout.log": {
+          "file": "e2e-complete-runtime-02.stdout.log",
+          "sha256": "f6a32ba490510c4dd34e094144827533a8807dfc227f69fc708dfe5c7dc4de7c",
+          "bytes": 239191
+        },
+        ".stderr.log": {
+          "file": "e2e-complete-runtime-02.stderr.log",
+          "sha256": "94af0a7c10aa5de043477c7f72b8856f35297378211bb403c04c884acbc727bc",
+          "bytes": 7414
+        }
+      }
+    },
+    {
+      "label": "e2e-complete-runtime-03",
+      "mode": "test",
+      "command": [
+        "pnpm",
+        "verify:e2e"
+      ],
+      "timeoutMs": 1920000,
+      "code": 0,
+      "timedOut": false,
+      "durationMs": 646196,
+      "archived": {
+        ".json": {
+          "file": "e2e-complete-runtime-03.json",
+          "sha256": "a00204ec3b04af866171335b93cb115d83026fc107a2c8343c939a1f3744299f",
+          "bytes": 591
+        },
+        ".stdout.log": {
+          "file": "e2e-complete-runtime-03.stdout.log",
+          "sha256": "858a77e00ebf194338d08163777d0d21548935659a3b2a50461c81b3989b91d3",
+          "bytes": 756657
+        },
+        ".stderr.log": {
+          "file": "e2e-complete-runtime-03.stderr.log",
+          "sha256": "bdf5380ed906b947356695ba07f7739beb6d86194401a30c0c1f304c0f1a802b",
+          "bytes": 851
+        }
+      }
+    },
+    {
+      "label": "e2e-complete-types-01",
+      "mode": "test",
+      "command": [
+        "pnpm",
+        "exec",
+        "tsc",
+        "--noEmit",
+        "--incremental",
+        "false"
+      ],
+      "timeoutMs": 120000,
+      "code": 0,
+      "timedOut": false,
+      "durationMs": 11812,
+      "archived": {
+        ".json": {
+          "file": "e2e-complete-types-01.json",
+          "sha256": "62332e90c3f884715cd562e14bb71e5e4f705d298dfb602eb8baf0e4c9452edf",
+          "bytes": 638
+        },
+        ".stdout.log": {
+          "file": "e2e-complete-types-01.stdout.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        ".stderr.log": {
+          "file": "e2e-complete-types-01.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      }
+    },
+    {
+      "label": "e2e-complete-types-02",
+      "mode": "test",
+      "command": [
+        "pnpm",
+        "exec",
+        "tsc",
+        "--noEmit",
+        "--incremental",
+        "false"
+      ],
+      "timeoutMs": 120000,
+      "code": 0,
+      "timedOut": false,
+      "durationMs": 12144,
+      "archived": {
+        ".json": {
+          "file": "e2e-complete-types-02.json",
+          "sha256": "12d7bcdfb6afd76cc39f563706624c9801b03e00fb689a17fcf5eccab6d09a5e",
+          "bytes": 638
+        },
+        ".stdout.log": {
+          "file": "e2e-complete-types-02.stdout.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        ".stderr.log": {
+          "file": "e2e-complete-types-02.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      }
+    },
+    {
+      "label": "e2e-complete-unit-01",
+      "mode": "test",
+      "command": [
+        "pnpm",
+        "exec",
+        "vitest",
+        "run",
+        "src/tests/unit/canvas-e2e-runner.test.ts",
+        "src/tests/unit/canvas-e2e-runtime-fixture.test.ts",
+        "src/tests/unit/canvas-object-store-fixture.test.ts",
+        "--testTimeout=30000"
+      ],
+      "timeoutMs": 180000,
+      "code": 1,
+      "timedOut": false,
+      "durationMs": 6714,
+      "archived": {
+        ".json": {
+          "file": "e2e-complete-unit-01.json",
+          "sha256": "d54323c4067f7373124586c9bd1dafac9a41255871f97f80927983af4f036c95",
+          "bytes": 788
+        },
+        ".stdout.log": {
+          "file": "e2e-complete-unit-01.stdout.log",
+          "sha256": "f88f8ceffed9472e7c836e20a72824e52ed954dd3e2e6316443a35efa9fa0cf6",
+          "bytes": 6597
+        },
+        ".stderr.log": {
+          "file": "e2e-complete-unit-01.stderr.log",
+          "sha256": "94930c3d515cc5f7226426473520b5aa47443115c15b73e2264179c2896f35a4",
+          "bytes": 1375
+        }
+      }
+    },
+    {
+      "label": "e2e-complete-unit-02",
+      "mode": "test",
+      "command": [
+        "pnpm",
+        "exec",
+        "vitest",
+        "run",
+        "src/tests/unit/canvas-e2e-runner.test.ts",
+        "src/tests/unit/canvas-e2e-runtime-fixture.test.ts",
+        "src/tests/unit/canvas-object-store-fixture.test.ts",
+        "--testTimeout=30000"
+      ],
+      "timeoutMs": 180000,
+      "code": 0,
+      "timedOut": false,
+      "durationMs": 6870,
+      "archived": {
+        ".json": {
+          "file": "e2e-complete-unit-02.json",
+          "sha256": "3e3e633d083292103a94b40e7859ac0dbbb2ed3d8c211e16c5c36d83c0fed2a5",
+          "bytes": 788
+        },
+        ".stdout.log": {
+          "file": "e2e-complete-unit-02.stdout.log",
+          "sha256": "9ea954016bfeb5bc3751d1fc98f252820295dd5a80ec5593f664dccd0a4188e3",
+          "bytes": 4570
+        },
+        ".stderr.log": {
+          "file": "e2e-complete-unit-02.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      }
+    },
+    {
+      "label": "e2e-complete-unit-03",
+      "mode": "test",
+      "command": [
+        "pnpm",
+        "exec",
+        "vitest",
+        "run",
+        "src/tests/unit/canvas-e2e-runner.test.ts",
+        "src/tests/unit/canvas-e2e-runtime-fixture.test.ts",
+        "src/tests/unit/canvas-e2e-http-fixture.test.ts",
+        "src/tests/unit/canvas-object-store-fixture.test.ts",
+        "--testTimeout=30000"
+      ],
+      "timeoutMs": 180000,
+      "code": 1,
+      "timedOut": false,
+      "durationMs": 7609,
+      "archived": {
+        ".json": {
+          "file": "e2e-complete-unit-03.json",
+          "sha256": "4d81b75a44817daacc6e52f3d1f46624b2e53e79f004509141b46b9a17f27c9d",
+          "bytes": 842
+        },
+        ".stdout.log": {
+          "file": "e2e-complete-unit-03.stdout.log",
+          "sha256": "fb87dea2026da555a46e43746df65ed3ccccfdc0452b06223e862080c52112dc",
+          "bytes": 7156
+        },
+        ".stderr.log": {
+          "file": "e2e-complete-unit-03.stderr.log",
+          "sha256": "120eabb9645074f775b3bd6670c46ba98ba6b96abfcd8aa66bdabfbd9cdd84ea",
+          "bytes": 830
+        }
+      }
+    },
+    {
+      "label": "e2e-complete-unit-04",
+      "mode": "test",
+      "command": [
+        "pnpm",
+        "exec",
+        "vitest",
+        "run",
+        "src/tests/unit/canvas-e2e-runner.test.ts",
+        "src/tests/unit/canvas-e2e-runtime-fixture.test.ts",
+        "src/tests/unit/canvas-e2e-http-fixture.test.ts",
+        "src/tests/unit/canvas-object-store-fixture.test.ts",
+        "--testTimeout=30000"
+      ],
+      "timeoutMs": 180000,
+      "code": 0,
+      "timedOut": false,
+      "durationMs": 6638,
+      "archived": {
+        ".json": {
+          "file": "e2e-complete-unit-04.json",
+          "sha256": "8e43fe1b1e1b5c14186c8e347866ad7a180681ed59ebe5488ef64f15a613a199",
+          "bytes": 842
+        },
+        ".stdout.log": {
+          "file": "e2e-complete-unit-04.stdout.log",
+          "sha256": "8e70f71c06008ca12271722908171ef5b6e63bb54aae1a434968b9f75558c1db",
+          "bytes": 4697
+        },
+        ".stderr.log": {
+          "file": "e2e-complete-unit-04.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      }
+    },
+    {
+      "label": "e2e-complete-unit-05",
+      "mode": "test",
+      "command": [
+        "pnpm",
+        "exec",
+        "vitest",
+        "run",
+        "src/tests/unit/canvas-e2e-runner.test.ts",
+        "src/tests/unit/canvas-e2e-runtime-fixture.test.ts",
+        "src/tests/unit/canvas-e2e-http-fixture.test.ts",
+        "src/tests/unit/canvas-object-store-fixture.test.ts",
+        "--testTimeout=30000"
+      ],
+      "timeoutMs": 180000,
+      "code": 0,
+      "timedOut": false,
+      "durationMs": 7602,
+      "archived": {
+        ".json": {
+          "file": "e2e-complete-unit-05.json",
+          "sha256": "1c19ce44c166e69ceb4207f85213091e969280eb13eab55a659ce10c4cb75fb9",
+          "bytes": 842
+        },
+        ".stdout.log": {
+          "file": "e2e-complete-unit-05.stdout.log",
+          "sha256": "418e52fbcf424ca1ea22bd03625c6878180b5c7bb634cc8f8ffddf90db7f36b1",
+          "bytes": 4697
+        },
+        ".stderr.log": {
+          "file": "e2e-complete-unit-05.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      }
+    },
+    {
+      "label": "e2e-complete-workflow-yaml-01",
+      "mode": "test",
+      "command": [
+        "node",
+        "C:/Users/Administrator/AppData/Local/Temp/narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea/react-flow-spike/e2e-workflow-syntax.mjs"
+      ],
+      "timeoutMs": 20000,
+      "code": 0,
+      "timedOut": false,
+      "durationMs": 161,
+      "archived": {
+        ".json": {
+          "file": "e2e-complete-workflow-yaml-01.json",
+          "sha256": "ee9a01d5f8203edec602ec2c9e82f7001b8ebdc7b5e60d82469204b93785ab8a",
+          "bytes": 725
+        },
+        ".stdout.log": {
+          "file": "e2e-complete-workflow-yaml-01.stdout.log",
+          "sha256": "91b58358093eb2c88199200960a9c86204303e13ea6d8bcd125b68aa98f19980",
+          "bytes": 105
+        },
+        ".stderr.log": {
+          "file": "e2e-complete-workflow-yaml-01.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      }
+    },
+    {
+      "label": "infra-final-compose-config-01",
+      "mode": "test",
+      "command": [
+        "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-history-cleanup-20261029\\node-v24.22.1-win-x64\\node.exe",
+        "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\resume-compose-audit.mjs"
+      ],
+      "timeoutMs": 100000,
+      "code": 0,
+      "timedOut": false,
+      "durationMs": 4716,
+      "archived": {
+        ".json": {
+          "file": "infra-final-compose-config-01.json",
+          "sha256": "a6b463c0a765d3c0b4a3a3b609b90db3b3e3f0ddf45a6764feaf2718991c0690",
+          "bytes": 827
+        },
+        ".stdout.log": {
+          "file": "infra-final-compose-config-01.stdout.log",
+          "sha256": "a64395ed6a74155d25c67a9b1161e963c45e69e6cde16017919f1a73fb596123",
+          "bytes": 7576
+        },
+        ".stderr.log": {
+          "file": "infra-final-compose-config-01.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      }
+    },
+    {
+      "label": "infra-final-full-01",
+      "mode": "test",
+      "command": [
+        "pnpm",
+        "exec",
+        "vitest",
+        "run",
+        "--testTimeout=30000",
+        "--exclude",
+        "**/worker-contracts-db.test.ts",
+        "--exclude",
+        "**/canvas-contracts-db.test.ts"
+      ],
+      "timeoutMs": 300000,
+      "code": 0,
+      "timedOut": false,
+      "durationMs": 44517,
+      "archived": {
+        ".json": {
+          "file": "infra-final-full-01.json",
+          "sha256": "e90fc15669ae5759b98fda73e941a53964c2a002c4e1eabc6c810afbf1add3f5",
+          "bytes": 733
+        },
+        ".stdout.log": {
+          "file": "infra-final-full-01.stdout.log",
+          "sha256": "329bb5a1c33ea96c7d97ab2bdc8f599db7822dfd82747d7e2dd6263dc1e6ac2b",
+          "bytes": 34138
+        },
+        ".stderr.log": {
+          "file": "infra-final-full-01.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      }
+    },
+    {
+      "label": "infra-final-go-build-01",
+      "mode": "test",
+      "command": [
+        "go",
+        "-C",
+        "worker",
+        "build",
+        "./..."
+      ],
+      "timeoutMs": 120000,
+      "code": 0,
+      "timedOut": false,
+      "durationMs": 5606,
+      "archived": {
+        ".json": {
+          "file": "infra-final-go-build-01.json",
+          "sha256": "6048f59745e2c50db7cec5463ebd5d403018d7d5672c9a2e3bdd6aba03d20b27",
+          "bytes": 618
+        },
+        ".stdout.log": {
+          "file": "infra-final-go-build-01.stdout.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        ".stderr.log": {
+          "file": "infra-final-go-build-01.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      }
+    },
+    {
+      "label": "infra-final-go-tests-01",
+      "mode": "test",
+      "command": [
+        "go",
+        "-C",
+        "worker",
+        "test",
+        "-count=1",
+        "-timeout=50s",
+        "./..."
+      ],
+      "timeoutMs": 180000,
+      "code": 0,
+      "timedOut": false,
+      "durationMs": 5774,
+      "archived": {
+        ".json": {
+          "file": "infra-final-go-tests-01.json",
+          "sha256": "29f2e821456fb771a3387af3e0a5e84c0de5c1ef9c96572098f502ecf636ae4d",
+          "bytes": 653
+        },
+        ".stdout.log": {
+          "file": "infra-final-go-tests-01.stdout.log",
+          "sha256": "8b4874cffea8eb01f0504c93bdf2d421e283f5b5b10d87ed4f20cc5afd9b2572",
+          "bytes": 267
+        },
+        ".stderr.log": {
+          "file": "infra-final-go-tests-01.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      }
+    },
+    {
+      "label": "infra-final-lint-01",
+      "mode": "test",
+      "command": [
+        "pnpm",
+        "lint"
+      ],
+      "timeoutMs": 180000,
+      "code": 0,
+      "timedOut": false,
+      "durationMs": 45947,
+      "archived": {
+        ".json": {
+          "file": "infra-final-lint-01.json",
+          "sha256": "0091a92402e996524a60b958e4bbf2779d87f735d2e6563ea206a7d72a4f1a13",
+          "bytes": 571
+        },
+        ".stdout.log": {
+          "file": "infra-final-lint-01.stdout.log",
+          "sha256": "5daf1d190f6e7a6339ad91d4ba48ff8657acaf01ac8c313e8213cfb2743df12a",
+          "bytes": 1405
+        },
+        ".stderr.log": {
+          "file": "infra-final-lint-01.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      }
+    },
+    {
+      "label": "infra-final-production-build-01",
+      "mode": "build",
+      "command": [
+        "pnpm",
+        "build"
+      ],
+      "timeoutMs": 600000,
+      "code": 0,
+      "timedOut": false,
+      "durationMs": 26609,
+      "archived": {
+        ".json": {
+          "file": "infra-final-production-build-01.json",
+          "sha256": "50d7be57c46c2ac150a860728acfc7f33d9fcfd3abd6ae2fcda57c86a236c589",
+          "bytes": 611
+        },
+        ".stdout.log": {
+          "file": "infra-final-production-build-01.stdout.log",
+          "sha256": "5968bfc4e323cc117dec59a25e2292ce2020c068ddf94222cb5b1d5c228c9e39",
+          "bytes": 4238
+        },
+        ".stderr.log": {
+          "file": "infra-final-production-build-01.stderr.log",
+          "sha256": "75066079154e16278b8bbb61e3a8fed567403e1667eda92ad7c8eeab0cda5879",
+          "bytes": 93
+        }
+      }
+    },
+    {
+      "label": "infra-final-release-scripts-01",
+      "mode": "test",
+      "command": [
+        "node",
+        "--test",
+        "scripts/tests/release-startup.test.mjs",
+        "scripts/tests/migration-safety.test.mjs"
+      ],
+      "timeoutMs": 120000,
+      "code": 0,
+      "timedOut": false,
+      "durationMs": 739,
+      "archived": {
+        ".json": {
+          "file": "infra-final-release-scripts-01.json",
+          "sha256": "ddc1013ef8168e8025a719a3f29f3cb86daf654337650c34b5edd134719633aa",
+          "bytes": 697
+        },
+        ".stdout.log": {
+          "file": "infra-final-release-scripts-01.stdout.log",
+          "sha256": "df24f68a05f746a679d30f1e18ce854fda009615329b89252b223c46025d2596",
+          "bytes": 1052
+        },
+        ".stderr.log": {
+          "file": "infra-final-release-scripts-01.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      }
+    },
+    {
+      "label": "infra-final-targeted-01",
+      "mode": "test",
+      "command": [
+        "pnpm",
+        "exec",
+        "vitest",
+        "run",
+        "src/tests/unit/canvas-e2e-http-fixture.test.ts",
+        "src/tests/unit/canvas-e2e-runtime-fixture.test.ts",
+        "src/tests/unit/canvas-e2e-runner.test.ts",
+        "src/tests/unit/canvas-object-store-fixture.test.ts",
+        "src/tests/contracts/canvas-contract.test.ts",
+        "src/tests/unit/canvas-schema-probe.test.ts",
+        "src/tests/unit/canvas-http.test.ts",
+        "src/tests/unit/local-docker-safety.test.ts",
+        "--testTimeout=30000"
+      ],
+      "timeoutMs": 180000,
+      "code": 0,
+      "timedOut": false,
+      "durationMs": 6926,
+      "archived": {
+        ".json": {
+          "file": "infra-final-targeted-01.json",
+          "sha256": "1627c113c04c65e8a81c467a145b393ec61940088d7e49f6fd28daab8621bc58",
+          "bytes": 1044
+        },
+        ".stdout.log": {
+          "file": "infra-final-targeted-01.stdout.log",
+          "sha256": "117d0ff59b18a1eb768eb366e81f1f402bd53bd7cff88a3ebc973aae57665914",
+          "bytes": 5322
+        },
+        ".stderr.log": {
+          "file": "infra-final-targeted-01.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      }
+    },
+    {
+      "label": "infra-final-types-01",
+      "mode": "test",
+      "command": [
+        "pnpm",
+        "exec",
+        "tsc",
+        "--noEmit",
+        "--incremental",
+        "false"
+      ],
+      "timeoutMs": 120000,
+      "code": 0,
+      "timedOut": false,
+      "durationMs": 44019,
+      "archived": {
+        ".json": {
+          "file": "infra-final-types-01.json",
+          "sha256": "0c1f0c77b708d795b71e65fbd9f113f854e4b986a4e5d326ce60d67e847e79a8",
+          "bytes": 635
+        },
+        ".stdout.log": {
+          "file": "infra-final-types-01.stdout.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        ".stderr.log": {
+          "file": "infra-final-types-01.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      }
+    },
+    {
+      "label": "infra-final-worker-go-01",
+      "mode": "test",
+      "command": [
+        "pnpm",
+        "verify:worker-contracts:go"
+      ],
+      "timeoutMs": 180000,
+      "code": 0,
+      "timedOut": false,
+      "durationMs": 13333,
+      "archived": {
+        ".json": {
+          "file": "infra-final-worker-go-01.json",
+          "sha256": "64439f27f3dc032d342d896844c92de348eaa8b2e615a210b6c00571eb359490",
+          "bytes": 608
+        },
+        ".stdout.log": {
+          "file": "infra-final-worker-go-01.stdout.log",
+          "sha256": "0d6a0ea9d9c7b42b6c2186147ff0168626643fb685c1ebf6f4a517d1d4054201",
+          "bytes": 665
+        },
+        ".stderr.log": {
+          "file": "infra-final-worker-go-01.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      }
+    },
+    {
+      "label": "infra-final-worker-ts-01",
+      "mode": "test",
+      "command": [
+        "pnpm",
+        "verify:worker-contracts:ts"
+      ],
+      "timeoutMs": 120000,
+      "code": 0,
+      "timedOut": false,
+      "durationMs": 2399,
+      "archived": {
+        ".json": {
+          "file": "infra-final-worker-ts-01.json",
+          "sha256": "769ed0e07f0ccdaebc0fbec364e0c3dfb05d7f5e5cd4e353b45b9eb26ddd2099",
+          "bytes": 607
+        },
+        ".stdout.log": {
+          "file": "infra-final-worker-ts-01.stdout.log",
+          "sha256": "497fcd81b85cf3f4b068c8b7d305ceb17d99eb18e263e50b15a50c8a318d3dd2",
+          "bytes": 2340
+        },
+        ".stderr.log": {
+          "file": "infra-final-worker-ts-01.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      }
+    },
+    {
+      "label": "provision-test-images-01",
+      "mode": "test",
+      "command": [
+        "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-history-cleanup-20261029\\node-v24.22.1-win-x64\\node.exe",
+        "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\provision-test-images.mjs",
+        "01"
+      ],
+      "timeoutMs": 1560000,
+      "code": 0,
+      "timedOut": false,
+      "durationMs": 54680,
+      "archived": {
+        ".json": {
+          "file": "provision-test-images-01.json",
+          "sha256": "03afad43eafca20da543c72126d46d319305d6a40e1f2bd2882284bdfa21307c",
+          "bytes": 825
+        },
+        ".stdout.log": {
+          "file": "provision-test-images-01.stdout.log",
+          "sha256": "b9775f3d71888a6f8736fa94dd753da4b4999c07693fa1b07e9e8430edeed2e3",
+          "bytes": 15453
+        },
+        ".stderr.log": {
+          "file": "provision-test-images-01.stderr.log",
+          "sha256": "0482240d507b1743ef0cf39364af508bc39b2cdb966b140f589c2d75fe297353",
+          "bytes": 242
+        }
+      }
+    }
+  ],
+  "sourceChangesThisTurn": [
+    {
+      "file": ".dockerignore",
+      "before": null,
+      "after": "feb679417204e8a6dd62f29c76c00367e7f1a4ccea97f11d7278d686980fb86f"
+    },
+    {
+      "file": ".github/workflows/verify.yml",
+      "before": "8352f282d415b5015cc00d7083c9e34dde743930bb231aaf8292e1f43096b767",
+      "after": "8461ad059e4c9912512f5305b85cb33c197b870ee5be7a59ef1924cc3f5a23fd"
+    },
+    {
+      "file": "Dockerfile",
+      "before": null,
+      "after": "32a77cf6f79605504039b75804bc1571da73b99ec559ff325d9116cb7039a5fe"
+    },
+    {
+      "file": "docker-compose.e2e.yml",
+      "before": "df72900021a90a478405f63e243212ed81f8c1413464ed02a58499b97332dc27",
+      "after": "2d3104a2100bab8be6740cdbe4c8b98dbd4e8c2b2c03c0423530f8d86ccf66fd"
+    },
+    {
+      "file": "scripts/fixtures/canvas-object-store.mjs",
+      "before": "57180c53e40dd0997bae0e796070e923e7af6686baf56158b9f8f67f29b52290",
+      "after": "ee58bf50e709fab385210797d63ae176709ec56c2a297969ae5759db8100985f"
+    },
+    {
+      "file": "scripts/fixtures/canvas-runtime.mjs",
+      "before": null,
+      "after": "e2afc2ec34c841c22dced8a78b9ed810fa756687bbe42f016d380df090c2b3d4"
+    },
+    {
+      "file": "scripts/lib/e2e-safety.mjs",
+      "before": "0097deafd7408ec9fd262d014d80f77dbe11b651553e33c05b6fbaa07cac9c72",
+      "after": "292fac44264ad9edabf9ddd5b8aab196b0cd46086701fcf668a38b421e445068"
+    },
+    {
+      "file": "scripts/verify-e2e.mjs",
+      "before": "344448cb101333ec6982f02a8c894bf034c562cacb225a98b2c64f7ad791d2e4",
+      "after": "b36d6adfc9341394846233e2d50c0f4524117ee4c88d136f26fa4f51c931176c"
+    },
+    {
+      "file": "src/tests/integration/canvas-contracts/canvas-contracts-db.test.ts",
+      "before": "a020d648142b22ec6a49ff0625d8886a822be77f6a8c66a1367e6141afe4d77c",
+      "after": "90bce42946f64e773bf3c93cc5b523b2e315f474ca7074c6131b21bcfc758c68"
+    },
+    {
+      "file": "src/tests/unit/canvas-e2e-http-fixture.test.ts",
+      "before": null,
+      "after": "0cea92ded962125302a11a45d6bc3861c19ab9090b3443afecc3c17f028b6c18"
+    },
+    {
+      "file": "src/tests/unit/canvas-e2e-runner.test.ts",
+      "before": "2b919099784ac52c65abc0a924c47e130f5faf8024e6339325110b137398b2be",
+      "after": "c38d9d5142779b0bb6c875931e48774399124f23a5b2004a61abc3bf0d42ff68"
+    },
+    {
+      "file": "src/tests/unit/canvas-e2e-runtime-fixture.test.ts",
+      "before": null,
+      "after": "2d7b585870c2ab7a9f953138c8b6d1b182736690d5cd0f81a0354c0e5b4f1748"
+    },
+    {
+      "file": "src/tests/unit/canvas-object-store-fixture.test.ts",
+      "before": "5cce8f8deb85dd61080c254c0a7049be7e1de9ad8d273654e6daf708a39c5fb2",
+      "after": "a17754c70c517673243523b8a163981c203e8da20eec5193f0976085f103f78f"
+    }
+  ],
+  "automatedResults": {
+    "canvasDb": {
+      "full": 32,
+      "additive": 32,
+      "exitCode": 0
+    },
+    "workerDb": {
+      "typescript": 6,
+      "taggedGoSuites": [
+        "TestWorkerContractsDB",
+        "TestGatewayDB"
+      ],
+      "exitCode": 0
+    },
+    "migrations": {
+      "groups": 5,
+      "exitCode": 0
+    },
+    "e2e": {
+      "exitCode": 0,
+      "durationMs": 646196,
+      "owner": "ba10161f-caf2-4d21-a922-f6a84ce1ebc9",
+      "scenarios": [
+        {
+          "name": "embedded",
+          "durationMs": 14236
+        },
+        {
+          "name": "dedicated",
+          "durationMs": 16546
+        },
+        {
+          "name": "conflict",
+          "durationMs": 16324
+        },
+        {
+          "name": "schema",
+          "durationMs": 21739
+        },
+        {
+          "name": "dbdown",
+          "durationMs": 33538
+        },
+        {
+          "name": "propagate",
+          "durationMs": 7464
+        },
+        {
+          "name": "canvas-embedded",
+          "durationMs": 132497
+        },
+        {
+          "name": "canvas-dedicated",
+          "durationMs": 134110
+        },
+        {
+          "name": "canvas-mismatch",
+          "durationMs": 21632
+        }
+      ],
+      "positiveEnabledCoverage": [
+        "signed-session productionSSR",
+        "owner isolated actual canvas APIs",
+        "realSDK originals upload/replay",
+        "snapshot/CAS",
+        "seeded committed real generation replay before/after deletion",
+        "explicit runtime/lookup IDs",
+        "actual managedWorkerGC fail-delete/backoff/retry",
+        "seven-day/recent/saved/completed-job/works/legacy retention",
+        "readiness/schema/capability mismatch/drain"
+      ],
+      "paidProviderGeneration": false
+    },
+    "finalOrdinary": {
+      "files": 120,
+      "tests": 1386,
+      "exitCode": 0
+    },
+    "fullTypecheck": true,
+    "lint": {
+      "errors": 0,
+      "warnings": 9
+    },
+    "productionBuild": true,
+    "composeConfigs": 5,
+    "browserFixtureFromPreviousGate": {
+      "groups": 14,
+      "sourceUnchanged": true,
+      "liveDatabase": false
+    }
+  },
+  "cleanup": {
+    "dbOwnerLabelAudit": "db-complete-cleanup-audit-01",
+    "e2eOwnerAudit": "e2e-complete-final-resource-audit-01",
+    "remainingE2EContainers": 0,
+    "remainingE2ENetworks": 0,
+    "remainingOwnedBuildImages": 0,
+    "scratchRemoved": true,
+    "baseImagesRetained": true
+  },
+  "remainingManualBoundaries": [
+    "physical phone and OS-native IME not executed",
+    "real provider/S3/production deployment not executed or authorized",
+    "authenticated browser-login-to-provider end-to-end not claimed; realSSR/API and realcomponent browser proven separately"
+  ],
+  "independentReview": {
+    "file": "../infra-final-review.md",
+    "sha256": "1419b1b4d673419c9a36caae659c7b9fd25fac95de2e9bc02d72d24fe5c27633",
+    "passed": true,
+    "residualCodeDefects": 0
+  },
+  "archive": {
+    "performed": true,
+    "command": "python ./.trellis/scripts/task.py archive 10-28-studio-canvas-v1 --no-commit",
+    "path": ".trellis/tasks/archive/2026-10/10-28-studio-canvas-v1",
+    "status": "completed",
+    "completedAt": "2026-10-30",
+    "preMoveFilesVerified": 259,
+    "hashesPreservedExceptTaskStatus": true,
+    "committed": false,
+    "parentStatus": "planning",
+    "mobileStatus": "planning",
+    "journalSession": 5
+  },
+  "commitOrDeploy": false,
+  "finalVerification": {
+    "verifiedAt": "2026-10-30T02:33:44.052346+00:00",
+    "sourceChangesUnchanged": 13,
+    "e2eManifestMatches": 17,
+    "priorBrowserSourceTreesUnchanged": true,
+    "CA1_CA13": "passed within stated manual/provider boundaries",
+    "stagingEmpty": true,
+    "taskReadyToArchive": true
+  }
+}

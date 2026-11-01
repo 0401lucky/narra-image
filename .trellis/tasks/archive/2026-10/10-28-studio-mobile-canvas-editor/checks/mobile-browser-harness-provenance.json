@@ -1,0 +1,6 @@
+{
+  "predecessorHarnessSha256": "50f62e9fcb6f5681a43bad4bcce49e5b0ff31aeaeab40821dd3e39b5bad5f9e3",
+  "adaptedHarnessSha256": "f4d9f19ec76aeeaf00f354cbc9e9feef8c322743ac485069261f05b8246c21c5",
+  "taskOwnedOutput": "E:\\code\\narra-image\\.trellis\\tasks\\10-28-studio-mobile-canvas-editor\\checks\\mobile-browser-check.mjs",
+  "scope": "Reused safe loopback/CDP harness, new fixture root and source snapshots, updated representative graph; phone extension pending, no browser execution yet."
+}

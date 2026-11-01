@@ -1,0 +1,10 @@
+[
+  {
+    "path": "mobile-browser-check.mjs",
+    "sha256": "4ef4af4300dd24bc1635d2b07675d6321affe01563fd9d1401c139cf57d7a43c"
+  },
+  {
+    "path": "mobile-phone-browser-checks.mjs",
+    "sha256": "0251b17dec98c13d9e7bd4b8d53c1a03b011e9d6c7e9860d11ed06e10bc902d8"
+  }
+]

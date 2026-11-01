@@ -1,0 +1,138 @@
+{
+  "checkedAt": "2026-10-31T04:01:11.378105+00:00",
+  "workspace": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\app",
+  "activeLockAfter": false,
+  "sourceFileCount": 806,
+  "allLiveAndSnapshotSourcesMatchManifest": true,
+  "sourceManifestSha256": "1e21711375aa3bc76f9fc5d05442e900e52ad423ffcb41add39b910f8ce3ef22",
+  "resumeBaselineSha256": "e4b33f00d161bd3eb437bbe6e82dc762a20ac969dd4dffc4923b13be2d1f4b97",
+  "assetManifestSha256": "2df808a56391538e103e5a74f9bfd158715e2c9655531795edc5b4da4905cd6d",
+  "guardSha256": "bd9ec3da5da5787ffc8378f8ed97835428d4b5a9c80a21a099ccca2c4d077e55",
+  "dependencyLinksAudited": true,
+  "ownedSource": {
+    "src/components/marketing/homepage/constants.ts": {
+      "sha256": "b7994c6de611f5e85559f27d539c9d53680ddf55a00c7304bdb88536da05cd59",
+      "bytes": 4229
+    },
+    "src/tests/contracts/homepage-assets.test.ts": {
+      "sha256": "aaa25c5571e6814130cd8cc171981d71fe71eb50e080f9d88e537572e8594872",
+      "bytes": 6400
+    },
+    "src/tests/unit/homepage-hero.test.tsx": {
+      "sha256": "2842f2b7d1f7749029a4e0417be31ac41364234927251c5ed4a83e292ccc7e2e",
+      "bytes": 10661
+    }
+  },
+  "imagesMatchManifest": [
+    {
+      "file": "public/marketing/home/bookshop-light-v1.png",
+      "bytes": 2335873,
+      "sha256": "2813ac8f0db954142f0f4d7827150cd029bdfebc92818c111fa6cf3199c65387",
+      "width": 1448,
+      "height": 1086
+    },
+    {
+      "file": "public/marketing/home/lantern-fox-v1.png",
+      "bytes": 3373661,
+      "sha256": "dcc683910d1d92a4860068be8857db0204a74ff37895df5b5cebe9c2ec973cde",
+      "width": 1448,
+      "height": 1086
+    },
+    {
+      "file": "public/marketing/home/jiangnan-rain-v2.png",
+      "bytes": 2638230,
+      "sha256": "f3ded79890deb46ccafe50e13419dcab0626970f6a77790652b221f1e73354d4",
+      "width": 1448,
+      "height": 1086
+    }
+  ],
+  "rejectedImagePublished": false,
+  "receipts": [
+    {
+      "id": "20261031T035810-test-eb7dfe",
+      "exitCode": 0,
+      "durationSeconds": 4.084,
+      "timeoutSeconds": 300,
+      "sourceChanges": [],
+      "snapshotModifications": []
+    },
+    {
+      "id": "20261031T035849-lint-eee113",
+      "exitCode": 0,
+      "durationSeconds": 14.975,
+      "timeoutSeconds": 180,
+      "sourceChanges": [],
+      "snapshotModifications": []
+    },
+    {
+      "id": "20261031T035938-types-7c4bdd",
+      "exitCode": 0,
+      "durationSeconds": 6.433,
+      "timeoutSeconds": 180,
+      "sourceChanges": [],
+      "snapshotModifications": []
+    }
+  ],
+  "whitespaceChecks": [
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": "warning: in the working copy of 'package.json', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'pnpm-lock.yaml', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'scripts/verify-e2e.mjs', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'src/components/marketing/featured-gallery.tsx', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'src/tests/unit/featured-gallery.test.tsx', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'worker/internal/worker/config.go', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'worker/internal/worker/config_test.go', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'worker/internal/worker/runtime_state.go', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'worker/internal/worker/server.go', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'worker/internal/worker/worker.go', LF will be replaced by CRLF the next time Git touches it\n"
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--no-index",
+        "--check",
+        "--",
+        "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\asset-delivery-implementation\\constants.ts.before",
+        "src/components/marketing/homepage/constants.ts"
+      ],
+      "exitCode": 1,
+      "stdout": "",
+      "stderr": "warning: in the working copy of 'E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\asset-delivery-implementation\\constants.ts.before', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'src/components/marketing/homepage/constants.ts', LF will be replaced by CRLF the next time Git touches it\n"
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--no-index",
+        "--check",
+        "--",
+        "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\asset-delivery-implementation\\homepage-assets.test.ts.before",
+        "src/tests/contracts/homepage-assets.test.ts"
+      ],
+      "exitCode": 1,
+      "stdout": "",
+      "stderr": "warning: in the working copy of 'E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\asset-delivery-implementation\\homepage-assets.test.ts.before', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'src/tests/contracts/homepage-assets.test.ts', LF will be replaced by CRLF the next time Git touches it\n"
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--no-index",
+        "--check",
+        "--",
+        "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\asset-delivery-implementation\\homepage-hero.test.tsx.before",
+        "src/tests/unit/homepage-hero.test.tsx"
+      ],
+      "exitCode": 1,
+      "stdout": "",
+      "stderr": "warning: in the working copy of 'E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\asset-delivery-implementation\\homepage-hero.test.tsx.before', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'src/tests/unit/homepage-hero.test.tsx', LF will be replaced by CRLF the next time Git touches it\n"
+    }
+  ],
+  "untrackedWholeFileTrailingWhitespace": {
+    "src/components/marketing/homepage/constants.ts": [],
+    "src/tests/contracts/homepage-assets.test.ts": [],
+    "src/tests/unit/homepage-hero.test.tsx": []
+  },
+  "nodeVersion": "v24.11.1",
+  "requiredNodeVersion": "v24.22.1",
+  "pinnedRuntimeParity": false
+}

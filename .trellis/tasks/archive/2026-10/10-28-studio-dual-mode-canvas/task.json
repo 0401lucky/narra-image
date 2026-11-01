@@ -1,0 +1,38 @@
+{
+  "id": "studio-dual-mode-canvas",
+  "name": "studio-dual-mode-canvas",
+  "title": "Studio dual-mode and independent canvas",
+  "description": "Verified final cross-child Studio integration acceptance: all AC1-AC17, five added real-SQL regressions in both histories, independent final review, and no-commit closeout; mobile remains deferred.",
+  "status": "completed",
+  "dev_type": "fullstack",
+  "scope": "create",
+  "package": null,
+  "priority": "P2",
+  "creator": "0401lucky",
+  "assignee": "0401lucky",
+  "createdAt": "2026-10-28",
+  "completedAt": "2026-10-30",
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [
+    "10-28-studio-history-cleanup",
+    "10-28-studio-canvas-v1"
+  ],
+  "parent": null,
+  "relatedFiles": [],
+  "notes": "Final parent AC1-AC17 acceptance passed on 2026-10-30 under the user's approved closeout scope. The existing five-case SQL addition passes 37 full + 37 additive cases with exact cleanup; independent final review finds no remaining required defect. Fresh lint/types/studio/context/whitespace pass; unchanged child ordinary/build/Worker/migration/runtime/browser receipts retain their explicit coverage limits. Verification, handoff and narrow spec test inventories are reconciled; both archived child patches and all existing source/index identities remain preserved. Only this parent may be archived with --no-commit, and journal must use --no-commit. No staging/commit/push/deployment/realproviderS3/productionDB or mobile activation is authorized; physical-device/native-IME and real-service/release work remain separate.",
+  "meta": {
+    "acceptance": "passed",
+    "accepted_at": "2026-10-30",
+    "verification": "verification.md",
+    "handoff": "handoff.md",
+    "final_review": "checks/integration-sql-final-review.md",
+    "sql_full_cases": 37,
+    "sql_additive_cases": 37,
+    "committed": false
+  }
+}

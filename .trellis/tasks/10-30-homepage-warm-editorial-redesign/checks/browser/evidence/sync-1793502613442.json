@@ -1,0 +1,12 @@
+{
+  "time": "2026-11-01T03:10:13.440Z",
+  "app": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\hero-hit-independent-8725c17e\\app",
+  "changes": [
+    {
+      "file": "src/components/create/canvas/controller-types.ts",
+      "from": "beaf96e20dc7592b1e42b125b098c8ec0d985ae210c1bef5b4a8de2eea66ea26",
+      "to": "039db7b877e61aa9fc8ece2b54fe8df027294303d4e2b26e84435360d83c80f6"
+    }
+  ],
+  "note": "Controlled production-source refresh. All prior build/browser verdicts invalid until rebuilt and rerun."
+}

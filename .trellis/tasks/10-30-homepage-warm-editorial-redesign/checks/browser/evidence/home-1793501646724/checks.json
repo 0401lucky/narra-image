@@ -1,0 +1,2831 @@
+[
+  {
+    "id": "L0-native-long-url-keyboard-calibration",
+    "passed": true,
+    "durationMs": 981,
+    "detail": {
+      "enter": {
+        "incompleteKey": {
+          "clicks": 0,
+          "events": [
+            {
+              "type": "keydown",
+              "key": "Tab",
+              "code": "Tab",
+              "trusted": true,
+              "target": ""
+            },
+            {
+              "type": "keyup",
+              "key": "Tab",
+              "code": "Tab",
+              "trusted": true,
+              "target": "native-enter-calibration"
+            },
+            {
+              "type": "keydown",
+              "key": "Enter",
+              "code": "",
+              "trusted": true,
+              "target": "native-enter-calibration"
+            },
+            {
+              "type": "keyup",
+              "key": "Enter",
+              "code": "",
+              "trusted": true,
+              "target": "native-enter-calibration"
+            }
+          ]
+        },
+        "completeKey": {
+          "clicks": 1,
+          "events": [
+            {
+              "type": "keydown",
+              "key": "Tab",
+              "code": "Tab",
+              "trusted": true,
+              "target": ""
+            },
+            {
+              "type": "keyup",
+              "key": "Tab",
+              "code": "Tab",
+              "trusted": true,
+              "target": "native-enter-calibration"
+            },
+            {
+              "type": "keydown",
+              "key": "Enter",
+              "code": "",
+              "trusted": true,
+              "target": "native-enter-calibration"
+            },
+            {
+              "type": "keyup",
+              "key": "Enter",
+              "code": "",
+              "trusted": true,
+              "target": "native-enter-calibration"
+            },
+            {
+              "type": "keydown",
+              "key": "Enter",
+              "code": "Enter",
+              "trusted": true,
+              "target": "native-enter-calibration"
+            },
+            {
+              "type": "keypress",
+              "key": "Enter",
+              "code": "Enter",
+              "trusted": true,
+              "target": "native-enter-calibration"
+            },
+            {
+              "type": "click",
+              "trusted": true,
+              "target": "native-enter-calibration"
+            },
+            {
+              "type": "keyup",
+              "key": "Enter",
+              "code": "Enter",
+              "trusted": true,
+              "target": "native-enter-calibration"
+            }
+          ]
+        },
+        "disabledKey": {
+          "clicks": 1,
+          "events": [
+            {
+              "type": "keydown",
+              "key": "Tab",
+              "code": "Tab",
+              "trusted": true,
+              "target": ""
+            },
+            {
+              "type": "keyup",
+              "key": "Tab",
+              "code": "Tab",
+              "trusted": true,
+              "target": "native-enter-calibration"
+            },
+            {
+              "type": "keydown",
+              "key": "Enter",
+              "code": "",
+              "trusted": true,
+              "target": "native-enter-calibration"
+            },
+            {
+              "type": "keyup",
+              "key": "Enter",
+              "code": "",
+              "trusted": true,
+              "target": "native-enter-calibration"
+            },
+            {
+              "type": "keydown",
+              "key": "Enter",
+              "code": "Enter",
+              "trusted": true,
+              "target": "native-enter-calibration"
+            },
+            {
+              "type": "keypress",
+              "key": "Enter",
+              "code": "Enter",
+              "trusted": true,
+              "target": "native-enter-calibration"
+            },
+            {
+              "type": "click",
+              "trusted": true,
+              "target": "native-enter-calibration"
+            },
+            {
+              "type": "keyup",
+              "key": "Enter",
+              "code": "Enter",
+              "trusted": true,
+              "target": "native-enter-calibration"
+            },
+            {
+              "type": "keydown",
+              "key": "Tab",
+              "code": "Tab",
+              "trusted": true,
+              "target": "native-enter-calibration"
+            },
+            {
+              "type": "keyup",
+              "key": "Tab",
+              "code": "Tab",
+              "trusted": true,
+              "target": ""
+            },
+            {
+              "type": "keydown",
+              "key": "Enter",
+              "code": "Enter",
+              "trusted": true,
+              "target": ""
+            },
+            {
+              "type": "keypress",
+              "key": "Enter",
+              "code": "Enter",
+              "trusted": true,
+              "target": ""
+            },
+            {
+              "type": "keyup",
+              "key": "Enter",
+              "code": "Enter",
+              "trusted": true,
+              "target": ""
+            }
+          ]
+        },
+        "programmaticClickOrFocus": false
+      },
+      "traversal": {
+        "samples": [
+          {
+            "label": "forward-first",
+            "modifiers": 0,
+            "before": "",
+            "active": "native-tab-first",
+            "clicks": 0,
+            "events": [
+              {
+                "type": "keydown",
+                "key": "Tab",
+                "code": "Tab",
+                "trusted": true,
+                "target": "",
+                "shift": false,
+                "alt": false,
+                "control": false,
+                "meta": false
+              },
+              {
+                "type": "focusin",
+                "trusted": true,
+                "target": "native-tab-first"
+              },
+              {
+                "type": "keyup",
+                "key": "Tab",
+                "code": "Tab",
+                "trusted": true,
+                "target": "native-tab-first",
+                "shift": false,
+                "alt": false,
+                "control": false,
+                "meta": false
+              }
+            ]
+          },
+          {
+            "label": "forward-middle",
+            "modifiers": 0,
+            "before": "native-tab-first",
+            "active": "native-tab-middle",
+            "clicks": 0,
+            "events": [
+              {
+                "type": "keydown",
+                "key": "Tab",
+                "code": "Tab",
+                "trusted": true,
+                "target": "native-tab-first",
+                "shift": false,
+                "alt": false,
+                "control": false,
+                "meta": false
+              },
+              {
+                "type": "focusin",
+                "trusted": true,
+                "target": "native-tab-middle"
+              },
+              {
+                "type": "keyup",
+                "key": "Tab",
+                "code": "Tab",
+                "trusted": true,
+                "target": "native-tab-middle",
+                "shift": false,
+                "alt": false,
+                "control": false,
+                "meta": false
+              }
+            ]
+          },
+          {
+            "label": "forward-skips-disabled",
+            "modifiers": 0,
+            "before": "native-tab-middle",
+            "active": "native-tab-last",
+            "clicks": 0,
+            "events": [
+              {
+                "type": "keydown",
+                "key": "Tab",
+                "code": "Tab",
+                "trusted": true,
+                "target": "native-tab-middle",
+                "shift": false,
+                "alt": false,
+                "control": false,
+                "meta": false
+              },
+              {
+                "type": "focusin",
+                "trusted": true,
+                "target": "native-tab-last"
+              },
+              {
+                "type": "keyup",
+                "key": "Tab",
+                "code": "Tab",
+                "trusted": true,
+                "target": "native-tab-last",
+                "shift": false,
+                "alt": false,
+                "control": false,
+                "meta": false
+              }
+            ]
+          },
+          {
+            "label": "reverse-skips-disabled",
+            "modifiers": 8,
+            "before": "native-tab-last",
+            "active": "native-tab-middle",
+            "clicks": 0,
+            "events": [
+              {
+                "type": "keydown",
+                "key": "Tab",
+                "code": "Tab",
+                "trusted": true,
+                "target": "native-tab-last",
+                "shift": true,
+                "alt": false,
+                "control": false,
+                "meta": false
+              },
+              {
+                "type": "focusin",
+                "trusted": true,
+                "target": "native-tab-middle"
+              },
+              {
+                "type": "keyup",
+                "key": "Tab",
+                "code": "Tab",
+                "trusted": true,
+                "target": "native-tab-middle",
+                "shift": true,
+                "alt": false,
+                "control": false,
+                "meta": false
+              }
+            ]
+          },
+          {
+            "label": "reverse-first",
+            "modifiers": 8,
+            "before": "native-tab-middle",
+            "active": "native-tab-first",
+            "clicks": 0,
+            "events": [
+              {
+                "type": "keydown",
+                "key": "Tab",
+                "code": "Tab",
+                "trusted": true,
+                "target": "native-tab-middle",
+                "shift": true,
+                "alt": false,
+                "control": false,
+                "meta": false
+              },
+              {
+                "type": "focusin",
+                "trusted": true,
+                "target": "native-tab-first"
+              },
+              {
+                "type": "keyup",
+                "key": "Tab",
+                "code": "Tab",
+                "trusted": true,
+                "target": "native-tab-first",
+                "shift": true,
+                "alt": false,
+                "control": false,
+                "meta": false
+              }
+            ]
+          },
+          {
+            "label": "forward-after-reverse",
+            "modifiers": 0,
+            "before": "native-tab-first",
+            "active": "native-tab-middle",
+            "clicks": 0,
+            "events": [
+              {
+                "type": "keydown",
+                "key": "Tab",
+                "code": "Tab",
+                "trusted": true,
+                "target": "native-tab-first",
+                "shift": false,
+                "alt": false,
+                "control": false,
+                "meta": false
+              },
+              {
+                "type": "focusin",
+                "trusted": true,
+                "target": "native-tab-middle"
+              },
+              {
+                "type": "keyup",
+                "key": "Tab",
+                "code": "Tab",
+                "trusted": true,
+                "target": "native-tab-middle",
+                "shift": false,
+                "alt": false,
+                "control": false,
+                "meta": false
+              }
+            ]
+          },
+          {
+            "label": "alt-is-not-reverse",
+            "modifiers": 1,
+            "before": "native-tab-middle",
+            "active": "native-tab-middle",
+            "clicks": 0,
+            "events": [
+              {
+                "type": "keydown",
+                "key": "Tab",
+                "code": "Tab",
+                "trusted": true,
+                "target": "native-tab-middle",
+                "shift": false,
+                "alt": true,
+                "control": false,
+                "meta": false
+              },
+              {
+                "type": "keyup",
+                "key": "Tab",
+                "code": "Tab",
+                "trusted": true,
+                "target": "native-tab-middle",
+                "shift": false,
+                "alt": true,
+                "control": false,
+                "meta": false
+              }
+            ]
+          }
+        ],
+        "modifiers": {
+          "Alt": 1,
+          "Control": 2,
+          "Meta": 4,
+          "Shift": 8
+        },
+        "disabledControlSkipped": true,
+        "programmaticClickOrFocus": false
+      }
+    }
+  },
+  {
+    "id": "L1-actual-public-DTO-entry-budget-permission-matrix",
+    "passed": true,
+    "durationMs": 2507,
+    "detail": {
+      "budget": 8192,
+      "rows": [
+        {
+          "user": null,
+          "label": "chinese8000",
+          "units": 8000,
+          "utf16Sha256": "0ee6ee91e8665659124a4cf6bb80e1503b08984187d5ea5e899c4f573a7de077",
+          "requestTargetBytes": 72015,
+          "manual": "/login",
+          "directTargetBytes": null,
+          "associated": true
+        },
+        {
+          "user": null,
+          "label": "emoji8000units",
+          "units": 8000,
+          "utf16Sha256": "11ea446f6953532c3c96f46ee043192df9d1d9bd08aee951119d7d15f4359b2a",
+          "requestTargetBytes": 56019,
+          "manual": "/login",
+          "directTargetBytes": null,
+          "associated": true
+        },
+        {
+          "user": null,
+          "label": "manual-over-input-limit",
+          "units": 8010,
+          "utf16Sha256": "0db7803f3ebd67f9aa51cccb115d42bcd2ee7b0b422fbffa584fe97d2648099b",
+          "requestTargetBytes": 40047,
+          "manual": "/login",
+          "directTargetBytes": null,
+          "associated": true
+        },
+        {
+          "user": null,
+          "label": "budget8191",
+          "units": 936,
+          "utf16Sha256": "2a6555308c3437e6768ca041d4e4cc520925e325f508d2e0c3c56fd51ec17243",
+          "requestTargetBytes": 8191,
+          "manual": null,
+          "directTargetBytes": 6,
+          "associated": null
+        },
+        {
+          "user": null,
+          "label": "budget8192",
+          "units": 937,
+          "utf16Sha256": "b2bec2aa31d03794c0b9be084332a31c25d80cb25257059b5c2963948c786383",
+          "requestTargetBytes": 8192,
+          "manual": null,
+          "directTargetBytes": 6,
+          "associated": null
+        },
+        {
+          "user": null,
+          "label": "budget8193",
+          "units": 938,
+          "utf16Sha256": "9bfe9592b1a42d8b88595a877ec1d8ba220b75d809e1561ded3d32bef217e4c1",
+          "requestTargetBytes": 8193,
+          "manual": "/login",
+          "directTargetBytes": null,
+          "associated": true
+        },
+        {
+          "user": null,
+          "label": "reserved-whitespace",
+          "units": 25,
+          "utf16Sha256": "41dc250d6162a07a4f2c224efb5074f64593dde718ca4569a27049ee5632bf55",
+          "requestTargetBytes": 114,
+          "manual": null,
+          "directTargetBytes": 6,
+          "associated": null
+        },
+        {
+          "user": null,
+          "label": "ascii8000",
+          "units": 8000,
+          "utf16Sha256": "e11f987ba711970265843fc226cdf42aa8f9567eb15a0303384d9900f0629881",
+          "requestTargetBytes": 8015,
+          "manual": null,
+          "directTargetBytes": 6,
+          "associated": null
+        },
+        {
+          "user": null,
+          "label": "ascii8001",
+          "units": 8001,
+          "utf16Sha256": "5367c4f637476ece0cf7f137826b67e4badbd3a39cce267a681b535f32b2b8e9",
+          "requestTargetBytes": 8016,
+          "manual": null,
+          "directTargetBytes": 6,
+          "associated": null
+        },
+        {
+          "user": null,
+          "label": "malformed-high",
+          "units": 20,
+          "utf16Sha256": "44c2b554da742c5cf9d690ed9c06f4fdf353ab235ebcdb77501f9937e7ac4bb2",
+          "requestTargetBytes": null,
+          "manual": "/login",
+          "directTargetBytes": null,
+          "associated": true
+        },
+        {
+          "user": null,
+          "label": "malformed-low",
+          "units": 20,
+          "utf16Sha256": "ac93b3223ce4613a846c6db382abf28319223ac4c2e539c7ce1a7cca9ad757f0",
+          "requestTargetBytes": null,
+          "manual": "/login",
+          "directTargetBytes": null,
+          "associated": true
+        },
+        {
+          "user": null,
+          "label": "blank",
+          "units": 5,
+          "utf16Sha256": "7c643db1b08fc1d6aa207611ec68bd5a99f5445a04c3ead00cb26c1e032445d9",
+          "requestTargetBytes": 30,
+          "manual": null,
+          "directTargetBytes": null,
+          "associated": null
+        },
+        {
+          "user": "home-member",
+          "label": "chinese8000",
+          "units": 8000,
+          "utf16Sha256": "0ee6ee91e8665659124a4cf6bb80e1503b08984187d5ea5e899c4f573a7de077",
+          "requestTargetBytes": 72015,
+          "manual": "/create",
+          "directTargetBytes": null,
+          "associated": true
+        },
+        {
+          "user": "home-member",
+          "label": "emoji8000units",
+          "units": 8000,
+          "utf16Sha256": "11ea446f6953532c3c96f46ee043192df9d1d9bd08aee951119d7d15f4359b2a",
+          "requestTargetBytes": 56019,
+          "manual": "/create",
+          "directTargetBytes": null,
+          "associated": true
+        },
+        {
+          "user": "home-member",
+          "label": "manual-over-input-limit",
+          "units": 8010,
+          "utf16Sha256": "0db7803f3ebd67f9aa51cccb115d42bcd2ee7b0b422fbffa584fe97d2648099b",
+          "requestTargetBytes": 40047,
+          "manual": "/create",
+          "directTargetBytes": null,
+          "associated": true
+        },
+        {
+          "user": "home-member",
+          "label": "budget8191",
+          "units": 936,
+          "utf16Sha256": "2a6555308c3437e6768ca041d4e4cc520925e325f508d2e0c3c56fd51ec17243",
+          "requestTargetBytes": 8191,
+          "manual": null,
+          "directTargetBytes": 8191,
+          "associated": null
+        },
+        {
+          "user": "home-member",
+          "label": "budget8192",
+          "units": 937,
+          "utf16Sha256": "b2bec2aa31d03794c0b9be084332a31c25d80cb25257059b5c2963948c786383",
+          "requestTargetBytes": 8192,
+          "manual": null,
+          "directTargetBytes": 8192,
+          "associated": null
+        },
+        {
+          "user": "home-member",
+          "label": "budget8193",
+          "units": 938,
+          "utf16Sha256": "9bfe9592b1a42d8b88595a877ec1d8ba220b75d809e1561ded3d32bef217e4c1",
+          "requestTargetBytes": 8193,
+          "manual": "/create",
+          "directTargetBytes": null,
+          "associated": true
+        },
+        {
+          "user": "home-member",
+          "label": "reserved-whitespace",
+          "units": 25,
+          "utf16Sha256": "41dc250d6162a07a4f2c224efb5074f64593dde718ca4569a27049ee5632bf55",
+          "requestTargetBytes": 114,
+          "manual": null,
+          "directTargetBytes": 114,
+          "associated": null
+        },
+        {
+          "user": "home-member",
+          "label": "ascii8000",
+          "units": 8000,
+          "utf16Sha256": "e11f987ba711970265843fc226cdf42aa8f9567eb15a0303384d9900f0629881",
+          "requestTargetBytes": 8015,
+          "manual": null,
+          "directTargetBytes": 8015,
+          "associated": null
+        },
+        {
+          "user": "home-member",
+          "label": "ascii8001",
+          "units": 8001,
+          "utf16Sha256": "5367c4f637476ece0cf7f137826b67e4badbd3a39cce267a681b535f32b2b8e9",
+          "requestTargetBytes": 8016,
+          "manual": null,
+          "directTargetBytes": 8016,
+          "associated": null
+        },
+        {
+          "user": "home-member",
+          "label": "malformed-high",
+          "units": 20,
+          "utf16Sha256": "44c2b554da742c5cf9d690ed9c06f4fdf353ab235ebcdb77501f9937e7ac4bb2",
+          "requestTargetBytes": null,
+          "manual": "/create",
+          "directTargetBytes": null,
+          "associated": true
+        },
+        {
+          "user": "home-member",
+          "label": "malformed-low",
+          "units": 20,
+          "utf16Sha256": "ac93b3223ce4613a846c6db382abf28319223ac4c2e539c7ce1a7cca9ad757f0",
+          "requestTargetBytes": null,
+          "manual": "/create",
+          "directTargetBytes": null,
+          "associated": true
+        },
+        {
+          "user": "home-member",
+          "label": "blank",
+          "units": 5,
+          "utf16Sha256": "7c643db1b08fc1d6aa207611ec68bd5a99f5445a04c3ead00cb26c1e032445d9",
+          "requestTargetBytes": 30,
+          "manual": null,
+          "directTargetBytes": null,
+          "associated": null
+        }
+      ],
+      "actualSourceToDtoToHome": true,
+      "hiddenAndBlankFailClosed": true
+    }
+  },
+  {
+    "id": "L2-chinese-member-native-keyboard-copy-manual-canvas",
+    "passed": true,
+    "durationMs": 2474,
+    "detail": {
+      "label": "chinese8000",
+      "user": "home-member",
+      "keyboard": true,
+      "width": 1440,
+      "clipboardMode": "accept",
+      "units": 8000,
+      "utf16Sha256": "0ee6ee91e8665659124a4cf6bb80e1503b08984187d5ea5e899c4f573a7de077",
+      "requestTargetBytes": 72015,
+      "selectedUnits": 8000,
+      "manualTarget": "/create",
+      "noPromptRequest": true,
+      "noCopyStorageChange": true,
+      "savedCanvasPreserved": true,
+      "emptyComposerAfterNavigation": true,
+      "screenshot": "long-url-chinese8000-member-keyboard-accept.png",
+      "traversal": [
+        {
+          "match": false,
+          "tag": "BODY",
+          "label": null,
+          "disclosure": false
+        },
+        {
+          "match": false,
+          "tag": "A",
+          "label": "Narra Image 首页",
+          "disclosure": false
+        },
+        {
+          "match": false,
+          "tag": "A",
+          "label": "GitHub 仓库",
+          "disclosure": false
+        },
+        {
+          "match": false,
+          "tag": "A",
+          "label": null,
+          "disclosure": false
+        },
+        {
+          "match": false,
+          "tag": "A",
+          "label": null,
+          "disclosure": false
+        },
+        {
+          "match": false,
+          "tag": "A",
+          "label": null,
+          "disclosure": false
+        },
+        {
+          "match": false,
+          "tag": "A",
+          "label": null,
+          "disclosure": false
+        },
+        {
+          "match": false,
+          "tag": "A",
+          "label": null,
+          "disclosure": false
+        },
+        {
+          "match": false,
+          "tag": "A",
+          "label": null,
+          "disclosure": false
+        },
+        {
+          "match": false,
+          "tag": "BUTTON",
+          "label": null,
+          "disclosure": false
+        },
+        {
+          "match": false,
+          "tag": "BUTTON",
+          "label": null,
+          "disclosure": false
+        },
+        {
+          "match": false,
+          "tag": "BUTTON",
+          "label": "选择宠物，当前是青蓝",
+          "disclosure": false
+        },
+        {
+          "match": false,
+          "tag": "A",
+          "label": "个人设置",
+          "disclosure": false
+        },
+        {
+          "match": false,
+          "tag": "BUTTON",
+          "label": null,
+          "disclosure": false
+        },
+        {
+          "match": false,
+          "tag": "A",
+          "label": null,
+          "disclosure": false
+        },
+        {
+          "match": false,
+          "tag": "A",
+          "label": null,
+          "disclosure": false
+        },
+        {
+          "match": false,
+          "tag": "BUTTON",
+          "label": null,
+          "disclosure": false
+        },
+        {
+          "match": false,
+          "tag": "BUTTON",
+          "label": null,
+          "disclosure": false
+        },
+        {
+          "match": false,
+          "tag": "BUTTON",
+          "label": "暂停装饰动效",
+          "disclosure": false
+        },
+        {
+          "match": false,
+          "tag": "BUTTON",
+          "label": "换一条构图灵感",
+          "disclosure": false
+        },
+        {
+          "match": false,
+          "tag": "A",
+          "label": null,
+          "disclosure": false
+        },
+        {
+          "match": false,
+          "tag": "A",
+          "label": "查看作品 纸上光影 001",
+          "card": "home-001",
+          "disclosure": false
+        },
+        {
+          "match": false,
+          "tag": "BUTTON",
+          "label": "点赞 纸上光影 001",
+          "card": "home-001",
+          "disclosure": false
+        },
+        {
+          "match": false,
+          "tag": "BUTTON",
+          "label": "收起提示词 纸上光影 001",
+          "card": "home-001",
+          "disclosure": true
+        },
+        {
+          "match": false,
+          "tag": "TEXTAREA",
+          "label": "完整公开提示词 纸上光影 001",
+          "card": "home-001",
+          "disclosure": false
+        }
+      ],
+      "native": [
+        {
+          "type": "focusin",
+          "trusted": true,
+          "card": "home-001",
+          "tag": "A",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "keyup",
+          "trusted": true,
+          "key": "Tab",
+          "shift": false,
+          "control": false,
+          "card": "home-001",
+          "tag": "A",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "keydown",
+          "trusted": true,
+          "key": "Tab",
+          "shift": false,
+          "control": false,
+          "card": "home-001",
+          "tag": "A",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "focusin",
+          "trusted": true,
+          "card": "home-001",
+          "tag": "BUTTON",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "keyup",
+          "trusted": true,
+          "key": "Tab",
+          "shift": false,
+          "control": false,
+          "card": "home-001",
+          "tag": "BUTTON",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "keydown",
+          "trusted": true,
+          "key": "Tab",
+          "shift": false,
+          "control": false,
+          "card": "home-001",
+          "tag": "BUTTON",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "focusin",
+          "trusted": true,
+          "card": "home-001",
+          "tag": "BUTTON",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "keyup",
+          "trusted": true,
+          "key": "Tab",
+          "shift": false,
+          "control": false,
+          "card": "home-001",
+          "tag": "BUTTON",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "keydown",
+          "trusted": true,
+          "key": "Tab",
+          "shift": false,
+          "control": false,
+          "card": "home-001",
+          "tag": "BUTTON",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "focusin",
+          "trusted": true,
+          "card": "home-001",
+          "tag": "TEXTAREA",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "keyup",
+          "trusted": true,
+          "key": "Tab",
+          "shift": false,
+          "control": false,
+          "card": "home-001",
+          "tag": "TEXTAREA",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "keydown",
+          "trusted": true,
+          "key": "Tab",
+          "shift": false,
+          "control": false,
+          "card": "home-001",
+          "tag": "TEXTAREA",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "focusin",
+          "trusted": true,
+          "card": "home-001",
+          "tag": "BUTTON",
+          "copy": true,
+          "manual": false
+        },
+        {
+          "type": "keyup",
+          "trusted": true,
+          "key": "Tab",
+          "shift": false,
+          "control": false,
+          "card": "home-001",
+          "tag": "BUTTON",
+          "copy": true,
+          "manual": false
+        },
+        {
+          "type": "keydown",
+          "trusted": true,
+          "key": "Enter",
+          "shift": false,
+          "control": false,
+          "card": "home-001",
+          "tag": "BUTTON",
+          "copy": true,
+          "manual": false
+        },
+        {
+          "type": "keypress",
+          "trusted": true,
+          "key": "Enter",
+          "shift": false,
+          "control": false,
+          "card": "home-001",
+          "tag": "BUTTON",
+          "copy": true,
+          "manual": false
+        },
+        {
+          "type": "click",
+          "trusted": true,
+          "shift": false,
+          "control": false,
+          "card": "home-001",
+          "tag": "BUTTON",
+          "copy": true,
+          "manual": false
+        },
+        {
+          "type": "keyup",
+          "trusted": true,
+          "key": "Enter",
+          "shift": false,
+          "control": false,
+          "card": "home-001",
+          "tag": "BUTTON",
+          "copy": true,
+          "manual": false
+        },
+        {
+          "type": "keydown",
+          "trusted": true,
+          "key": "Tab",
+          "shift": true,
+          "control": false,
+          "card": "home-001",
+          "tag": "BUTTON",
+          "copy": true,
+          "manual": false
+        },
+        {
+          "type": "focusin",
+          "trusted": true,
+          "card": "home-001",
+          "tag": "TEXTAREA",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "keyup",
+          "trusted": true,
+          "key": "Tab",
+          "shift": true,
+          "control": false,
+          "card": "home-001",
+          "tag": "TEXTAREA",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "keydown",
+          "trusted": true,
+          "key": "a",
+          "shift": false,
+          "control": true,
+          "card": "home-001",
+          "tag": "TEXTAREA",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "keyup",
+          "trusted": true,
+          "key": "a",
+          "shift": false,
+          "control": true,
+          "card": "home-001",
+          "tag": "TEXTAREA",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "keydown",
+          "trusted": true,
+          "key": "Tab",
+          "shift": false,
+          "control": false,
+          "card": "home-001",
+          "tag": "TEXTAREA",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "focusin",
+          "trusted": true,
+          "card": "home-001",
+          "tag": "BUTTON",
+          "copy": true,
+          "manual": false
+        },
+        {
+          "type": "keyup",
+          "trusted": true,
+          "key": "Tab",
+          "shift": false,
+          "control": false,
+          "card": "home-001",
+          "tag": "BUTTON",
+          "copy": true,
+          "manual": false
+        },
+        {
+          "type": "keydown",
+          "trusted": true,
+          "key": "Tab",
+          "shift": false,
+          "control": false,
+          "card": "home-001",
+          "tag": "BUTTON",
+          "copy": true,
+          "manual": false
+        },
+        {
+          "type": "focusin",
+          "trusted": true,
+          "card": "home-001",
+          "tag": "A",
+          "copy": false,
+          "manual": true
+        },
+        {
+          "type": "keyup",
+          "trusted": true,
+          "key": "Tab",
+          "shift": false,
+          "control": false,
+          "card": "home-001",
+          "tag": "A",
+          "copy": false,
+          "manual": true
+        }
+      ]
+    }
+  },
+  {
+    "id": "L3-emoji-member-native-touch-copy-manual-canvas",
+    "passed": true,
+    "durationMs": 3076,
+    "detail": {
+      "label": "emoji8000units",
+      "user": "home-member",
+      "keyboard": false,
+      "width": 390,
+      "clipboardMode": "accept",
+      "units": 8000,
+      "utf16Sha256": "11ea446f6953532c3c96f46ee043192df9d1d9bd08aee951119d7d15f4359b2a",
+      "requestTargetBytes": 56019,
+      "selectedUnits": 8000,
+      "manualTarget": "/create",
+      "noPromptRequest": true,
+      "noCopyStorageChange": true,
+      "savedCanvasPreserved": true,
+      "emptyComposerAfterNavigation": true,
+      "screenshot": "long-url-emoji8000units-member-390-accept.png",
+      "traversal": [],
+      "native": [
+        {
+          "type": "touchstart",
+          "trusted": true,
+          "shift": false,
+          "control": false,
+          "card": "home-002",
+          "tag": "SPAN",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "touchend",
+          "trusted": true,
+          "shift": false,
+          "control": false,
+          "card": "home-002",
+          "tag": "SPAN",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "focusin",
+          "trusted": true,
+          "card": "home-002",
+          "tag": "BUTTON",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "click",
+          "trusted": true,
+          "shift": false,
+          "control": false,
+          "card": "home-002",
+          "tag": "BUTTON",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "touchstart",
+          "trusted": true,
+          "shift": false,
+          "control": false,
+          "card": "home-002",
+          "tag": "BUTTON",
+          "copy": true,
+          "manual": false
+        },
+        {
+          "type": "touchend",
+          "trusted": true,
+          "shift": false,
+          "control": false,
+          "card": "home-002",
+          "tag": "BUTTON",
+          "copy": true,
+          "manual": false
+        },
+        {
+          "type": "focusin",
+          "trusted": true,
+          "card": "home-002",
+          "tag": "BUTTON",
+          "copy": true,
+          "manual": false
+        },
+        {
+          "type": "click",
+          "trusted": true,
+          "shift": false,
+          "control": false,
+          "card": "home-002",
+          "tag": "BUTTON",
+          "copy": true,
+          "manual": false
+        },
+        {
+          "type": "touchstart",
+          "trusted": true,
+          "shift": false,
+          "control": false,
+          "card": "home-002",
+          "tag": "TEXTAREA",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "touchend",
+          "trusted": true,
+          "shift": false,
+          "control": false,
+          "card": "home-002",
+          "tag": "TEXTAREA",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "focusin",
+          "trusted": true,
+          "card": "home-002",
+          "tag": "TEXTAREA",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "click",
+          "trusted": true,
+          "shift": false,
+          "control": false,
+          "card": "home-002",
+          "tag": "TEXTAREA",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "keydown",
+          "trusted": true,
+          "key": "a",
+          "shift": false,
+          "control": true,
+          "card": "home-002",
+          "tag": "TEXTAREA",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "keyup",
+          "trusted": true,
+          "key": "a",
+          "shift": false,
+          "control": true,
+          "card": "home-002",
+          "tag": "TEXTAREA",
+          "copy": false,
+          "manual": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "L4-chinese-guest-touch-login-no-continuation",
+    "passed": true,
+    "durationMs": 4527,
+    "detail": {
+      "label": "chinese8000",
+      "user": null,
+      "keyboard": false,
+      "width": 390,
+      "clipboardMode": "accept",
+      "units": 8000,
+      "utf16Sha256": "0ee6ee91e8665659124a4cf6bb80e1503b08984187d5ea5e899c4f573a7de077",
+      "requestTargetBytes": 72015,
+      "selectedUnits": 8000,
+      "manualTarget": "/login",
+      "noPromptRequest": true,
+      "noCopyStorageChange": true,
+      "savedCanvasPreserved": false,
+      "emptyComposerAfterNavigation": true,
+      "screenshot": "long-url-chinese8000-guest-390-accept.png",
+      "traversal": [],
+      "native": [
+        {
+          "type": "touchstart",
+          "trusted": true,
+          "shift": false,
+          "control": false,
+          "card": "home-001",
+          "tag": "BUTTON",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "touchend",
+          "trusted": true,
+          "shift": false,
+          "control": false,
+          "card": "home-001",
+          "tag": "BUTTON",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "focusin",
+          "trusted": true,
+          "card": "home-001",
+          "tag": "BUTTON",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "click",
+          "trusted": true,
+          "shift": false,
+          "control": false,
+          "card": "home-001",
+          "tag": "BUTTON",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "touchstart",
+          "trusted": true,
+          "shift": false,
+          "control": false,
+          "card": "home-001",
+          "tag": "BUTTON",
+          "copy": true,
+          "manual": false
+        },
+        {
+          "type": "touchend",
+          "trusted": true,
+          "shift": false,
+          "control": false,
+          "card": "home-001",
+          "tag": "BUTTON",
+          "copy": true,
+          "manual": false
+        },
+        {
+          "type": "focusin",
+          "trusted": true,
+          "card": "home-001",
+          "tag": "BUTTON",
+          "copy": true,
+          "manual": false
+        },
+        {
+          "type": "click",
+          "trusted": true,
+          "shift": false,
+          "control": false,
+          "card": "home-001",
+          "tag": "BUTTON",
+          "copy": true,
+          "manual": false
+        },
+        {
+          "type": "touchstart",
+          "trusted": true,
+          "shift": false,
+          "control": false,
+          "card": "home-001",
+          "tag": "TEXTAREA",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "touchend",
+          "trusted": true,
+          "shift": false,
+          "control": false,
+          "card": "home-001",
+          "tag": "TEXTAREA",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "focusin",
+          "trusted": true,
+          "card": "home-001",
+          "tag": "TEXTAREA",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "click",
+          "trusted": true,
+          "shift": false,
+          "control": false,
+          "card": "home-001",
+          "tag": "TEXTAREA",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "keydown",
+          "trusted": true,
+          "key": "a",
+          "shift": false,
+          "control": true,
+          "card": "home-001",
+          "tag": "TEXTAREA",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "keyup",
+          "trusted": true,
+          "key": "a",
+          "shift": false,
+          "control": true,
+          "card": "home-001",
+          "tag": "TEXTAREA",
+          "copy": false,
+          "manual": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "L5-emoji-guest-native-keyboard-copy-promptless-login",
+    "passed": true,
+    "durationMs": 2478,
+    "detail": {
+      "label": "emoji8000units",
+      "user": null,
+      "keyboard": true,
+      "width": 1440,
+      "clipboardMode": "accept",
+      "units": 8000,
+      "utf16Sha256": "11ea446f6953532c3c96f46ee043192df9d1d9bd08aee951119d7d15f4359b2a",
+      "requestTargetBytes": 56019,
+      "selectedUnits": 8000,
+      "manualTarget": "/login",
+      "noPromptRequest": true,
+      "noCopyStorageChange": true,
+      "savedCanvasPreserved": false,
+      "emptyComposerAfterNavigation": false,
+      "screenshot": "long-url-emoji8000units-guest-keyboard-accept.png",
+      "traversal": [
+        {
+          "match": false,
+          "tag": "BODY",
+          "label": null,
+          "disclosure": false
+        },
+        {
+          "match": false,
+          "tag": "A",
+          "label": "Narra Image 首页",
+          "disclosure": false
+        },
+        {
+          "match": false,
+          "tag": "A",
+          "label": "GitHub 仓库",
+          "disclosure": false
+        },
+        {
+          "match": false,
+          "tag": "A",
+          "label": null,
+          "disclosure": false
+        },
+        {
+          "match": false,
+          "tag": "A",
+          "label": null,
+          "disclosure": false
+        },
+        {
+          "match": false,
+          "tag": "A",
+          "label": null,
+          "disclosure": false
+        },
+        {
+          "match": false,
+          "tag": "A",
+          "label": null,
+          "disclosure": false
+        },
+        {
+          "match": false,
+          "tag": "A",
+          "label": null,
+          "disclosure": false
+        },
+        {
+          "match": false,
+          "tag": "A",
+          "label": null,
+          "disclosure": false
+        },
+        {
+          "match": false,
+          "tag": "A",
+          "label": null,
+          "disclosure": false
+        },
+        {
+          "match": false,
+          "tag": "A",
+          "label": null,
+          "disclosure": false
+        },
+        {
+          "match": false,
+          "tag": "BUTTON",
+          "label": null,
+          "disclosure": false
+        },
+        {
+          "match": false,
+          "tag": "BUTTON",
+          "label": null,
+          "disclosure": false
+        },
+        {
+          "match": false,
+          "tag": "BUTTON",
+          "label": "暂停装饰动效",
+          "disclosure": false
+        },
+        {
+          "match": false,
+          "tag": "BUTTON",
+          "label": "换一条构图灵感",
+          "disclosure": false
+        },
+        {
+          "match": false,
+          "tag": "A",
+          "label": null,
+          "disclosure": false
+        },
+        {
+          "match": false,
+          "tag": "A",
+          "label": "查看作品 纸上光影 001",
+          "card": "home-001",
+          "disclosure": false
+        },
+        {
+          "match": false,
+          "tag": "BUTTON",
+          "label": "点赞 纸上光影 001",
+          "card": "home-001",
+          "disclosure": false
+        },
+        {
+          "match": false,
+          "tag": "BUTTON",
+          "label": "收起提示词 纸上光影 001",
+          "card": "home-001",
+          "disclosure": true
+        },
+        {
+          "match": false,
+          "tag": "TEXTAREA",
+          "label": "完整公开提示词 纸上光影 001",
+          "card": "home-001",
+          "disclosure": false
+        },
+        {
+          "match": false,
+          "tag": "BUTTON",
+          "label": null,
+          "card": "home-001",
+          "disclosure": false
+        },
+        {
+          "match": false,
+          "tag": "A",
+          "label": null,
+          "card": "home-001",
+          "disclosure": false
+        },
+        {
+          "match": false,
+          "tag": "A",
+          "label": "查看作品 纸上光影 002",
+          "card": "home-002",
+          "disclosure": false
+        },
+        {
+          "match": false,
+          "tag": "BUTTON",
+          "label": "点赞 纸上光影 002",
+          "card": "home-002",
+          "disclosure": false
+        },
+        {
+          "match": false,
+          "tag": "BUTTON",
+          "label": "收起提示词 纸上光影 002",
+          "card": "home-002",
+          "disclosure": true
+        },
+        {
+          "match": false,
+          "tag": "TEXTAREA",
+          "label": "完整公开提示词 纸上光影 002",
+          "card": "home-002",
+          "disclosure": false
+        }
+      ],
+      "native": [
+        {
+          "type": "focusin",
+          "trusted": true,
+          "card": "home-001",
+          "tag": "A",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "keyup",
+          "trusted": true,
+          "key": "Tab",
+          "shift": false,
+          "control": false,
+          "card": "home-001",
+          "tag": "A",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "keydown",
+          "trusted": true,
+          "key": "Tab",
+          "shift": false,
+          "control": false,
+          "card": "home-001",
+          "tag": "A",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "focusin",
+          "trusted": true,
+          "card": "home-001",
+          "tag": "BUTTON",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "keyup",
+          "trusted": true,
+          "key": "Tab",
+          "shift": false,
+          "control": false,
+          "card": "home-001",
+          "tag": "BUTTON",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "keydown",
+          "trusted": true,
+          "key": "Tab",
+          "shift": false,
+          "control": false,
+          "card": "home-001",
+          "tag": "BUTTON",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "focusin",
+          "trusted": true,
+          "card": "home-001",
+          "tag": "BUTTON",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "keyup",
+          "trusted": true,
+          "key": "Tab",
+          "shift": false,
+          "control": false,
+          "card": "home-001",
+          "tag": "BUTTON",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "keydown",
+          "trusted": true,
+          "key": "Tab",
+          "shift": false,
+          "control": false,
+          "card": "home-001",
+          "tag": "BUTTON",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "focusin",
+          "trusted": true,
+          "card": "home-001",
+          "tag": "TEXTAREA",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "keyup",
+          "trusted": true,
+          "key": "Tab",
+          "shift": false,
+          "control": false,
+          "card": "home-001",
+          "tag": "TEXTAREA",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "keydown",
+          "trusted": true,
+          "key": "Tab",
+          "shift": false,
+          "control": false,
+          "card": "home-001",
+          "tag": "TEXTAREA",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "focusin",
+          "trusted": true,
+          "card": "home-001",
+          "tag": "BUTTON",
+          "copy": true,
+          "manual": false
+        },
+        {
+          "type": "keyup",
+          "trusted": true,
+          "key": "Tab",
+          "shift": false,
+          "control": false,
+          "card": "home-001",
+          "tag": "BUTTON",
+          "copy": true,
+          "manual": false
+        },
+        {
+          "type": "keydown",
+          "trusted": true,
+          "key": "Tab",
+          "shift": false,
+          "control": false,
+          "card": "home-001",
+          "tag": "BUTTON",
+          "copy": true,
+          "manual": false
+        },
+        {
+          "type": "focusin",
+          "trusted": true,
+          "card": "home-001",
+          "tag": "A",
+          "copy": false,
+          "manual": true
+        },
+        {
+          "type": "keyup",
+          "trusted": true,
+          "key": "Tab",
+          "shift": false,
+          "control": false,
+          "card": "home-001",
+          "tag": "A",
+          "copy": false,
+          "manual": true
+        },
+        {
+          "type": "keydown",
+          "trusted": true,
+          "key": "Tab",
+          "shift": false,
+          "control": false,
+          "card": "home-001",
+          "tag": "A",
+          "copy": false,
+          "manual": true
+        },
+        {
+          "type": "focusin",
+          "trusted": true,
+          "card": "home-002",
+          "tag": "A",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "keyup",
+          "trusted": true,
+          "key": "Tab",
+          "shift": false,
+          "control": false,
+          "card": "home-002",
+          "tag": "A",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "keydown",
+          "trusted": true,
+          "key": "Tab",
+          "shift": false,
+          "control": false,
+          "card": "home-002",
+          "tag": "A",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "focusin",
+          "trusted": true,
+          "card": "home-002",
+          "tag": "BUTTON",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "keyup",
+          "trusted": true,
+          "key": "Tab",
+          "shift": false,
+          "control": false,
+          "card": "home-002",
+          "tag": "BUTTON",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "keydown",
+          "trusted": true,
+          "key": "Tab",
+          "shift": false,
+          "control": false,
+          "card": "home-002",
+          "tag": "BUTTON",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "focusin",
+          "trusted": true,
+          "card": "home-002",
+          "tag": "BUTTON",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "keyup",
+          "trusted": true,
+          "key": "Tab",
+          "shift": false,
+          "control": false,
+          "card": "home-002",
+          "tag": "BUTTON",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "keydown",
+          "trusted": true,
+          "key": "Tab",
+          "shift": false,
+          "control": false,
+          "card": "home-002",
+          "tag": "BUTTON",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "focusin",
+          "trusted": true,
+          "card": "home-002",
+          "tag": "TEXTAREA",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "keyup",
+          "trusted": true,
+          "key": "Tab",
+          "shift": false,
+          "control": false,
+          "card": "home-002",
+          "tag": "TEXTAREA",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "keydown",
+          "trusted": true,
+          "key": "Tab",
+          "shift": false,
+          "control": false,
+          "card": "home-002",
+          "tag": "TEXTAREA",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "focusin",
+          "trusted": true,
+          "card": "home-002",
+          "tag": "BUTTON",
+          "copy": true,
+          "manual": false
+        },
+        {
+          "type": "keyup",
+          "trusted": true,
+          "key": "Tab",
+          "shift": false,
+          "control": false,
+          "card": "home-002",
+          "tag": "BUTTON",
+          "copy": true,
+          "manual": false
+        },
+        {
+          "type": "keydown",
+          "trusted": true,
+          "key": "Enter",
+          "shift": false,
+          "control": false,
+          "card": "home-002",
+          "tag": "BUTTON",
+          "copy": true,
+          "manual": false
+        },
+        {
+          "type": "keypress",
+          "trusted": true,
+          "key": "Enter",
+          "shift": false,
+          "control": false,
+          "card": "home-002",
+          "tag": "BUTTON",
+          "copy": true,
+          "manual": false
+        },
+        {
+          "type": "click",
+          "trusted": true,
+          "shift": false,
+          "control": false,
+          "card": "home-002",
+          "tag": "BUTTON",
+          "copy": true,
+          "manual": false
+        },
+        {
+          "type": "keyup",
+          "trusted": true,
+          "key": "Enter",
+          "shift": false,
+          "control": false,
+          "card": "home-002",
+          "tag": "BUTTON",
+          "copy": true,
+          "manual": false
+        },
+        {
+          "type": "keydown",
+          "trusted": true,
+          "key": "Tab",
+          "shift": true,
+          "control": false,
+          "card": "home-002",
+          "tag": "BUTTON",
+          "copy": true,
+          "manual": false
+        },
+        {
+          "type": "focusin",
+          "trusted": true,
+          "card": "home-002",
+          "tag": "TEXTAREA",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "keyup",
+          "trusted": true,
+          "key": "Tab",
+          "shift": true,
+          "control": false,
+          "card": "home-002",
+          "tag": "TEXTAREA",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "keydown",
+          "trusted": true,
+          "key": "a",
+          "shift": false,
+          "control": true,
+          "card": "home-002",
+          "tag": "TEXTAREA",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "keyup",
+          "trusted": true,
+          "key": "a",
+          "shift": false,
+          "control": true,
+          "card": "home-002",
+          "tag": "TEXTAREA",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "keydown",
+          "trusted": true,
+          "key": "Tab",
+          "shift": false,
+          "control": false,
+          "card": "home-002",
+          "tag": "TEXTAREA",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "focusin",
+          "trusted": true,
+          "card": "home-002",
+          "tag": "BUTTON",
+          "copy": true,
+          "manual": false
+        },
+        {
+          "type": "keyup",
+          "trusted": true,
+          "key": "Tab",
+          "shift": false,
+          "control": false,
+          "card": "home-002",
+          "tag": "BUTTON",
+          "copy": true,
+          "manual": false
+        },
+        {
+          "type": "keydown",
+          "trusted": true,
+          "key": "Tab",
+          "shift": false,
+          "control": false,
+          "card": "home-002",
+          "tag": "BUTTON",
+          "copy": true,
+          "manual": false
+        },
+        {
+          "type": "focusin",
+          "trusted": true,
+          "card": "home-002",
+          "tag": "A",
+          "copy": false,
+          "manual": true
+        },
+        {
+          "type": "keyup",
+          "trusted": true,
+          "key": "Tab",
+          "shift": false,
+          "control": false,
+          "card": "home-002",
+          "tag": "A",
+          "copy": false,
+          "manual": true
+        }
+      ]
+    }
+  },
+  {
+    "id": "L6-chinese-clipboard-rejection-full-selection",
+    "passed": true,
+    "durationMs": 3003,
+    "detail": {
+      "label": "chinese8000",
+      "user": "home-member",
+      "keyboard": false,
+      "width": 390,
+      "clipboardMode": "reject",
+      "units": 8000,
+      "utf16Sha256": "0ee6ee91e8665659124a4cf6bb80e1503b08984187d5ea5e899c4f573a7de077",
+      "requestTargetBytes": 72015,
+      "selectedUnits": 8000,
+      "manualTarget": "/create",
+      "noPromptRequest": true,
+      "noCopyStorageChange": true,
+      "savedCanvasPreserved": true,
+      "emptyComposerAfterNavigation": true,
+      "screenshot": "long-url-chinese8000-member-390-reject.png",
+      "traversal": [],
+      "native": [
+        {
+          "type": "touchstart",
+          "trusted": true,
+          "shift": false,
+          "control": false,
+          "card": "home-001",
+          "tag": "SPAN",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "touchend",
+          "trusted": true,
+          "shift": false,
+          "control": false,
+          "card": "home-001",
+          "tag": "SPAN",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "focusin",
+          "trusted": true,
+          "card": "home-001",
+          "tag": "BUTTON",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "click",
+          "trusted": true,
+          "shift": false,
+          "control": false,
+          "card": "home-001",
+          "tag": "SPAN",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "touchstart",
+          "trusted": true,
+          "shift": false,
+          "control": false,
+          "card": "home-001",
+          "tag": "BUTTON",
+          "copy": true,
+          "manual": false
+        },
+        {
+          "type": "touchend",
+          "trusted": true,
+          "shift": false,
+          "control": false,
+          "card": "home-001",
+          "tag": "BUTTON",
+          "copy": true,
+          "manual": false
+        },
+        {
+          "type": "focusin",
+          "trusted": true,
+          "card": "home-001",
+          "tag": "BUTTON",
+          "copy": true,
+          "manual": false
+        },
+        {
+          "type": "click",
+          "trusted": true,
+          "shift": false,
+          "control": false,
+          "card": "home-001",
+          "tag": "BUTTON",
+          "copy": true,
+          "manual": false
+        },
+        {
+          "type": "focusin",
+          "trusted": true,
+          "card": "home-001",
+          "tag": "TEXTAREA",
+          "copy": false,
+          "manual": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "L7-emoji-clipboard-absent-320-full-selection",
+    "passed": true,
+    "durationMs": 2608,
+    "detail": {
+      "label": "emoji8000units",
+      "user": null,
+      "keyboard": false,
+      "width": 320,
+      "clipboardMode": "absent",
+      "units": 8000,
+      "utf16Sha256": "11ea446f6953532c3c96f46ee043192df9d1d9bd08aee951119d7d15f4359b2a",
+      "requestTargetBytes": 56019,
+      "selectedUnits": 8000,
+      "manualTarget": "/login",
+      "noPromptRequest": true,
+      "noCopyStorageChange": true,
+      "savedCanvasPreserved": false,
+      "emptyComposerAfterNavigation": false,
+      "screenshot": "long-url-emoji8000units-guest-320-absent.png",
+      "traversal": [],
+      "native": [
+        {
+          "type": "touchstart",
+          "trusted": true,
+          "shift": false,
+          "control": false,
+          "card": "home-002",
+          "tag": "SPAN",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "touchend",
+          "trusted": true,
+          "shift": false,
+          "control": false,
+          "card": "home-002",
+          "tag": "SPAN",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "focusin",
+          "trusted": true,
+          "card": "home-002",
+          "tag": "BUTTON",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "click",
+          "trusted": true,
+          "shift": false,
+          "control": false,
+          "card": "home-002",
+          "tag": "SPAN",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "touchstart",
+          "trusted": true,
+          "shift": false,
+          "control": false,
+          "card": "home-002",
+          "tag": "BUTTON",
+          "copy": true,
+          "manual": false
+        },
+        {
+          "type": "touchend",
+          "trusted": true,
+          "shift": false,
+          "control": false,
+          "card": "home-002",
+          "tag": "BUTTON",
+          "copy": true,
+          "manual": false
+        },
+        {
+          "type": "focusin",
+          "trusted": true,
+          "card": "home-002",
+          "tag": "BUTTON",
+          "copy": true,
+          "manual": false
+        },
+        {
+          "type": "click",
+          "trusted": true,
+          "shift": false,
+          "control": false,
+          "card": "home-002",
+          "tag": "BUTTON",
+          "copy": true,
+          "manual": false
+        },
+        {
+          "type": "focusin",
+          "trusted": true,
+          "card": "home-002",
+          "tag": "TEXTAREA",
+          "copy": false,
+          "manual": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "L8-over-input-limit-full-copy-warning",
+    "passed": true,
+    "durationMs": 3187,
+    "detail": {
+      "label": "manual-over-input-limit",
+      "user": "home-member",
+      "keyboard": false,
+      "width": 390,
+      "clipboardMode": "accept",
+      "units": 8010,
+      "utf16Sha256": "0db7803f3ebd67f9aa51cccb115d42bcd2ee7b0b422fbffa584fe97d2648099b",
+      "requestTargetBytes": 40047,
+      "selectedUnits": 8010,
+      "manualTarget": "/create",
+      "noPromptRequest": true,
+      "noCopyStorageChange": true,
+      "savedCanvasPreserved": true,
+      "emptyComposerAfterNavigation": true,
+      "screenshot": "long-url-manual-over-input-limit-member-390-accept.png",
+      "traversal": [],
+      "native": [
+        {
+          "type": "touchstart",
+          "trusted": true,
+          "shift": false,
+          "control": false,
+          "card": "home-004",
+          "tag": "A",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "touchend",
+          "trusted": true,
+          "shift": false,
+          "control": false,
+          "card": "home-004",
+          "tag": "A",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "focusin",
+          "trusted": true,
+          "card": "home-004",
+          "tag": "A",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "click",
+          "trusted": true,
+          "shift": false,
+          "control": false,
+          "card": "home-004",
+          "tag": "DIV",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "touchstart",
+          "trusted": true,
+          "shift": false,
+          "control": false,
+          "card": "home-004",
+          "tag": "BUTTON",
+          "copy": true,
+          "manual": false
+        },
+        {
+          "type": "touchend",
+          "trusted": true,
+          "shift": false,
+          "control": false,
+          "card": "home-004",
+          "tag": "BUTTON",
+          "copy": true,
+          "manual": false
+        },
+        {
+          "type": "focusin",
+          "trusted": true,
+          "card": "home-004",
+          "tag": "BUTTON",
+          "copy": true,
+          "manual": false
+        },
+        {
+          "type": "click",
+          "trusted": true,
+          "shift": false,
+          "control": false,
+          "card": "home-004",
+          "tag": "BUTTON",
+          "copy": true,
+          "manual": false
+        },
+        {
+          "type": "touchstart",
+          "trusted": true,
+          "shift": false,
+          "control": false,
+          "card": "home-004",
+          "tag": "TEXTAREA",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "touchend",
+          "trusted": true,
+          "shift": false,
+          "control": false,
+          "card": "home-004",
+          "tag": "TEXTAREA",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "focusin",
+          "trusted": true,
+          "card": "home-004",
+          "tag": "TEXTAREA",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "click",
+          "trusted": true,
+          "shift": false,
+          "control": false,
+          "card": "home-004",
+          "tag": "TEXTAREA",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "keydown",
+          "trusted": true,
+          "key": "a",
+          "shift": false,
+          "control": true,
+          "card": "home-004",
+          "tag": "TEXTAREA",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "keyup",
+          "trusted": true,
+          "key": "a",
+          "shift": false,
+          "control": true,
+          "card": "home-004",
+          "tag": "TEXTAREA",
+          "copy": false,
+          "manual": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "L9-budget8193-native-manual-no-prefill",
+    "passed": true,
+    "durationMs": 3149,
+    "detail": {
+      "label": "budget8193",
+      "user": "home-member",
+      "keyboard": false,
+      "width": 390,
+      "clipboardMode": "accept",
+      "units": 938,
+      "utf16Sha256": "9bfe9592b1a42d8b88595a877ec1d8ba220b75d809e1561ded3d32bef217e4c1",
+      "requestTargetBytes": 8193,
+      "selectedUnits": 938,
+      "manualTarget": "/create",
+      "noPromptRequest": true,
+      "noCopyStorageChange": true,
+      "savedCanvasPreserved": true,
+      "emptyComposerAfterNavigation": true,
+      "screenshot": "long-url-budget8193-member-390-accept.png",
+      "traversal": [],
+      "native": [
+        {
+          "type": "touchstart",
+          "trusted": true,
+          "shift": false,
+          "control": false,
+          "card": "home-007",
+          "tag": "SPAN",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "touchend",
+          "trusted": true,
+          "shift": false,
+          "control": false,
+          "card": "home-007",
+          "tag": "SPAN",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "focusin",
+          "trusted": true,
+          "card": "home-007",
+          "tag": "BUTTON",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "click",
+          "trusted": true,
+          "shift": false,
+          "control": false,
+          "card": "home-007",
+          "tag": "SPAN",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "touchstart",
+          "trusted": true,
+          "shift": false,
+          "control": false,
+          "card": "home-007",
+          "tag": "BUTTON",
+          "copy": true,
+          "manual": false
+        },
+        {
+          "type": "touchend",
+          "trusted": true,
+          "shift": false,
+          "control": false,
+          "card": "home-007",
+          "tag": "BUTTON",
+          "copy": true,
+          "manual": false
+        },
+        {
+          "type": "focusin",
+          "trusted": true,
+          "card": "home-007",
+          "tag": "BUTTON",
+          "copy": true,
+          "manual": false
+        },
+        {
+          "type": "click",
+          "trusted": true,
+          "shift": false,
+          "control": false,
+          "card": "home-007",
+          "tag": "BUTTON",
+          "copy": true,
+          "manual": false
+        },
+        {
+          "type": "touchstart",
+          "trusted": true,
+          "shift": false,
+          "control": false,
+          "card": "home-007",
+          "tag": "TEXTAREA",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "touchend",
+          "trusted": true,
+          "shift": false,
+          "control": false,
+          "card": "home-007",
+          "tag": "TEXTAREA",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "focusin",
+          "trusted": true,
+          "card": "home-007",
+          "tag": "TEXTAREA",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "click",
+          "trusted": true,
+          "shift": false,
+          "control": false,
+          "card": "home-007",
+          "tag": "TEXTAREA",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "keydown",
+          "trusted": true,
+          "key": "a",
+          "shift": false,
+          "control": true,
+          "card": "home-007",
+          "tag": "TEXTAREA",
+          "copy": false,
+          "manual": false
+        },
+        {
+          "type": "keyup",
+          "trusted": true,
+          "key": "a",
+          "shift": false,
+          "control": true,
+          "card": "home-007",
+          "tag": "TEXTAREA",
+          "copy": false,
+          "manual": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "L10-actual-gallery-direct-navigation-budget8191",
+    "passed": true,
+    "durationMs": 5404,
+    "detail": {
+      "label": "budget8191",
+      "units": 936,
+      "utf16Sha256": "2a6555308c3437e6768ca041d4e4cc520925e325f508d2e0c3c56fd51ec17243",
+      "requestTargetBytes": 8191,
+      "inputUnits": 936,
+      "actualNextNavigation": true,
+      "noMutation": true
+    }
+  },
+  {
+    "id": "L10-actual-gallery-direct-navigation-budget8192",
+    "passed": true,
+    "durationMs": 5370,
+    "detail": {
+      "label": "budget8192",
+      "units": 937,
+      "utf16Sha256": "b2bec2aa31d03794c0b9be084332a31c25d80cb25257059b5c2963948c786383",
+      "requestTargetBytes": 8192,
+      "inputUnits": 937,
+      "actualNextNavigation": true,
+      "noMutation": true
+    }
+  },
+  {
+    "id": "L10-actual-gallery-direct-navigation-reserved-whitespace",
+    "passed": true,
+    "durationMs": 5398,
+    "detail": {
+      "label": "reserved-whitespace",
+      "units": 25,
+      "utf16Sha256": "41dc250d6162a07a4f2c224efb5074f64593dde718ca4569a27049ee5632bf55",
+      "requestTargetBytes": 114,
+      "inputUnits": 25,
+      "actualNextNavigation": true,
+      "noMutation": true
+    }
+  },
+  {
+    "id": "L10-actual-gallery-direct-navigation-ascii8000",
+    "passed": true,
+    "durationMs": 5460,
+    "detail": {
+      "label": "ascii8000",
+      "units": 8000,
+      "utf16Sha256": "e11f987ba711970265843fc226cdf42aa8f9567eb15a0303384d9900f0629881",
+      "requestTargetBytes": 8015,
+      "inputUnits": 8000,
+      "actualNextNavigation": true,
+      "noMutation": true
+    }
+  },
+  {
+    "id": "L10-actual-gallery-direct-navigation-ascii8001",
+    "passed": true,
+    "durationMs": 5439,
+    "detail": {
+      "label": "ascii8001",
+      "units": 8001,
+      "utf16Sha256": "5367c4f637476ece0cf7f137826b67e4badbd3a39cce267a681b535f32b2b8e9",
+      "requestTargetBytes": 8016,
+      "inputUnits": 8000,
+      "actualNextNavigation": true,
+      "noMutation": true
+    }
+  },
+  {
+    "id": "C2-ascii-prefill-existing8000-unit-boundary",
+    "passed": true,
+    "durationMs": 3071,
+    "detail": {
+      "passedAsciiCases": [
+        {
+          "label": "ascii8000",
+          "units": 8000,
+          "requestTargetBytes": 8015,
+          "status": 200,
+          "inputUnits": 8000,
+          "matchesExistingSlice": true
+        },
+        {
+          "label": "ascii8001",
+          "units": 8001,
+          "requestTargetBytes": 8016,
+          "status": 200,
+          "inputUnits": 8000,
+          "matchesExistingSlice": true
+        }
+      ],
+      "multibyteCases": [
+        {
+          "label": "chinese8000",
+          "units": 8000,
+          "requestTargetBytes": 72015,
+          "status": 431,
+          "inputUnits": null,
+          "matchesExistingSlice": false,
+          "directNavigationPassed": false,
+          "approvedGalleryFallbackVerified": true,
+          "classification": "transport-observation-with-independently-verified-approved-entry-fallback"
+        },
+        {
+          "label": "emoji8000units",
+          "units": 8000,
+          "requestTargetBytes": 56019,
+          "status": 431,
+          "inputUnits": null,
+          "matchesExistingSlice": false,
+          "directNavigationPassed": false,
+          "approvedGalleryFallbackVerified": true,
+          "classification": "transport-observation-with-independently-verified-approved-entry-fallback"
+        }
+      ],
+      "note": "Raw HTTP431 is retained, never counted as successful prefill. Only separately passed actual-gallery fallback closes entry acceptance."
+    }
+  }
+]

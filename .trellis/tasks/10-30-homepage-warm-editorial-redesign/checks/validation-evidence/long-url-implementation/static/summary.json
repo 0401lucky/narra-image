@@ -1,0 +1,23 @@
+{
+  "nodeVersion": "v24.22.1",
+  "lintErrors": 0,
+  "lintBaselineWarnings": 9,
+  "results": [
+    {
+      "id": "20261101T023815-lint-3d787c",
+      "exitCode": 0,
+      "durationSeconds": 16.77,
+      "timeoutSeconds": 180,
+      "sourceChanges": [],
+      "snapshotModifications": []
+    },
+    {
+      "id": "20261101T023849-types-1a06ca",
+      "exitCode": 0,
+      "durationSeconds": 5.216,
+      "timeoutSeconds": 180,
+      "sourceChanges": [],
+      "snapshotModifications": []
+    }
+  ]
+}

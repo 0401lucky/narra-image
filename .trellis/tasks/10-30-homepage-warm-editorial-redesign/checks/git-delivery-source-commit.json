@@ -1,0 +1,9 @@
+{
+  "commit": "d1960ecc53ceadcda70e3bf9616cc8020c70b570",
+  "message": "feat: deliver studio canvas and warm editorial homepage",
+  "paths": 402,
+  "sourceAudit": "git-delivery-source-audit.json",
+  "identityFromExistingHead": true,
+  "globalConfigChanged": false,
+  "pushPerformed": false
+}

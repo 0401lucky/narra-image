@@ -1,0 +1,141 @@
+[
+  {
+    "id": "R-reference-clean-1440",
+    "passed": true,
+    "durationMs": 4605,
+    "detail": {
+      "width": 1440,
+      "height": 1000,
+      "measured": {
+        "font": "\"Plus Jakarta Sans\", \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", sans-serif",
+        "paper": "rgb(246, 242, 235)",
+        "hero": {
+          "x": 0,
+          "y": 65,
+          "width": 1425,
+          "height": 665.5,
+          "top": 65,
+          "right": 1425,
+          "bottom": 730.5,
+          "left": 0
+        },
+        "title": {
+          "x": 104.5,
+          "y": 240.75,
+          "width": 584,
+          "height": 87,
+          "top": 240.75,
+          "right": 688.5,
+          "bottom": 327.75,
+          "left": 104.5
+        },
+        "frame": {
+          "x": 736.5,
+          "y": 129,
+          "width": 584,
+          "height": 505.5,
+          "top": 129,
+          "right": 1320.5,
+          "bottom": 634.5,
+          "left": 736.5
+        },
+        "overflow": false,
+        "imageLoaded": true,
+        "fonts": [
+          "Cormorant Garamond",
+          "Cormorant Garamond",
+          "Cormorant Garamond",
+          "Noto Serif SC",
+          "Noto Serif SC",
+          "Noto Serif SC",
+          "Noto Serif SC",
+          "Noto Serif SC",
+          "Noto Serif SC",
+          "Noto Serif SC",
+          "Noto Serif SC",
+          "Noto Serif SC",
+          "Noto Serif SC",
+          "Noto Serif SC",
+          "Noto Serif SC",
+          "Noto Serif SC",
+          "Noto Serif SC",
+          "Plus Jakarta Sans",
+          "Plus Jakarta Sans",
+          "Plus Jakarta Sans",
+          "Plus Jakarta Sans"
+        ]
+      },
+      "htmlSha256": "61407551ce76abee52f1025badd1a125cefd70823000f04aa64af0e0f4a00f69",
+      "cdnSha256": "176e894661aa9cdc9a5cba6c720044cbbf7b8bd80d1c9a142a7c24b1b6c50d15",
+      "externalNetworkBlocked": []
+    }
+  },
+  {
+    "id": "R-reference-clean-390",
+    "passed": true,
+    "durationMs": 4365,
+    "detail": {
+      "width": 390,
+      "height": 844,
+      "measured": {
+        "font": "\"Plus Jakarta Sans\", \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", sans-serif",
+        "paper": "rgb(246, 242, 235)",
+        "hero": {
+          "x": 0,
+          "y": 65,
+          "width": 390,
+          "height": 984.78125,
+          "top": 65,
+          "right": 390,
+          "bottom": 1049.78125,
+          "left": 0
+        },
+        "title": {
+          "x": 16,
+          "y": 191,
+          "width": 358,
+          "height": 83.78125,
+          "top": 191,
+          "right": 374,
+          "bottom": 274.78125,
+          "left": 16
+        },
+        "frame": {
+          "x": 16,
+          "y": 626.78125,
+          "width": 358,
+          "height": 359,
+          "top": 626.78125,
+          "right": 374,
+          "bottom": 985.78125,
+          "left": 16
+        },
+        "overflow": false,
+        "imageLoaded": true,
+        "fonts": [
+          "Cormorant Garamond",
+          "Cormorant Garamond",
+          "Cormorant Garamond",
+          "Noto Serif SC",
+          "Noto Serif SC",
+          "Noto Serif SC",
+          "Noto Serif SC",
+          "Noto Serif SC",
+          "Noto Serif SC",
+          "Noto Serif SC",
+          "Noto Serif SC",
+          "Noto Serif SC",
+          "Noto Serif SC",
+          "Noto Serif SC",
+          "Plus Jakarta Sans",
+          "Plus Jakarta Sans",
+          "Plus Jakarta Sans",
+          "Plus Jakarta Sans"
+        ]
+      },
+      "htmlSha256": "61407551ce76abee52f1025badd1a125cefd70823000f04aa64af0e0f4a00f69",
+      "cdnSha256": "176e894661aa9cdc9a5cba6c720044cbbf7b8bd80d1c9a142a7c24b1b6c50d15",
+      "externalNetworkBlocked": []
+    }
+  }
+]

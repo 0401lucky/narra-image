@@ -1,0 +1,22 @@
+export const GALLERY_PAGE_SIZE = 16;
+export const GALLERY_ITEM_LIMIT = 72;
+export const GALLERY_REQUEST_TIMEOUT_MS = 15_000;
+export const GALLERY_OBSERVER_MARGIN = "400px";
+export const GALLERY_CASCADE_DELAY = 0.07;
+
+export const GALLERY_MESSAGES = {
+  bootstrapError: "精选作品暂时加载失败，请重试。",
+  pageError: "加载失败，已展示的作品仍保留，请重试。",
+  pageFormatError: "精选作品数据格式不正确，请重试。",
+  cursorError: "精选作品分页未能继续，请重试。",
+  pageTimeout: "精选作品加载超时，请重试。",
+  duplicatePage: "本页没有新增作品，已暂停自动加载，可手动继续。",
+  likeError: "点赞失败，当前状态未更新，请重试。",
+  likeUnconfirmed: "点赞结果未确认，当前显示未更新，请刷新后确认。",
+  likeTimeout: "点赞请求超时，当前显示未更新，请刷新后确认。",
+  guestRemix: "做同款需先登录。登录后请返回首页社区精选，重新选择作品；公开提示词可直接复制。",
+  remixHint: "做同款只预填公开的正向提示词，不复制模型或参数，也不会自动生成。如已保存画布模式，请手动切回「对话」查看预填内容。",
+  hiddenPrompt: "作者未公开提示词，暂不能复制或做同款。",
+  emptyPrompt: "这件作品暂时没有可用的公开提示词。",
+  clipboardManual: "无法自动复制，请选中下方完整提示词手动复制。",
+} as const;

@@ -1,0 +1,647 @@
+{
+  "runId": "home-1793431525760",
+  "mode": "home",
+  "filter": "^H10-",
+  "evidence": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\browser\\evidence\\home-1793431525760",
+  "app": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\hero-hit-independent-8725c17e\\app",
+  "checks": [
+    {
+      "id": "H10-keyboard-scene-tabs-and-native-copy-all-scenes",
+      "passed": true,
+      "durationMs": 2675,
+      "detail": {
+        "calibration": {
+          "incompleteKey": {
+            "clicks": 0,
+            "events": [
+              {
+                "type": "keydown",
+                "key": "Tab",
+                "code": "Tab",
+                "trusted": true,
+                "target": ""
+              },
+              {
+                "type": "keyup",
+                "key": "Tab",
+                "code": "Tab",
+                "trusted": true,
+                "target": "native-enter-calibration"
+              },
+              {
+                "type": "keydown",
+                "key": "Enter",
+                "code": "",
+                "trusted": true,
+                "target": "native-enter-calibration"
+              },
+              {
+                "type": "keyup",
+                "key": "Enter",
+                "code": "",
+                "trusted": true,
+                "target": "native-enter-calibration"
+              }
+            ]
+          },
+          "completeKey": {
+            "clicks": 1,
+            "events": [
+              {
+                "type": "keydown",
+                "key": "Tab",
+                "code": "Tab",
+                "trusted": true,
+                "target": ""
+              },
+              {
+                "type": "keyup",
+                "key": "Tab",
+                "code": "Tab",
+                "trusted": true,
+                "target": "native-enter-calibration"
+              },
+              {
+                "type": "keydown",
+                "key": "Enter",
+                "code": "",
+                "trusted": true,
+                "target": "native-enter-calibration"
+              },
+              {
+                "type": "keyup",
+                "key": "Enter",
+                "code": "",
+                "trusted": true,
+                "target": "native-enter-calibration"
+              },
+              {
+                "type": "keydown",
+                "key": "Enter",
+                "code": "Enter",
+                "trusted": true,
+                "target": "native-enter-calibration"
+              },
+              {
+                "type": "keypress",
+                "key": "Enter",
+                "code": "Enter",
+                "trusted": true,
+                "target": "native-enter-calibration"
+              },
+              {
+                "type": "click",
+                "trusted": true,
+                "target": "native-enter-calibration"
+              },
+              {
+                "type": "keyup",
+                "key": "Enter",
+                "code": "Enter",
+                "trusted": true,
+                "target": "native-enter-calibration"
+              }
+            ]
+          },
+          "disabledKey": {
+            "clicks": 1,
+            "events": [
+              {
+                "type": "keydown",
+                "key": "Tab",
+                "code": "Tab",
+                "trusted": true,
+                "target": ""
+              },
+              {
+                "type": "keyup",
+                "key": "Tab",
+                "code": "Tab",
+                "trusted": true,
+                "target": "native-enter-calibration"
+              },
+              {
+                "type": "keydown",
+                "key": "Enter",
+                "code": "",
+                "trusted": true,
+                "target": "native-enter-calibration"
+              },
+              {
+                "type": "keyup",
+                "key": "Enter",
+                "code": "",
+                "trusted": true,
+                "target": "native-enter-calibration"
+              },
+              {
+                "type": "keydown",
+                "key": "Enter",
+                "code": "Enter",
+                "trusted": true,
+                "target": "native-enter-calibration"
+              },
+              {
+                "type": "keypress",
+                "key": "Enter",
+                "code": "Enter",
+                "trusted": true,
+                "target": "native-enter-calibration"
+              },
+              {
+                "type": "click",
+                "trusted": true,
+                "target": "native-enter-calibration"
+              },
+              {
+                "type": "keyup",
+                "key": "Enter",
+                "code": "Enter",
+                "trusted": true,
+                "target": "native-enter-calibration"
+              },
+              {
+                "type": "keydown",
+                "key": "Tab",
+                "code": "Tab",
+                "trusted": true,
+                "target": "native-enter-calibration"
+              },
+              {
+                "type": "keyup",
+                "key": "Tab",
+                "code": "Tab",
+                "trusted": true,
+                "target": ""
+              },
+              {
+                "type": "keydown",
+                "key": "Enter",
+                "code": "Enter",
+                "trusted": true,
+                "target": ""
+              },
+              {
+                "type": "keypress",
+                "key": "Enter",
+                "code": "Enter",
+                "trusted": true,
+                "target": ""
+              },
+              {
+                "type": "keyup",
+                "key": "Enter",
+                "code": "Enter",
+                "trusted": true,
+                "target": ""
+              }
+            ]
+          },
+          "programmaticClickOrFocus": false
+        },
+        "traversalCalibration": {
+          "samples": [
+            {
+              "label": "forward-first",
+              "modifiers": 0,
+              "before": "",
+              "active": "native-tab-first",
+              "clicks": 0,
+              "events": [
+                {
+                  "type": "keydown",
+                  "key": "Tab",
+                  "code": "Tab",
+                  "trusted": true,
+                  "target": "",
+                  "shift": false,
+                  "alt": false,
+                  "control": false,
+                  "meta": false
+                },
+                {
+                  "type": "focusin",
+                  "trusted": true,
+                  "target": "native-tab-first"
+                },
+                {
+                  "type": "keyup",
+                  "key": "Tab",
+                  "code": "Tab",
+                  "trusted": true,
+                  "target": "native-tab-first",
+                  "shift": false,
+                  "alt": false,
+                  "control": false,
+                  "meta": false
+                }
+              ]
+            },
+            {
+              "label": "forward-middle",
+              "modifiers": 0,
+              "before": "native-tab-first",
+              "active": "native-tab-middle",
+              "clicks": 0,
+              "events": [
+                {
+                  "type": "keydown",
+                  "key": "Tab",
+                  "code": "Tab",
+                  "trusted": true,
+                  "target": "native-tab-first",
+                  "shift": false,
+                  "alt": false,
+                  "control": false,
+                  "meta": false
+                },
+                {
+                  "type": "focusin",
+                  "trusted": true,
+                  "target": "native-tab-middle"
+                },
+                {
+                  "type": "keyup",
+                  "key": "Tab",
+                  "code": "Tab",
+                  "trusted": true,
+                  "target": "native-tab-middle",
+                  "shift": false,
+                  "alt": false,
+                  "control": false,
+                  "meta": false
+                }
+              ]
+            },
+            {
+              "label": "forward-skips-disabled",
+              "modifiers": 0,
+              "before": "native-tab-middle",
+              "active": "native-tab-last",
+              "clicks": 0,
+              "events": [
+                {
+                  "type": "keydown",
+                  "key": "Tab",
+                  "code": "Tab",
+                  "trusted": true,
+                  "target": "native-tab-middle",
+                  "shift": false,
+                  "alt": false,
+                  "control": false,
+                  "meta": false
+                },
+                {
+                  "type": "focusin",
+                  "trusted": true,
+                  "target": "native-tab-last"
+                },
+                {
+                  "type": "keyup",
+                  "key": "Tab",
+                  "code": "Tab",
+                  "trusted": true,
+                  "target": "native-tab-last",
+                  "shift": false,
+                  "alt": false,
+                  "control": false,
+                  "meta": false
+                }
+              ]
+            },
+            {
+              "label": "reverse-skips-disabled",
+              "modifiers": 8,
+              "before": "native-tab-last",
+              "active": "native-tab-middle",
+              "clicks": 0,
+              "events": [
+                {
+                  "type": "keydown",
+                  "key": "Tab",
+                  "code": "Tab",
+                  "trusted": true,
+                  "target": "native-tab-last",
+                  "shift": true,
+                  "alt": false,
+                  "control": false,
+                  "meta": false
+                },
+                {
+                  "type": "focusin",
+                  "trusted": true,
+                  "target": "native-tab-middle"
+                },
+                {
+                  "type": "keyup",
+                  "key": "Tab",
+                  "code": "Tab",
+                  "trusted": true,
+                  "target": "native-tab-middle",
+                  "shift": true,
+                  "alt": false,
+                  "control": false,
+                  "meta": false
+                }
+              ]
+            },
+            {
+              "label": "reverse-first",
+              "modifiers": 8,
+              "before": "native-tab-middle",
+              "active": "native-tab-first",
+              "clicks": 0,
+              "events": [
+                {
+                  "type": "keydown",
+                  "key": "Tab",
+                  "code": "Tab",
+                  "trusted": true,
+                  "target": "native-tab-middle",
+                  "shift": true,
+                  "alt": false,
+                  "control": false,
+                  "meta": false
+                },
+                {
+                  "type": "focusin",
+                  "trusted": true,
+                  "target": "native-tab-first"
+                },
+                {
+                  "type": "keyup",
+                  "key": "Tab",
+                  "code": "Tab",
+                  "trusted": true,
+                  "target": "native-tab-first",
+                  "shift": true,
+                  "alt": false,
+                  "control": false,
+                  "meta": false
+                }
+              ]
+            },
+            {
+              "label": "forward-after-reverse",
+              "modifiers": 0,
+              "before": "native-tab-first",
+              "active": "native-tab-middle",
+              "clicks": 0,
+              "events": [
+                {
+                  "type": "keydown",
+                  "key": "Tab",
+                  "code": "Tab",
+                  "trusted": true,
+                  "target": "native-tab-first",
+                  "shift": false,
+                  "alt": false,
+                  "control": false,
+                  "meta": false
+                },
+                {
+                  "type": "focusin",
+                  "trusted": true,
+                  "target": "native-tab-middle"
+                },
+                {
+                  "type": "keyup",
+                  "key": "Tab",
+                  "code": "Tab",
+                  "trusted": true,
+                  "target": "native-tab-middle",
+                  "shift": false,
+                  "alt": false,
+                  "control": false,
+                  "meta": false
+                }
+              ]
+            },
+            {
+              "label": "alt-is-not-reverse",
+              "modifiers": 1,
+              "before": "native-tab-middle",
+              "active": "native-tab-middle",
+              "clicks": 0,
+              "events": [
+                {
+                  "type": "keydown",
+                  "key": "Tab",
+                  "code": "Tab",
+                  "trusted": true,
+                  "target": "native-tab-middle",
+                  "shift": false,
+                  "alt": true,
+                  "control": false,
+                  "meta": false
+                },
+                {
+                  "type": "keyup",
+                  "key": "Tab",
+                  "code": "Tab",
+                  "trusted": true,
+                  "target": "native-tab-middle",
+                  "shift": false,
+                  "alt": true,
+                  "control": false,
+                  "meta": false
+                }
+              ]
+            }
+          ],
+          "modifiers": {
+            "Alt": 1,
+            "Control": 2,
+            "Meta": 4,
+            "Shift": 8
+          },
+          "disabledControlSkipped": true,
+          "programmaticClickOrFocus": false
+        },
+        "samples": [
+          {
+            "scene": "film",
+            "before": {
+              "at": 1385.2000000029802,
+              "x": 1239,
+              "y": 537.703125,
+              "rect": {
+                "x": 1198,
+                "y": 523.703125,
+                "width": 82,
+                "height": 28,
+                "top": 523.703125,
+                "right": 1280,
+                "bottom": 551.703125,
+                "left": 1198
+              },
+              "clip": {
+                "left": 0,
+                "top": 0,
+                "right": 1432,
+                "bottom": 1000
+              },
+              "visible": true,
+              "hit": true,
+              "hitTag": "BUTTON",
+              "disabled": false,
+              "scene": "film",
+              "ready": true,
+              "frameTransform": "matrix(1, 0, 0, 1, 0, 0)",
+              "pointerActive": "false",
+              "rotateX": 0,
+              "rotateY": 0,
+              "paused": "false",
+              "reduced": "false",
+              "copyCount": 0
+            },
+            "copied": {
+              "text": "黄昏穿过旧书店百叶窗的丁达尔光束，微尘在暖金空气中漂浮，王家卫电影胶片颗粒感，柔和景深，叙事感构图",
+              "id": "film",
+              "typed": "黄昏穿过旧书店百叶窗"
+            },
+            "events": [
+              {
+                "type": "click",
+                "at": 1388.300000011921,
+                "x": 0,
+                "y": 0,
+                "trusted": true,
+                "pointerType": "",
+                "detail": 0,
+                "heroCopy": true,
+                "target": "<button type=\"button\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-arrow-up-right\" aria-hidden=\"true\"><path d=\"M7 7h10v10\"></path><path d=\"M7 1",
+                "scene": "film"
+              }
+            ],
+            "returnFocus": "胶片光影"
+          },
+          {
+            "scene": "storybook",
+            "before": {
+              "at": 1524.2000000029802,
+              "x": 1239,
+              "y": 537.703125,
+              "rect": {
+                "x": 1198,
+                "y": 523.703125,
+                "width": 82,
+                "height": 28,
+                "top": 523.703125,
+                "right": 1280,
+                "bottom": 551.703125,
+                "left": 1198
+              },
+              "clip": {
+                "left": 0,
+                "top": 0,
+                "right": 1432,
+                "bottom": 1000
+              },
+              "visible": true,
+              "hit": true,
+              "hitTag": "BUTTON",
+              "disabled": false,
+              "scene": "storybook",
+              "ready": true,
+              "frameTransform": "matrix(1, 0, 0, 1, 0, 0)",
+              "pointerActive": "false",
+              "rotateX": 0,
+              "rotateY": 0,
+              "paused": "false",
+              "reduced": "false",
+              "copyCount": 1
+            },
+            "copied": {
+              "text": "提着暖黄煤油灯穿过迷雾森林的小狐狸，宫崎骏式温暖手绘水彩质感，星光点缀夜空，细腻纸张纹理",
+              "id": "storybook",
+              "typed": "提着"
+            },
+            "events": [
+              {
+                "type": "click",
+                "at": 1526.5,
+                "x": 0,
+                "y": 0,
+                "trusted": true,
+                "pointerType": "",
+                "detail": 0,
+                "heroCopy": true,
+                "target": "<button type=\"button\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-arrow-up-right\" aria-hidden=\"true\"><path d=\"M7 7h10v10\"></path><path d=\"M7 1",
+                "scene": "storybook"
+              }
+            ],
+            "returnFocus": "绘本叙事"
+          },
+          {
+            "scene": "oriental",
+            "before": {
+              "at": 1652.800000011921,
+              "x": 1239,
+              "y": 537.703125,
+              "rect": {
+                "x": 1198,
+                "y": 523.703125,
+                "width": 82,
+                "height": 28,
+                "top": 523.703125,
+                "right": 1280,
+                "bottom": 551.703125,
+                "left": 1198
+              },
+              "clip": {
+                "left": 0,
+                "top": 0,
+                "right": 1432,
+                "bottom": 1000
+              },
+              "visible": true,
+              "hit": true,
+              "hitTag": "BUTTON",
+              "disabled": false,
+              "scene": "oriental",
+              "ready": true,
+              "frameTransform": "matrix(1, 0, 0, 1, 0, 0)",
+              "pointerActive": "false",
+              "rotateX": 0,
+              "rotateY": 0,
+              "paused": "false",
+              "reduced": "false",
+              "copyCount": 2
+            },
+            "copied": {
+              "text": "江南雨巷檐角滴落的雨水，远处暖黄灯笼倒映在青石板水面，宋代美学克制留白，电影级冷暖色调对比",
+              "id": "oriental",
+              "typed": "江南"
+            },
+            "events": [
+              {
+                "type": "click",
+                "at": 1653.5,
+                "x": 0,
+                "y": 0,
+                "trusted": true,
+                "pointerType": "",
+                "detail": 0,
+                "heroCopy": true,
+                "target": "<button type=\"button\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-arrow-up-right\" aria-hidden=\"true\"><path d=\"M7 7h10v10\"></path><path d=\"M7 1",
+                "scene": "oriental"
+              }
+            ],
+            "returnFocus": "东方美学"
+          }
+        ],
+        "nativeKeyboardCopies": 3,
+        "programmaticFocus": false
+      }
+    }
+  ],
+  "passed": true,
+  "passedScope": "Executable checks only; unresolved acceptance is separate and never a passing navigation case.",
+  "unresolvedAcceptance": [],
+  "limitations": [
+    "Real Next/React/Chromium with synthetic DB only; not live DB/Worker/provider E2E.",
+    "Desktop Chrome CDP emulates viewport/touch; not physical mobile/native IME.",
+    "Local installed Node is not pinned Node24.22.1."
+  ]
+}

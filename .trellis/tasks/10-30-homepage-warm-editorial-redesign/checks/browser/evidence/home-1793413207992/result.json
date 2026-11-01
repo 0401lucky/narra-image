@@ -1,0 +1,155 @@
+{
+  "runId": "home-1793413207992",
+  "mode": "home",
+  "filter": "^F2",
+  "evidence": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\browser\\evidence\\home-1793413207992",
+  "app": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\browser-home-6123bb41\\app",
+  "checks": [
+    {
+      "id": "F2-final-gallery-row-settles-before-footer",
+      "passed": true,
+      "durationMs": 10058,
+      "detail": {
+        "initial": [
+          {
+            "id": "home-069",
+            "top": 227.15673828125,
+            "bottom": 588.40673828125,
+            "height": 361.25,
+            "opacity": "0.3207",
+            "visibility": "visible",
+            "transform": "matrix(1, 0, 0, 1, 0, 16.1725)",
+            "visible": true,
+            "opacityChain": [
+              "1",
+              "0.3207",
+              "1",
+              "1"
+            ]
+          },
+          {
+            "id": "home-070",
+            "top": 234.984375,
+            "bottom": 596.234375,
+            "height": 361.25,
+            "opacity": "0",
+            "visibility": "visible",
+            "transform": "matrix(1, 0, 0, 1, 0, 24)",
+            "visible": true,
+            "opacityChain": [
+              "1",
+              "0",
+              "1",
+              "1"
+            ]
+          },
+          {
+            "id": "home-071",
+            "top": 234.984375,
+            "bottom": 596.234375,
+            "height": 361.25,
+            "opacity": "0",
+            "visibility": "visible",
+            "transform": "matrix(1, 0, 0, 1, 0, 24)",
+            "visible": true,
+            "opacityChain": [
+              "1",
+              "0",
+              "1",
+              "1"
+            ]
+          },
+          {
+            "id": "home-072",
+            "top": 234.984375,
+            "bottom": 596.234375,
+            "height": 361.25,
+            "opacity": "0",
+            "visibility": "visible",
+            "transform": "matrix(1, 0, 0, 1, 0, 24)",
+            "visible": true,
+            "opacityChain": [
+              "1",
+              "0",
+              "1",
+              "1"
+            ]
+          }
+        ],
+        "settled": [
+          {
+            "id": "home-069",
+            "top": 210.984375,
+            "bottom": 572.234375,
+            "height": 361.25,
+            "opacity": "1",
+            "visibility": "visible",
+            "transform": "none",
+            "visible": true,
+            "opacityChain": [
+              "1",
+              "1",
+              "1",
+              "1"
+            ]
+          },
+          {
+            "id": "home-070",
+            "top": 210.984375,
+            "bottom": 572.234375,
+            "height": 361.25,
+            "opacity": "1",
+            "visibility": "visible",
+            "transform": "none",
+            "visible": true,
+            "opacityChain": [
+              "1",
+              "1",
+              "1",
+              "1"
+            ]
+          },
+          {
+            "id": "home-071",
+            "top": 210.984375,
+            "bottom": 572.234375,
+            "height": 361.25,
+            "opacity": "1",
+            "visibility": "visible",
+            "transform": "none",
+            "visible": true,
+            "opacityChain": [
+              "1",
+              "1",
+              "1",
+              "1"
+            ]
+          },
+          {
+            "id": "home-072",
+            "top": 210.984375,
+            "bottom": 572.234375,
+            "height": 361.25,
+            "opacity": "1",
+            "visibility": "visible",
+            "transform": "none",
+            "visible": true,
+            "opacityChain": [
+              "1",
+              "1",
+              "1",
+              "1"
+            ]
+          }
+        ],
+        "waitedMs": 5500
+      }
+    }
+  ],
+  "passed": true,
+  "limitations": [
+    "Real Next/React/Chromium with synthetic DB only; not live DB/Worker/provider E2E.",
+    "Desktop Chrome CDP emulates viewport/touch; not physical mobile/native IME.",
+    "Local installed Node is not pinned Node24.22.1."
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "capturedAt": "2026-11-01",
+  "rawThirdPartyHtmlExcluded": {
+    "file": ".trellis/tasks/10-30-homepage-warm-editorial-redesign/research/asset-evidence/unsplash-license.html",
+    "sha256": "eb8392d0ef5489246585e980f75dfe6ea161ada6cd99cb4358651080a54ae2de",
+    "reason": "Downloaded third-party public HTML embeds unrelated Google client API configuration. The raw page remains local and is not a production input or Git deliverable. No key value is retained in this report."
+  },
+  "whitespacePolicy": "Only byte-exact before-images and exact two third-party OFL originals/copies have attribute exemptions; source, authored docs and helpers retain default checks. Two legacy final blank lines are normalized separately with before/after evidence.",
+  "productionAssetsExcluded": false,
+  "rawFilesDeleted": false
+}

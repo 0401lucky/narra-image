@@ -1,0 +1,320 @@
+{
+  "checked_at": "2026-10-30T16:44:29.678993+00:00",
+  "scope": "Retained final automated receipts/source/spec identities; physical/native/services/actual CI remain unperformed",
+  "pass": true,
+  "gates": [
+    {
+      "label": "mobile-zoom-focused-01",
+      "receipt_sha256": "35d619d4fd60339ca5ada0ad943a323b50e950b07e64549a8c9992d118055f70",
+      "code": 0,
+      "duration_ms": 9984,
+      "timeout_ms": 180000,
+      "logs": [
+        {
+          "path": "checks/receipts/mobile-zoom-focused-01.stdout.log",
+          "sha256": "53c0af1d3d4217172ab08e3fd8150c1b2f4b90f8e2f3c804e13eb2799ab3a6f0",
+          "bytes": 4452
+        },
+        {
+          "path": "checks/receipts/mobile-zoom-focused-01.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      ]
+    },
+    {
+      "label": "mobile-zoom-full-01",
+      "receipt_sha256": "3401ed8cc66feee158d75e4940ba8455ca76c04dbc16b07f6f80927675be224f",
+      "code": 0,
+      "duration_ms": 33260,
+      "timeout_ms": 300000,
+      "logs": [
+        {
+          "path": "checks/receipts/mobile-zoom-full-01.stdout.log",
+          "sha256": "988965a70ef7f98ca5b4d1e2d53e89b1b5187889974d0777cd1ea043a6950853",
+          "bytes": 34287
+        },
+        {
+          "path": "checks/receipts/mobile-zoom-full-01.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      ]
+    },
+    {
+      "label": "mobile-zoom-types-01",
+      "receipt_sha256": "ac2266eb3b5b5631943381c56e6cf5d4fb4712143af94c72038c314101813752",
+      "code": 0,
+      "duration_ms": 10841,
+      "timeout_ms": 120000,
+      "logs": [
+        {
+          "path": "checks/receipts/mobile-zoom-types-01.stdout.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        {
+          "path": "checks/receipts/mobile-zoom-types-01.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      ]
+    },
+    {
+      "label": "mobile-zoom-lint-01",
+      "receipt_sha256": "31607f1420dc372fbf2be7ee15aabfbdec7fb90f6d52d545f6142994a8bc2c3c",
+      "code": 0,
+      "duration_ms": 12857,
+      "timeout_ms": 180000,
+      "logs": [
+        {
+          "path": "checks/receipts/mobile-zoom-lint-01.stdout.log",
+          "sha256": "5daf1d190f6e7a6339ad91d4ba48ff8657acaf01ac8c313e8213cfb2743df12a",
+          "bytes": 1405
+        },
+        {
+          "path": "checks/receipts/mobile-zoom-lint-01.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      ]
+    },
+    {
+      "label": "mobile-main-final-types-01",
+      "receipt_sha256": "7511f8b369f3d85357b76b10bd3538b75c6a997df77c7a48f00ee0da5db4d489",
+      "code": 0,
+      "duration_ms": 9713,
+      "timeout_ms": 120000,
+      "logs": [
+        {
+          "path": "checks/receipts/mobile-main-final-types-01.stdout.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        {
+          "path": "checks/receipts/mobile-main-final-types-01.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      ]
+    },
+    {
+      "label": "mobile-main-final-lint-01",
+      "receipt_sha256": "c7a890f6f3ec18528ff321e3fd6db7577c131a8201cbe9fc66248a1144b33ba8",
+      "code": 0,
+      "duration_ms": 11942,
+      "timeout_ms": 180000,
+      "logs": [
+        {
+          "path": "checks/receipts/mobile-main-final-lint-01.stdout.log",
+          "sha256": "5daf1d190f6e7a6339ad91d4ba48ff8657acaf01ac8c313e8213cfb2743df12a",
+          "bytes": 1405
+        },
+        {
+          "path": "checks/receipts/mobile-main-final-lint-01.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      ]
+    },
+    {
+      "label": "mobile-final-build-02",
+      "receipt_sha256": "a5d0ed74998bc9d03bb3c527007140b64a7f7da645b96ecbfae67c761334315c",
+      "code": 0,
+      "duration_ms": 22738,
+      "timeout_ms": 600000,
+      "logs": [
+        {
+          "path": "checks/receipts/mobile-final-build-02.stdout.log",
+          "sha256": "65de6ffabcb3e2079faca58ecbdd6e3ef4f9b05be64b6ea96b405fb9dd59c9fd",
+          "bytes": 4238
+        },
+        {
+          "path": "checks/receipts/mobile-final-build-02.stderr.log",
+          "sha256": "182c0464760a85dc39f87798eacd72f2ae993b5f274b487e4adeaea2436ab3fb",
+          "bytes": 961
+        }
+      ]
+    },
+    {
+      "label": "mobile-final-worker-ts-01",
+      "receipt_sha256": "8f34e25a8e271345925f41496080eac29e6e8cad8c44ebb67f640a09444cba14",
+      "code": 0,
+      "duration_ms": 2845,
+      "timeout_ms": 120000,
+      "logs": [
+        {
+          "path": "checks/receipts/mobile-final-worker-ts-01.stdout.log",
+          "sha256": "a7459d7423160767893929479297e945cf934e211ddcfddc00cc2b81694b5e7d",
+          "bytes": 2340
+        },
+        {
+          "path": "checks/receipts/mobile-final-worker-ts-01.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      ]
+    },
+    {
+      "label": "mobile-fixture-build-04",
+      "receipt_sha256": "27d4627dba23f37c72e137d198891dd37bc4d5cbbf479cdd57e890b5686e7332",
+      "code": 0,
+      "duration_ms": 7792,
+      "timeout_ms": 240000,
+      "logs": [
+        {
+          "path": "checks/receipts/mobile-fixture-build-04.stdout.log",
+          "sha256": "7ac24600cfd0696582380e1fea13901fb72dd2e888e7b0651c95d3bf77f030ff",
+          "bytes": 863
+        },
+        {
+          "path": "checks/receipts/mobile-fixture-build-04.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      ]
+    },
+    {
+      "label": "mobile-browser-07",
+      "receipt_sha256": "f9ab72aad2a7087b047c25fe9e7690503b7fa46b694ac5620c4acf52d1d5b2d0",
+      "code": 0,
+      "duration_ms": 150415,
+      "timeout_ms": 600000,
+      "logs": [
+        {
+          "path": "checks/receipts/mobile-browser-07.stdout.log",
+          "sha256": "cbf61a1044f4d720ee25e26eeddbcb52f80dacb608926d0b0df2a412a45054ab",
+          "bytes": 3343
+        },
+        {
+          "path": "checks/receipts/mobile-browser-07.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      ]
+    },
+    {
+      "label": "mobile-fixture-audit-prebuild-04",
+      "receipt_sha256": "19cc5993f5de0c5e345be72b71d25b6543e96a92c1e99daede882accc170d054",
+      "code": 0,
+      "duration_ms": 190,
+      "timeout_ms": 60000,
+      "logs": [
+        {
+          "path": "checks/receipts/mobile-fixture-audit-prebuild-04.stdout.log",
+          "sha256": "d7c98feb66a1a090b3f8c2377f72bb4b665aec23e5a60d7ffc34ca9931354f57",
+          "bytes": 3151
+        },
+        {
+          "path": "checks/receipts/mobile-fixture-audit-prebuild-04.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      ]
+    },
+    {
+      "label": "mobile-fixture-audit-postbuild-04",
+      "receipt_sha256": "85b7202c7c442e881901c283f5180e9d2fd6fee144cb6b5a51b4a7cc63b160f2",
+      "code": 0,
+      "duration_ms": 180,
+      "timeout_ms": 60000,
+      "logs": [
+        {
+          "path": "checks/receipts/mobile-fixture-audit-postbuild-04.stdout.log",
+          "sha256": "f5aa6ccdf2d5c97985e10b87161562084695df2837cb775d274dba6cd19ce516",
+          "bytes": 3152
+        },
+        {
+          "path": "checks/receipts/mobile-fixture-audit-postbuild-04.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      ]
+    },
+    {
+      "label": "mobile-fixture-audit-prebrowser-07",
+      "receipt_sha256": "15fdecf14ae679ae83fc97912a47ca2199bd77b6316ae1bef235f97d03e669b1",
+      "code": 0,
+      "duration_ms": 188,
+      "timeout_ms": 60000,
+      "logs": [
+        {
+          "path": "checks/receipts/mobile-fixture-audit-prebrowser-07.stdout.log",
+          "sha256": "69d019f27228d6c40af176a0c885c4e1e2f43f01b57fb828e68799b27c94ede1",
+          "bytes": 3156
+        },
+        {
+          "path": "checks/receipts/mobile-fixture-audit-prebrowser-07.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      ]
+    },
+    {
+      "label": "mobile-fixture-audit-postbrowser-07",
+      "receipt_sha256": "75e737aea2e7f76f34fa31b8cf12f0bf886a787449104515b4d1196d2625f71e",
+      "code": 0,
+      "duration_ms": 184,
+      "timeout_ms": 60000,
+      "logs": [
+        {
+          "path": "checks/receipts/mobile-fixture-audit-postbrowser-07.stdout.log",
+          "sha256": "c7d56fac93969cad276f9db2be32a383f6ad9ac24f348934d0041674a4eae264",
+          "bytes": 3157
+        },
+        {
+          "path": "checks/receipts/mobile-fixture-audit-postbrowser-07.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      ]
+    }
+  ],
+  "browser_groups": 27,
+  "browser_engine": "Chrome/156.0.8078.74",
+  "exact_production_fixture_inputs": 224,
+  "frozen_product_test_paths": 35,
+  "task_status": "in_progress",
+  "final_spec_identity_record": "spec-sync-final-02-2026-10-31.json",
+  "ma1_ma4_checked": false,
+  "staged_paths": [],
+  "git_diff_check": {
+    "code": 0,
+    "stdout": "",
+    "stderr": "warning: in the working copy of 'package.json', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'pnpm-lock.yaml', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'scripts/verify-e2e.mjs', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'worker/internal/worker/config.go', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'worker/internal/worker/config_test.go', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'worker/internal/worker/runtime_state.go', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'worker/internal/worker/server.go', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'worker/internal/worker/worker.go', LF will be replaced by CRLF the next time Git touches it\n"
+  },
+  "task_artifact_identities": [
+    {
+      "path": ".trellis\\tasks\\10-28-studio-mobile-canvas-editor\\prd.md",
+      "sha256": "4ce6f7e0a8e3960ab52de2b6d5fa7006d07e0ddd0ae15e8ecdb9ccbf730833e1"
+    },
+    {
+      "path": ".trellis\\tasks\\10-28-studio-mobile-canvas-editor\\design.md",
+      "sha256": "0141e3fea2fb77c766321b27795f06284b3641c4e9e715d83f62b5e608cffd4c"
+    },
+    {
+      "path": ".trellis\\tasks\\10-28-studio-mobile-canvas-editor\\implement.md",
+      "sha256": "836ab24ca37c91190832c8aabf3854b796089bfa3d67ef951c22b5a4dec0c439"
+    },
+    {
+      "path": ".trellis\\tasks\\10-28-studio-mobile-canvas-editor\\verification.md",
+      "sha256": "9216db8b135fbfa0c83deb4cd5296f3137a5e9f5eef4773552163964f556488c"
+    },
+    {
+      "path": ".trellis\\tasks\\10-28-studio-mobile-canvas-editor\\handoff.md",
+      "sha256": "733805706f50133919f18b457c8fde48b025109763b6cf78e20f3baf1312de8f"
+    },
+    {
+      "path": ".trellis\\tasks\\10-28-studio-mobile-canvas-editor\\task.json",
+      "sha256": "08a53e6d1c9fbe829153417da217be5de61dfce3c55addee6d0107099c68fc1a"
+    },
+    {
+      "path": ".trellis\\tasks\\10-28-studio-mobile-canvas-editor\\implement.jsonl",
+      "sha256": "cb259bdfd52a525b7c3891b342ff045cd04bdefa56983b69bb45d7b814c5cd30"
+    },
+    {
+      "path": ".trellis\\tasks\\10-28-studio-mobile-canvas-editor\\check.jsonl",
+      "sha256": "d7a82163065c6980456541b2e3971eed5be0e0053b7b864f41f7b9ec9b353eb4"
+    }
+  ]
+}

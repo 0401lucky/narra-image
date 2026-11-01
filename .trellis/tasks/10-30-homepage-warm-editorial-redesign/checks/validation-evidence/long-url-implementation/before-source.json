@@ -1,0 +1,17 @@
+{
+  "src/components/marketing/homepage/gallery-card.tsx": {
+    "sha256": "ab033dfb542d16a0207fba410da647d0b6bc95192beda463b6e70277e134d44a",
+    "bytes": 12085,
+    "before": "src__components__marketing__homepage__gallery-card.tsx.before"
+  },
+  "src/components/marketing/homepage/gallery-constants.ts": {
+    "sha256": "c7ff26b48222af3d6e9521bcd1949a40a35f624dc00ef7b2c556861ea8aed346",
+    "bytes": 1491,
+    "before": "src__components__marketing__homepage__gallery-constants.ts.before"
+  },
+  "src/tests/unit/featured-gallery.test.tsx": {
+    "sha256": "f09290d626c0bb8e6560fac9a9fd3f740e089e7bb578f7550e6744b57289a5ad",
+    "bytes": 16548,
+    "before": "src__tests__unit__featured-gallery.test.tsx.before"
+  }
+}

@@ -1,0 +1,24 @@
+[
+  {
+    "label": "chinese8000",
+    "units": 8000,
+    "requestTargetBytes": 72015,
+    "status": 431,
+    "inputUnits": null,
+    "matchesExistingSlice": false,
+    "directNavigationPassed": false,
+    "approvedGalleryFallbackVerified": true,
+    "classification": "transport-observation-with-independently-verified-approved-entry-fallback"
+  },
+  {
+    "label": "emoji8000units",
+    "units": 8000,
+    "requestTargetBytes": 56019,
+    "status": 431,
+    "inputUnits": null,
+    "matchesExistingSlice": false,
+    "directNavigationPassed": false,
+    "approvedGalleryFallbackVerified": true,
+    "classification": "transport-observation-with-independently-verified-approved-entry-fallback"
+  }
+]

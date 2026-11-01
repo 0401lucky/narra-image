@@ -1,0 +1,237 @@
+{
+  "checkedAt": "2026-11-01T06:09:51.561263+00:00",
+  "reviewer": "final_delivery_review",
+  "verdict": "PASS-local-synthetic",
+  "attribution": "Bounded final receipt/hash/metadata review. Prior source/contracts review: long_url_check; prior task audit: prior_tasks_audit; production gates: coordinator; final fixture build/browser: delivery_final_check. No product gate rerun by this reviewer.",
+  "sourceInputs": 809,
+  "sourceManifestSha256": "c94793261bc0bf091e6f6c3e44a96960184fe973c09e760e56bd101a518fe150",
+  "liveAndProductionSnapshotExact": true,
+  "browserSnapshotExactExceptDeclaredDb": true,
+  "fixtureProductionInputs": 659,
+  "replacements": {
+    "src/lib/db.ts": {
+      "source": "db.ts.fixture",
+      "sha256": "044edf0c7b20fee2a56fb5f25001e4d3e9eca562677ac0b65989153e989ffeb3",
+      "priorSha256": "6e12e882c0cbaa69fff993318e56df751d3489562cd717498fa0037a1e6f77c8"
+    },
+    "src/app/homepage-fixture/control/route.ts": {
+      "source": "control-route.ts.fixture",
+      "sha256": "fe7cba0e3078fe6fd2933db1a45f950ebe355f840617485f24a0f09db3746ecf",
+      "priorSha256": null
+    },
+    "src/app/homepage-fixture/links/page.tsx": {
+      "source": "links-page.tsx.fixture",
+      "sha256": "055ae2a4ce387caa6d7e22b59d68b7c94ed407e4a32f972e9a1c36bf1949e1c7",
+      "priorSha256": null
+    },
+    "src/proxy.ts": {
+      "source": "proxy.ts.fixture",
+      "sha256": "9550d083bc6fc1946aed9e0bd258103bd60482144f1f6677da6ebee0da2aec01",
+      "priorSha256": null
+    }
+  },
+  "helperInputs": 23,
+  "preBuildPostBuildPreBrowserPostBrowserExact": true,
+  "buildId": "umNg6_gu5u70rOQB6OOdY",
+  "builtArtifacts": 1798,
+  "builtArtifactSha256": "ec0f626c7a435fb4b6a32cce324825ace9558dd9b05bd23d832812ce0635f25a",
+  "dependencyLinksWithinOwnedCopy": 2,
+  "cacheAndTraceExcluded": [
+    ".next/cache/**",
+    ".next/trace*"
+  ],
+  "runtime": "v24.22.1",
+  "nodeSha256": "d702daa815eabbff763c7d3808e235cf031cf2ca70211b56847bc72f51e240e5",
+  "gates": [
+    {
+      "id": "20261101T030500-test-bounded-51b1e2",
+      "exitCode": 0,
+      "durationSeconds": 107.651,
+      "deadlineSeconds": 900
+    },
+    {
+      "id": "20261101T030703-lint-66cf1d",
+      "exitCode": 0,
+      "durationSeconds": 12.681,
+      "deadlineSeconds": 180
+    },
+    {
+      "id": "20261101T030732-types-53098f",
+      "exitCode": 0,
+      "durationSeconds": 2.612,
+      "deadlineSeconds": 180
+    },
+    {
+      "id": "20261101T030751-prisma-no-network-1fceeb",
+      "exitCode": 0,
+      "durationSeconds": 1.347,
+      "deadlineSeconds": 120
+    },
+    {
+      "id": "20261101T030808-build-c758b4",
+      "exitCode": 0,
+      "durationSeconds": 19.369,
+      "deadlineSeconds": 600
+    }
+  ],
+  "tests": {
+    "files": 140,
+    "tests": 1704,
+    "scope": "all non-DB, unchanged DB exclusions"
+  },
+  "lint": {
+    "errors": 0,
+    "baselineWarnings": 9,
+    "metadataInputs": 31,
+    "attribution": "Prior independently verified metadata-inclusive coordinator run, receipt bytes reverified here",
+    "all31LiveAndSnapshotMetadataIdentitiesExact": true,
+    "supplementalPolicyInputsExact": 2
+  },
+  "browser": {
+    "runId": "full-1793502794542",
+    "mode": "full",
+    "filter": null,
+    "passed": 103,
+    "total": 103,
+    "privacy": 43,
+    "homepageAndNative": 60,
+    "longUrlIncluded": 15,
+    "receipt": "20261101T031314-script-5cadc5",
+    "exitCode": 0,
+    "timedOut": false,
+    "durationSeconds": 326.492,
+    "deadlineSeconds": 900,
+    "unresolved": []
+  },
+  "transport": {
+    "directOversizedUnicodeStatus": 431,
+    "observations": 2,
+    "approvedFallbackVerified": true,
+    "directNavigationClaimedPassing": false
+  },
+  "policyUnchangedFromPriorAudit": true,
+  "whitespaceOnlyTwoFinalLfRemovalsVerified": true,
+  "ownedLaneUnlocked": true,
+  "processCleanupAttribution": "Coordinator process-cleanup.json, not a second process scan",
+  "screenshotsViewed": [
+    "long-url-emoji8000units-member-390-accept.png",
+    "long-url-chinese8000-member-keyboard-accept.png"
+  ],
+  "limits": [
+    "Controlled Clipboard API accepts/denies, not OS clipboard permissions.",
+    "Desktop Chromium viewport/touch/native-keyboard events, not physical mobile or native IME/OS chooser/download.",
+    "Actual Next/React with declared synthetic DB/loopback data, not combined-revision live-account/DB/Worker/provider/storage E2E.",
+    "No actual CI, production deployment, staging/commit/push or product-gate rerun by this reviewer.",
+    "Final staged selection, credential audit, remote branch check and Git delivery remain coordinator-owned."
+  ],
+  "reviewedEvidence": {
+    "checks/validation-evidence/git-delivery-independent/automated-gates-verification.json": {
+      "bytes": 3527,
+      "sha256": "f91bc04f488de292d54e372824d69e1e5996a1914bc3309ad09c656562692606"
+    },
+    "checks/validation-evidence/git-delivery-independent/git-policy-verification.json": {
+      "bytes": 5203,
+      "sha256": "663c8759ea5297e07363b286d1e980416431049659c80a3ff215da13cc746359"
+    },
+    "checks/validation-evidence/git-delivery-independent/fixture-rebind.json": {
+      "bytes": 1127,
+      "sha256": "44fad675fb8d2e8aeaf8377ca486fb174c3ba06c808307912c35ceba352610f6"
+    },
+    "checks/validation-evidence/git-delivery-independent/source-final-manifest.json": {
+      "bytes": 135682,
+      "sha256": "c94793261bc0bf091e6f6c3e44a96960184fe973c09e760e56bd101a518fe150"
+    },
+    "checks/validation-evidence/git-delivery-independent/source-pre-build.json": {
+      "bytes": 1700,
+      "sha256": "5b561e8837c817cf3ed46b8c9d45b50ab7e5161e800368b54e91cb922eaf9fd3"
+    },
+    "checks/validation-evidence/git-delivery-independent/source-post-build.json": {
+      "bytes": 1826,
+      "sha256": "813cf6dc584d2097f7620031e6db32379094d74d19add45cd35e999605bd10da"
+    },
+    "checks/validation-evidence/git-delivery-independent/source-pre-browser.json": {
+      "bytes": 1827,
+      "sha256": "3ac468833785a6287556a4a80deab934b9e46fd13d947d6adafd76ad40770e3c"
+    },
+    "checks/browser/evidence/full-1793502794542/result.json": {
+      "bytes": 464940,
+      "sha256": "f03b3c705107a2bc254292ae6f34b9ca14bd5a4f0a1926d5cb2b8a055a300ffb"
+    },
+    "checks/browser/evidence/full-1793502794542/source-pre-browser.json": {
+      "bytes": 360178,
+      "sha256": "fa58a4afc3b63bd09efb3a45de9a23211f4f7f14daa9c7ae52b530985a981458"
+    },
+    "checks/browser/evidence/full-1793502794542/source-post-browser.json": {
+      "bytes": 360179,
+      "sha256": "ce75e9b9f81e965001b3d724324bcf9924dbc65588b0598e6c8ee41cd54b7522"
+    },
+    "checks/browser/evidence/full-1793502794542/long-url-transport-observations.json": {
+      "bytes": 699,
+      "sha256": "fe73390e57c9b0e276789ebaa752c0aeb817cd4960a39716a4bebb050f7501d2"
+    },
+    "checks/long-url-independent-review.md": {
+      "bytes": 10871,
+      "sha256": "0d5d32ea42b7f93f29a860c7e0f188c9f449b3132f747cdb7092db921d9b2df6"
+    },
+    "checks/git-delivery-prior-tasks.md": {
+      "bytes": 11670,
+      "sha256": "95b8d920de0a986d8a3c1739cdb0f0dd73e9806c97d45e2e0a862786b0293ac2"
+    },
+    "checks/validation-evidence/git-delivery-final/result.json": {
+      "bytes": 9096,
+      "sha256": "1b4d17423bec5ad4ec5c1951596c604074051631152d6697f58e36a932524fd1"
+    },
+    "checks/validation-evidence/git-delivery-final/process-cleanup.json": {
+      "bytes": 100,
+      "sha256": "c3a21b4b444a88c8b449d94b62ad694817cfd02837529d3ac7d4aa809287dd81"
+    }
+  },
+  "promotedReceipts": [
+    {
+      "source": "checks/.runtime/hero-hit-independent-8725c17e/receipts/20261101T031138-build-3de240.json",
+      "promoted": "checks/validation-evidence/git-delivery-independent/final-full/20261101T031138-build-3de240.json",
+      "bytes": 195385,
+      "sha256": "79b84b7750007f892c7ee8bc98e254eb1e6161b7f904be2619499b352149e411"
+    },
+    {
+      "source": "checks/.runtime/hero-hit-independent-8725c17e/receipts/20261101T031138-build-3de240.stdout.log",
+      "promoted": "checks/validation-evidence/git-delivery-independent/final-full/20261101T031138-build-3de240.stdout.log",
+      "bytes": 4003,
+      "sha256": "49a44b7e1188e7436ba18351b6701f7f77a8c59933eab79ebe4a452297566407"
+    },
+    {
+      "source": "checks/.runtime/hero-hit-independent-8725c17e/receipts/20261101T031138-build-3de240.stderr.log",
+      "promoted": "checks/validation-evidence/git-delivery-independent/final-full/20261101T031138-build-3de240.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "checks/.runtime/hero-hit-independent-8725c17e/receipts/20261101T031314-script-5cadc5.json",
+      "promoted": "checks/validation-evidence/git-delivery-independent/final-full/20261101T031314-script-5cadc5.json",
+      "bytes": 1898,
+      "sha256": "32933593f046728ef24608fa45e12e4153be1cd1c0c6da817cf89c4435495d5c"
+    },
+    {
+      "source": "checks/.runtime/hero-hit-independent-8725c17e/receipts/20261101T031314-script-5cadc5.stdout.log",
+      "promoted": "checks/validation-evidence/git-delivery-independent/final-full/20261101T031314-script-5cadc5.stdout.log",
+      "bytes": 5016,
+      "sha256": "7ebb1ebeaf0165ab3eb146474ced211757196357f621292a6044a3b75bb55092"
+    },
+    {
+      "source": "checks/.runtime/hero-hit-independent-8725c17e/receipts/20261101T031314-script-5cadc5.stderr.log",
+      "promoted": "checks/validation-evidence/git-delivery-independent/final-full/20261101T031314-script-5cadc5.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "metadataReviewed": [
+    "prd.md final revision and AC3/AC10",
+    "implement.md current final revision",
+    "checks/acceptance-status.md",
+    "checks/browser-acceptance.md",
+    "checks/session-handoff.md",
+    "task.json",
+    "checks/validation-environment.md"
+  ],
+  "metadataScope": "Current sections align with final evidence and local/synthetic limits; historical entries retained and superseded, Git completion still coordinator-owned."
+}

@@ -1,0 +1,63 @@
+[
+  {
+    "label": "viewport-sliver",
+    "before": {
+      "rect": {
+        "x": 80,
+        "y": 980,
+        "width": 400,
+        "height": 240,
+        "top": 980,
+        "right": 480,
+        "bottom": 1220,
+        "left": 80
+      },
+      "clip": {
+        "x": 80,
+        "y": 980,
+        "width": 440,
+        "height": 500,
+        "top": 980,
+        "right": 520,
+        "bottom": 1480,
+        "left": 80
+      },
+      "innerWidth": 1440,
+      "innerHeight": 1000,
+      "scrollY": 0,
+      "scrollTop": 0,
+      "events": []
+    },
+    "oldPoint": {
+      "x": 400,
+      "y": 1040
+    },
+    "after": {
+      "rect": {
+        "x": 80,
+        "y": 980,
+        "width": 400,
+        "height": 240,
+        "top": 980,
+        "right": 480,
+        "bottom": 1220,
+        "left": 80
+      },
+      "clip": {
+        "x": 80,
+        "y": 980,
+        "width": 440,
+        "height": 500,
+        "top": 980,
+        "right": 520,
+        "bottom": 1480,
+        "left": 80
+      },
+      "innerWidth": 1440,
+      "innerHeight": 1000,
+      "scrollY": 0,
+      "scrollTop": 0,
+      "events": []
+    }
+  }
+]

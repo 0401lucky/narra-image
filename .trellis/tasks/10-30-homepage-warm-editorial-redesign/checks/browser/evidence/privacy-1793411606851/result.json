@@ -1,0 +1,750 @@
+{
+  "runId": "privacy-1793411606851",
+  "mode": "privacy",
+  "evidence": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\browser\\evidence\\privacy-1793411606851",
+  "app": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\browser-privacy-c97052fe\\app",
+  "checks": [
+    {
+      "id": "D1-html-guest-featured-public",
+      "passed": true,
+      "durationMs": 170,
+      "detail": {
+        "id": "fixture-featured-public",
+        "keys": [
+          "authorNickname",
+          "createdAt",
+          "featuredAt",
+          "id",
+          "model",
+          "negativePrompt",
+          "prompt",
+          "showPromptPublic",
+          "showcaseStatus",
+          "size",
+          "url"
+        ],
+        "isOwner": false,
+        "publicPrompt": true
+      }
+    },
+    {
+      "id": "D1-html-guest-featured-hidden",
+      "passed": true,
+      "durationMs": 16,
+      "detail": {
+        "id": "fixture-featured-hidden",
+        "keys": [
+          "authorNickname",
+          "createdAt",
+          "featuredAt",
+          "id",
+          "model",
+          "negativePrompt",
+          "prompt",
+          "showPromptPublic",
+          "showcaseStatus",
+          "size",
+          "url"
+        ],
+        "isOwner": false,
+        "publicPrompt": false
+      }
+    },
+    {
+      "id": "D1-html-guest-private-public",
+      "passed": true,
+      "durationMs": 12,
+      "detail": {
+        "transportStatus": 200,
+        "nextBoundaryStatus": 404,
+        "noClientDetail": true,
+        "note": "Next streaming can already have committed HTTP200 before notFound; semantic rejection matches pre-change behavior."
+      }
+    },
+    {
+      "id": "D1-html-guest-private-hidden",
+      "passed": true,
+      "durationMs": 10,
+      "detail": {
+        "transportStatus": 200,
+        "nextBoundaryStatus": 404,
+        "noClientDetail": true,
+        "note": "Next streaming can already have committed HTTP200 before notFound; semantic rejection matches pre-change behavior."
+      }
+    },
+    {
+      "id": "D1-html-guest-pending-public",
+      "passed": true,
+      "durationMs": 10,
+      "detail": {
+        "transportStatus": 200,
+        "nextBoundaryStatus": 404,
+        "noClientDetail": true,
+        "note": "Next streaming can already have committed HTTP200 before notFound; semantic rejection matches pre-change behavior."
+      }
+    },
+    {
+      "id": "D1-html-guest-pending-hidden",
+      "passed": true,
+      "durationMs": 11,
+      "detail": {
+        "transportStatus": 200,
+        "nextBoundaryStatus": 404,
+        "noClientDetail": true,
+        "note": "Next streaming can already have committed HTTP200 before notFound; semantic rejection matches pre-change behavior."
+      }
+    },
+    {
+      "id": "D1-html-guest-takedown_pending-public",
+      "passed": true,
+      "durationMs": 10,
+      "detail": {
+        "transportStatus": 200,
+        "nextBoundaryStatus": 404,
+        "noClientDetail": true,
+        "note": "Next streaming can already have committed HTTP200 before notFound; semantic rejection matches pre-change behavior."
+      }
+    },
+    {
+      "id": "D1-html-guest-takedown_pending-hidden",
+      "passed": true,
+      "durationMs": 10,
+      "detail": {
+        "transportStatus": 200,
+        "nextBoundaryStatus": 404,
+        "noClientDetail": true,
+        "note": "Next streaming can already have committed HTTP200 before notFound; semantic rejection matches pre-change behavior."
+      }
+    },
+    {
+      "id": "D1-html-home-member-featured-public",
+      "passed": true,
+      "durationMs": 18,
+      "detail": {
+        "id": "fixture-featured-public",
+        "keys": [
+          "authorNickname",
+          "createdAt",
+          "featuredAt",
+          "id",
+          "model",
+          "negativePrompt",
+          "prompt",
+          "showPromptPublic",
+          "showcaseStatus",
+          "size",
+          "url"
+        ],
+        "isOwner": false,
+        "publicPrompt": true
+      }
+    },
+    {
+      "id": "D1-html-home-member-featured-hidden",
+      "passed": true,
+      "durationMs": 13,
+      "detail": {
+        "id": "fixture-featured-hidden",
+        "keys": [
+          "authorNickname",
+          "createdAt",
+          "featuredAt",
+          "id",
+          "model",
+          "negativePrompt",
+          "prompt",
+          "showPromptPublic",
+          "showcaseStatus",
+          "size",
+          "url"
+        ],
+        "isOwner": false,
+        "publicPrompt": false
+      }
+    },
+    {
+      "id": "D1-html-home-member-private-public",
+      "passed": true,
+      "durationMs": 9,
+      "detail": {
+        "transportStatus": 200,
+        "nextBoundaryStatus": 404,
+        "noClientDetail": true,
+        "note": "Next streaming can already have committed HTTP200 before notFound; semantic rejection matches pre-change behavior."
+      }
+    },
+    {
+      "id": "D1-html-home-member-private-hidden",
+      "passed": true,
+      "durationMs": 8,
+      "detail": {
+        "transportStatus": 200,
+        "nextBoundaryStatus": 404,
+        "noClientDetail": true,
+        "note": "Next streaming can already have committed HTTP200 before notFound; semantic rejection matches pre-change behavior."
+      }
+    },
+    {
+      "id": "D1-html-home-member-pending-public",
+      "passed": true,
+      "durationMs": 7,
+      "detail": {
+        "transportStatus": 200,
+        "nextBoundaryStatus": 404,
+        "noClientDetail": true,
+        "note": "Next streaming can already have committed HTTP200 before notFound; semantic rejection matches pre-change behavior."
+      }
+    },
+    {
+      "id": "D1-html-home-member-pending-hidden",
+      "passed": true,
+      "durationMs": 7,
+      "detail": {
+        "transportStatus": 200,
+        "nextBoundaryStatus": 404,
+        "noClientDetail": true,
+        "note": "Next streaming can already have committed HTTP200 before notFound; semantic rejection matches pre-change behavior."
+      }
+    },
+    {
+      "id": "D1-html-home-member-takedown_pending-public",
+      "passed": true,
+      "durationMs": 7,
+      "detail": {
+        "transportStatus": 200,
+        "nextBoundaryStatus": 404,
+        "noClientDetail": true,
+        "note": "Next streaming can already have committed HTTP200 before notFound; semantic rejection matches pre-change behavior."
+      }
+    },
+    {
+      "id": "D1-html-home-member-takedown_pending-hidden",
+      "passed": true,
+      "durationMs": 8,
+      "detail": {
+        "transportStatus": 200,
+        "nextBoundaryStatus": 404,
+        "noClientDetail": true,
+        "note": "Next streaming can already have committed HTTP200 before notFound; semantic rejection matches pre-change behavior."
+      }
+    },
+    {
+      "id": "D1-html-home-admin-featured-public",
+      "passed": true,
+      "durationMs": 10,
+      "detail": {
+        "id": "fixture-featured-public",
+        "keys": [
+          "authorNickname",
+          "createdAt",
+          "featuredAt",
+          "id",
+          "model",
+          "negativePrompt",
+          "prompt",
+          "showPromptPublic",
+          "showcaseStatus",
+          "size",
+          "url"
+        ],
+        "isOwner": false,
+        "publicPrompt": true
+      }
+    },
+    {
+      "id": "D1-html-home-admin-featured-hidden",
+      "passed": true,
+      "durationMs": 10,
+      "detail": {
+        "id": "fixture-featured-hidden",
+        "keys": [
+          "authorNickname",
+          "createdAt",
+          "featuredAt",
+          "id",
+          "model",
+          "negativePrompt",
+          "prompt",
+          "showPromptPublic",
+          "showcaseStatus",
+          "size",
+          "url"
+        ],
+        "isOwner": false,
+        "publicPrompt": false
+      }
+    },
+    {
+      "id": "D1-html-home-admin-private-public",
+      "passed": true,
+      "durationMs": 7,
+      "detail": {
+        "transportStatus": 200,
+        "nextBoundaryStatus": 404,
+        "noClientDetail": true,
+        "note": "Next streaming can already have committed HTTP200 before notFound; semantic rejection matches pre-change behavior."
+      }
+    },
+    {
+      "id": "D1-html-home-admin-private-hidden",
+      "passed": true,
+      "durationMs": 6,
+      "detail": {
+        "transportStatus": 200,
+        "nextBoundaryStatus": 404,
+        "noClientDetail": true,
+        "note": "Next streaming can already have committed HTTP200 before notFound; semantic rejection matches pre-change behavior."
+      }
+    },
+    {
+      "id": "D1-html-home-admin-pending-public",
+      "passed": true,
+      "durationMs": 9,
+      "detail": {
+        "transportStatus": 200,
+        "nextBoundaryStatus": 404,
+        "noClientDetail": true,
+        "note": "Next streaming can already have committed HTTP200 before notFound; semantic rejection matches pre-change behavior."
+      }
+    },
+    {
+      "id": "D1-html-home-admin-pending-hidden",
+      "passed": true,
+      "durationMs": 8,
+      "detail": {
+        "transportStatus": 200,
+        "nextBoundaryStatus": 404,
+        "noClientDetail": true,
+        "note": "Next streaming can already have committed HTTP200 before notFound; semantic rejection matches pre-change behavior."
+      }
+    },
+    {
+      "id": "D1-html-home-admin-takedown_pending-public",
+      "passed": true,
+      "durationMs": 10,
+      "detail": {
+        "transportStatus": 200,
+        "nextBoundaryStatus": 404,
+        "noClientDetail": true,
+        "note": "Next streaming can already have committed HTTP200 before notFound; semantic rejection matches pre-change behavior."
+      }
+    },
+    {
+      "id": "D1-html-home-admin-takedown_pending-hidden",
+      "passed": true,
+      "durationMs": 7,
+      "detail": {
+        "transportStatus": 200,
+        "nextBoundaryStatus": 404,
+        "noClientDetail": true,
+        "note": "Next streaming can already have committed HTTP200 before notFound; semantic rejection matches pre-change behavior."
+      }
+    },
+    {
+      "id": "D1-html-home-owner-featured-public",
+      "passed": true,
+      "durationMs": 10,
+      "detail": {
+        "id": "fixture-featured-public",
+        "keys": [
+          "authorNickname",
+          "createdAt",
+          "featuredAt",
+          "generationCreatedAt",
+          "generationStatus",
+          "id",
+          "jobId",
+          "model",
+          "negativePrompt",
+          "ownerId",
+          "prompt",
+          "reviewNote",
+          "reviewedAt",
+          "reviewedById",
+          "reviewer",
+          "showPromptPublic",
+          "showcaseStatus",
+          "size",
+          "submittedAt",
+          "url"
+        ],
+        "isOwner": true,
+        "publicPrompt": true
+      }
+    },
+    {
+      "id": "D1-html-home-owner-featured-hidden",
+      "passed": true,
+      "durationMs": 10,
+      "detail": {
+        "id": "fixture-featured-hidden",
+        "keys": [
+          "authorNickname",
+          "createdAt",
+          "featuredAt",
+          "generationCreatedAt",
+          "generationStatus",
+          "id",
+          "jobId",
+          "model",
+          "negativePrompt",
+          "ownerId",
+          "prompt",
+          "reviewNote",
+          "reviewedAt",
+          "reviewedById",
+          "reviewer",
+          "showPromptPublic",
+          "showcaseStatus",
+          "size",
+          "submittedAt",
+          "url"
+        ],
+        "isOwner": true,
+        "publicPrompt": false
+      }
+    },
+    {
+      "id": "D1-html-home-owner-private-public",
+      "passed": true,
+      "durationMs": 9,
+      "detail": {
+        "id": "fixture-private-public",
+        "keys": [
+          "authorNickname",
+          "createdAt",
+          "featuredAt",
+          "generationCreatedAt",
+          "generationStatus",
+          "id",
+          "jobId",
+          "model",
+          "negativePrompt",
+          "ownerId",
+          "prompt",
+          "reviewNote",
+          "reviewedAt",
+          "reviewedById",
+          "reviewer",
+          "showPromptPublic",
+          "showcaseStatus",
+          "size",
+          "submittedAt",
+          "url"
+        ],
+        "isOwner": true,
+        "publicPrompt": true
+      }
+    },
+    {
+      "id": "D1-html-home-owner-private-hidden",
+      "passed": true,
+      "durationMs": 8,
+      "detail": {
+        "id": "fixture-private-hidden",
+        "keys": [
+          "authorNickname",
+          "createdAt",
+          "featuredAt",
+          "generationCreatedAt",
+          "generationStatus",
+          "id",
+          "jobId",
+          "model",
+          "negativePrompt",
+          "ownerId",
+          "prompt",
+          "reviewNote",
+          "reviewedAt",
+          "reviewedById",
+          "reviewer",
+          "showPromptPublic",
+          "showcaseStatus",
+          "size",
+          "submittedAt",
+          "url"
+        ],
+        "isOwner": true,
+        "publicPrompt": false
+      }
+    },
+    {
+      "id": "D1-html-home-owner-pending-public",
+      "passed": true,
+      "durationMs": 10,
+      "detail": {
+        "id": "fixture-pending-public",
+        "keys": [
+          "authorNickname",
+          "createdAt",
+          "featuredAt",
+          "generationCreatedAt",
+          "generationStatus",
+          "id",
+          "jobId",
+          "model",
+          "negativePrompt",
+          "ownerId",
+          "prompt",
+          "reviewNote",
+          "reviewedAt",
+          "reviewedById",
+          "reviewer",
+          "showPromptPublic",
+          "showcaseStatus",
+          "size",
+          "submittedAt",
+          "url"
+        ],
+        "isOwner": true,
+        "publicPrompt": true
+      }
+    },
+    {
+      "id": "D1-html-home-owner-pending-hidden",
+      "passed": true,
+      "durationMs": 10,
+      "detail": {
+        "id": "fixture-pending-hidden",
+        "keys": [
+          "authorNickname",
+          "createdAt",
+          "featuredAt",
+          "generationCreatedAt",
+          "generationStatus",
+          "id",
+          "jobId",
+          "model",
+          "negativePrompt",
+          "ownerId",
+          "prompt",
+          "reviewNote",
+          "reviewedAt",
+          "reviewedById",
+          "reviewer",
+          "showPromptPublic",
+          "showcaseStatus",
+          "size",
+          "submittedAt",
+          "url"
+        ],
+        "isOwner": true,
+        "publicPrompt": false
+      }
+    },
+    {
+      "id": "D1-html-home-owner-takedown_pending-public",
+      "passed": true,
+      "durationMs": 9,
+      "detail": {
+        "id": "fixture-takedown_pending-public",
+        "keys": [
+          "authorNickname",
+          "createdAt",
+          "featuredAt",
+          "generationCreatedAt",
+          "generationStatus",
+          "id",
+          "jobId",
+          "model",
+          "negativePrompt",
+          "ownerId",
+          "prompt",
+          "reviewNote",
+          "reviewedAt",
+          "reviewedById",
+          "reviewer",
+          "showPromptPublic",
+          "showcaseStatus",
+          "size",
+          "submittedAt",
+          "url"
+        ],
+        "isOwner": true,
+        "publicPrompt": true
+      }
+    },
+    {
+      "id": "D1-html-home-owner-takedown_pending-hidden",
+      "passed": true,
+      "durationMs": 9,
+      "detail": {
+        "id": "fixture-takedown_pending-hidden",
+        "keys": [
+          "authorNickname",
+          "createdAt",
+          "featuredAt",
+          "generationCreatedAt",
+          "generationStatus",
+          "id",
+          "jobId",
+          "model",
+          "negativePrompt",
+          "ownerId",
+          "prompt",
+          "reviewNote",
+          "reviewedAt",
+          "reviewedById",
+          "reviewer",
+          "showPromptPublic",
+          "showcaseStatus",
+          "size",
+          "submittedAt",
+          "url"
+        ],
+        "isOwner": true,
+        "publicPrompt": false
+      }
+    },
+    {
+      "id": "D1-missing-image-remains-404",
+      "passed": true,
+      "durationMs": 6,
+      "detail": {
+        "transportStatus": 200,
+        "nextBoundaryStatus": 404
+      }
+    },
+    {
+      "id": "D1-admin-list-retains-authorized-data",
+      "passed": true,
+      "durationMs": 57
+    },
+    {
+      "id": "D1-featured-api-never-transfers-private-prompt-or-review",
+      "passed": true,
+      "durationMs": 10
+    },
+    {
+      "id": "D1-next-navigation-refresh-guest-public",
+      "passed": true,
+      "durationMs": 1958,
+      "detail": {
+        "id": "fixture-featured-public",
+        "keys": [
+          "authorNickname",
+          "createdAt",
+          "featuredAt",
+          "id",
+          "model",
+          "negativePrompt",
+          "prompt",
+          "showPromptPublic",
+          "showcaseStatus",
+          "size",
+          "url"
+        ],
+        "isOwner": false,
+        "publicPrompt": true
+      }
+    },
+    {
+      "id": "D1-next-navigation-refresh-guest-hidden",
+      "passed": true,
+      "durationMs": 1833,
+      "detail": {
+        "id": "fixture-featured-hidden",
+        "keys": [
+          "authorNickname",
+          "createdAt",
+          "featuredAt",
+          "id",
+          "model",
+          "negativePrompt",
+          "prompt",
+          "showPromptPublic",
+          "showcaseStatus",
+          "size",
+          "url"
+        ],
+        "isOwner": false,
+        "publicPrompt": false
+      }
+    },
+    {
+      "id": "D1-next-navigation-refresh-home-member-public",
+      "passed": false,
+      "durationMs": 8238,
+      "error": "Error: Actual Next client navigation must request a Flight payload\n    at waitFor (file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/cdp.mjs:13:9)\n    at async file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/run-browser.mjs:241:26\n    at async check (file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/run-browser.mjs:60:20)\n    at async privacyChecks (file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/run-browser.mjs:233:7)\n    at async file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/run-browser.mjs:322:5"
+    },
+    {
+      "id": "D1-next-navigation-refresh-home-member-hidden",
+      "passed": true,
+      "durationMs": 1895,
+      "detail": {
+        "id": "fixture-featured-hidden",
+        "keys": [
+          "authorNickname",
+          "createdAt",
+          "featuredAt",
+          "id",
+          "model",
+          "negativePrompt",
+          "prompt",
+          "showPromptPublic",
+          "showcaseStatus",
+          "size",
+          "url"
+        ],
+        "isOwner": false,
+        "publicPrompt": false
+      }
+    },
+    {
+      "id": "D1-next-navigation-refresh-home-admin-public",
+      "passed": false,
+      "durationMs": 8262,
+      "error": "Error: Actual Next client navigation must request a Flight payload\n    at waitFor (file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/cdp.mjs:13:9)\n    at async file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/run-browser.mjs:241:26\n    at async check (file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/run-browser.mjs:60:20)\n    at async privacyChecks (file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/run-browser.mjs:233:7)\n    at async file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/run-browser.mjs:322:5"
+    },
+    {
+      "id": "D1-next-navigation-refresh-home-admin-hidden",
+      "passed": false,
+      "durationMs": 8280,
+      "error": "Error: Actual Next client navigation must request a Flight payload\n    at waitFor (file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/cdp.mjs:13:9)\n    at async file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/run-browser.mjs:241:26\n    at async check (file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/run-browser.mjs:60:20)\n    at async privacyChecks (file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/run-browser.mjs:233:7)\n    at async file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/run-browser.mjs:322:5"
+    },
+    {
+      "id": "D1-next-navigation-refresh-home-owner-public",
+      "passed": true,
+      "durationMs": 2020,
+      "detail": {
+        "id": "fixture-featured-public",
+        "keys": [
+          "authorNickname",
+          "createdAt",
+          "featuredAt",
+          "generationCreatedAt",
+          "generationStatus",
+          "id",
+          "jobId",
+          "model",
+          "negativePrompt",
+          "ownerId",
+          "prompt",
+          "reviewNote",
+          "reviewedAt",
+          "reviewedById",
+          "reviewer",
+          "showPromptPublic",
+          "showcaseStatus",
+          "size",
+          "submittedAt",
+          "url"
+        ],
+        "isOwner": true,
+        "publicPrompt": true
+      }
+    },
+    {
+      "id": "D1-next-navigation-refresh-home-owner-hidden",
+      "passed": false,
+      "durationMs": 8261,
+      "error": "Error: Actual Next client navigation must request a Flight payload\n    at waitFor (file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/cdp.mjs:13:9)\n    at async file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/run-browser.mjs:241:26\n    at async check (file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/run-browser.mjs:60:20)\n    at async privacyChecks (file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/run-browser.mjs:233:7)\n    at async file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/run-browser.mjs:322:5"
+    }
+  ],
+  "passed": false,
+  "limitations": [
+    "Real Next/React/Chromium with synthetic DB only; not live DB/Worker/provider E2E.",
+    "Desktop Chrome CDP emulates viewport/touch; not physical mobile/native IME.",
+    "Local installed Node is not pinned Node24.22.1."
+  ]
+}

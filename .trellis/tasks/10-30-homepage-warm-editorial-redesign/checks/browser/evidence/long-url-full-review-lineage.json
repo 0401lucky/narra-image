@@ -1,0 +1,117 @@
+{
+  "capturedAt": "2026-11-01T02:44:34.853747+00:00",
+  "baseline": "validation-evidence/final-automated/source-manifest.json",
+  "baselineCount": 802,
+  "currentCount": 809,
+  "changed": [
+    {
+      "file": "eslint.config.mjs",
+      "before": {
+        "sha256": "0da84bf3df87aab3ce7526411b87f973e9b831a0ec680b5bcebf809f13e129ec",
+        "bytes": 617
+      },
+      "after": {
+        "sha256": "116700928b90fd58cbcd005e5be1c9edf181d58f609c58fbaa31a433452ad694",
+        "bytes": 726
+      }
+    },
+    {
+      "file": "src/components/marketing/homepage/constants.ts",
+      "before": {
+        "sha256": "a02cc0387b202a2c3f1f7343dc6b705f3c88aa55dd64f9b0796761e460edde3b",
+        "bytes": 4226
+      },
+      "after": {
+        "sha256": "b7994c6de611f5e85559f27d539c9d53680ddf55a00c7304bdb88536da05cd59",
+        "bytes": 4229
+      }
+    },
+    {
+      "file": "src/components/marketing/homepage/gallery-card.tsx",
+      "before": {
+        "sha256": "ab033dfb542d16a0207fba410da647d0b6bc95192beda463b6e70277e134d44a",
+        "bytes": 12085
+      },
+      "after": {
+        "sha256": "4f6c2fde255fdb2a587b1a73c9115f81e136668d0226673224cab3357b9a30c2",
+        "bytes": 13376
+      }
+    },
+    {
+      "file": "src/components/marketing/homepage/gallery-constants.ts",
+      "before": {
+        "sha256": "c7ff26b48222af3d6e9521bcd1949a40a35f624dc00ef7b2c556861ea8aed346",
+        "bytes": 1491
+      },
+      "after": {
+        "sha256": "6b7653b264d811fd0ba9446f9ec5d3470d6c30e20789243c812af081b5cd3e42",
+        "bytes": 2181
+      }
+    },
+    {
+      "file": "src/components/marketing/homepage/home-reveal.tsx",
+      "before": {
+        "sha256": "8e44ba16847a3e503fed68638588dd2ff1bc28e199aaafa006d7db044f411762",
+        "bytes": 1235
+      },
+      "after": {
+        "sha256": "cbfcc21f6039c0d3a01ebb2bc2edb59ce22a1c023997d7aa080506d4090ff073",
+        "bytes": 1545
+      }
+    },
+    {
+      "file": "src/components/marketing/homepage/homepage.module.css",
+      "before": {
+        "sha256": "ec7be31b074f036be8b0396692091fc8185b8d4922675b8f1e3bc0b9bf101786",
+        "bytes": 22437
+      },
+      "after": {
+        "sha256": "7ea47efd76599b4e4a9ed92f78aff3533b0445db436ffb5c307bb2f4ee990fb0",
+        "bytes": 22539
+      }
+    },
+    {
+      "file": "src/tests/unit/featured-gallery.test.tsx",
+      "before": {
+        "sha256": "f09290d626c0bb8e6560fac9a9fd3f740e089e7bb578f7550e6744b57289a5ad",
+        "bytes": 16548
+      },
+      "after": {
+        "sha256": "6d93dfcd4526fb81602e8c5d7c79a0ac9aa6f9dba070b55bffa64545c889b9fd",
+        "bytes": 16547
+      }
+    },
+    {
+      "file": "src/tests/unit/homepage-hero.test.tsx",
+      "before": {
+        "sha256": "d544ff5629b5e05b7c90a1d753d5571e1f8193cd557ab72d15ce4f7946e08cf6",
+        "bytes": 9958
+      },
+      "after": {
+        "sha256": "72323da97e95d01809908c26aafb734fef4a5aea24fc9a895468aa82e60c5902",
+        "bytes": 11648
+      }
+    },
+    {
+      "file": "src/tests/unit/homepage-motion.test.tsx",
+      "before": {
+        "sha256": "1918e7063a4572d23b45b0898aca26861e4e665492b06ccf3d29c85d6d642ef0",
+        "bytes": 16207
+      },
+      "after": {
+        "sha256": "55732e133ea17eeb8539b791183dc0fc8112220980ea1a74877e7ad4b28d9092",
+        "bytes": 17290
+      }
+    }
+  ],
+  "added": [
+    "public/marketing/home/bookshop-light-v1.png",
+    "public/marketing/home/jiangnan-rain-v2.png",
+    "public/marketing/home/lantern-fox-v1.png",
+    "src/tests/contracts/homepage-assets.test.ts",
+    "src/tests/unit/eslint-scope.test.ts",
+    "src/tests/unit/gallery-remix-fallback.test.tsx",
+    "src/tests/unit/homepage-reveal.test.tsx"
+  ],
+  "missing": []
+}

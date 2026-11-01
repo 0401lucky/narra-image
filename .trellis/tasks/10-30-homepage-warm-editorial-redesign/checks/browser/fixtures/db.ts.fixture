@@ -1,0 +1,233 @@
+import "server-only";
+
+import type { PrismaClient } from "@prisma/client";
+
+import config from "./homepage-fixture-config.json";
+
+type Query = Record<string, unknown>;
+type FixtureMode = "data" | "empty" | "error" | "long-url";
+type FixtureCall = { model: string; method: string; mutation: boolean };
+type FixtureState = {
+  mode: FixtureMode;
+  calls: FixtureCall[];
+  likes: Set<string>;
+  checkedIn: Set<string>;
+  credits: Record<string, number>;
+  failNextPage: boolean;
+  failLike: boolean;
+  failCheckIn: boolean;
+};
+
+const stateKey = Symbol.for("narra.homepage.fixture.state.v1");
+const runtime = globalThis as unknown as Record<symbol, FixtureState | undefined>;
+
+function freshState(): FixtureState {
+  return { mode: "data", calls: [], likes: new Set(), checkedIn: new Set(), credits: {}, failNextPage: false, failLike: false, failCheckIn: false };
+}
+
+export function fixtureState(): FixtureState {
+  return runtime[stateKey] ?? (runtime[stateKey] = freshState());
+}
+
+export function resetFixture(input: Query) {
+  const state = freshState();
+  if (input.mode === "empty" || input.mode === "error" || input.mode === "long-url") state.mode = input.mode;
+  state.failNextPage = input.failNextPage === true;
+  state.failLike = input.failLike === true;
+  state.failCheckIn = input.failCheckIn === true;
+  runtime[stateKey] = state;
+  return { mode: state.mode };
+}
+
+export function fixtureSummary() {
+  const state = fixtureState();
+  return { mode: state.mode, calls: state.calls, credits: state.credits, checkedIn: [...state.checkedIn], likes: [...state.likes] };
+}
+
+function object(value: unknown): Query {
+  return value && typeof value === "object" && !Array.isArray(value) ? value as Query : {};
+}
+
+function field(value: unknown, ...keys: string[]): unknown {
+  return keys.reduce<unknown>((current, key) => object(current)[key], value);
+}
+
+const date = new Date("2026-10-20T06:00:00.000Z");
+const reviewerId = "HOME_REVIEWER_ID_SECRET";
+const owner = { id: "home-owner", email: "owner@homepage.invalid", nickname: "纸间旅人", avatarUrl: "/homepage-fixtures/avatar.png" };
+
+export const fixturePrompts = {
+  publicPositive: "HOME_PUBLIC_POSITIVE_SENTINEL 江南雨巷，灯火倒映在青石板上。\n原样保留 + & # / ? = % 和 emoji 🌧️。",
+  publicNegative: "HOME_PUBLIC_NEGATIVE_SENTINEL blurry, watermark",
+  privatePositive: "HOME_PRIVATE_POSITIVE_SECRET never send this positive prompt to a visitor",
+  privateNegative: "HOME_PRIVATE_NEGATIVE_SECRET never send this negative prompt to a visitor",
+};
+
+function work(id: string, index: number, showcaseStatus = "FEATURED", showPromptPublic = true, detail = false) {
+  const media = config.media[index % config.media.length];
+  const ordinaryPrompt = index === 1 ? "作者未公开提示词" : index === 3
+    ? "8000-unit public prompt: 江南 & + # 🌧️\n" + "a".repeat(8000)
+    : `公开作品 ${String(index + 1).padStart(3, "0")}：晨光穿过纸窗，温暖的纹理与安静的空气。\n完整正向提示词 + & # / ? = %，不包含模型或负向提示词。`;
+  const prompt = detail
+    ? (showPromptPublic ? fixturePrompts.publicPositive : fixturePrompts.privatePositive)
+    : (showPromptPublic ? ordinaryPrompt : `${fixturePrompts.privatePositive} ${id}`);
+  const featuredAt = new Date(date.getTime() - index * 1000);
+  return {
+    id, jobId: `HOME_JOB_PRIVATE_${id}`, url: media.url, width: media.width, height: media.height,
+    createdAt: featuredAt, featuredAt: showcaseStatus === "FEATURED" ? featuredAt : null,
+    showcaseStatus, showPromptPublic, submittedAt: new Date("2026-10-18T06:00:00.000Z"),
+    reviewedAt: new Date("2026-10-19T06:00:00.000Z"), reviewedById: reviewerId,
+    reviewNote: "HOME_REVIEW_NOTE_SECRET internal moderation notes",
+    reviewedBy: { id: reviewerId, email: "HOME_REVIEWER_EMAIL_SECRET@homepage.invalid" },
+    job: {
+      createdAt: featuredAt, id: `HOME_JOB_PRIVATE_${id}`, model: detail ? "Fixture Detail Model" : `纸上光影 ${String(index + 1).padStart(3, "0")}`,
+      negativePrompt: showPromptPublic ? fixturePrompts.publicNegative : fixturePrompts.privateNegative,
+      prompt, size: `${media.width}x${media.height}`, status: "SUCCEEDED", userId: owner.id, user: owner,
+    },
+    _count: { likes: 10 + index }, likes: [] as Array<{ userId: string }>,
+    fixtureFeed: !detail,
+  };
+}
+
+const gallery = Array.from({ length: 80 }, (_, index) => work(`home-${String(index + 1).padStart(3, "0")}`, index, "FEATURED", index % 5 !== 2));
+const details = ["FEATURED", "PRIVATE", "PENDING", "TAKEDOWN_PENDING"].flatMap((status, index) => [
+  work(`fixture-${status.toLowerCase()}-public`, index, status, true, true),
+  work(`fixture-${status.toLowerCase()}-hidden`, index, status, false, true),
+]);
+const works = [...gallery, ...details];
+
+function user(id: string) {
+  if (!["home-owner", "home-member", "home-admin"].includes(id)) return null;
+  return {
+    id, email: `${id === owner.id ? "owner" : id === "home-admin" ? "admin" : "member"}@homepage.invalid`,
+    nickname: id === owner.id ? owner.nickname : id === "home-admin" ? "策展管理员" : "暖纸创作者",
+    role: id === "home-admin" ? "ADMIN" : "USER", avatarUrl: "/homepage-fixtures/avatar.png",
+    credits: fixtureState().credits[id] ?? 500, passwordHash: config.passwordHash,
+    bannedAt: null, oauthProvider: null, oauthId: null, createdAt: date, updatedAt: date,
+  };
+}
+
+function matches(row: ReturnType<typeof work>, query: Query): boolean {
+  const where = object(query.where);
+  if (typeof where.id === "string" && row.id !== where.id) return false;
+  if (typeof where.showcaseStatus === "string" && row.showcaseStatus !== where.showcaseStatus) return false;
+  const statuses = field(where, "showcaseStatus", "in");
+  if (Array.isArray(statuses) && !statuses.includes(row.showcaseStatus)) return false;
+  const userId = field(where, "job", "userId");
+  if (typeof userId === "string" && row.job.userId !== userId) return false;
+  if (Array.isArray(where.OR)) {
+    return where.OR.some((branch) => {
+      const value = object(branch);
+      const compare = value.featuredAt ?? value.createdAt;
+      const stamp = value.featuredAt !== undefined ? row.featuredAt : row.createdAt;
+      if (compare instanceof Date) return stamp?.getTime() === compare.getTime() && row.id < String(field(value, "id", "lt"));
+      const bound = field(compare, "lt");
+      return bound instanceof Date && Boolean(stamp && stamp < bound);
+    });
+  }
+  return true;
+}
+
+function selectedWork(row: ReturnType<typeof work>, query: Query) {
+  const viewer = field(query, "include", "likes", "where", "userId");
+  const likes = typeof viewer === "string" && fixtureState().likes.has(`${row.id}:${viewer}`) ? [{ userId: viewer }] : [];
+  const extra = [...fixtureState().likes].filter((key) => key.startsWith(`${row.id}:`)).length;
+  const variant = fixtureState().mode === "long-url" && row.fixtureFeed
+    ? config.longUrlCases.find((entry) => entry.id === row.id)
+    : undefined;
+  return { ...row, job: variant ? { ...row.job, prompt: String.fromCharCode(...variant.promptCodeUnits) } : row.job, _count: { likes: row._count.likes + extra }, likes };
+}
+
+function record(model: string, method: string, mutation = false) {
+  fixtureState().calls.push({ model, method, mutation });
+  if (fixtureState().calls.length > 5000) throw new Error("Fixture query bound exceeded");
+}
+
+function likeKey(query: Query) {
+  const key = object(field(query, "where", "workId_userId") ?? query.data);
+  return `${String(key.workId)}:${String(key.userId)}`;
+}
+
+async function execute(model: string, method: string, input: unknown = {}) {
+  const query = object(input);
+  const state = fixtureState();
+  const mutation = !["findMany", "findUnique", "findFirst", "count", "groupBy", "aggregate"].includes(method);
+  record(model, method, mutation);
+  if (model === "generationImage") {
+    if (method === "findUnique" || method === "findFirst") {
+      const row = works.find((row) => matches(row, query));
+      return row ? selectedWork(row, query) : null;
+    }
+    if (method === "findMany") {
+      const feed = field(query, "where", "featuredAt", "not") === null;
+      if (feed && state.mode === "error") throw new Error("Synthetic featured feed unavailable");
+      if (feed && state.mode === "empty") return [];
+      if (feed && state.failNextPage && Array.isArray(field(query, "where", "OR"))) {
+        state.failNextPage = false;
+        throw new Error("Synthetic next-page failure");
+      }
+      return works.filter((row) => (!feed || row.fixtureFeed) && matches(row, query)).slice(0, Number(query.take ?? 120)).map((row) => selectedWork(row, query));
+    }
+    if (method === "count") return works.filter((row) => matches(row, query)).length;
+    if (method === "groupBy") return ["FEATURED", "PRIVATE", "PENDING", "TAKEDOWN_PENDING"].map((showcaseStatus) => ({ showcaseStatus, _count: { _all: works.filter((row) => row.showcaseStatus === showcaseStatus && matches(row, query)).length } }));
+  }
+  if (model === "user") {
+    if (method === "count") return 3;
+    if (method === "findUnique" || method === "findFirst") {
+      const id = field(query, "where", "id");
+      const email = field(query, "where", "email");
+      return typeof id === "string" ? user(id) : ["home-owner", "home-member", "home-admin"].map(user).find((entry) => entry?.email === email) ?? null;
+    }
+    if (method === "update" && typeof field(query, "data", "credits", "increment") === "number") {
+      const id = String(field(query, "where", "id"));
+      const increment = Number(field(query, "data", "credits", "increment"));
+      if (increment !== 50 || !user(id)) throw new Error("Forbidden synthetic credit mutation");
+      state.credits[id] = (state.credits[id] ?? 500) + increment;
+      return user(id);
+    }
+  }
+  if (model === "workLike") {
+    if (state.failLike) throw new Error("Synthetic like failure");
+    if (method === "findUnique") return state.likes.has(likeKey(query)) ? { id: likeKey(query) } : null;
+    if (method === "create") { state.likes.add(likeKey(query)); return { id: likeKey(query) }; }
+    if (method === "delete") { state.likes.delete(likeKey(query)); return { id: likeKey(query) }; }
+    if (method === "count") {
+      const id = String(field(query, "where", "workId"));
+      const row = works.find((entry) => entry.id === id);
+      return (row?._count.likes ?? 0) + [...state.likes].filter((key) => key.startsWith(`${id}:`)).length;
+    }
+  }
+  if (model === "benefitConfig" && method === "findUnique") return { scope: "default", checkInReward: 50, autoApproveShowcase: false };
+  if (model === "checkInRecord") {
+    if (state.failCheckIn) throw new Error("Synthetic check-in failure");
+    if (method === "findUnique") return state.checkedIn.has(String(field(query, "where", "userId_dateKey", "userId"))) ? { id: "fixture-check-in" } : null;
+    if (method === "create") {
+      const id = String(field(query, "data", "userId"));
+      if (state.checkedIn.has(id)) throw Object.assign(new Error("Synthetic duplicate check-in"), { code: "P2002" });
+      state.checkedIn.add(id);
+      return query.data;
+    }
+  }
+  if (model === "turnstileConfig" && method === "findUnique") return { id: "fixture-turnstile", scope: "default", isEnabled: false, siteKey: null, secretEncrypted: null, protectLogin: false, protectRegister: false, protectInviteRedeem: false, protectGenerate: false };
+  if (model === "loginCoverConfig" && method === "findUnique") return { mode: "featured", customUrl: null };
+  if (model === "apiConfig" && method === "upsert") return { id: "fixture-api-config", scope: "default", isEnabled: false, requestsPerDay: 100, requestsPerMinute: 10, updatedAt: date };
+  const empty = ["providerChannel", "savedProviderConfig", "conversation", "generationJob", "generatedVideo", "canvas", "canvasRun", "oAuthProvider", "promptLibraryItem", "promptSource", "apiKey", "inviteCode", "redeemCode"];
+  if (empty.includes(model)) {
+    if (method === "findMany") return [];
+    if (method === "findUnique" || method === "findFirst") return null;
+    if (method === "count") return 0;
+  }
+  throw new Error(`Forbidden/unimplemented fixture query: ${model}.${method}`);
+}
+
+const adapter = new Proxy({}, {
+  get(_target, name) {
+    if (name === "$transaction") return async (operation: unknown) => typeof operation === "function" ? operation(adapter) : Promise.all(operation as Promise<unknown>[]);
+    if (name === "then") return undefined;
+    return new Proxy({}, { get(_delegate, method) { return (query: unknown) => execute(String(name), String(method), query); } });
+  },
+});
+
+// Deliberate test-only replacement of the Prisma boundary. Product consumers,
+// serializers, access rules and route implementations remain unmodified.
+export const db = adapter as unknown as PrismaClient;

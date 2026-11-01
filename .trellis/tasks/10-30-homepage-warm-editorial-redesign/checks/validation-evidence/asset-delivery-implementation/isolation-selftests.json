@@ -1,0 +1,9 @@
+{
+  "command": [
+    "python",
+    ".trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/isolated_check_test.py"
+  ],
+  "exitCode": 0,
+  "durationSeconds": 2.1978474,
+  "finishedAt": "2026-10-31T03:57:46.7969396Z"
+}

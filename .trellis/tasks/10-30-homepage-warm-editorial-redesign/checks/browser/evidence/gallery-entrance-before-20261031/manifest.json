@@ -1,0 +1,29 @@
+{
+  "recordedAt": "2026-10-31T07:32:39.942817+00:00",
+  "files": {
+    "cdp.mjs": {
+      "bytes": 17281,
+      "sha256": "42e6d6799f6b175d7442a95981fff6bd5dc01f8e172fc6ce181f521221bc4543"
+    },
+    "homepage-checks.mjs": {
+      "bytes": 41982,
+      "sha256": "195c3e9eb978fe59e75d81e405e27ce8072ba34971e96c255c62bcb5ec5456ff"
+    },
+    "run-browser.mjs": {
+      "bytes": 26963,
+      "sha256": "e3f62cda0843e65d4f7bb897b964904b2a92091ca2c990057c038f871acb57c5"
+    },
+    "diagnose-hero-hit.mjs": {
+      "bytes": 2886,
+      "sha256": "ec4e580ba304e4aa4368942c285005366380194eed389fd03e56ca46cff9bf5b"
+    },
+    "fixture:homepage-fixture-manifest.json": {
+      "bytes": 83657,
+      "sha256": "aa7ab59d472fe939660d3fc8f3a4599c1f140ec69877845a7d2769e866533631"
+    },
+    "fixture:.next/BUILD_ID": {
+      "bytes": 21,
+      "sha256": "ef242f04a7fae0cac9bc1902e2bf4d1f133d0c8e6644f8fa3f3426ed94a46185"
+    }
+  }
+}

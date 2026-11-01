@@ -1,0 +1,288 @@
+{
+  "captured_at": "2026-10-30T16:44:29.236501+00:00",
+  "scope": "Reviewed-source and preserved-work provenance, not MA/device/service acceptance",
+  "head": "1f7948e334c589dc6db38ac045b584f0f5381481",
+  "baseline_identities": 1337,
+  "index_entries_match_unchanged_head": true,
+  "staged_paths": [],
+  "current_mobile_identities": [
+    {
+      "path": "src/components/create/canvas/commands.ts",
+      "kind": "file",
+      "bytes": 11781,
+      "sha256": "c6af5a2afd2711fe30d215a81cac7c16472e055b6245d6e73c94d081a1cd4a01"
+    },
+    {
+      "path": "src/components/create/canvas/controller-types.ts",
+      "kind": "file",
+      "bytes": 5902,
+      "sha256": "beaf96e20dc7592b1e42b125b098c8ec0d985ae210c1bef5b4a8de2eea66ea26"
+    },
+    {
+      "path": "src/components/create/canvas/controller.ts",
+      "kind": "file",
+      "bytes": 53775,
+      "sha256": "5b5487a51ffd8ac40b8ba7655addc563678f5f4aa28efb2b8805b6d3d5974711"
+    },
+    {
+      "path": "src/components/create/canvas/editor-state.ts",
+      "kind": "file",
+      "bytes": 9063,
+      "sha256": "cf58379993bf449887c052ad1d5cb8db39f4d01c72542329bc5dfbfbac73ab95"
+    },
+    {
+      "path": "src/components/create/canvas/mobile-interaction.ts",
+      "kind": "file",
+      "bytes": 3669,
+      "sha256": "6a3060ef5dab27700ed6890fcbfb99e45c63101fdd1a95e17a1bfa963cce6c99"
+    },
+    {
+      "path": "src/components/create/canvas/renderer-adapter.ts",
+      "kind": "file",
+      "bytes": 7938,
+      "sha256": "28c65ca58b1e3d95bd4b2de692bc1a3db78c67d6e88cbc25a573b38563685a9b"
+    },
+    {
+      "path": "src/components/create/canvas/renderer-constants.ts",
+      "kind": "file",
+      "bytes": 2850,
+      "sha256": "df328737336ff49f7ce12fe25213747063aecc02ea70293c53dc158990a008bf"
+    },
+    {
+      "path": "src/components/create/canvas/renderer-types.ts",
+      "kind": "file",
+      "bytes": 2937,
+      "sha256": "1dff26422efb81b448684926d8ab8c4bfe39d9cbf6e49e2417e38dd655766f68"
+    },
+    {
+      "path": "src/components/create/generator-studio.tsx",
+      "kind": "file",
+      "bytes": 60192,
+      "sha256": "b3a3ec2094ace13160c1fa532993728bcacb9085977b7dbdb9fbf95347816fac"
+    },
+    {
+      "path": "src/components/create/hooks/use-canvas-editor.ts",
+      "kind": "file",
+      "bytes": 862,
+      "sha256": "4c6a9e6382c0e0703313ef6943f435c298e72d984b7a074ea4522d1a3670231d"
+    },
+    {
+      "path": "src/components/create/hooks/use-canvas-mobile-viewport.ts",
+      "kind": "file",
+      "bytes": 2699,
+      "sha256": "63bdd56b42f59da6a4b0f7ec10b244795a26619503aec0c0996b92f24ca1a10e"
+    },
+    {
+      "path": "src/components/create/hooks/use-studio-mode.ts",
+      "kind": "file",
+      "bytes": 2198,
+      "sha256": "cc89a172799bbfc5525a16bf9e43bdaf725a140b22e6c21687bada28279db6b3"
+    },
+    {
+      "path": "src/components/create/parts/canvas-dialog.tsx",
+      "kind": "file",
+      "bytes": 4647,
+      "sha256": "e6664bcbdd45aff31c53b6ed2e6f6c8b7946453bdedc837578db6999711c3840"
+    },
+    {
+      "path": "src/components/create/parts/canvas-node-editor.tsx",
+      "kind": "file",
+      "bytes": 4348,
+      "sha256": "c8eff43005b7437a0e8f9b465cb5b200e0ee6ad5711efbcd71dd0d18d8059f1b"
+    },
+    {
+      "path": "src/components/create/parts/canvas-node-inspector.tsx",
+      "kind": "file",
+      "bytes": 16517,
+      "sha256": "8724ee0db77a35d70617c0a7326c7336fa1ed18447a1d6e2ff8935c4dee11e35"
+    },
+    {
+      "path": "src/components/create/parts/canvas-node-picker.tsx",
+      "kind": "file",
+      "bytes": 2924,
+      "sha256": "822c1636f48624b92b57bb008c7f94966092aa4de756f5a4e5d726148e84c47a"
+    },
+    {
+      "path": "src/components/create/parts/canvas-nodes/generation-node.tsx",
+      "kind": "file",
+      "bytes": 5422,
+      "sha256": "e1a5475559151a68ab536ec8847afb6606bb82364e3e50817dc13bc6daeb72bf"
+    },
+    {
+      "path": "src/components/create/parts/canvas-nodes/node-shell.tsx",
+      "kind": "file",
+      "bytes": 2350,
+      "sha256": "d0525b7414ed93ef774180256429b485f6a7a750c2784923308c0cee4a017f0e"
+    },
+    {
+      "path": "src/components/create/parts/canvas-nodes/prompt-node.tsx",
+      "kind": "file",
+      "bytes": 1793,
+      "sha256": "43af3d21cff18e478c9e17097d85e097fec6309ff8c679790148e3b5c3fc21b1"
+    },
+    {
+      "path": "src/components/create/parts/canvas-nodes/reference-node.tsx",
+      "kind": "file",
+      "bytes": 5232,
+      "sha256": "54c34520567c3a6aa6f0b941eae0d823fef4222e4426079bb243c7b90671357d"
+    },
+    {
+      "path": "src/components/create/parts/canvas-nodes/result-node.tsx",
+      "kind": "file",
+      "bytes": 3690,
+      "sha256": "65cf3608bdf02eaed15af9e805947c00bc107e6707f06fc7c0624eb396ebfb8d"
+    },
+    {
+      "path": "src/components/create/parts/canvas-prompt-field.tsx",
+      "kind": "file",
+      "bytes": 2085,
+      "sha256": "782d1ea6f084c6a0f406b3cf50c59ec9d71b34427044310110fe3f55342b98a3"
+    },
+    {
+      "path": "src/components/create/parts/canvas-runtime-dialog.tsx",
+      "kind": "file",
+      "bytes": 7792,
+      "sha256": "9697a8181344b5f1880a8c537e87a9e86acc0cb6dd052824b63e56c3034bc73c"
+    },
+    {
+      "path": "src/components/create/parts/canvas-stage.module.css",
+      "kind": "file",
+      "bytes": 24551,
+      "sha256": "f6c2af7423851f4f44fdb54004c089395303286bc215d20e8dcd87d829b1b889"
+    },
+    {
+      "path": "src/components/create/parts/canvas-stage.tsx",
+      "kind": "file",
+      "bytes": 33770,
+      "sha256": "4f8697f5abe5467d72b5b12cd98571ce17c94cc32dc52c8835598ecadcd9ba09"
+    },
+    {
+      "path": "src/components/create/parts/canvas-toolbar.tsx",
+      "kind": "file",
+      "bytes": 5289,
+      "sha256": "b5fa2dbfd855f8d8b02920c56a6d8c711e0a51c09bd9f72545899231221e02c2"
+    },
+    {
+      "path": "src/components/create/parts/image-zoom-modal.tsx",
+      "kind": "file",
+      "bytes": 4979,
+      "sha256": "937b10bedba126fb4c11ccd4302940b2c582926d5d8392112318dfde80842077"
+    },
+    {
+      "path": "src/tests/unit/canvas-controller-connections.test.ts",
+      "kind": "file",
+      "bytes": 8826,
+      "sha256": "b9a4698db682c475f66b2cffe194b6e5bb1a468c6c740d3d953cf0afd607d321"
+    },
+    {
+      "path": "src/tests/unit/canvas-controller-documents.test.ts",
+      "kind": "file",
+      "bytes": 39077,
+      "sha256": "008fb98500097353c42f0244fe9be87267f1cde60dcd621a62ac5a8d11dd9ebe"
+    },
+    {
+      "path": "src/tests/unit/canvas-mobile-interaction.test.ts",
+      "kind": "file",
+      "bytes": 2400,
+      "sha256": "256be2e50323d918c798ae424b07e5650ea516c155c9d09693186badec0bce43"
+    },
+    {
+      "path": "src/tests/unit/canvas-mobile-viewport.test.tsx",
+      "kind": "file",
+      "bytes": 4506,
+      "sha256": "c9f76aa48e37a720e28b3d1bce1f0f89e2c013a3a8c8757d5364a88c95160869"
+    },
+    {
+      "path": "src/tests/unit/canvas-node-editor.test.tsx",
+      "kind": "file",
+      "bytes": 33223,
+      "sha256": "3a359f64483297305d7e2959593a9e717a719592180407cacb43b55a06da58e4"
+    },
+    {
+      "path": "src/tests/unit/canvas-stage.test.tsx",
+      "kind": "file",
+      "bytes": 45062,
+      "sha256": "ee4a4777dc82515d9b17013d62787146bb77a3f06657e45a566cad3012f57e89"
+    },
+    {
+      "path": "src/tests/unit/generator-studio-canvas.test.tsx",
+      "kind": "file",
+      "bytes": 45778,
+      "sha256": "c3d2631cda1c32a6ab0435d102518f5275434527dfcad4930d9d077746eb75c8"
+    },
+    {
+      "path": "src/tests/unit/use-canvas-editor.test.tsx",
+      "kind": "file",
+      "bytes": 6196,
+      "sha256": "52beb04b514d1f166578fa34e60fa41d029cd3e61fbfa8b7888f38094e6da571"
+    }
+  ],
+  "mobile_changed_baseline_paths": [
+    "src/components/create/canvas/commands.ts",
+    "src/components/create/canvas/controller-types.ts",
+    "src/components/create/canvas/controller.ts",
+    "src/components/create/canvas/renderer-adapter.ts",
+    "src/components/create/canvas/renderer-constants.ts",
+    "src/components/create/canvas/renderer-types.ts",
+    "src/components/create/generator-studio.tsx",
+    "src/components/create/hooks/use-studio-mode.ts",
+    "src/components/create/parts/canvas-dialog.tsx",
+    "src/components/create/parts/canvas-node-inspector.tsx",
+    "src/components/create/parts/canvas-nodes/generation-node.tsx",
+    "src/components/create/parts/canvas-nodes/node-shell.tsx",
+    "src/components/create/parts/canvas-nodes/prompt-node.tsx",
+    "src/components/create/parts/canvas-nodes/reference-node.tsx",
+    "src/components/create/parts/canvas-nodes/result-node.tsx",
+    "src/components/create/parts/canvas-runtime-dialog.tsx",
+    "src/components/create/parts/canvas-stage.module.css",
+    "src/components/create/parts/canvas-stage.tsx",
+    "src/components/create/parts/canvas-toolbar.tsx",
+    "src/components/create/parts/image-zoom-modal.tsx",
+    "src/tests/unit/canvas-controller-documents.test.ts",
+    "src/tests/unit/canvas-stage.test.tsx",
+    "src/tests/unit/generator-studio-canvas.test.tsx"
+  ],
+  "main_spec_changes": [
+    ".trellis/spec/frontend/canvas-studio.md",
+    ".trellis/spec/frontend/index.md",
+    ".trellis/spec/frontend/quality-guidelines.md",
+    ".trellis/spec/frontend/state-management.md"
+  ],
+  "authorized_ui_additions": [
+    ".trellis/tasks/10-30-homepage-warm-editorial-redesign/check.jsonl",
+    ".trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/planning-baseline.json",
+    ".trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/planning-review.md",
+    ".trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/planning-validation.json",
+    ".trellis/tasks/10-30-homepage-warm-editorial-redesign/design.md",
+    ".trellis/tasks/10-30-homepage-warm-editorial-redesign/implement.jsonl",
+    ".trellis/tasks/10-30-homepage-warm-editorial-redesign/implement.md",
+    ".trellis/tasks/10-30-homepage-warm-editorial-redesign/prd.md",
+    ".trellis/tasks/10-30-homepage-warm-editorial-redesign/references/narra_ai.md",
+    ".trellis/tasks/10-30-homepage-warm-editorial-redesign/references/narra_image.html",
+    ".trellis/tasks/10-30-homepage-warm-editorial-redesign/research/asset-evidence/asset-inspection.json",
+    ".trellis/tasks/10-30-homepage-warm-editorial-redesign/research/asset-evidence/cormorant-garamond-OFL.txt",
+    ".trellis/tasks/10-30-homepage-warm-editorial-redesign/research/asset-evidence/cormorant-garamond-latin-italic.woff2",
+    ".trellis/tasks/10-30-homepage-warm-editorial-redesign/research/asset-evidence/cormorant-garamond-latin-normal.woff2",
+    ".trellis/tasks/10-30-homepage-warm-editorial-redesign/research/asset-evidence/google-fonts.css",
+    ".trellis/tasks/10-30-homepage-warm-editorial-redesign/research/asset-evidence/hero-film.jpg",
+    ".trellis/tasks/10-30-homepage-warm-editorial-redesign/research/asset-evidence/hero-oriental.jpg",
+    ".trellis/tasks/10-30-homepage-warm-editorial-redesign/research/asset-evidence/hero-storybook-candidate.jpg",
+    ".trellis/tasks/10-30-homepage-warm-editorial-redesign/research/asset-evidence/noto-serif-sc-OFL.txt",
+    ".trellis/tasks/10-30-homepage-warm-editorial-redesign/research/asset-evidence/noto-serif-sc-chinese-sample.woff2",
+    ".trellis/tasks/10-30-homepage-warm-editorial-redesign/research/asset-evidence/plus-jakarta-sans-OFL.txt",
+    ".trellis/tasks/10-30-homepage-warm-editorial-redesign/research/asset-evidence/plus-jakarta-sans-latin.woff2",
+    ".trellis/tasks/10-30-homepage-warm-editorial-redesign/research/asset-evidence/unsplash-license.html",
+    ".trellis/tasks/10-30-homepage-warm-editorial-redesign/research/homepage-asset-delivery.md",
+    ".trellis/tasks/10-30-homepage-warm-editorial-redesign/research/homepage-reference-analysis.md",
+    ".trellis/tasks/10-30-homepage-warm-editorial-redesign/research/homepage-validation-plan.md",
+    ".trellis/tasks/10-30-homepage-warm-editorial-redesign/research/prompt-reuse-contracts.md",
+    ".trellis/tasks/10-30-homepage-warm-editorial-redesign/task.json"
+  ],
+  "unexpected_baseline_changes": [],
+  "unexpected_additions": [],
+  "source_mismatches": [],
+  "preserved_snapshot_copies": 167,
+  "snapshot_mismatches": [],
+  "real_dotenv_read": false,
+  "pass": true
+}

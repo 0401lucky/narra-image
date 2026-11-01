@@ -1,0 +1,19 @@
+{
+  "recordedAt": "2026-10-30T04:45:49.088994+00:00",
+  "phase": "post-implementation; SQL preflight unmet; independent review pending",
+  "sourceBaseline": "source-baseline.json",
+  "sourcePathsChecked": 192,
+  "declaredSourceChanges": [
+    {
+      "file": "src/tests/integration/canvas-contracts/canvas-contracts-db.test.ts",
+      "before": "90bce42946f64e773bf3c93cc5b523b2e315f474ca7074c6131b21bcfc758c68",
+      "after": "c11543353646b5d61c4ec1170d02eecc9de4669774b9702f4b58e4b95da0c31c"
+    }
+  ],
+  "unexpectedChanges": [],
+  "archivedChildFilesMatched": 277,
+  "browserSourceFilesMatched": 215,
+  "head": "1f7948e334c589dc6db38ac045b584f0f5381481",
+  "indexEntriesUnchanged": true,
+  "realEnvironmentRead": false
+}

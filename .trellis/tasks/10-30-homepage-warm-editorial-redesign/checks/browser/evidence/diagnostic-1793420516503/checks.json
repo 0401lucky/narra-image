@@ -1,0 +1,8 @@
+[
+  {
+    "id": "diagnostic-hero-native-painted-control",
+    "passed": false,
+    "durationMs": 5904,
+    "error": "AssertionError [ERR_ASSERTION]: A native press at the painted hero copy control was obstructed\n\n0 !== 1\n\n    at file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/diagnose-hero-hit.mjs:37:12\n    at async check (file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/run-browser.mjs:79:20)\n    at async diagnoseHeroHit (file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/diagnose-hero-hit.mjs:8:3)\n    at async file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/run-browser.mjs:372:5"
+  }
+]

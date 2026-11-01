@@ -1,0 +1,27 @@
+{
+  "label": "mobile-impl-focused-01",
+  "mode": "test",
+  "command": [
+    "pnpm",
+    "exec",
+    "vitest",
+    "run",
+    "--testTimeout=30000",
+    "src/tests/unit/canvas-controller-connections.test.ts",
+    "src/tests/unit/use-canvas-editor.test.tsx",
+    "src/tests/unit/canvas-node-editor.test.tsx",
+    "src/tests/unit/canvas-mobile-interaction.test.ts",
+    "src/tests/unit/canvas-mobile-viewport.test.tsx",
+    "src/tests/unit/canvas-stage.test.tsx",
+    "src/tests/unit/generator-studio-canvas.test.tsx",
+    "src/tests/unit/use-canvas-runtime-lease.test.tsx"
+  ],
+  "cwd": "E:/code/narra-image",
+  "timeoutMs": 180000,
+  "code": 0,
+  "signal": null,
+  "timedOut": false,
+  "durationMs": 10876,
+  "stdoutPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-impl-focused-01.stdout.log",
+  "stderrPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-impl-focused-01.stderr.log"
+}

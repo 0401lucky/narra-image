@@ -1,0 +1,25 @@
+{
+  "checkedAt": "2026-11-01T03:10:41.844273+00:00",
+  "reviewer": "delivery_final_check",
+  "workspace": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\hero-hit-independent-8725c17e\\app",
+  "sourceInputs": 809,
+  "fixtureProductionInputs": 659,
+  "broaderInputsCopied": 150,
+  "changedBroaderInputs": [
+    {
+      "file": "THIRD_PARTY_NOTICES.md",
+      "previous": "9c91c915a2f8220034295085baa29525ed80730cba73994812b9dcce98396851",
+      "current": "33f503831942a0c7003f6fe29f7f2fb803d75bd7ee8e15a93b8e649aec7a90b1"
+    }
+  ],
+  "declaredProductReplacements": {
+    "src/lib/db.ts": "044edf0c7b20fee2a56fb5f25001e4d3e9eca562677ac0b65989153e989ffeb3"
+  },
+  "sourceManifestSha256": "c94793261bc0bf091e6f6c3e44a96960184fe973c09e760e56bd101a518fe150",
+  "allLiveIdentitiesMatch": true,
+  "allSnapshotIdentitiesMatchExceptDeclaredDb": true,
+  "beforeManifest": "prior-lane-source-manifest.json",
+  "priorFixtureManifest": "prior-fixture-manifest.json",
+  "previousBuildBrowserVerdictsInvalidated": true,
+  "fixtureNotUnmodifiedProductBuild": true
+}

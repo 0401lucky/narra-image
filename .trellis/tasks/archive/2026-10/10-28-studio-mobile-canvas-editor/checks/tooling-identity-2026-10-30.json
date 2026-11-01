@@ -1,0 +1,27 @@
+{
+  "nodeVersion": "v24.22.1",
+  "inspectedHelperSource": true,
+  "realDotenvRead": false,
+  "identities": [
+    {
+      "path": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-history-cleanup-20261029\\node-v24.22.1-win-x64\\node.exe",
+      "sha256": "d702daa815eabbff763c7d3808e235cf031cf2ca70211b56847bc72f51e240e5"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\safe-run.mjs",
+      "sha256": "c1f112216efb79e443770551b75a31823e857bcef78b9907374289c389fefdea"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\safe-environment.mjs",
+      "sha256": "9f3ccb0362ed1c29d36c1e8926bb0c40833679c1fc006fbb54f02c5ca9101710"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\deny-local-env.cjs",
+      "sha256": "0a84ade7b6c386a545421156c60b8e96e0e468475838c9954af0c12d33262bcf"
+    },
+    {
+      "path": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\installed-package.mjs",
+      "sha256": "99f1df01b023b9ebb9d5055045188ce8bded1523bf3328efecaf9280a9f74011"
+    }
+  ]
+}

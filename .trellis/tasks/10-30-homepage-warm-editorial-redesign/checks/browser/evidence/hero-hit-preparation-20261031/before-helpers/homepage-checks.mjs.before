@@ -1,0 +1,580 @@
+import assert from "node:assert/strict";
+import { readFile, writeFile } from "node:fs/promises";
+import path from "node:path";
+
+import { delay, waitFor } from "./cdp.mjs";
+import { heroImageChecks, heroImagesReady } from "./hero-image-checks.mjs";
+import { HERO_SCENE_CONTRACT } from "./hero-scene-contract.mjs";
+
+const card = (id) => `[data-gallery-card][data-work-id="${id}"]`;
+const field = (id, name) => `${card(id)} [data-gallery-${name}]`;
+const positive = (index) => `公开作品 ${String(index + 1).padStart(3, "0")}：晨光穿过纸窗，温暖的纹理与安静的空气。\n完整正向提示词 + & # / ? = %，不包含模型或负向提示词。`;
+const heroPrompt = HERO_SCENE_CONTRACT[0].prompt;
+
+async function openCard(tab, id, touch = false) {
+  const opened = await tab.cdp.evaluate(`document.querySelector(${JSON.stringify(field(id, "disclosure"))})?.getAttribute('aria-expanded')==='true'`);
+  if (!opened) {
+    if (touch) await tab.click(field(id, "disclosure"), null, 0, true);
+    else {
+      await tab.point(card(id));
+      await delay(1800);
+      // After route-return scroll restoration, hover can finish opening during a
+      // fallback click's pointer move. Clicking then would deliberately close it.
+      await tab.cdp.send("Input.dispatchMouseEvent", { type: "mouseMoved", x: 3, y: 90 });
+      await tab.hover(card(id), null, 0, [0.5, 0.5]);
+    }
+  }
+  await waitFor(() => tab.cdp.evaluate(`document.querySelector(${JSON.stringify(field(id, "disclosure"))})?.getAttribute('aria-expanded')==='true'`));
+  await delay(400);
+}
+
+async function clipboard(tab, reject = false) {
+  await tab.cdp.evaluate(`void (()=>{window.__homepageCopies=[];Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async(text)=>{${reject ? "throw new DOMException('Clipboard deliberately denied','NotAllowedError')" : "window.__homepageCopies.push(text)"}}}})})()`);
+}
+
+async function galleryCount(tab) { return tab.cdp.evaluate("document.querySelectorAll('[data-gallery-card]').length"); }
+async function homeReady(tab) { await tab.ready("[data-homepage]"); await tab.ready("[data-gallery-card]"); await tab.settledFonts(); }
+
+function styleFields(value) {
+  if (!value) return null;
+  const { fontFamily, fontSize, fontWeight, color, backgroundColor, borderColor } = value;
+  return { fontFamily, fontSize, fontWeight, color, backgroundColor, borderColor };
+}
+
+export async function fullHomepageChecks({ page, check, control, request, evidence, browser, visualMetrics, here, heroAssets = [] }) {
+  const unresolved = [];
+  const actualImages = heroImagesReady(heroAssets);
+  const baseline = JSON.parse(await readFile(path.join(here, "evidence/latest-baseline.json"), "utf8")).baseline;
+  await control({ mode: "data" });
+
+  for (const [width, height, touch] of [[1440, 1000, false], [390, 844, true], [320, 844, true], [768, 1000, false], [1024, 1000, false]]) {
+    await check(`S1-home-geometry-fonts-${width}`, async () => {
+      const tab = await page("home-member");
+      await tab.viewport(width, height, touch);
+      await tab.navigate("/");
+      await homeReady(tab);
+      if (actualImages) await waitFor(() => tab.cdp.evaluate("document.querySelector('[data-home-hero-frame]')?.dataset.imageState==='ready'"), { message: "Delivered first hero image must decode" });
+      await delay(1200);
+      const metrics = await tab.cdp.evaluate(`(() => {
+        const root=document.querySelector('[data-homepage]'), title=document.querySelector('#hero h1'), frame=document.querySelector('[data-home-hero-frame]'), grid=document.querySelector('[data-gallery-grid]');
+        const s=getComputedStyle(root),r=title.getBoundingClientRect();
+        return {paper:s.backgroundColor,font:s.fontFamily,title:{width:r.width,right:r.right,left:r.left,font:getComputedStyle(title).fontFamily,fontSize:getComputedStyle(title).fontSize},overflow:document.documentElement.scrollWidth>innerWidth,sections:['hero','capabilities','gallery','footer'].map(id=>Boolean(document.getElementById(id))),stats:document.querySelectorAll('#hero [data-home-stat]').length,frames:document.querySelectorAll('[data-home-hero-frame]').length,ratio:(()=>{const r=document.querySelector('[data-home-hero-viewport]').getBoundingClientRect();return r.width/r.height})(),columns:getComputedStyle(grid).gridTemplateColumns.split(' ').length,fonts:[...document.fonts].filter(f=>f.status==='loaded').map(f=>f.family),fontRequests:performance.getEntriesByType('resource').filter(r=>r.name.includes('.woff2')).map(r=>({url:r.name,bytes:r.transferSize,decodedBytes:r.decodedBodySize})),imageState:frame.dataset.imageState};
+      })()`);
+      assert.equal(metrics.overflow, false);
+      assert(metrics.sections.every(Boolean));
+      assert.equal(metrics.stats, 3);
+      assert.equal(metrics.frames, 1);
+      assert(Math.abs(metrics.ratio - 4 / 3) < 0.02);
+      assert(metrics.font.includes("NarraHomeJakarta"));
+      for (const name of ["NarraHomeJakarta", "NarraHomeNotoSerifSC", "NarraHomeCormorant"]) assert(metrics.fonts.some((loaded) => loaded.includes(name)), `Actual font face not loaded: ${name}`);
+      assert.equal(metrics.columns, width >= 1024 ? 4 : width >= 640 ? 2 : 1);
+      assert(metrics.title.right <= width + 1 && metrics.title.left >= 0);
+      const refinements = await tab.cdp.evaluate("({gate:getComputedStyle(document.querySelector('.route-transition-gate')).visibility,statTops:[...document.querySelectorAll('#hero dd')].map(el=>el.getBoundingClientRect().top),descriptionLineHeight:getComputedStyle(document.querySelector('#hero p')).lineHeight})");
+      assert.equal(refinements.gate, "hidden", "Home-specific style must suppress the inherited orange edge gate");
+      assert(Math.max(...refinements.statTops) - Math.min(...refinements.statTops) < 1, "Stat numbers align even when labels wrap");
+      metrics.refinements = refinements;
+      const { root } = await tab.cdp.send("DOM.getDocument");
+      metrics.renderedFonts = {};
+      for (const [name, selector] of [["chineseEmphasis", "#home-title span span"], ["englishWordmark", "header strong"], ["latinBody", "#hero p"]]) {
+        const { nodeId } = await tab.cdp.send("DOM.querySelector", { nodeId: root.nodeId, selector });
+        metrics.renderedFonts[name] = nodeId ? (await tab.cdp.send("CSS.getPlatformFontsForNode", { nodeId })).fonts : [];
+      }
+      metrics.fontTransferredBytes = metrics.fontRequests.reduce((sum, request) => sum + request.bytes, 0);
+      metrics.fontRequestCount = metrics.fontRequests.length;
+      if (!actualImages) unresolved.push({ id: `AC7-assets-${width}`, reason: "Three real delivered hero assets are not in this snapshot; no successful image decode/subject fidelity claim." });
+      else assert.equal(metrics.imageState, "ready");
+      await tab.screenshot(path.join(evidence, `home-${width}.png`));
+      if (width === 1440 || width === 390) {
+        await tab.point("[data-home-demo=prompt]");
+        await delay(1400);
+        await tab.screenshot(path.join(evidence, `capabilities-${width}.png`));
+        await tab.point(card("home-001"));
+        await delay(1400);
+        await tab.screenshot(path.join(evidence, `gallery-${width}.png`));
+        await tab.point("#footer nav a");
+        await delay(2200);
+        await tab.screenshot(path.join(evidence, `footer-${width}.png`));
+      }
+      return metrics;
+    });
+  }
+
+  for (const route of ["/create", "/works", "/settings", "/admin"]) {
+    await check(`S1-real-navigation-theme-isolation-${route.slice(1)}`, async () => {
+      const tab = await page(route === "/admin" ? "home-admin" : "home-member");
+      await tab.navigate("/");
+      await homeReady(tab);
+      await tab.click(`header a[href="${route}"]`);
+      await waitFor(() => tab.cdp.evaluate(`location.pathname===${JSON.stringify(route)}`));
+      await tab.ready(route === "/create" ? "textarea" : "h1");
+      await delay(800);
+      const actual = await visualMetrics(tab);
+      for (const region of ["body", "main", "header", "h1"]) assert.deepEqual(styleFields(actual[region]), styleFields(baseline[route][region]), `Non-home ${region} style changed after Home navigation`);
+      assert.equal(actual.overflow, false);
+      assert.equal(await tab.cdp.evaluate("document.querySelector('[data-homepage]')===null"), true);
+      await tab.screenshot(path.join(evidence, `after-home-${route.slice(1)}.png`));
+      return actual;
+    });
+  }
+
+  await check("S2-header-mobile-drawer-native-touch-keyboard", async () => {
+    const tab = await page("home-admin");
+    await tab.viewport(390, 844, true);
+    await tab.navigate("/");
+    await homeReady(tab);
+    await tab.click('button[aria-label="打开导航菜单"]', null, 0, true);
+    await tab.ready('[role="dialog"]');
+    const geometry = await tab.cdp.evaluate("(()=>{const dialog=document.querySelector('[role=dialog]'),r=dialog.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,height:r.height,modal:dialog.getAttribute('aria-modal'),activeInside:dialog.contains(document.activeElement),links:[...dialog.querySelectorAll('a')].map(a=>a.getAttribute('href')),bodyOverflow:getComputedStyle(document.body).overflow}})()");
+    assert(geometry.left >= -1 && geometry.right <= 391 && geometry.top >= -1 && geometry.bottom <= 845);
+    assert.equal(geometry.modal, "true");
+    assert(geometry.activeInside);
+    assert(geometry.links.includes("/admin") && geometry.links.includes("/api-keys"));
+    await tab.key("Tab");
+    assert(await tab.cdp.evaluate("document.querySelector('[role=dialog]').contains(document.activeElement)"));
+    await tab.key("Escape");
+    await waitFor(() => tab.cdp.evaluate("document.querySelector('[role=dialog]')===null"));
+    assert.equal(await tab.cdp.evaluate("document.activeElement?.getAttribute('aria-label')"), "打开导航菜单");
+    assert.notEqual(await tab.cdp.evaluate("document.body.style.overflow"), "hidden");
+    return geometry;
+  });
+
+  await check("M1-M4-real-pointer-count-miniatures-pause", async () => {
+    const tab = await page("home-member");
+    await tab.navigate("/");
+    await homeReady(tab);
+    await tab.hover("[data-home-hero-frame]", null, 0, [0.8, 0.2]);
+    const tilt = await tab.cdp.evaluate("(()=>{const el=document.querySelector('[data-home-hero-frame]');return {transform:getComputedStyle(el).transform,x:el.style.getPropertyValue('--rotate-x'),y:el.style.getPropertyValue('--rotate-y')}})()");
+    assert(tilt.transform !== "none" && (tilt.x !== "0deg" || tilt.y !== "0deg"));
+    await waitFor(() => tab.cdp.evaluate("[...document.querySelectorAll('[data-home-stat]')].some(el=>el.textContent.includes('150,000'))"));
+    const stats = await tab.cdp.evaluate("[...document.querySelectorAll('[data-home-stat]')].map(el=>el.textContent)");
+    assert(stats.some((text) => text.includes("150,000")) && stats.some((text) => text.includes("120")) && stats.some((text) => text.includes("4.2")));
+    await tab.point("[data-home-demo=prompt]");
+    const before = await tab.cdp.evaluate("[...document.querySelectorAll('[data-home-demo]')].map(el=>({kind:el.dataset.homeDemo,text:el.textContent,active:el.querySelector('[data-active=true]')?.textContent}))");
+    await delay(2600);
+    const after = await tab.cdp.evaluate("[...document.querySelectorAll('[data-home-demo]')].map(el=>({kind:el.dataset.homeDemo,text:el.textContent,active:el.querySelector('[data-active=true]')?.textContent}))");
+    assert.equal(before.length, 4);
+    assert.notEqual(before.find((entry) => entry.kind === "prompt").active, after.find((entry) => entry.kind === "prompt").active);
+    assert.notEqual(before.find((entry) => entry.kind === "versions").text, after.find((entry) => entry.kind === "versions").text);
+    const petBefore = after.find((entry) => entry.kind === "pet").text;
+    await tab.click("[data-home-demo=pet] button");
+    const petAfter = await tab.cdp.evaluate("document.querySelector('[data-home-demo=pet]').textContent");
+    assert.notEqual(petAfter, petBefore);
+    assert(after.find((entry) => entry.kind === "api").text.includes("/v1/images/generations"));
+    assert.equal(tab.requests.filter((entry) => entry.method !== "GET").length, 0, "Miniatures must not mutate real business state");
+    await tab.click('[aria-label="暂停装饰动效"]');
+    assert.equal(await tab.cdp.evaluate("document.querySelector('[data-homepage]').dataset.motionPaused"), "true");
+    await tab.point("[data-home-demo=prompt]");
+    const paused = await tab.cdp.evaluate("[...document.querySelectorAll('[data-home-demo]')].map(el=>el.textContent)");
+    await delay(2500);
+    assert.deepEqual(await tab.cdp.evaluate("[...document.querySelectorAll('[data-home-demo]')].map(el=>el.textContent)"), paused);
+    await tab.reducedMotion(true);
+    await waitFor(() => tab.cdp.evaluate("document.querySelector('[data-homepage]').dataset.motionReduced==='true'"));
+    return { tilt, stats, before, after, petBefore, petAfter };
+  });
+
+  await check("H1-M2-forced-image-failure-coherent-copy-and-real-retry", async () => {
+    const tab = await page();
+    await tab.cdp.send("Network.setCacheDisabled", { cacheDisabled: true });
+    for (const scene of HERO_SCENE_CONTRACT) tab.serve(scene.image, "Deliberate fixture image failure", "text/plain", 503);
+    await tab.navigate("/");
+    await homeReady(tab);
+    await waitFor(() => tab.cdp.evaluate("document.querySelector('[data-home-hero-frame]').dataset.imageState==='error'"));
+    await clipboard(tab);
+    await tab.click("[data-home-hero-frame] button", "复用画面灵感");
+    assert.deepEqual(await tab.cdp.evaluate("window.__homepageCopies"), [heroPrompt]);
+    await tab.click('[role="tab"]', "绘本叙事");
+    await tab.click('[role="tab"]', "东方美学");
+    await tab.click('[role="tab"]', "胶片光影");
+    await delay(2000);
+    assert.equal(await tab.cdp.evaluate("document.querySelector('[data-home-hero-frame]').dataset.sceneId"), "film");
+    const state = await tab.cdp.evaluate("document.querySelector('[data-home-hero-frame]').dataset.imageState");
+    assert.equal(state, "error");
+    assert(await tab.cdp.evaluate("document.querySelector('[data-home-hero-frame]').textContent.includes('无法加载')"));
+    await clipboard(tab, true);
+    await tab.click("[data-home-hero-frame] button", "复用画面灵感");
+    await tab.ready("[data-home-hero-frame] textarea");
+    assert.equal(await tab.cdp.evaluate("document.querySelector('[data-home-hero-frame] textarea').value"), heroPrompt);
+    for (const scene of HERO_SCENE_CONTRACT) tab.unserve(scene.image);
+    if (actualImages) {
+      await tab.click("[data-home-hero-frame] button", "重试图片");
+      await waitFor(() => tab.cdp.evaluate("document.querySelector('[data-home-hero-frame]').dataset.imageState==='ready' && document.querySelector('[data-home-scene-image]').naturalWidth>0"));
+      assert.equal(await tab.cdp.evaluate("document.querySelector('[data-home-scene-image]').getAttribute('src')"), HERO_SCENE_CONTRACT[0].image);
+    }
+    return { forcedFailureStatus: 503, state, coherentScene: "film", fullPrompt: true, retryRealFile: actualImages };
+  });
+
+  await check("G1-desktop-four-column-crop-and-original-detail", async () => {
+    const tab = await page("home-member");
+    await tab.navigate("/");
+    await homeReady(tab);
+    await tab.point(card("home-001"));
+    const shapes = await tab.cdp.evaluate("[...document.querySelectorAll('[data-gallery-card]')].slice(0,4).map(el=>{const layer=el.querySelector('[data-gallery-image-layer]'),img=el.querySelector('[data-gallery-image]'),r=layer.getBoundingClientRect(),s=getComputedStyle(img);return {x:r.x,y:r.y,width:r.width,height:r.height,fit:s.objectFit,position:s.objectPosition,original:[img.naturalWidth,img.naturalHeight]}})");
+    assert.equal(shapes.length, 4);
+    for (const item of shapes) { assert(Math.abs(item.width / item.height - 0.8) < 0.02); assert.equal(item.fit, "cover"); assert.equal(item.position, "50% 50%"); }
+    await tab.click(`${card("home-001")} a[href="/works/home-001"]`);
+    await tab.ready('img[alt="作品图片"]');
+    const detail = await tab.cdp.evaluate("(()=>{const img=document.querySelector('img[alt=作品图片]');return {fit:getComputedStyle(img).objectFit,ratio:img.naturalWidth/img.naturalHeight}})()");
+    assert.equal(detail.fit, "contain");
+    assert(Math.abs(detail.ratio - 1.5) < 0.01);
+    return { shapes, detail };
+  });
+
+  await check("C1-C3-guest-public-copy-hidden-permission-clipboard-denial", async () => {
+    const tab = await page();
+    await tab.viewport(390, 844, true);
+    await tab.navigate("/");
+    await homeReady(tab);
+    await clipboard(tab);
+    await openCard(tab, "home-001", true);
+    assert.equal(await tab.cdp.evaluate(`document.querySelector(${JSON.stringify(field("home-001", "prompt"))}).value`), positive(0));
+    assert.equal(await tab.cdp.evaluate(`document.querySelector(${JSON.stringify(field("home-001", "remix"))}).getAttribute('href')`), "/login");
+    const instructions = await tab.cdp.evaluate("document.querySelector('#gallery').textContent");
+    assert(instructions.includes("登录") && instructions.includes("返回") && /重选|重新选择/.test(instructions));
+    await tab.click(field("home-001", "copy"), null, 0, true);
+    assert.deepEqual(await tab.cdp.evaluate("window.__homepageCopies"), [positive(0)]);
+    await tab.key("Escape");
+    assert.equal(await tab.cdp.evaluate("document.activeElement?.hasAttribute('data-gallery-disclosure')"), true);
+    await openCard(tab, "home-003", true);
+    assert.equal(await tab.cdp.evaluate(`document.querySelector(${JSON.stringify(field("home-003", "prompt"))})`), null);
+    assert.equal(await tab.cdp.evaluate(`document.querySelector(${JSON.stringify(field("home-003", "copy"))})`), null);
+    await openCard(tab, "home-002", true);
+    await clipboard(tab, true);
+    await tab.click(field("home-002", "copy"), null, 0, true);
+    await waitFor(() => tab.cdp.evaluate(`document.querySelector(${JSON.stringify(card("home-002"))}).textContent.includes('手动')`));
+    const manual = await tab.cdp.evaluate(`(()=>{const text=document.querySelector(${JSON.stringify(field("home-002", "prompt"))});return {value:text.value,selected:text.selectionEnd-text.selectionStart}})()`);
+    assert.equal(manual.value, "作者未公开提示词");
+    assert.equal(manual.selected, manual.value.length);
+    return { manual, guestHint: instructions.slice(0, 230) };
+  });
+
+  await check("P1-P2-real-api-pagination16-to72", async () => {
+    await control({ mode: "data" });
+    const tab = await page("home-member");
+    await tab.navigate("/");
+    await homeReady(tab);
+    await tab.cdp.evaluate("void (()=>{window.__galleryCounts=[document.querySelectorAll('[data-gallery-card]').length];const observer=new MutationObserver(()=>{const count=document.querySelectorAll('[data-gallery-card]').length;if(window.__galleryCounts.at(-1)!==count)window.__galleryCounts.push(count)});observer.observe(document.querySelector('[data-gallery-grid]'),{childList:true,subtree:true});window.__galleryCountObserver=observer})()");
+    const counts = [await galleryCount(tab)];
+    assert.equal(counts[0], 16);
+    for (const target of [32, 48, 64, 72]) {
+      if ((await galleryCount(tab)) < target) await tab.point("[data-gallery-load-more]").catch(async (error) => { if ((await galleryCount(tab)) < target) throw error; });
+      const current = await galleryCount(tab);
+      if (current < target && !(await tab.cdp.evaluate("document.querySelector('[data-gallery-load-more]')?.disabled"))) await tab.click("[data-gallery-load-more]");
+      await waitFor(async () => (await galleryCount(tab)) >= target, { message: `Gallery did not advance to ${target}` });
+      const count = await galleryCount(tab);
+      assert(count >= target && count <= 72);
+      counts.push(count);
+    }
+    const final = await tab.cdp.evaluate("({ids:[...document.querySelectorAll('[data-gallery-card]')].map(el=>el.dataset.workId),button:!!document.querySelector('[data-gallery-load-more]'),status:document.querySelector('[data-gallery-status]').textContent})");
+    assert.equal(new Set(final.ids).size, 72);
+    assert.equal(final.button, false);
+    assert(final.status.includes("上限"));
+    const requests = tab.requests.filter((entry) => entry.url.includes("/api/works/featured"));
+    assert.equal(requests.length, 4);
+    assert.equal(new Set(requests.map((entry) => new URL(entry.url).searchParams.get("cursor"))).size, 4);
+    const observed = await tab.cdp.evaluate("window.__galleryCounts");
+    await tab.cdp.evaluate("void window.__galleryCountObserver.disconnect()");
+    assert.deepEqual(observed, [16, 32, 48, 64, 72]);
+    return { counts, observed, requests, status: final.status };
+  });
+
+  await check("P2-page-failure-keeps-records-explicit-retry", async () => {
+    await control({ mode: "data", failNextPage: true });
+    const tab = await page("home-member");
+    await tab.navigate("/");
+    await homeReady(tab);
+    await tab.point("[data-gallery-load-more]");
+    await waitFor(() => tab.cdp.evaluate("Boolean(document.querySelector('[data-gallery-status] [role=alert]'))"));
+    assert.equal(await galleryCount(tab), 16);
+    const before = tab.requests.filter((entry) => entry.url.includes("/api/works/featured")).length;
+    await delay(1400);
+    assert.equal(tab.requests.filter((entry) => entry.url.includes("/api/works/featured")).length, before, "Failed page must not auto-retry forever");
+    await tab.click("[data-gallery-load-more]");
+    await waitFor(async () => (await galleryCount(tab)) === 32);
+    return { preserved: 16, afterRetry: 32, autoRetrySuppressed: true };
+  });
+
+  await check("M5-M6-gallery-depth-glare-reveal-and-reduced-motion", async () => {
+    await control({ mode: "data" });
+    const tab = await page("home-member");
+    await tab.navigate("/");
+    await homeReady(tab);
+    await tab.point(card("home-001"));
+    await delay(800);
+    await tab.hover(card("home-001"), null, 0, [0.8, 0.25]);
+    await delay(350);
+    const normal = await tab.cdp.evaluate(`(()=>{const root=document.querySelector(${JSON.stringify(card("home-001"))}),tilt=root.querySelector('[data-gallery-tilt]'),image=root.querySelector('[data-gallery-image]'),info=root.querySelector('[data-gallery-info]'),glare=root.querySelector('[data-gallery-glare]');return {tilt:getComputedStyle(tilt).transform,preserve:getComputedStyle(tilt).transformStyle,overflow:getComputedStyle(tilt).overflow,image:getComputedStyle(image).transform,info:getComputedStyle(info).transform,glare:getComputedStyle(glare).backgroundImage,glareOpacity:getComputedStyle(glare).opacity,entrance:getComputedStyle(root.parentElement).transform,entranceOpacity:getComputedStyle(root.parentElement).opacity}})()`);
+    assert.equal(normal.preserve, "preserve-3d");
+    assert.equal(normal.overflow, "visible");
+    assert.notEqual(normal.tilt, "none");
+    assert.notEqual(normal.image, "none");
+    assert.notEqual(normal.info, "none");
+    assert(normal.glare.includes("gradient"));
+    await waitFor(() => tab.cdp.evaluate(`Number(getComputedStyle(document.querySelector(${JSON.stringify(card("home-001"))}).parentElement).opacity)>0.995`), { message: "Gallery entrance should settle at visible opacity" });
+    normal.settledEntranceOpacity = await tab.cdp.evaluate(`getComputedStyle(document.querySelector(${JSON.stringify(card("home-001"))}).parentElement).opacity`);
+    await tab.point(field("home-001", "copy"));
+    await tab.point(field("home-001", "remix"));
+    await tab.screenshot(path.join(evidence, "gallery-hover-depth.png"));
+    await tab.cdp.send("Input.dispatchMouseEvent", { type: "mouseMoved", x: 3, y: 90 });
+    await delay(450);
+    await tab.reducedMotion(true);
+    await waitFor(() => tab.cdp.evaluate("document.querySelector('[data-homepage]').dataset.motionReduced==='true'"));
+    await tab.hover(card("home-001"));
+    const reduced = await tab.cdp.evaluate(`(()=>{const el=document.querySelector(${JSON.stringify(field("home-001", "tilt"))});return {enabled:el.dataset.motionEnabled,transform:getComputedStyle(el).transform,visible:getComputedStyle(el).visibility}})()`);
+    assert.equal(reduced.enabled, "false");
+    assert.equal(reduced.transform, "none");
+    assert.equal(reduced.visible, "visible");
+    return { normal, reduced };
+  });
+
+  await check("M4-home-observers-and-timers-dispose-on-route-exit", async () => {
+    const tab = await page("home-member");
+    await tab.cdp.send("Page.addScriptToEvaluateOnNewDocument", { source: `(()=>{
+      const originalTimeout=window.setTimeout.bind(window),originalClear=window.clearTimeout.bind(window),originalRaf=window.requestAnimationFrame.bind(window),originalCancel=window.cancelAnimationFrame.bind(window);
+      const timers=new Set(),frames=new Set(),observed=new Set();
+      const owned=()=>{const root=document.querySelector('[data-homepage]');return !!root&&document.querySelector('[data-home-demo=prompt]')?.getBoundingClientRect().top<innerHeight};
+      window.setTimeout=(fn,ms,...args)=>{let id;const track=owned()&&ms===2200;id=originalTimeout(()=>{timers.delete(id);fn(...args)},ms);if(track)timers.add(id);return id};
+      window.clearTimeout=id=>{timers.delete(id);originalClear(id)};
+      window.requestAnimationFrame=fn=>{let id;const track=owned();id=originalRaf(time=>{frames.delete(id);fn(time)});if(track)frames.add(id);return id};
+      window.cancelAnimationFrame=id=>{frames.delete(id);originalCancel(id)};
+      const native=window.IntersectionObserver;
+      window.IntersectionObserver=class extends native{constructor(...args){super(...args);this.own=new Set()}observe(el){if(el.closest('[data-homepage]')){observed.add(el);this.own.add(el)}super.observe(el)}unobserve(el){observed.delete(el);this.own.delete(el);super.unobserve(el)}disconnect(){for(const el of this.own)observed.delete(el);this.own.clear();super.disconnect()}};
+      window.__homeHandles={timers,frames,observed};
+    })()` });
+    await tab.navigate("/");
+    await homeReady(tab);
+    await tab.point("[data-home-demo=prompt]");
+    await delay(300);
+    const active = await tab.cdp.evaluate("({timers:window.__homeHandles.timers.size,frames:window.__homeHandles.frames.size,observed:window.__homeHandles.observed.size})");
+    await tab.click('header a[href="/works"]');
+    await waitFor(() => tab.cdp.evaluate("location.pathname==='/works' && !document.querySelector('[data-homepage]')"));
+    await delay(3000);
+    const disposed = await tab.cdp.evaluate("({timers:window.__homeHandles.timers.size,frames:window.__homeHandles.frames.size,observed:window.__homeHandles.observed.size})");
+    assert.equal(disposed.timers, 0);
+    assert.equal(disposed.frames, 0);
+    assert.equal(disposed.observed, 0);
+    return { active, disposed, limit: "Captured the known2200ms miniature loop and active-home RAFs; complete lifecycle contract also requires focused unit instrumentation." };
+  });
+
+  await check("S2-real-like-checkin-pet-logout", async () => {
+    await control({ mode: "data" });
+    const tab = await page("home-member");
+    await tab.navigate("/");
+    await homeReady(tab);
+    await tab.click(field("home-001", "like"));
+    await waitFor(() => tab.cdp.evaluate(`document.querySelector(${JSON.stringify(field("home-001", "like"))}).getAttribute('aria-pressed')==='true'`));
+    assert.equal(await tab.cdp.evaluate(`document.querySelector(${JSON.stringify(field("home-001", "like"))}).textContent.trim()`), "11");
+    await tab.click(field("home-001", "like"));
+    await waitFor(() => tab.cdp.evaluate(`document.querySelector(${JSON.stringify(field("home-001", "like"))}).getAttribute('aria-pressed')==='false'`));
+    await tab.click("header button", "签到 +50");
+    await waitFor(() => tab.cdp.evaluate("document.querySelector('header').textContent.includes('550')"));
+    await tab.click('button[title="开启桌面宠物"]');
+    await waitFor(() => tab.cdp.evaluate("document.querySelector('button[title=关闭桌面宠物]')?.getAttribute('aria-pressed')==='true'"));
+    await tab.cdp.send("Input.dispatchMouseEvent", { type: "mouseMoved", x: 2, y: 90 });
+    await delay(200);
+    await tab.click('button[title="关闭桌面宠物"]');
+    await tab.click('button[title="退出登录"]');
+    await waitFor(() => tab.cdp.evaluate("Boolean(document.querySelector('header a[href=\"/login\"]'))"));
+    const summary = await control();
+    assert.equal(summary.credits["home-member"], 550);
+    assert(summary.checkedIn.includes("home-member"));
+    return { credited: 550, checkedIn: true, loggedOut: true, network: tab.requests.filter((entry) => entry.method !== "GET") };
+  });
+
+  await check("C2-C3-actual-remix-saved-canvas-then-chat", async () => {
+    await control({ mode: "data" });
+    const tab = await page("home-member");
+    await tab.navigate("/");
+    await homeReady(tab);
+    await tab.cdp.evaluate("void localStorage.setItem('narra_studio_mode_v1:home-member','canvas')");
+    await openCard(tab, "home-001");
+    await tab.click(field("home-001", "remix"));
+    await waitFor(() => tab.cdp.evaluate("location.pathname==='/create'"));
+    await waitFor(() => tab.cdp.evaluate("[...document.querySelectorAll('[aria-label=创作模式] button')].some(button=>button.textContent==='画布'&&button.getAttribute('aria-pressed')==='true')"));
+    assert.equal(await tab.cdp.evaluate("localStorage.getItem('narra_studio_mode_v1:home-member')"), "canvas");
+    assert.equal(await tab.cdp.evaluate("document.querySelectorAll('.react-flow__node').length"), 0);
+    await tab.click('[aria-label="创作模式"] button', "对话");
+    await tab.ready("textarea");
+    assert.equal(await tab.cdp.evaluate("document.querySelector('textarea').value"), positive(0));
+    const selected = await tab.cdp.evaluate("new URLSearchParams(location.search).get('prompt')");
+    assert.equal(selected, positive(0));
+    assert.equal(tab.requests.filter((entry) => entry.method !== "GET").length, 0, "Remix must not create a conversation, canvas or generation");
+    const summary = await control();
+    assert.equal(summary.calls.filter((entry) => entry.mutation).length, 0, "Server create bootstrap must not mutate these fresh fixtures");
+    await tab.type("textarea", "保留已经编辑的本地草稿");
+    await tab.click('header a[href="/"]');
+    await waitFor(() => tab.cdp.evaluate("location.pathname==='/'"));
+    await homeReady(tab);
+    await openCard(tab, "home-002");
+    await tab.click(field("home-002", "remix"));
+    await waitFor(() => tab.cdp.evaluate("location.pathname==='/create'"));
+    await tab.ready("textarea");
+    const successive = await tab.cdp.evaluate("document.querySelector('textarea').value");
+    assert.equal(successive, "作者未公开提示词", "A new actual gallery selection must prefill after leaving create; do not overwrite a still-mounted draft to force this");
+    return { selected, preservedCanvas: true, noMutation: true, successive };
+  });
+
+  await check("C3-guest-real-login-return-reselect-no-continuation", async () => {
+    await control({ mode: "data" });
+    const tab = await page();
+    await tab.navigate("/");
+    await homeReady(tab);
+    await openCard(tab, "home-001");
+    await tab.click(field("home-001", "remix"));
+    await waitFor(() => tab.cdp.evaluate("location.pathname==='/login'"));
+    await tab.ready("input[name=email]");
+    assert.equal(await tab.cdp.evaluate("location.search"), "");
+    await tab.type("input[name=email]", "member@homepage.invalid");
+    await tab.type("input[name=password]", "homepage-fixture-password");
+    await tab.click("button[type=submit]");
+    await waitFor(() => tab.cdp.evaluate("location.pathname==='/create'"));
+    if (await tab.cdp.evaluate("[...document.querySelectorAll('[aria-label=创作模式] button')].some(button=>button.textContent==='画布'&&button.getAttribute('aria-pressed')==='true')")) await tab.click('[aria-label="创作模式"] button', "对话");
+    await tab.ready("textarea");
+    assert.equal(await tab.cdp.evaluate("document.querySelector('textarea').value"), "", "Login must not silently restore the guest's old selection");
+    await tab.click('header a[href="/"]');
+    await waitFor(() => tab.cdp.evaluate("location.pathname==='/'"));
+    await homeReady(tab);
+    await openCard(tab, "home-005");
+    await tab.click(field("home-005", "remix"));
+    await waitFor(() => tab.cdp.evaluate("location.pathname==='/create'"));
+    await tab.ready("textarea");
+    assert.equal(await tab.cdp.evaluate("document.querySelector('textarea').value"), positive(4));
+    assert.equal(tab.requests.filter((entry) => entry.method !== "GET" && !entry.url.endsWith("/api/auth/login")).length, 0);
+    return { guestSelectionResumed: false, reselected: "home-005", actualAuthRoute: true };
+  });
+
+  await check("S2-like-failure-keeps-prior-state-and-guest401", async () => {
+    await control({ mode: "data", failLike: true });
+    const tab = await page("home-member");
+    await tab.navigate("/");
+    await homeReady(tab);
+    const prior = await tab.cdp.evaluate(`document.querySelector(${JSON.stringify(field("home-001", "like"))}).textContent`);
+    await tab.click(field("home-001", "like"));
+    await waitFor(() => tab.cdp.evaluate(`Boolean(document.querySelector(${JSON.stringify(`${card("home-001")} [role=alert]`)}))`));
+    assert.equal(await tab.cdp.evaluate(`document.querySelector(${JSON.stringify(field("home-001", "like"))}).textContent`), prior);
+    await control({ mode: "data" });
+    const guest = await page();
+    await guest.navigate("/");
+    await homeReady(guest);
+    await guest.click(field("home-001", "like"));
+    await waitFor(() => guest.cdp.evaluate("location.pathname==='/login'"));
+    return { failedLikeUnchanged: true, guestRedirect: "/login" };
+  });
+
+  await check("P2-same-viewer-refresh-preserves-pages-and-like", async () => {
+    await control({ mode: "data" });
+    const tab = await page("home-member");
+    await tab.navigate("/");
+    await homeReady(tab);
+    await tab.cdp.send("Input.dispatchMouseEvent", { type: "mouseWheel", x: 1420, y: 850, deltaX: 0, deltaY: 10000 });
+    await waitFor(async () => (await galleryCount(tab)) > 16);
+    await tab.click(field("home-017", "like"));
+    await waitFor(() => tab.cdp.evaluate(`document.querySelector(${JSON.stringify(field("home-017", "like"))}).getAttribute('aria-pressed')==='true'`));
+    const before = await galleryCount(tab);
+    await tab.click("header button", "签到 +50");
+    await waitFor(() => tab.cdp.evaluate("document.querySelector('header').textContent.includes('550')"));
+    assert.equal(await galleryCount(tab), before);
+    assert.equal(await tab.cdp.evaluate(`document.querySelector(${JSON.stringify(field("home-017", "like"))}).getAttribute('aria-pressed')`), "true");
+    await tab.cdp.send("Input.dispatchMouseEvent", { type: "mouseWheel", x: 1420, y: 100, deltaX: 0, deltaY: -12000 });
+    await waitFor(() => tab.cdp.evaluate("scrollY===0"));
+    await tab.click('button[title="退出登录"]');
+    await waitFor(() => tab.cdp.evaluate("Boolean(document.querySelector('header a[href=\"/login\"]'))"));
+    assert.equal(await galleryCount(tab), 16, "Viewer key must reset another user's paginated/liked snapshot");
+    return { beforeRefresh: before, preservedLike: "home-017", afterViewerChange: 16 };
+  });
+
+  await check("C2-long-url-existing8000-unit-boundary", async () => {
+    const tab = await page("home-member");
+    const variants = [
+      { label: "ascii8000", value: "a".repeat(8000) },
+      { label: "ascii8001", value: "a".repeat(8001) },
+      { label: "chinese8000", value: "江".repeat(8000) },
+      { label: "emoji8000units", value: "🌧️".repeat(2666) + "雨雨" },
+    ];
+    const results = [];
+    for (const variant of variants) {
+      const url = `/create?prompt=${encodeURIComponent(variant.value)}`;
+      const before = tab.responses.length;
+      await tab.cdp.send("Page.navigate", { url: new URL(url, tab.origin).href });
+      await waitFor(() => tab.responses.slice(before).some((entry) => entry.type === "Document"), { timeout: 15000, message: "Long URL document response not captured" });
+      await delay(700);
+      await tab.flushBodies();
+      const documentResponse = tab.responses.slice(before).filter((entry) => entry.type === "Document").at(-1);
+      const value = await tab.cdp.evaluate("document.querySelector('textarea')?.value ?? null");
+      results.push({ label: variant.label, units: variant.value.length, requestTargetBytes: Buffer.byteLength(url), status: documentResponse?.status ?? null, inputUnits: value?.length ?? null, matchesExistingSlice: value === variant.value.slice(0, 8000) });
+    }
+    await writeFile(path.join(evidence, "long-url-boundary.json"), JSON.stringify(results, null, 2));
+    assert(results[0].matchesExistingSlice && results[1].matchesExistingSlice);
+    for (const result of results.slice(2)) if (!result.matchesExistingSlice) unresolved.push({ id: "C2-long-multibyte-url", ...result, reason: "Existing URL-prefill transport limit; needs root scope decision, no create/environment workaround applied." });
+    return results;
+  });
+
+  for (const mode of ["empty", "error"]) {
+    await check(`H1-P2-initial-${mode}-fixed-hero-first-page-retry`, async () => {
+      await control({ mode });
+      const tab = await page("home-member");
+      await tab.navigate("/");
+      await tab.ready("[data-homepage]");
+      if (actualImages) await waitFor(() => tab.cdp.evaluate("document.querySelector('[data-home-hero-frame]').dataset.imageState==='ready'"));
+      assert.equal(await galleryCount(tab), 0);
+      assert.equal(await tab.cdp.evaluate("document.querySelector('[data-home-hero-frame]').dataset.sceneId"), "film");
+      if (mode === "error") {
+        assert(await tab.cdp.evaluate("Boolean(document.querySelector('[data-gallery-status] [role=alert]'))"));
+        await control({ mode: "data" });
+        await tab.click("[data-gallery-load-more]");
+        await waitFor(async () => (await galleryCount(tab)) === 16);
+      } else assert(await tab.cdp.evaluate("document.querySelector('#gallery').textContent.includes('筹备')"));
+      await tab.screenshot(path.join(evidence, `home-${mode}.png`));
+      return { initialItems: 0, heroScene: "film", recoveredItems: await galleryCount(tab) };
+    });
+  }
+
+  await check("F1-footer-valid-links-anchors-role-visibility", async () => {
+    const results = [];
+    for (const user of [null, "home-member"]) {
+      await control({ mode: "data" });
+      const tab = await page(user);
+      await tab.navigate("/");
+      await homeReady(tab);
+      const links = await tab.cdp.evaluate("[...document.querySelectorAll('#footer a')].map(a=>({href:a.getAttribute('href'),text:a.textContent.trim()}))");
+      for (const item of links) {
+        assert(item.href && item.href !== "#");
+        assert(!/policy|privacy|terms|status|models/.test(item.href));
+        if (item.href.startsWith("#")) assert(await tab.cdp.evaluate(`Boolean(document.getElementById(${JSON.stringify(item.href.slice(1))}))`));
+      }
+      for (const href of ["/create", "/prompts", "/video", "/works", "/settings", "https://github.com/0401lucky/narra-image"]) assert(links.some((entry) => entry.href === href));
+      assert.equal(links.some((entry) => entry.href === "/api-keys"), user !== null);
+      results.push({ user, links });
+    }
+    return results;
+  });
+
+  await check("F2-final-gallery-row-settles-before-footer", async () => {
+    await control({ mode: "data" });
+    const tab = await page("home-member");
+    await tab.navigate("/");
+    await homeReady(tab);
+    for (let attempt = 0; attempt < 8 && (await galleryCount(tab)) < 72; attempt += 1) {
+      await tab.cdp.send("Input.dispatchMouseEvent", { type: "mouseWheel", x: 1420, y: 850, deltaX: 0, deltaY: 12000 });
+      await delay(350);
+    }
+    await waitFor(async () => (await galleryCount(tab)) === 72);
+    await tab.point("#footer nav a");
+    const measure = () => tab.cdp.evaluate("[...document.querySelectorAll('[data-gallery-card]')].slice(-4).map(card=>{const rect=card.getBoundingClientRect();const entrance=card.parentElement;return {id:card.dataset.workId,top:rect.top,bottom:rect.bottom,height:rect.height,opacity:getComputedStyle(entrance).opacity,visibility:getComputedStyle(entrance).visibility,transform:getComputedStyle(entrance).transform,visible:rect.bottom>64&&rect.top<innerHeight,opacityChain:[card,entrance,entrance.parentElement,document.querySelector('#gallery')].map(el=>getComputedStyle(el).opacity)}})");
+    const initial = await measure();
+    await delay(5500);
+    const settled = await measure();
+    await tab.screenshot(path.join(evidence, "footer-last-row-settled-1440.png"));
+    await writeFile(path.join(evidence, "footer-last-row-settle.json"), JSON.stringify({ initial, settled, waitedMs: 5500 }, null, 2));
+    for (const row of settled) {
+      assert.equal(row.opacity, "1", `Final card ${row.id} stayed transparent without another scroll`);
+      assert.equal(row.visibility, "visible");
+      assert(row.opacityChain.every((opacity) => opacity === "1"), `Ancestor of ${row.id} hides the final row`);
+    }
+    return { initial, settled, waitedMs: 5500 };
+  });
+
+  await heroImageChecks({ page, check, evidence, browser, heroAssets, unresolved });
+  await writeFile(path.join(evidence, "unresolved-acceptance.json"), JSON.stringify(unresolved, null, 2));
+  await writeFile(path.join(evidence, "fixture-limits.json"), JSON.stringify({ browserConnection: "owned fresh Chrome loopback CDP", clipboardTests: "explicit controlled Clipboard API accept/deny; OS clipboard not used", noAssetSubstitution: true, actualImages, heroAssets, unresolved }, null, 2));
+  void request;
+}

@@ -1,0 +1,121 @@
+import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
+import type { ReactNode } from "react";
+
+const scheduler = vi.hoisted(() => {
+  const frames = new Map<number, FrameRequestCallback>();
+  let id = 0;
+  vi.stubGlobal("requestAnimationFrame", (callback: FrameRequestCallback) => {
+    frames.set(++id, callback);
+    return id;
+  });
+  vi.stubGlobal("cancelAnimationFrame", (handle: number) => frames.delete(handle));
+  return { frames, now: 0 };
+});
+
+import { HOME_MEDIA } from "@/components/marketing/homepage/constants";
+import { HomeMotionProvider } from "@/components/marketing/homepage/home-motion-provider";
+import { HomeReveal } from "@/components/marketing/homepage/home-reveal";
+import { useHomeMotion } from "@/components/marketing/homepage/hooks/use-home-motion";
+
+import { installHomeMotionEnvironment } from "./helpers/homepage-motion-fixtures";
+
+let environment: ReturnType<typeof installHomeMotionEnvironment>;
+
+// Drive the real Motion scheduler, including render work queued by stop().
+function advance(milliseconds: number) {
+  for (let elapsed = 0; elapsed < milliseconds; elapsed += 16) {
+    scheduler.now += 16;
+    act(() => {
+      const callbacks = [...scheduler.frames.values()];
+      scheduler.frames.clear();
+      callbacks.forEach((callback) => callback(scheduler.now));
+    });
+  }
+}
+
+beforeEach(() => {
+  scheduler.now += 1000;
+  vi.spyOn(performance, "now").mockImplementation(() => scheduler.now);
+  environment = installHomeMotionEnvironment();
+});
+
+afterEach(() => {
+  cleanup();
+  advance(1600);
+  vi.restoreAllMocks();
+  vi.unstubAllGlobals();
+});
+
+function PauseControl() {
+  const motion = useHomeMotion();
+  return <button type="button" onClick={motion.togglePaused}>Pause motion</button>;
+}
+
+function Wrapper({ children }: { children: ReactNode }) {
+  return <HomeMotionProvider>{children}<PauseControl /></HomeMotionProvider>;
+}
+
+describe("HomeReveal with the real Motion render scheduler", () => {
+  it.each(["offscreen", "hidden", "reduced", "paused", "unmounted"] as const)(
+    "keeps interrupted content readable after queued rendering when %s",
+    (reason) => {
+      const { container, unmount } = render(<Wrapper><HomeReveal><p>Readable content</p></HomeReveal></Wrapper>);
+      const section = container.querySelector<HTMLElement>("[data-home-reveal]")!;
+      environment.visibility(true);
+      advance(96);
+      expect(Number(section.style.opacity)).toBeGreaterThan(0);
+      expect(Number(section.style.opacity)).toBeLessThan(1);
+
+      if (reason === "offscreen") environment.visibility(false);
+      if (reason === "hidden") environment.setHidden(true);
+      if (reason === "reduced") environment.setMedia(HOME_MEDIA.reduced, true);
+      if (reason === "paused") fireEvent.click(screen.getByRole("button", { name: "Pause motion" }));
+      if (reason === "unmounted") unmount();
+      expect(section.style.opacity).toBe("1");
+      expect(section.style.transform).toBe("none");
+
+      advance(160);
+      expect(section.style.opacity).toBe("1");
+      expect(section.style.transform).toBe("none");
+      advance(1200);
+      expect(section.style.opacity).toBe("1");
+      expect(section.style.transform).toBe("none");
+    },
+  );
+
+  it("settles an entrance interrupted during its stagger delay without a later write", () => {
+    const { container } = render(<Wrapper><HomeReveal delay={0.7}><p>Delayed content</p></HomeReveal></Wrapper>);
+    const section = container.querySelector<HTMLElement>("[data-home-reveal]")!;
+    environment.visibility(true);
+    advance(64);
+    expect(Number(section.style.opacity)).toBe(0);
+    environment.visibility(false);
+    advance(1600);
+    expect(section.style.opacity).toBe("1");
+    expect(section.style.transform).toBe("none");
+    environment.visibility(true);
+    advance(96);
+    expect(section.style.opacity).toBe("1");
+    expect(section.style.transform).toBe("none");
+  });
+
+  it("retains staggered motion, reaches the final state and does not replay", () => {
+    const { container } = render(<Wrapper><HomeReveal delay={0.14}><p>One entrance</p></HomeReveal></Wrapper>);
+    const section = container.querySelector<HTMLElement>("[data-home-reveal]")!;
+    environment.visibility(true);
+    advance(64);
+    expect(Number(section.style.opacity)).toBe(0);
+    advance(192);
+    expect(Number(section.style.opacity)).toBeGreaterThan(0);
+    expect(Number(section.style.opacity)).toBeLessThan(1);
+    expect(section.style.transform).not.toBe("none");
+    advance(1000);
+    expect(section.style.opacity).toBe("1");
+    expect(section.style.transform).toBe("none");
+    environment.visibility(false);
+    environment.visibility(true);
+    advance(160);
+    expect(section.style.opacity).toBe("1");
+    expect(section.style.transform).toBe("none");
+  });
+});

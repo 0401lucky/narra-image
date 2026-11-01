@@ -1,0 +1,13 @@
+{
+  "id": "20261101T024004-test-118ad4",
+  "exitCode": 1,
+  "durationSeconds": 38.017,
+  "filesCompleted": 13,
+  "testsReportedPassed": 230,
+  "incompleteFiles": [
+    "src/tests/unit/homepage-motion.test.tsx"
+  ],
+  "classification": "Node worker OOM and Vitest-pool unhandled error; not a passing gate.",
+  "sourceChanges": [],
+  "snapshotModifications": []
+}

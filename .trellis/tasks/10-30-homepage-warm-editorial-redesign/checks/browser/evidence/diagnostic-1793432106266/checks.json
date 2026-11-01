@@ -1,0 +1,1433 @@
+[
+  {
+    "id": "diagnostic-gallery-entrance-native-viewport",
+    "passed": true,
+    "durationMs": 8025,
+    "detail": {
+      "samples": [
+        {
+          "label": "before-point",
+          "at": 1331.7999999970198,
+          "width": 1440,
+          "height": 1000,
+          "scrollY": 0,
+          "hidden": false,
+          "card": {
+            "tag": "ARTICLE",
+            "rect": {
+              "x": 108,
+              "y": 1807.046875,
+              "width": 289,
+              "height": 361.25,
+              "top": 1807.046875,
+              "right": 397,
+              "bottom": 2168.296875,
+              "left": 108
+            },
+            "opacity": "1",
+            "transform": "none",
+            "inline": null,
+            "animations": []
+          },
+          "entrance": {
+            "tag": "DIV",
+            "rect": {
+              "x": 108,
+              "y": 1807.046875,
+              "width": 289,
+              "height": 361.25,
+              "top": 1807.046875,
+              "right": 397,
+              "bottom": 2168.296875,
+              "left": 108
+            },
+            "opacity": "1",
+            "transform": "none",
+            "inline": null,
+            "animations": []
+          },
+          "section": {
+            "tag": "SECTION",
+            "rect": {
+              "x": 0,
+              "y": 1530.265625,
+              "width": 1432,
+              "height": 1950.78125,
+              "top": 1530.265625,
+              "right": 1432,
+              "bottom": 3481.046875,
+              "left": 0
+            },
+            "opacity": "1",
+            "transform": "none",
+            "inline": null,
+            "animations": []
+          },
+          "pointer": []
+        },
+        {
+          "label": "after-original-point",
+          "at": 2125.9000000059605,
+          "width": 1440,
+          "height": 1000,
+          "scrollY": 1667,
+          "hidden": false,
+          "card": {
+            "tag": "ARTICLE",
+            "rect": {
+              "x": 108,
+              "y": 147.2470703125,
+              "width": 289,
+              "height": 361.25,
+              "top": 147.2470703125,
+              "right": 397,
+              "bottom": 508.4970703125,
+              "left": 108
+            },
+            "opacity": "1",
+            "transform": "none",
+            "inline": null,
+            "animations": []
+          },
+          "entrance": {
+            "tag": "DIV",
+            "rect": {
+              "x": 108,
+              "y": 147.2470703125,
+              "width": 289,
+              "height": 361.25,
+              "top": 147.2470703125,
+              "right": 397,
+              "bottom": 508.4970703125,
+              "left": 108
+            },
+            "opacity": "0.731335",
+            "transform": "matrix(1, 0, 0, 1, 0, 6.46262)",
+            "inline": "transform: translateY(6.46262px); opacity: 0.731335;",
+            "animations": []
+          },
+          "section": {
+            "tag": "SECTION",
+            "rect": {
+              "x": 0,
+              "y": -135.996826171875,
+              "width": 1432,
+              "height": 3475.781005859375,
+              "top": -135.996826171875,
+              "right": 1432,
+              "bottom": 3339.7841796875,
+              "left": 0
+            },
+            "opacity": "0.96894",
+            "transform": "matrix(1, 0, 0, 1, 0, 0.737584)",
+            "inline": "transform: translateY(0.737584px);",
+            "animations": [
+              {
+                "playState": "running",
+                "currentTime": 394.99999999403946,
+                "startTime": 1597.9000000059605,
+                "pending": false,
+                "timing": {
+                  "delay": 0,
+                  "direction": "normal",
+                  "duration": 750,
+                  "easing": "cubic-bezier(0.22, 1, 0.36, 1)",
+                  "endDelay": 0,
+                  "fill": "both",
+                  "iterationStart": 0,
+                  "iterations": 1,
+                  "activeDuration": 750,
+                  "currentIteration": 0,
+                  "endTime": 750,
+                  "localTime": 394.99999999403946,
+                  "progress": 0.9689401041563874
+                },
+                "keyframes": [
+                  {
+                    "offset": null,
+                    "easing": "linear",
+                    "composite": "auto",
+                    "opacity": "0",
+                    "computedOffset": 0
+                  },
+                  {
+                    "offset": null,
+                    "easing": "linear",
+                    "composite": "auto",
+                    "opacity": "1",
+                    "computedOffset": 1
+                  }
+                ]
+              }
+            ]
+          },
+          "pointer": [
+            {
+              "type": "wheel",
+              "x": 1416,
+              "y": 500,
+              "trusted": true,
+              "target": "SECTION"
+            },
+            {
+              "type": "wheel",
+              "x": 1416,
+              "y": 500,
+              "trusted": true,
+              "target": "SECTION"
+            },
+            {
+              "type": "wheel",
+              "x": 1416,
+              "y": 500,
+              "trusted": true,
+              "target": "SECTION"
+            }
+          ]
+        },
+        {
+          "label": "before-original-hover",
+          "at": 2931.6000000089407,
+          "width": 1440,
+          "height": 1000,
+          "scrollY": 1667,
+          "hidden": false,
+          "card": {
+            "tag": "ARTICLE",
+            "rect": {
+              "x": 108,
+              "y": 146.50949096679688,
+              "width": 289,
+              "height": 361.25,
+              "top": 146.50949096679688,
+              "right": 397,
+              "bottom": 507.7594909667969,
+              "left": 108
+            },
+            "opacity": "1",
+            "transform": "none",
+            "inline": null,
+            "animations": []
+          },
+          "entrance": {
+            "tag": "DIV",
+            "rect": {
+              "x": 108,
+              "y": 146.50949096679688,
+              "width": 289,
+              "height": 361.25,
+              "top": 146.50949096679688,
+              "right": 397,
+              "bottom": 507.7594909667969,
+              "left": 108
+            },
+            "opacity": "0.731335",
+            "transform": "matrix(1, 0, 0, 1, 0, 6.46262)",
+            "inline": "transform: translateY(6.46262px); opacity: 0.731335;",
+            "animations": []
+          },
+          "section": {
+            "tag": "SECTION",
+            "rect": {
+              "x": 0,
+              "y": -136.734375,
+              "width": 1432,
+              "height": 3475.78125,
+              "top": -136.734375,
+              "right": 1432,
+              "bottom": 3339.046875,
+              "left": 0
+            },
+            "opacity": "1",
+            "transform": "none",
+            "inline": "transform: none; opacity: 1;",
+            "animations": []
+          },
+          "pointer": [
+            {
+              "type": "wheel",
+              "x": 1416,
+              "y": 500,
+              "trusted": true,
+              "target": "SECTION"
+            },
+            {
+              "type": "wheel",
+              "x": 1416,
+              "y": 500,
+              "trusted": true,
+              "target": "SECTION"
+            },
+            {
+              "type": "wheel",
+              "x": 1416,
+              "y": 500,
+              "trusted": true,
+              "target": "SECTION"
+            }
+          ]
+        },
+        {
+          "label": "original-hover-request",
+          "x": 339.20000000000005,
+          "y": 236.82199096679688,
+          "insideViewport": true
+        },
+        {
+          "label": "original-hover-0",
+          "at": 3506.4000000059605,
+          "width": 1440,
+          "height": 1000,
+          "scrollY": 1667,
+          "hidden": false,
+          "card": {
+            "tag": "ARTICLE",
+            "rect": {
+              "x": 108,
+              "y": 146.50949096679688,
+              "width": 289,
+              "height": 361.25,
+              "top": 146.50949096679688,
+              "right": 397,
+              "bottom": 507.7594909667969,
+              "left": 108
+            },
+            "opacity": "1",
+            "transform": "none",
+            "inline": null,
+            "animations": []
+          },
+          "entrance": {
+            "tag": "DIV",
+            "rect": {
+              "x": 108,
+              "y": 146.50949096679688,
+              "width": 289,
+              "height": 361.25,
+              "top": 146.50949096679688,
+              "right": 397,
+              "bottom": 507.7594909667969,
+              "left": 108
+            },
+            "opacity": "0.731335",
+            "transform": "matrix(1, 0, 0, 1, 0, 6.46262)",
+            "inline": "transform: translateY(6.46262px); opacity: 0.731335;",
+            "animations": []
+          },
+          "section": {
+            "tag": "SECTION",
+            "rect": {
+              "x": 0,
+              "y": -136.734375,
+              "width": 1432,
+              "height": 3475.78125,
+              "top": -136.734375,
+              "right": 1432,
+              "bottom": 3339.046875,
+              "left": 0
+            },
+            "opacity": "1",
+            "transform": "none",
+            "inline": "transform: none; opacity: 1;",
+            "animations": []
+          },
+          "pointer": [
+            {
+              "type": "wheel",
+              "x": 1416,
+              "y": 500,
+              "trusted": true,
+              "target": "SECTION"
+            },
+            {
+              "type": "wheel",
+              "x": 1416,
+              "y": 500,
+              "trusted": true,
+              "target": "SECTION"
+            },
+            {
+              "type": "wheel",
+              "x": 1416,
+              "y": 500,
+              "trusted": true,
+              "target": "SECTION"
+            },
+            {
+              "type": "pointermove",
+              "x": 339.20001220703125,
+              "y": 236.82199096679688,
+              "trusted": true,
+              "target": "A"
+            }
+          ]
+        },
+        {
+          "label": "original-hover-1",
+          "at": 3908,
+          "width": 1440,
+          "height": 1000,
+          "scrollY": 1667,
+          "hidden": false,
+          "card": {
+            "tag": "ARTICLE",
+            "rect": {
+              "x": 108,
+              "y": 146.50949096679688,
+              "width": 289,
+              "height": 361.25,
+              "top": 146.50949096679688,
+              "right": 397,
+              "bottom": 507.7594909667969,
+              "left": 108
+            },
+            "opacity": "1",
+            "transform": "none",
+            "inline": null,
+            "animations": []
+          },
+          "entrance": {
+            "tag": "DIV",
+            "rect": {
+              "x": 108,
+              "y": 146.50949096679688,
+              "width": 289,
+              "height": 361.25,
+              "top": 146.50949096679688,
+              "right": 397,
+              "bottom": 507.7594909667969,
+              "left": 108
+            },
+            "opacity": "0.731335",
+            "transform": "matrix(1, 0, 0, 1, 0, 6.46262)",
+            "inline": "transform: translateY(6.46262px); opacity: 0.731335;",
+            "animations": []
+          },
+          "section": {
+            "tag": "SECTION",
+            "rect": {
+              "x": 0,
+              "y": -136.734375,
+              "width": 1432,
+              "height": 3475.78125,
+              "top": -136.734375,
+              "right": 1432,
+              "bottom": 3339.046875,
+              "left": 0
+            },
+            "opacity": "1",
+            "transform": "none",
+            "inline": "transform: none; opacity: 1;",
+            "animations": []
+          },
+          "pointer": [
+            {
+              "type": "wheel",
+              "x": 1416,
+              "y": 500,
+              "trusted": true,
+              "target": "SECTION"
+            },
+            {
+              "type": "wheel",
+              "x": 1416,
+              "y": 500,
+              "trusted": true,
+              "target": "SECTION"
+            },
+            {
+              "type": "wheel",
+              "x": 1416,
+              "y": 500,
+              "trusted": true,
+              "target": "SECTION"
+            },
+            {
+              "type": "pointermove",
+              "x": 339.20001220703125,
+              "y": 236.82199096679688,
+              "trusted": true,
+              "target": "A"
+            }
+          ]
+        },
+        {
+          "label": "original-hover-2",
+          "at": 4309.5,
+          "width": 1440,
+          "height": 1000,
+          "scrollY": 1667,
+          "hidden": false,
+          "card": {
+            "tag": "ARTICLE",
+            "rect": {
+              "x": 108,
+              "y": 146.50949096679688,
+              "width": 289,
+              "height": 361.25,
+              "top": 146.50949096679688,
+              "right": 397,
+              "bottom": 507.7594909667969,
+              "left": 108
+            },
+            "opacity": "1",
+            "transform": "none",
+            "inline": null,
+            "animations": []
+          },
+          "entrance": {
+            "tag": "DIV",
+            "rect": {
+              "x": 108,
+              "y": 146.50949096679688,
+              "width": 289,
+              "height": 361.25,
+              "top": 146.50949096679688,
+              "right": 397,
+              "bottom": 507.7594909667969,
+              "left": 108
+            },
+            "opacity": "0.731335",
+            "transform": "matrix(1, 0, 0, 1, 0, 6.46262)",
+            "inline": "transform: translateY(6.46262px); opacity: 0.731335;",
+            "animations": []
+          },
+          "section": {
+            "tag": "SECTION",
+            "rect": {
+              "x": 0,
+              "y": -136.734375,
+              "width": 1432,
+              "height": 3475.78125,
+              "top": -136.734375,
+              "right": 1432,
+              "bottom": 3339.046875,
+              "left": 0
+            },
+            "opacity": "1",
+            "transform": "none",
+            "inline": "transform: none; opacity: 1;",
+            "animations": []
+          },
+          "pointer": [
+            {
+              "type": "wheel",
+              "x": 1416,
+              "y": 500,
+              "trusted": true,
+              "target": "SECTION"
+            },
+            {
+              "type": "wheel",
+              "x": 1416,
+              "y": 500,
+              "trusted": true,
+              "target": "SECTION"
+            },
+            {
+              "type": "wheel",
+              "x": 1416,
+              "y": 500,
+              "trusted": true,
+              "target": "SECTION"
+            },
+            {
+              "type": "pointermove",
+              "x": 339.20001220703125,
+              "y": 236.82199096679688,
+              "trusted": true,
+              "target": "A"
+            }
+          ]
+        },
+        {
+          "label": "original-hover-3",
+          "at": 4711.29999999702,
+          "width": 1440,
+          "height": 1000,
+          "scrollY": 1667,
+          "hidden": false,
+          "card": {
+            "tag": "ARTICLE",
+            "rect": {
+              "x": 108,
+              "y": 146.50949096679688,
+              "width": 289,
+              "height": 361.25,
+              "top": 146.50949096679688,
+              "right": 397,
+              "bottom": 507.7594909667969,
+              "left": 108
+            },
+            "opacity": "1",
+            "transform": "none",
+            "inline": null,
+            "animations": []
+          },
+          "entrance": {
+            "tag": "DIV",
+            "rect": {
+              "x": 108,
+              "y": 146.50949096679688,
+              "width": 289,
+              "height": 361.25,
+              "top": 146.50949096679688,
+              "right": 397,
+              "bottom": 507.7594909667969,
+              "left": 108
+            },
+            "opacity": "0.731335",
+            "transform": "matrix(1, 0, 0, 1, 0, 6.46262)",
+            "inline": "transform: translateY(6.46262px); opacity: 0.731335;",
+            "animations": []
+          },
+          "section": {
+            "tag": "SECTION",
+            "rect": {
+              "x": 0,
+              "y": -136.734375,
+              "width": 1432,
+              "height": 3475.78125,
+              "top": -136.734375,
+              "right": 1432,
+              "bottom": 3339.046875,
+              "left": 0
+            },
+            "opacity": "1",
+            "transform": "none",
+            "inline": "transform: none; opacity: 1;",
+            "animations": []
+          },
+          "pointer": [
+            {
+              "type": "wheel",
+              "x": 1416,
+              "y": 500,
+              "trusted": true,
+              "target": "SECTION"
+            },
+            {
+              "type": "wheel",
+              "x": 1416,
+              "y": 500,
+              "trusted": true,
+              "target": "SECTION"
+            },
+            {
+              "type": "wheel",
+              "x": 1416,
+              "y": 500,
+              "trusted": true,
+              "target": "SECTION"
+            },
+            {
+              "type": "pointermove",
+              "x": 339.20001220703125,
+              "y": 236.82199096679688,
+              "trusted": true,
+              "target": "A"
+            }
+          ]
+        },
+        {
+          "label": "original-hover-4",
+          "at": 5112.5,
+          "width": 1440,
+          "height": 1000,
+          "scrollY": 1667,
+          "hidden": false,
+          "card": {
+            "tag": "ARTICLE",
+            "rect": {
+              "x": 108,
+              "y": 146.50949096679688,
+              "width": 289,
+              "height": 361.25,
+              "top": 146.50949096679688,
+              "right": 397,
+              "bottom": 507.7594909667969,
+              "left": 108
+            },
+            "opacity": "1",
+            "transform": "none",
+            "inline": null,
+            "animations": []
+          },
+          "entrance": {
+            "tag": "DIV",
+            "rect": {
+              "x": 108,
+              "y": 146.50949096679688,
+              "width": 289,
+              "height": 361.25,
+              "top": 146.50949096679688,
+              "right": 397,
+              "bottom": 507.7594909667969,
+              "left": 108
+            },
+            "opacity": "0.731335",
+            "transform": "matrix(1, 0, 0, 1, 0, 6.46262)",
+            "inline": "transform: translateY(6.46262px); opacity: 0.731335;",
+            "animations": []
+          },
+          "section": {
+            "tag": "SECTION",
+            "rect": {
+              "x": 0,
+              "y": -136.734375,
+              "width": 1432,
+              "height": 3475.78125,
+              "top": -136.734375,
+              "right": 1432,
+              "bottom": 3339.046875,
+              "left": 0
+            },
+            "opacity": "1",
+            "transform": "none",
+            "inline": "transform: none; opacity: 1;",
+            "animations": []
+          },
+          "pointer": [
+            {
+              "type": "wheel",
+              "x": 1416,
+              "y": 500,
+              "trusted": true,
+              "target": "SECTION"
+            },
+            {
+              "type": "wheel",
+              "x": 1416,
+              "y": 500,
+              "trusted": true,
+              "target": "SECTION"
+            },
+            {
+              "type": "wheel",
+              "x": 1416,
+              "y": 500,
+              "trusted": true,
+              "target": "SECTION"
+            },
+            {
+              "type": "pointermove",
+              "x": 339.20001220703125,
+              "y": 236.82199096679688,
+              "trusted": true,
+              "target": "A"
+            }
+          ]
+        },
+        {
+          "label": "before-full-card-native-scroll",
+          "at": 5372.29999999702,
+          "width": 1440,
+          "height": 1000,
+          "scrollY": 1667,
+          "hidden": false,
+          "card": {
+            "tag": "ARTICLE",
+            "rect": {
+              "x": 108,
+              "y": 146.50949096679688,
+              "width": 289,
+              "height": 361.25,
+              "top": 146.50949096679688,
+              "right": 397,
+              "bottom": 507.7594909667969,
+              "left": 108
+            },
+            "opacity": "1",
+            "transform": "none",
+            "inline": null,
+            "animations": []
+          },
+          "entrance": {
+            "tag": "DIV",
+            "rect": {
+              "x": 108,
+              "y": 146.50949096679688,
+              "width": 289,
+              "height": 361.25,
+              "top": 146.50949096679688,
+              "right": 397,
+              "bottom": 507.7594909667969,
+              "left": 108
+            },
+            "opacity": "0.731335",
+            "transform": "matrix(1, 0, 0, 1, 0, 6.46262)",
+            "inline": "transform: translateY(6.46262px); opacity: 0.731335;",
+            "animations": []
+          },
+          "section": {
+            "tag": "SECTION",
+            "rect": {
+              "x": 0,
+              "y": -136.734375,
+              "width": 1432,
+              "height": 3475.78125,
+              "top": -136.734375,
+              "right": 1432,
+              "bottom": 3339.046875,
+              "left": 0
+            },
+            "opacity": "1",
+            "transform": "none",
+            "inline": "transform: none; opacity: 1;",
+            "animations": []
+          },
+          "pointer": [
+            {
+              "type": "wheel",
+              "x": 1416,
+              "y": 500,
+              "trusted": true,
+              "target": "SECTION"
+            },
+            {
+              "type": "wheel",
+              "x": 1416,
+              "y": 500,
+              "trusted": true,
+              "target": "SECTION"
+            },
+            {
+              "type": "wheel",
+              "x": 1416,
+              "y": 500,
+              "trusted": true,
+              "target": "SECTION"
+            },
+            {
+              "type": "pointermove",
+              "x": 339.20001220703125,
+              "y": 236.82199096679688,
+              "trusted": true,
+              "target": "A"
+            }
+          ]
+        },
+        {
+          "label": "after-full-card-native-scroll",
+          "at": 5628.20000000298,
+          "width": 1440,
+          "height": 1000,
+          "scrollY": 1554,
+          "hidden": false,
+          "card": {
+            "tag": "ARTICLE",
+            "rect": {
+              "x": 108,
+              "y": 259.5094909667969,
+              "width": 289,
+              "height": 361.2500305175781,
+              "top": 259.5094909667969,
+              "right": 397,
+              "bottom": 620.759521484375,
+              "left": 108
+            },
+            "opacity": "1",
+            "transform": "none",
+            "inline": null,
+            "animations": []
+          },
+          "entrance": {
+            "tag": "DIV",
+            "rect": {
+              "x": 108,
+              "y": 259.5094909667969,
+              "width": 289,
+              "height": 361.2500305175781,
+              "top": 259.5094909667969,
+              "right": 397,
+              "bottom": 620.759521484375,
+              "left": 108
+            },
+            "opacity": "0.731335",
+            "transform": "matrix(1, 0, 0, 1, 0, 6.46262)",
+            "inline": "transform: translateY(6.46262px); opacity: 0.731335;",
+            "animations": []
+          },
+          "section": {
+            "tag": "SECTION",
+            "rect": {
+              "x": 0,
+              "y": -23.734375,
+              "width": 1432,
+              "height": 3475.78125,
+              "top": -23.734375,
+              "right": 1432,
+              "bottom": 3452.046875,
+              "left": 0
+            },
+            "opacity": "1",
+            "transform": "none",
+            "inline": "transform: none; opacity: 1;",
+            "animations": []
+          },
+          "pointer": [
+            {
+              "type": "wheel",
+              "x": 1416,
+              "y": 500,
+              "trusted": true,
+              "target": "SECTION"
+            },
+            {
+              "type": "wheel",
+              "x": 1416,
+              "y": 500,
+              "trusted": true,
+              "target": "SECTION"
+            },
+            {
+              "type": "wheel",
+              "x": 1416,
+              "y": 500,
+              "trusted": true,
+              "target": "SECTION"
+            },
+            {
+              "type": "pointermove",
+              "x": 339.20001220703125,
+              "y": 236.82199096679688,
+              "trusted": true,
+              "target": "A"
+            },
+            {
+              "type": "wheel",
+              "x": 1416,
+              "y": 500,
+              "trusted": true,
+              "target": "SECTION"
+            }
+          ]
+        },
+        {
+          "label": "visible-hover-0",
+          "at": 6034.29999999702,
+          "width": 1440,
+          "height": 1000,
+          "scrollY": 1554,
+          "hidden": false,
+          "card": {
+            "tag": "ARTICLE",
+            "rect": {
+              "x": 108,
+              "y": 259.5094909667969,
+              "width": 289,
+              "height": 361.2500305175781,
+              "top": 259.5094909667969,
+              "right": 397,
+              "bottom": 620.759521484375,
+              "left": 108
+            },
+            "opacity": "1",
+            "transform": "none",
+            "inline": null,
+            "animations": []
+          },
+          "entrance": {
+            "tag": "DIV",
+            "rect": {
+              "x": 108,
+              "y": 259.5094909667969,
+              "width": 289,
+              "height": 361.2500305175781,
+              "top": 259.5094909667969,
+              "right": 397,
+              "bottom": 620.759521484375,
+              "left": 108
+            },
+            "opacity": "0.731335",
+            "transform": "matrix(1, 0, 0, 1, 0, 6.46262)",
+            "inline": "transform: translateY(6.46262px); opacity: 0.731335;",
+            "animations": []
+          },
+          "section": {
+            "tag": "SECTION",
+            "rect": {
+              "x": 0,
+              "y": -23.734375,
+              "width": 1432,
+              "height": 3475.78125,
+              "top": -23.734375,
+              "right": 1432,
+              "bottom": 3452.046875,
+              "left": 0
+            },
+            "opacity": "1",
+            "transform": "none",
+            "inline": "transform: none; opacity: 1;",
+            "animations": []
+          },
+          "pointer": [
+            {
+              "type": "wheel",
+              "x": 1416,
+              "y": 500,
+              "trusted": true,
+              "target": "SECTION"
+            },
+            {
+              "type": "wheel",
+              "x": 1416,
+              "y": 500,
+              "trusted": true,
+              "target": "SECTION"
+            },
+            {
+              "type": "wheel",
+              "x": 1416,
+              "y": 500,
+              "trusted": true,
+              "target": "SECTION"
+            },
+            {
+              "type": "pointermove",
+              "x": 339.20001220703125,
+              "y": 236.82199096679688,
+              "trusted": true,
+              "target": "A"
+            },
+            {
+              "type": "wheel",
+              "x": 1416,
+              "y": 500,
+              "trusted": true,
+              "target": "SECTION"
+            },
+            {
+              "type": "pointermove",
+              "x": 339.20001220703125,
+              "y": 349.8219909667969,
+              "trusted": true,
+              "target": "IMG"
+            }
+          ]
+        },
+        {
+          "label": "visible-hover-1",
+          "at": 6436.20000000298,
+          "width": 1440,
+          "height": 1000,
+          "scrollY": 1554,
+          "hidden": false,
+          "card": {
+            "tag": "ARTICLE",
+            "rect": {
+              "x": 108,
+              "y": 259.5094909667969,
+              "width": 289,
+              "height": 361.2500305175781,
+              "top": 259.5094909667969,
+              "right": 397,
+              "bottom": 620.759521484375,
+              "left": 108
+            },
+            "opacity": "1",
+            "transform": "none",
+            "inline": null,
+            "animations": []
+          },
+          "entrance": {
+            "tag": "DIV",
+            "rect": {
+              "x": 108,
+              "y": 259.5094909667969,
+              "width": 289,
+              "height": 361.2500305175781,
+              "top": 259.5094909667969,
+              "right": 397,
+              "bottom": 620.759521484375,
+              "left": 108
+            },
+            "opacity": "0.731335",
+            "transform": "matrix(1, 0, 0, 1, 0, 6.46262)",
+            "inline": "transform: translateY(6.46262px); opacity: 0.731335;",
+            "animations": []
+          },
+          "section": {
+            "tag": "SECTION",
+            "rect": {
+              "x": 0,
+              "y": -23.734375,
+              "width": 1432,
+              "height": 3475.78125,
+              "top": -23.734375,
+              "right": 1432,
+              "bottom": 3452.046875,
+              "left": 0
+            },
+            "opacity": "1",
+            "transform": "none",
+            "inline": "transform: none; opacity: 1;",
+            "animations": []
+          },
+          "pointer": [
+            {
+              "type": "wheel",
+              "x": 1416,
+              "y": 500,
+              "trusted": true,
+              "target": "SECTION"
+            },
+            {
+              "type": "wheel",
+              "x": 1416,
+              "y": 500,
+              "trusted": true,
+              "target": "SECTION"
+            },
+            {
+              "type": "wheel",
+              "x": 1416,
+              "y": 500,
+              "trusted": true,
+              "target": "SECTION"
+            },
+            {
+              "type": "pointermove",
+              "x": 339.20001220703125,
+              "y": 236.82199096679688,
+              "trusted": true,
+              "target": "A"
+            },
+            {
+              "type": "wheel",
+              "x": 1416,
+              "y": 500,
+              "trusted": true,
+              "target": "SECTION"
+            },
+            {
+              "type": "pointermove",
+              "x": 339.20001220703125,
+              "y": 349.8219909667969,
+              "trusted": true,
+              "target": "IMG"
+            }
+          ]
+        },
+        {
+          "label": "visible-hover-2",
+          "at": 6837.4000000059605,
+          "width": 1440,
+          "height": 1000,
+          "scrollY": 1554,
+          "hidden": false,
+          "card": {
+            "tag": "ARTICLE",
+            "rect": {
+              "x": 108,
+              "y": 259.5094909667969,
+              "width": 289,
+              "height": 361.2500305175781,
+              "top": 259.5094909667969,
+              "right": 397,
+              "bottom": 620.759521484375,
+              "left": 108
+            },
+            "opacity": "1",
+            "transform": "none",
+            "inline": null,
+            "animations": []
+          },
+          "entrance": {
+            "tag": "DIV",
+            "rect": {
+              "x": 108,
+              "y": 259.5094909667969,
+              "width": 289,
+              "height": 361.2500305175781,
+              "top": 259.5094909667969,
+              "right": 397,
+              "bottom": 620.759521484375,
+              "left": 108
+            },
+            "opacity": "0.731335",
+            "transform": "matrix(1, 0, 0, 1, 0, 6.46262)",
+            "inline": "transform: translateY(6.46262px); opacity: 0.731335;",
+            "animations": []
+          },
+          "section": {
+            "tag": "SECTION",
+            "rect": {
+              "x": 0,
+              "y": -23.734375,
+              "width": 1432,
+              "height": 3475.78125,
+              "top": -23.734375,
+              "right": 1432,
+              "bottom": 3452.046875,
+              "left": 0
+            },
+            "opacity": "1",
+            "transform": "none",
+            "inline": "transform: none; opacity: 1;",
+            "animations": []
+          },
+          "pointer": [
+            {
+              "type": "wheel",
+              "x": 1416,
+              "y": 500,
+              "trusted": true,
+              "target": "SECTION"
+            },
+            {
+              "type": "wheel",
+              "x": 1416,
+              "y": 500,
+              "trusted": true,
+              "target": "SECTION"
+            },
+            {
+              "type": "wheel",
+              "x": 1416,
+              "y": 500,
+              "trusted": true,
+              "target": "SECTION"
+            },
+            {
+              "type": "pointermove",
+              "x": 339.20001220703125,
+              "y": 236.82199096679688,
+              "trusted": true,
+              "target": "A"
+            },
+            {
+              "type": "wheel",
+              "x": 1416,
+              "y": 500,
+              "trusted": true,
+              "target": "SECTION"
+            },
+            {
+              "type": "pointermove",
+              "x": 339.20001220703125,
+              "y": 349.8219909667969,
+              "trusted": true,
+              "target": "IMG"
+            }
+          ]
+        },
+        {
+          "label": "visible-hover-3",
+          "at": 7239,
+          "width": 1440,
+          "height": 1000,
+          "scrollY": 1554,
+          "hidden": false,
+          "card": {
+            "tag": "ARTICLE",
+            "rect": {
+              "x": 108,
+              "y": 259.5094909667969,
+              "width": 289,
+              "height": 361.2500305175781,
+              "top": 259.5094909667969,
+              "right": 397,
+              "bottom": 620.759521484375,
+              "left": 108
+            },
+            "opacity": "1",
+            "transform": "none",
+            "inline": null,
+            "animations": []
+          },
+          "entrance": {
+            "tag": "DIV",
+            "rect": {
+              "x": 108,
+              "y": 259.5094909667969,
+              "width": 289,
+              "height": 361.2500305175781,
+              "top": 259.5094909667969,
+              "right": 397,
+              "bottom": 620.759521484375,
+              "left": 108
+            },
+            "opacity": "0.731335",
+            "transform": "matrix(1, 0, 0, 1, 0, 6.46262)",
+            "inline": "transform: translateY(6.46262px); opacity: 0.731335;",
+            "animations": []
+          },
+          "section": {
+            "tag": "SECTION",
+            "rect": {
+              "x": 0,
+              "y": -23.734375,
+              "width": 1432,
+              "height": 3475.78125,
+              "top": -23.734375,
+              "right": 1432,
+              "bottom": 3452.046875,
+              "left": 0
+            },
+            "opacity": "1",
+            "transform": "none",
+            "inline": "transform: none; opacity: 1;",
+            "animations": []
+          },
+          "pointer": [
+            {
+              "type": "wheel",
+              "x": 1416,
+              "y": 500,
+              "trusted": true,
+              "target": "SECTION"
+            },
+            {
+              "type": "wheel",
+              "x": 1416,
+              "y": 500,
+              "trusted": true,
+              "target": "SECTION"
+            },
+            {
+              "type": "wheel",
+              "x": 1416,
+              "y": 500,
+              "trusted": true,
+              "target": "SECTION"
+            },
+            {
+              "type": "pointermove",
+              "x": 339.20001220703125,
+              "y": 236.82199096679688,
+              "trusted": true,
+              "target": "A"
+            },
+            {
+              "type": "wheel",
+              "x": 1416,
+              "y": 500,
+              "trusted": true,
+              "target": "SECTION"
+            },
+            {
+              "type": "pointermove",
+              "x": 339.20001220703125,
+              "y": 349.8219909667969,
+              "trusted": true,
+              "target": "IMG"
+            }
+          ]
+        },
+        {
+          "label": "visible-hover-4",
+          "at": 7642.79999999702,
+          "width": 1440,
+          "height": 1000,
+          "scrollY": 1554,
+          "hidden": false,
+          "card": {
+            "tag": "ARTICLE",
+            "rect": {
+              "x": 108,
+              "y": 259.5094909667969,
+              "width": 289,
+              "height": 361.2500305175781,
+              "top": 259.5094909667969,
+              "right": 397,
+              "bottom": 620.759521484375,
+              "left": 108
+            },
+            "opacity": "1",
+            "transform": "none",
+            "inline": null,
+            "animations": []
+          },
+          "entrance": {
+            "tag": "DIV",
+            "rect": {
+              "x": 108,
+              "y": 259.5094909667969,
+              "width": 289,
+              "height": 361.2500305175781,
+              "top": 259.5094909667969,
+              "right": 397,
+              "bottom": 620.759521484375,
+              "left": 108
+            },
+            "opacity": "0.731335",
+            "transform": "matrix(1, 0, 0, 1, 0, 6.46262)",
+            "inline": "transform: translateY(6.46262px); opacity: 0.731335;",
+            "animations": []
+          },
+          "section": {
+            "tag": "SECTION",
+            "rect": {
+              "x": 0,
+              "y": -23.734375,
+              "width": 1432,
+              "height": 3475.78125,
+              "top": -23.734375,
+              "right": 1432,
+              "bottom": 3452.046875,
+              "left": 0
+            },
+            "opacity": "1",
+            "transform": "none",
+            "inline": "transform: none; opacity: 1;",
+            "animations": []
+          },
+          "pointer": [
+            {
+              "type": "wheel",
+              "x": 1416,
+              "y": 500,
+              "trusted": true,
+              "target": "SECTION"
+            },
+            {
+              "type": "wheel",
+              "x": 1416,
+              "y": 500,
+              "trusted": true,
+              "target": "SECTION"
+            },
+            {
+              "type": "wheel",
+              "x": 1416,
+              "y": 500,
+              "trusted": true,
+              "target": "SECTION"
+            },
+            {
+              "type": "pointermove",
+              "x": 339.20001220703125,
+              "y": 236.82199096679688,
+              "trusted": true,
+              "target": "A"
+            },
+            {
+              "type": "wheel",
+              "x": 1416,
+              "y": 500,
+              "trusted": true,
+              "target": "SECTION"
+            },
+            {
+              "type": "pointermove",
+              "x": 339.20001220703125,
+              "y": 349.8219909667969,
+              "trusted": true,
+              "target": "IMG"
+            }
+          ]
+        }
+      ],
+      "correctedPoint": {
+        "x": 339.20000000000005,
+        "y": 349.8219985961914,
+        "hit": {
+          "correct": true,
+          "tag": "IMG"
+        }
+      },
+      "noProductMutation": true
+    }
+  }
+]

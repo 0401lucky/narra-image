@@ -1,0 +1,190 @@
+{
+  "trace": [
+    {
+      "type": "pointerdown",
+      "at": 2934.2000000029802,
+      "x": 349.8062438964844,
+      "y": 463.104736328125,
+      "target": "<a data-gallery-remix=\"true\" aria-describedby=\"_R_n5fnbb_\" class=\"gallery-module__AxK02G__remixButton\" href=\"/create?prompt=%E5%85%AC%E5%BC%80%E4%BD%9C%E5%93%81%20001%EF%BC%9A%E6%99%A8%E5%85%89%E7%A9%BF%E8%BF%87%E7%BA%B8%E7%AA%97%EF%BC%8C%E6%B8%A9%E6%9A%96%E7%9A%84%E7%BA%B9%E7%90%86%E4%B8%8E%E5%AE%8",
+      "scene": "film",
+      "expanded": "true"
+    },
+    {
+      "type": "pointerup",
+      "at": 2945.8999999910593,
+      "x": 349.8062438964844,
+      "y": 463.104736328125,
+      "target": "<a data-gallery-remix=\"true\" aria-describedby=\"_R_n5fnbb_\" class=\"gallery-module__AxK02G__remixButton\" href=\"/create?prompt=%E5%85%AC%E5%BC%80%E4%BD%9C%E5%93%81%20001%EF%BC%9A%E6%99%A8%E5%85%89%E7%A9%BF%E8%BF%87%E7%BA%B8%E7%AA%97%EF%BC%8C%E6%B8%A9%E6%9A%96%E7%9A%84%E7%BA%B9%E7%90%86%E4%B8%8E%E5%AE%8",
+      "scene": "film",
+      "expanded": "true"
+    },
+    {
+      "type": "click",
+      "at": 2946.2000000029802,
+      "x": 349,
+      "y": 463,
+      "target": "<a data-gallery-remix=\"true\" aria-describedby=\"_R_n5fnbb_\" class=\"gallery-module__AxK02G__remixButton\" href=\"/create?prompt=%E5%85%AC%E5%BC%80%E4%BD%9C%E5%93%81%20001%EF%BC%9A%E6%99%A8%E5%85%89%E7%A9%BF%E8%BF%87%E7%BA%B8%E7%AA%97%EF%BC%8C%E6%B8%A9%E6%9A%96%E7%9A%84%E7%BA%B9%E7%90%86%E4%B8%8E%E5%AE%8",
+      "scene": "film",
+      "expanded": "true"
+    },
+    {
+      "type": "pointerdown",
+      "at": 3818.3999999910593,
+      "x": 69,
+      "y": 104,
+      "target": "<button type=\"button\" aria-pressed=\"false\" class=\"inline-flex items-center gap-2 rounded-lg px-4 py-1.5 text-sm font-semibold transition-colors text-[var(--ink-soft)] hover:bg-white/60\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColo"
+    },
+    {
+      "type": "pointerup",
+      "at": 3820.2999999970198,
+      "x": 69,
+      "y": 104,
+      "target": "<button type=\"button\" aria-pressed=\"false\" class=\"inline-flex items-center gap-2 rounded-lg px-4 py-1.5 text-sm font-semibold transition-colors text-[var(--ink-soft)] hover:bg-white/60\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColo"
+    },
+    {
+      "type": "click",
+      "at": 3820.3999999910593,
+      "x": 69,
+      "y": 104,
+      "target": "<button type=\"button\" aria-pressed=\"false\" class=\"inline-flex items-center gap-2 rounded-lg px-4 py-1.5 text-sm font-semibold transition-colors text-[var(--ink-soft)] hover:bg-white/60\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColo"
+    },
+    {
+      "type": "pointerdown",
+      "at": 4418.899999991059,
+      "x": 830.5,
+      "y": 874,
+      "target": "<textarea maxlength=\"8000\" placeholder=\"输入提示词生成图片，或直接粘贴图片进入图生图...\" class=\"max-h-24 w-full resize-none bg-transparent py-1 text-base leading-6 text-[var(--ink)] outline-none placeholder:text-[#8d7d6f]/70 sm:max-h-28\" rows=\"1\" style=\"min-height: 36px; height: 56px;\">公开作品 001：晨光穿过纸窗，温暖的纹理与安静的空气。\n完整正向提示"
+    },
+    {
+      "type": "pointerup",
+      "at": 4420.399999991059,
+      "x": 830.5,
+      "y": 874,
+      "target": "<textarea maxlength=\"8000\" placeholder=\"输入提示词生成图片，或直接粘贴图片进入图生图...\" class=\"max-h-24 w-full resize-none bg-transparent py-1 text-base leading-6 text-[var(--ink)] outline-none placeholder:text-[#8d7d6f]/70 sm:max-h-28\" rows=\"1\" style=\"min-height: 36px; height: 56px;\">公开作品 001：晨光穿过纸窗，温暖的纹理与安静的空气。\n完整正向提示"
+    },
+    {
+      "type": "click",
+      "at": 4420.5999999940395,
+      "x": 830,
+      "y": 874,
+      "target": "<textarea maxlength=\"8000\" placeholder=\"输入提示词生成图片，或直接粘贴图片进入图生图...\" class=\"max-h-24 w-full resize-none bg-transparent py-1 text-base leading-6 text-[var(--ink)] outline-none placeholder:text-[#8d7d6f]/70 sm:max-h-28\" rows=\"1\" style=\"min-height: 36px; height: 56px;\">公开作品 001：晨光穿过纸窗，温暖的纹理与安静的空气。\n完整正向提示"
+    },
+    {
+      "type": "pointerdown",
+      "at": 4868.899999991059,
+      "x": 130.265625,
+      "y": 36,
+      "target": "<a class=\"flex min-w-0 items-center gap-2 whitespace-nowrap md:gap-3\" href=\"/\"><span class=\"editorial-title shrink-0 text-xl font-semibold uppercase tracking-[0.26em] text-[#9b5a20] sm:text-2xl\">Narra</span><span class=\"editorial-title truncate text-2xl font-semibold text-[#21170f] sm:text-3xl\">Imag"
+    },
+    {
+      "type": "pointerup",
+      "at": 4870.0999999940395,
+      "x": 130.265625,
+      "y": 36,
+      "target": "<a class=\"flex min-w-0 items-center gap-2 whitespace-nowrap md:gap-3\" href=\"/\"><span class=\"editorial-title shrink-0 text-xl font-semibold uppercase tracking-[0.26em] text-[#9b5a20] sm:text-2xl\">Narra</span><span class=\"editorial-title truncate text-2xl font-semibold text-[#21170f] sm:text-3xl\">Imag"
+    },
+    {
+      "type": "click",
+      "at": 4870.0999999940395,
+      "x": 130,
+      "y": 36,
+      "target": "<a class=\"flex min-w-0 items-center gap-2 whitespace-nowrap md:gap-3\" href=\"/\"><span class=\"editorial-title shrink-0 text-xl font-semibold uppercase tracking-[0.26em] text-[#9b5a20] sm:text-2xl\">Narra</span><span class=\"editorial-title truncate text-2xl font-semibold text-[#21170f] sm:text-3xl\">Imag"
+    },
+    {
+      "type": "pointerdown",
+      "at": 7066.5,
+      "x": 670.5211181640625,
+      "y": 167.88540649414062,
+      "target": "<span>收起</span>",
+      "scene": "film",
+      "expanded": "true"
+    },
+    {
+      "type": "pointerup",
+      "at": 7072.0999999940395,
+      "x": 670.5211181640625,
+      "y": 167.88540649414062,
+      "target": "<span>收起</span>",
+      "scene": "film",
+      "expanded": "true"
+    },
+    {
+      "type": "click",
+      "at": 7072.20000000298,
+      "x": 670,
+      "y": 167,
+      "target": "<span>收起</span>",
+      "scene": "film",
+      "expanded": "true"
+    }
+  ],
+  "motion": {
+    "active": "true",
+    "paused": "false",
+    "reduced": "false"
+  },
+  "frame": {
+    "transform": "matrix(1, 0, 0, 1, 0, 0)",
+    "pointer": "false",
+    "rx": "0deg",
+    "ry": "0deg"
+  },
+  "buttons": [
+    {
+      "text": "胶片光影",
+      "rect": {
+        "x": 1083,
+        "y": -1652,
+        "width": 70,
+        "height": 30,
+        "top": -1652,
+        "right": 1153,
+        "bottom": -1622,
+        "left": 1083
+      },
+      "stack": []
+    },
+    {
+      "text": "绘本叙事",
+      "rect": {
+        "x": 1156,
+        "y": -1652,
+        "width": 70,
+        "height": 30,
+        "top": -1652,
+        "right": 1226,
+        "bottom": -1622,
+        "left": 1156
+      },
+      "stack": []
+    },
+    {
+      "text": "东方美学",
+      "rect": {
+        "x": 1229,
+        "y": -1652,
+        "width": 70,
+        "height": 30,
+        "top": -1652,
+        "right": 1299,
+        "bottom": -1622,
+        "left": 1229
+      },
+      "stack": []
+    },
+    {
+      "text": "复用画面灵感",
+      "rect": {
+        "x": 1198,
+        "y": -1278.296875,
+        "width": 82,
+        "height": 28,
+        "top": -1278.296875,
+        "right": 1280,
+        "bottom": -1250.296875,
+        "left": 1198
+      },
+      "stack": []
+    }
+  ]
+}

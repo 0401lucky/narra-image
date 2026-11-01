@@ -1,0 +1,21 @@
+{
+  "label": "resume-back-docker-red",
+  "mode": "test",
+  "command": [
+    "pnpm",
+    "exec",
+    "vitest",
+    "run",
+    "src/tests/unit/local-docker-safety.test.ts",
+    "src/tests/unit/canvas-e2e-runner.test.ts",
+    "--testTimeout=30000"
+  ],
+  "cwd": "E:/code/narra-image",
+  "timeoutMs": 120000,
+  "code": 1,
+  "signal": null,
+  "timedOut": false,
+  "durationMs": 1163,
+  "stdoutPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\resume-back-docker-red.stdout.log",
+  "stderrPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\resume-back-docker-red.stderr.log"
+}

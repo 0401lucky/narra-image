@@ -1,0 +1,13 @@
+{
+  "checkedAt": "2026-11-01T03:09:59.585753+00:00",
+  "reviewer": "delivery_final_check",
+  "ownerVerified": true,
+  "workspace": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\hero-hit-independent-8725c17e\\app",
+  "activeLock": false,
+  "dependencyLinksAudited": 2342,
+  "allDependencyTargetsWithinOwnedCopy": true,
+  "sourceInputs": 809,
+  "sourceManifestSha256": "c94793261bc0bf091e6f6c3e44a96960184fe973c09e760e56bd101a518fe150",
+  "liveInputIdentityExact": true,
+  "noNodeInvokedByThisPreflight": true
+}

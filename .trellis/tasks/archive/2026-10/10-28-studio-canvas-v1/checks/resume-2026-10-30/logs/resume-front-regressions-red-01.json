@@ -1,0 +1,21 @@
+{
+  "label": "resume-front-regressions-red-01",
+  "mode": "test",
+  "command": [
+    "pnpm",
+    "exec",
+    "vitest",
+    "run",
+    "src/tests/unit/canvas-controller-runs.test.ts",
+    "src/tests/unit/use-conversation-generations.test.tsx",
+    "--testTimeout=30000"
+  ],
+  "cwd": "E:/code/narra-image",
+  "timeoutMs": 90000,
+  "code": 1,
+  "signal": null,
+  "timedOut": false,
+  "durationMs": 3679,
+  "stdoutPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\resume-front-regressions-red-01.stdout.log",
+  "stderrPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\resume-front-regressions-red-01.stderr.log"
+}

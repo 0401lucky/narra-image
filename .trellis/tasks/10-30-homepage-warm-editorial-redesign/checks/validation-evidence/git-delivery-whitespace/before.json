@@ -1,0 +1,33 @@
+{
+  "preparedAt": "2026-11-01T03:00:13.205412+00:00",
+  "status": "prepared-awaiting-explicit-coordinator-release",
+  "sourceFilesEdited": false,
+  "nodeOrTestsStarted": false,
+  "scope": "Two final-blank-line removals only. No original license or existing before-image edits.",
+  "files": [
+    {
+      "path": "THIRD_PARTY_NOTICES.md",
+      "beforeSnapshot": "THIRD_PARTY_NOTICES.md.before",
+      "beforeBytes": 10746,
+      "beforeSha256": "9c91c915a2f8220034295085baa29525ed80730cba73994812b9dcce98396851",
+      "beforeTrailingLfBytes": 2,
+      "plannedAfterBytes": 10745,
+      "plannedAfterSha256": "33f503831942a0c7003f6fe29f7f2fb803d75bd7ee8e15a93b8e649aec7a90b1",
+      "plannedDeletedByte": "0a",
+      "plannedDeletedOffset": 10745,
+      "plannedOperation": "Delete only the final byte after verifying current bytes equal the preserved before-image."
+    },
+    {
+      "path": "src/components/create/canvas/controller-types.ts",
+      "beforeSnapshot": "src__components__create__canvas__controller-types.ts.before",
+      "beforeBytes": 5902,
+      "beforeSha256": "beaf96e20dc7592b1e42b125b098c8ec0d985ae210c1bef5b4a8de2eea66ea26",
+      "beforeTrailingLfBytes": 2,
+      "plannedAfterBytes": 5901,
+      "plannedAfterSha256": "039db7b877e61aa9fc8ece2b54fe8df027294303d4e2b26e84435360d83c80f6",
+      "plannedDeletedByte": "0a",
+      "plannedDeletedOffset": 5901,
+      "plannedOperation": "Delete only the final byte after verifying current bytes equal the preserved before-image."
+    }
+  ]
+}

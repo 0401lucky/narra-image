@@ -1,0 +1,1283 @@
+{
+  "label": "01",
+  "scope": "Plain non-React Chromium CDP calibration, not product/device acceptance",
+  "cases": [
+    {
+      "action": "auto",
+      "method": "synthesize",
+      "before": {
+        "layoutViewport": {
+          "pageX": 0,
+          "pageY": 0,
+          "clientWidth": 390,
+          "clientHeight": 844
+        },
+        "visualViewport": {
+          "offsetX": 0,
+          "offsetY": 0,
+          "pageX": 0,
+          "pageY": 0,
+          "clientWidth": 390,
+          "clientHeight": 844,
+          "scale": 1,
+          "zoom": 1
+        },
+        "contentSize": {
+          "x": 0,
+          "y": 0,
+          "width": 390,
+          "height": 844
+        },
+        "cssLayoutViewport": {
+          "pageX": 0,
+          "pageY": 0,
+          "clientWidth": 390,
+          "clientHeight": 844
+        },
+        "cssVisualViewport": {
+          "offsetX": 0,
+          "offsetY": 0,
+          "pageX": 0,
+          "pageY": 0,
+          "clientWidth": 390,
+          "clientHeight": 844,
+          "scale": 1,
+          "zoom": 1
+        },
+        "cssContentSize": {
+          "x": 0,
+          "y": 0,
+          "width": 390,
+          "height": 844
+        }
+      },
+      "after": {
+        "layoutViewport": {
+          "pageX": 0,
+          "pageY": 0,
+          "clientWidth": 390,
+          "clientHeight": 844
+        },
+        "visualViewport": {
+          "offsetX": 0,
+          "offsetY": 0,
+          "pageX": 0,
+          "pageY": 0,
+          "clientWidth": 390,
+          "clientHeight": 844,
+          "scale": 1,
+          "zoom": 1
+        },
+        "contentSize": {
+          "x": 0,
+          "y": 0,
+          "width": 390,
+          "height": 844
+        },
+        "cssLayoutViewport": {
+          "pageX": 0,
+          "pageY": 0,
+          "clientWidth": 390,
+          "clientHeight": 844
+        },
+        "cssVisualViewport": {
+          "offsetX": 0,
+          "offsetY": 0,
+          "pageX": 0,
+          "pageY": 0,
+          "clientWidth": 390,
+          "clientHeight": 844,
+          "scale": 1,
+          "zoom": 1
+        },
+        "cssContentSize": {
+          "x": 0,
+          "y": 0,
+          "width": 390,
+          "height": 844
+        }
+      },
+      "actual": {
+        "scale": 1,
+        "fieldTouchAction": "auto",
+        "events": [
+          {
+            "name": "touchstart",
+            "cancelled": false,
+            "touches": 1
+          },
+          {
+            "name": "touchstart",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchend",
+            "cancelled": false,
+            "touches": 1
+          },
+          {
+            "name": "touchend",
+            "cancelled": false,
+            "touches": 0
+          }
+        ]
+      }
+    },
+    {
+      "action": "auto",
+      "method": "dispatch",
+      "before": {
+        "layoutViewport": {
+          "pageX": 0,
+          "pageY": 0,
+          "clientWidth": 390,
+          "clientHeight": 844
+        },
+        "visualViewport": {
+          "offsetX": 0,
+          "offsetY": 0,
+          "pageX": 0,
+          "pageY": 0,
+          "clientWidth": 390,
+          "clientHeight": 844,
+          "scale": 1,
+          "zoom": 1
+        },
+        "contentSize": {
+          "x": 0,
+          "y": 0,
+          "width": 390,
+          "height": 844
+        },
+        "cssLayoutViewport": {
+          "pageX": 0,
+          "pageY": 0,
+          "clientWidth": 390,
+          "clientHeight": 844
+        },
+        "cssVisualViewport": {
+          "offsetX": 0,
+          "offsetY": 0,
+          "pageX": 0,
+          "pageY": 0,
+          "clientWidth": 390,
+          "clientHeight": 844,
+          "scale": 1,
+          "zoom": 1
+        },
+        "cssContentSize": {
+          "x": 0,
+          "y": 0,
+          "width": 390,
+          "height": 844
+        }
+      },
+      "after": {
+        "layoutViewport": {
+          "pageX": 0,
+          "pageY": 0,
+          "clientWidth": 390,
+          "clientHeight": 844
+        },
+        "visualViewport": {
+          "offsetX": 45,
+          "offsetY": 71,
+          "pageX": 45,
+          "pageY": 71,
+          "clientWidth": 122.36392974853516,
+          "clientHeight": 264.80810546875,
+          "scale": 3.187213897705078,
+          "zoom": 1
+        },
+        "contentSize": {
+          "x": 0,
+          "y": 0,
+          "width": 390,
+          "height": 844
+        },
+        "cssLayoutViewport": {
+          "pageX": 0,
+          "pageY": 0,
+          "clientWidth": 390,
+          "clientHeight": 844
+        },
+        "cssVisualViewport": {
+          "offsetX": 45,
+          "offsetY": 71,
+          "pageX": 45,
+          "pageY": 71,
+          "clientWidth": 122.36392974853516,
+          "clientHeight": 264.80810546875,
+          "scale": 3.187213897705078,
+          "zoom": 1
+        },
+        "cssContentSize": {
+          "x": 0,
+          "y": 0,
+          "width": 390,
+          "height": 844
+        }
+      },
+      "actual": {
+        "scale": 3.187213897705078,
+        "fieldTouchAction": "auto",
+        "events": [
+          {
+            "name": "touchstart",
+            "cancelled": false,
+            "touches": 1
+          },
+          {
+            "name": "touchstart",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "pointercancel",
+            "cancelled": false
+          },
+          {
+            "name": "pointercancel",
+            "cancelled": false
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchend",
+            "cancelled": false,
+            "touches": 1
+          },
+          {
+            "name": "touchend",
+            "cancelled": false,
+            "touches": 0
+          }
+        ]
+      }
+    },
+    {
+      "action": "pan-y pinch-zoom",
+      "method": "synthesize",
+      "before": {
+        "layoutViewport": {
+          "pageX": 0,
+          "pageY": 0,
+          "clientWidth": 390,
+          "clientHeight": 844
+        },
+        "visualViewport": {
+          "offsetX": 0,
+          "offsetY": 0,
+          "pageX": 0,
+          "pageY": 0,
+          "clientWidth": 390,
+          "clientHeight": 844,
+          "scale": 1,
+          "zoom": 1
+        },
+        "contentSize": {
+          "x": 0,
+          "y": 0,
+          "width": 390,
+          "height": 844
+        },
+        "cssLayoutViewport": {
+          "pageX": 0,
+          "pageY": 0,
+          "clientWidth": 390,
+          "clientHeight": 844
+        },
+        "cssVisualViewport": {
+          "offsetX": 0,
+          "offsetY": 0,
+          "pageX": 0,
+          "pageY": 0,
+          "clientWidth": 390,
+          "clientHeight": 844,
+          "scale": 1,
+          "zoom": 1
+        },
+        "cssContentSize": {
+          "x": 0,
+          "y": 0,
+          "width": 390,
+          "height": 844
+        }
+      },
+      "after": {
+        "layoutViewport": {
+          "pageX": 0,
+          "pageY": 0,
+          "clientWidth": 390,
+          "clientHeight": 844
+        },
+        "visualViewport": {
+          "offsetX": 0,
+          "offsetY": 0,
+          "pageX": 0,
+          "pageY": 0,
+          "clientWidth": 390,
+          "clientHeight": 844,
+          "scale": 1,
+          "zoom": 1
+        },
+        "contentSize": {
+          "x": 0,
+          "y": 0,
+          "width": 390,
+          "height": 844
+        },
+        "cssLayoutViewport": {
+          "pageX": 0,
+          "pageY": 0,
+          "clientWidth": 390,
+          "clientHeight": 844
+        },
+        "cssVisualViewport": {
+          "offsetX": 0,
+          "offsetY": 0,
+          "pageX": 0,
+          "pageY": 0,
+          "clientWidth": 390,
+          "clientHeight": 844,
+          "scale": 1,
+          "zoom": 1
+        },
+        "cssContentSize": {
+          "x": 0,
+          "y": 0,
+          "width": 390,
+          "height": 844
+        }
+      },
+      "actual": {
+        "scale": 1,
+        "fieldTouchAction": "pan-y pinch-zoom",
+        "events": [
+          {
+            "name": "touchstart",
+            "cancelled": false,
+            "touches": 1
+          },
+          {
+            "name": "touchstart",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchend",
+            "cancelled": false,
+            "touches": 1
+          },
+          {
+            "name": "touchend",
+            "cancelled": false,
+            "touches": 0
+          }
+        ]
+      }
+    },
+    {
+      "action": "pan-y pinch-zoom",
+      "method": "dispatch",
+      "before": {
+        "layoutViewport": {
+          "pageX": 0,
+          "pageY": 0,
+          "clientWidth": 390,
+          "clientHeight": 844
+        },
+        "visualViewport": {
+          "offsetX": 0,
+          "offsetY": 0,
+          "pageX": 0,
+          "pageY": 0,
+          "clientWidth": 390,
+          "clientHeight": 844,
+          "scale": 1,
+          "zoom": 1
+        },
+        "contentSize": {
+          "x": 0,
+          "y": 0,
+          "width": 390,
+          "height": 844
+        },
+        "cssLayoutViewport": {
+          "pageX": 0,
+          "pageY": 0,
+          "clientWidth": 390,
+          "clientHeight": 844
+        },
+        "cssVisualViewport": {
+          "offsetX": 0,
+          "offsetY": 0,
+          "pageX": 0,
+          "pageY": 0,
+          "clientWidth": 390,
+          "clientHeight": 844,
+          "scale": 1,
+          "zoom": 1
+        },
+        "cssContentSize": {
+          "x": 0,
+          "y": 0,
+          "width": 390,
+          "height": 844
+        }
+      },
+      "after": {
+        "layoutViewport": {
+          "pageX": 0,
+          "pageY": 0,
+          "clientWidth": 390,
+          "clientHeight": 844
+        },
+        "visualViewport": {
+          "offsetX": 183,
+          "offsetY": 71,
+          "pageX": 183,
+          "pageY": 71,
+          "clientWidth": 122.36392974853516,
+          "clientHeight": 264.80810546875,
+          "scale": 3.187213897705078,
+          "zoom": 1
+        },
+        "contentSize": {
+          "x": 0,
+          "y": 0,
+          "width": 390,
+          "height": 844
+        },
+        "cssLayoutViewport": {
+          "pageX": 0,
+          "pageY": 0,
+          "clientWidth": 390,
+          "clientHeight": 844
+        },
+        "cssVisualViewport": {
+          "offsetX": 183,
+          "offsetY": 71,
+          "pageX": 183,
+          "pageY": 71,
+          "clientWidth": 122.36392974853516,
+          "clientHeight": 264.80810546875,
+          "scale": 3.187213897705078,
+          "zoom": 1
+        },
+        "cssContentSize": {
+          "x": 0,
+          "y": 0,
+          "width": 390,
+          "height": 844
+        }
+      },
+      "actual": {
+        "scale": 3.187213897705078,
+        "fieldTouchAction": "pan-y pinch-zoom",
+        "events": [
+          {
+            "name": "touchstart",
+            "cancelled": false,
+            "touches": 1
+          },
+          {
+            "name": "touchstart",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "pointercancel",
+            "cancelled": false
+          },
+          {
+            "name": "pointercancel",
+            "cancelled": false
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchend",
+            "cancelled": false,
+            "touches": 1
+          },
+          {
+            "name": "touchend",
+            "cancelled": false,
+            "touches": 0
+          }
+        ]
+      }
+    },
+    {
+      "action": "none",
+      "method": "synthesize",
+      "before": {
+        "layoutViewport": {
+          "pageX": 0,
+          "pageY": 0,
+          "clientWidth": 390,
+          "clientHeight": 844
+        },
+        "visualViewport": {
+          "offsetX": 0,
+          "offsetY": 0,
+          "pageX": 0,
+          "pageY": 0,
+          "clientWidth": 390,
+          "clientHeight": 844,
+          "scale": 1,
+          "zoom": 1
+        },
+        "contentSize": {
+          "x": 0,
+          "y": 0,
+          "width": 390,
+          "height": 844
+        },
+        "cssLayoutViewport": {
+          "pageX": 0,
+          "pageY": 0,
+          "clientWidth": 390,
+          "clientHeight": 844
+        },
+        "cssVisualViewport": {
+          "offsetX": 0,
+          "offsetY": 0,
+          "pageX": 0,
+          "pageY": 0,
+          "clientWidth": 390,
+          "clientHeight": 844,
+          "scale": 1,
+          "zoom": 1
+        },
+        "cssContentSize": {
+          "x": 0,
+          "y": 0,
+          "width": 390,
+          "height": 844
+        }
+      },
+      "after": {
+        "layoutViewport": {
+          "pageX": 0,
+          "pageY": 0,
+          "clientWidth": 390,
+          "clientHeight": 844
+        },
+        "visualViewport": {
+          "offsetX": 0,
+          "offsetY": 0,
+          "pageX": 0,
+          "pageY": 0,
+          "clientWidth": 390,
+          "clientHeight": 844,
+          "scale": 1,
+          "zoom": 1
+        },
+        "contentSize": {
+          "x": 0,
+          "y": 0,
+          "width": 390,
+          "height": 844
+        },
+        "cssLayoutViewport": {
+          "pageX": 0,
+          "pageY": 0,
+          "clientWidth": 390,
+          "clientHeight": 844
+        },
+        "cssVisualViewport": {
+          "offsetX": 0,
+          "offsetY": 0,
+          "pageX": 0,
+          "pageY": 0,
+          "clientWidth": 390,
+          "clientHeight": 844,
+          "scale": 1,
+          "zoom": 1
+        },
+        "cssContentSize": {
+          "x": 0,
+          "y": 0,
+          "width": 390,
+          "height": 844
+        }
+      },
+      "actual": {
+        "scale": 1,
+        "fieldTouchAction": "none",
+        "events": [
+          {
+            "name": "touchstart",
+            "cancelled": false,
+            "touches": 1
+          },
+          {
+            "name": "touchstart",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchend",
+            "cancelled": false,
+            "touches": 1
+          },
+          {
+            "name": "touchend",
+            "cancelled": false,
+            "touches": 0
+          }
+        ]
+      }
+    },
+    {
+      "action": "none",
+      "method": "dispatch",
+      "before": {
+        "layoutViewport": {
+          "pageX": 0,
+          "pageY": 0,
+          "clientWidth": 390,
+          "clientHeight": 844
+        },
+        "visualViewport": {
+          "offsetX": 0,
+          "offsetY": 0,
+          "pageX": 0,
+          "pageY": 0,
+          "clientWidth": 390,
+          "clientHeight": 844,
+          "scale": 1,
+          "zoom": 1
+        },
+        "contentSize": {
+          "x": 0,
+          "y": 0,
+          "width": 390,
+          "height": 844
+        },
+        "cssLayoutViewport": {
+          "pageX": 0,
+          "pageY": 0,
+          "clientWidth": 390,
+          "clientHeight": 844
+        },
+        "cssVisualViewport": {
+          "offsetX": 0,
+          "offsetY": 0,
+          "pageX": 0,
+          "pageY": 0,
+          "clientWidth": 390,
+          "clientHeight": 844,
+          "scale": 1,
+          "zoom": 1
+        },
+        "cssContentSize": {
+          "x": 0,
+          "y": 0,
+          "width": 390,
+          "height": 844
+        }
+      },
+      "after": {
+        "layoutViewport": {
+          "pageX": 0,
+          "pageY": 0,
+          "clientWidth": 390,
+          "clientHeight": 844
+        },
+        "visualViewport": {
+          "offsetX": 0,
+          "offsetY": 0,
+          "pageX": 0,
+          "pageY": 0,
+          "clientWidth": 390,
+          "clientHeight": 844,
+          "scale": 1,
+          "zoom": 1
+        },
+        "contentSize": {
+          "x": 0,
+          "y": 0,
+          "width": 390,
+          "height": 844
+        },
+        "cssLayoutViewport": {
+          "pageX": 0,
+          "pageY": 0,
+          "clientWidth": 390,
+          "clientHeight": 844
+        },
+        "cssVisualViewport": {
+          "offsetX": 0,
+          "offsetY": 0,
+          "pageX": 0,
+          "pageY": 0,
+          "clientWidth": 390,
+          "clientHeight": 844,
+          "scale": 1,
+          "zoom": 1
+        },
+        "cssContentSize": {
+          "x": 0,
+          "y": 0,
+          "width": 390,
+          "height": 844
+        }
+      },
+      "actual": {
+        "scale": 1,
+        "fieldTouchAction": "none",
+        "events": [
+          {
+            "name": "touchstart",
+            "cancelled": false,
+            "touches": 1
+          },
+          {
+            "name": "touchstart",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchmove",
+            "cancelled": false,
+            "touches": 2
+          },
+          {
+            "name": "touchend",
+            "cancelled": false,
+            "touches": 1
+          },
+          {
+            "name": "touchend",
+            "cancelled": false,
+            "touches": 0
+          }
+        ]
+      }
+    }
+  ],
+  "engine": "Chrome/156.0.8078.74",
+  "context": {
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
+    "viewport": "width=device-width, initial-scale=1",
+    "touchPoints": 2
+  },
+  "browser": {
+    "name": "plain",
+    "requested": [
+      {
+        "stage": "startup",
+        "url": "http://127.0.0.1:59929/create",
+        "type": "Document"
+      },
+      {
+        "stage": "startup",
+        "url": "http://127.0.0.1:59929/favicon.ico",
+        "type": "Other"
+      }
+    ],
+    "consoleErrors": [],
+    "exceptions": [],
+    "blocked": [],
+    "screenshots": [
+      "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\native-pinch-probe-01\\plain-auto-synthesize.png",
+      "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\native-pinch-probe-01\\plain-auto-dispatch.png",
+      "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\native-pinch-probe-01\\plain-pan-y-pinch-zoom-synthesize.png",
+      "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\native-pinch-probe-01\\plain-pan-y-pinch-zoom-dispatch.png",
+      "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\native-pinch-probe-01\\plain-none-synthesize.png",
+      "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\native-pinch-probe-01\\plain-none-dispatch.png"
+    ],
+    "downloads": [],
+    "chrome": "Chrome/156.0.8078.74"
+  }
+}

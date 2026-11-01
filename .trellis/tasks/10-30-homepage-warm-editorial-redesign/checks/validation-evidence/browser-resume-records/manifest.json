@@ -1,0 +1,36 @@
+{
+  "capturedAt": "2026-10-31T06:36:48.560840+00:00",
+  "purpose": "Preserve prior task records before reconciling the recovered browser continuation; original failed receipts remain untouched.",
+  "files": {
+    "checks/acceptance-status.md": {
+      "retained": "checks/validation-evidence/browser-resume-records/acceptance-status.md.before",
+      "sha256": "4036c8b340b944cb0aed2dbece5b996f9e47dbcdd1e45d165f3ed95863154b57",
+      "bytes": 7542
+    },
+    "checks/session-handoff.md": {
+      "retained": "checks/validation-evidence/browser-resume-records/session-handoff.md.before",
+      "sha256": "4e9c9d67d55fc067fce3546204bab2ba98b39e37b2debd3369494bb5a752623b",
+      "bytes": 5481
+    },
+    "checks/browser-acceptance.md": {
+      "retained": "checks/validation-evidence/browser-resume-records/browser-acceptance.md.before",
+      "sha256": "69f383be5316650c302f8618a74d6959df3e6c56688a47aee09efde0bcc971c6",
+      "bytes": 19341
+    },
+    "implement.md": {
+      "retained": "checks/validation-evidence/browser-resume-records/implement.md.before",
+      "sha256": "c369bb5acb81cc47d54b28405587a996cafccddfdcb13373ef866f27409c6916",
+      "bytes": 17875
+    },
+    "prd.md": {
+      "retained": "checks/validation-evidence/browser-resume-records/prd.md.before",
+      "sha256": "3bf8f282924ea3d7eb632730cc61229fbb38c57d46776c054ac55b276e3068af",
+      "bytes": 16273
+    },
+    "design.md": {
+      "retained": "checks/validation-evidence/browser-resume-records/design.md.before",
+      "sha256": "c6738839c1035aae0df0bd695c2a1b516d2b47e2b173618e58c33aef6ca7a932",
+      "bytes": 23810
+    }
+  }
+}

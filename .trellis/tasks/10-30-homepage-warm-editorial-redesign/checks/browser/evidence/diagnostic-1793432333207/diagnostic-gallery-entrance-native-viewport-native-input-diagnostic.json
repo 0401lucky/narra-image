@@ -1,0 +1,72 @@
+{
+  "trace": [],
+  "motion": {
+    "active": "true",
+    "paused": "false",
+    "reduced": "false"
+  },
+  "frame": {
+    "transform": "matrix(1, 0, 0, 1, 0, 0)",
+    "pointer": "false",
+    "rx": "0deg",
+    "ry": "0deg"
+  },
+  "buttons": [
+    {
+      "text": "胶片光影",
+      "rect": {
+        "x": 1083,
+        "y": -1405,
+        "width": 70,
+        "height": 30,
+        "top": -1405,
+        "right": 1153,
+        "bottom": -1375,
+        "left": 1083
+      },
+      "stack": []
+    },
+    {
+      "text": "绘本叙事",
+      "rect": {
+        "x": 1156,
+        "y": -1405,
+        "width": 70,
+        "height": 30,
+        "top": -1405,
+        "right": 1226,
+        "bottom": -1375,
+        "left": 1156
+      },
+      "stack": []
+    },
+    {
+      "text": "东方美学",
+      "rect": {
+        "x": 1229,
+        "y": -1405,
+        "width": 70,
+        "height": 30,
+        "top": -1405,
+        "right": 1299,
+        "bottom": -1375,
+        "left": 1229
+      },
+      "stack": []
+    },
+    {
+      "text": "复用画面灵感",
+      "rect": {
+        "x": 1198,
+        "y": -1031.296875,
+        "width": 82,
+        "height": 28,
+        "top": -1031.296875,
+        "right": 1280,
+        "bottom": -1003.296875,
+        "left": 1198
+      },
+      "stack": []
+    }
+  ]
+}

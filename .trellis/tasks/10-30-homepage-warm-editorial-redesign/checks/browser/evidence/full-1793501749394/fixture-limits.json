@@ -1,0 +1,39 @@
+{
+  "browserConnection": "owned fresh Chrome loopback CDP",
+  "clipboardTests": "explicit controlled Clipboard API accept/deny; OS clipboard not used",
+  "noAssetSubstitution": true,
+  "actualImages": true,
+  "heroAssets": [
+    {
+      "id": "film",
+      "url": "/marketing/home/bookshop-light-v1.png",
+      "available": true,
+      "sha256": "2813ac8f0db954142f0f4d7827150cd029bdfebc92818c111fa6cf3199c65387",
+      "bytes": 2335873,
+      "width": 1448,
+      "height": 1086,
+      "format": "png"
+    },
+    {
+      "id": "storybook",
+      "url": "/marketing/home/lantern-fox-v1.png",
+      "available": true,
+      "sha256": "dcc683910d1d92a4860068be8857db0204a74ff37895df5b5cebe9c2ec973cde",
+      "bytes": 3373661,
+      "width": 1448,
+      "height": 1086,
+      "format": "png"
+    },
+    {
+      "id": "oriental",
+      "url": "/marketing/home/jiangnan-rain-v2.png",
+      "available": true,
+      "sha256": "f3ded79890deb46ccafe50e13419dcab0626970f6a77790652b221f1e73354d4",
+      "bytes": 2638230,
+      "width": 1448,
+      "height": 1086,
+      "format": "png"
+    }
+  ],
+  "unresolved": []
+}

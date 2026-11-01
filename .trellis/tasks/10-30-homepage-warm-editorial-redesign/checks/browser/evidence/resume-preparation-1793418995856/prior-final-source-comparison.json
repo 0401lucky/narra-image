@@ -1,0 +1,42 @@
+{
+  "baselineManifest": ".trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/validation-evidence/final-automated/source-manifest.json",
+  "freshManifest": ".trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/.runtime/browser-hero-resume-72e89a9f/source-manifest.json",
+  "comparedAt": "2026-10-31T04:07:35.4327618+00:00",
+  "oldCount": 802,
+  "newCount": 806,
+  "unchanged": 800,
+  "changes": [
+    {
+      "new": "b7994c6de611f5e85559f27d539c9d53680ddf55a00c7304bdb88536da05cd59",
+      "change": "changed",
+      "old": "a02cc0387b202a2c3f1f7343dc6b705f3c88aa55dd64f9b0796761e460edde3b",
+      "file": "src/components/marketing/homepage/constants.ts"
+    },
+    {
+      "new": "2842f2b7d1f7749029a4e0417be31ac41364234927251c5ed4a83e292ccc7e2e",
+      "change": "changed",
+      "old": "d544ff5629b5e05b7c90a1d753d5571e1f8193cd557ab72d15ce4f7946e08cf6",
+      "file": "src/tests/unit/homepage-hero.test.tsx"
+    },
+    {
+      "change": "added",
+      "new": "2813ac8f0db954142f0f4d7827150cd029bdfebc92818c111fa6cf3199c65387",
+      "file": "public/marketing/home/bookshop-light-v1.png"
+    },
+    {
+      "change": "added",
+      "new": "f3ded79890deb46ccafe50e13419dcab0626970f6a77790652b221f1e73354d4",
+      "file": "public/marketing/home/jiangnan-rain-v2.png"
+    },
+    {
+      "change": "added",
+      "new": "dcc683910d1d92a4860068be8857db0204a74ff37895df5b5cebe9c2ec973cde",
+      "file": "public/marketing/home/lantern-fox-v1.png"
+    },
+    {
+      "change": "added",
+      "new": "aaa25c5571e6814130cd8cc171981d71fe71eb50e080f9d88e537572e8594872",
+      "file": "src/tests/contracts/homepage-assets.test.ts"
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "command": [
+    "python",
+    "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\isolated_check_test.py"
+  ],
+  "exitCode": 0,
+  "tests": 7,
+  "finishedAt": "2026-10-31T01:38:55.103538+00:00",
+  "node": "D:/node/node.exe",
+  "nodeVersion": "v24.11.1",
+  "pinnedRuntimeParity": false
+}

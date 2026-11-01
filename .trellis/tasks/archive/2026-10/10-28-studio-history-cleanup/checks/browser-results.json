@@ -1,0 +1,158 @@
+{
+  "environment": "isolated client fixture: real GeneratorStudio + child components + compiled repository Tailwind; mocked Next navigation/dynamic and all API fetches; no DB/provider/object storage",
+  "chrome": "Chrome/156.0.8078.48",
+  "results": [
+    {
+      "check": "desktop 1440x900 history absence/reclaimed width/composer inset",
+      "metrics": {
+        "viewport": 1440,
+        "documentWidth": 1440,
+        "nav": {
+          "left": 0,
+          "right": 320,
+          "width": 320
+        },
+        "main": {
+          "left": 320,
+          "right": 1440,
+          "width": 1120
+        },
+        "textarea": {
+          "left": 389.5,
+          "right": 1271.5,
+          "bottom": 802
+        },
+        "composerHeight": 175,
+        "streamPadding": 187
+      },
+      "pass": true
+    },
+    {
+      "check": "desktop chat zoom/reuse/edit/settings and expanded inset",
+      "metrics": {
+        "viewport": 1440,
+        "documentWidth": 1440,
+        "nav": {
+          "left": 0,
+          "right": 320,
+          "width": 320
+        },
+        "main": {
+          "left": 320,
+          "right": 1440,
+          "width": 1120
+        },
+        "textarea": {
+          "left": 389.5,
+          "right": 1271.5,
+          "bottom": 441.25
+        },
+        "composerHeight": 584,
+        "streamPadding": 596
+      },
+      "pass": true
+    },
+    {
+      "check": "delete then refreshed old props cannot restore removed conversation",
+      "pass": true
+    },
+    {
+      "check": "new then refreshed old props remains empty",
+      "pass": true
+    },
+    {
+      "check": "failed conversation create restores draft and sends no generation request",
+      "pass": true
+    },
+    {
+      "check": "phone 390x844 conversation-only drawer and central layout",
+      "metrics": {
+        "viewport": 390,
+        "documentWidth": 390,
+        "nav": {
+          "left": 0,
+          "right": 288,
+          "width": 288
+        },
+        "main": {
+          "left": 0,
+          "right": 390,
+          "width": 390
+        },
+        "textarea": {
+          "left": 25,
+          "right": 275,
+          "bottom": 717.609375
+        },
+        "composerHeight": 205.390625,
+        "streamPadding": 218
+      },
+      "pass": true
+    },
+    {
+      "check": "phone selection isolates other conversation and settings sheet opens/closes",
+      "pass": true
+    },
+    {
+      "check": "phone 360x800 composer fits and no horizontal overflow",
+      "metrics": {
+        "viewport": 360,
+        "documentWidth": 360,
+        "nav": {
+          "left": -288,
+          "right": 0,
+          "width": 288
+        },
+        "main": {
+          "left": 0,
+          "right": 360,
+          "width": 360
+        },
+        "textarea": {
+          "left": 25,
+          "right": 245,
+          "bottom": 673.609375
+        },
+        "composerHeight": 205.390625,
+        "streamPadding": 218
+      },
+      "pass": true
+    },
+    {
+      "check": "md breakpoint 768x900 central region and composer fit",
+      "metrics": {
+        "viewport": 768,
+        "documentWidth": 768,
+        "nav": {
+          "left": 0,
+          "right": 288,
+          "width": 288
+        },
+        "main": {
+          "left": 288,
+          "right": 768,
+          "width": 480
+        },
+        "textarea": {
+          "left": 350,
+          "right": 607,
+          "bottom": 710
+        },
+        "composerHeight": 283,
+        "streamPadding": 295
+      },
+      "pass": true
+    }
+  ],
+  "exceptions": [],
+  "screenshots": [
+    "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-history-cleanup-20261029\\desktop.png",
+    "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-history-cleanup-20261029\\desktop-zoom.png",
+    "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-history-cleanup-20261029\\desktop-settings.png",
+    "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-history-cleanup-20261029\\phone.png",
+    "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-history-cleanup-20261029\\phone-drawer.png",
+    "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-history-cleanup-20261029\\phone-settings.png",
+    "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-history-cleanup-20261029\\phone-narrow.png",
+    "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-history-cleanup-20261029\\tablet.png"
+  ]
+}

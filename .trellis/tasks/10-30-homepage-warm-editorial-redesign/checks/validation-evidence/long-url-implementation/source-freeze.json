@@ -1,0 +1,31 @@
+{
+  "capturedAt": "2026-11-01T02:37:30.607365+00:00",
+  "scope": "Four implementation-owned source files only; coordinator/checker own other concurrent inputs.",
+  "files": {
+    "src/components/marketing/homepage/gallery-card.tsx": {
+      "sha256": "4f6c2fde255fdb2a587b1a73c9115f81e136668d0226673224cab3357b9a30c2",
+      "bytes": 13376
+    },
+    "src/components/marketing/homepage/gallery-constants.ts": {
+      "sha256": "6b7653b264d811fd0ba9446f9ec5d3470d6c30e20789243c812af081b5cd3e42",
+      "bytes": 2181
+    },
+    "src/tests/unit/featured-gallery.test.tsx": {
+      "sha256": "6d93dfcd4526fb81602e8c5d7c79a0ac9aa6f9dba070b55bffa64545c889b9fd",
+      "bytes": 16547
+    },
+    "src/tests/unit/gallery-remix-fallback.test.tsx": {
+      "sha256": "84365dacd70ae738715a5446cea4c8124eba9699d1eaa9bd3381a3b7b4b2b977",
+      "bytes": 15029
+    }
+  },
+  "focusedReceiptId": "20261101T023631-test-59cbd7",
+  "filesPassed": 2,
+  "testsPassed": 81,
+  "newRegressionTests": 62,
+  "sourceChanges": [],
+  "snapshotModifications": [],
+  "node": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-history-cleanup-20261029\\node-v24.22.1-win-x64\\node.exe",
+  "nodeVersion": "v24.22.1",
+  "nodeSha256": "d702daa815eabbff763c7d3808e235cf031cf2ca70211b56847bc72f51e240e5"
+}

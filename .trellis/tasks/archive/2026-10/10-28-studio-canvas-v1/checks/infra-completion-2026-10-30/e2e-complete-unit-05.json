@@ -1,0 +1,23 @@
+{
+  "label": "e2e-complete-unit-05",
+  "mode": "test",
+  "command": [
+    "pnpm",
+    "exec",
+    "vitest",
+    "run",
+    "src/tests/unit/canvas-e2e-runner.test.ts",
+    "src/tests/unit/canvas-e2e-runtime-fixture.test.ts",
+    "src/tests/unit/canvas-e2e-http-fixture.test.ts",
+    "src/tests/unit/canvas-object-store-fixture.test.ts",
+    "--testTimeout=30000"
+  ],
+  "cwd": "E:/code/narra-image",
+  "timeoutMs": 180000,
+  "code": 0,
+  "signal": null,
+  "timedOut": false,
+  "durationMs": 7602,
+  "stdoutPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\e2e-complete-unit-05.stdout.log",
+  "stderrPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\e2e-complete-unit-05.stderr.log"
+}

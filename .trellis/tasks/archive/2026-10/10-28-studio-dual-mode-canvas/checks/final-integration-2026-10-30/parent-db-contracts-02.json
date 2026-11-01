@@ -1,0 +1,16 @@
+{
+  "label": "parent-db-contracts-02",
+  "mode": "test",
+  "command": [
+    "pnpm",
+    "verify:canvas-contracts:db"
+  ],
+  "cwd": "E:/code/narra-image",
+  "timeoutMs": 420000,
+  "code": 2,
+  "signal": null,
+  "timedOut": false,
+  "durationMs": 1504,
+  "stdoutPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\parent-db-contracts-02.stdout.log",
+  "stderrPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\parent-db-contracts-02.stderr.log"
+}

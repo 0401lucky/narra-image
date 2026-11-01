@@ -1,0 +1,75 @@
+# Task-Only Validation Environment
+
+This launcher is not a production runner, permission bypass, service fixture, or real-service E2E gate. It does not change application configuration, Compose, existing DB guards, or another task's files.
+
+## Safety Boundary
+
+- The outer process is Python. It builds an OS-essential environment allowlist before starting Node, so inherited `NODE_OPTIONS`, provider/database/storage secrets, proxy settings and package configuration never reach the initial Node process.
+- Every workspace lives directly under this task's owner-marked `checks/.runtime/`. Source is copied from the current working tree, not Git HEAD. The allowlist includes production source, tests, contracts, scripts, public assets and the root configuration files needed by those tests.
+- Real dotenv, package credentials, key material, assistant metadata and previous build/cache outputs are excluded. Only the exact regular root `.env.example` is copied; its SHA-256 is recorded and checked by the preload. No live environment file is read, renamed, moved or edited.
+- Installed dependencies are physically copied, not hard-linked. All internal dependency junctions are recreated against the same new workspace's `node_modules`; every target is audited. Prisma generation, Vite caches, TypeScript incremental output and `.next` therefore remain independent of the live working tree and other validation lanes.
+- Test processes use `NODE_ENV=test` without `APP_URL`. Build/browser processes use a synthetic non-loopback `.invalid` app URL and a synthetic secret. The synthetic database URL points to unusable loopback port 1; no DB sentinels are enabled. Unit-test database boundaries must still be mocked.
+- The Node preload blocks sync, callback, promise, stream, URL and Buffer dotenv reads. It preserves the exact public-example exception and is inherited by ordinary Node children. This is defense in depth, not a filesystem security sandbox; the credential-free snapshot is the primary boundary.
+- Commands have finite deadlines, exact exit codes, stdout/stderr receipts, per-workspace locks and hidden Windows processes. Timeouts kill only the process tree started for that invocation. Cleanup refuses outside paths, wrong owner markers, active locks and escaping reparse points.
+
+## Commands
+
+Run from the repository root. Use one separate `prepare` for the production-source lane and another for a browser fixture. The JSON preparation result gives the exact absolute workspace path.
+
+```powershell
+python .trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/isolated_check_test.py
+python .trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/isolated_check.py prepare --label production
+python .trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/isolated_check.py run --workspace <absolute-app-path> --stage test src/tests/unit/prisma-mappers.test.ts
+python .trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/isolated_check.py run --workspace <absolute-app-path> --stage lint
+python .trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/isolated_check.py run --workspace <absolute-app-path> --stage types
+python .trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/isolated_check.py run --workspace <absolute-app-path> --stage test
+python .trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/isolated_check.py run --workspace <absolute-app-path> --stage prisma
+python .trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/isolated_check.py run --workspace <absolute-app-path> --stage build
+```
+
+`test` invokes the existing Vitest entry with `run --testTimeout=30000`, preserving both DB exclusions in the unchanged config. `lint`, `types`, `prisma` and `build` invoke the existing installed ESLint, TypeScript, Prisma and Next entry files with their normal arguments. No tool is installed or downloaded. Prisma must run before the production build if schema/client identities differ.
+
+`refresh --workspace <path>` updates only an unmodified source snapshot to the current working tree. It refuses to overwrite browser adapters or other snapshot source changes (apart from Next's generated `next-env.d.ts`). Save needed red receipts and source inputs before refresh. Do not refresh a running server or fixture lane.
+
+For task-owned browser helpers:
+
+```powershell
+python .trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/isolated_check.py prepare --label browser
+python .trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/isolated_check.py script --workspace <absolute-app-path> --script <absolute-task-browser-helper.mjs> --lane browser --timeout-seconds 600 -- <arguments>
+```
+
+Helpers run with cwd and `NARRA_CHECK_ROOT` set to the snapshot app, and `NARRA_CHECK_OWNER_ROOT` set to its owner directory. A helper located under `checks/browser/` must use Node built-ins or explicitly resolve installed tools from the snapshot, never bare-import live project dependencies. All server/browser children must inherit the sanitized environment, use loopback-only interfaces and owner-root empty profiles, and be bounded and shut down by the helper. Fixture changes must be listed by the browser evidence; an adapted fixture build is not an unmodified production-source build.
+
+The optional global `--node <absolute-installed-node.exe>` selects a known installed runtime. It does not download anything. The default local executable is `D:\node\node.exe`, version `v24.11.1`; the project pins `v24.22.1`. Checks with the available local runtime are explicitly not pinned-runtime parity. Only known command/NVM locations were probed; no personal profile or another task's runtime resources were borrowed.
+
+## Evidence Layout
+
+- `owner.json`: random owner identity and absolute owned app path.
+- `source-manifest.json`: current source file byte lengths and SHA-256 hashes.
+- `dependencies.json`: installed dependency source, physically copied byte/file counts and internal junction count.
+- `preparation.json`: local Node version and pinned-runtime-parity result.
+- `receipts/*.json`: command, real exit code, duration/deadline, environment key names, source-before/after hashes and any modified snapshot inputs.
+- `receipts/*.stdout.log` and `*.stderr.log`: exact bounded-command outputs. The runtime directory is ignored, not staged; relevant gate summaries are copied to task evidence by the coordinator.
+
+No real-account, live database, Worker, provider, storage, Docker E2E or physical-device check is implied by a green local receipt.
+
+## Initial Gate Results
+
+- G0: seven Python safety tests pass, including Node preload sync/async/ESM/child behavior. Exact test output is preserved in `validation-evidence/g0-selftests.*`. Two preparation attempts exposed Windows long-path handling; dependency I/O now uses extended Win32 paths while canonical ownership checks retain ordinary absolute paths. Failed partial copies were removed only after owner/path verification.
+- Pre-fix privacy red: 4 files, 49 tests, 16 expected semantic failures and 33 passes, exit 1. The actual client-bound privacy leak and missing public permission flag are exercised, not merely missing imports. Receipt, logs, hashes and targeted before-source bytes remain in `validation-evidence/privacy-red/`.
+- Post-fix privacy green: 10 files, 99 tests, all pass, exit 0. Receipt and full input hashes remain in `validation-evidence/privacy-green/`.
+- Post-privacy full-source lint: exit 0, zero errors and nine pre-existing warnings (migration helper/repair unused variables, the default mobile-nav avatar image, and my-works-board test mock variables). Type-check: exit 0 with no output. Neither stage changed snapshot source. Evidence is in `validation-evidence/privacy-baseline/`; this is before the new homepage visual slice, not its final quality gate.
+- Reusable production lane: `checks/.runtime/production-fa4bca90/app`. It is currently unlocked and may be refreshed to final source once all writers have stopped. The red lane `checks/.runtime/privacy-red-e61732a6/app` remains immutable. Browser owns its separate lane and fixture evidence.
+- The full non-DB suite and production build have not yet been run by G0. Both must run again against the final implementation. All results above use available Node 24.11.1, not the pinned 24.22.1 runtime.
+
+## Prisma Guard Regression
+
+The coordinator's first final-source Prisma generation failed with exit 1 and `Error: undefined`. The original receipt is retained as `validation-evidence/prisma-runner/20261031T022724-prisma-f758af.*`.
+
+1. **Root cause (cross-layer contract + coverage gap):** the task's `fs.exists` wrapper preserved its callback result but dropped Node's `util.promisify.custom` property. Unlike ordinary error-first filesystem callbacks, `fs.exists` calls back with one boolean. The installed Prisma CLI uses `promisify(fs.exists)` in schema discovery and engine checks. Without the custom property, an existing schema rejects with the primitive `true`; Prisma's `error.message` is then undefined.
+2. **Discriminating evidence:** the unchanged snapshot's read-only `prisma_exists_probe.cjs` reports a missing custom handler, boolean-true rejection for the existing schema/public example, and undefined rather than false for hidden/missing files. The added guard regression fails before the fix. No retry, schema edit, Node reinstall, or unsafe dotenv exception was used.
+3. **Minimal correction:** `deny_env.cjs` defines a custom promise implementation which calls the guarded `fs.exists` and resolves `Promise<boolean>`. It does not copy the original native custom function, which might bypass the denial wrapper. Exact public-example permissions, hidden-file denial, callback timing and error handling remain intact.
+4. **Verification:** the read-only probe passes after updating only the owner-verified copied guard. Eight safety tests pass, including public/ordinary existing files, denied/missing/invalid paths, missing-callback errors, and a diagnostic no-network guard. Actual `prisma generate` then succeeds with exit 0 in 1.909 seconds, using the already installed Prisma 7.7.0 engine/client while all Node socket/fetch connections are forbidden. No engine download occurs, and all production-source hashes stay unchanged.
+5. **Prevention:** filesystem/preload adapters must preserve special callback contracts and custom promisification, not only direct calls and `fs.promises`. Test native, callback, promisified and ESM consumers before broad tool gates. The coordinator owns any shared-spec promotion and final full-suite/build rerun under the corrected guard.
+
+All diagnostic, red/green probe, safety-test, guard-hash and successful generation evidence is in `validation-evidence/prisma-runner/`. `prisma_no_network.cjs` is only an additional diagnostic safety preload; it is not a production runtime change or a replacement for the credential-free snapshot. The production lane is released to the coordinator after generation; no browser lane or live dependency is modified.

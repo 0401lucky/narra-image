@@ -1,0 +1,36 @@
+{
+  "checkedAt": "2026-11-01T03:11:30.440068+00:00",
+  "stage": "pre-build",
+  "sourceInputCount": 809,
+  "fixtureProductionInputCount": 659,
+  "sourceManifestSha256": "c94793261bc0bf091e6f6c3e44a96960184fe973c09e760e56bd101a518fe150",
+  "fixtureManifestSha256": "a536e7b2df7a7a85324619b19639a91bf785d29548f5ba20cd5da79aecee84aa",
+  "liveVectorSha256": "ed4f2c7e1a431ae274aca3b7486a3b68ad59050846e92f092787d1cbd2b7156f",
+  "snapshotVectorSha256": "d939c1b8cfe12ae9cd76f17952dbef8efd2041220851c44b69f5359b26f92ee1",
+  "helpersVectorSha256": "16d71658adff75a7e99578d4c785dbfff2c3a41e9350db859ec2016ec3fa2172",
+  "fixtureConfigSha256": "37a67b3e2adb20fd40a2a67d433afa6e8e87cb6d17ee59e672264188cfea0f0c",
+  "guardSha256": "bd9ec3da5da5787ffc8378f8ed97835428d4b5a9c80a21a099ccca2c4d077e55",
+  "declaredReplacements": {
+    "src/lib/db.ts": {
+      "source": "db.ts.fixture",
+      "sha256": "044edf0c7b20fee2a56fb5f25001e4d3e9eca562677ac0b65989153e989ffeb3",
+      "priorSha256": "6e12e882c0cbaa69fff993318e56df751d3489562cd717498fa0037a1e6f77c8"
+    },
+    "src/app/homepage-fixture/control/route.ts": {
+      "source": "control-route.ts.fixture",
+      "sha256": "fe7cba0e3078fe6fd2933db1a45f950ebe355f840617485f24a0f09db3746ecf",
+      "priorSha256": null
+    },
+    "src/app/homepage-fixture/links/page.tsx": {
+      "source": "links-page.tsx.fixture",
+      "sha256": "055ae2a4ce387caa6d7e22b59d68b7c94ed407e4a32f972e9a1c36bf1949e1c7",
+      "priorSha256": null
+    },
+    "src/proxy.ts": {
+      "source": "proxy.ts.fixture",
+      "sha256": "9550d083bc6fc1946aed9e0bd258103bd60482144f1f6677da6ebee0da2aec01",
+      "priorSha256": null
+    }
+  },
+  "drift": []
+}

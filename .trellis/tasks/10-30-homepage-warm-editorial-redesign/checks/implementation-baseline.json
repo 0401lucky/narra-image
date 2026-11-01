@@ -1,0 +1,88 @@
+{
+  "timestamp": "2026-10-31T01:25:55.467842+00:00",
+  "task": ".trellis/tasks/10-30-homepage-warm-editorial-redesign",
+  "approval": "User explicitly approved implementation of the complete plan on 2026-10-31.",
+  "gitStatus": " M .dockerignore\n M .env.example\n M .github/workflows/verify.yml\n M .trellis/spec/frontend/directory-structure.md\n M .trellis/spec/frontend/generation-worker-contracts.md\n M .trellis/spec/frontend/index.md\n M .trellis/spec/frontend/quality-guidelines.md\n M .trellis/spec/frontend/state-management.md\n M .trellis/spec/frontend/type-safety.md\n M .trellis/spec/operations/index.md\n M .trellis/spec/operations/release-hardening.md\n M .trellis/workspace/0401lucky/index.md\n M .trellis/workspace/0401lucky/journal-1.md\n M Dockerfile\n M README.md\n M contracts/runtime/v1/environment.json\n M docker-compose.e2e.yml\n M docker-compose.yml\n M package.json\n M pnpm-lock.yaml\n M prisma/schema.prisma\n M scripts/lib/disposable-postgres.mjs\n M scripts/verify-ci.mjs\n M scripts/verify-e2e.mjs\n M src/app/api/generate/route.ts\n M src/app/create/page.tsx\n M src/app/globals.css\n M src/components/create/constants.ts\n M src/components/create/generator-studio.tsx\n M src/components/create/hooks/use-image-poller.ts\n M src/components/create/hooks/use-sessions.ts\n D src/components/create/parts/history-rail.tsx\n M src/components/create/parts/image-zoom-modal.tsx\n M src/components/create/parts/session-sidebar.tsx\n M src/components/create/types.ts\n M src/lib/env.ts\n M src/lib/generation/parse-generate-request.ts\n M src/lib/readiness.ts\n M src/lib/validators.ts\n M src/tests/integration/worker-contracts/postgres-runner.ts\n M src/tests/integration/worker-contracts/runner-vitest.config.ts\n M src/tests/unit/generator-studio-edit.test.tsx\n M src/tests/unit/generator-studio-feedback.test.tsx\n M src/tests/unit/generator-studio-ratio.test.tsx\n M src/tests/unit/generator-studio-retry-cancel.test.tsx\n M src/tests/unit/generator-studio-session-history.test.tsx\n M src/tests/unit/use-image-poller.test.tsx\n M vitest.config.ts\n M worker/internal/worker/config.go\n M worker/internal/worker/config_test.go\n M worker/internal/worker/runtime_state.go\n M worker/internal/worker/server.go\n M worker/internal/worker/worker.go\n?? .trellis/spec/frontend/canvas-studio.md\n?? .trellis/spec/operations/canvas-contracts.md\n?? .trellis/tasks/10-28-studio-mobile-canvas-editor/\n?? .trellis/tasks/10-30-homepage-warm-editorial-redesign/\n?? .trellis/tasks/archive/2026-10/\n?? THIRD_PARTY_NOTICES.md\n?? contracts/canvas/\n?? prisma/migrations/20261029090000_canvas_v1/\n?? scripts/fixtures/canvas-object-store.mjs\n?? scripts/fixtures/canvas-runtime.mjs\n?? scripts/lib/deny-disposable-env.cjs\n?? scripts/lib/disposable-test-environment.mjs\n?? scripts/lib/e2e-safety.mjs\n?? scripts/lib/local-docker-safety.mjs\n?? scripts/verify-canvas-contracts-db.mjs\n?? src/app/api/me/canvas-assets/\n?? src/app/api/me/canvas-runs/\n?? src/app/api/me/canvas-runtime/\n?? src/app/api/me/canvases/\n?? src/app/api/me/conversations/[id]/generations/\n?? src/components/create/canvas/\n?? src/components/create/generation-item.ts\n?? src/components/create/hooks/use-canvas-documents.ts\n?? src/components/create/hooks/use-canvas-editor.ts\n?? src/components/create/hooks/use-canvas-image-viewer.ts\n?? src/components/create/hooks/use-canvas-mobile-viewport.ts\n?? src/components/create/hooks/use-canvas-runtime-lease.ts\n?? src/components/create/hooks/use-conversation-generations.ts\n?? src/components/create/hooks/use-studio-jobs.ts\n?? src/components/create/hooks/use-studio-mode.ts\n?? src/components/create/parts/canvas-dialog.tsx\n?? src/components/create/parts/canvas-lazy-pane.tsx\n?? src/components/create/parts/canvas-node-editor.tsx\n?? src/components/create/parts/canvas-node-inspector.tsx\n?? src/components/create/parts/canvas-node-picker.tsx\n?? src/components/create/parts/canvas-nodes/\n?? src/components/create/parts/canvas-prompt-field.tsx\n?? src/components/create/parts/canvas-runtime-dialog.tsx\n?? src/components/create/parts/canvas-sidebar.tsx\n?? src/components/create/parts/canvas-stage.module.css\n?? src/components/create/parts/canvas-stage.tsx\n?? src/components/create/parts/canvas-toolbar.tsx\n?? src/components/create/parts/chat-pane.tsx\n?? src/components/create/parts/studio-mode-switch.tsx\n?? src/lib/canvas/\n?? src/lib/conversations/\n?? src/lib/server/conversation-generations.ts\n?? src/tests/contracts/canvas-contract.test.ts\n?? src/tests/integration/canvas-contracts/\n?? src/tests/integration/worker-contracts/migration-plan.ts\n?? src/tests/unit/canvas-assets-api.test.ts\n?? src/tests/unit/canvas-client-api.test.ts\n?? src/tests/unit/canvas-controller-connections.test.ts\n?? src/tests/unit/canvas-controller-documents.test.ts\n?? src/tests/unit/canvas-controller-runs.test.ts\n?? src/tests/unit/canvas-disposable-runner.test.ts\n?? src/tests/unit/canvas-documents-api.test.ts\n?? src/tests/unit/canvas-draft-store.test.ts\n?? src/tests/unit/canvas-e2e-http-fixture.test.ts\n?? src/tests/unit/canvas-e2e-runner.test.ts\n?? src/tests/unit/canvas-e2e-runtime-fixture.test.ts\n?? src/tests/unit/canvas-env.test.ts\n?? src/tests/unit/canvas-generate-parser.test.ts\n?? src/tests/unit/canvas-generate-route.test.ts\n?? src/tests/unit/canvas-graph.test.ts\n?? src/tests/unit/canvas-http.test.ts\n?? src/tests/unit/canvas-lazy-pane.test.tsx\n?? src/tests/unit/canvas-mobile-interaction.test.ts\n?? src/tests/unit/canvas-mobile-viewport.test.tsx\n?? src/tests/unit/canvas-node-editor.test.tsx\n?? src/tests/unit/canvas-object-store-fixture.test.ts\n?? src/tests/unit/canvas-readiness.test.ts\n?? src/tests/unit/canvas-reference-runtime.test.ts\n?? src/tests/unit/canvas-renderer-adapter.test.ts\n?? src/tests/unit/canvas-run-lookup.test.ts\n?? src/tests/unit/canvas-runtime-api.test.ts\n?? src/tests/unit/canvas-schema-probe.test.ts\n?? src/tests/unit/canvas-stage.test.tsx\n?? src/tests/unit/canvas-storage-capability-response.test.ts\n?? src/tests/unit/canvas-storage.test.ts\n?? src/tests/unit/canvas-terminal-placement.test.ts\n?? src/tests/unit/chat-pane.test.tsx\n?? src/tests/unit/conversation-generations-api.test.ts\n?? src/tests/unit/create-page-conversations.test.tsx\n?? src/tests/unit/generation-item.test.ts\n?? src/tests/unit/generator-studio-canvas.test.tsx\n?? src/tests/unit/generator-studio-conversations.test.tsx\n?? src/tests/unit/generator-studio-origins.test.tsx\n?? src/tests/unit/helpers/\n?? src/tests/unit/local-docker-safety.test.ts\n?? src/tests/unit/use-canvas-documents.test.tsx\n?? src/tests/unit/use-canvas-editor.test.tsx\n?? src/tests/unit/use-canvas-runtime-lease.test.tsx\n?? src/tests/unit/use-conversation-generations.test.tsx\n?? src/tests/unit/use-sessions-origin.test.tsx\n?? src/tests/unit/use-studio-jobs.test.tsx\n?? worker/internal/worker/canvas_catalog_expression.go\n?? worker/internal/worker/canvas_catalog_expression_test.go\n?? worker/internal/worker/canvas_contract.go\n?? worker/internal/worker/canvas_contract_test.go\n?? worker/internal/worker/canvas_gc.go\n?? worker/internal/worker/canvas_gc_repository.go\n?? worker/internal/worker/canvas_gc_repository_test.go\n?? worker/internal/worker/canvas_gc_storage.go\n?? worker/internal/worker/canvas_gc_storage_test.go\n?? worker/internal/worker/canvas_gc_test.go\n?? worker/internal/worker/canvas_runtime.go\n?? worker/internal/worker/canvas_runtime_test.go\n?? worker/internal/worker/canvas_schema.go\n?? worker/internal/worker/canvas_schema_test.go\n?? worker/internal/worker/canvas_storage_location.go\n?? worker/internal/worker/canvas_storage_location_test.go\n",
+  "files": {
+    "src/app/page.tsx": {
+      "sha256": "f840b87dd8c1049997111060705be123333466fe3077490441d9bce50845352c",
+      "bytes": 19181
+    },
+    "src/app/works/[id]/page.tsx": {
+      "sha256": "20214b1d801be7510d6f8409dd4e0ccfec04b25a1907f741bb14c460d036f3da",
+      "bytes": 2668
+    },
+    "src/lib/prisma-mappers.ts": {
+      "sha256": "046ec67ec422980a7cd3c8447e9426f2e6b0de1ebe6a52ececcd8a3653bb2150",
+      "bytes": 13867
+    },
+    "src/lib/server/works.ts": {
+      "sha256": "d64e9876c013fbc56c4eecb438b11b2630d8aba0858f8a878ebf035dc02cd421",
+      "bytes": 11774
+    },
+    "src/lib/validators.ts": {
+      "sha256": "251d75a2e237254e0aa86e4517d9c66b8438633b9b03ccc5628cf37b5dccbb43",
+      "bytes": 26266
+    },
+    "src/components/works/work-detail-panel.tsx": {
+      "sha256": "ca326decc3803fd25c35242493bc3bdf7b0b4feed1ae042c1101236f235f565c",
+      "bytes": 7118
+    },
+    "src/components/marketing/site-header.tsx": {
+      "sha256": "5199a1cd49fda36704b701c6a742c25dbc8fef95233f5824a95e85d76d77a68c",
+      "bytes": 8255
+    },
+    "src/components/marketing/header-shell.tsx": {
+      "sha256": "e2f1c88dd32cff8e4260039fb59c58d0c735a9323eb0c7fa1dc3c4ee9d33234b",
+      "bytes": 2076
+    },
+    "src/components/marketing/mobile-nav.tsx": {
+      "sha256": "ceec3d8cd59ebf60f59553e56c10be4671c9916af742499059d4b02ccecda632",
+      "bytes": 10051
+    },
+    "src/components/marketing/featured-gallery.tsx": {
+      "sha256": "551199bfd52962f1827b3cb35505f1219398b20f33a8c5c651e6ffafb1ddc30b",
+      "bytes": 11247
+    },
+    "src/app/create/page.tsx": {
+      "sha256": "fd098da618e00b7de39f92aec6339e1a98f85c65b8204818261f89162d8963f9",
+      "bytes": 3902
+    },
+    "src/app/layout.tsx": {
+      "sha256": "d478c33a13d8e8d77c110c67b00b88db7dd2c9db3c598ccebb872d875c77be26",
+      "bytes": 819
+    },
+    "src/app/globals.css": {
+      "sha256": "e870d5b65cdddb382509011d1ef1bae5797248732baa392572d6e5124ea1a111",
+      "bytes": 20836
+    },
+    "src/components/create/generator-studio.tsx": {
+      "sha256": "b3a3ec2094ace13160c1fa532993728bcacb9085977b7dbdb9fbf95347816fac",
+      "bytes": 60192
+    },
+    "src/components/create/hooks/use-studio-mode.ts": {
+      "sha256": "cc89a172799bbfc5525a16bf9e43bdaf725a140b22e6c21687bada28279db6b3",
+      "bytes": 2198
+    },
+    "package.json": {
+      "sha256": "af404da2a44b7b994016bfc7e67bfc4cf945e16d80b8698df2a44b7943d2144b",
+      "bytes": 2756
+    },
+    "pnpm-lock.yaml": {
+      "sha256": "5201950763cc0d98b0a08473efd4cbbb1e4900f641e4edf36313e51e25cd6283",
+      "bytes": 263883
+    },
+    "prisma/schema.prisma": {
+      "sha256": "437a94a88d89ce46b6a93092e7e132b20eb5d8d5b61721eff0b2b97dcdbd8304",
+      "bytes": 27567
+    },
+    "THIRD_PARTY_NOTICES.md": {
+      "sha256": "abd2b9c3e44e2218b6501e6faed56399663cacb76f808b1ee2a07ec9430f515f",
+      "bytes": 10015
+    },
+    "vitest.config.ts": {
+      "sha256": "a1a517fe37eb1d2a5b428b819040352d37d3fc092ed64dc13909b601da526d47",
+      "bytes": 686
+    }
+  }
+}

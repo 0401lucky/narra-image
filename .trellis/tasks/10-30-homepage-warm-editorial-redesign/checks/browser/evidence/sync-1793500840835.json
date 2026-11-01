@@ -1,0 +1,32 @@
+{
+  "time": "2026-11-01T02:40:40.832Z",
+  "app": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\hero-hit-independent-8725c17e\\app",
+  "changes": [
+    {
+      "file": "src/components/marketing/homepage/gallery-card.tsx",
+      "from": "ab033dfb542d16a0207fba410da647d0b6bc95192beda463b6e70277e134d44a",
+      "to": "4f6c2fde255fdb2a587b1a73c9115f81e136668d0226673224cab3357b9a30c2"
+    },
+    {
+      "file": "src/components/marketing/homepage/gallery-constants.ts",
+      "from": "c7ff26b48222af3d6e9521bcd1949a40a35f624dc00ef7b2c556861ea8aed346",
+      "to": "6b7653b264d811fd0ba9446f9ec5d3470d6c30e20789243c812af081b5cd3e42"
+    },
+    {
+      "file": "src/tests/unit/eslint-scope.test.ts",
+      "from": null,
+      "to": "63c2d02437e90f7dbf8553fd388529dca2c5c6d7fc37b084cc76425023940cf7"
+    },
+    {
+      "file": "src/tests/unit/featured-gallery.test.tsx",
+      "from": "f09290d626c0bb8e6560fac9a9fd3f740e089e7bb578f7550e6744b57289a5ad",
+      "to": "6d93dfcd4526fb81602e8c5d7c79a0ac9aa6f9dba070b55bffa64545c889b9fd"
+    },
+    {
+      "file": "src/tests/unit/gallery-remix-fallback.test.tsx",
+      "from": null,
+      "to": "84365dacd70ae738715a5446cea4c8124eba9699d1eaa9bd3381a3b7b4b2b977"
+    }
+  ],
+  "note": "Controlled production-source refresh. All prior build/browser verdicts invalid until rebuilt and rerun."
+}

@@ -1,0 +1,93 @@
+{
+  "capturedAt": "2026-10-31T07:22:46.532311+00:00",
+  "records": {
+    ".trellis/tasks/10-30-homepage-warm-editorial-redesign/check.jsonl": {
+      "sha256": "22255e5b9e87557518501f8da41029cd4501ac3816bbdee80e5d210cd1454150",
+      "bytes": 2829
+    },
+    ".trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/acceptance-status.md": {
+      "sha256": "58bcd04135361b094245986cdac645d6d24826c0e4469a856b1257a27cd079bc",
+      "bytes": 6795
+    },
+    ".trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/asset-delivery-implementation.md": {
+      "sha256": "2f98ca0a5d09bca4dc3f0ad7167cc5e37abe166d703baad73f59ee7d660e7cbb",
+      "bytes": 10071
+    },
+    ".trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/asset-delivery-independent-review.md": {
+      "sha256": "e2f1267af717ec4e4b652cf235b2d36766d7a3af23693ad95803ea15684c1c30",
+      "bytes": 10294
+    },
+    ".trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser-acceptance.md": {
+      "sha256": "69f383be5316650c302f8618a74d6959df3e6c56688a47aee09efde0bcc971c6",
+      "bytes": 19341
+    },
+    ".trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/gallery-interaction.md": {
+      "sha256": "a61a3f8b866a286ff6759d6502e24d6c4520220bd2c1ffd3ad65977df7422228",
+      "bytes": 8980
+    },
+    ".trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/hero-hit-implementation.md": {
+      "sha256": "a0c9117ea9eda61a82b08f46b6eea72e1c6d1b01342156620f8425038cfaa81a",
+      "bytes": 8521
+    },
+    ".trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/homepage-visual.md": {
+      "sha256": "81e265cef2642db0bbb4d76abe7a52846b12cd6de37be3328d8cf6b426398ab4",
+      "bytes": 12537
+    },
+    ".trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/independent-review.md": {
+      "sha256": "450293df36c740acfc85fc94cce4dc1d684bc2bf2311dceb033283575e05efb9",
+      "bytes": 14302
+    },
+    ".trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/planning-review.md": {
+      "sha256": "043c1bc104b356da7ab7e41aea89c31d347a1cafd698858a5cab7d13b9350446",
+      "bytes": 5594
+    },
+    ".trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/prisma-guard-retrospective.md": {
+      "sha256": "25779ff1c189b642f4abd7e8bca116728f9c76746ecdf4ecefd5a8f1fcbfc96f",
+      "bytes": 2567
+    },
+    ".trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/privacy-contract.md": {
+      "sha256": "1891a38540a8a5492e5c37967d912da064c96527433d57cd4861692ae75e1ee3",
+      "bytes": 6136
+    },
+    ".trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/resume-20261031.md": {
+      "sha256": "933226eba796484bf2321e56b0ed1a90912d2beade2bb5c83cc4e486cf5d0874",
+      "bytes": 4620
+    },
+    ".trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/resume-browser-20261031.md": {
+      "sha256": "0071df230048b80d58053285f02d475399bff6194d3621a22c4e190fd0174554",
+      "bytes": 4386
+    },
+    ".trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/resume-hero-hit-20261031.md": {
+      "sha256": "afccbf7b830a6f4761e2f4014a323f251c7eaa52e7b63615357d38df34c0aeb8",
+      "bytes": 3942
+    },
+    ".trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/session-handoff.md": {
+      "sha256": "4e9c9d67d55fc067fce3546204bab2ba98b39e37b2debd3369494bb5a752623b",
+      "bytes": 5481
+    },
+    ".trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/validation-environment.md": {
+      "sha256": "2a0ffdbb59fa9747356adba7dee820e3f94f0aa2d349aa8cffd54c922814d9e7",
+      "bytes": 11028
+    },
+    ".trellis/tasks/10-30-homepage-warm-editorial-redesign/design.md": {
+      "sha256": "c6738839c1035aae0df0bd695c2a1b516d2b47e2b173618e58c33aef6ca7a932",
+      "bytes": 23810
+    },
+    ".trellis/tasks/10-30-homepage-warm-editorial-redesign/implement.jsonl": {
+      "sha256": "5bf849522828054718263a71e82de9a0959c5065726b771978f0bda8ed189661",
+      "bytes": 2939
+    },
+    ".trellis/tasks/10-30-homepage-warm-editorial-redesign/implement.md": {
+      "sha256": "c369bb5acb81cc47d54b28405587a996cafccddfdcb13373ef866f27409c6916",
+      "bytes": 17875
+    },
+    ".trellis/tasks/10-30-homepage-warm-editorial-redesign/prd.md": {
+      "sha256": "3bf8f282924ea3d7eb632730cc61229fbb38c57d46776c054ac55b276e3068af",
+      "bytes": 16273
+    },
+    ".trellis/tasks/10-30-homepage-warm-editorial-redesign/task.json": {
+      "sha256": "6855f9d5bda16e67637759535d98fc4747fe778a6cb87670eb79af8138dba2a8",
+      "bytes": 4320
+    }
+  }
+}

@@ -1,0 +1,145 @@
+{
+  "verifiedAt": "2026-10-31T03:11:16.537012+00:00",
+  "source": "https://chatgpt2api.204152.xyz/openapi.json",
+  "sourceSha256": "bcc0185b016c486c906a07cbcc3cd30cd40786e6d78f253680c7085dbaa3a6a7",
+  "service": {
+    "title": "chatgpt2api",
+    "version": "3.2.3"
+  },
+  "endpoint": {
+    "path": "/v1/images/generations",
+    "method": "POST",
+    "contract": {
+      "post": {
+        "summary": "Generate Images",
+        "operationId": "generate_images_v1_images_generations_post",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ImageGenerationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "schema": {
+    "properties": {
+      "prompt": {
+        "type": "string",
+        "minLength": 1,
+        "title": "Prompt"
+      },
+      "model": {
+        "type": "string",
+        "title": "Model",
+        "default": "gpt-image-2"
+      },
+      "n": {
+        "type": "integer",
+        "maximum": 4.0,
+        "minimum": 1.0,
+        "title": "N",
+        "default": 1
+      },
+      "size": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "title": "Size"
+      },
+      "quality": {
+        "type": "string",
+        "title": "Quality",
+        "default": "auto"
+      },
+      "response_format": {
+        "type": "string",
+        "title": "Response Format",
+        "default": "b64_json"
+      },
+      "history_disabled": {
+        "type": "boolean",
+        "title": "History Disabled",
+        "default": true
+      },
+      "stream": {
+        "anyOf": [
+          {
+            "type": "boolean"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "title": "Stream"
+      }
+    },
+    "type": "object",
+    "required": [
+      "prompt"
+    ],
+    "title": "ImageGenerationRequest"
+  },
+  "model": "gpt-image-2.5-sunburst",
+  "modelInAuthenticatedList": true,
+  "authorization": "Bearer; user supplied, value never persisted",
+  "headerNames": [
+    "Authorization",
+    "Content-Type",
+    "Accept",
+    "User-Agent"
+  ],
+  "tlsVerification": true,
+  "followRedirects": false,
+  "inheritedProxyConfiguration": false,
+  "modelsProbe": "200 using exact supplied key; punctuation-trim variant rejected401; no guessing further",
+  "officialOpenAIModelClaim": false,
+  "scope": "Three task illustrations only; no site-provider configuration or live product-service access."
+}

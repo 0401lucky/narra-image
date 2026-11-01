@@ -1,0 +1,1873 @@
+{
+  "captured_at": "2026-10-30T16:30:33.233236+00:00",
+  "fixture_root": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071",
+  "scope": "Exact isolated raw evidence; excludes browser profiles/caches and real environment files",
+  "files": [
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-browser-01.json",
+      "copy": "receipts/mobile-browser-01.json",
+      "bytes": 661,
+      "sha256": "c81efa88cc956fd80f0e54ad8c671cf5d945123a02d0e7b059f79fb102fddaf6"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-browser-01.stderr.log",
+      "copy": "receipts/mobile-browser-01.stderr.log",
+      "bytes": 594,
+      "sha256": "40fa9f431282b1b6f520ca6e3a2e602d4356ef0717b41d0c95396f46d11086e3"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-browser-01.stdout.log",
+      "copy": "receipts/mobile-browser-01.stdout.log",
+      "bytes": 859,
+      "sha256": "d1f260a6b02e1f469e777809bca2c1d496036037ae758554762d3e68299bab87"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-browser-02.json",
+      "copy": "receipts/mobile-browser-02.json",
+      "bytes": 661,
+      "sha256": "d07fe06a63c1c07f5ca3d7a73b2fb257838ac67f8e0b606ee6e756ee51b6b208"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-browser-02.stderr.log",
+      "copy": "receipts/mobile-browser-02.stderr.log",
+      "bytes": 642,
+      "sha256": "1ad8acf231cb44aeb041864e2327c63c53d20d3cc71587050dded886c4936713"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-browser-02.stdout.log",
+      "copy": "receipts/mobile-browser-02.stdout.log",
+      "bytes": 967,
+      "sha256": "5d3d0a5caad9b53edb6de6ca4cb24d1d203bd713dca5a6357d8286e7d401ab48"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-browser-03.json",
+      "copy": "receipts/mobile-browser-03.json",
+      "bytes": 661,
+      "sha256": "b3fa106b7fe4fe0619e4f2b67a0c5d8dffc73a0ed394b08a247c68a6bba65641"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-browser-03.stderr.log",
+      "copy": "receipts/mobile-browser-03.stderr.log",
+      "bytes": 819,
+      "sha256": "13397dc4075408162fc94f062547bfca2c6e87d76c77c9ea12e5f9a454587b00"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-browser-03.stdout.log",
+      "copy": "receipts/mobile-browser-03.stdout.log",
+      "bytes": 1709,
+      "sha256": "5d6bfcfa2084aa4a2de3a3d3aa76e426dbc7163f1501fc0d69bd39d4e4284791"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-browser-04.json",
+      "copy": "receipts/mobile-browser-04.json",
+      "bytes": 661,
+      "sha256": "5526220c87f0ea59474a56ee2b0c470beba82e0b65ebf9eaa717b0e4dc8b07c5"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-browser-04.stderr.log",
+      "copy": "receipts/mobile-browser-04.stderr.log",
+      "bytes": 363,
+      "sha256": "fe2d0e1509f48e44090e29010f76c40bd02c219fcb9d8e6f4f77a6174384f2da"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-browser-04.stdout.log",
+      "copy": "receipts/mobile-browser-04.stdout.log",
+      "bytes": 1709,
+      "sha256": "e1004ff8bb31926bd6dd8fcd6c5c2e345c88f6db18a5135961f450e8c4ef2350"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-browser-05.json",
+      "copy": "receipts/mobile-browser-05.json",
+      "bytes": 661,
+      "sha256": "e67895d3d89655c581c4621202f3cad8d1aa639a5dc3323fab4984098a3e27a9"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-browser-05.stderr.log",
+      "copy": "receipts/mobile-browser-05.stderr.log",
+      "bytes": 685,
+      "sha256": "e2637525cda14450fa33a41fc906118e356a6f8d951707ce6e000876287f924c"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-browser-05.stdout.log",
+      "copy": "receipts/mobile-browser-05.stdout.log",
+      "bytes": 2097,
+      "sha256": "166d9a0afde200c736429c5ded5de9b65b08ef323e993720956ec3e7900ea0a1"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-browser-06.json",
+      "copy": "receipts/mobile-browser-06.json",
+      "bytes": 662,
+      "sha256": "b94b274062316ee8661f117c98def5f9f09a2250fa1931fa3bcffcc86470fb94"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-browser-06.stderr.log",
+      "copy": "receipts/mobile-browser-06.stderr.log",
+      "bytes": 967,
+      "sha256": "04459afc06360aea5ed5cc590728e11f4f0a94492ee7a19ce1cce8d3003fcc87"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-browser-06.stdout.log",
+      "copy": "receipts/mobile-browser-06.stdout.log",
+      "bytes": 2301,
+      "sha256": "0a5fec7699c32c336c37b0d8b3fece3be5c9d188280af06a605af69654bd1273"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-browser-07.json",
+      "copy": "receipts/mobile-browser-07.json",
+      "bytes": 662,
+      "sha256": "f9ab72aad2a7087b047c25fe9e7690503b7fa46b694ac5620c4acf52d1d5b2d0"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-browser-07.stderr.log",
+      "copy": "receipts/mobile-browser-07.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-browser-07.stdout.log",
+      "copy": "receipts/mobile-browser-07.stdout.log",
+      "bytes": 3343,
+      "sha256": "cbf61a1044f4d720ee25e26eeddbcb52f80dacb608926d0b0df2a412a45054ab"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-check-focused-01.json",
+      "copy": "receipts/mobile-check-focused-01.json",
+      "bytes": 1776,
+      "sha256": "27c24d10c4f2bff91fdf3d320aeee1ea986c3f44830019276bbba89b790610d6"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-check-focused-01.stderr.log",
+      "copy": "receipts/mobile-check-focused-01.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-check-focused-01.stdout.log",
+      "copy": "receipts/mobile-check-focused-01.stdout.log",
+      "bytes": 7198,
+      "sha256": "161d765b11a7f583a4a48d826bacc1929d646fe7dfee88f9354073078e91880a"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-check-full-01.json",
+      "copy": "receipts/mobile-check-full-01.json",
+      "bytes": 626,
+      "sha256": "1271313d3a493418c1ac385a73374463cede33fd9c58ee172b26be353b5bf4c4"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-check-full-01.stderr.log",
+      "copy": "receipts/mobile-check-full-01.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-check-full-01.stdout.log",
+      "copy": "receipts/mobile-check-full-01.stdout.log",
+      "bytes": 34585,
+      "sha256": "1689c43dadef83ffb0effef438d3e0a97601f13524bdca046a7db8bac6b73e82"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-check-full-02.json",
+      "copy": "receipts/mobile-check-full-02.json",
+      "bytes": 626,
+      "sha256": "29b6245b7fea545a1343b20e3ac2a617a82e63b9322f5daadecb48e126e115d4"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-check-full-02.stderr.log",
+      "copy": "receipts/mobile-check-full-02.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-check-full-02.stdout.log",
+      "copy": "receipts/mobile-check-full-02.stdout.log",
+      "bytes": 33171,
+      "sha256": "cd44c9c6d5be17f11f31a27cf3e07a60c2405a02951b853a3c0dc5049b9c7a0f"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-check-lint-01.json",
+      "copy": "receipts/mobile-check-lint-01.json",
+      "bytes": 574,
+      "sha256": "4d827b216c744580d9e13b17919fbba1a44f072597f33b79e735431ab02dd418"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-check-lint-01.stderr.log",
+      "copy": "receipts/mobile-check-lint-01.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-check-lint-01.stdout.log",
+      "copy": "receipts/mobile-check-lint-01.stdout.log",
+      "bytes": 1405,
+      "sha256": "5daf1d190f6e7a6339ad91d4ba48ff8657acaf01ac8c313e8213cfb2743df12a"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-check-lint-02.json",
+      "copy": "receipts/mobile-check-lint-02.json",
+      "bytes": 574,
+      "sha256": "42aada052b524ef25d5e92a7a6bbaa0cdcbfb7b5873c316faea572ef260ec6a6"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-check-lint-02.stderr.log",
+      "copy": "receipts/mobile-check-lint-02.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-check-lint-02.stdout.log",
+      "copy": "receipts/mobile-check-lint-02.stdout.log",
+      "bytes": 1405,
+      "sha256": "5daf1d190f6e7a6339ad91d4ba48ff8657acaf01ac8c313e8213cfb2743df12a"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-check-regression-01.json",
+      "copy": "receipts/mobile-check-regression-01.json",
+      "bytes": 693,
+      "sha256": "1a932ec1936f75de873e7d3ace0164b786069cb2e865dd8a48218790defe0bd9"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-check-regression-01.stderr.log",
+      "copy": "receipts/mobile-check-regression-01.stderr.log",
+      "bytes": 3129,
+      "sha256": "c52974622f611fe9fff87cb9d09e13f5847a763c7f80528bd2dae8b1bf4009b4"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-check-regression-01.stdout.log",
+      "copy": "receipts/mobile-check-regression-01.stdout.log",
+      "bytes": 3581,
+      "sha256": "90010d9c3932c0095959ab4c00fd2405086a4fc08b00c4b7366b1351da5b8dd9"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-check-regression-02.json",
+      "copy": "receipts/mobile-check-regression-02.json",
+      "bytes": 693,
+      "sha256": "e73f9e2f5dd754020738e14a20b4d0508da34e0d7c9f58e43e3e5ed53ff03934"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-check-regression-02.stderr.log",
+      "copy": "receipts/mobile-check-regression-02.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-check-regression-02.stdout.log",
+      "copy": "receipts/mobile-check-regression-02.stdout.log",
+      "bytes": 1140,
+      "sha256": "00c9d08f42a09d9dead28a09ffa09afdb69a3317328bb63930c1cf3872775a4f"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-check-regression-03.json",
+      "copy": "receipts/mobile-check-regression-03.json",
+      "bytes": 693,
+      "sha256": "7bd007b29f5ea2ced50f95edcae1855716cb5a6af4260bc067143f87abfbff41"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-check-regression-03.stderr.log",
+      "copy": "receipts/mobile-check-regression-03.stderr.log",
+      "bytes": 2979,
+      "sha256": "1512c54ec445abd7391b4dab69db0269405b4eee38945fe972d0a3fbea4a424a"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-check-regression-03.stdout.log",
+      "copy": "receipts/mobile-check-regression-03.stdout.log",
+      "bytes": 4001,
+      "sha256": "cbc0f84b76524001df1f0211ff63c7e9d7e6e2f84e6d6d5518d95387c55f304e"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-check-types-01.json",
+      "copy": "receipts/mobile-check-types-01.json",
+      "bytes": 638,
+      "sha256": "bfb8baf15a86d8eac5e34cf5bcc0dae0b1b3e94db09d0b7d2f44e90c3c50ed16"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-check-types-01.stderr.log",
+      "copy": "receipts/mobile-check-types-01.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-check-types-01.stdout.log",
+      "copy": "receipts/mobile-check-types-01.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-check-types-02.json",
+      "copy": "receipts/mobile-check-types-02.json",
+      "bytes": 638,
+      "sha256": "9317b549ec69aa786cd840e48b4ab5e1ff23e3d33f5fdbe4867bdabc83996296"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-check-types-02.stderr.log",
+      "copy": "receipts/mobile-check-types-02.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-check-types-02.stdout.log",
+      "copy": "receipts/mobile-check-types-02.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-final-build-01.json",
+      "copy": "receipts/mobile-final-build-01.json",
+      "bytes": 579,
+      "sha256": "2376f8b94dbd4eefa542d588eeaecdab562380c7603517d021e44b5c9353c798"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-final-build-01.stderr.log",
+      "copy": "receipts/mobile-final-build-01.stderr.log",
+      "bytes": 93,
+      "sha256": "75066079154e16278b8bbb61e3a8fed567403e1667eda92ad7c8eeab0cda5879"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-final-build-01.stdout.log",
+      "copy": "receipts/mobile-final-build-01.stdout.log",
+      "bytes": 4238,
+      "sha256": "8e88d89a06a132ac02f2efb0786b49ef953bcafb8b9aa55e976a9f97eefd81f7"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-final-build-02.json",
+      "copy": "receipts/mobile-final-build-02.json",
+      "bytes": 579,
+      "sha256": "a5d0ed74998bc9d03bb3c527007140b64a7f7da645b96ecbfae67c761334315c"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-final-build-02.stderr.log",
+      "copy": "receipts/mobile-final-build-02.stderr.log",
+      "bytes": 961,
+      "sha256": "182c0464760a85dc39f87798eacd72f2ae993b5f274b487e4adeaea2436ab3fb"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-final-build-02.stdout.log",
+      "copy": "receipts/mobile-final-build-02.stdout.log",
+      "bytes": 4238,
+      "sha256": "65de6ffabcb3e2079faca58ecbdd6e3ef4f9b05be64b6ea96b405fb9dd59c9fd"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-final-worker-ts-01.json",
+      "copy": "receipts/mobile-final-worker-ts-01.json",
+      "bytes": 610,
+      "sha256": "8f34e25a8e271345925f41496080eac29e6e8cad8c44ebb67f640a09444cba14"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-final-worker-ts-01.stderr.log",
+      "copy": "receipts/mobile-final-worker-ts-01.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-final-worker-ts-01.stdout.log",
+      "copy": "receipts/mobile-final-worker-ts-01.stdout.log",
+      "bytes": 2340,
+      "sha256": "a7459d7423160767893929479297e945cf934e211ddcfddc00cc2b81694b5e7d"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-audit-postbrowser-07.json",
+      "copy": "receipts/mobile-fixture-audit-postbrowser-07.json",
+      "bytes": 725,
+      "sha256": "75e737aea2e7f76f34fa31b8cf12f0bf886a787449104515b4d1196d2625f71e"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-audit-postbrowser-07.stderr.log",
+      "copy": "receipts/mobile-fixture-audit-postbrowser-07.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-audit-postbrowser-07.stdout.log",
+      "copy": "receipts/mobile-fixture-audit-postbrowser-07.stdout.log",
+      "bytes": 3157,
+      "sha256": "c7d56fac93969cad276f9db2be32a383f6ad9ac24f348934d0041674a4eae264"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-audit-postbuild-02.json",
+      "copy": "receipts/mobile-fixture-audit-postbuild-02.json",
+      "bytes": 714,
+      "sha256": "e2a16a2a51e7f1cefd97067ca62c4670741a084337821bcaa17ea36344d2b966"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-audit-postbuild-02.stderr.log",
+      "copy": "receipts/mobile-fixture-audit-postbuild-02.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-audit-postbuild-02.stdout.log",
+      "copy": "receipts/mobile-fixture-audit-postbuild-02.stdout.log",
+      "bytes": 3152,
+      "sha256": "9cd4defe0887c548879ac4f2778e0695ce76b1461ca5f82f84b4f8a21ef883a2"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-audit-postbuild-03.json",
+      "copy": "receipts/mobile-fixture-audit-postbuild-03.json",
+      "bytes": 714,
+      "sha256": "fd5b80151fb67184071677a70fc950dc0668fb9f5fb836d6506b396573706b40"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-audit-postbuild-03.stderr.log",
+      "copy": "receipts/mobile-fixture-audit-postbuild-03.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-audit-postbuild-03.stdout.log",
+      "copy": "receipts/mobile-fixture-audit-postbuild-03.stdout.log",
+      "bytes": 3152,
+      "sha256": "cbfc926dd5ad941060da9bf40532185e2050390efb0cd7a21e641b6e67e56d11"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-audit-postbuild-04.json",
+      "copy": "receipts/mobile-fixture-audit-postbuild-04.json",
+      "bytes": 714,
+      "sha256": "85b7202c7c442e881901c283f5180e9d2fd6fee144cb6b5a51b4a7cc63b160f2"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-audit-postbuild-04.stderr.log",
+      "copy": "receipts/mobile-fixture-audit-postbuild-04.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-audit-postbuild-04.stdout.log",
+      "copy": "receipts/mobile-fixture-audit-postbuild-04.stdout.log",
+      "bytes": 3152,
+      "sha256": "f5aa6ccdf2d5c97985e10b87161562084695df2837cb775d274dba6cd19ce516"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-audit-prebrowser-03.json",
+      "copy": "receipts/mobile-fixture-audit-prebrowser-03.json",
+      "bytes": 721,
+      "sha256": "9d1424ca7331c01f25d80ce32cb97efffe8f9e877a9b880444a5a35f06f731f9"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-audit-prebrowser-03.stderr.log",
+      "copy": "receipts/mobile-fixture-audit-prebrowser-03.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-audit-prebrowser-03.stdout.log",
+      "copy": "receipts/mobile-fixture-audit-prebrowser-03.stdout.log",
+      "bytes": 3156,
+      "sha256": "54bc375ecfe2daa8c20fa46649693d82f5ad838312363b2064f1a814b690f97e"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-audit-prebrowser-04.json",
+      "copy": "receipts/mobile-fixture-audit-prebrowser-04.json",
+      "bytes": 721,
+      "sha256": "18544d17ca3d84c0a743f54af9bc48ffde92f1b83b00ce3e89ecf9a384e8b3ee"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-audit-prebrowser-04.stderr.log",
+      "copy": "receipts/mobile-fixture-audit-prebrowser-04.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-audit-prebrowser-04.stdout.log",
+      "copy": "receipts/mobile-fixture-audit-prebrowser-04.stdout.log",
+      "bytes": 3156,
+      "sha256": "d5192ead331ed44f3c651f613c6cd335a46c904318a508e4937f62b13ae919bf"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-audit-prebrowser-06.json",
+      "copy": "receipts/mobile-fixture-audit-prebrowser-06.json",
+      "bytes": 721,
+      "sha256": "c41b6218580d7495276a7e10eb9b5e53603a3e2429fc7ef4d4dfce1f6e8121a6"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-audit-prebrowser-06.stderr.log",
+      "copy": "receipts/mobile-fixture-audit-prebrowser-06.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-audit-prebrowser-06.stdout.log",
+      "copy": "receipts/mobile-fixture-audit-prebrowser-06.stdout.log",
+      "bytes": 3156,
+      "sha256": "2485765982ff3bcb17d743cffdb9967dd4ba1ddd25a5b829eb2e8e7a7af83175"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-audit-prebrowser-07.json",
+      "copy": "receipts/mobile-fixture-audit-prebrowser-07.json",
+      "bytes": 721,
+      "sha256": "15fdecf14ae679ae83fc97912a47ca2199bd77b6316ae1bef235f97d03e669b1"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-audit-prebrowser-07.stderr.log",
+      "copy": "receipts/mobile-fixture-audit-prebrowser-07.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-audit-prebrowser-07.stdout.log",
+      "copy": "receipts/mobile-fixture-audit-prebrowser-07.stdout.log",
+      "bytes": 3156,
+      "sha256": "69d019f27228d6c40af176a0c885c4e1e2f43f01b57fb828e68799b27c94ede1"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-audit-prebuild-01.json",
+      "copy": "receipts/mobile-fixture-audit-prebuild-01.json",
+      "bytes": 710,
+      "sha256": "2149dc424d6f438403a896a79cb0b4c9b13362e7d388cf0d28c2608e30eed630"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-audit-prebuild-01.stderr.log",
+      "copy": "receipts/mobile-fixture-audit-prebuild-01.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-audit-prebuild-01.stdout.log",
+      "copy": "receipts/mobile-fixture-audit-prebuild-01.stdout.log",
+      "bytes": 640,
+      "sha256": "28e531ddc58ca74349a1d1522aade8a8664b3d4b937424d508cfbc97cc6e2c86"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-audit-prebuild-02.json",
+      "copy": "receipts/mobile-fixture-audit-prebuild-02.json",
+      "bytes": 710,
+      "sha256": "f5aef302e182e741e4c9e337683ec5c85916baa79f65ad3ddfae2ba579b53c1a"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-audit-prebuild-02.stderr.log",
+      "copy": "receipts/mobile-fixture-audit-prebuild-02.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-audit-prebuild-02.stdout.log",
+      "copy": "receipts/mobile-fixture-audit-prebuild-02.stdout.log",
+      "bytes": 3151,
+      "sha256": "6e2e5bbcb08dd03ddfe2807cc714c760563923f6f9c63ae6835acdcf9bef2d50"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-audit-prebuild-03.json",
+      "copy": "receipts/mobile-fixture-audit-prebuild-03.json",
+      "bytes": 710,
+      "sha256": "b2401bddca39112b9bb35726802bd35c77faf4266be026ee753abee9d67bb2d4"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-audit-prebuild-03.stderr.log",
+      "copy": "receipts/mobile-fixture-audit-prebuild-03.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-audit-prebuild-03.stdout.log",
+      "copy": "receipts/mobile-fixture-audit-prebuild-03.stdout.log",
+      "bytes": 3151,
+      "sha256": "c7f95ca73b91232d8ff96148239ff1b89c0174a926f2a64f8e8b18d726ce3148"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-audit-prebuild-04.json",
+      "copy": "receipts/mobile-fixture-audit-prebuild-04.json",
+      "bytes": 710,
+      "sha256": "19cc5993f5de0c5e345be72b71d25b6543e96a92c1e99daede882accc170d054"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-audit-prebuild-04.stderr.log",
+      "copy": "receipts/mobile-fixture-audit-prebuild-04.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-audit-prebuild-04.stdout.log",
+      "copy": "receipts/mobile-fixture-audit-prebuild-04.stdout.log",
+      "bytes": 3151,
+      "sha256": "d7c98feb66a1a090b3f8c2377f72bb4b665aec23e5a60d7ffc34ca9931354f57"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-build-01.json",
+      "copy": "receipts/mobile-fixture-build-01.json",
+      "bytes": 715,
+      "sha256": "f4be1be26b5ade9b2f47785f3413d2c5d7176c97df570748a5a1f1652fa2d719"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-build-01.stderr.log",
+      "copy": "receipts/mobile-fixture-build-01.stderr.log",
+      "bytes": 1302,
+      "sha256": "c2def9d03af6cab6bfa9ab94e3fdfccaedc779764c3c10e2e0f00ffd5df3419e"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-build-01.stdout.log",
+      "copy": "receipts/mobile-fixture-build-01.stdout.log",
+      "bytes": 863,
+      "sha256": "421b1e8a3d4b01e641d4228ce1f28a383d2a7a6fb21d7e750ec6535cf611c1fd"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-build-02.json",
+      "copy": "receipts/mobile-fixture-build-02.json",
+      "bytes": 891,
+      "sha256": "c4df84b244ebfb91968ed80b4d732d39f8be9489cc9a4beca7ad0f83aae8c386"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-build-02.stderr.log",
+      "copy": "receipts/mobile-fixture-build-02.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-build-02.stdout.log",
+      "copy": "receipts/mobile-fixture-build-02.stdout.log",
+      "bytes": 863,
+      "sha256": "c80efec2bc168263655df748ad0feccaff933429a74299a9863a2b07ae2fce34"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-build-03.json",
+      "copy": "receipts/mobile-fixture-build-03.json",
+      "bytes": 892,
+      "sha256": "14aca756789731bb85d8274768449fa029c86e408af56c15ef5889d5655ae3dd"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-build-03.stderr.log",
+      "copy": "receipts/mobile-fixture-build-03.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-build-03.stdout.log",
+      "copy": "receipts/mobile-fixture-build-03.stdout.log",
+      "bytes": 863,
+      "sha256": "4784aa3034519372592e1e5b0b2050532e25b5588379714458034c59d80b3b35"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-build-04.json",
+      "copy": "receipts/mobile-fixture-build-04.json",
+      "bytes": 891,
+      "sha256": "27d4627dba23f37c72e137d198891dd37bc4d5cbbf479cdd57e890b5686e7332"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-build-04.stderr.log",
+      "copy": "receipts/mobile-fixture-build-04.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-build-04.stdout.log",
+      "copy": "receipts/mobile-fixture-build-04.stdout.log",
+      "bytes": 863,
+      "sha256": "7ac24600cfd0696582380e1fea13901fb72dd2e888e7b0651c95d3bf77f030ff"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-dependencies-01.json",
+      "copy": "receipts/mobile-fixture-dependencies-01.json",
+      "bytes": 709,
+      "sha256": "948b27fe7a47bce60ce2e45232d09926a063a486255365a44cf9da73d26d2b57"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-dependencies-01.stderr.log",
+      "copy": "receipts/mobile-fixture-dependencies-01.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-dependencies-01.stdout.log",
+      "copy": "receipts/mobile-fixture-dependencies-01.stdout.log",
+      "bytes": 816,
+      "sha256": "f0b299afd4f8bb8cdad9470abcbe09778f3f39c83836a965410867ae96c11464"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-dependencies-02.json",
+      "copy": "receipts/mobile-fixture-dependencies-02.json",
+      "bytes": 709,
+      "sha256": "f513e1fcabb710173fcbb03ff4529f0eaf62dec0ee8f2cb6dd4fbbde4d067b63"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-dependencies-02.stderr.log",
+      "copy": "receipts/mobile-fixture-dependencies-02.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-dependencies-02.stdout.log",
+      "copy": "receipts/mobile-fixture-dependencies-02.stdout.log",
+      "bytes": 809,
+      "sha256": "6bac5ac252929a0b08ea84323d4d3496c2719dd15b69a49eaf9a863f3dce5158"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-source-01.json",
+      "copy": "receipts/mobile-fixture-source-01.json",
+      "bytes": 672,
+      "sha256": "febeaa242e310514baa21a1eef432321f8230c01fbd6357d0fbb74c5e209bce4"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-source-01.stderr.log",
+      "copy": "receipts/mobile-fixture-source-01.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-source-01.stdout.log",
+      "copy": "receipts/mobile-fixture-source-01.stdout.log",
+      "bytes": 341,
+      "sha256": "3765a7bb4ea6b2f49f2c210277b1607cc893ae6e28f0380c7f39ce05c47e6304"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-source-02.json",
+      "copy": "receipts/mobile-fixture-source-02.json",
+      "bytes": 672,
+      "sha256": "a791cc3972eab2f600ac32fad8932574f297bb8793963a357cb8eed5ad25ef34"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-source-02.stderr.log",
+      "copy": "receipts/mobile-fixture-source-02.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-source-02.stdout.log",
+      "copy": "receipts/mobile-fixture-source-02.stdout.log",
+      "bytes": 341,
+      "sha256": "8f142f1acae7cd735b27008fab1deb96da57876ed12db322bfa041a8207b9060"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-source-03.json",
+      "copy": "receipts/mobile-fixture-source-03.json",
+      "bytes": 672,
+      "sha256": "0ffbc206fde3b16ab7f9a3380cf29520f27c5f623b13cec0aa91a829c563c1b8"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-source-03.stderr.log",
+      "copy": "receipts/mobile-fixture-source-03.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-source-03.stdout.log",
+      "copy": "receipts/mobile-fixture-source-03.stdout.log",
+      "bytes": 341,
+      "sha256": "40eee5e291d7f8ff93833784a0e9e71e1911d12bb62118b2f4d2e4a4a6e31411"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-source-04.json",
+      "copy": "receipts/mobile-fixture-source-04.json",
+      "bytes": 672,
+      "sha256": "3651831186aa1fefbf3a1dbd20a11011b7f641a066797ed4ead832d01f458052"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-source-04.stderr.log",
+      "copy": "receipts/mobile-fixture-source-04.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-source-04.stdout.log",
+      "copy": "receipts/mobile-fixture-source-04.stdout.log",
+      "bytes": 341,
+      "sha256": "fa67c543716eb40c882f80540fd4cb9b9c2001d8da01acdff6835f45b5701b47"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-harness-syntax-02.json",
+      "copy": "receipts/mobile-harness-syntax-02.json",
+      "bytes": 673,
+      "sha256": "e91695b59f0da83e072bacebf12709327eaed450c5f25d878a0c92e885cf8066"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-harness-syntax-02.stderr.log",
+      "copy": "receipts/mobile-harness-syntax-02.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-harness-syntax-02.stdout.log",
+      "copy": "receipts/mobile-harness-syntax-02.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-impl-existing-01.json",
+      "copy": "receipts/mobile-impl-existing-01.json",
+      "bytes": 1053,
+      "sha256": "bb299a1ae61ff4587369e03a877c793ccf34a46b4b35c0965a9ad9a050887b91"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-impl-existing-01.stderr.log",
+      "copy": "receipts/mobile-impl-existing-01.stderr.log",
+      "bytes": 66209,
+      "sha256": "53c19a946f1767c84e78e8a00aecbd997b1871b0df8da05fa90feec75b99e305"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-impl-existing-01.stdout.log",
+      "copy": "receipts/mobile-impl-existing-01.stdout.log",
+      "bytes": 8903,
+      "sha256": "4f856b99729f7cb53740561459995c8eb5042b7ee06b4d7ddb6d236724266254"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-impl-focused-01.json",
+      "copy": "receipts/mobile-impl-focused-01.json",
+      "bytes": 1056,
+      "sha256": "b66a4e9f94a87230fced2d801ea821232a2b1789a28937f3bec655e3501dd5e4"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-impl-focused-01.stderr.log",
+      "copy": "receipts/mobile-impl-focused-01.stderr.log",
+      "bytes": 27948,
+      "sha256": "8e3eab5627014da078dd32071ebb9b0cd3fa30692713bfb42edac2c2e4d5804c"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-impl-focused-01.stdout.log",
+      "copy": "receipts/mobile-impl-focused-01.stdout.log",
+      "bytes": 4323,
+      "sha256": "883f4f74aeca8ab099386e51435a9f6fc054e4290d08d9d70e44276fa87c7143"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-impl-focused-02.json",
+      "copy": "receipts/mobile-impl-focused-02.json",
+      "bytes": 1773,
+      "sha256": "aa91fa2e9c4a5c882a61c287f8f8ebf6274ab7f0d0846a31ca8e752d039b44ca"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-impl-focused-02.stderr.log",
+      "copy": "receipts/mobile-impl-focused-02.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-impl-focused-02.stdout.log",
+      "copy": "receipts/mobile-impl-focused-02.stdout.log",
+      "bytes": 8564,
+      "sha256": "f49aff0aea9b77210218bf1ac4a2cd2fc3679d686537587dd33d5ad5dba85550"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-impl-focused-03.json",
+      "copy": "receipts/mobile-impl-focused-03.json",
+      "bytes": 1773,
+      "sha256": "f06737ebcb635e3fbc7cfc6b3b0058016e2b050b123d3b3706bb850a8318b99d"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-impl-focused-03.stderr.log",
+      "copy": "receipts/mobile-impl-focused-03.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-impl-focused-03.stdout.log",
+      "copy": "receipts/mobile-impl-focused-03.stdout.log",
+      "bytes": 11136,
+      "sha256": "ce88caff5a00f7d8d7d50dda2a8477661bccbf0d15516538c23d683ba8b0c650"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-impl-focused-04.json",
+      "copy": "receipts/mobile-impl-focused-04.json",
+      "bytes": 737,
+      "sha256": "e6b18dc743559fc9add64ab649c1d8415c2b92a3f64bf1b0baee9d00d6c78ab2"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-impl-focused-04.stderr.log",
+      "copy": "receipts/mobile-impl-focused-04.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-impl-focused-04.stdout.log",
+      "copy": "receipts/mobile-impl-focused-04.stdout.log",
+      "bytes": 3441,
+      "sha256": "bc9c3079faa3ef92461d2304a03dac4b0fb82d1713b9a00280e54cc3b49c75da"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-impl-focused-05.json",
+      "copy": "receipts/mobile-impl-focused-05.json",
+      "bytes": 1773,
+      "sha256": "aabc5d87a0da4255360af281b8fc08f80a97be18f8e93949a98b618320cca028"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-impl-focused-05.stderr.log",
+      "copy": "receipts/mobile-impl-focused-05.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-impl-focused-05.stdout.log",
+      "copy": "receipts/mobile-impl-focused-05.stdout.log",
+      "bytes": 12245,
+      "sha256": "f5209b8be0d3d710afd243b7ddfc4c31e1c98e9d4cb5a67662918309a67edd55"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-impl-lint-01.json",
+      "copy": "receipts/mobile-impl-lint-01.json",
+      "bytes": 571,
+      "sha256": "6d0b448f1cd651152e22764afd1d827d19446ca1e48e06728da5c003d11d7400"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-impl-lint-01.stderr.log",
+      "copy": "receipts/mobile-impl-lint-01.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-impl-lint-01.stdout.log",
+      "copy": "receipts/mobile-impl-lint-01.stdout.log",
+      "bytes": 2121,
+      "sha256": "8ce3e4c4c2a3eddc8867cdec005efb4173486be78e2e1557466f505c6f1d6362"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-impl-lint-02.json",
+      "copy": "receipts/mobile-impl-lint-02.json",
+      "bytes": 571,
+      "sha256": "39565ef2a03ca75e9cd6537f818c753e3c0089707f6a76ebec90d48ab7bfd1f1"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-impl-lint-02.stderr.log",
+      "copy": "receipts/mobile-impl-lint-02.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-impl-lint-02.stdout.log",
+      "copy": "receipts/mobile-impl-lint-02.stdout.log",
+      "bytes": 2547,
+      "sha256": "453152258a79a968ab31f283ef5a6fe2617990872a56116f7be6923c3f1d97d2"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-impl-lint-03.json",
+      "copy": "receipts/mobile-impl-lint-03.json",
+      "bytes": 571,
+      "sha256": "34455679278a63b244836f1b465ff557075c562d49ffa3d477c5fb46bc9b61e8"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-impl-lint-03.stderr.log",
+      "copy": "receipts/mobile-impl-lint-03.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-impl-lint-03.stdout.log",
+      "copy": "receipts/mobile-impl-lint-03.stdout.log",
+      "bytes": 1610,
+      "sha256": "6a4da1937589bfc1218205619ee226a28bd85ab616ac7224ee147e845d982e28"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-impl-lint-04.json",
+      "copy": "receipts/mobile-impl-lint-04.json",
+      "bytes": 571,
+      "sha256": "f51d2fab3ef8e874890cd25a3d05f20d52625b00e3d77e0f9906528395a107a7"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-impl-lint-04.stderr.log",
+      "copy": "receipts/mobile-impl-lint-04.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-impl-lint-04.stdout.log",
+      "copy": "receipts/mobile-impl-lint-04.stdout.log",
+      "bytes": 1610,
+      "sha256": "6a4da1937589bfc1218205619ee226a28bd85ab616ac7224ee147e845d982e28"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-impl-types-01.json",
+      "copy": "receipts/mobile-impl-types-01.json",
+      "bytes": 635,
+      "sha256": "9a33bafacc50ab7c0a4d20f1ad3533b4389b07480314cdafef8f141a760de820"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-impl-types-01.stderr.log",
+      "copy": "receipts/mobile-impl-types-01.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-impl-types-01.stdout.log",
+      "copy": "receipts/mobile-impl-types-01.stdout.log",
+      "bytes": 1038,
+      "sha256": "833dc11b95d24af719fdc065682419d9d3adc2860b1aa91ab7f745c5a14c9ba1"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-impl-types-02.json",
+      "copy": "receipts/mobile-impl-types-02.json",
+      "bytes": 635,
+      "sha256": "b9cf30a3acb8574761c305bdaad3a9a3b682eee366f6f049d069bf1317d8e7cd"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-impl-types-02.stderr.log",
+      "copy": "receipts/mobile-impl-types-02.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-impl-types-02.stdout.log",
+      "copy": "receipts/mobile-impl-types-02.stdout.log",
+      "bytes": 559,
+      "sha256": "52ef8f9276b6d3f931defc5d52859c8701b6f7b4469334eac1ee1666dab5eb34"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-impl-types-03.json",
+      "copy": "receipts/mobile-impl-types-03.json",
+      "bytes": 635,
+      "sha256": "1369a18017b5918be5c9362dc304169b3dfb814bc71060f26ed40fadd6c76051"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-impl-types-03.stderr.log",
+      "copy": "receipts/mobile-impl-types-03.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-impl-types-03.stdout.log",
+      "copy": "receipts/mobile-impl-types-03.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-impl-types-04.json",
+      "copy": "receipts/mobile-impl-types-04.json",
+      "bytes": 635,
+      "sha256": "ba2435fbd9954f9659b1a07c51bff2f9491cd823c4e44a4ae41c5e4e5398489d"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-impl-types-04.stderr.log",
+      "copy": "receipts/mobile-impl-types-04.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-impl-types-04.stdout.log",
+      "copy": "receipts/mobile-impl-types-04.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-main-final-lint-01.json",
+      "copy": "receipts/mobile-main-final-lint-01.json",
+      "bytes": 589,
+      "sha256": "c7a890f6f3ec18528ff321e3fd6db7577c131a8201cbe9fc66248a1144b33ba8"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-main-final-lint-01.stderr.log",
+      "copy": "receipts/mobile-main-final-lint-01.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-main-final-lint-01.stdout.log",
+      "copy": "receipts/mobile-main-final-lint-01.stdout.log",
+      "bytes": 1405,
+      "sha256": "5daf1d190f6e7a6339ad91d4ba48ff8657acaf01ac8c313e8213cfb2743df12a"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-main-final-types-01.json",
+      "copy": "receipts/mobile-main-final-types-01.json",
+      "bytes": 652,
+      "sha256": "7511f8b369f3d85357b76b10bd3538b75c6a997df77c7a48f00ee0da5db4d489"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-main-final-types-01.stderr.log",
+      "copy": "receipts/mobile-main-final-types-01.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-main-final-types-01.stdout.log",
+      "copy": "receipts/mobile-main-final-types-01.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-native-pinch-probe-01.json",
+      "copy": "receipts/mobile-native-pinch-probe-01.json",
+      "bytes": 681,
+      "sha256": "a76ae5a072682194184eac39af8ef709b0fffe5e06b7fc7467c221adf7b161d7"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-native-pinch-probe-01.stderr.log",
+      "copy": "receipts/mobile-native-pinch-probe-01.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-native-pinch-probe-01.stdout.log",
+      "copy": "receipts/mobile-native-pinch-probe-01.stdout.log",
+      "bytes": 610,
+      "sha256": "a788471a0f4599b1a6727c2440b6ec11048e7b8f5313be549549c76242bbe831"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-phone-harness-syntax-02.json",
+      "copy": "receipts/mobile-phone-harness-syntax-02.json",
+      "bytes": 698,
+      "sha256": "edf252faa8e28c7f4bafd44432c35776a9cfa39e1197d88e9398738ae0dd116d"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-phone-harness-syntax-02.stderr.log",
+      "copy": "receipts/mobile-phone-harness-syntax-02.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-phone-harness-syntax-02.stdout.log",
+      "copy": "receipts/mobile-phone-harness-syntax-02.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-preedit-focused-01.json",
+      "copy": "receipts/mobile-preedit-focused-01.json",
+      "bytes": 1045,
+      "sha256": "70c7f86ae654de6cd355d1afcd74c0288409b3aa33ef04b05668fbc7c5c165fd"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-preedit-focused-01.stderr.log",
+      "copy": "receipts/mobile-preedit-focused-01.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-preedit-focused-01.stdout.log",
+      "copy": "receipts/mobile-preedit-focused-01.stdout.log",
+      "bytes": 3569,
+      "sha256": "bcd692be7b73f179775ec48bbb5cc9ed316d649f0882a476793d8e2c79d2243d"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-preedit-types-01.json",
+      "copy": "receipts/mobile-preedit-types-01.json",
+      "bytes": 644,
+      "sha256": "beeedf28636b1cada24e8f0b405beeeb5551e3fb8690efd04e1a0f30739399e6"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-preedit-types-01.stderr.log",
+      "copy": "receipts/mobile-preedit-types-01.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-preedit-types-01.stdout.log",
+      "copy": "receipts/mobile-preedit-types-01.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-zoom-focused-01.json",
+      "copy": "receipts/mobile-zoom-focused-01.json",
+      "bytes": 993,
+      "sha256": "35d619d4fd60339ca5ada0ad943a323b50e950b07e64549a8c9992d118055f70"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-zoom-focused-01.stderr.log",
+      "copy": "receipts/mobile-zoom-focused-01.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-zoom-focused-01.stdout.log",
+      "copy": "receipts/mobile-zoom-focused-01.stdout.log",
+      "bytes": 4452,
+      "sha256": "53c0af1d3d4217172ab08e3fd8150c1b2f4b90f8e2f3c804e13eb2799ab3a6f0"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-zoom-full-01.json",
+      "copy": "receipts/mobile-zoom-full-01.json",
+      "bytes": 623,
+      "sha256": "3401ed8cc66feee158d75e4940ba8455ca76c04dbc16b07f6f80927675be224f"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-zoom-full-01.stderr.log",
+      "copy": "receipts/mobile-zoom-full-01.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-zoom-full-01.stdout.log",
+      "copy": "receipts/mobile-zoom-full-01.stdout.log",
+      "bytes": 34287,
+      "sha256": "988965a70ef7f98ca5b4d1e2d53e89b1b5187889974d0777cd1ea043a6950853"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-zoom-lint-01.json",
+      "copy": "receipts/mobile-zoom-lint-01.json",
+      "bytes": 571,
+      "sha256": "31607f1420dc372fbf2be7ee15aabfbdec7fb90f6d52d545f6142994a8bc2c3c"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-zoom-lint-01.stderr.log",
+      "copy": "receipts/mobile-zoom-lint-01.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-zoom-lint-01.stdout.log",
+      "copy": "receipts/mobile-zoom-lint-01.stdout.log",
+      "bytes": 1405,
+      "sha256": "5daf1d190f6e7a6339ad91d4ba48ff8657acaf01ac8c313e8213cfb2743df12a"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-zoom-regression-01.json",
+      "copy": "receipts/mobile-zoom-regression-01.json",
+      "bytes": 690,
+      "sha256": "abd081a30f339e73a49fb60ba093773c2203d216bfac17eae9b189525710723b"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-zoom-regression-01.stderr.log",
+      "copy": "receipts/mobile-zoom-regression-01.stderr.log",
+      "bytes": 14819,
+      "sha256": "0fe71dee5961cabcbbc588fe0cade4886d6993a48c8216a3ba9e932623fc40a8"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-zoom-regression-01.stdout.log",
+      "copy": "receipts/mobile-zoom-regression-01.stdout.log",
+      "bytes": 4233,
+      "sha256": "508bcc940b65034e908c4e71a57601938dd92b83d2691de74ba5f26091f8abf9"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-zoom-types-01.json",
+      "copy": "receipts/mobile-zoom-types-01.json",
+      "bytes": 635,
+      "sha256": "ac2266eb3b5b5631943381c56e6cf5d4fb4712143af94c72038c314101813752"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-zoom-types-01.stderr.log",
+      "copy": "receipts/mobile-zoom-types-01.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-zoom-types-01.stdout.log",
+      "copy": "receipts/mobile-zoom-types-01.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-01\\desktop-failure.png",
+      "copy": "browser-evidence/mobile-browser-01/desktop-failure.png",
+      "bytes": 601055,
+      "sha256": "588bbbd85c99f8823cbc16e82e2a6d70f174939e6a439c351f75a3926a30dff6"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-01\\next.stderr.log",
+      "copy": "browser-evidence/mobile-browser-01/next.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-01\\next.stdout.log",
+      "copy": "browser-evidence/mobile-browser-01/next.stdout.log",
+      "bytes": 118,
+      "sha256": "2bf824f8506399618d954d00ca63d7449a19e6799c1400c6ebfefa3fd9eb4e6f"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-01\\original-a.png",
+      "copy": "browser-evidence/mobile-browser-01/original-a.png",
+      "bytes": 12218,
+      "sha256": "0884609103a467153a8fa8623bb8dbcf6425c5222744f8626ecb7cbf823d0359"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-01\\original-b.png",
+      "copy": "browser-evidence/mobile-browser-01/original-b.png",
+      "bytes": 39666,
+      "sha256": "2d85c90504eb5ea83d0d8ff18ab544fcbd997e088e31686f38162b5bef6326c0"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-01\\results.json",
+      "copy": "browser-evidence/mobile-browser-01/results.json",
+      "bytes": 95157,
+      "sha256": "74da77f5c77247736164d70b71ff69477c33d362d959db241d0b94f193820719"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-01\\separate-device-failure.png",
+      "copy": "browser-evidence/mobile-browser-01/separate-device-failure.png",
+      "bytes": 516476,
+      "sha256": "b49984131e3acfcd768e3212f4dac54a061b8b03ab4054064ee8c890e7c180e9"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-02\\desktop-downloads\\narra-image.png",
+      "copy": "browser-evidence/mobile-browser-02/desktop-downloads/narra-image.png",
+      "bytes": 12218,
+      "sha256": "0884609103a467153a8fa8623bb8dbcf6425c5222744f8626ecb7cbf823d0359"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-02\\desktop-failure.png",
+      "copy": "browser-evidence/mobile-browser-02/desktop-failure.png",
+      "bytes": 97186,
+      "sha256": "1aaffaf1c7c2f01415fe9499f9fbbdfb002faeba1fe8f6cd574d57a56117e10b"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-02\\next.stderr.log",
+      "copy": "browser-evidence/mobile-browser-02/next.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-02\\next.stdout.log",
+      "copy": "browser-evidence/mobile-browser-02/next.stdout.log",
+      "bytes": 118,
+      "sha256": "5b264a84d2db301340116307cea1bb35001f7d22fc67356e5885dbf03c4285f1"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-02\\original-a.png",
+      "copy": "browser-evidence/mobile-browser-02/original-a.png",
+      "bytes": 12218,
+      "sha256": "0884609103a467153a8fa8623bb8dbcf6425c5222744f8626ecb7cbf823d0359"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-02\\original-b.png",
+      "copy": "browser-evidence/mobile-browser-02/original-b.png",
+      "bytes": 39666,
+      "sha256": "2d85c90504eb5ea83d0d8ff18ab544fcbd997e088e31686f38162b5bef6326c0"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-02\\results.json",
+      "copy": "browser-evidence/mobile-browser-02/results.json",
+      "bytes": 136915,
+      "sha256": "5edfcb90a506609a1f63b22556a7e39b48b00557030da50929e1bf412193d661"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-02\\separate-device-failure.png",
+      "copy": "browser-evidence/mobile-browser-02/separate-device-failure.png",
+      "bytes": 595721,
+      "sha256": "f00214d3271cbb9c3f6f9e052542198c2dcf619684d217ad1be44dc025c0ebb4"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-03\\desktop-desktop.png",
+      "copy": "browser-evidence/mobile-browser-03/desktop-desktop.png",
+      "bytes": 586457,
+      "sha256": "32dcec521a1170fe54ca439ab38c20a09ddf42b704f563c768e6088823f10104"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-03\\desktop-downloads\\narra-image.png",
+      "copy": "browser-evidence/mobile-browser-03/desktop-downloads/narra-image.png",
+      "bytes": 12218,
+      "sha256": "0884609103a467153a8fa8623bb8dbcf6425c5222744f8626ecb7cbf823d0359"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-03\\desktop-failure.png",
+      "copy": "browser-evidence/mobile-browser-03/desktop-failure.png",
+      "bytes": 47127,
+      "sha256": "4b5270a6cc5a9a8bfb55e75196cf7134c44beb26b7c4a92e228344c98d92f056"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-03\\desktop-phone-editor-360x844.png",
+      "copy": "browser-evidence/mobile-browser-03/desktop-phone-editor-360x844.png",
+      "bytes": 47087,
+      "sha256": "f1efadfc9055f0f6caa024ddd98ea4a7b1650cc07f2ddd09220a8786b22c9f14"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-03\\desktop-phone-editor-390x440.png",
+      "copy": "browser-evidence/mobile-browser-03/desktop-phone-editor-390x440.png",
+      "bytes": 21615,
+      "sha256": "3c2d0bebf5621c98894649ab5ad7d4b380af05746d8d68ed58ae89a7b29ccb89"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-03\\desktop-phone-editor-390x844.png",
+      "copy": "browser-evidence/mobile-browser-03/desktop-phone-editor-390x844.png",
+      "bytes": 47573,
+      "sha256": "7688ff8b5445ea45d6fe560fcfc63ac3f3ce9ab434c454866b2c5f805717087b"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-03\\desktop-phone-editor-430x932.png",
+      "copy": "browser-evidence/mobile-browser-03/desktop-phone-editor-430x932.png",
+      "bytes": 48415,
+      "sha256": "d25bcd785d8b14a2e86fe3ba15fadee81b1a1190a250b8ffa697aceb3ca302dc"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-03\\desktop-phone-editor-844x390.png",
+      "copy": "browser-evidence/mobile-browser-03/desktop-phone-editor-844x390.png",
+      "bytes": 27880,
+      "sha256": "aac9e04b5308ef0d7986f2b1bc53fd0bb008318d78f420a3bc90785a2cc5f013"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-03\\desktop-stress-200.png",
+      "copy": "browser-evidence/mobile-browser-03/desktop-stress-200.png",
+      "bytes": 553452,
+      "sha256": "217ff2715771079e5f9c2afbd361ab38054e0339e56511e5dc4ed93997fbeb14"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-03\\next.stderr.log",
+      "copy": "browser-evidence/mobile-browser-03/next.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-03\\next.stdout.log",
+      "copy": "browser-evidence/mobile-browser-03/next.stdout.log",
+      "bytes": 118,
+      "sha256": "9e79508b3e1d224f39fdb42afe409b7190f86cab523331a6af6d0e737f505714"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-03\\original-a.png",
+      "copy": "browser-evidence/mobile-browser-03/original-a.png",
+      "bytes": 12218,
+      "sha256": "0884609103a467153a8fa8623bb8dbcf6425c5222744f8626ecb7cbf823d0359"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-03\\original-b.png",
+      "copy": "browser-evidence/mobile-browser-03/original-b.png",
+      "bytes": 39666,
+      "sha256": "2d85c90504eb5ea83d0d8ff18ab544fcbd997e088e31686f38162b5bef6326c0"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-03\\results.json",
+      "copy": "browser-evidence/mobile-browser-03/results.json",
+      "bytes": 441560,
+      "sha256": "b13e18ce45f14ea67855c9ae2f56aa582c9a4994193373fb778e9e67041a3937"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-03\\separate-device-failure.png",
+      "copy": "browser-evidence/mobile-browser-03/separate-device-failure.png",
+      "bytes": 596168,
+      "sha256": "e06a4c503125a5346439cc1f7fee921b6e6e2a4eda4c2179760fa1581693a4e4"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-04\\desktop-desktop.png",
+      "copy": "browser-evidence/mobile-browser-04/desktop-desktop.png",
+      "bytes": 590556,
+      "sha256": "9947d39d3ed08927c36d4bafc7a7ab2820eefecdb402dcaf543ef62832becd5c"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-04\\desktop-downloads\\narra-image.png",
+      "copy": "browser-evidence/mobile-browser-04/desktop-downloads/narra-image.png",
+      "bytes": 12218,
+      "sha256": "0884609103a467153a8fa8623bb8dbcf6425c5222744f8626ecb7cbf823d0359"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-04\\desktop-failure.png",
+      "copy": "browser-evidence/mobile-browser-04/desktop-failure.png",
+      "bytes": 47150,
+      "sha256": "125eb4637509a81746156ff9e7fafe849cc06463e7df75c6fff89c2e08e3fd69"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-04\\desktop-phone-editor-360x844.png",
+      "copy": "browser-evidence/mobile-browser-04/desktop-phone-editor-360x844.png",
+      "bytes": 47108,
+      "sha256": "f8cd25120ba2971c3ef6900e2a290b214405066533121fcfbfbc3a8b89b317c0"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-04\\desktop-phone-editor-390x440.png",
+      "copy": "browser-evidence/mobile-browser-04/desktop-phone-editor-390x440.png",
+      "bytes": 21637,
+      "sha256": "fb6b3503cb0d42476d6ac99cb2eeb3599689d3c0fd121c389a8fd55ed194f51a"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-04\\desktop-phone-editor-390x844.png",
+      "copy": "browser-evidence/mobile-browser-04/desktop-phone-editor-390x844.png",
+      "bytes": 47593,
+      "sha256": "0433bd65106f1c165b388d50882bcd29c7c1dd479370d899ddf34ab259ae8996"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-04\\desktop-phone-editor-430x932.png",
+      "copy": "browser-evidence/mobile-browser-04/desktop-phone-editor-430x932.png",
+      "bytes": 48434,
+      "sha256": "84cb7bd2981169bc09c8e55a9b42a5acb856af788572957bcbeda78a93ff64b3"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-04\\desktop-phone-editor-844x390.png",
+      "copy": "browser-evidence/mobile-browser-04/desktop-phone-editor-844x390.png",
+      "bytes": 27907,
+      "sha256": "b21e9daaec48e0750c12933271e9798e05d940d37f8c888f09321ff4664c65cb"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-04\\desktop-stress-200.png",
+      "copy": "browser-evidence/mobile-browser-04/desktop-stress-200.png",
+      "bytes": 553563,
+      "sha256": "2f1fea50e62681f5f22dfc83e01e332193c71fcec8e196e76a9d712cdc41bfb6"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-04\\next.stderr.log",
+      "copy": "browser-evidence/mobile-browser-04/next.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-04\\next.stdout.log",
+      "copy": "browser-evidence/mobile-browser-04/next.stdout.log",
+      "bytes": 118,
+      "sha256": "761c936e364f5913b675d008a5e96154c012661ace72c48e77f0ee0da4d8c759"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-04\\original-a.png",
+      "copy": "browser-evidence/mobile-browser-04/original-a.png",
+      "bytes": 12218,
+      "sha256": "0884609103a467153a8fa8623bb8dbcf6425c5222744f8626ecb7cbf823d0359"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-04\\original-b.png",
+      "copy": "browser-evidence/mobile-browser-04/original-b.png",
+      "bytes": 39666,
+      "sha256": "2d85c90504eb5ea83d0d8ff18ab544fcbd997e088e31686f38162b5bef6326c0"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-04\\results.json",
+      "copy": "browser-evidence/mobile-browser-04/results.json",
+      "bytes": 441567,
+      "sha256": "251ac20d759430cdef7311f3faa0ea9f83a87d2e9dcb9022c6ff917f8586c3b7"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-04\\separate-device-failure.png",
+      "copy": "browser-evidence/mobile-browser-04/separate-device-failure.png",
+      "bytes": 596168,
+      "sha256": "e06a4c503125a5346439cc1f7fee921b6e6e2a4eda4c2179760fa1581693a4e4"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-05\\desktop-desktop.png",
+      "copy": "browser-evidence/mobile-browser-05/desktop-desktop.png",
+      "bytes": 586458,
+      "sha256": "26d5799cb84f5fdf06c662f7ea27720de7c7b5bf71222887343b19c9c4906bbf"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-05\\desktop-downloads\\narra-image.png",
+      "copy": "browser-evidence/mobile-browser-05/desktop-downloads/narra-image.png",
+      "bytes": 12218,
+      "sha256": "0884609103a467153a8fa8623bb8dbcf6425c5222744f8626ecb7cbf823d0359"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-05\\desktop-failure.png",
+      "copy": "browser-evidence/mobile-browser-05/desktop-failure.png",
+      "bytes": 67411,
+      "sha256": "64ffa475e419be6977cc95b029601fcd9ac8311dc8c91b9da16d5d4a163e1b64"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-05\\desktop-phone-accessibility-pinch.png",
+      "copy": "browser-evidence/mobile-browser-05/desktop-phone-accessibility-pinch.png",
+      "bytes": 48810,
+      "sha256": "ad4d4ab24bd280fbe697d35dc02b59f7228d133206f32def4a1ee1e5403b3200"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-05\\desktop-phone-editor-360x844.png",
+      "copy": "browser-evidence/mobile-browser-05/desktop-phone-editor-360x844.png",
+      "bytes": 46961,
+      "sha256": "ac2501078301753673ec81446160041fdfde77729e7fa9e479c5d40f8dfa91c5"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-05\\desktop-phone-editor-390x440.png",
+      "copy": "browser-evidence/mobile-browser-05/desktop-phone-editor-390x440.png",
+      "bytes": 21485,
+      "sha256": "58cbc3e064dc32aa9b472142a6e980ee820e63c41a8476b463e988737faa2ec6"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-05\\desktop-phone-editor-390x844.png",
+      "copy": "browser-evidence/mobile-browser-05/desktop-phone-editor-390x844.png",
+      "bytes": 47450,
+      "sha256": "ee6d8aa8440a9f33b403fef00699a4b4fcb953912ae62ad540ef39fb138a6655"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-05\\desktop-phone-editor-430x932.png",
+      "copy": "browser-evidence/mobile-browser-05/desktop-phone-editor-430x932.png",
+      "bytes": 48304,
+      "sha256": "31dd27548459995c354880d6cda062a0309906ecfb1532b995f3f954b668555d"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-05\\desktop-phone-editor-844x390.png",
+      "copy": "browser-evidence/mobile-browser-05/desktop-phone-editor-844x390.png",
+      "bytes": 27734,
+      "sha256": "c7e929411c6a6c9b6b39055a429a07057d320fe169d5ceef33d780bbaa63a5c3"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-05\\desktop-stress-200.png",
+      "copy": "browser-evidence/mobile-browser-05/desktop-stress-200.png",
+      "bytes": 552764,
+      "sha256": "15fe0735c8c415b7e7a9ca8d3fc0d2281b493727a3d98c98108fe99fa734743b"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-05\\next.stderr.log",
+      "copy": "browser-evidence/mobile-browser-05/next.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-05\\next.stdout.log",
+      "copy": "browser-evidence/mobile-browser-05/next.stdout.log",
+      "bytes": 118,
+      "sha256": "628e1f4627ee27d2084e85f7b4d8f868961c1b04234b5b530be56d1d6419e3ee"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-05\\original-a.png",
+      "copy": "browser-evidence/mobile-browser-05/original-a.png",
+      "bytes": 12218,
+      "sha256": "0884609103a467153a8fa8623bb8dbcf6425c5222744f8626ecb7cbf823d0359"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-05\\original-b.png",
+      "copy": "browser-evidence/mobile-browser-05/original-b.png",
+      "bytes": 39666,
+      "sha256": "2d85c90504eb5ea83d0d8ff18ab544fcbd997e088e31686f38162b5bef6326c0"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-05\\results.json",
+      "copy": "browser-evidence/mobile-browser-05/results.json",
+      "bytes": 459753,
+      "sha256": "328872a1e4571826b34a553d42ce751113e6bf9541c90059158e1a50a4f2764d"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-05\\separate-device-failure.png",
+      "copy": "browser-evidence/mobile-browser-05/separate-device-failure.png",
+      "bytes": 596154,
+      "sha256": "8b1d32dd7e24ad6cea7fbfcb3170ef4c66458d868bd8442db5675e48734a965d"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-06\\desktop-desktop.png",
+      "copy": "browser-evidence/mobile-browser-06/desktop-desktop.png",
+      "bytes": 586458,
+      "sha256": "59d518fcb900f2c3dfe88e7f35cf8ddeb12fa8201f12304064fc3c091ed23e72"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-06\\desktop-downloads\\narra-image.png",
+      "copy": "browser-evidence/mobile-browser-06/desktop-downloads/narra-image.png",
+      "bytes": 12218,
+      "sha256": "0884609103a467153a8fa8623bb8dbcf6425c5222744f8626ecb7cbf823d0359"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-06\\desktop-failure.png",
+      "copy": "browser-evidence/mobile-browser-06/desktop-failure.png",
+      "bytes": 57433,
+      "sha256": "92f3dd6984eab006039923c1c0bda44e7c227f822e9ac0bf082cdcd108de76f3"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-06\\desktop-phone-accessibility-pinch.png",
+      "copy": "browser-evidence/mobile-browser-06/desktop-phone-accessibility-pinch.png",
+      "bytes": 50845,
+      "sha256": "4797aeb60dcf7089189874b795bca09e3b052625d84389ac80d918a6a26587a3"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-06\\desktop-phone-editor-360x844.png",
+      "copy": "browser-evidence/mobile-browser-06/desktop-phone-editor-360x844.png",
+      "bytes": 47166,
+      "sha256": "cff2c12bab90842e58a1d0c93dfcd511f93ac5b31d21fe040ea0c20e98672d8a"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-06\\desktop-phone-editor-390x440.png",
+      "copy": "browser-evidence/mobile-browser-06/desktop-phone-editor-390x440.png",
+      "bytes": 21694,
+      "sha256": "43f80dae4f79a706a9856eae2863512948f1be76452687c9cef983d41e6dd79f"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-06\\desktop-phone-editor-390x844.png",
+      "copy": "browser-evidence/mobile-browser-06/desktop-phone-editor-390x844.png",
+      "bytes": 47647,
+      "sha256": "63a66d0eb586120ce74e7cd2c3a9e6911087c708e976116fb65e1f1011686945"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-06\\desktop-phone-editor-430x932.png",
+      "copy": "browser-evidence/mobile-browser-06/desktop-phone-editor-430x932.png",
+      "bytes": 48491,
+      "sha256": "a8fecdd0a564510ed862df8cb604f61d6eafdb7457521a3f18c850ff805de766"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-06\\desktop-phone-editor-844x390.png",
+      "copy": "browser-evidence/mobile-browser-06/desktop-phone-editor-844x390.png",
+      "bytes": 27959,
+      "sha256": "75a2a306970d352229fee90d0eb48960faacf641d4a9b1448d9db9336855aa04"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-06\\desktop-phone-runtime-360x844.png",
+      "copy": "browser-evidence/mobile-browser-06/desktop-phone-runtime-360x844.png",
+      "bytes": 67320,
+      "sha256": "173999eb9723f87d0a670b0075da269012018ef72ef7edb0ae867399c41fbbf8"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-06\\desktop-phone-runtime-390x440.png",
+      "copy": "browser-evidence/mobile-browser-06/desktop-phone-runtime-390x440.png",
+      "bytes": 35736,
+      "sha256": "7645d7a6e58ad9f28864398cf62330f66ee2802b5e47d85d9bb437a392baac35"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-06\\desktop-phone-runtime-844x390.png",
+      "copy": "browser-evidence/mobile-browser-06/desktop-phone-runtime-844x390.png",
+      "bytes": 64489,
+      "sha256": "45f1734241abccfa5d13fbf62e925e85af2b1c47a34a440970058076bd46b3bb"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-06\\desktop-stress-200.png",
+      "copy": "browser-evidence/mobile-browser-06/desktop-stress-200.png",
+      "bytes": 552589,
+      "sha256": "29753199ce0d865d5203a0ec59b295db5a41f0b56e84a737c02543105f9a4ccb"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-06\\next.stderr.log",
+      "copy": "browser-evidence/mobile-browser-06/next.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-06\\next.stdout.log",
+      "copy": "browser-evidence/mobile-browser-06/next.stdout.log",
+      "bytes": 118,
+      "sha256": "a2ca057d58d1a0437d3ae705ddc552487d590d552cfc4ab87145688a9c2448b0"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-06\\original-a.png",
+      "copy": "browser-evidence/mobile-browser-06/original-a.png",
+      "bytes": 12218,
+      "sha256": "0884609103a467153a8fa8623bb8dbcf6425c5222744f8626ecb7cbf823d0359"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-06\\original-b.png",
+      "copy": "browser-evidence/mobile-browser-06/original-b.png",
+      "bytes": 39666,
+      "sha256": "2d85c90504eb5ea83d0d8ff18ab544fcbd997e088e31686f38162b5bef6326c0"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-06\\phone-a.png",
+      "copy": "browser-evidence/mobile-browser-06/phone-a.png",
+      "bytes": 12218,
+      "sha256": "0884609103a467153a8fa8623bb8dbcf6425c5222744f8626ecb7cbf823d0359"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-06\\phone-b.png",
+      "copy": "browser-evidence/mobile-browser-06/phone-b.png",
+      "bytes": 39666,
+      "sha256": "2d85c90504eb5ea83d0d8ff18ab544fcbd997e088e31686f38162b5bef6326c0"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-06\\phone-c.png",
+      "copy": "browser-evidence/mobile-browser-06/phone-c.png",
+      "bytes": 12218,
+      "sha256": "0884609103a467153a8fa8623bb8dbcf6425c5222744f8626ecb7cbf823d0359"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-06\\results.json",
+      "copy": "browser-evidence/mobile-browser-06/results.json",
+      "bytes": 485627,
+      "sha256": "ed01ba47ff705cb7225318bb0d5225acf7047a14275e4bdd3009a2eb43ec3fd3"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-06\\separate-device-failure.png",
+      "copy": "browser-evidence/mobile-browser-06/separate-device-failure.png",
+      "bytes": 596171,
+      "sha256": "5985e23f18a0d4d0863ef52afa34a2fd08bfe844667414ec2fc0c36fdea90328"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-07\\desktop-desktop.png",
+      "copy": "browser-evidence/mobile-browser-07/desktop-desktop.png",
+      "bytes": 586458,
+      "sha256": "26d5799cb84f5fdf06c662f7ea27720de7c7b5bf71222887343b19c9c4906bbf"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-07\\desktop-downloads\\narra-image.png",
+      "copy": "browser-evidence/mobile-browser-07/desktop-downloads/narra-image.png",
+      "bytes": 39666,
+      "sha256": "2d85c90504eb5ea83d0d8ff18ab544fcbd997e088e31686f38162b5bef6326c0"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-07\\desktop-phone-accessibility-pinch.png",
+      "copy": "browser-evidence/mobile-browser-07/desktop-phone-accessibility-pinch.png",
+      "bytes": 49789,
+      "sha256": "5115b51d8b3605835edffd1565b83d5472bd13f1e52c713a41c5efc3787e0df9"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-07\\desktop-phone-editor-360x844.png",
+      "copy": "browser-evidence/mobile-browser-07/desktop-phone-editor-360x844.png",
+      "bytes": 47096,
+      "sha256": "acf4433a2f1c2f59a5cfd97c19b1296b2aceb14075faaf859b4291216d0f0ce6"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-07\\desktop-phone-editor-390x440.png",
+      "copy": "browser-evidence/mobile-browser-07/desktop-phone-editor-390x440.png",
+      "bytes": 21621,
+      "sha256": "f15db4608512d5db9800cfbefef64b73891617694be2f9e8356b4359fea36968"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-07\\desktop-phone-editor-390x844.png",
+      "copy": "browser-evidence/mobile-browser-07/desktop-phone-editor-390x844.png",
+      "bytes": 47579,
+      "sha256": "c0ff848f49d23d5384bf00dbabb434210d054c90dc7fb17d872d0cfefe676256"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-07\\desktop-phone-editor-430x932.png",
+      "copy": "browser-evidence/mobile-browser-07/desktop-phone-editor-430x932.png",
+      "bytes": 48427,
+      "sha256": "2b0302d72d3574e8b5509d6b16a8e99961eef3adbf0ba98bc74b369d928b2ddd"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-07\\desktop-phone-editor-844x390.png",
+      "copy": "browser-evidence/mobile-browser-07/desktop-phone-editor-844x390.png",
+      "bytes": 27882,
+      "sha256": "cd350df6376cd56ec4399c9802b2838bc7a388e17f05b54d71228901a9d26afc"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-07\\desktop-phone-runtime-360x844.png",
+      "copy": "browser-evidence/mobile-browser-07/desktop-phone-runtime-360x844.png",
+      "bytes": 67295,
+      "sha256": "b27b8f6becf7c1dd30d43b210c1dca14e48673a849a60a9b32f5c58786b20600"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-07\\desktop-phone-runtime-390x440.png",
+      "copy": "browser-evidence/mobile-browser-07/desktop-phone-runtime-390x440.png",
+      "bytes": 35646,
+      "sha256": "3f7a1e05b6de87c04ee1fdee06ecc4899f86deaacf8aeee7f7919bacb27b9889"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-07\\desktop-phone-runtime-844x390.png",
+      "copy": "browser-evidence/mobile-browser-07/desktop-phone-runtime-844x390.png",
+      "bytes": 64213,
+      "sha256": "cfedc0bc828c8043cce210ebaef9ead3989960479db890a882cad41da14680db"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-07\\desktop-phone-stress-200.png",
+      "copy": "browser-evidence/mobile-browser-07/desktop-phone-stress-200.png",
+      "bytes": 90356,
+      "sha256": "95ba46fe0891a0c6d8d3664e12e73866b29d479ec66a3aa7a8b2cae7a6795a09"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-07\\desktop-phone-stress-24.png",
+      "copy": "browser-evidence/mobile-browser-07/desktop-phone-stress-24.png",
+      "bytes": 91174,
+      "sha256": "0aa7276a254d8333868691b0162cbec0035368eeca22c6b2cc893d4d6959f46e"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-07\\desktop-stress-200.png",
+      "copy": "browser-evidence/mobile-browser-07/desktop-stress-200.png",
+      "bytes": 553256,
+      "sha256": "2873cb19185c09526b23489f41ad255520737d919d6806e549ef7ed2b6b1e5d0"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-07\\lazy-network-chunk-recovery-guidance.png",
+      "copy": "browser-evidence/mobile-browser-07/lazy-network-chunk-recovery-guidance.png",
+      "bytes": 150509,
+      "sha256": "50888a80acd2e583c520cdcefe711cb98696a03b115243bc981f88076ede2a75"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-07\\lazy-network-manual-reload-recovered.png",
+      "copy": "browser-evidence/mobile-browser-07/lazy-network-manual-reload-recovered.png",
+      "bytes": 620964,
+      "sha256": "70efaac422a107becd14bb0491c754c68adc87fd608d426ad57d9e571b8c82fe"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-07\\next.stderr.log",
+      "copy": "browser-evidence/mobile-browser-07/next.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-07\\next.stdout.log",
+      "copy": "browser-evidence/mobile-browser-07/next.stdout.log",
+      "bytes": 118,
+      "sha256": "a607b23dffcb14c9105b179e11507ef1c3faa3fbd43902dca2fd3118a856231b"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-07\\original-a.png",
+      "copy": "browser-evidence/mobile-browser-07/original-a.png",
+      "bytes": 12218,
+      "sha256": "0884609103a467153a8fa8623bb8dbcf6425c5222744f8626ecb7cbf823d0359"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-07\\original-b.png",
+      "copy": "browser-evidence/mobile-browser-07/original-b.png",
+      "bytes": 39666,
+      "sha256": "2d85c90504eb5ea83d0d8ff18ab544fcbd997e088e31686f38162b5bef6326c0"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-07\\phone-a.png",
+      "copy": "browser-evidence/mobile-browser-07/phone-a.png",
+      "bytes": 12218,
+      "sha256": "0884609103a467153a8fa8623bb8dbcf6425c5222744f8626ecb7cbf823d0359"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-07\\phone-b.png",
+      "copy": "browser-evidence/mobile-browser-07/phone-b.png",
+      "bytes": 39666,
+      "sha256": "2d85c90504eb5ea83d0d8ff18ab544fcbd997e088e31686f38162b5bef6326c0"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-07\\phone-c.png",
+      "copy": "browser-evidence/mobile-browser-07/phone-c.png",
+      "bytes": 12218,
+      "sha256": "0884609103a467153a8fa8623bb8dbcf6425c5222744f8626ecb7cbf823d0359"
+    },
+    {
+      "original": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-07\\results.json",
+      "copy": "browser-evidence/mobile-browser-07/results.json",
+      "bytes": 487355,
+      "sha256": "74fd560310f54914697fe7ee445b59c27591d889fb867075b033e8c7ec192558"
+    }
+  ]
+}

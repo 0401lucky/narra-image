@@ -1,0 +1,305 @@
+{
+  "scope": "Intermediate runtime/frontend foundation and native store verification; not final acceptance",
+  "recordedAt": "2026-10-29T11:07:21.2249681Z",
+  "positiveDbExecuted": false,
+  "results": [
+    {
+      "label": "runtime-review-final-go",
+      "mode": "test",
+      "command": [
+        "go",
+        "-C",
+        "worker",
+        "test",
+        "-count=1",
+        "-timeout=50s",
+        "-json",
+        "./..."
+      ],
+      "cwd": "E:\\code\\narra-image",
+      "timeoutMs": 180000,
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "durationMs": 9304,
+      "stdoutPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\runtime-review-final-go.stdout.log",
+      "stderrPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\runtime-review-final-go.stderr.log"
+    },
+    {
+      "label": "runtime-review-final-node",
+      "mode": "test",
+      "command": [
+        "pnpm",
+        "exec",
+        "vitest",
+        "run",
+        "src/tests/unit/canvas-env.test.ts",
+        "src/tests/unit/canvas-readiness.test.ts",
+        "src/tests/unit/canvas-storage.test.ts",
+        "src/tests/unit/canvas-storage-capability-response.test.ts",
+        "src/tests/unit/readiness.test.ts",
+        "src/tests/contracts/runtime-environment-contract.test.ts",
+        "src/tests/unit/canvas-assets-api.test.ts",
+        "src/tests/unit/generation-cancel-route.test.ts",
+        "src/tests/unit/admin-generations-cleanup-route.test.ts",
+        "src/tests/unit/job-refund.test.ts",
+        "src/tests/contracts/generation-contract.test.ts",
+        "src/tests/integration/worker-contracts/worker-contracts.test.ts",
+        "--testTimeout=30000"
+      ],
+      "cwd": "E:\\code\\narra-image",
+      "timeoutMs": 180000,
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "durationMs": 4562,
+      "stdoutPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\runtime-review-final-node.stdout.log",
+      "stderrPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\runtime-review-final-node.stderr.log"
+    },
+    {
+      "label": "runtime-review-final-types",
+      "mode": "test",
+      "command": [
+        "pnpm",
+        "exec",
+        "tsc",
+        "--noEmit"
+      ],
+      "cwd": "E:\\code\\narra-image",
+      "timeoutMs": 120000,
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "durationMs": 3339,
+      "stdoutPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\runtime-review-final-types.stdout.log",
+      "stderrPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\runtime-review-final-types.stderr.log"
+    },
+    {
+      "label": "runtime-review-final-lint",
+      "mode": "test",
+      "command": [
+        "pnpm",
+        "lint"
+      ],
+      "cwd": "E:\\code\\narra-image",
+      "timeoutMs": 180000,
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "durationMs": 9539,
+      "stdoutPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\runtime-review-final-lint.stdout.log",
+      "stderrPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\runtime-review-final-lint.stderr.log"
+    },
+    {
+      "label": "canvas-e2e-review-targeted-final",
+      "mode": "test",
+      "command": [
+        "pnpm",
+        "exec",
+        "vitest",
+        "run",
+        "src/tests/unit/canvas-e2e-runner.test.ts",
+        "src/tests/unit/canvas-object-store-fixture.test.ts",
+        "--testTimeout=30000"
+      ],
+      "cwd": "E:\\code\\narra-image",
+      "timeoutMs": 90000,
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "durationMs": 6596,
+      "stdoutPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\canvas-e2e-review-targeted-final.stdout.log",
+      "stderrPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\canvas-e2e-review-targeted-final.stderr.log"
+    },
+    {
+      "label": "canvas-e2e-review-types-final",
+      "mode": "test",
+      "command": [
+        "pnpm",
+        "exec",
+        "tsc",
+        "--noEmit"
+      ],
+      "cwd": "E:\\code\\narra-image",
+      "timeoutMs": 120000,
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "durationMs": 3350,
+      "stdoutPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\canvas-e2e-review-types-final.stdout.log",
+      "stderrPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\canvas-e2e-review-types-final.stderr.log"
+    },
+    {
+      "label": "canvas-e2e-review-lint-final",
+      "mode": "test",
+      "command": [
+        "pnpm",
+        "lint"
+      ],
+      "cwd": "E:\\code\\narra-image",
+      "timeoutMs": 180000,
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "durationMs": 9741,
+      "stdoutPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\canvas-e2e-review-lint-final.stdout.log",
+      "stderrPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\canvas-e2e-review-lint-final.stderr.log"
+    },
+    {
+      "label": "canvas-e2e-review-safe-preflight",
+      "mode": "test",
+      "command": [
+        "pnpm",
+        "verify:e2e"
+      ],
+      "cwd": "E:\\code\\narra-image",
+      "timeoutMs": 1920000,
+      "code": 2,
+      "signal": null,
+      "timedOut": false,
+      "durationMs": 1700,
+      "stdoutPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\canvas-e2e-review-safe-preflight.stdout.log",
+      "stderrPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\canvas-e2e-review-safe-preflight.stderr.log"
+    },
+    {
+      "label": "studio-shell-final-targeted",
+      "mode": "test",
+      "command": [
+        "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-history-cleanup-20261029\\node-v24.22.1-win-x64\\node.exe",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "src/tests/unit/generator-studio-session-history.test.tsx",
+        "src/tests/unit/generator-studio-feedback.test.tsx",
+        "src/tests/unit/generator-studio-edit.test.tsx",
+        "src/tests/unit/generator-studio-retry-cancel.test.tsx",
+        "src/tests/unit/generator-studio-ratio.test.tsx",
+        "src/tests/unit/generator-studio-conversations.test.tsx",
+        "src/tests/unit/generator-studio-origins.test.tsx",
+        "src/tests/unit/use-sessions-origin.test.tsx",
+        "src/tests/unit/chat-pane.test.tsx",
+        "src/tests/unit/use-image-poller.test.tsx",
+        "src/tests/unit/use-studio-jobs.test.tsx",
+        "src/tests/unit/use-conversation-generations.test.tsx",
+        "--testTimeout=30000"
+      ],
+      "cwd": "E:\\code\\narra-image",
+      "timeoutMs": 90000,
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "durationMs": 9507,
+      "stdoutPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\studio-shell-final-targeted.stdout.log",
+      "stderrPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\studio-shell-final-targeted.stderr.log"
+    },
+    {
+      "label": "studio-jobs-targeted-final",
+      "mode": "test",
+      "command": [
+        "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-history-cleanup-20261029\\node-v24.22.1-win-x64\\node.exe",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "src/tests/unit/use-image-poller.test.tsx",
+        "src/tests/unit/use-studio-jobs.test.tsx",
+        "src/tests/unit/use-conversation-generations.test.tsx",
+        "--testTimeout=30000"
+      ],
+      "cwd": "E:\\code\\narra-image",
+      "timeoutMs": 120000,
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "durationMs": 2022,
+      "stdoutPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\studio-jobs-targeted-final.stdout.log",
+      "stderrPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\studio-jobs-targeted-final.stderr.log"
+    },
+    {
+      "label": "foundations-check-final-tests-2",
+      "mode": "test",
+      "command": [
+        "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-history-cleanup-20261029\\node-v24.22.1-win-x64\\node.exe",
+        "D:\\node\\node_modules\\corepack\\dist\\pnpm.js",
+        "exec",
+        "vitest",
+        "run",
+        "src/tests/unit/generation-item.test.ts",
+        "src/tests/unit/conversation-generations-api.test.ts",
+        "src/tests/unit/create-page-conversations.test.tsx",
+        "src/tests/unit/use-conversation-generations.test.tsx",
+        "src/tests/unit/use-sessions-origin.test.tsx",
+        "src/tests/unit/use-image-poller.test.tsx",
+        "src/tests/unit/use-studio-jobs.test.tsx",
+        "src/tests/unit/chat-pane.test.tsx",
+        "src/tests/unit/generator-studio-conversations.test.tsx",
+        "src/tests/unit/generator-studio-origins.test.tsx",
+        "src/tests/unit/generator-studio-session-history.test.tsx",
+        "src/tests/unit/generator-studio-feedback.test.tsx",
+        "src/tests/unit/generator-studio-edit.test.tsx",
+        "src/tests/unit/generator-studio-retry-cancel.test.tsx",
+        "src/tests/unit/generator-studio-ratio.test.tsx",
+        "--testTimeout=30000"
+      ],
+      "cwd": "E:\\code\\narra-image",
+      "timeoutMs": 90000,
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "durationMs": 11324,
+      "stdoutPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\foundations-check-final-tests-2.stdout.log",
+      "stderrPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\foundations-check-final-tests-2.stderr.log"
+    },
+    {
+      "label": "foundations-check-final-types-3",
+      "mode": "test",
+      "command": [
+        "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-history-cleanup-20261029\\node-v24.22.1-win-x64\\node.exe",
+        "D:\\node\\node_modules\\corepack\\dist\\pnpm.js",
+        "exec",
+        "tsc",
+        "--noEmit",
+        "--incremental",
+        "false"
+      ],
+      "cwd": "E:\\code\\narra-image",
+      "timeoutMs": 120000,
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "durationMs": 7789,
+      "stdoutPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\foundations-check-final-types-3.stdout.log",
+      "stderrPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\foundations-check-final-types-3.stderr.log"
+    },
+    {
+      "label": "foundations-check-final-lint-2",
+      "mode": "test",
+      "command": [
+        "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-history-cleanup-20261029\\node-v24.22.1-win-x64\\node.exe",
+        "D:\\node\\node_modules\\corepack\\dist\\pnpm.js",
+        "lint"
+      ],
+      "cwd": "E:\\code\\narra-image",
+      "timeoutMs": 180000,
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "durationMs": 16519,
+      "stdoutPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\foundations-check-final-lint-2.stdout.log",
+      "stderrPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\foundations-check-final-lint-2.stderr.log"
+    },
+    {
+      "label": "canvas-native-idb-browser-01",
+      "mode": "test",
+      "command": [
+        "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-history-cleanup-20261029\\node-v24.22.1-win-x64\\node.exe",
+        "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\native-idb-browser.mjs"
+      ],
+      "cwd": "E:\\code\\narra-image",
+      "timeoutMs": 120000,
+      "code": 0,
+      "signal": null,
+      "timedOut": false,
+      "durationMs": 1972,
+      "stdoutPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\canvas-native-idb-browser-01.stdout.log",
+      "stderrPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\canvas-native-idb-browser-01.stderr.log"
+    }
+  ]
+}

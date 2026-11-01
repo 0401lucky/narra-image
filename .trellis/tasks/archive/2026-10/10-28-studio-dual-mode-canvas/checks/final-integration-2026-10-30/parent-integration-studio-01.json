@@ -1,0 +1,26 @@
+{
+  "label": "parent-integration-studio-01",
+  "mode": "test",
+  "command": [
+    "pnpm",
+    "exec",
+    "vitest",
+    "run",
+    "src/tests/unit/generator-studio-session-history.test.tsx",
+    "src/tests/unit/generator-studio-conversations.test.tsx",
+    "src/tests/unit/generator-studio-origins.test.tsx",
+    "src/tests/unit/generator-studio-canvas.test.tsx",
+    "src/tests/unit/conversation-generations-api.test.ts",
+    "src/tests/unit/create-page-conversations.test.tsx",
+    "src/tests/unit/use-conversation-generations.test.tsx",
+    "--testTimeout=30000"
+  ],
+  "cwd": "E:/code/narra-image",
+  "timeoutMs": 180000,
+  "code": 0,
+  "signal": null,
+  "timedOut": false,
+  "durationMs": 11032,
+  "stdoutPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\parent-integration-studio-01.stdout.log",
+  "stderrPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\parent-integration-studio-01.stderr.log"
+}

@@ -1,0 +1,16 @@
+{"file":".trellis/spec/frontend/quality-guidelines.md","reason":"Full-scope quality gates, safe test environment, missing tests and truthful result reporting."}
+{"file":".trellis/spec/frontend/component-guidelines.md","reason":"Check default/home isolation, keyboard/touch controls, accessibility and component boundaries."}
+{"file":".trellis/spec/frontend/hook-guidelines.md","reason":"Check all RAF/timer/observer/listener/async cleanup and stale-response handling."}
+{"file":".trellis/spec/frontend/state-management.md","reason":"Verify SSR versus local state, viewer reset and no overwriting existing studio drafts."}
+{"file":".trellis/spec/frontend/type-safety.md","reason":"Verify explicit permission flags and allowlisted client-bound data, not type casts or UI-only hiding."}
+{"file":".trellis/spec/frontend/public-work-data.md","reason":"Verify actual public DTO keys, preserved owner/admin access and existing streamed notFound semantics without UI-only privacy claims."}
+{"file":".trellis/spec/frontend/homepage-interactions.md","reason":"Review concrete homepage isolation, paging/clipboard/lifecycle contracts and honest asset/long-URL acceptance limits."}
+{"file":".trellis/spec/frontend/directory-structure.md","reason":"Ensure production fixtures/helpers do not cross server/client or task ownership boundaries."}
+{"file":".trellis/spec/frontend/canvas-studio.md","reason":"Compatibility only: saved canvas preference and no automatic node/import/run behavior; preserve parallel mobile changes."}
+{"file":".trellis/spec/operations/release-hardening.md","reason":"Do not validate through live credentials, relax wrappers, or clean shared infrastructure."}
+{"file":".trellis/spec/guides/code-reuse-thinking-guide.md","reason":"Check reuse and consistency of image, permission, navigation and constants."}
+{"file":".trellis/spec/guides/cross-layer-thinking-guide.md","reason":"Check actual source-to-DTO-to-client data and actions, including raw privacy payloads."}
+{"file":".trellis/tasks/10-30-homepage-warm-editorial-redesign/research/homepage-reference-analysis.md","reason":"Verify reference fidelity and only the explicitly approved visual/business deviations."}
+{"file":".trellis/tasks/10-30-homepage-warm-editorial-redesign/research/prompt-reuse-contracts.md","reason":"Review guest/owner/public matrices, no clone/auto-run/auth-continuation and original privacy risks."}
+{"file":".trellis/tasks/10-30-homepage-warm-editorial-redesign/research/homepage-asset-delivery.md","reason":"Check real replacement imagery, local font glyph coverage, licenses and no original broken images."}
+{"file":".trellis/tasks/10-30-homepage-warm-editorial-redesign/research/homepage-validation-plan.md","reason":"Acceptance matrix, actual async-page props/RSC evidence and limits of synthetic browser checks."}

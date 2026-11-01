@@ -1,0 +1,16 @@
+{
+  "label": "resume-back-worker-ts",
+  "mode": "test",
+  "command": [
+    "pnpm",
+    "verify:worker-contracts:ts"
+  ],
+  "cwd": "E:/code/narra-image",
+  "timeoutMs": 120000,
+  "code": 0,
+  "signal": null,
+  "timedOut": false,
+  "durationMs": 3068,
+  "stdoutPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\resume-back-worker-ts.stdout.log",
+  "stderrPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\resume-back-worker-ts.stderr.log"
+}

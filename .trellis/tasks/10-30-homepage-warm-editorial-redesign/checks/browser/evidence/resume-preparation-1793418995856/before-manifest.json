@@ -1,0 +1,32 @@
+[
+  {
+    "file": "hero-scene-contract.mjs",
+    "sha256": "b71520884eb8c732245fb081e368dfaa7ad8b2efa3b41fd98c391b158d2bd881",
+    "bytes": 1191
+  },
+  {
+    "file": "hero-image-checks.mjs",
+    "sha256": "f8ef67527102a646d4dbed73aceee73dfd65be7bf620e0b21ba83972b5e5aa36",
+    "bytes": 16698
+  },
+  {
+    "file": "prepare-fixture.mjs",
+    "sha256": "cdee1f912bbfddd2f21ecd3bb5404359194182feae0216ed7087ed03529023a3",
+    "bytes": 8061
+  },
+  {
+    "file": "run-browser.mjs",
+    "sha256": "57bacb2e521e5dabe9406bf865006062694a47629fa1dcf361a2efbb8737d4c3",
+    "bytes": 24926
+  },
+  {
+    "file": "cdp.mjs",
+    "sha256": "893928be51d1beb11f65734031bbfb115de20b03a3097459bd17371b79b2237c",
+    "bytes": 15189
+  },
+  {
+    "file": "homepage-checks.mjs",
+    "sha256": "e004432cb4bd34f3fb095b32996217e624bc4d94899073bd9429184b2b6dfe86",
+    "bytes": 41673
+  }
+]

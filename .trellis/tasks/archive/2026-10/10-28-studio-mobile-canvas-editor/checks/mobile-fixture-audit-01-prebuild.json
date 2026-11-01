@@ -1,0 +1,29 @@
+{
+  "checkedAt": "2026-10-30T14:46:49.647Z",
+  "label": "01",
+  "phase": "prebuild",
+  "exactSourceIdentityCount": 224,
+  "changed": [],
+  "inventories": {
+    "src/components": {
+      "productionCount": 116,
+      "copiedCount": 116,
+      "recordedCount": 116,
+      "equal": true
+    },
+    "src/lib": {
+      "productionCount": 78,
+      "copiedCount": 78,
+      "recordedCount": 78,
+      "equal": true
+    },
+    "contracts": {
+      "productionCount": 28,
+      "copiedCount": 28,
+      "recordedCount": 28,
+      "equal": true
+    }
+  },
+  "pass": true,
+  "scope": "Source provenance only; not browser/device/service acceptance"
+}

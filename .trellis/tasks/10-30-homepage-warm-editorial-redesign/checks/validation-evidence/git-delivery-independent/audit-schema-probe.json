@@ -1,0 +1,9 @@
+{
+  "reviewer": "delivery_final_check",
+  "status": "failed-read-only-audit-attempt",
+  "error": "KeyError: testGatePassed",
+  "cause": "The initial one-off verifier incorrectly expected a redundant field from the historical result schema. The final schema records automatedGatePassed plus five detailed receipts.",
+  "productOrHelperChanges": false,
+  "nodeInvoked": false,
+  "correction": "Read the actual final schema; directly verify the test command, exit, complete 140/1704 log totals, and all809 source maps. No product gate rerun or pass relabeling."
+}

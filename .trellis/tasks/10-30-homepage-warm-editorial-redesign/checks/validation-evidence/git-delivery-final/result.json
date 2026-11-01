@@ -1,0 +1,159 @@
+{
+  "startedAt": "2026-11-01T03:04:52.110573+00:00",
+  "automatedGatePassed": true,
+  "runtime": "v24.22.1",
+  "nodeSha256": "d702daa815eabbff763c7d3808e235cf031cf2ca70211b56847bc72f51e240e5",
+  "pinnedRuntimeParity": true,
+  "sourceFiles": 809,
+  "sourceManifestSha256": "c94793261bc0bf091e6f6c3e44a96960184fe973c09e760e56bd101a518fe150",
+  "revisionDelta": [
+    "src/components/create/canvas/controller-types.ts",
+    "THIRD_PARTY_NOTICES.md"
+  ],
+  "deltaProof": "../git-delivery-whitespace/after.json",
+  "metadataInclusiveLintInputs": 31,
+  "supplementalGitPolicy": [
+    {
+      "file": ".gitattributes",
+      "sha256": "e92e07b2a436efcf5216924b24df87871d98e20a3eb69c022402ac3df526e9a1",
+      "bytes": 1191
+    },
+    {
+      "file": ".trellis/tasks/.gitignore",
+      "sha256": "6e77b1a9dc041ca869374e094e997c52c0fbe3dd9a95eb094ac47d995c89a0bf",
+      "bytes": 516
+    }
+  ],
+  "gates": [
+    {
+      "id": "20261101T030500-test-bounded-51b1e2",
+      "command": [
+        "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-history-cleanup-20261029\\node-v24.22.1-win-x64\\node.exe",
+        "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\app\\node_modules\\vitest\\vitest.mjs",
+        "run",
+        "--testTimeout=30000",
+        "--maxWorkers=2"
+      ],
+      "cwd": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\app",
+      "finishedAt": "2026-11-01T03:06:47.722941+00:00",
+      "exitCode": 0,
+      "timedOut": false,
+      "timeoutSeconds": 900,
+      "durationSeconds": 107.651,
+      "stdout": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\receipts\\20261101T030500-test-bounded-51b1e2.stdout.log",
+      "stderr": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\receipts\\20261101T030500-test-bounded-51b1e2.stderr.log",
+      "nodeEnv": "test",
+      "buildOnlyAppUrl": null,
+      "inheritedCallerConfiguration": false,
+      "sourceChanges": [],
+      "snapshotModifications": [],
+      "sourceManifest": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\source-manifest.json"
+    },
+    {
+      "id": "20261101T030703-lint-66cf1d",
+      "command": [
+        "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-history-cleanup-20261029\\node-v24.22.1-win-x64\\node.exe",
+        "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\app\\node_modules\\eslint\\bin\\eslint.js",
+        "."
+      ],
+      "cwd": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\app",
+      "finishedAt": "2026-11-01T03:07:16.392731+00:00",
+      "exitCode": 0,
+      "timedOut": false,
+      "timeoutSeconds": 180,
+      "durationSeconds": 12.681,
+      "stdout": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\receipts\\20261101T030703-lint-66cf1d.stdout.log",
+      "stderr": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\receipts\\20261101T030703-lint-66cf1d.stderr.log",
+      "nodeEnv": "test",
+      "buildOnlyAppUrl": null,
+      "inheritedCallerConfiguration": false,
+      "sourceChanges": [],
+      "snapshotModifications": [],
+      "sourceManifest": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\source-manifest.json"
+    },
+    {
+      "id": "20261101T030732-types-53098f",
+      "command": [
+        "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-history-cleanup-20261029\\node-v24.22.1-win-x64\\node.exe",
+        "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\app\\node_modules\\typescript\\bin\\tsc",
+        "--noEmit"
+      ],
+      "cwd": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\app",
+      "finishedAt": "2026-11-01T03:07:35.020553+00:00",
+      "exitCode": 0,
+      "timedOut": false,
+      "timeoutSeconds": 180,
+      "durationSeconds": 2.612,
+      "stdout": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\receipts\\20261101T030732-types-53098f.stdout.log",
+      "stderr": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\receipts\\20261101T030732-types-53098f.stderr.log",
+      "nodeEnv": "test",
+      "buildOnlyAppUrl": null,
+      "inheritedCallerConfiguration": false,
+      "sourceChanges": [],
+      "snapshotModifications": [],
+      "sourceManifest": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\source-manifest.json"
+    },
+    {
+      "id": "20261101T030751-prisma-no-network-1fceeb",
+      "command": [
+        "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-history-cleanup-20261029\\node-v24.22.1-win-x64\\node.exe",
+        "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\app\\node_modules\\prisma\\build\\index.js",
+        "generate"
+      ],
+      "cwd": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\app",
+      "finishedAt": "2026-11-01T03:07:52.465411+00:00",
+      "exitCode": 0,
+      "timedOut": false,
+      "timeoutSeconds": 120,
+      "durationSeconds": 1.347,
+      "stdout": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\receipts\\20261101T030751-prisma-no-network-1fceeb.stdout.log",
+      "stderr": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\receipts\\20261101T030751-prisma-no-network-1fceeb.stderr.log",
+      "nodeEnv": "production",
+      "buildOnlyAppUrl": "https://homepage-validation.invalid",
+      "inheritedCallerConfiguration": false,
+      "sourceChanges": [],
+      "snapshotModifications": [],
+      "sourceManifest": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\source-manifest.json",
+      "networkGuardSha256": "2445a292a89413835d8a756c7646df3a6984ff66d465378f49775c354c3a6697"
+    },
+    {
+      "id": "20261101T030808-build-c758b4",
+      "command": [
+        "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-history-cleanup-20261029\\node-v24.22.1-win-x64\\node.exe",
+        "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\app\\node_modules\\next\\dist\\bin\\next",
+        "build"
+      ],
+      "cwd": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\app",
+      "finishedAt": "2026-11-01T03:08:27.826806+00:00",
+      "exitCode": 0,
+      "timedOut": false,
+      "timeoutSeconds": 600,
+      "durationSeconds": 19.369,
+      "stdout": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\receipts\\20261101T030808-build-c758b4.stdout.log",
+      "stderr": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\receipts\\20261101T030808-build-c758b4.stderr.log",
+      "nodeEnv": "production",
+      "buildOnlyAppUrl": "https://homepage-validation.invalid",
+      "inheritedCallerConfiguration": false,
+      "sourceChanges": [],
+      "snapshotModifications": [],
+      "sourceManifest": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\production-fa4bca90\\source-manifest.json"
+    }
+  ],
+  "scheduling": "Serialized fullsuite maxWorkers=2, testTimeout30000,900s total; unchanged default DB exclusions. Browser lane paused.",
+  "previousRevision": "../long-url-final-bounded/result.json",
+  "notRun": [
+    "live account/database/Worker/provider/storage E2E on combined revision",
+    "physical mobile/native IME/OS downloads",
+    "actual GitHub CI or production deployment"
+  ],
+  "liveSourceChanges": [],
+  "sourceSnapshotChanges": [],
+  "metadataSnapshotChanges": [],
+  "gitPolicyLiveChanges": [],
+  "testFiles": 140,
+  "tests": 1704,
+  "lintErrors": 0,
+  "lintBaselineWarnings": 9,
+  "guardSha256": "bd9ec3da5da5787ffc8378f8ed97835428d4b5a9c80a21a099ccca2c4d077e55",
+  "finishedAt": "2026-11-01T03:08:36.061243+00:00"
+}

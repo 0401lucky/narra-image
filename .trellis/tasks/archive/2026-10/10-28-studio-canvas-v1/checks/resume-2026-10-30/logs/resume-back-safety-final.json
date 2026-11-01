@@ -1,0 +1,24 @@
+{
+  "label": "resume-back-safety-final",
+  "mode": "test",
+  "command": [
+    "pnpm",
+    "exec",
+    "vitest",
+    "run",
+    "src/tests/unit/local-docker-safety.test.ts",
+    "src/tests/unit/canvas-e2e-runner.test.ts",
+    "src/tests/unit/canvas-disposable-runner.test.ts",
+    "src/tests/unit/canvas-http.test.ts",
+    "src/tests/unit/canvas-generate-route.test.ts",
+    "--testTimeout=30000"
+  ],
+  "cwd": "E:/code/narra-image",
+  "timeoutMs": 120000,
+  "code": 0,
+  "signal": null,
+  "timedOut": false,
+  "durationMs": 2608,
+  "stdoutPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\resume-back-safety-final.stdout.log",
+  "stderrPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\resume-back-safety-final.stderr.log"
+}

@@ -1,0 +1,117 @@
+# Implementation Acceptance Status
+
+## Current Native Hero Correction
+
+The image revision's independent browser check found a real copy-button
+obstruction under hero tilt, plus phone prompt-panel occlusion of the selected
+illustrations. The continuation is fixing these in the homepage only and
+repeating the required gates. `resume-hero-hit-20261031.md` owns current
+progress. No final acceptance is claimed from the prior 1624-test pass or the
+78/82 first real-image browser run. Long-URL approval and pinned-runtime parity
+remain unresolved, and no commit/deployment/archive is authorized.
+
+## Resumed Asset Revision
+
+The source session continued after the earlier failure report, successfully
+generated all three scenes, then stopped with agent-transport HTTP 413. The
+continuation has inspected and published original bookshop v1, fox v1 and rain
+v2 PNGs at actual 1448x1086 dimensions. `assets/image-manifest.json` records the
+selected bytes and provenance; `resume-20261031.md` records scope and baseline.
+Fresh asset, independent, full automated and browser gates are in progress.
+The historical no-image statements and counts below do not describe final
+acceptance of this resumed revision. The long-URL decision is still pending.
+
+## Earlier Revision Evidence
+
+Status: Implementation and independent review complete for the current code;
+task remains in progress because final images and a long-URL decision are missing.
+This is not a completion or release-readiness declaration.
+The latest complete planning approval was explicit on 2026-10-31. No commit,
+push, deployment or archive is authorized.
+
+## External And Product Decisions Still Required
+
+1. The user has authorized an external API/model after the built-in tool
+   failed. Its authentication and model listing work, but two bounded bookshop
+   requests return `503 / no_available_account`, including a browser-header
+   recheck. No image exists. The provider must restore account availability or
+   the user must authorize a different model; no silent fallback is permitted.
+   Exact prompts, key-free contract and receipts: `assets/`.
+2. Real Next baseline confirms the existing query-string prefill cannot carry
+   every 8000-unit Unicode prompt: ASCII 8000/8001 succeeds and the page keeps
+   8000; 8000 Chinese units encode to 72,015 request-URL bytes and return HTTP
+   431; the tested emoji input similarly encodes to 56,019 bytes and returns
+   431. Root asked the user to approve an explicit oversized-link/manual-copy
+   fallback at the gallery entry only. No new threshold or workaround is yet
+   approved or implemented. No create/auth/draft contract was changed.
+3. The available runtime is Node 24.11.1, not the repository's pinned 24.22.1.
+   Local checks do not prove pinned-runtime parity. No runtime is downloaded.
+
+## Acceptance Matrix
+
+| AC | Current Evidence | Status |
+| --- | --- | --- |
+| AC1 | Actual local fonts, paper colors and 320/390/768/1024/1440 responsive checks; final comparison still lacks images | Partial / image blocked |
+| AC2 | Six motion groups implemented and lifecycle-tested; real successful scene effects need absent images | Partial / image blocked |
+| AC3 | Actual API/account/like/paging/copy contracts pass; oversized remix URL remains unresolved | Partial / long-URL decision pending |
+| AC4 | Empty/error retry, keyboard/touch disclosure and manual copy tests plus actual Next browser checks | Passed |
+| AC5 | Pause/reduced/hidden/unmount tests and browser instrumentation pass; live successful-image effects not exercised | Partial / image blocked |
+| AC6 | 185 protected source hashes unchanged; default route baseline and actual navigation comparisons pass | Passed |
+| AC7 | Fixed scene constants and coherent error handling; no final generated bitmaps | Blocked |
+| AC8 | Four-column 4:5 thumbnail grid and centered crop; original/detail preserved | Passed |
+| AC9 | 16-to-72 paging, synchronous command gate, retry/dedup/cap tests and real API browser checks | Passed |
+| AC10 | Positive-only URL payload with no generation/config cloning; long Unicode URL baseline fails | Partial / user decision pending |
+| AC11 | Actual guest login without continuation, return/reselect, saved-canvas/manual-chat and successive selections | Passed |
+| AC12 | Actual page props plus real Next raw HTML and navigation/refresh Flight secret-sentinel checks | Passed |
+| AC13 | Owner/admin controls/data intact, access policy unchanged; raw transfer matrix | Passed |
+| AC14 | Real existing-route footer/header links; no invented policy/status pages | Passed |
+
+## Final Automated And Browser Gates
+
+- Full non-DB suite: 136 files / 1610 tests pass under the final corrected
+  safety preload. Required DB exclusions remain unchanged.
+- Lint: zero errors, nine existing baseline warnings. TypeScript: pass.
+- Prisma Client generation: pass using the already installed engine, with an
+  extra diagnostic network block proving no download. No database migration.
+- Unmodified production-source Next build: pass, 23.016 seconds, no fixture DB
+  adapters or source changes. This is separate from the browser fixture build.
+- Independent review: no additional production defect found; five missing
+  regressions added, 14 focused files / 173 tests pass.
+- Final actual Next/Chromium with synthetic DB: 71 / 71 executed checks pass,
+  with eight unresolved asset/long-URL records listed separately, never counted
+  as passed. Final production/helper/build identities have no drift.
+- Final receipts: `validation-evidence/final-automated/result.json`;
+  `browser/evidence/full-1793413804860/result.json`. All owned servers/browser
+  processes stop after the checks.
+
+## Verified Privacy Slice
+
+- Before fix: 49 unit tests, 16 expected semantic failures and 33 passes.
+- After fix: 10 suites / 99 tests pass; actual outgoing client props retain only
+  the 11 allowed public fields. Hidden positive and negative prompts are null;
+  internal management fields never cross the non-owner boundary.
+- Actual Next with a synthetic DB-only boundary: 43 / 43 raw transfer checks
+  pass, including 32 visibility/permission combinations and 8 real navigation
+  plus refresh transfers; rerun in the final combined browser evidence at
+  `browser/evidence/full-1793413804860/`.
+- The existing Next streaming denial may use transport HTTP 200 with
+  `NEXT_HTTP_ERROR_FALLBACK;404` and noindex. Before/after evidence confirms the
+  existing behavior, with no client detail props or secret sentinels. Do not
+  equate that transport detail with an authorization exception.
+
+## Safety And Test Scope
+
+- `validation-environment.md` documents owned snapshots, OS-essential sanitized
+  child environments, exact public `.env.example` exception, independent
+  dependency copies, generated outputs, deadlines and cleanup. Eight final
+  safety self-tests pass. A task-preload `fs.exists` custom-promisification bug
+  was fixed without weakening dotenv rules; red/green evidence is preserved.
+  No real dotenv is read.
+- Source baseline: `implementation-baseline.json`. Create/canvas, root layout,
+  global styles, production package/lock/schema/config and service access code
+  remain unchanged from the start of this task.
+- Final full-suite/build results supplement, rather than substitute for,
+  per-slice evidence and independent review.
+- Browser evidence uses actual Next/React/Chromium with deterministic synthetic
+  service data. It is not live-account/database/Worker/provider/storage E2E,
+  physical iOS/Android testing or production release approval.

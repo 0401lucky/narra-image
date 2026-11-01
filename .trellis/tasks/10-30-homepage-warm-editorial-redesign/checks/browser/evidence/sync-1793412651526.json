@@ -1,0 +1,62 @@
+{
+  "time": "2026-10-31T02:10:51.523Z",
+  "app": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\browser-home-6123bb41\\app",
+  "changes": [
+    {
+      "file": "src/app/page.tsx",
+      "from": "260a710d227afa726443ead547a749730268b9fece6de6442de282a216531a27",
+      "to": "7504ef335e9b6a20b543a0032bf505dc9ec3c9c31426dbf4b68536cb827eac0a"
+    },
+    {
+      "file": "src/components/marketing/homepage/header.module.css",
+      "from": "10d719a7c7315c863ab1b73ae9b18fa9850a55a7bcc6cb0831451efb4ea5b0e9",
+      "to": "0b0045a83b64a7c3b8d9e4ed7f383d6ee95a549fbcae1e88fcc2114dbd120f0e"
+    },
+    {
+      "file": "src/components/marketing/homepage/hero-scene.tsx",
+      "from": "c356159a0099cd805a1b7d1cfbd0a879d1f4120d9f397c74e56019f42e89f845",
+      "to": "ae39dec877127642b7ea13c3b56b497689c25d7714db431ddec4cfcba0aad60d"
+    },
+    {
+      "file": "src/components/marketing/homepage/homepage.module.css",
+      "from": "7182157ae10a772eb6a3e943c6df5bf418d7597634c8d5ed7acb4023e2de212e",
+      "to": "ec7be31b074f036be8b0396692091fc8185b8d4922675b8f1e3bc0b9bf101786"
+    },
+    {
+      "file": "src/components/marketing/homepage/hooks/use-hero-scene.ts",
+      "from": "f8b7aea6b7ed073cbf57386c67a50fc99e81016b3016d8efcdf5ce33ca555d20",
+      "to": "61e358c3b663d087232725c5b30dc1553d12513ed81721bb23b9de0057940983"
+    },
+    {
+      "file": "src/tests/unit/featured-gallery-likes.test.tsx",
+      "from": "f5e8b104426677edb1b23c01eef1361e0dd27e1e23b438f6c3373df9dce0c20b",
+      "to": "039d41da061bcf1ee670d3aa942052117af5c66c8784f93314b18d84a6d9a89c"
+    },
+    {
+      "file": "src/tests/unit/featured-gallery.test.tsx",
+      "from": "618d29d8dbd7bf10e0e0affab1a567e85f4576cb184b7e613d9ec119995f32cb",
+      "to": "f09290d626c0bb8e6560fac9a9fd3f740e089e7bb578f7550e6744b57289a5ad"
+    },
+    {
+      "file": "src/tests/unit/helpers/gallery-fixtures.ts",
+      "from": "9ddf2826258a3d7df997e0b8d683b995138ed1ecc5c837e1e739d51490a45e8e",
+      "to": "22eae1412502bd5d7af2835adfaf357745f9ed9624f3ed35c4f7de2ea9dd0229"
+    },
+    {
+      "file": "src/tests/unit/homepage-hero.test.tsx",
+      "from": "e479fa4f5ad05e75ea3e7427b1372ed785a4ce586fa01f7177e04dfffbb5849d",
+      "to": "604c9993225914eddb30a77c66c45e9612b89ba635c008a123533fd3ca59acda"
+    },
+    {
+      "file": "src/tests/unit/homepage-motion.test.tsx",
+      "from": "2ed2b11d18644deca5771ff31d5bb6356caba240692b8399976bee5d6ab53621",
+      "to": "4a8d3db65708d26a7065ffeebefd2d6ca159de7ce4f2c2581890213a2dc8707b"
+    },
+    {
+      "file": "src/tests/unit/use-featured-gallery.test.tsx",
+      "from": "34043aed1856726a7deb000b1d4175f191ca2d39d16a8d8abff941bb9a58bfe3",
+      "to": "6b1872184121e1fa3e8a314e9e7d3708bc702fd889a478e707f5643184157dc8"
+    }
+  ],
+  "note": "Controlled production-source refresh. All prior build/browser verdicts invalid until rebuilt and rerun."
+}

@@ -1,0 +1,10 @@
+[
+  {
+    "check": "full",
+    "command": "pnpm exec vitest run --testTimeout=30000 --exclude **/worker-contracts-db.test.ts",
+    "code": 1,
+    "signal": null,
+    "timedOut": false,
+    "durationMs": 18284
+  }
+]

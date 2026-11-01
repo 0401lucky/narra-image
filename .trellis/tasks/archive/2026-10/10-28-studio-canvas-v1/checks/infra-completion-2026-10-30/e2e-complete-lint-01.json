@@ -1,0 +1,24 @@
+{
+  "label": "e2e-complete-lint-01",
+  "mode": "test",
+  "command": [
+    "pnpm",
+    "exec",
+    "eslint",
+    "scripts/verify-e2e.mjs",
+    "scripts/lib/e2e-safety.mjs",
+    "scripts/fixtures/canvas-object-store.mjs",
+    "scripts/fixtures/canvas-runtime.mjs",
+    "src/tests/unit/canvas-e2e-runner.test.ts",
+    "src/tests/unit/canvas-e2e-runtime-fixture.test.ts",
+    "src/tests/unit/canvas-object-store-fixture.test.ts"
+  ],
+  "cwd": "E:/code/narra-image",
+  "timeoutMs": 180000,
+  "code": 0,
+  "signal": null,
+  "timedOut": false,
+  "durationMs": 2938,
+  "stdoutPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\e2e-complete-lint-01.stdout.log",
+  "stderrPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\e2e-complete-lint-01.stderr.log"
+}

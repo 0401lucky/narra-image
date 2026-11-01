@@ -1,0 +1,8 @@
+[
+  {
+    "id": "diagnostic-gallery-entrance-native-viewport",
+    "passed": false,
+    "durationMs": 8016,
+    "error": "AssertionError [ERR_ASSERTION]: Fully visible native-hovered card must finish its unchanged opacity contract\n    at file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/diagnose-gallery-entrance.mjs:60:7\n    at async check (file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/run-browser.mjs:79:20)\n    at async diagnoseGalleryEntrance (file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/diagnose-gallery-entrance.mjs:8:3)\n    at async file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/run-browser.mjs:373:7"
+  }
+]

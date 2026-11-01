@@ -1,0 +1,135 @@
+{
+  "initial": [
+    {
+      "id": "home-069",
+      "top": 226.25537109375,
+      "bottom": 587.50537109375,
+      "height": 361.25,
+      "opacity": "0.358427",
+      "visibility": "visible",
+      "transform": "matrix(1, 0, 0, 1, 0, 15.2711)",
+      "visible": true,
+      "opacityChain": [
+        "1",
+        "0.358427",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "id": "home-070",
+      "top": 234.984375,
+      "bottom": 596.234375,
+      "height": 361.25,
+      "opacity": "0",
+      "visibility": "visible",
+      "transform": "matrix(1, 0, 0, 1, 0, 24)",
+      "visible": true,
+      "opacityChain": [
+        "1",
+        "0",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "id": "home-071",
+      "top": 234.984375,
+      "bottom": 596.234375,
+      "height": 361.25,
+      "opacity": "0",
+      "visibility": "visible",
+      "transform": "matrix(1, 0, 0, 1, 0, 24)",
+      "visible": true,
+      "opacityChain": [
+        "1",
+        "0",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "id": "home-072",
+      "top": 234.984375,
+      "bottom": 596.234375,
+      "height": 361.25,
+      "opacity": "0",
+      "visibility": "visible",
+      "transform": "matrix(1, 0, 0, 1, 0, 24)",
+      "visible": true,
+      "opacityChain": [
+        "1",
+        "0",
+        "1",
+        "1"
+      ]
+    }
+  ],
+  "settled": [
+    {
+      "id": "home-069",
+      "top": 210.984375,
+      "bottom": 572.234375,
+      "height": 361.25,
+      "opacity": "1",
+      "visibility": "visible",
+      "transform": "none",
+      "visible": true,
+      "opacityChain": [
+        "1",
+        "1",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "id": "home-070",
+      "top": 210.984375,
+      "bottom": 572.234375,
+      "height": 361.25,
+      "opacity": "1",
+      "visibility": "visible",
+      "transform": "none",
+      "visible": true,
+      "opacityChain": [
+        "1",
+        "1",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "id": "home-071",
+      "top": 210.984375,
+      "bottom": 572.234375,
+      "height": 361.25,
+      "opacity": "1",
+      "visibility": "visible",
+      "transform": "none",
+      "visible": true,
+      "opacityChain": [
+        "1",
+        "1",
+        "1",
+        "1"
+      ]
+    },
+    {
+      "id": "home-072",
+      "top": 210.984375,
+      "bottom": 572.234375,
+      "height": 361.25,
+      "opacity": "1",
+      "visibility": "visible",
+      "transform": "none",
+      "visible": true,
+      "opacityChain": [
+        "1",
+        "1",
+        "1",
+        "1"
+      ]
+    }
+  ],
+  "waitedMs": 5500
+}

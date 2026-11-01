@@ -1,0 +1,16 @@
+{
+  "recordedAt": "2026-10-30T14:28:32.937021+08:00",
+  "userAuthorized": true,
+  "action": "Start installed Docker Desktop",
+  "executable": "C:\\Users\\Administrator\\AppData\\Local\\Programs\\DockerDesktop\\Docker Desktop.exe",
+  "windowStyle": "Hidden",
+  "processId": 32520,
+  "engineReady": true,
+  "noDaemonConfigurationChange": true,
+  "noImagePull": true,
+  "noApplicationDataOperation": true,
+  "readinessLabels": [
+    "parent-docker-ready-01"
+  ],
+  "readinessCheckedAt": "2026-10-30T06:30:55.0923433+00:00"
+}

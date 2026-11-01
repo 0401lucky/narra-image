@@ -1,0 +1,214 @@
+# Mobile canvas editing follow-up
+
+## User-Requested Code-Scope Archive
+
+On 2026-10-31 the user explicitly requested administrative archive after the
+continuation handoff. This permits archive with `--no-commit` despite deferred
+device/global-quality gates; it does not accept or waive MA1-MA4 or authorize
+commits, real-service/device setup or deployment. `closure.md` records the
+delivered scope and unverified remainder. The requirements and unchecked MA
+criteria below are preserved, not retroactively rewritten as accepted.
+
+## Status And Authorization
+
+- Existing independent P3 task, created on 2026-10-28 with
+  `task.py create --no-start`; approved to transition from `planning` to
+  `in_progress` on 2026-10-30. Do not create a
+  duplicate, reparent it, or reopen an archived predecessor.
+- On 2026-10-30 the user resumed this task's planning, approved D1 and D2 in
+  separate replies, then explicitly delegated the remaining decisions to main
+  and requested implementation after preparation. D3-D6 are therefore main's
+  delegated choices, not additional individual user approvals.
+- On 2026-10-30 the user replied "可以" to the latest complete final summary.
+  This fresh approval authorizes `task.py start` and the approved product edits;
+  see `checks/implementation-approval-2026-10-30.md`. Main dispatches
+  `trellis-implement` and independent `trellis-check` with
+  native Codex context injection preferred and explicit child-side fallback.
+- Preserve all uncommitted changes. No staging, commit, push, deployment,
+  production enablement, real dotenv read, real DB/S3 or paid generation access
+  is authorized. Predecessor infrastructure permission does not transfer.
+- The user confirmed that `.trellis/tasks/10-30-homepage-warm-editorial-redesign/`
+  is unrelated concurrent UI work and may be preserved/ignored. During planning
+  use this explicit mobile path, not its session-fallback pointer. Do not change
+  that pointer or modify the UI task; coordinate any actual shared-file conflict.
+
+## Goal
+
+Let phone users complete the core connected-node image-creation loop without a
+desktop: create/edit/move nodes, connect ready inputs, manually run one node and
+inspect results. Preserve usable phone conversation creation and the existing
+Chinese cream/orange visual language, account identity and durable work.
+
+## Background And Source Evidence
+
+- The desktop-first predecessor was verified and archived on 2026-10-30:
+  `.trellis/tasks/archive/2026-10/10-28-studio-canvas-v1/prd.md`, its `design.md`,
+  `verification.md` and `handoff.md`. Its phone policy is currently read-only
+  selection/view/pan/zoom. This task deliberately replaces that phone policy,
+  not the accepted identity/save/reference/run/retention contracts.
+- Parent AC1-AC17 integration passed with independent final review; see
+  `.trellis/tasks/archive/2026-10/10-28-studio-dual-mode-canvas/verification.md`
+  and `.trellis/tasks/archive/2026-10/10-28-studio-dual-mode-canvas/handoff.md`.
+  Verified independent identity, saved documents, reference persistence,
+  ownership, generation lifecycle and first-release integration satisfy the
+  prerequisites, not MA1-MA4. Neither predecessor depends on mobile completion.
+- Archives/journals used `--no-commit`; implementation remains uncommitted.
+  Retained historical red preflights are not current predecessor blockers.
+  Recorded fixture-browser and signed-session runtime evidence are separate;
+  neither establishes physical phones, native IME or paid-provider browser E2E.
+- Initial continuation baseline: `main`, HEAD
+  `1f7948e334c589dc6db38ac045b584f0f5381481`, 154 porcelain entries, empty staging
+  and 1337 preserved file/absence identities outside this task, recorded in
+  `research/planning-source-baseline-2026-10-30.json`. Subsequent allowed UI-task
+  additions do not become mobile ownership. Hashes are provenance, not tests.
+- Pre-implementation planning snapshot:
+  `src/components/create/hooks/use-canvas-documents.ts:27` mounted the existing
+  owner controller above the lazy renderer; read-only updates are separate at
+  `src/components/create/hooks/use-canvas-documents.ts:49`.
+  `src/components/create/canvas/controller.ts:101` centralized mutation guards;
+  `src/components/create/hooks/use-studio-mode.ts:30` then coupled these
+  guards to width. Removing hidden buttons alone was insufficient. Layout changes
+  must not revoke capability or remount the controller/runtime.
+- Implementation evidence and relevant specs are indexed in
+  `research/mobile-touch-connections-audit-2026-10-30.md`,
+  `research/mobile-keyboard-verification-audit-2026-10-30.md` and
+  `research/mobile-planning-foundation-2026-10-30.md`.
+
+## Requirements
+
+- M1: Replace phone read-only editing with touch-safe creation, selection,
+  prompt/parameter/reference editing, movement and input connections. Provide an
+  unscaled editor and node chooser, separate browse/move/edit gestures, source
+  replacement/disconnection and explicit reference order. Failed replacement
+  leaves the old edge/order intact. Desktop pointer editing remains usable.
+- M2: Import/replace a reference or reuse current-canvas references/completed
+  results, then explicitly Run one target through the existing authenticated
+  pipeline. Retain one prompt, 0-16 ordered images, readiness/ownership/count and
+  capacity checks, frozen captured input and original uncertain-run recovery.
+  Missing/pending upstream input blocks Run; editing/loading/navigation never
+  runs upstream/downstream, retries automatically or drops an input silently.
+- M3: Reuse the same account/canvas/document/asset/job identities and scene v1.
+  Local automatic drafts remain distinct from manual captured account Save;
+  Save includes disconnected originals, is not generation and acknowledges only
+  its captured edit. Upload/storage/revision failure preserves drafts. Conflicts
+  require explicit warned reload, not merge/force overwrite. Canvas/node/result
+  deletion removes organization only, not works/media/jobs or credits; delayed
+  callbacks cannot resurrect it, cancel work or trigger refunds.
+- M4: Preserve Chinese composition/caret/selection, unfinished field input,
+  keyboard-safe actions, native scrolling, safe areas, orientation/mode changes,
+  chat creation, image viewing/downloading and error recovery. Prompt/parameter
+  Enter and IME candidate keys are not Run; explicit keyboard activation of a
+  Run/confirmation control remains accessible. Changing layout does not submit,
+  copy content, discard completed edits or hijack another node/canvas's results.
+
+## Product Decisions
+
+- D1 / M1-M4, user-approved: select a node and explicitly open a bottom editor
+  that does not scale with the scene. Prompt, reference, generation settings
+  and single-node Run use that panel; selection/overview/movement stay on canvas.
+  A node tap/drag/image action must not open competing overlays accidentally.
+- D2 / M1-M2, user-approved: use target-node panel source selection and large
+  replace/disconnect/up/down controls, with identifiable inputs and visible
+  order. Failed replacement retains the original connection/order; no precision
+  port gesture is required on phones. Desktop direct-port behavior is unchanged.
+- D3 / M4, delegated: primary targets are iOS 18+ Safari and Android 12+ Chrome
+  (current and preceding stable Chrome major at acceptance time), at least
+  360 CSS pixels wide. Cover portrait/landscape and keyboard/safe-area states.
+  Record actual tested OS/browser/hardware versions. In-app browsers/WebViews,
+  older OS/browser versions and sub-360 viewports are best-effort, not promised.
+  Use a 24-node/up-to-32-valid-edge representative graph and a 200-node capacity
+  smoke; no measured FPS/capacity or latency SLA is promised.
+- D4 / M1-M3, delegated: include New/select/manual Save, rename, confirmed
+  canvas delete/account reload, explicit node deletion, and the current node
+  settings/runtime channel/CAPTCHA paths. Keep primary actions reachable; put
+  destructive/advanced actions behind labelled menus/confirmation. No undo,
+  lasso, multi-select, duplication suite or auto-layout is added.
+- D5 / M2-M3, delegated: reuse existing sources in the same canvas, including
+  account-saved originals restored on another device and specific completed
+  results. A source may feed multiple targets; canonical duplicates at one
+  target remain invalid. Do not add an account-wide works/imported-asset library
+  or discovery/insertion API. Upload-once/READY reuse remains unchanged.
+- D6 / M1-M4, delegated: default one-finger canvas pan/two-finger pinch; select
+  a node, explicitly enter Move, drag the whole preview card, then Done returns
+  to browse. Completed drops become local edits; interrupted gesture previews
+  are not accepted edits. A second finger/pointer cancellation cannot commit an
+  accidental move. Panel/input scrolling stays separate. Node chooser/explicit
+  locate supports offscreen or highly zoomed-out nodes; background results do
+  not seize the camera. No long-press gesture is required.
+
+## Acceptance Criteria
+
+- [ ] MA1 / M1-M2: Complete the phone core loop from New through adding,
+  selecting/moving/editing nodes, importing/replacing/reusing inputs and changing
+  connections/order to explicit single-node Run and result view. Verify frozen
+  ordered ready inputs, retained old results and one submission per user Run.
+  Invalid/duplicate/unavailable replacement preserves the original edge/order;
+  incomplete fields or missing inputs create no generation request.
+- [ ] MA2 / M3: Same-profile native local reload restores completed edits and
+  originals; explicit phone account Save restores its captured snapshot under
+  the same owner/canvas ID in a separate desktop profile. Newer unsaved edits
+  remain dirty. Verify asset reuse, owner isolation, Save-while-editing, conflict/
+  failure preservation and organization-only deletion with no cancel/refund.
+- [ ] MA3 / M2-M4: Switching modes, selecting another node/canvas, rotating,
+  opening/closing keyboard, or foregrounding the page creates no extra Run/Save
+  request. Completed text/geometry and runtime unfinished parameter drafts
+  remain; canonical terminal results attach only to live captured origins.
+  Phone chat/composition, runtime confirmation and original view/download remain
+  usable, including a download whose card/editor closes.
+- [ ] MA4 / M1-M4: At the D3 targets and supported zoom range, distinguish tap,
+  pan, pinch, explicit Move and editor/input scrolling. Main touch controls are
+  at least 44x44 CSS pixels, unscaled fields are readable, and a node/source
+  chooser avoids precision/offscreen dependence. Test 360/390/430 CSS portrait
+  fixtures and landscape/short keyboard layouts, native focus/IME/safe areas,
+  actual lazy hydration/recovery and representative/capacity scenes without
+  crashes, lost input, runaway effects or unreachable controls.
+
+## Acceptance And Verification Boundaries
+
+- Automated DOM/controller tests, actual Next/React Flow/native IndexedDB
+  fixture-browser checks, physical-device checks, signed-session API/runtime,
+  real services and actual CI each need separate evidence labels. Existing
+  predecessor results stay dated prerequisites, not new mobile passes.
+- Code and automated validation may finish without physical hardware. Physical
+  iOS Safari and Android Chrome touch/native Chinese IME/file-picker/download
+  checks remain required before claiming full target-device MA1/MA3/MA4
+  acceptance or rollout readiness. If unavailable, report those portions pending
+  explicitly; do not check off all MA criteria or silently waive that gate.
+- No real provider/S3/DB, browser login-to-paid-provider loop or actual GitHub
+  Actions run is authorized or claimed. Browser fixtures use explicit dummy
+  identity/fake HTTP; a successful mock does not certify authentication, billing
+  or native OS behavior. Browser clearing/eviction can still lose unsynced drafts.
+- Performance receipts must state scene/device/engine and actual observations.
+  Shared 200-node/400-edge limits are protective bounds, not a benchmark promise;
+  crashes, hangs, lost input or unreachable actions block the applicable test.
+
+## Out Of Scope
+
+- New schema/phone document format, account/asset/provider/Worker/billing
+  lifecycle, whole-graph execution, automatic upstream/downstream generation,
+  mode copying, realtime collaboration, video/photo/mask editing or scene export.
+- Account-wide reference/works discovery, advanced graph tools, versioned import
+  storage, stronger browser-eviction durability, or changed retention/save rules.
+- Production flags/migrations/deployment, real-service/paid testing, actual CI,
+  commits/pushes, automatic archive/closeout, or modification of concurrent UI work.
+
+## Artifact Status
+
+- Requirements and delegated decisions are converged; no unresolved product
+  choice remains. `design.md` and `implement.md` hold technical/execution detail;
+  curated `implement.jsonl` and `check.jsonl` hold spec/research and current
+  verification/handoff evidence references, not product ownership or acceptance.
+- Final-summary approval is recorded separately from D1/D2 and delegated D3-D6.
+  Execution and verification now follow `implement.md`; planning itself claims
+  no application/device/service pass, MA acceptance or production readiness.
+- On 2026-10-31 the approved code/local automated scope is verified; see
+  `verification.md`, `handoff.md` and final independent source freeze. The task
+  stays `P3 / in_progress`, with MA1-MA4 unchecked and physical/native-device,
+  real-service and actual-CI gates explicitly unperformed. No new product choice,
+  automatic archive, staging/commit or rollout approval is inferred.
+- On the resumed 2026-10-31 session the user explicitly confirmed that ongoing
+  homepage work belongs to another agent and must be preserved. Continue only
+  mobile review/evidence/handoff; no shared lint-configuration fix or foreign
+  artifact cleanup is authorized. The new scoped and dated snapshot verdicts,
+  retained full-root lint failure and pending MA gates are in
+  `checks/mobile-resume-verification-2026-10-31.md`.

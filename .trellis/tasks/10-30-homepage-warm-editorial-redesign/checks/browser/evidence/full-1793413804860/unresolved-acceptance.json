@@ -1,0 +1,46 @@
+[
+  {
+    "id": "AC7-assets-1440",
+    "reason": "Three approved hero assets not generated; no successful image decode/subject fidelity claim."
+  },
+  {
+    "id": "AC7-assets-390",
+    "reason": "Three approved hero assets not generated; no successful image decode/subject fidelity claim."
+  },
+  {
+    "id": "AC7-assets-320",
+    "reason": "Three approved hero assets not generated; no successful image decode/subject fidelity claim."
+  },
+  {
+    "id": "AC7-assets-768",
+    "reason": "Three approved hero assets not generated; no successful image decode/subject fidelity claim."
+  },
+  {
+    "id": "AC7-assets-1024",
+    "reason": "Three approved hero assets not generated; no successful image decode/subject fidelity claim."
+  },
+  {
+    "id": "M1-M2-actual-scene-motion",
+    "reason": "Asset prerequisite absent: successful3-scene decode/fade/dust cannot be accepted from failure-state checks."
+  },
+  {
+    "id": "C2-long-multibyte-url",
+    "label": "chinese8000",
+    "units": 8000,
+    "requestTargetBytes": 72015,
+    "status": 431,
+    "inputUnits": null,
+    "matchesExistingSlice": false,
+    "reason": "Existing URL-prefill transport limit; needs root scope decision, no create/environment workaround applied."
+  },
+  {
+    "id": "C2-long-multibyte-url",
+    "label": "emoji8000units",
+    "units": 8000,
+    "requestTargetBytes": 56019,
+    "status": 431,
+    "inputUnits": null,
+    "matchesExistingSlice": false,
+    "reason": "Existing URL-prefill transport limit; needs root scope decision, no create/environment workaround applied."
+  }
+]

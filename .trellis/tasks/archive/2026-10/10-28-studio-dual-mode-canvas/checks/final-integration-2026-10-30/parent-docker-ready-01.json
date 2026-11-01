@@ -1,0 +1,20 @@
+{
+  "label": "parent-docker-ready-01",
+  "mode": "test",
+  "command": [
+    "docker",
+    "--host",
+    "npipe:////./pipe/dockerDesktopLinuxEngine",
+    "info",
+    "--format",
+    "{{.ServerVersion}}"
+  ],
+  "cwd": "E:/code/narra-image",
+  "timeoutMs": 20000,
+  "code": 0,
+  "signal": null,
+  "timedOut": false,
+  "durationMs": 2033,
+  "stdoutPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\parent-docker-ready-01.stdout.log",
+  "stderrPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\parent-docker-ready-01.stderr.log"
+}

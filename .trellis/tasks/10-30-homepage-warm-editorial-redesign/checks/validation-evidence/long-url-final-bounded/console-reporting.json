@@ -1,0 +1,8 @@
+{
+  "orchestrationExecExitCode": 1,
+  "nodeTestExitCode": 0,
+  "receiptWrittenBeforeConsoleError": true,
+  "failure": "Python console-only UnicodeEncodeError: gbk could not encode U+2713 while printing the already saved stdout log.",
+  "impact": "Does not alter Node exit0, saved outputs or source hashes; receipt reread separately without rerunning tests.",
+  "noPassingTestCountInferredFromPartialLogs": true
+}

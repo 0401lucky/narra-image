@@ -1,0 +1,711 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-10-29T05:01:37.812Z",
+  "task": ".trellis/tasks/10-28-studio-canvas-v1",
+  "orderedStep": 2,
+  "pass": true,
+  "scope": "Pinned dependency/license and disposable narrow client-only compatibility/interaction spike only; not full child acceptance or authenticated application/data E2E.",
+  "filesChangedBySpike": [
+    "package.json (exact dependency addition only; later script ownership transferred to foundation)",
+    "pnpm-lock.yaml (additive Flow closure only)",
+    "THIRD_PARTY_NOTICES.md",
+    ".trellis/tasks/10-28-studio-canvas-v1/checks/react-flow-spike.json"
+  ],
+  "predecessorApplicationPatch": [
+    {
+      "path": "src/app/globals.css",
+      "originalCheckedPatchSha256Preserved": true
+    },
+    {
+      "path": "src/components/create/generator-studio.tsx",
+      "originalCheckedPatchSha256Preserved": true
+    },
+    {
+      "path": "src/components/create/parts/history-rail.tsx",
+      "stillDeleted": true
+    },
+    {
+      "path": "src/components/create/parts/session-sidebar.tsx",
+      "originalCheckedPatchSha256Preserved": true
+    },
+    {
+      "path": "src/tests/unit/generator-studio-feedback.test.tsx",
+      "originalCheckedPatchSha256Preserved": true
+    },
+    {
+      "path": "src/tests/unit/generator-studio-session-history.test.tsx",
+      "originalCheckedPatchSha256Preserved": true
+    }
+  ],
+  "dependency": {
+    "package": "@xyflow/react",
+    "exactVersion": "12.12.0",
+    "peerRanges": {
+      "@types/react": ">=17",
+      "@types/react-dom": ">=17",
+      "react": ">=17",
+      "react-dom": ">=17"
+    },
+    "existingResolvedVersions": {
+      "next": "16.2.4",
+      "react": "19.2.4",
+      "react-dom": "19.2.4",
+      "@types/react": "19.2.14",
+      "@types/react-dom": "19.2.3"
+    },
+    "lockIntegrity": "sha512-74oXI0Rgm1Eu33cHQAd74J6oVgCH9mbFyTVQbsGgp2kmWwh0HdtBr2VP04z8mbPD+M/xO69nqG5dDEt7/EN2rQ==",
+    "previousNonblankLockLinesPreservedAtInstall": true,
+    "runtimeDependencies": {
+      "classcat": "^5.0.3",
+      "zustand": "^4.4.0",
+      "@xyflow/system": "0.0.83"
+    },
+    "introducedPackages": [
+      {
+        "name": "@xyflow/react",
+        "version": "12.12.0",
+        "license": "MIT"
+      },
+      {
+        "name": "classcat",
+        "version": "5.0.5",
+        "license": "MIT"
+      },
+      {
+        "name": "zustand",
+        "version": "4.5.7",
+        "license": "MIT"
+      },
+      {
+        "name": "use-sync-external-store",
+        "version": "1.7.0",
+        "license": "MIT"
+      },
+      {
+        "name": "@xyflow/system",
+        "version": "0.0.83",
+        "license": "MIT"
+      },
+      {
+        "name": "@types/d3-drag",
+        "version": "3.0.7",
+        "license": "MIT"
+      },
+      {
+        "name": "@types/d3-selection",
+        "version": "3.0.12",
+        "license": "MIT"
+      },
+      {
+        "name": "@types/d3-interpolate",
+        "version": "3.0.4",
+        "license": "MIT"
+      },
+      {
+        "name": "@types/d3-color",
+        "version": "3.1.3",
+        "license": "MIT"
+      },
+      {
+        "name": "@types/d3-transition",
+        "version": "3.0.9",
+        "license": "MIT"
+      },
+      {
+        "name": "@types/d3-zoom",
+        "version": "3.0.9",
+        "license": "MIT"
+      },
+      {
+        "name": "d3-drag",
+        "version": "3.0.0",
+        "license": "ISC"
+      },
+      {
+        "name": "d3-dispatch",
+        "version": "3.0.1",
+        "license": "ISC"
+      },
+      {
+        "name": "d3-selection",
+        "version": "3.0.0",
+        "license": "ISC"
+      },
+      {
+        "name": "d3-interpolate",
+        "version": "3.0.1",
+        "license": "ISC"
+      },
+      {
+        "name": "d3-color",
+        "version": "3.1.0",
+        "license": "ISC"
+      },
+      {
+        "name": "d3-zoom",
+        "version": "3.0.0",
+        "license": "ISC"
+      },
+      {
+        "name": "d3-transition",
+        "version": "3.0.1",
+        "license": "ISC"
+      },
+      {
+        "name": "d3-ease",
+        "version": "3.0.1",
+        "license": "BSD-3-Clause"
+      },
+      {
+        "name": "d3-timer",
+        "version": "3.0.1",
+        "license": "ISC"
+      }
+    ],
+    "notices": {
+      "file": "THIRD_PARTY_NOTICES.md",
+      "sha256": "abd2b9c3e44e2218b6501e6faed56399663cacb76f808b1ee2a07ec9430f515f",
+      "all20PublishedNoticesRetained": true,
+      "coreCopyright": "Copyright (c) 2019-2025 webkid GmbH",
+      "corePermission": "MIT",
+      "unicodeJustification": "classcat published copyright symbol retained verbatim to preserve legal notice",
+      "copiedProContent": false,
+      "applicationGlobalStoreAdded": false
+    }
+  },
+  "environment": {
+    "node": "24.22.1, temporary official-checksummed runtime prepared by main",
+    "pnpm": "10.32.1",
+    "next": "16.2.4",
+    "react": "19.2.4",
+    "chrome": "Chrome/156.0.8078.48",
+    "runnerRoot": "$spike",
+    "fixtureRoot": "$fixture",
+    "safePreload": "$spike\\deny-local-env.cjs",
+    "safeEnvironment": "$spike\\safe-environment.mjs",
+    "safeCommandRunner": "$spike\\safe-run.mjs",
+    "browserRunner": "$spike\\browser-spike.mjs",
+    "deadlines": "Independent stages reuse scripts/lib/command-runner.mjs; browser CDP commands additionally have 15s per-call deadlines.",
+    "database": "Explicit dummy postgresql://...@127.0.0.1:1/canvas_no_db?schema=public; no DB connection/migration runner invoked by this agent.",
+    "secrets": "Fresh dummy AUTH_SECRET >=32 chars; real inherited secrets discarded; provider/S3 credentials, bucket, endpoint and public URL blank; S3_REGION=auto.",
+    "worker": "ENABLE_EMBEDDED_WORKER=false, WORKER_RUNTIME_MODE=dedicated; no worker process launched.",
+    "envFiles": "Runner preload blocks exact repository .env/.env.* fs and fs.promises access except tracked .env.example; safety self-test and Prisma config block audit pass; no real .env contents read.",
+    "appUrl": "Only build/Next production fixture mode sets https://narra-canvas-build.invalid; APP_URL omitted from test/install/dev modes.",
+    "fixtureDependencies": "46 exact already-installed packages copied into disposable same-drive fixture to avoid Windows C:/E: resolution; no fixture dependency install or global tool modification.",
+    "filesystem": "No recursive delete, .env mutation, stage/commit/push/deploy or broad temp cleanup. Failed cross-drive fixture/junction left intact; all outputs runner-owned."
+  },
+  "commands": [
+    {
+      "label": "safety",
+      "command": [
+        "node",
+        "-e",
+        "const assert=require(\"node:assert/strict\");const fs=require(\"node:fs\");const p=\"$repo/.env\";assert.equal(fs.existsSync(p),false);assert.throws(()=>fs.readFileSync(p),{code:\"ENOENT\"});(async()=>{await assert.rejects(fs.promises.readFile(p),{code:\"ENOENT\"});const f=await import(\"node:fs\");assert.equal(f.existsSync(p),false);assert.throws(()=>f.readFileSync(p),{code:\"ENOENT\"});assert.equal(new URL(process.env.DATABASE_URL).hostname,\"127.0.0.1\");assert.equal(new URL(process.env.DATABASE_URL).port,\"1\");assert.ok(process.env.AUTH_SECRET.length>=32);assert.equal(process.env.APP_URL,undefined);assert.equal(process.env.ENABLE_EMBEDDED_WORKER,\"false\");assert.equal(process.env.S3_SECRET_ACCESS_KEY,\"\");console.log(\"Safe runner: exact .env reads denied; dummy port-1 DB; no APP_URL/provider/S3/worker\");})()"
+      ],
+      "cwd": "$repo",
+      "deadlineMs": 30000,
+      "exitCode": 0,
+      "timedOut": false,
+      "durationMs": 84,
+      "evidence": "$spike\\logs\\safety.json"
+    },
+    {
+      "label": "dependency-install",
+      "command": [
+        "pnpm",
+        "add",
+        "--save-exact",
+        "@xyflow/react@12.12.0"
+      ],
+      "cwd": "$repo",
+      "deadlineMs": 180000,
+      "exitCode": 0,
+      "timedOut": false,
+      "durationMs": 16762,
+      "evidence": "$spike\\logs\\dependency-install.json"
+    },
+    {
+      "label": "prisma-generate",
+      "command": [
+        "pnpm",
+        "exec",
+        "prisma",
+        "generate"
+      ],
+      "cwd": "$repo",
+      "deadlineMs": 60000,
+      "exitCode": 0,
+      "timedOut": false,
+      "durationMs": 2423,
+      "evidence": "$spike\\logs\\prisma-generate.json"
+    },
+    {
+      "label": "dependency-evidence",
+      "command": [
+        "node",
+        "$spike\\dependency-evidence.mjs"
+      ],
+      "cwd": "$repo",
+      "deadlineMs": 60000,
+      "exitCode": 0,
+      "timedOut": false,
+      "durationMs": 149,
+      "evidence": "$spike\\logs\\dependency-evidence.json"
+    },
+    {
+      "label": "fixture-dependencies-final",
+      "command": [
+        "node",
+        "$spike\\copy-fixture-dependencies.mjs"
+      ],
+      "cwd": "$repo",
+      "deadlineMs": 180000,
+      "exitCode": 0,
+      "timedOut": false,
+      "durationMs": 15062,
+      "evidence": "$spike\\logs\\fixture-dependencies-final.json"
+    },
+    {
+      "label": "fixture-build-final",
+      "command": [
+        "node",
+        "$fixture\\node_modules\\next\\dist\\bin\\next",
+        "build",
+        "--webpack"
+      ],
+      "cwd": "$fixture",
+      "deadlineMs": 300000,
+      "exitCode": 0,
+      "timedOut": false,
+      "durationMs": 10621,
+      "evidence": "$spike\\logs\\fixture-build-final.json"
+    },
+    {
+      "label": "fixture-turbopack",
+      "command": [
+        "node",
+        "$fixture\\node_modules\\next\\dist\\bin\\next",
+        "build"
+      ],
+      "cwd": "$fixture",
+      "deadlineMs": 300000,
+      "exitCode": 0,
+      "timedOut": false,
+      "durationMs": 4181,
+      "evidence": "$spike\\logs\\fixture-turbopack.json"
+    },
+    {
+      "label": "browser-spike-4",
+      "command": [
+        "node",
+        "$spike\\browser-spike.mjs",
+        "4"
+      ],
+      "cwd": "$repo",
+      "deadlineMs": 240000,
+      "exitCode": 0,
+      "timedOut": false,
+      "durationMs": 24184,
+      "evidence": "$spike\\logs\\browser-spike-4.json"
+    },
+    {
+      "label": "browser-spike-turbo",
+      "command": [
+        "node",
+        "$spike\\browser-spike.mjs",
+        "turbo"
+      ],
+      "cwd": "$repo",
+      "deadlineMs": 240000,
+      "exitCode": 0,
+      "timedOut": false,
+      "durationMs": 24137,
+      "evidence": "$spike\\logs\\browser-spike-turbo.json"
+    },
+    {
+      "label": "repository-types",
+      "command": [
+        "pnpm",
+        "exec",
+        "tsc",
+        "--noEmit"
+      ],
+      "cwd": "$repo",
+      "deadlineMs": 57000,
+      "exitCode": 0,
+      "timedOut": false,
+      "durationMs": 7407,
+      "evidence": "$spike\\logs\\repository-types.json"
+    },
+    {
+      "label": "repository-lint",
+      "command": [
+        "pnpm",
+        "lint"
+      ],
+      "cwd": "$repo",
+      "deadlineMs": 57000,
+      "exitCode": 0,
+      "timedOut": false,
+      "durationMs": 9700,
+      "evidence": "$spike\\logs\\repository-lint.json"
+    },
+    {
+      "label": "spike-whitespace",
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "cwd": "$repo",
+      "deadlineMs": 30000,
+      "exitCode": 0,
+      "timedOut": false,
+      "durationMs": 82,
+      "evidence": "$spike\\logs\\spike-whitespace.json"
+    }
+  ],
+  "browser": {
+    "method": "actual Next 16.2.4 App Router production server + ssr:false next/dynamic + React/react-dom 19.2.4 + @xyflow/react 12.12.0; synthetic cards, chat pane, IDs, commands, and media; no auth, /create, DB, API, provider or object store",
+    "finalBundler": "Actual Next default Turbopack production output; webpack production output independently passed the same 9 browser checks.",
+    "passedCheckCount": 9,
+    "checks": [
+      {
+        "check": "Next hydration and lazy mount",
+        "pass": true,
+        "measured": {
+          "width": 1440,
+          "height": 789,
+          "documentWidth": 1440
+        },
+        "lazyChunks": [
+          "/_next/static/chunks/04~5zkx0euuho.js"
+        ],
+        "shellMounts": 1,
+        "stageMounts": 1
+      },
+      {
+        "check": "Typed handle pointer connections",
+        "pass": true,
+        "edges": [
+          {
+            "source": "generation",
+            "target": "result-one",
+            "sourceHandle": "result-out",
+            "targetHandle": "result-in",
+            "data": {
+              "kind": "output-provenance"
+            }
+          },
+          {
+            "source": "generation",
+            "target": "result-two",
+            "sourceHandle": "result-out",
+            "targetHandle": "result-in",
+            "data": {
+              "kind": "output-provenance"
+            }
+          },
+          {
+            "source": "prompt",
+            "target": "generation",
+            "sourceHandle": "prompt-out",
+            "targetHandle": "prompt-in",
+            "data": {
+              "kind": "prompt-input"
+            }
+          },
+          {
+            "source": "reference",
+            "target": "generation",
+            "sourceHandle": "image-out",
+            "targetHandle": "image-in",
+            "data": {
+              "kind": "image-input",
+              "ordinal": 1
+            }
+          },
+          {
+            "source": "result-one",
+            "target": "generation",
+            "sourceHandle": "image-out",
+            "targetHandle": "image-in",
+            "data": {
+              "kind": "image-input",
+              "ordinal": 2
+            }
+          }
+        ],
+        "priorResultFeedbackAllowed": true,
+        "wrongPortAndDuplicatePointerRejected": true,
+        "selfAndMissingEndpointValidatorRejected": true
+      },
+      {
+        "check": "Chinese composition focus and textarea wheel isolation",
+        "pass": true,
+        "method": "Chrome CDP imeSetComposition/insertText and browser composition events, native input and mouse wheel; synthetic remote-debugger IME, not actual Windows IME",
+        "compositionTypes": [
+          "start",
+          "update",
+          "update",
+          "end"
+        ],
+        "textareaBoundaryWheelDoesNotPanOrZoom": true,
+        "textSelectionDoesNotDrag": true
+      },
+      {
+        "check": "Keyboard focus selection and isolated card buttons",
+        "pass": true,
+        "actualTabFocusNodeId": "prompt",
+        "enterSelectionAndEscape": true,
+        "buttonClickDoesNotDrag": true,
+        "onlyExplicitSyntheticRunCount": 1
+      },
+      {
+        "check": "Explicit drag handle and zoom-normalized negative geometry",
+        "pass": true,
+        "drags": [
+          {
+            "zoom": 0.25,
+            "screenDeltaAfterDeadzone": {
+              "x": 20,
+              "y": 12
+            },
+            "worldDelta": {
+              "x": 80,
+              "y": 48
+            }
+          },
+          {
+            "zoom": 1,
+            "screenDeltaAfterDeadzone": {
+              "x": 20,
+              "y": 12
+            },
+            "worldDelta": {
+              "x": 20,
+              "y": 12
+            }
+          },
+          {
+            "zoom": 2,
+            "screenDeltaAfterDeadzone": {
+              "x": 20,
+              "y": 12
+            },
+            "worldDelta": {
+              "x": 10,
+              "y": 6
+            }
+          }
+        ],
+        "nativeMousePanePansWithoutMovingNodes": true
+      },
+      {
+        "check": "Disposable scene negative-coordinate camera round-trip",
+        "pass": true,
+        "viewport": {
+          "x": -130,
+          "y": -85,
+          "zoom": 0.25
+        },
+        "negativeNodes": [
+          {
+            "id": "prompt",
+            "position": {
+              "x": -70,
+              "y": 6
+            }
+          },
+          {
+            "id": "reference",
+            "position": {
+              "x": -180,
+              "y": 250
+            }
+          }
+        ],
+        "runtimeFieldsExcluded": true,
+        "unknownFixtureVersionDoesNotClearScene": true,
+        "notFinalSceneSchemaOrCloudPersistence": true
+      },
+      {
+        "check": "Lazy unmount return-to-chat and recoverable stage render failure",
+        "pass": true,
+        "syntheticChatDraftAndObserverPreserved": true,
+        "shellMounts": 1,
+        "stageMounts": 4,
+        "stageUnmounts": 3,
+        "failureMethod": "Synthetic render exception caught by actual React error boundary; actual lazy import/network failure remains untested"
+      },
+      {
+        "check": "Phone read-only selection pan zoom pinch and command fencing",
+        "pass": true,
+        "viewport": {
+          "width": 390,
+          "height": 844
+        },
+        "nativeBrowserTouchTapSelection": true,
+        "panBefore": {
+          "x": 87.44897959183673,
+          "y": 292.09183673469386,
+          "zoom": 0.3469387755102041
+        },
+        "panAfter": {
+          "x": 27.448979591836746,
+          "y": 247.09183673469386,
+          "zoom": 0.3469387755102041
+        },
+        "pinchBefore": 0.3469387755102041,
+        "pinchAfter": 0.6071428571428571,
+        "controlZoomAfter": 0.7285714285714285,
+        "readonlyCommandAttemptsRejected": 10,
+        "nodeEdgePromptRunAndMetadataUnchanged": true,
+        "method": "Chrome CDP emulated touch points/viewport, not a physical phone or OS gesture"
+      },
+      {
+        "check": "Phone can return to the synthetic editable chat pane",
+        "pass": true,
+        "actualChatGenerationNotExercised": true
+      }
+    ],
+    "uncaughtPageExceptions": 0,
+    "expectedInjectedBoundaryConsoleErrors": 1,
+    "unexpectedHydrationOrConsoleErrors": 0,
+    "apiOrExternalRequestAttempts": 0,
+    "rawFinalEvidence": "$spike\\browser-turbo\\results.json",
+    "rawWebpackEvidence": "$spike\\browser-4\\results.json",
+    "screenshots": [
+      "$spike\\browser-turbo\\desktop.png",
+      "$spike\\browser-turbo\\phone.png"
+    ],
+    "visuallyInspected": [
+      "$spike\\browser-1\\desktop.png",
+      "$spike\\browser-4\\phone.png"
+    ]
+  },
+  "failedHarnessAttempts": [
+    {
+      "label": "fixture-build",
+      "exitCode": 1,
+      "deadlineMs": 300000,
+      "durationMs": 6822,
+      "reason": "Disposable C:-to-E: node_modules junction made Next webpack generate invalid ./E:/ entry requests; replaced with exact installed same-drive dependency copy, no dependency upgrade.",
+      "evidence": "$spike\\logs\\fixture-build.json"
+    },
+    {
+      "label": "fixture-dependencies",
+      "exitCode": 1,
+      "deadlineMs": 180000,
+      "durationMs": 13866,
+      "reason": "Disposable dependency copier initially assumed all package.json subpaths were exported; corrected metadata discovery and resumed runner-owned copy without deletion.",
+      "evidence": "$spike\\logs\\fixture-dependencies.json"
+    },
+    {
+      "label": "fixture-build-local",
+      "exitCode": 1,
+      "deadlineMs": 300000,
+      "durationMs": 8135,
+      "reason": "Strict TypeScript caught disposable spread-map losing discriminated Node/data correlation; replaced with exhaustive type-preserving switch.",
+      "evidence": "$spike\\logs\\fixture-build-local.json"
+    },
+    {
+      "label": "browser-spike-1",
+      "exitCode": 1,
+      "deadlineMs": 240000,
+      "durationMs": 13155,
+      "reason": "Disposable browser selector typo: .reference-card did not exist; corrected to data-kind=reference.",
+      "evidence": "$spike\\logs\\browser-spike-1.json"
+    },
+    {
+      "label": "browser-spike-2",
+      "exitCode": 1,
+      "deadlineMs": 240000,
+      "durationMs": 13557,
+      "reason": "Measurement started before React Flow default drag deadzone; measured later screen/world delta after crossing deadzone instead of changing library behavior or widening assertions.",
+      "evidence": "$spike\\logs\\browser-spike-2.json"
+    },
+    {
+      "label": "browser-spike-3",
+      "exitCode": 1,
+      "deadlineMs": 240000,
+      "durationMs": 39017,
+      "reason": "Reference viewer card moved offscreen during intentional pan/pinch; fit camera before pointer click. All earlier interaction stages already passed.",
+      "evidence": "$spike\\logs\\browser-spike-3.json"
+    }
+  ],
+  "coordinatorBaselineChecks": {
+    "commands": [
+      {
+        "label": "coordinator-baseline-targeted",
+        "executedBy": "main session, not this spike agent",
+        "command": [
+          "pnpm",
+          "exec",
+          "vitest",
+          "run",
+          "src/tests/unit/generator-studio-session-history.test.tsx",
+          "src/tests/unit/generator-studio-feedback.test.tsx",
+          "src/tests/unit/generator-studio-edit.test.tsx",
+          "src/tests/unit/generator-studio-retry-cancel.test.tsx",
+          "--testTimeout=30000"
+        ],
+        "exitCode": 0,
+        "deadlineMs": 57000,
+        "durationMs": 9599,
+        "evidence": "$spike\\logs\\coordinator-baseline-targeted.json"
+      },
+      {
+        "label": "coordinator-safe-environment-regression",
+        "executedBy": "main session, not this spike agent",
+        "command": [
+          "pnpm",
+          "exec",
+          "vitest",
+          "run",
+          "src/tests/unit/env-security.test.ts",
+          "src/tests/contracts/runtime-environment-contract.test.ts",
+          "--testTimeout=30000"
+        ],
+        "exitCode": 1,
+        "deadlineMs": 57000,
+        "durationMs": 2099,
+        "evidence": "$spike\\logs\\coordinator-safe-environment-regression.json"
+      },
+      {
+        "label": "coordinator-safe-environment-regression-final",
+        "executedBy": "main session, not this spike agent",
+        "command": [
+          "pnpm",
+          "exec",
+          "vitest",
+          "run",
+          "src/tests/unit/env-security.test.ts",
+          "src/tests/contracts/runtime-environment-contract.test.ts",
+          "--testTimeout=30000"
+        ],
+        "exitCode": 0,
+        "deadlineMs": 57000,
+        "durationMs": 1973,
+        "evidence": "$spike\\logs\\coordinator-safe-environment-regression-final.json"
+      }
+    ],
+    "finalResultsReportedByMain": "Existing studio targeted suite 4 files/32 tests pass; env-security + runtime manifest 20/20 pass.",
+    "runnerContamination": "Initial main environment repeat had 8/20 pass and 12 failures because WORKER_RUNTIME_MODE=null manifest default was injected as explicit empty enum. Runner fixed to dedicated only; exact repeat passes without application/test edits. S3_REGION preserved as auto rather than invalid blank. APP_URL never added to tests."
+  },
+  "materialDesignChangeRequired": false,
+  "remainingGaps": [
+    "Actual Windows Chinese IME candidate UI, physical mouse/trackpad/touch/pinch and OS virtual keyboard not executed",
+    "Authenticated /create hydration, actual GeneratorStudio chat controllers/observers/polling/API/data boundaries and real browser reload remain future application checks",
+    "Synthetic fixture round-trip is not the step-3 scene validator, local IndexedDB/outbox, cloud save, owner authorization or canonical job/media retention",
+    "No real jobs/providers/DB/S3, migration/topology/GC/capacity/stress suite, Pro sample or phone editor",
+    "Actual lazy chunk/network import failure not exercised; synthetic render-boundary retry only"
+  ],
+  "nextBatch": "Main acknowledged/released ordered foundation work after the narrow gate; spike agent does not start schema/controller/mobile work without a new dispatch.",
+  "pathAliases": {
+    "$fixture": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\same-drive-fixture",
+    "$spike": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike",
+    "$repo": "E:/code/narra-image"
+  },
+  "evidencePaths": "Path aliases expand to exact runner/repository paths; raw stage logs retain original argv/cwd and process output."
+}

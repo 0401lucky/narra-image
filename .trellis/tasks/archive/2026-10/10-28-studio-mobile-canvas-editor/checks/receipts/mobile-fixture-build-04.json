@@ -1,0 +1,17 @@
+{
+  "label": "mobile-fixture-build-04",
+  "mode": "build",
+  "command": [
+    "node",
+    "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\.installed-packages\\next@16.2.4-67c9d3db\\node_modules\\next\\dist\\bin\\next",
+    "build"
+  ],
+  "cwd": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\fixture-04",
+  "timeoutMs": 240000,
+  "code": 0,
+  "signal": null,
+  "timedOut": false,
+  "durationMs": 7792,
+  "stdoutPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-build-04.stdout.log",
+  "stderrPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\mobile-fixture-build-04.stderr.log"
+}

@@ -1,0 +1,13 @@
+{
+  "node": "D:/node/node.exe",
+  "nodeVersion": "v24.11.1",
+  "requiredNodeVersion": "v24.22.1",
+  "pinnedRuntimeParity": false,
+  "browserBinariesPresent": [
+    "C:/Program Files/Google/Chrome/Application/chrome.exe",
+    "C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe"
+  ],
+  "browserExecutionTestedByG0": false,
+  "probeScope": "Get-Command node -All; explicit existing NVM_HOME/NVM_SYMLINK; known browser installation paths only",
+  "downloadsOrInstalls": false
+}

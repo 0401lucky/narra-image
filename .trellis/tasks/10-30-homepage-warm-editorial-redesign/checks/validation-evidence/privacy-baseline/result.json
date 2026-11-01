@@ -1,0 +1,16 @@
+{
+  "scope": "Full-source lint/types immediately after G1 privacy fix, before homepage visual changes",
+  "lintExitCode": 0,
+  "typecheckExitCode": 0,
+  "sourceModifications": [],
+  "nodeVersion": "v24.11.1",
+  "pinnedRuntimeParity": false,
+  "lintWarnings": 9,
+  "lintErrors": 0,
+  "baselineWarningFiles": [
+    "scripts/lib/migration-safety.mjs",
+    "scripts/migrations/repair.mjs",
+    "src/components/marketing/mobile-nav.tsx",
+    "src/tests/unit/my-works-board.test.tsx"
+  ]
+}

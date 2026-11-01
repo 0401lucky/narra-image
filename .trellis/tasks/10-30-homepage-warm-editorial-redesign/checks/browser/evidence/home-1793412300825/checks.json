@@ -1,0 +1,1102 @@
+[
+  {
+    "id": "S1-home-geometry-fonts-1440",
+    "passed": true,
+    "durationMs": 2909,
+    "detail": {
+      "paper": "rgb(246, 242, 235)",
+      "font": "NarraHomeJakarta, \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", sans-serif",
+      "title": {
+        "width": 584,
+        "right": 692,
+        "left": 108,
+        "font": "NarraHomeJakarta, \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", sans-serif",
+        "fontSize": "44px"
+      },
+      "overflow": false,
+      "sections": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "stats": 3,
+      "frames": 1,
+      "ratio": 1.3333333333333333,
+      "columns": 4,
+      "fonts": [
+        "NarraHomeCormorant",
+        "NarraHomeCormorant",
+        "NarraHomeCormorant",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeJakarta",
+        "NarraHomeJakarta",
+        "NarraHomeJakarta",
+        "NarraHomeJakarta"
+      ],
+      "fontRequests": [
+        {
+          "url": "http://127.0.0.1:64610/marketing/home/fonts/cormorant-garamond-d9ec821052ff94a7.woff2",
+          "bytes": 37940,
+          "decodedBytes": 37640
+        },
+        {
+          "url": "http://127.0.0.1:64610/marketing/home/fonts/plus-jakarta-sans-d8c30647abfeffe6.woff2",
+          "bytes": 27648,
+          "decodedBytes": 27348
+        },
+        {
+          "url": "http://127.0.0.1:64610/marketing/home/fonts/noto-serif-sc-d8c61f0c834f348a.woff2",
+          "bytes": 33264,
+          "decodedBytes": 32964
+        },
+        {
+          "url": "http://127.0.0.1:64610/marketing/home/fonts/cormorant-garamond-291655adcb38b6b4.woff2",
+          "bytes": 39560,
+          "decodedBytes": 39260
+        },
+        {
+          "url": "http://127.0.0.1:64610/marketing/home/fonts/noto-serif-sc-f63d970a7b2b5321.woff2",
+          "bytes": 58524,
+          "decodedBytes": 58224
+        },
+        {
+          "url": "http://127.0.0.1:64610/marketing/home/fonts/noto-serif-sc-2ef4d8c6c25aaa84.woff2",
+          "bytes": 66956,
+          "decodedBytes": 66656
+        },
+        {
+          "url": "http://127.0.0.1:64610/marketing/home/fonts/noto-serif-sc-71139ee70c1b1fce.woff2",
+          "bytes": 81952,
+          "decodedBytes": 81652
+        },
+        {
+          "url": "http://127.0.0.1:64610/marketing/home/fonts/noto-serif-sc-5849283072442ca2.woff2",
+          "bytes": 72808,
+          "decodedBytes": 72508
+        }
+      ],
+      "imageState": "error"
+    }
+  },
+  {
+    "id": "S1-home-geometry-fonts-390",
+    "passed": true,
+    "durationMs": 2425,
+    "detail": {
+      "paper": "rgb(246, 242, 235)",
+      "font": "NarraHomeJakarta, \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", sans-serif",
+      "title": {
+        "width": 358,
+        "right": 374,
+        "left": 16,
+        "font": "NarraHomeJakarta, \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", sans-serif",
+        "fontSize": "30px"
+      },
+      "overflow": false,
+      "sections": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "stats": 3,
+      "frames": 1,
+      "ratio": 1.3333333333333333,
+      "columns": 1,
+      "fonts": [
+        "NarraHomeCormorant",
+        "NarraHomeCormorant",
+        "NarraHomeCormorant",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeJakarta",
+        "NarraHomeJakarta",
+        "NarraHomeJakarta",
+        "NarraHomeJakarta"
+      ],
+      "fontRequests": [
+        {
+          "url": "http://127.0.0.1:64610/marketing/home/fonts/cormorant-garamond-d9ec821052ff94a7.woff2",
+          "bytes": 300,
+          "decodedBytes": 37640
+        },
+        {
+          "url": "http://127.0.0.1:64610/marketing/home/fonts/plus-jakarta-sans-d8c30647abfeffe6.woff2",
+          "bytes": 300,
+          "decodedBytes": 27348
+        },
+        {
+          "url": "http://127.0.0.1:64610/marketing/home/fonts/noto-serif-sc-d8c61f0c834f348a.woff2",
+          "bytes": 300,
+          "decodedBytes": 32964
+        },
+        {
+          "url": "http://127.0.0.1:64610/marketing/home/fonts/cormorant-garamond-291655adcb38b6b4.woff2",
+          "bytes": 300,
+          "decodedBytes": 39260
+        },
+        {
+          "url": "http://127.0.0.1:64610/marketing/home/fonts/noto-serif-sc-f63d970a7b2b5321.woff2",
+          "bytes": 300,
+          "decodedBytes": 58224
+        },
+        {
+          "url": "http://127.0.0.1:64610/marketing/home/fonts/noto-serif-sc-2ef4d8c6c25aaa84.woff2",
+          "bytes": 300,
+          "decodedBytes": 66656
+        },
+        {
+          "url": "http://127.0.0.1:64610/marketing/home/fonts/noto-serif-sc-71139ee70c1b1fce.woff2",
+          "bytes": 300,
+          "decodedBytes": 81652
+        },
+        {
+          "url": "http://127.0.0.1:64610/marketing/home/fonts/noto-serif-sc-5849283072442ca2.woff2",
+          "bytes": 300,
+          "decodedBytes": 72508
+        }
+      ],
+      "imageState": "error"
+    }
+  },
+  {
+    "id": "S1-home-geometry-fonts-320",
+    "passed": true,
+    "durationMs": 2838,
+    "detail": {
+      "paper": "rgb(246, 242, 235)",
+      "font": "NarraHomeJakarta, \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", sans-serif",
+      "title": {
+        "width": 288,
+        "right": 304,
+        "left": 16,
+        "font": "NarraHomeJakarta, \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", sans-serif",
+        "fontSize": "27px"
+      },
+      "overflow": false,
+      "sections": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "stats": 3,
+      "frames": 1,
+      "ratio": 1.3333333333333333,
+      "columns": 1,
+      "fonts": [
+        "NarraHomeCormorant",
+        "NarraHomeCormorant",
+        "NarraHomeCormorant",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeJakarta",
+        "NarraHomeJakarta",
+        "NarraHomeJakarta",
+        "NarraHomeJakarta"
+      ],
+      "fontRequests": [
+        {
+          "url": "http://127.0.0.1:64610/marketing/home/fonts/cormorant-garamond-d9ec821052ff94a7.woff2",
+          "bytes": 300,
+          "decodedBytes": 37640
+        },
+        {
+          "url": "http://127.0.0.1:64610/marketing/home/fonts/plus-jakarta-sans-d8c30647abfeffe6.woff2",
+          "bytes": 300,
+          "decodedBytes": 27348
+        },
+        {
+          "url": "http://127.0.0.1:64610/marketing/home/fonts/noto-serif-sc-d8c61f0c834f348a.woff2",
+          "bytes": 300,
+          "decodedBytes": 32964
+        },
+        {
+          "url": "http://127.0.0.1:64610/marketing/home/fonts/cormorant-garamond-291655adcb38b6b4.woff2",
+          "bytes": 300,
+          "decodedBytes": 39260
+        },
+        {
+          "url": "http://127.0.0.1:64610/marketing/home/fonts/noto-serif-sc-f63d970a7b2b5321.woff2",
+          "bytes": 300,
+          "decodedBytes": 58224
+        },
+        {
+          "url": "http://127.0.0.1:64610/marketing/home/fonts/noto-serif-sc-2ef4d8c6c25aaa84.woff2",
+          "bytes": 300,
+          "decodedBytes": 66656
+        },
+        {
+          "url": "http://127.0.0.1:64610/marketing/home/fonts/noto-serif-sc-71139ee70c1b1fce.woff2",
+          "bytes": 300,
+          "decodedBytes": 81652
+        },
+        {
+          "url": "http://127.0.0.1:64610/marketing/home/fonts/noto-serif-sc-5849283072442ca2.woff2",
+          "bytes": 300,
+          "decodedBytes": 72508
+        }
+      ],
+      "imageState": "error"
+    }
+  },
+  {
+    "id": "S1-home-geometry-fonts-768",
+    "passed": true,
+    "durationMs": 2561,
+    "detail": {
+      "paper": "rgb(246, 242, 235)",
+      "font": "NarraHomeJakarta, \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", sans-serif",
+      "title": {
+        "width": 712,
+        "right": 736,
+        "left": 24,
+        "font": "NarraHomeJakarta, \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", sans-serif",
+        "fontSize": "36px"
+      },
+      "overflow": false,
+      "sections": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "stats": 3,
+      "frames": 1,
+      "ratio": 1.3333333333333333,
+      "columns": 2,
+      "fonts": [
+        "NarraHomeCormorant",
+        "NarraHomeCormorant",
+        "NarraHomeCormorant",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeJakarta",
+        "NarraHomeJakarta",
+        "NarraHomeJakarta",
+        "NarraHomeJakarta"
+      ],
+      "fontRequests": [
+        {
+          "url": "http://127.0.0.1:64610/marketing/home/fonts/cormorant-garamond-d9ec821052ff94a7.woff2",
+          "bytes": 300,
+          "decodedBytes": 37640
+        },
+        {
+          "url": "http://127.0.0.1:64610/marketing/home/fonts/plus-jakarta-sans-d8c30647abfeffe6.woff2",
+          "bytes": 300,
+          "decodedBytes": 27348
+        },
+        {
+          "url": "http://127.0.0.1:64610/marketing/home/fonts/noto-serif-sc-d8c61f0c834f348a.woff2",
+          "bytes": 300,
+          "decodedBytes": 32964
+        },
+        {
+          "url": "http://127.0.0.1:64610/marketing/home/fonts/cormorant-garamond-291655adcb38b6b4.woff2",
+          "bytes": 300,
+          "decodedBytes": 39260
+        },
+        {
+          "url": "http://127.0.0.1:64610/marketing/home/fonts/noto-serif-sc-f63d970a7b2b5321.woff2",
+          "bytes": 300,
+          "decodedBytes": 58224
+        },
+        {
+          "url": "http://127.0.0.1:64610/marketing/home/fonts/noto-serif-sc-2ef4d8c6c25aaa84.woff2",
+          "bytes": 300,
+          "decodedBytes": 66656
+        },
+        {
+          "url": "http://127.0.0.1:64610/marketing/home/fonts/noto-serif-sc-71139ee70c1b1fce.woff2",
+          "bytes": 300,
+          "decodedBytes": 81652
+        },
+        {
+          "url": "http://127.0.0.1:64610/marketing/home/fonts/noto-serif-sc-5849283072442ca2.woff2",
+          "bytes": 300,
+          "decodedBytes": 72508
+        }
+      ],
+      "imageState": "error"
+    }
+  },
+  {
+    "id": "S1-home-geometry-fonts-1024",
+    "passed": true,
+    "durationMs": 2631,
+    "detail": {
+      "paper": "rgb(246, 242, 235)",
+      "font": "NarraHomeJakarta, \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", sans-serif",
+      "title": {
+        "width": 452,
+        "right": 484,
+        "left": 32,
+        "font": "NarraHomeJakarta, \"PingFang SC\", \"Hiragino Sans GB\", \"Microsoft YaHei\", sans-serif",
+        "fontSize": "36px"
+      },
+      "overflow": false,
+      "sections": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "stats": 3,
+      "frames": 1,
+      "ratio": 1.3333333333333333,
+      "columns": 4,
+      "fonts": [
+        "NarraHomeCormorant",
+        "NarraHomeCormorant",
+        "NarraHomeCormorant",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeNotoSerifSC",
+        "NarraHomeJakarta",
+        "NarraHomeJakarta",
+        "NarraHomeJakarta",
+        "NarraHomeJakarta"
+      ],
+      "fontRequests": [
+        {
+          "url": "http://127.0.0.1:64610/marketing/home/fonts/cormorant-garamond-d9ec821052ff94a7.woff2",
+          "bytes": 300,
+          "decodedBytes": 37640
+        },
+        {
+          "url": "http://127.0.0.1:64610/marketing/home/fonts/plus-jakarta-sans-d8c30647abfeffe6.woff2",
+          "bytes": 300,
+          "decodedBytes": 27348
+        },
+        {
+          "url": "http://127.0.0.1:64610/marketing/home/fonts/noto-serif-sc-d8c61f0c834f348a.woff2",
+          "bytes": 300,
+          "decodedBytes": 32964
+        },
+        {
+          "url": "http://127.0.0.1:64610/marketing/home/fonts/cormorant-garamond-291655adcb38b6b4.woff2",
+          "bytes": 300,
+          "decodedBytes": 39260
+        },
+        {
+          "url": "http://127.0.0.1:64610/marketing/home/fonts/noto-serif-sc-f63d970a7b2b5321.woff2",
+          "bytes": 300,
+          "decodedBytes": 58224
+        },
+        {
+          "url": "http://127.0.0.1:64610/marketing/home/fonts/noto-serif-sc-2ef4d8c6c25aaa84.woff2",
+          "bytes": 300,
+          "decodedBytes": 66656
+        },
+        {
+          "url": "http://127.0.0.1:64610/marketing/home/fonts/noto-serif-sc-71139ee70c1b1fce.woff2",
+          "bytes": 300,
+          "decodedBytes": 81652
+        },
+        {
+          "url": "http://127.0.0.1:64610/marketing/home/fonts/noto-serif-sc-5849283072442ca2.woff2",
+          "bytes": 300,
+          "decodedBytes": 72508
+        }
+      ],
+      "imageState": "error"
+    }
+  },
+  {
+    "id": "S1-real-navigation-theme-isolation-create",
+    "passed": true,
+    "durationMs": 2544,
+    "detail": {
+      "body": {
+        "fontFamily": "\"Avenir Next\", \"Segoe UI\", \"PingFang SC\", \"Hiragino Sans GB\", \"Noto Sans SC\", sans-serif, \"PingFang SC\", \"Microsoft YaHei\", sans-serif",
+        "fontSize": "16px",
+        "fontWeight": "400",
+        "color": "rgb(33, 23, 15)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderColor": "rgb(33, 23, 15)",
+        "height": 1000,
+        "width": 1440
+      },
+      "main": {
+        "fontFamily": "\"Avenir Next\", \"Segoe UI\", \"PingFang SC\", \"Hiragino Sans GB\", \"Noto Sans SC\", sans-serif, \"PingFang SC\", \"Microsoft YaHei\", sans-serif",
+        "fontSize": "16px",
+        "fontWeight": "400",
+        "color": "rgb(33, 23, 15)",
+        "backgroundColor": "rgb(245, 239, 230)",
+        "borderColor": "rgb(33, 23, 15)",
+        "height": 1000,
+        "width": 1440
+      },
+      "header": {
+        "fontFamily": "\"Avenir Next\", \"Segoe UI\", \"PingFang SC\", \"Hiragino Sans GB\", \"Noto Sans SC\", sans-serif, \"PingFang SC\", \"Microsoft YaHei\", sans-serif",
+        "fontSize": "16px",
+        "fontWeight": "400",
+        "color": "rgb(33, 23, 15)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderColor": "rgb(33, 23, 15)",
+        "height": 72,
+        "width": 1440
+      },
+      "h1": null,
+      "overflow": false,
+      "links": [
+        {
+          "href": "/",
+          "text": "NarraImage"
+        },
+        {
+          "href": "https://github.com/0401lucky/narra-image",
+          "text": ""
+        },
+        {
+          "href": "/",
+          "text": "首页"
+        },
+        {
+          "href": "/create",
+          "text": "创作台"
+        },
+        {
+          "href": "/prompts",
+          "text": "提示词库"
+        },
+        {
+          "href": "/video",
+          "text": "视频"
+        },
+        {
+          "href": "/works",
+          "text": "作品"
+        },
+        {
+          "href": "/api-keys",
+          "text": "API"
+        },
+        {
+          "href": "/settings",
+          "text": ""
+        }
+      ]
+    }
+  },
+  {
+    "id": "S1-real-navigation-theme-isolation-works",
+    "passed": true,
+    "durationMs": 2442,
+    "detail": {
+      "body": {
+        "fontFamily": "\"Avenir Next\", \"Segoe UI\", \"PingFang SC\", \"Hiragino Sans GB\", \"Noto Sans SC\", sans-serif, \"PingFang SC\", \"Microsoft YaHei\", sans-serif",
+        "fontSize": "16px",
+        "fontWeight": "400",
+        "color": "rgb(33, 23, 15)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderColor": "rgb(33, 23, 15)",
+        "height": 1000,
+        "width": 1440
+      },
+      "main": {
+        "fontFamily": "\"Avenir Next\", \"Segoe UI\", \"PingFang SC\", \"Hiragino Sans GB\", \"Noto Sans SC\", sans-serif, \"PingFang SC\", \"Microsoft YaHei\", sans-serif",
+        "fontSize": "16px",
+        "fontWeight": "400",
+        "color": "rgb(33, 23, 15)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderColor": "rgb(33, 23, 15)",
+        "height": 704.5,
+        "width": 1440
+      },
+      "header": {
+        "fontFamily": "\"Avenir Next\", \"Segoe UI\", \"PingFang SC\", \"Hiragino Sans GB\", \"Noto Sans SC\", sans-serif, \"PingFang SC\", \"Microsoft YaHei\", sans-serif",
+        "fontSize": "16px",
+        "fontWeight": "400",
+        "color": "rgb(33, 23, 15)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderColor": "rgb(33, 23, 15)",
+        "height": 84,
+        "width": 1440
+      },
+      "h1": {
+        "fontFamily": "\"Avenir Next\", \"Segoe UI\", \"PingFang SC\", \"Hiragino Sans GB\", \"Noto Sans SC\", sans-serif, \"PingFang SC\", \"Microsoft YaHei\", sans-serif",
+        "fontSize": "36px",
+        "fontWeight": "600",
+        "color": "rgb(33, 23, 15)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderColor": "rgb(33, 23, 15)",
+        "height": 40,
+        "width": 70.203125
+      },
+      "overflow": false,
+      "links": [
+        {
+          "href": "/",
+          "text": "NarraImage"
+        },
+        {
+          "href": "https://github.com/0401lucky/narra-image",
+          "text": ""
+        },
+        {
+          "href": "/",
+          "text": "首页"
+        },
+        {
+          "href": "/create",
+          "text": "创作台"
+        },
+        {
+          "href": "/prompts",
+          "text": "提示词库"
+        },
+        {
+          "href": "/video",
+          "text": "视频"
+        },
+        {
+          "href": "/works",
+          "text": "作品"
+        },
+        {
+          "href": "/api-keys",
+          "text": "API"
+        },
+        {
+          "href": "/settings",
+          "text": ""
+        }
+      ]
+    }
+  },
+  {
+    "id": "S1-real-navigation-theme-isolation-settings",
+    "passed": true,
+    "durationMs": 2320,
+    "detail": {
+      "body": {
+        "fontFamily": "\"Avenir Next\", \"Segoe UI\", \"PingFang SC\", \"Hiragino Sans GB\", \"Noto Sans SC\", sans-serif, \"PingFang SC\", \"Microsoft YaHei\", sans-serif",
+        "fontSize": "16px",
+        "fontWeight": "400",
+        "color": "rgb(33, 23, 15)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderColor": "rgb(33, 23, 15)",
+        "height": 1044.75,
+        "width": 1432
+      },
+      "main": {
+        "fontFamily": "\"Avenir Next\", \"Segoe UI\", \"PingFang SC\", \"Hiragino Sans GB\", \"Noto Sans SC\", sans-serif, \"PingFang SC\", \"Microsoft YaHei\", sans-serif",
+        "fontSize": "16px",
+        "fontWeight": "400",
+        "color": "rgb(33, 23, 15)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderColor": "rgb(33, 23, 15)",
+        "height": 1044.75,
+        "width": 1432
+      },
+      "header": {
+        "fontFamily": "\"Avenir Next\", \"Segoe UI\", \"PingFang SC\", \"Hiragino Sans GB\", \"Noto Sans SC\", sans-serif, \"PingFang SC\", \"Microsoft YaHei\", sans-serif",
+        "fontSize": "16px",
+        "fontWeight": "400",
+        "color": "rgb(33, 23, 15)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderColor": "rgb(33, 23, 15)",
+        "height": 84,
+        "width": 1432
+      },
+      "h1": {
+        "fontFamily": "\"Avenir Next\", \"Segoe UI\", \"PingFang SC\", \"Hiragino Sans GB\", \"Noto Sans SC\", sans-serif, \"PingFang SC\", \"Microsoft YaHei\", sans-serif",
+        "fontSize": "36px",
+        "fontWeight": "600",
+        "color": "rgb(33, 23, 15)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderColor": "rgb(33, 23, 15)",
+        "height": 40,
+        "width": 1216
+      },
+      "overflow": false,
+      "links": [
+        {
+          "href": "/",
+          "text": "NarraImage"
+        },
+        {
+          "href": "https://github.com/0401lucky/narra-image",
+          "text": ""
+        },
+        {
+          "href": "/",
+          "text": "首页"
+        },
+        {
+          "href": "/create",
+          "text": "创作台"
+        },
+        {
+          "href": "/prompts",
+          "text": "提示词库"
+        },
+        {
+          "href": "/video",
+          "text": "视频"
+        },
+        {
+          "href": "/works",
+          "text": "作品"
+        },
+        {
+          "href": "/api-keys",
+          "text": "API"
+        },
+        {
+          "href": "/settings",
+          "text": ""
+        }
+      ]
+    }
+  },
+  {
+    "id": "S1-real-navigation-theme-isolation-admin",
+    "passed": true,
+    "durationMs": 2434,
+    "detail": {
+      "body": {
+        "fontFamily": "\"Avenir Next\", \"Segoe UI\", \"PingFang SC\", \"Hiragino Sans GB\", \"Noto Sans SC\", sans-serif, \"PingFang SC\", \"Microsoft YaHei\", sans-serif",
+        "fontSize": "16px",
+        "fontWeight": "400",
+        "color": "rgb(33, 23, 15)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderColor": "rgb(33, 23, 15)",
+        "height": 1119.3125,
+        "width": 1432
+      },
+      "main": {
+        "fontFamily": "\"Avenir Next\", \"Segoe UI\", \"PingFang SC\", \"Hiragino Sans GB\", \"Noto Sans SC\", sans-serif, \"PingFang SC\", \"Microsoft YaHei\", sans-serif",
+        "fontSize": "16px",
+        "fontWeight": "400",
+        "color": "rgb(33, 23, 15)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderColor": "rgb(33, 23, 15)",
+        "height": 1052.3125,
+        "width": 1144
+      },
+      "header": {
+        "fontFamily": "\"Avenir Next\", \"Segoe UI\", \"PingFang SC\", \"Hiragino Sans GB\", \"Noto Sans SC\", sans-serif, \"PingFang SC\", \"Microsoft YaHei\", sans-serif",
+        "fontSize": "16px",
+        "fontWeight": "400",
+        "color": "rgb(33, 23, 15)",
+        "backgroundColor": "rgba(252, 249, 244, 0.75)",
+        "borderColor": "rgba(73, 48, 27, 0.08)",
+        "height": 67,
+        "width": 1144
+      },
+      "h1": {
+        "fontFamily": "\"Avenir Next\", \"Segoe UI\", \"PingFang SC\", \"Hiragino Sans GB\", \"Noto Sans SC\", sans-serif, \"PingFang SC\", \"Microsoft YaHei\", sans-serif",
+        "fontSize": "16px",
+        "fontWeight": "600",
+        "color": "rgb(33, 23, 15)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderColor": "rgb(33, 23, 15)",
+        "height": 24,
+        "width": 119.84375
+      },
+      "overflow": false,
+      "links": [
+        {
+          "href": "/",
+          "text": "返回主页"
+        },
+        {
+          "href": "/create",
+          "text": "创作台"
+        }
+      ]
+    }
+  },
+  {
+    "id": "S2-header-mobile-drawer-native-touch-keyboard",
+    "passed": true,
+    "durationMs": 1481,
+    "detail": {
+      "left": 30,
+      "right": 390,
+      "top": 0,
+      "bottom": 844,
+      "height": 844,
+      "modal": "true",
+      "activeInside": true,
+      "links": [
+        "/",
+        "/create",
+        "/prompts",
+        "/video",
+        "/works",
+        "/api-keys",
+        "/admin",
+        "https://github.com/0401lucky/narra-image",
+        "/settings"
+      ],
+      "bodyOverflow": "hidden"
+    }
+  },
+  {
+    "id": "M1-M4-real-pointer-count-miniatures-pause",
+    "passed": false,
+    "durationMs": 1401,
+    "error": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert(stats.some((text) => text.includes(\"150,000\")) && stats.some((text) => text.includes(\"120\")) && stats.some((text) => text.includes(\"4.2\")))\n\n    at file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/homepage-checks.mjs:114:5\n    at async check (file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/run-browser.mjs:60:20)\n    at async fullHomepageChecks (file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/homepage-checks.mjs:106:3)\n    at async file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/run-browser.mjs:347:7"
+  },
+  {
+    "id": "H1-M2-missing-scene-failure-is-coherent-copy-complete",
+    "passed": true,
+    "durationMs": 4245,
+    "detail": {
+      "state": "error",
+      "coherentScene": "film",
+      "fullPrompt": true
+    }
+  },
+  {
+    "id": "G1-desktop-four-column-crop-and-original-detail",
+    "passed": true,
+    "durationMs": 2185,
+    "detail": {
+      "shapes": [
+        {
+          "x": 109,
+          "y": 144.1370849609375,
+          "width": 287,
+          "height": 359.2501220703125,
+          "fit": "cover",
+          "position": "50% 50%",
+          "original": [
+            360,
+            240
+          ]
+        },
+        {
+          "x": 418,
+          "y": 151.2286376953125,
+          "width": 287,
+          "height": 359.2498779296875,
+          "fit": "cover",
+          "position": "50% 50%",
+          "original": [
+            360,
+            360
+          ]
+        },
+        {
+          "x": 727,
+          "y": 158.3155517578125,
+          "width": 287,
+          "height": 359.2498779296875,
+          "fit": "cover",
+          "position": "50% 50%",
+          "original": [
+            360,
+            540
+          ]
+        },
+        {
+          "x": 1036,
+          "y": 158.3155517578125,
+          "width": 287,
+          "height": 359.2498779296875,
+          "fit": "cover",
+          "position": "50% 50%",
+          "original": [
+            360,
+            240
+          ]
+        }
+      ],
+      "detail": {
+        "fit": "contain",
+        "ratio": 1.5
+      }
+    }
+  },
+  {
+    "id": "C1-C3-guest-public-copy-hidden-permission-clipboard-denial",
+    "passed": false,
+    "durationMs": 2223,
+    "error": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert(instructions.includes(\"登录\") && instructions.includes(\"返回\") && instructions.includes(\"重选\"))\n\n    at file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/homepage-checks.mjs:189:5\n    at async check (file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/run-browser.mjs:60:20)\n    at async fullHomepageChecks (file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/homepage-checks.mjs:179:3)\n    at async file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/run-browser.mjs:347:7"
+  },
+  {
+    "id": "P1-P2-real-api-pagination16-to72",
+    "passed": false,
+    "durationMs": 2262,
+    "error": "AssertionError [ERR_ASSERTION]: No visible-layout element [data-gallery-load-more] \n    at BrowserPage.point (file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/cdp.mjs:177:7)\n    at async file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/homepage-checks.mjs:215:7\n    at async check (file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/run-browser.mjs:60:20)\n    at async fullHomepageChecks (file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/homepage-checks.mjs:207:3)\n    at async file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/run-browser.mjs:347:7"
+  },
+  {
+    "id": "P2-page-failure-keeps-records-explicit-retry",
+    "passed": true,
+    "durationMs": 3080,
+    "detail": {
+      "preserved": 16,
+      "afterRetry": 32,
+      "autoRetrySuppressed": true
+    }
+  },
+  {
+    "id": "S2-real-like-checkin-pet-logout",
+    "passed": true,
+    "durationMs": 3187,
+    "detail": {
+      "credited": 550,
+      "checkedIn": true,
+      "loggedOut": true,
+      "network": [
+        {
+          "url": "http://127.0.0.1:64610/api/works/home-001/like",
+          "method": "PUT",
+          "type": "Fetch",
+          "requestId": "10608.657"
+        },
+        {
+          "url": "http://127.0.0.1:64610/api/works/home-001/like",
+          "method": "PUT",
+          "type": "Fetch",
+          "requestId": "10608.658"
+        },
+        {
+          "url": "http://127.0.0.1:64610/api/me/check-in",
+          "method": "POST",
+          "type": "Fetch",
+          "requestId": "10608.659"
+        },
+        {
+          "url": "http://127.0.0.1:64610/api/auth/logout",
+          "method": "POST",
+          "type": "Fetch",
+          "requestId": "10608.686"
+        }
+      ]
+    }
+  },
+  {
+    "id": "C2-C3-actual-remix-saved-canvas-then-chat",
+    "passed": false,
+    "durationMs": 19351,
+    "error": "Error: Condition did not become true\n    at waitFor (file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/cdp.mjs:13:9)\n    at async openCard (file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/homepage-checks.mjs:18:3)\n    at async file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/homepage-checks.mjs:298:5\n    at async check (file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/run-browser.mjs:60:20)\n    at async fullHomepageChecks (file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/homepage-checks.mjs:274:3)\n    at async file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/run-browser.mjs:347:7"
+  },
+  {
+    "id": "C2-long-url-existing8000-unit-boundary",
+    "passed": true,
+    "durationMs": 3059,
+    "detail": [
+      {
+        "label": "ascii8000",
+        "units": 8000,
+        "requestTargetBytes": 8015,
+        "status": 200,
+        "inputUnits": 8000,
+        "matchesExistingSlice": true
+      },
+      {
+        "label": "ascii8001",
+        "units": 8001,
+        "requestTargetBytes": 8016,
+        "status": 200,
+        "inputUnits": 8000,
+        "matchesExistingSlice": true
+      },
+      {
+        "label": "chinese8000",
+        "units": 8000,
+        "requestTargetBytes": 72015,
+        "status": 431,
+        "inputUnits": null,
+        "matchesExistingSlice": false
+      },
+      {
+        "label": "emoji8000units",
+        "units": 8000,
+        "requestTargetBytes": 56019,
+        "status": 431,
+        "inputUnits": null,
+        "matchesExistingSlice": false
+      }
+    ]
+  },
+  {
+    "id": "H1-P2-initial-empty-fixed-hero-first-page-retry",
+    "passed": true,
+    "durationMs": 2998,
+    "detail": {
+      "initialItems": 0,
+      "heroScene": "film",
+      "recoveredItems": 0
+    }
+  },
+  {
+    "id": "H1-P2-initial-error-fixed-hero-first-page-retry",
+    "passed": true,
+    "durationMs": 1946,
+    "detail": {
+      "initialItems": 0,
+      "heroScene": "film",
+      "recoveredItems": 16
+    }
+  },
+  {
+    "id": "F1-footer-valid-links-anchors-role-visibility",
+    "passed": true,
+    "durationMs": 2554,
+    "detail": [
+      {
+        "user": null,
+        "links": [
+          {
+            "href": "#hero",
+            "text": "NARRAImage"
+          },
+          {
+            "href": "/create",
+            "text": "光影创作台"
+          },
+          {
+            "href": "/prompts",
+            "text": "叙事提示词库"
+          },
+          {
+            "href": "/video",
+            "text": "视频创作"
+          },
+          {
+            "href": "/works",
+            "text": "个人作品（需登录）"
+          },
+          {
+            "href": "/settings",
+            "text": "账户设置（需登录）"
+          },
+          {
+            "href": "/login",
+            "text": "登录账号"
+          },
+          {
+            "href": "#capabilities",
+            "text": "核心能力"
+          },
+          {
+            "href": "#gallery",
+            "text": "社区精选"
+          },
+          {
+            "href": "https://github.com/0401lucky/narra-image",
+            "text": "GitHub 开源项目"
+          }
+        ]
+      },
+      {
+        "user": "home-member",
+        "links": [
+          {
+            "href": "#hero",
+            "text": "NARRAImage"
+          },
+          {
+            "href": "/create",
+            "text": "光影创作台"
+          },
+          {
+            "href": "/prompts",
+            "text": "叙事提示词库"
+          },
+          {
+            "href": "/video",
+            "text": "视频创作"
+          },
+          {
+            "href": "/works",
+            "text": "个人作品"
+          },
+          {
+            "href": "/settings",
+            "text": "账户设置"
+          },
+          {
+            "href": "/api-keys",
+            "text": "开发者 API"
+          },
+          {
+            "href": "#capabilities",
+            "text": "核心能力"
+          },
+          {
+            "href": "#gallery",
+            "text": "社区精选"
+          },
+          {
+            "href": "https://github.com/0401lucky/narra-image",
+            "text": "GitHub 开源项目"
+          }
+        ]
+      }
+    ]
+  }
+]

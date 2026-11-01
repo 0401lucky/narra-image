@@ -1,0 +1,371 @@
+[
+  {
+    "id": "S1-baseline--create",
+    "passed": true,
+    "durationMs": 1838,
+    "detail": {
+      "body": {
+        "fontFamily": "\"Avenir Next\", \"Segoe UI\", \"PingFang SC\", \"Hiragino Sans GB\", \"Noto Sans SC\", sans-serif, \"PingFang SC\", \"Microsoft YaHei\", sans-serif",
+        "fontSize": "16px",
+        "fontWeight": "400",
+        "color": "rgb(33, 23, 15)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderColor": "rgb(33, 23, 15)",
+        "height": 1000,
+        "width": 1440
+      },
+      "main": {
+        "fontFamily": "\"Avenir Next\", \"Segoe UI\", \"PingFang SC\", \"Hiragino Sans GB\", \"Noto Sans SC\", sans-serif, \"PingFang SC\", \"Microsoft YaHei\", sans-serif",
+        "fontSize": "16px",
+        "fontWeight": "400",
+        "color": "rgb(33, 23, 15)",
+        "backgroundColor": "rgb(245, 239, 230)",
+        "borderColor": "rgb(33, 23, 15)",
+        "height": 1000,
+        "width": 1440
+      },
+      "header": {
+        "fontFamily": "\"Avenir Next\", \"Segoe UI\", \"PingFang SC\", \"Hiragino Sans GB\", \"Noto Sans SC\", sans-serif, \"PingFang SC\", \"Microsoft YaHei\", sans-serif",
+        "fontSize": "16px",
+        "fontWeight": "400",
+        "color": "rgb(33, 23, 15)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderColor": "rgb(33, 23, 15)",
+        "height": 72,
+        "width": 1440
+      },
+      "h1": null,
+      "overflow": false,
+      "links": [
+        {
+          "href": "/",
+          "text": "NarraImage"
+        },
+        {
+          "href": "https://github.com/0401lucky/narra-image",
+          "text": ""
+        },
+        {
+          "href": "/",
+          "text": "首页"
+        },
+        {
+          "href": "/create",
+          "text": "创作台"
+        },
+        {
+          "href": "/prompts",
+          "text": "提示词库"
+        },
+        {
+          "href": "/video",
+          "text": "视频"
+        },
+        {
+          "href": "/works",
+          "text": "作品"
+        },
+        {
+          "href": "/api-keys",
+          "text": "API"
+        },
+        {
+          "href": "/settings",
+          "text": ""
+        }
+      ]
+    }
+  },
+  {
+    "id": "S1-baseline--works",
+    "passed": true,
+    "durationMs": 1395,
+    "detail": {
+      "body": {
+        "fontFamily": "\"Avenir Next\", \"Segoe UI\", \"PingFang SC\", \"Hiragino Sans GB\", \"Noto Sans SC\", sans-serif, \"PingFang SC\", \"Microsoft YaHei\", sans-serif",
+        "fontSize": "16px",
+        "fontWeight": "400",
+        "color": "rgb(33, 23, 15)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderColor": "rgb(33, 23, 15)",
+        "height": 1000,
+        "width": 1440
+      },
+      "main": {
+        "fontFamily": "\"Avenir Next\", \"Segoe UI\", \"PingFang SC\", \"Hiragino Sans GB\", \"Noto Sans SC\", sans-serif, \"PingFang SC\", \"Microsoft YaHei\", sans-serif",
+        "fontSize": "16px",
+        "fontWeight": "400",
+        "color": "rgb(33, 23, 15)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderColor": "rgb(33, 23, 15)",
+        "height": 704.5,
+        "width": 1440
+      },
+      "header": {
+        "fontFamily": "\"Avenir Next\", \"Segoe UI\", \"PingFang SC\", \"Hiragino Sans GB\", \"Noto Sans SC\", sans-serif, \"PingFang SC\", \"Microsoft YaHei\", sans-serif",
+        "fontSize": "16px",
+        "fontWeight": "400",
+        "color": "rgb(33, 23, 15)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderColor": "rgb(33, 23, 15)",
+        "height": 84,
+        "width": 1440
+      },
+      "h1": {
+        "fontFamily": "\"Avenir Next\", \"Segoe UI\", \"PingFang SC\", \"Hiragino Sans GB\", \"Noto Sans SC\", sans-serif, \"PingFang SC\", \"Microsoft YaHei\", sans-serif",
+        "fontSize": "36px",
+        "fontWeight": "600",
+        "color": "rgb(33, 23, 15)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderColor": "rgb(33, 23, 15)",
+        "height": 40,
+        "width": 70.203125
+      },
+      "overflow": false,
+      "links": [
+        {
+          "href": "/",
+          "text": "NarraImage"
+        },
+        {
+          "href": "https://github.com/0401lucky/narra-image",
+          "text": ""
+        },
+        {
+          "href": "/",
+          "text": "首页"
+        },
+        {
+          "href": "/create",
+          "text": "创作台"
+        },
+        {
+          "href": "/prompts",
+          "text": "提示词库"
+        },
+        {
+          "href": "/video",
+          "text": "视频"
+        },
+        {
+          "href": "/works",
+          "text": "作品"
+        },
+        {
+          "href": "/api-keys",
+          "text": "API"
+        },
+        {
+          "href": "/settings",
+          "text": ""
+        }
+      ]
+    }
+  },
+  {
+    "id": "S1-baseline--settings",
+    "passed": true,
+    "durationMs": 1300,
+    "detail": {
+      "body": {
+        "fontFamily": "\"Avenir Next\", \"Segoe UI\", \"PingFang SC\", \"Hiragino Sans GB\", \"Noto Sans SC\", sans-serif, \"PingFang SC\", \"Microsoft YaHei\", sans-serif",
+        "fontSize": "16px",
+        "fontWeight": "400",
+        "color": "rgb(33, 23, 15)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderColor": "rgb(33, 23, 15)",
+        "height": 1044.75,
+        "width": 1432
+      },
+      "main": {
+        "fontFamily": "\"Avenir Next\", \"Segoe UI\", \"PingFang SC\", \"Hiragino Sans GB\", \"Noto Sans SC\", sans-serif, \"PingFang SC\", \"Microsoft YaHei\", sans-serif",
+        "fontSize": "16px",
+        "fontWeight": "400",
+        "color": "rgb(33, 23, 15)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderColor": "rgb(33, 23, 15)",
+        "height": 1044.75,
+        "width": 1432
+      },
+      "header": {
+        "fontFamily": "\"Avenir Next\", \"Segoe UI\", \"PingFang SC\", \"Hiragino Sans GB\", \"Noto Sans SC\", sans-serif, \"PingFang SC\", \"Microsoft YaHei\", sans-serif",
+        "fontSize": "16px",
+        "fontWeight": "400",
+        "color": "rgb(33, 23, 15)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderColor": "rgb(33, 23, 15)",
+        "height": 84,
+        "width": 1432
+      },
+      "h1": {
+        "fontFamily": "\"Avenir Next\", \"Segoe UI\", \"PingFang SC\", \"Hiragino Sans GB\", \"Noto Sans SC\", sans-serif, \"PingFang SC\", \"Microsoft YaHei\", sans-serif",
+        "fontSize": "36px",
+        "fontWeight": "600",
+        "color": "rgb(33, 23, 15)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderColor": "rgb(33, 23, 15)",
+        "height": 40,
+        "width": 1216
+      },
+      "overflow": false,
+      "links": [
+        {
+          "href": "/",
+          "text": "NarraImage"
+        },
+        {
+          "href": "https://github.com/0401lucky/narra-image",
+          "text": ""
+        },
+        {
+          "href": "/",
+          "text": "首页"
+        },
+        {
+          "href": "/create",
+          "text": "创作台"
+        },
+        {
+          "href": "/prompts",
+          "text": "提示词库"
+        },
+        {
+          "href": "/video",
+          "text": "视频"
+        },
+        {
+          "href": "/works",
+          "text": "作品"
+        },
+        {
+          "href": "/api-keys",
+          "text": "API"
+        },
+        {
+          "href": "/settings",
+          "text": ""
+        }
+      ]
+    }
+  },
+  {
+    "id": "S1-baseline--admin",
+    "passed": true,
+    "durationMs": 1339,
+    "detail": {
+      "body": {
+        "fontFamily": "\"Avenir Next\", \"Segoe UI\", \"PingFang SC\", \"Hiragino Sans GB\", \"Noto Sans SC\", sans-serif, \"PingFang SC\", \"Microsoft YaHei\", sans-serif",
+        "fontSize": "16px",
+        "fontWeight": "400",
+        "color": "rgb(33, 23, 15)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderColor": "rgb(33, 23, 15)",
+        "height": 1119.3125,
+        "width": 1432
+      },
+      "main": {
+        "fontFamily": "\"Avenir Next\", \"Segoe UI\", \"PingFang SC\", \"Hiragino Sans GB\", \"Noto Sans SC\", sans-serif, \"PingFang SC\", \"Microsoft YaHei\", sans-serif",
+        "fontSize": "16px",
+        "fontWeight": "400",
+        "color": "rgb(33, 23, 15)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderColor": "rgb(33, 23, 15)",
+        "height": 1052.3125,
+        "width": 1144
+      },
+      "header": {
+        "fontFamily": "\"Avenir Next\", \"Segoe UI\", \"PingFang SC\", \"Hiragino Sans GB\", \"Noto Sans SC\", sans-serif, \"PingFang SC\", \"Microsoft YaHei\", sans-serif",
+        "fontSize": "16px",
+        "fontWeight": "400",
+        "color": "rgb(33, 23, 15)",
+        "backgroundColor": "rgba(252, 249, 244, 0.75)",
+        "borderColor": "rgba(73, 48, 27, 0.08)",
+        "height": 67,
+        "width": 1144
+      },
+      "h1": {
+        "fontFamily": "\"Avenir Next\", \"Segoe UI\", \"PingFang SC\", \"Hiragino Sans GB\", \"Noto Sans SC\", sans-serif, \"PingFang SC\", \"Microsoft YaHei\", sans-serif",
+        "fontSize": "16px",
+        "fontWeight": "600",
+        "color": "rgb(33, 23, 15)",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderColor": "rgb(33, 23, 15)",
+        "height": 24,
+        "width": 119.84375
+      },
+      "overflow": false,
+      "links": [
+        {
+          "href": "/",
+          "text": "返回主页"
+        },
+        {
+          "href": "/create",
+          "text": "创作台"
+        }
+      ]
+    }
+  },
+  {
+    "id": "D1-before-change-notFound-transport-semantics",
+    "passed": true,
+    "durationMs": 36,
+    "detail": {
+      "transportStatus": 200,
+      "nextBoundaryStatus": 404,
+      "noClientDetail": true
+    }
+  },
+  {
+    "id": "C2-existing-navigation-ascii8000",
+    "passed": true,
+    "durationMs": 751,
+    "detail": {
+      "label": "ascii8000",
+      "promptUnits": 8000,
+      "requestTargetBytes": 8015,
+      "transportStatus": 200,
+      "inputUnits": 8000,
+      "correctlyPrefilled": true
+    }
+  },
+  {
+    "id": "C2-existing-navigation-ascii8001",
+    "passed": true,
+    "durationMs": 744,
+    "detail": {
+      "label": "ascii8001",
+      "promptUnits": 8001,
+      "requestTargetBytes": 8016,
+      "transportStatus": 200,
+      "inputUnits": 8000,
+      "correctlyPrefilled": true
+    }
+  },
+  {
+    "id": "C2-existing-navigation-chinese8000",
+    "passed": true,
+    "durationMs": 741,
+    "detail": {
+      "label": "chinese8000",
+      "promptUnits": 8000,
+      "requestTargetBytes": 72015,
+      "transportStatus": 431,
+      "inputUnits": null,
+      "correctlyPrefilled": false
+    }
+  },
+  {
+    "id": "C2-existing-navigation-emoji8000units",
+    "passed": true,
+    "durationMs": 750,
+    "detail": {
+      "label": "emoji8000units",
+      "promptUnits": 8000,
+      "requestTargetBytes": 56019,
+      "transportStatus": 431,
+      "inputUnits": null,
+      "correctlyPrefilled": false
+    }
+  }
+]

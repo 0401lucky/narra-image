@@ -1,0 +1,16 @@
+{
+  "label": "resume-worker-db-01",
+  "mode": "test",
+  "command": [
+    "pnpm",
+    "verify:worker-contracts:db"
+  ],
+  "cwd": "E:\\code\\narra-image",
+  "timeoutMs": 90000,
+  "code": 2,
+  "signal": null,
+  "timedOut": false,
+  "durationMs": 17859,
+  "stdoutPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\resume-worker-db-01.stdout.log",
+  "stderrPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\react-flow-spike\\logs\\resume-worker-db-01.stderr.log"
+}

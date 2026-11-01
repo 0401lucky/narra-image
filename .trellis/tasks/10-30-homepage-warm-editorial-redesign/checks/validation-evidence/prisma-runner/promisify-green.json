@@ -1,0 +1,6 @@
+{
+  "exitCode": 0,
+  "tests": 7,
+  "finishedAt": "2026-10-31T02:33:13.611036+00:00",
+  "coverage": "allowed example/ordinary file true; denied/missing/invalid path false; callback error semantic; all earlier safety tests"
+}

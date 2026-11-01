@@ -1,0 +1,35 @@
+{
+  "recorded_at": "2026-10-30T16:39:02.643620+00:00",
+  "scope": "Required frontend executable spec sync only; no operations/production acceptance",
+  "frontend_spec_identities": [
+    {
+      "path": ".trellis/spec/frontend/canvas-studio.md",
+      "before_sha256": "bf2fbfcbeef4f1d4976231f3b6ae37d43a7d633ba5199d5ba05d8500ca4c2687",
+      "final_sha256": "7ce3acdbadc3dcaa93d7ed99bd887aec60a7845269f9379dec2073ff4c62e016",
+      "final_bytes": 20678
+    },
+    {
+      "path": ".trellis/spec/frontend/index.md",
+      "before_sha256": "c53e214b035c6e53ac34ff7abb7928fe7786afd0af8d2163e18d3a8242f7239b",
+      "final_sha256": "51fc8d4b9f4c0640d23e7e87ba68e7817f1dfc07f315097ff65e24574b8c4404",
+      "final_bytes": 2510
+    },
+    {
+      "path": ".trellis/spec/frontend/state-management.md",
+      "before_sha256": "de849b60d56e104744d2415b9e121f8a8e61af6711cea877462e77fc38439ba7",
+      "final_sha256": "0eb6a3d7a05bdd897c114d7b91eb77457b5aee72d89bd569feba4defeb82863f",
+      "final_bytes": 8842
+    },
+    {
+      "path": ".trellis/spec/frontend/quality-guidelines.md",
+      "before_sha256": "7c13336d815a893ec3bfb4fe351b8fb28b64ad85debe2149cdb7fc989ff0f14e",
+      "final_sha256": "a26d7b589239a4c6dc3cb2e80c258c8fe10aaf2360f4fd4c542921fd0e6d75b9",
+      "final_bytes": 7157
+    }
+  ],
+  "operations_contract_identity_unchanged": true,
+  "operations_contract_path": ".trellis/spec/operations/canvas-contracts.md",
+  "generated_template_tree_exists": false,
+  "committed": false,
+  "correction": "Read-only independent final review qualified existing canonical-size Custom intent; product/source receipts unchanged"
+}

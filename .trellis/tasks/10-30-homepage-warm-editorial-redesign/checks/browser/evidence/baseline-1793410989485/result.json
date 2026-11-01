@@ -1,0 +1,19 @@
+{
+  "runId": "baseline-1793410989485",
+  "mode": "baseline",
+  "evidence": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\browser\\evidence\\baseline-1793410989485",
+  "app": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\browser-baseline-66310069\\app",
+  "checks": [
+    {
+      "id": "runner",
+      "passed": false,
+      "error": "Error: Owned Next fixture did not start\n    at waitFor (file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/cdp.mjs:13:9)\n    at async file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/run-browser.mjs:279:3"
+    }
+  ],
+  "passed": false,
+  "limitations": [
+    "Real Next/React/Chromium with synthetic DB only; not live DB/Worker/provider E2E.",
+    "Desktop Chrome CDP emulates viewport/touch; not physical mobile/native IME.",
+    "Local installed Node is not pinned Node24.22.1."
+  ]
+}

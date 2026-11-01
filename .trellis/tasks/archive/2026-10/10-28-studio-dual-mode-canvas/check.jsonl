@@ -1,0 +1,21 @@
+{"file": ".trellis/spec/frontend/state-management.md", "reason": "Guarded bootstrap, account/workspace scope and no global-history fallback."}
+{"file": ".trellis/spec/frontend/type-safety.md", "reason": "Shared validators, serialized DTOs and runtime/server-only type boundaries."}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "Lint/types/Vitest/build, mocks, DB exclusions and truthful verification."}
+{"file": ".trellis/spec/frontend/generation-worker-contracts.md", "reason": "Preserve shared Node/Go lifecycle, charge/cancel/refund and safe disposable contracts."}
+{"file": ".trellis/spec/operations/media-storage.md", "reason": "Production S3 policy, legacy media compatibility and no implicit result deletion."}
+{"file": ".trellis/spec/operations/release-hardening.md", "reason": "Additive migrations, both topology/readiness/shutdown and safe wrapper/rollback contracts; research notes manifest filename drift."}
+{"file": ".trellis/tasks/archive/2026-10/10-28-studio-dual-mode-canvas/research/canvas-backend-contracts.md", "reason": "Owner shells/CAS, upload/run fences, immutable roots, actual GC scheduling, capability and disposable gates."}
+{"file": ".trellis/tasks/archive/2026-10/10-28-studio-dual-mode-canvas/research/canvas-backend-operations.md", "reason": "Lossless GC/storage-capability/schema/environment/disposable-DB and topology contracts; no real storage or capacity verification."}
+{"file": ".trellis/tasks/archive/2026-10/10-28-studio-dual-mode-canvas/research/canvas-frontend-contracts.md", "reason": "Independent mounted controllers, accepted-only scene bindings, local outbox, graph order and suppression guards."}
+{"file": ".trellis/tasks/archive/2026-10/10-28-studio-dual-mode-canvas/research/canvas-frontend-persistence.md", "reason": "Lossless local envelope/New-Rename-Save-Delete/CAS/phone/test contracts and resolved planning-review guards."}
+{"file": ".trellis/spec/guides/cross-layer-thinking-guide.md", "reason": "Explicit scene/API/service/DB/worker data flow and shared projections."}
+{"file": ".trellis/tasks/archive/2026-10/10-28-studio-dual-mode-canvas/research/current-studio.md", "reason": "Exact desktop/phone history removal, shared query/actions and regression map."}
+{"file": ".trellis/tasks/archive/2026-10/10-28-studio-dual-mode-canvas/research/canvas-reference-retention.md", "reason": "Selected seven-day new-import grace, saved/job roots, legacy/result exclusion and draft expiry."}
+{"file": ".trellis/tasks/archive/2026-10/10-28-studio-dual-mode-canvas/research/product-decision-inventory.md", "reason": "Resolved user choices and fresh final-review activation boundary."}
+{"file": ".trellis/tasks/archive/2026-10/10-28-studio-dual-mode-canvas/research/recommendation.md", "reason": "Cross-child integration direction and selected/deferred MVP boundaries."}
+{"file": ".trellis/spec/frontend/canvas-studio.md", "reason": "Review current dual-mode, local/manual-save, phone read-only, origin and browser contracts."}
+{"file": ".trellis/spec/operations/canvas-contracts.md", "reason": "Review real owner/CAS/retention/GC evidence and safe isolated verification, not mock-only acceptance."}
+{"file": ".trellis/tasks/archive/2026-10/10-28-studio-dual-mode-canvas/research/final-integration-closeout-2026-10-30.md", "reason": "Complete AC1-AC17 parent review map, actual test gaps, evidence invalidation and no-commit archive requirements."}
+{"file": ".trellis/tasks/archive/2026-10/10-28-studio-history-cleanup/handoff.md", "reason": "History cleanup predecessor contracts and original scope boundaries; later scoped loader must preserve chat."}
+{"file": ".trellis/tasks/archive/2026-10/10-28-studio-canvas-v1/handoff.md", "reason": "Verified final child results, preserved source and explicit physical-device/provider/deployment residuals."}
+{"file": ".trellis/tasks/archive/2026-10/10-28-studio-canvas-v1/checks/infra-final-review.md", "reason": "Prior independent full-scope results and provenance, for fresh parent-level review rather than automatic AC inheritance."}

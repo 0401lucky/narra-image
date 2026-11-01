@@ -1,0 +1,22 @@
+{
+  "checked_at": "2026-10-31T02:35:23.139572+00:00",
+  "scope": "Source/index preservation only; full-root lint is red and physical/native/services/actual CI remain unperformed",
+  "protected_identities": 1514,
+  "changed_source_paths": [
+    ".trellis/spec/frontend/index.md",
+    "src/tests/unit/featured-gallery-likes.test.tsx",
+    "src/tests/unit/homepage-header-footer.test.tsx",
+    "src/tests/unit/homepage-hero.test.tsx",
+    "src/tests/unit/homepage-motion.test.tsx"
+  ],
+  "unexpected_source_additions": [
+    ".trellis/spec/frontend/homepage-interactions.md"
+  ],
+  "head": "1f7948e334c589dc6db38ac045b584f0f5381481",
+  "head_matches_resume_baseline": true,
+  "index_matches_resume_baseline": true,
+  "index_entries_match_head": true,
+  "staged_paths": [],
+  "real_dotenv_read": false,
+  "integrity_pass": false
+}

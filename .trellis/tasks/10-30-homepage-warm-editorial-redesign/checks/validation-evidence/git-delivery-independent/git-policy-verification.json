@@ -1,0 +1,136 @@
+{
+  "checkedAt": "2026-11-01T03:07:28.750772+00:00",
+  "reviewer": "delivery_final_check",
+  "passed": true,
+  "attributes": {
+    "THIRD_PARTY_NOTICES.md": {
+      "whitespace": "unspecified",
+      "merge": "unspecified"
+    },
+    "src/components/create/canvas/controller-types.ts": {
+      "whitespace": "unspecified",
+      "merge": "unspecified"
+    },
+    "src/components/marketing/homepage/gallery-card.tsx": {
+      "whitespace": "unspecified",
+      "merge": "unspecified"
+    },
+    ".trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/run-browser.mjs": {
+      "whitespace": "unspecified",
+      "merge": "unspecified"
+    },
+    ".trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/git-delivery-independent-review.md": {
+      "whitespace": "unspecified",
+      "merge": "unspecified"
+    },
+    ".trellis/tasks/10-30-homepage-warm-editorial-redesign/prd.md": {
+      "whitespace": "unspecified",
+      "merge": "unspecified"
+    },
+    "public/marketing/home/fonts/noto-serif-sc-OFL.txt": {
+      "whitespace": "unspecified",
+      "merge": "unspecified"
+    },
+    ".trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/validation-evidence/git-delivery-whitespace/THIRD_PARTY_NOTICES.md.before": {
+      "whitespace": "-blank-at-eol,-blank-at-eof",
+      "merge": "unspecified"
+    },
+    ".trellis/tasks/10-30-homepage-warm-editorial-redesign/research/asset-evidence/cormorant-garamond-OFL.txt": {
+      "whitespace": "-blank-at-eol,-blank-at-eof",
+      "merge": "unspecified"
+    },
+    ".trellis/tasks/10-30-homepage-warm-editorial-redesign/research/asset-evidence/plus-jakarta-sans-OFL.txt": {
+      "whitespace": "-blank-at-eol,-blank-at-eof",
+      "merge": "unspecified"
+    },
+    "public/marketing/home/fonts/cormorant-garamond-OFL.txt": {
+      "whitespace": "-blank-at-eol,-blank-at-eof",
+      "merge": "unspecified"
+    },
+    "public/marketing/home/fonts/plus-jakarta-sans-OFL.txt": {
+      "whitespace": "-blank-at-eol,-blank-at-eof",
+      "merge": "unspecified"
+    },
+    ".trellis/workspace/admin/journal-1.md": {
+      "whitespace": "unspecified",
+      "merge": "union"
+    }
+  },
+  "exactlyFiveNarrowWhitespaceRules": true,
+  "journalMergeUnionPreserved": true,
+  "ignoreChecks": {
+    "ignored": [
+      ".trellis/tasks/10-30-homepage-warm-editorial-redesign/research/asset-evidence/unsplash-license.html"
+    ],
+    "notIgnored": [
+      ".trellis/tasks/10-30-homepage-warm-editorial-redesign/references/narra_image.html",
+      ".trellis/tasks/10-30-homepage-warm-editorial-redesign/references/narra_ai.md",
+      "public/marketing/home/fonts/cormorant-garamond-OFL.txt",
+      "public/marketing/home/bookshop-light-v1.png",
+      ".trellis/tasks/10-30-homepage-warm-editorial-redesign/research/asset-evidence/cormorant-garamond-OFL.txt"
+    ]
+  },
+  "rawThirdPartyHtml": {
+    "sha256": "eb8392d0ef5489246585e980f75dfe6ea161ada6cd99cb4358651080a54ae2de",
+    "stillPresent": true,
+    "contentsOrKeyPrinted": false
+  },
+  "unmodifiedLicensePairs": [
+    {
+      "family": "cormorant-garamond",
+      "bytes": 4387,
+      "sha256": "60700d351cac4650c51f3f9db318d2a420f8b45052dba2715eb5fec41f0f6956",
+      "publicEqualsResearch": true
+    },
+    {
+      "family": "plus-jakarta-sans",
+      "bytes": 4402,
+      "sha256": "995c7199cab65954f545996326755daee7b63cc6b42b06c13da1f9502ab08a99",
+      "publicEqualsResearch": true
+    }
+  ],
+  "exactTwoEofChanges": [
+    {
+      "path": "THIRD_PARTY_NOTICES.md",
+      "beforeSnapshot": "THIRD_PARTY_NOTICES.md.before",
+      "beforeBytes": 10746,
+      "beforeSha256": "9c91c915a2f8220034295085baa29525ed80730cba73994812b9dcce98396851",
+      "afterBytes": 10745,
+      "afterSha256": "33f503831942a0c7003f6fe29f7f2fb803d75bd7ee8e15a93b8e649aec7a90b1",
+      "deletedBytesHex": "0a",
+      "deletedOffset": 10745,
+      "afterEqualsExactBeforePrefix": true,
+      "beforeEqualsAfterPlusOneLf": true,
+      "beforeTrailingLfBytes": 2,
+      "afterTrailingLfBytes": 1,
+      "beforeSnapshotUnchanged": true
+    },
+    {
+      "path": "src/components/create/canvas/controller-types.ts",
+      "beforeSnapshot": "src__components__create__canvas__controller-types.ts.before",
+      "beforeBytes": 5902,
+      "beforeSha256": "beaf96e20dc7592b1e42b125b098c8ec0d985ae210c1bef5b4a8de2eea66ea26",
+      "afterBytes": 5901,
+      "afterSha256": "039db7b877e61aa9fc8ece2b54fe8df027294303d4e2b26e84435360d83c80f6",
+      "deletedBytesHex": "0a",
+      "deletedOffset": 5901,
+      "afterEqualsExactBeforePrefix": true,
+      "beforeEqualsAfterPlusOneLf": true,
+      "beforeTrailingLfBytes": 2,
+      "afterTrailingLfBytes": 1,
+      "beforeSnapshotUnchanged": true
+    }
+  ],
+  "supplementaryPolicyIdentities": {
+    ".gitattributes": {
+      "sha256": "e92e07b2a436efcf5216924b24df87871d98e20a3eb69c022402ac3df526e9a1",
+      "bytes": 1191
+    },
+    ".trellis/tasks/.gitignore": {
+      "sha256": "6e77b1a9dc041ca869374e094e997c52c0fbe3dd9a95eb094ac47d995c89a0bf",
+      "bytes": 516
+    }
+  },
+  "gitMutation": false,
+  "rootOwnsFinalStagedAudit": true
+}

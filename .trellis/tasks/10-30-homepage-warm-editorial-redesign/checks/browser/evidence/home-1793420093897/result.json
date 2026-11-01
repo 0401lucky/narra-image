@@ -1,0 +1,61 @@
+{
+  "runId": "home-1793420093897",
+  "mode": "home",
+  "filter": "^(H3|H4|C2-C3|C3-guest)",
+  "evidence": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\browser\\evidence\\home-1793420093897",
+  "app": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\browser-hero-resume-72e89a9f\\app",
+  "checks": [
+    {
+      "id": "C2-C3-actual-remix-saved-canvas-then-chat",
+      "passed": false,
+      "durationMs": 22328,
+      "error": "Error: Condition did not become true\n    at waitFor (file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/cdp.mjs:13:9)\n    at async openCard (file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/homepage-checks.mjs:23:3)\n    at async file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/homepage-checks.mjs:403:5\n    at async check (file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/run-browser.mjs:79:20)\n    at async fullHomepageChecks (file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/homepage-checks.mjs:379:3)\n    at async file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/run-browser.mjs:374:7"
+    },
+    {
+      "id": "C3-guest-real-login-return-reselect-no-continuation",
+      "passed": false,
+      "durationMs": 21868,
+      "error": "Error: Condition did not become true\n    at waitFor (file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/cdp.mjs:13:9)\n    at async openCard (file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/homepage-checks.mjs:23:3)\n    at async file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/homepage-checks.mjs:432:5\n    at async check (file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/run-browser.mjs:79:20)\n    at async fullHomepageChecks (file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/homepage-checks.mjs:412:3)\n    at async file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/run-browser.mjs:374:7"
+    },
+    {
+      "id": "H3-current-full-copy-during-typewriter-1440",
+      "passed": false,
+      "durationMs": 3369,
+      "error": "Error: Control is occluded/clipped: [data-home-hero-frame] button 复用画面灵感 {\"left\":1197.4490966796875,\"top\":515.42529296875,\"right\":1278.508544921875,\"bottom\":543.67236328125,\"width\":81.0594482421875,\"height\":28.2470703125,\"x\":1237.9788208007812,\"y\":529.548828125,\"visible\":true,\"hit\":false,\"hitTag\":\"IMG\",\"hitText\":\"\",\"text\":\"复用画面灵感\",\"disabled\":false}\n    at BrowserPage.point (file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/cdp.mjs:222:11)\n    at async fastClick (file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/hero-image-checks.mjs:57:17)\n    at async file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/hero-image-checks.mjs:141:9\n    at async check (file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/run-browser.mjs:79:20)\n    at async heroImageChecks (file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/hero-image-checks.mjs:129:5)\n    at async fullHomepageChecks (file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/homepage-checks.mjs:572:3)\n    at async file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/run-browser.mjs:374:7"
+    },
+    {
+      "id": "H3-current-full-copy-during-typewriter-390",
+      "passed": true,
+      "durationMs": 2653,
+      "detail": [
+        {
+          "text": "提着暖黄煤油灯穿过迷雾森林的小狐狸，宫崎骏式温暖手绘水彩质感，星光点缀夜空，细腻纸张纹理",
+          "id": "storybook",
+          "typed": "提着暖黄煤油灯穿过迷"
+        },
+        {
+          "text": "江南雨巷檐角滴落的雨水，远处暖黄灯笼倒映在青石板水面，宋代美学克制留白，电影级冷暖色调对比",
+          "id": "oriental",
+          "typed": "江南雨"
+        },
+        {
+          "text": "黄昏穿过旧书店百叶窗的丁达尔光束，微尘在暖金空气中漂浮，王家卫电影胶片颗粒感，柔和景深，叙事感构图",
+          "id": "film",
+          "typed": "黄昏穿过"
+        }
+      ]
+    },
+    {
+      "id": "H4-rapid-requests-latest-committed-image-prompt",
+      "passed": false,
+      "durationMs": 9706,
+      "error": "Error: Control is occluded/clipped: [data-home-hero-frame] button 复用画面灵感 {\"left\":1197.5230712890625,\"top\":515.4578247070312,\"right\":1278.65185546875,\"bottom\":543.7071533203125,\"width\":81.1287841796875,\"height\":28.24932861328125,\"x\":1238.0874633789062,\"y\":529.5824890136719,\"visible\":true,\"hit\":false,\"hitTag\":\"IMG\",\"hitText\":\"\",\"text\":\"复用画面灵感\",\"disabled\":false}\n    at BrowserPage.point (file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/cdp.mjs:222:11)\n    at async fastClick (file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/hero-image-checks.mjs:57:17)\n    at async file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/hero-image-checks.mjs:175:5\n    at async check (file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/run-browser.mjs:79:20)\n    at async heroImageChecks (file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/hero-image-checks.mjs:152:3)\n    at async fullHomepageChecks (file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/homepage-checks.mjs:572:3)\n    at async file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/run-browser.mjs:374:7"
+    }
+  ],
+  "passed": false,
+  "limitations": [
+    "Real Next/React/Chromium with synthetic DB only; not live DB/Worker/provider E2E.",
+    "Desktop Chrome CDP emulates viewport/touch; not physical mobile/native IME.",
+    "Local installed Node is not pinned Node24.22.1."
+  ]
+}

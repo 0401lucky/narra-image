@@ -1,0 +1,3547 @@
+{
+  "attempt": "02",
+  "fixture": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\fixture-03",
+  "scope": "Actual Next 16.2.4 production App Router SSR/hydration and unmodified GeneratorStudio/React Flow/controller/native IndexedDB. Serialized auth/catalogue and HTTP APIs are isolated loopback fixtures, not actual auth, database, provider, Worker, S3, billing or infrastructure E2E.",
+  "results": [
+    {
+      "check": "Actual Next SSR hydration, lazy canvas and separate empty-new navigation",
+      "pass": true,
+      "measured": {
+        "width": 1200,
+        "height": 653.296875,
+        "documentWidth": 1440
+      },
+      "lazyChunks": [
+        "/_next/static/chunks/12nnylkpazca6.js"
+      ],
+      "actualRootAndNativeStore": true
+    },
+    {
+      "check": "Chinese CDP composition, textarea wheel/focus and actual typed handle connection",
+      "pass": true,
+      "chineseMethod": "Chrome CDP IME composition, not native OS candidate UI",
+      "promptId": "ec1b0275-35c0-42f5-98ed-2147c2964f4b",
+      "genId": "81dc4992-2390-4e82-8225-a0e46854e001",
+      "noAutomaticSubmission": true
+    },
+    {
+      "check": "Native original import, explicit disconnected-reference Save and captured Save while editing",
+      "pass": true,
+      "savedUnsubmittedOriginals": 2,
+      "originalAssetIds": [
+        "asset-45f934e5-b1c0-40f9-954d-cdba08fa5016",
+        "asset-21e0212a-2c1f-440e-bd5d-6862bd4fb7e0"
+      ],
+      "capturedSnapshotPreservesNewerDirtyEdit": true,
+      "nativeBlobs": [
+        {
+          "blobId": "b250c2f6-63e7-41a4-a8d4-5696f42c8844",
+          "size": 12218,
+          "assetId": "asset-45f934e5-b1c0-40f9-954d-cdba08fa5016",
+          "fileName": "original-a.png"
+        },
+        {
+          "blobId": "ec774baf-ebd3-49f7-87ba-9f586be155e9",
+          "size": 39666,
+          "assetId": "asset-21e0212a-2c1f-440e-bd5d-6862bd4fb7e0",
+          "fileName": "original-b.png"
+        }
+      ]
+    },
+    {
+      "check": "Separate browser restores saved originals, explicit reference ordering/manual Run and cloud CAS conflict",
+      "pass": true,
+      "independentProfileNoLocalBlob": true,
+      "orderedAssetIds": [
+        "asset-21e0212a-2c1f-440e-bd5d-6862bd4fb7e0",
+        "asset-45f934e5-b1c0-40f9-954d-cdba08fa5016"
+      ],
+      "reusedUploads": 2,
+      "fakeServerCASPreservesDraft": true
+    }
+  ],
+  "browsers": [
+    {
+      "name": "desktop",
+      "requested": [
+        {
+          "stage": "startup",
+          "url": "http://127.0.0.1:56291/create",
+          "type": "Document"
+        },
+        {
+          "stage": "startup",
+          "url": "http://127.0.0.1:56291/_next/static/chunks/0kyg3yi_p4kz_.css",
+          "type": "Stylesheet"
+        },
+        {
+          "stage": "startup",
+          "url": "http://127.0.0.1:56291/_next/static/chunks/058dbm3ehj_6_.css",
+          "type": "Stylesheet"
+        },
+        {
+          "stage": "startup",
+          "url": "http://127.0.0.1:56291/_next/static/chunks/01inidwn~q716.js",
+          "type": "Script"
+        },
+        {
+          "stage": "startup",
+          "url": "http://127.0.0.1:56291/_next/static/chunks/03zr5-kjdemeu.js",
+          "type": "Script"
+        },
+        {
+          "stage": "startup",
+          "url": "http://127.0.0.1:56291/_next/static/chunks/0v-z0oz4su18..js",
+          "type": "Script"
+        },
+        {
+          "stage": "startup",
+          "url": "http://127.0.0.1:56291/_next/static/chunks/0r2yn.9.2rvqv.js",
+          "type": "Script"
+        },
+        {
+          "stage": "startup",
+          "url": "http://127.0.0.1:56291/_next/static/chunks/turbopack-13wsag-_6jjyr.js",
+          "type": "Script"
+        },
+        {
+          "stage": "startup",
+          "url": "http://127.0.0.1:56291/_next/static/chunks/0w0.mho7jk36..js",
+          "type": "Script"
+        },
+        {
+          "stage": "startup",
+          "url": "http://127.0.0.1:56291/_next/static/chunks/0q5yio_uwwvwb.js",
+          "type": "Script"
+        },
+        {
+          "stage": "startup",
+          "url": "http://127.0.0.1:56291/_next/static/chunks/0p4ssay0gd5xy.js",
+          "type": "Script"
+        },
+        {
+          "stage": "startup",
+          "url": "http://127.0.0.1:56291/_next/static/chunks/0j.~ss7xwevcc.js",
+          "type": "Script"
+        },
+        {
+          "stage": "startup",
+          "url": "http://127.0.0.1:56291/_next/static/chunks/127m.cqhi6elt.js",
+          "type": "Script"
+        },
+        {
+          "stage": "startup",
+          "url": "http://127.0.0.1:56291/favicon.ico",
+          "type": "Other"
+        },
+        {
+          "stage": "startup",
+          "url": "http://127.0.0.1:56291/_next/static/chunks/0tjb8wkysr4sw.js",
+          "type": "Script"
+        },
+        {
+          "stage": "startup",
+          "url": "http://127.0.0.1:56291/_next/static/chunks/0fi978u_g_p40.js",
+          "type": "Script"
+        },
+        {
+          "stage": "startup",
+          "url": "http://127.0.0.1:56291/api/me/canvases",
+          "type": "Fetch"
+        },
+        {
+          "stage": "Actual Next SSR hydration, lazy canvas and separate empty-new navigation",
+          "url": "http://127.0.0.1:56291/_next/static/chunks/12nnylkpazca6.js",
+          "type": "Script"
+        },
+        {
+          "stage": "Actual Next SSR hydration, lazy canvas and separate empty-new navigation",
+          "url": "http://127.0.0.1:56291/_next/static/chunks/0hj819sbkgu77.css",
+          "type": "Stylesheet"
+        },
+        {
+          "stage": "Actual Next SSR hydration, lazy canvas and separate empty-new navigation",
+          "url": "http://127.0.0.1:56291/api/me/canvases",
+          "type": "Fetch"
+        },
+        {
+          "stage": "Actual Next SSR hydration, lazy canvas and separate empty-new navigation",
+          "url": "http://127.0.0.1:56291/api/me/canvases/c76f1506-22fe-4bbf-9709-684ccf99dfca",
+          "type": "Fetch"
+        },
+        {
+          "stage": "Native original import, explicit disconnected-reference Save and captured Save while editing",
+          "url": "blob:http://127.0.0.1:56291/58ae14c1-119f-4cc2-9ef7-0e53ab78d20b",
+          "type": "Image"
+        },
+        {
+          "stage": "Native original import, explicit disconnected-reference Save and captured Save while editing",
+          "url": "blob:http://127.0.0.1:56291/65afd281-d30e-4365-b3ed-3b745a741325",
+          "type": "Image"
+        },
+        {
+          "stage": "Native original import, explicit disconnected-reference Save and captured Save while editing",
+          "url": "http://127.0.0.1:56291/api/me/canvas-assets",
+          "type": "Fetch"
+        },
+        {
+          "stage": "Native original import, explicit disconnected-reference Save and captured Save while editing",
+          "url": "http://127.0.0.1:56291/_next/image?url=%2Ffixture-media%2Fasset-45f934e5-b1c0-40f9-954d-cdba08fa5016.png&w=640&q=75",
+          "type": "Image"
+        },
+        {
+          "stage": "Native original import, explicit disconnected-reference Save and captured Save while editing",
+          "url": "http://127.0.0.1:56291/api/me/canvas-assets",
+          "type": "Fetch"
+        },
+        {
+          "stage": "Native original import, explicit disconnected-reference Save and captured Save while editing",
+          "url": "http://127.0.0.1:56291/_next/image?url=%2Ffixture-media%2Fasset-21e0212a-2c1f-440e-bd5d-6862bd4fb7e0.png&w=640&q=75",
+          "type": "Image"
+        },
+        {
+          "stage": "Native original import, explicit disconnected-reference Save and captured Save while editing",
+          "url": "http://127.0.0.1:56291/api/me/canvases/c76f1506-22fe-4bbf-9709-684ccf99dfca/snapshot",
+          "type": "Fetch"
+        },
+        {
+          "stage": "Native original import, explicit disconnected-reference Save and captured Save while editing",
+          "url": "http://127.0.0.1:56291/api/me/canvas-assets/asset-45f934e5-b1c0-40f9-954d-cdba08fa5016",
+          "type": "Fetch"
+        },
+        {
+          "stage": "Native original import, explicit disconnected-reference Save and captured Save while editing",
+          "url": "http://127.0.0.1:56291/api/me/canvas-assets/asset-21e0212a-2c1f-440e-bd5d-6862bd4fb7e0",
+          "type": "Fetch"
+        },
+        {
+          "stage": "Native original import, explicit disconnected-reference Save and captured Save while editing",
+          "url": "http://127.0.0.1:56291/api/me/canvases/c76f1506-22fe-4bbf-9709-684ccf99dfca/snapshot",
+          "type": "Fetch"
+        },
+        {
+          "stage": "Separate browser restores saved originals, explicit reference ordering/manual Run and cloud CAS conflict",
+          "url": "http://127.0.0.1:56291/api/me/canvas-assets/asset-45f934e5-b1c0-40f9-954d-cdba08fa5016",
+          "type": "Fetch"
+        },
+        {
+          "stage": "Separate browser restores saved originals, explicit reference ordering/manual Run and cloud CAS conflict",
+          "url": "http://127.0.0.1:56291/api/me/canvas-assets/asset-21e0212a-2c1f-440e-bd5d-6862bd4fb7e0",
+          "type": "Fetch"
+        },
+        {
+          "stage": "Separate browser restores saved originals, explicit reference ordering/manual Run and cloud CAS conflict",
+          "url": "http://127.0.0.1:56291/api/me/canvases/c76f1506-22fe-4bbf-9709-684ccf99dfca/snapshot",
+          "type": "Fetch"
+        },
+        {
+          "stage": "Separate browser restores saved originals, explicit reference ordering/manual Run and cloud CAS conflict",
+          "url": "http://127.0.0.1:56291/api/me/canvases/c76f1506-22fe-4bbf-9709-684ccf99dfca",
+          "type": "Fetch"
+        },
+        {
+          "stage": "Separate browser restores saved originals, explicit reference ordering/manual Run and cloud CAS conflict",
+          "url": "blob:http://127.0.0.1:56291/58ae14c1-119f-4cc2-9ef7-0e53ab78d20b",
+          "type": "Image"
+        },
+        {
+          "stage": "Separate browser restores saved originals, explicit reference ordering/manual Run and cloud CAS conflict",
+          "url": "blob:http://127.0.0.1:56291/65afd281-d30e-4365-b3ed-3b745a741325",
+          "type": "Image"
+        },
+        {
+          "stage": "Separate browser restores saved originals, explicit reference ordering/manual Run and cloud CAS conflict",
+          "url": "http://127.0.0.1:56291/api/me/canvas-runtime/resolve",
+          "type": "Fetch"
+        },
+        {
+          "stage": "Separate browser restores saved originals, explicit reference ordering/manual Run and cloud CAS conflict",
+          "url": "http://127.0.0.1:56291/create?_rsc=1hp4v",
+          "type": "Fetch"
+        },
+        {
+          "stage": "Separate browser restores saved originals, explicit reference ordering/manual Run and cloud CAS conflict",
+          "url": "http://127.0.0.1:56291/_next/image?url=%2Ffixture-media%2Fasset-45f934e5-b1c0-40f9-954d-cdba08fa5016.png&w=640&q=75",
+          "type": "Image"
+        },
+        {
+          "stage": "Separate browser restores saved originals, explicit reference ordering/manual Run and cloud CAS conflict",
+          "url": "http://127.0.0.1:56291/_next/image?url=%2Ffixture-media%2Fasset-21e0212a-2c1f-440e-bd5d-6862bd4fb7e0.png&w=640&q=75",
+          "type": "Image"
+        },
+        {
+          "stage": "Separate browser restores saved originals, explicit reference ordering/manual Run and cloud CAS conflict",
+          "url": "http://127.0.0.1:56291/_next/image?url=%2Ffixture-media%2Fcanvas-02ba2343-01fb-4486-ae43-8fe561c40c3b-image-0.png&w=640&q=75",
+          "type": "Image"
+        },
+        {
+          "stage": "Manual rerun stable nonoverlapping results, reference viewer/download, focused keyboard isolation",
+          "url": "http://127.0.0.1:56291/api/me/canvas-assets/asset-21e0212a-2c1f-440e-bd5d-6862bd4fb7e0",
+          "type": "Fetch"
+        },
+        {
+          "stage": "Manual rerun stable nonoverlapping results, reference viewer/download, focused keyboard isolation",
+          "url": "http://127.0.0.1:56291/api/me/canvas-assets/asset-45f934e5-b1c0-40f9-954d-cdba08fa5016",
+          "type": "Fetch"
+        },
+        {
+          "stage": "Manual rerun stable nonoverlapping results, reference viewer/download, focused keyboard isolation",
+          "url": "http://127.0.0.1:56291/api/generate",
+          "type": "Fetch"
+        },
+        {
+          "stage": "Manual rerun stable nonoverlapping results, reference viewer/download, focused keyboard isolation",
+          "url": "http://127.0.0.1:56291/create?_rsc=1hp4v",
+          "type": "Fetch"
+        },
+        {
+          "stage": "Manual rerun stable nonoverlapping results, reference viewer/download, focused keyboard isolation",
+          "url": "http://127.0.0.1:56291/_next/image?url=%2Ffixture-media%2Fcanvas-ba92c483-cb35-4eae-8570-736ecbe69b4f-image-0.png&w=640&q=75",
+          "type": "Image"
+        },
+        {
+          "stage": "Manual rerun stable nonoverlapping results, reference viewer/download, focused keyboard isolation",
+          "url": "blob:http://127.0.0.1:56291/43b0787d-3337-4250-8e25-ee6d6da5e44c",
+          "type": "Image"
+        },
+        {
+          "stage": "Manual rerun stable nonoverlapping results, reference viewer/download, focused keyboard isolation",
+          "url": "blob:http://127.0.0.1:56291/43b0787d-3337-4250-8e25-ee6d6da5e44c",
+          "type": "Fetch"
+        }
+      ],
+      "consoleErrors": [],
+      "exceptions": [],
+      "blocked": [],
+      "screenshots": [
+        "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-02\\desktop-failure.png"
+      ],
+      "downloads": [
+        {
+          "guid": "1f890f49-99e1-4584-bfe4-1b5308142eaa",
+          "totalBytes": 12218,
+          "receivedBytes": 0,
+          "state": "inProgress"
+        },
+        {
+          "guid": "1f890f49-99e1-4584-bfe4-1b5308142eaa",
+          "totalBytes": 12218,
+          "receivedBytes": 12218,
+          "state": "inProgress"
+        },
+        {
+          "guid": "1f890f49-99e1-4584-bfe4-1b5308142eaa",
+          "totalBytes": 12218,
+          "receivedBytes": 12218,
+          "state": "inProgress"
+        },
+        {
+          "guid": "1f890f49-99e1-4584-bfe4-1b5308142eaa",
+          "totalBytes": 12218,
+          "receivedBytes": 12218,
+          "state": "inProgress"
+        },
+        {
+          "guid": "1f890f49-99e1-4584-bfe4-1b5308142eaa",
+          "totalBytes": 12218,
+          "receivedBytes": 12218,
+          "state": "inProgress"
+        },
+        {
+          "guid": "1f890f49-99e1-4584-bfe4-1b5308142eaa",
+          "totalBytes": 12218,
+          "receivedBytes": 12218,
+          "state": "completed",
+          "filePath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-02\\desktop-downloads\\narra-image.png"
+        }
+      ],
+      "chrome": "Chrome/156.0.8078.74",
+      "controlActions": [
+        {
+          "stage": "Actual Next SSR hydration, lazy canvas and separate empty-new navigation",
+          "selector": "textarea[placeholder]",
+          "x": 830.5,
+          "y": 834,
+          "width": 882,
+          "height": 36,
+          "visibility": "visible",
+          "hit": true,
+          "hitLabel": "Chat seed only",
+          "label": "Chat seed only",
+          "disabled": false
+        },
+        {
+          "stage": "Actual Next SSR hydration, lazy canvas and separate empty-new navigation",
+          "selector": "[data-fixture-click=true]",
+          "x": 157,
+          "y": 87,
+          "width": 88,
+          "height": 36,
+          "visibility": "visible",
+          "hit": true,
+          "hitLabel": "画布",
+          "label": "画布",
+          "disabled": false
+        },
+        {
+          "stage": "Actual Next SSR hydration, lazy canvas and separate empty-new navigation",
+          "selector": "[data-fixture-click=true]",
+          "x": 119.5,
+          "y": 196.5859375,
+          "width": 210.21875,
+          "height": 44.796875,
+          "visibility": "visible",
+          "hit": true,
+          "hitLabel": "新建空白画布",
+          "label": "新建空白画布",
+          "disabled": false
+        },
+        {
+          "stage": "Actual Next SSR hydration, lazy canvas and separate empty-new navigation",
+          "selector": "[aria-label=\"重命名画布\"]",
+          "x": 1250.0546875,
+          "y": 156.5859375,
+          "width": 30.390625,
+          "height": 30.390625,
+          "visibility": "visible",
+          "hit": true,
+          "hitLabel": "",
+          "label": "重命名画布",
+          "disabled": false
+        },
+        {
+          "stage": "Actual Next SSR hydration, lazy canvas and separate empty-new navigation",
+          "selector": "[aria-label=\"画布名称\"]",
+          "x": 720,
+          "y": 491.796875,
+          "width": 398,
+          "height": 44,
+          "visibility": "visible",
+          "hit": true,
+          "hitLabel": "画布名称",
+          "label": "画布名称",
+          "disabled": false
+        },
+        {
+          "stage": "Actual Next SSR hydration, lazy canvas and separate empty-new navigation",
+          "selector": "[data-fixture-click=true]",
+          "x": 873.609375,
+          "y": 556.59375,
+          "width": 90.78125,
+          "height": 44,
+          "visibility": "visible",
+          "hit": true,
+          "hitLabel": "确认重命名",
+          "label": "确认重命名",
+          "disabled": false
+        },
+        {
+          "stage": "Chinese CDP composition, textarea wheel/focus and actual typed handle connection",
+          "selector": "#fixture-native-control",
+          "x": 650,
+          "y": 135,
+          "width": 200,
+          "height": 70,
+          "visibility": "visible",
+          "hit": true,
+          "hitLabel": "",
+          "label": "",
+          "disabled": false
+        },
+        {
+          "stage": "Chinese CDP composition, textarea wheel/focus and actual typed handle connection",
+          "selector": "[data-fixture-click=true]",
+          "x": 300.5859375,
+          "y": 221.3671875,
+          "width": 81.171875,
+          "height": 33.171875,
+          "visibility": "visible",
+          "hit": true,
+          "hitLabel": "提示词",
+          "label": "提示词",
+          "disabled": false
+        },
+        {
+          "stage": "Chinese CDP composition, textarea wheel/focus and actual typed handle connection",
+          "selector": "[aria-label=\"节点提示词\"]",
+          "x": 434,
+          "y": 501,
+          "width": 260.40625,
+          "height": 139.53125,
+          "visibility": "visible",
+          "hit": true,
+          "hitLabel": "节点提示词",
+          "label": "节点提示词",
+          "disabled": false
+        },
+        {
+          "stage": "Chinese CDP composition, textarea wheel/focus and actual typed handle connection",
+          "selector": "[aria-label=\"节点提示词\"]",
+          "x": 434,
+          "y": 501,
+          "width": 260.40625,
+          "height": 139.53125,
+          "visibility": "visible",
+          "hit": true,
+          "hitLabel": "节点提示词",
+          "label": "节点提示词",
+          "disabled": false
+        },
+        {
+          "stage": "Chinese CDP composition, textarea wheel/focus and actual typed handle connection",
+          "selector": "[aria-label=\"节点提示词\"]",
+          "x": 434,
+          "y": 501,
+          "width": 260.40625,
+          "height": 139.53125,
+          "visibility": "visible",
+          "hit": true,
+          "hitLabel": "节点提示词",
+          "label": "节点提示词",
+          "disabled": false
+        },
+        {
+          "stage": "Chinese CDP composition, textarea wheel/focus and actual typed handle connection",
+          "selector": "[aria-label=\"节点提示词\"]",
+          "x": 434,
+          "y": 501,
+          "width": 260.40625,
+          "height": 139.53125,
+          "visibility": "visible",
+          "hit": true,
+          "hitLabel": "节点提示词",
+          "label": "节点提示词",
+          "disabled": false
+        },
+        {
+          "stage": "Chinese CDP composition, textarea wheel/focus and actual typed handle connection",
+          "selector": "[data-fixture-click=true]",
+          "x": 481.7109375,
+          "y": 221.3671875,
+          "width": 93.171875,
+          "height": 33.171875,
+          "visibility": "visible",
+          "hit": true,
+          "hitLabel": "生成节点",
+          "label": "生成节点",
+          "disabled": false
+        },
+        {
+          "stage": "Chinese CDP composition, textarea wheel/focus and actual typed handle connection",
+          "selector": "[aria-label=\"关闭节点设置\"]",
+          "x": 1402,
+          "y": 331.5,
+          "width": 44,
+          "height": 44,
+          "visibility": "visible",
+          "hit": true,
+          "hitLabel": "",
+          "label": "关闭节点设置",
+          "disabled": false
+        },
+        {
+          "stage": "Chinese CDP composition, textarea wheel/focus and actual typed handle connection",
+          "selector": "[aria-label=\"适应全部节点\"]",
+          "x": 1404.8046875,
+          "y": 221.3671875,
+          "width": 30.390625,
+          "height": 30.390625,
+          "visibility": "visible",
+          "hit": true,
+          "hitLabel": "",
+          "label": "适应全部节点",
+          "disabled": false
+        },
+        {
+          "stage": "Native original import, explicit disconnected-reference Save and captured Save while editing",
+          "selector": "[data-fixture-click=true]",
+          "x": 1363.4140625,
+          "y": 156.5859375,
+          "width": 113.171875,
+          "height": 39.578125,
+          "visibility": "visible",
+          "hit": true,
+          "hitLabel": "保存到账户",
+          "label": "保存到账户",
+          "disabled": false
+        },
+        {
+          "stage": "Native original import, explicit disconnected-reference Save and captured Save while editing",
+          "selector": "[aria-label=\"适应全部节点\"]",
+          "x": 1404.8046875,
+          "y": 221.3671875,
+          "width": 30.390625,
+          "height": 30.390625,
+          "visibility": "visible",
+          "hit": true,
+          "hitLabel": "",
+          "label": "适应全部节点",
+          "disabled": false
+        },
+        {
+          "stage": "Native original import, explicit disconnected-reference Save and captured Save while editing",
+          "selector": "[aria-label=\"节点提示词\"]",
+          "x": 735.3327026367188,
+          "y": 423.94789123535156,
+          "width": 143.4527587890625,
+          "height": 76.86508178710938,
+          "visibility": "visible",
+          "hit": true,
+          "hitLabel": "节点提示词",
+          "label": "节点提示词",
+          "disabled": false
+        },
+        {
+          "stage": "Native original import, explicit disconnected-reference Save and captured Save while editing",
+          "selector": "[data-fixture-click=true]",
+          "x": 1363.4140625,
+          "y": 156.5859375,
+          "width": 113.171875,
+          "height": 39.578125,
+          "visibility": "visible",
+          "hit": true,
+          "hitLabel": "保存到账户",
+          "label": "保存到账户",
+          "disabled": false
+        },
+        {
+          "stage": "Native original import, explicit disconnected-reference Save and captured Save while editing",
+          "selector": "[aria-label=\"节点提示词\"]",
+          "x": 735.3327026367188,
+          "y": 423.94789123535156,
+          "width": 143.4527587890625,
+          "height": 76.86508178710938,
+          "visibility": "visible",
+          "hit": true,
+          "hitLabel": "节点提示词",
+          "label": "节点提示词",
+          "disabled": false
+        },
+        {
+          "stage": "Separate browser restores saved originals, explicit reference ordering/manual Run and cloud CAS conflict",
+          "selector": "[data-fixture-click=true]",
+          "x": 1363.4140625,
+          "y": 156.5859375,
+          "width": 113.171875,
+          "height": 39.578125,
+          "visibility": "visible",
+          "hit": true,
+          "hitLabel": "保存到账户",
+          "label": "保存到账户",
+          "disabled": false
+        },
+        {
+          "stage": "Separate browser restores saved originals, explicit reference ordering/manual Run and cloud CAS conflict",
+          "selector": "[data-fixture-click=true]",
+          "x": 1369.8828125,
+          "y": 206.5703125,
+          "width": 108.234375,
+          "height": 30.390625,
+          "visibility": "visible",
+          "hit": true,
+          "hitLabel": "重新载入账户快照",
+          "label": "重新载入账户快照",
+          "disabled": false
+        },
+        {
+          "stage": "Separate browser restores saved originals, explicit reference ordering/manual Run and cloud CAS conflict",
+          "selector": "[data-fixture-click=true]",
+          "x": 861.609375,
+          "y": 545,
+          "width": 114.78125,
+          "height": 44,
+          "visibility": "visible",
+          "hit": true,
+          "hitLabel": "放弃本地并载入",
+          "label": "放弃本地并载入",
+          "disabled": false
+        },
+        {
+          "stage": "Manual rerun stable nonoverlapping results, reference viewer/download, focused keyboard isolation",
+          "selector": "[aria-label=\"适应全部节点\"]",
+          "x": 1404.8046875,
+          "y": 221.3671875,
+          "width": 30.390625,
+          "height": 30.390625,
+          "visibility": "visible",
+          "hit": true,
+          "hitLabel": "",
+          "label": "适应全部节点",
+          "disabled": false
+        },
+        {
+          "stage": "Manual rerun stable nonoverlapping results, reference viewer/download, focused keyboard isolation",
+          "selector": "[data-fixture-click=true]",
+          "x": 827.996826171875,
+          "y": 483.31817626953125,
+          "width": 119.4464111328125,
+          "height": 20.27069091796875,
+          "visibility": "visible",
+          "hit": true,
+          "hitLabel": "运行此节点",
+          "label": "运行此节点",
+          "disabled": false
+        },
+        {
+          "stage": "Manual rerun stable nonoverlapping results, reference viewer/download, focused keyboard isolation",
+          "selector": "[aria-label=\"适应全部节点\"]",
+          "x": 1404.8046875,
+          "y": 221.3671875,
+          "width": 30.390625,
+          "height": 30.390625,
+          "visibility": "visible",
+          "hit": true,
+          "hitLabel": "",
+          "label": "适应全部节点",
+          "disabled": false
+        },
+        {
+          "stage": "Manual rerun stable nonoverlapping results, reference viewer/download, focused keyboard isolation",
+          "selector": ".react-flow__node-reference [aria-label=\"查看参考原图\"]",
+          "x": 630.6653442382812,
+          "y": 616.3687438964844,
+          "width": 143.4527587890625,
+          "height": 92.54791259765625,
+          "visibility": "visible",
+          "hit": true,
+          "hitLabel": "",
+          "label": "查看参考原图",
+          "disabled": false
+        },
+        {
+          "stage": "Manual rerun stable nonoverlapping results, reference viewer/download, focused keyboard isolation",
+          "selector": "[data-fixture-click=true]",
+          "x": 720,
+          "y": 914,
+          "width": 168,
+          "height": 48,
+          "visibility": "visible",
+          "hit": true,
+          "hitLabel": "保存高清原图",
+          "label": "保存高清原图",
+          "disabled": false
+        }
+      ]
+    },
+    {
+      "name": "separate-device",
+      "requested": [
+        {
+          "stage": "Separate browser restores saved originals, explicit reference ordering/manual Run and cloud CAS conflict",
+          "url": "http://127.0.0.1:56291/create",
+          "type": "Document"
+        },
+        {
+          "stage": "Separate browser restores saved originals, explicit reference ordering/manual Run and cloud CAS conflict",
+          "url": "http://127.0.0.1:56291/_next/static/chunks/0kyg3yi_p4kz_.css",
+          "type": "Stylesheet"
+        },
+        {
+          "stage": "Separate browser restores saved originals, explicit reference ordering/manual Run and cloud CAS conflict",
+          "url": "http://127.0.0.1:56291/_next/static/chunks/058dbm3ehj_6_.css",
+          "type": "Stylesheet"
+        },
+        {
+          "stage": "Separate browser restores saved originals, explicit reference ordering/manual Run and cloud CAS conflict",
+          "url": "http://127.0.0.1:56291/_next/static/chunks/01inidwn~q716.js",
+          "type": "Script"
+        },
+        {
+          "stage": "Separate browser restores saved originals, explicit reference ordering/manual Run and cloud CAS conflict",
+          "url": "http://127.0.0.1:56291/_next/static/chunks/03zr5-kjdemeu.js",
+          "type": "Script"
+        },
+        {
+          "stage": "Separate browser restores saved originals, explicit reference ordering/manual Run and cloud CAS conflict",
+          "url": "http://127.0.0.1:56291/_next/static/chunks/0v-z0oz4su18..js",
+          "type": "Script"
+        },
+        {
+          "stage": "Separate browser restores saved originals, explicit reference ordering/manual Run and cloud CAS conflict",
+          "url": "http://127.0.0.1:56291/_next/static/chunks/0r2yn.9.2rvqv.js",
+          "type": "Script"
+        },
+        {
+          "stage": "Separate browser restores saved originals, explicit reference ordering/manual Run and cloud CAS conflict",
+          "url": "http://127.0.0.1:56291/_next/static/chunks/turbopack-13wsag-_6jjyr.js",
+          "type": "Script"
+        },
+        {
+          "stage": "Separate browser restores saved originals, explicit reference ordering/manual Run and cloud CAS conflict",
+          "url": "http://127.0.0.1:56291/_next/static/chunks/0w0.mho7jk36..js",
+          "type": "Script"
+        },
+        {
+          "stage": "Separate browser restores saved originals, explicit reference ordering/manual Run and cloud CAS conflict",
+          "url": "http://127.0.0.1:56291/_next/static/chunks/0q5yio_uwwvwb.js",
+          "type": "Script"
+        },
+        {
+          "stage": "Separate browser restores saved originals, explicit reference ordering/manual Run and cloud CAS conflict",
+          "url": "http://127.0.0.1:56291/_next/static/chunks/0p4ssay0gd5xy.js",
+          "type": "Script"
+        },
+        {
+          "stage": "Separate browser restores saved originals, explicit reference ordering/manual Run and cloud CAS conflict",
+          "url": "http://127.0.0.1:56291/_next/static/chunks/0j.~ss7xwevcc.js",
+          "type": "Script"
+        },
+        {
+          "stage": "Separate browser restores saved originals, explicit reference ordering/manual Run and cloud CAS conflict",
+          "url": "http://127.0.0.1:56291/_next/static/chunks/127m.cqhi6elt.js",
+          "type": "Script"
+        },
+        {
+          "stage": "Separate browser restores saved originals, explicit reference ordering/manual Run and cloud CAS conflict",
+          "url": "http://127.0.0.1:56291/favicon.ico",
+          "type": "Other"
+        },
+        {
+          "stage": "Separate browser restores saved originals, explicit reference ordering/manual Run and cloud CAS conflict",
+          "url": "http://127.0.0.1:56291/_next/static/chunks/0tjb8wkysr4sw.js",
+          "type": "Script"
+        },
+        {
+          "stage": "Separate browser restores saved originals, explicit reference ordering/manual Run and cloud CAS conflict",
+          "url": "http://127.0.0.1:56291/_next/static/chunks/0fi978u_g_p40.js",
+          "type": "Script"
+        },
+        {
+          "stage": "Separate browser restores saved originals, explicit reference ordering/manual Run and cloud CAS conflict",
+          "url": "http://127.0.0.1:56291/api/me/canvases",
+          "type": "Fetch"
+        },
+        {
+          "stage": "Separate browser restores saved originals, explicit reference ordering/manual Run and cloud CAS conflict",
+          "url": "http://127.0.0.1:56291/api/me/canvases/c76f1506-22fe-4bbf-9709-684ccf99dfca",
+          "type": "Fetch"
+        },
+        {
+          "stage": "Separate browser restores saved originals, explicit reference ordering/manual Run and cloud CAS conflict",
+          "url": "http://127.0.0.1:56291/api/me/canvas-runtime/resolve",
+          "type": "Fetch"
+        },
+        {
+          "stage": "Separate browser restores saved originals, explicit reference ordering/manual Run and cloud CAS conflict",
+          "url": "http://127.0.0.1:56291/_next/static/chunks/12nnylkpazca6.js",
+          "type": "Script"
+        },
+        {
+          "stage": "Separate browser restores saved originals, explicit reference ordering/manual Run and cloud CAS conflict",
+          "url": "http://127.0.0.1:56291/_next/static/chunks/0hj819sbkgu77.css",
+          "type": "Stylesheet"
+        },
+        {
+          "stage": "Separate browser restores saved originals, explicit reference ordering/manual Run and cloud CAS conflict",
+          "url": "http://127.0.0.1:56291/_next/image?url=%2Ffixture-media%2Fasset-45f934e5-b1c0-40f9-954d-cdba08fa5016.png&w=640&q=75",
+          "type": "Image"
+        },
+        {
+          "stage": "Separate browser restores saved originals, explicit reference ordering/manual Run and cloud CAS conflict",
+          "url": "http://127.0.0.1:56291/_next/image?url=%2Ffixture-media%2Fasset-21e0212a-2c1f-440e-bd5d-6862bd4fb7e0.png&w=640&q=75",
+          "type": "Image"
+        },
+        {
+          "stage": "Separate browser restores saved originals, explicit reference ordering/manual Run and cloud CAS conflict",
+          "url": "http://127.0.0.1:56291/_next/image?url=%2Ffixture-media%2Fasset-45f934e5-b1c0-40f9-954d-cdba08fa5016.png&w=160&q=75",
+          "type": "Image"
+        },
+        {
+          "stage": "Separate browser restores saved originals, explicit reference ordering/manual Run and cloud CAS conflict",
+          "url": "http://127.0.0.1:56291/_next/image?url=%2Ffixture-media%2Fasset-21e0212a-2c1f-440e-bd5d-6862bd4fb7e0.png&w=160&q=75",
+          "type": "Image"
+        },
+        {
+          "stage": "Separate browser restores saved originals, explicit reference ordering/manual Run and cloud CAS conflict",
+          "url": "http://127.0.0.1:56291/api/me/canvas-assets/asset-21e0212a-2c1f-440e-bd5d-6862bd4fb7e0",
+          "type": "Fetch"
+        },
+        {
+          "stage": "Separate browser restores saved originals, explicit reference ordering/manual Run and cloud CAS conflict",
+          "url": "http://127.0.0.1:56291/api/me/canvas-assets/asset-45f934e5-b1c0-40f9-954d-cdba08fa5016",
+          "type": "Fetch"
+        },
+        {
+          "stage": "Separate browser restores saved originals, explicit reference ordering/manual Run and cloud CAS conflict",
+          "url": "http://127.0.0.1:56291/api/generate",
+          "type": "Fetch"
+        },
+        {
+          "stage": "Separate browser restores saved originals, explicit reference ordering/manual Run and cloud CAS conflict",
+          "url": "http://127.0.0.1:56291/create?_rsc=1hp4v",
+          "type": "Fetch"
+        },
+        {
+          "stage": "Separate browser restores saved originals, explicit reference ordering/manual Run and cloud CAS conflict",
+          "url": "http://127.0.0.1:56291/_next/image?url=%2Ffixture-media%2Fcanvas-02ba2343-01fb-4486-ae43-8fe561c40c3b-image-0.png&w=640&q=75",
+          "type": "Image"
+        },
+        {
+          "stage": "Separate browser restores saved originals, explicit reference ordering/manual Run and cloud CAS conflict",
+          "url": "http://127.0.0.1:56291/api/me/canvas-assets/asset-45f934e5-b1c0-40f9-954d-cdba08fa5016",
+          "type": "Fetch"
+        },
+        {
+          "stage": "Separate browser restores saved originals, explicit reference ordering/manual Run and cloud CAS conflict",
+          "url": "http://127.0.0.1:56291/api/me/canvas-assets/asset-21e0212a-2c1f-440e-bd5d-6862bd4fb7e0",
+          "type": "Fetch"
+        },
+        {
+          "stage": "Separate browser restores saved originals, explicit reference ordering/manual Run and cloud CAS conflict",
+          "url": "http://127.0.0.1:56291/api/me/canvases/c76f1506-22fe-4bbf-9709-684ccf99dfca/snapshot",
+          "type": "Fetch"
+        }
+      ],
+      "consoleErrors": [],
+      "exceptions": [],
+      "blocked": [],
+      "screenshots": [
+        "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\mobile-browser-02\\separate-device-failure.png"
+      ],
+      "downloads": [],
+      "chrome": "Chrome/156.0.8078.74",
+      "controlActions": [
+        {
+          "stage": "Separate browser restores saved originals, explicit reference ordering/manual Run and cloud CAS conflict",
+          "selector": "[data-fixture-click=true]",
+          "x": 157,
+          "y": 87,
+          "width": 88,
+          "height": 36,
+          "visibility": "visible",
+          "hit": true,
+          "hitLabel": "画布",
+          "label": "画布",
+          "disabled": false
+        },
+        {
+          "stage": "Separate browser restores saved originals, explicit reference ordering/manual Run and cloud CAS conflict",
+          "selector": "[aria-label=\"适应全部节点\"]",
+          "x": 1404.8046875,
+          "y": 221.3671875,
+          "width": 30.390625,
+          "height": 30.390625,
+          "visibility": "visible",
+          "hit": true,
+          "hitLabel": "",
+          "label": "适应全部节点",
+          "disabled": false
+        },
+        {
+          "stage": "Separate browser restores saved originals, explicit reference ordering/manual Run and cloud CAS conflict",
+          "selector": "[aria-label=\"设置生成节点参数\"]",
+          "x": 1006.1507568359375,
+          "y": 468.1646728515625,
+          "width": 20.48583984375,
+          "height": 16.956787109375,
+          "visibility": "visible",
+          "hit": true,
+          "hitLabel": "",
+          "label": "设置生成节点参数",
+          "disabled": false
+        },
+        {
+          "stage": "Separate browser restores saved originals, explicit reference ordering/manual Run and cloud CAS conflict",
+          "selector": "[aria-label=\"选择参考图或结果\"]",
+          "x": 1243.3046875,
+          "y": 861.984375,
+          "width": 244.609375,
+          "height": 44,
+          "visibility": "visible",
+          "hit": true,
+          "hitLabel": "选择参考图或结果",
+          "label": "选择参考图或结果",
+          "disabled": false
+        },
+        {
+          "stage": "Separate browser restores saved originals, explicit reference ordering/manual Run and cloud CAS conflict",
+          "selector": "[aria-label=\"连接选择参考图或结果\"]",
+          "x": 1394,
+          "y": 861.984375,
+          "width": 44,
+          "height": 44,
+          "visibility": "visible",
+          "hit": true,
+          "hitLabel": "",
+          "label": "连接选择参考图或结果",
+          "disabled": false
+        },
+        {
+          "stage": "Separate browser restores saved originals, explicit reference ordering/manual Run and cloud CAS conflict",
+          "selector": "[aria-label=\"选择参考图或结果\"]",
+          "x": 1243.3046875,
+          "y": 862.2890625,
+          "width": 244.609375,
+          "height": 43.859375,
+          "visibility": "visible",
+          "hit": true,
+          "hitLabel": "选择参考图或结果",
+          "label": "选择参考图或结果",
+          "disabled": false
+        },
+        {
+          "stage": "Separate browser restores saved originals, explicit reference ordering/manual Run and cloud CAS conflict",
+          "selector": "[aria-label=\"连接选择参考图或结果\"]",
+          "x": 1394,
+          "y": 862.2890625,
+          "width": 44,
+          "height": 43.859375,
+          "visibility": "visible",
+          "hit": true,
+          "hitLabel": "",
+          "label": "连接选择参考图或结果",
+          "disabled": false
+        },
+        {
+          "stage": "Separate browser restores saved originals, explicit reference ordering/manual Run and cloud CAS conflict",
+          "selector": "[aria-label=\"上移参考图 2\"]",
+          "x": 1295.4375,
+          "y": 862.15625,
+          "width": 44,
+          "height": 44,
+          "visibility": "visible",
+          "hit": true,
+          "hitLabel": "",
+          "label": "上移参考图 2",
+          "disabled": false
+        },
+        {
+          "stage": "Separate browser restores saved originals, explicit reference ordering/manual Run and cloud CAS conflict",
+          "selector": "[aria-label=\"关闭节点设置\"]",
+          "x": 1402,
+          "y": 331.5,
+          "width": 44,
+          "height": 44,
+          "visibility": "visible",
+          "hit": true,
+          "hitLabel": "",
+          "label": "关闭节点设置",
+          "disabled": false
+        },
+        {
+          "stage": "Separate browser restores saved originals, explicit reference ordering/manual Run and cloud CAS conflict",
+          "selector": "[aria-label=\"适应全部节点\"]",
+          "x": 1404.8046875,
+          "y": 221.3671875,
+          "width": 30.390625,
+          "height": 30.390625,
+          "visibility": "visible",
+          "hit": true,
+          "hitLabel": "",
+          "label": "适应全部节点",
+          "disabled": false
+        },
+        {
+          "stage": "Separate browser restores saved originals, explicit reference ordering/manual Run and cloud CAS conflict",
+          "selector": "[data-fixture-click=true]",
+          "x": 932.6641235351562,
+          "y": 468.1689758300781,
+          "width": 119.4464111328125,
+          "height": 20.27069091796875,
+          "visibility": "visible",
+          "hit": true,
+          "hitLabel": "运行此节点",
+          "label": "运行此节点",
+          "disabled": false
+        },
+        {
+          "stage": "Separate browser restores saved originals, explicit reference ordering/manual Run and cloud CAS conflict",
+          "selector": "[data-fixture-click=true]",
+          "x": 1363.4140625,
+          "y": 156.5859375,
+          "width": 113.171875,
+          "height": 39.578125,
+          "visibility": "visible",
+          "hit": true,
+          "hitLabel": "保存到账户",
+          "label": "保存到账户",
+          "disabled": false
+        }
+      ]
+    }
+  ],
+  "apiErrors": [],
+  "harnessIdentities": [
+    {
+      "path": "mobile-browser-check.mjs",
+      "sha256": "486e53afe19b019c61b7fab5ce7fc80940664fae9c8fdfb9276822e3abb58414"
+    },
+    {
+      "path": "mobile-phone-browser-checks.mjs",
+      "sha256": "0251b17dec98c13d9e7bd4b8d53c1a03b011e9d6c7e9860d11ed06e10bc902d8"
+    }
+  ],
+  "sourceEvidence": {
+    "recordedAt": "2026-10-30T15:39:37.908Z",
+    "repo": "E:/code/narra-image",
+    "fixture": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071\\fixture-03",
+    "root": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-mobile-canvas-20261030-1d478cd6-97d5-4b12-9a49-795e7767f071",
+    "label": "03",
+    "identities": [
+      {
+        "path": "src/components/admin/admin-actions.tsx",
+        "bytes": 60235,
+        "sha256": "b42aa96d5bc8ab973a2d3b119e24c6580644bb67f47d4cdd007fcbc64999d56c"
+      },
+      {
+        "path": "src/components/admin/admin-frame.tsx",
+        "bytes": 12688,
+        "sha256": "626dc0429ef79738158f2b42f5d8149bcada0bbcaceb589867ea1ea05ef79ca7"
+      },
+      {
+        "path": "src/components/admin/admin-nav.tsx",
+        "bytes": 2163,
+        "sha256": "69ec54fa2fd80830f3544d90eb5b5efd6ffb922371fdbe2ea477fc773fa30be6"
+      },
+      {
+        "path": "src/components/admin/admin-pagination.tsx",
+        "bytes": 3478,
+        "sha256": "50bf551c2b0e9924d1079787a2c55a58d31ae83e30d08c0c2711d71c55881a9e"
+      },
+      {
+        "path": "src/components/admin/admin-works-board.tsx",
+        "bytes": 16187,
+        "sha256": "add22afed3b80f94557fc3d71ca5b8eda68dbf2acbb277822813a399038fe4bd"
+      },
+      {
+        "path": "src/components/admin/api-admin-panel.tsx",
+        "bytes": 12162,
+        "sha256": "040c8f54160b0995056e2650fac34a19186df77dc1ce0f07abf39f24f7a08b94"
+      },
+      {
+        "path": "src/components/admin/channel-manager.tsx",
+        "bytes": 25690,
+        "sha256": "baa884fa422ebda26889a04811b340e4f96726f6a32c13c0af4fad1bb71d4019"
+      },
+      {
+        "path": "src/components/admin/check-in-benefit-form.tsx",
+        "bytes": 2267,
+        "sha256": "81a9c7449d5e9b9b6026a212a5a260fc20c89c5001f304b5cd4e8cf5dfbc7c45"
+      },
+      {
+        "path": "src/components/admin/cleanup-failed-button.tsx",
+        "bytes": 3968,
+        "sha256": "b23767511474118dc42303887e595b36892ab147272e77e672ce7f68f2fe565f"
+      },
+      {
+        "path": "src/components/admin/generation-search-bar.tsx",
+        "bytes": 2707,
+        "sha256": "82aae9138cc9ce7a1cc7e91759298773746e79c114f28e81e7aa5919fd5cb708"
+      },
+      {
+        "path": "src/components/admin/invite-table-actions.tsx",
+        "bytes": 2078,
+        "sha256": "24f27440deeaedff90de0bbee0268e6f4a29e23b066a094ec3de79fa10adca8b"
+      },
+      {
+        "path": "src/components/admin/login-cover-form.tsx",
+        "bytes": 5673,
+        "sha256": "99dd3313ddac3cdceb48ce27c55d8d0791c0673bc362fa95bfd8a6cbb2192b7f"
+      },
+      {
+        "path": "src/components/admin/moderation-config-form.tsx",
+        "bytes": 10662,
+        "sha256": "bdfc4d643cdd5eb7c4e37546ead254df9824bc4afd0d971c9d97ea1f4225506d"
+      },
+      {
+        "path": "src/components/admin/moderation-reviews-board.tsx",
+        "bytes": 12102,
+        "sha256": "41cfb457e935721cf0769ae21c2c14f06c15d1dabfed56a1d5f4ba261d983e69"
+      },
+      {
+        "path": "src/components/admin/oauth-provider-manager.tsx",
+        "bytes": 10235,
+        "sha256": "7a4b118f37ca2a019b5d2bce56a384e4b4ea07478fcc5ec7840b941794eecd89"
+      },
+      {
+        "path": "src/components/admin/prompt-source-manager.tsx",
+        "bytes": 8924,
+        "sha256": "82f0b101a3e92ed73006b2a53723fae3c264fb2bde1a5ab9725839280eb21341"
+      },
+      {
+        "path": "src/components/admin/redeem-code-manager.tsx",
+        "bytes": 12739,
+        "sha256": "f37cb165d97d64c2c9c1bcfbf9e3284c8f844d5ee72830aaf17b53c8709079a6"
+      },
+      {
+        "path": "src/components/admin/settings-sub-nav.tsx",
+        "bytes": 1097,
+        "sha256": "ff4155f5ed0f06e20ec5c024154a77b80e15de9476cd31b1369bf22e64b90a14"
+      },
+      {
+        "path": "src/components/admin/showcase-auto-approve-toggle.tsx",
+        "bytes": 2794,
+        "sha256": "6f7fbee91015d48f179805f6660e9c7907b00980791d9f59a5cf23b4ecb48ca4"
+      },
+      {
+        "path": "src/components/admin/turnstile-config-form.tsx",
+        "bytes": 8898,
+        "sha256": "77f75fd738fe15122b2af47d21e796c0e994cc11920cfd3e5f16c46a0c31deea"
+      },
+      {
+        "path": "src/components/admin/user-admin-card.tsx",
+        "bytes": 11889,
+        "sha256": "02f6fbb88abddb7b02a420295c8a0f185f5d490c032e50d79353e9afbc9376dd"
+      },
+      {
+        "path": "src/components/admin/user-search-bar.tsx",
+        "bytes": 1979,
+        "sha256": "48ec81272813759806bf4413da9611632ee85e7384f0b19648eb1ba036b86c18"
+      },
+      {
+        "path": "src/components/api/api-key-console.tsx",
+        "bytes": 13819,
+        "sha256": "60d0e807e442355881edfb95c412a6d2eed814c1be31b87a3998989fbd590eda"
+      },
+      {
+        "path": "src/components/auth/logout-button.tsx",
+        "bytes": 687,
+        "sha256": "a2149dc9c6b0c479c56acb1bfef2d2cdaa3fafd27784462b24b7b925beecd0da"
+      },
+      {
+        "path": "src/components/auth/turnstile-widget.tsx",
+        "bytes": 5663,
+        "sha256": "9e00e12e30e24f40be11f326d4a2c4981ad72dc221422bf326a1d76acf88c6aa"
+      },
+      {
+        "path": "src/components/benefits/check-in-button.tsx",
+        "bytes": 2943,
+        "sha256": "7e12a9dab98fbe8c111a592254b502cfdf738c02073b08adf5f817d8b1684eb3"
+      },
+      {
+        "path": "src/components/create/canvas/client-api.ts",
+        "bytes": 11989,
+        "sha256": "8c02f2941d9a3eafbd5f43081483507f6cca97d3fee1738eabfdf4644f05d455"
+      },
+      {
+        "path": "src/components/create/canvas/commands.ts",
+        "bytes": 11781,
+        "sha256": "c6af5a2afd2711fe30d215a81cac7c16472e055b6245d6e73c94d081a1cd4a01"
+      },
+      {
+        "path": "src/components/create/canvas/controller-types.ts",
+        "bytes": 5902,
+        "sha256": "beaf96e20dc7592b1e42b125b098c8ec0d985ae210c1bef5b4a8de2eea66ea26"
+      },
+      {
+        "path": "src/components/create/canvas/controller.ts",
+        "bytes": 53775,
+        "sha256": "5b5487a51ffd8ac40b8ba7655addc563678f5f4aa28efb2b8805b6d3d5974711"
+      },
+      {
+        "path": "src/components/create/canvas/draft-store.ts",
+        "bytes": 22934,
+        "sha256": "beca5523b10346a24228ae35392ab3e0e7ad45a70f64f7bc5c6aa0e89d77ca93"
+      },
+      {
+        "path": "src/components/create/canvas/draft-types.ts",
+        "bytes": 4893,
+        "sha256": "4b5f48bbbd1d18fba8e9a0206572ec71d8aa2edfe3076f68d57a8fb5f1ceabb1"
+      },
+      {
+        "path": "src/components/create/canvas/editor-state.ts",
+        "bytes": 9063,
+        "sha256": "cf58379993bf449887c052ad1d5cb8db39f4d01c72542329bc5dfbfbac73ab95"
+      },
+      {
+        "path": "src/components/create/canvas/mobile-interaction.ts",
+        "bytes": 3669,
+        "sha256": "6a3060ef5dab27700ed6890fcbfb99e45c63101fdd1a95e17a1bfa963cce6c99"
+      },
+      {
+        "path": "src/components/create/canvas/reference-runtime.ts",
+        "bytes": 7724,
+        "sha256": "921669e7f5024f4493f9212c6e6c1fea94c203f540d114bfd362767fda5f43df"
+      },
+      {
+        "path": "src/components/create/canvas/renderer-adapter.ts",
+        "bytes": 7938,
+        "sha256": "28c65ca58b1e3d95bd4b2de692bc1a3db78c67d6e88cbc25a573b38563685a9b"
+      },
+      {
+        "path": "src/components/create/canvas/renderer-constants.ts",
+        "bytes": 2850,
+        "sha256": "df328737336ff49f7ce12fe25213747063aecc02ea70293c53dc158990a008bf"
+      },
+      {
+        "path": "src/components/create/canvas/renderer-types.ts",
+        "bytes": 2937,
+        "sha256": "1dff26422efb81b448684926d8ab8c4bfe39d9cbf6e49e2417e38dd655766f68"
+      },
+      {
+        "path": "src/components/create/canvas/run-commands.ts",
+        "bytes": 9947,
+        "sha256": "b59c4fbfb423ae4776a1631fe4bcc90da9d5a1d2aafb37c1f0d0a3d84f7551e4"
+      },
+      {
+        "path": "src/components/create/canvas/studio-bridge.ts",
+        "bytes": 929,
+        "sha256": "a0487c8379819a0c8f6384af2afb3f2b5f54495847e657c88a456a3ca25d9cf2"
+      },
+      {
+        "path": "src/components/create/constants.ts",
+        "bytes": 2534,
+        "sha256": "19a3b49a461263d23b3ba04ca82f0d5a63dd89c73fc7d3a762810293a7d7ac72"
+      },
+      {
+        "path": "src/components/create/generation-item.ts",
+        "bytes": 3227,
+        "sha256": "82ebeacc6a4185851052197a6d8800dbe07de3b96a05d76f98e13f17cf28ef48"
+      },
+      {
+        "path": "src/components/create/generator-studio.tsx",
+        "bytes": 60192,
+        "sha256": "b3a3ec2094ace13160c1fa532993728bcacb9085977b7dbdb9fbf95347816fac"
+      },
+      {
+        "path": "src/components/create/hooks/use-canvas-documents.ts",
+        "bytes": 2378,
+        "sha256": "4055c3d13558ad706b177505a7ebdacb49c19b5ebc70907fa848a532ff1fe71a"
+      },
+      {
+        "path": "src/components/create/hooks/use-canvas-editor.ts",
+        "bytes": 862,
+        "sha256": "4c6a9e6382c0e0703313ef6943f435c298e72d984b7a074ea4522d1a3670231d"
+      },
+      {
+        "path": "src/components/create/hooks/use-canvas-image-viewer.ts",
+        "bytes": 5732,
+        "sha256": "eff113a277ce658046d898aa0896cd0cf16a7672255b527b94ac988b5810a298"
+      },
+      {
+        "path": "src/components/create/hooks/use-canvas-mobile-viewport.ts",
+        "bytes": 2699,
+        "sha256": "63bdd56b42f59da6a4b0f7ec10b244795a26619503aec0c0996b92f24ca1a10e"
+      },
+      {
+        "path": "src/components/create/hooks/use-canvas-runtime-lease.ts",
+        "bytes": 10660,
+        "sha256": "043d07e03d046d462cf60f103b562f7d8938780a0117639872ecc00f93c1af9c"
+      },
+      {
+        "path": "src/components/create/hooks/use-conversation-generations.ts",
+        "bytes": 14620,
+        "sha256": "8b033beb557b88f8ef08dd89d8cb0aa9fa6d8c1d457325181898094db5d61ee1"
+      },
+      {
+        "path": "src/components/create/hooks/use-image-poller.ts",
+        "bytes": 7847,
+        "sha256": "cb0e7fa27a6a4e3a0a9a831051a98f3f3dfeebdf13f75d021965dde0b131d1bb"
+      },
+      {
+        "path": "src/components/create/hooks/use-reference-images.ts",
+        "bytes": 4856,
+        "sha256": "b07240da847f402b8684f054a5408c62801b24a495d54b77b12139203529f0c9"
+      },
+      {
+        "path": "src/components/create/hooks/use-sessions.ts",
+        "bytes": 9962,
+        "sha256": "9432887ef6e39d202db242bd8b55ed65282b9e691abcd115d798376f1d39a459"
+      },
+      {
+        "path": "src/components/create/hooks/use-studio-jobs.ts",
+        "bytes": 8227,
+        "sha256": "c1edf8fc75e05750afad279bc0ee85ca90920b88905ab5aa56dfec7c50ca2643"
+      },
+      {
+        "path": "src/components/create/hooks/use-studio-mode.ts",
+        "bytes": 2198,
+        "sha256": "cc89a172799bbfc5525a16bf9e43bdaf725a140b22e6c21687bada28279db6b3"
+      },
+      {
+        "path": "src/components/create/parts/advanced-settings.tsx",
+        "bytes": 20444,
+        "sha256": "8bdfff53673f7d7349b3036f887ed6a709e1dc233ffcdb5fb6ed48ff16e986cb"
+      },
+      {
+        "path": "src/components/create/parts/canvas-dialog.tsx",
+        "bytes": 4647,
+        "sha256": "e6664bcbdd45aff31c53b6ed2e6f6c8b7946453bdedc837578db6999711c3840"
+      },
+      {
+        "path": "src/components/create/parts/canvas-lazy-pane.tsx",
+        "bytes": 2778,
+        "sha256": "460baabd4ecde6072e8b291052cb83564b176a2548c70f59dc1194424b038567"
+      },
+      {
+        "path": "src/components/create/parts/canvas-node-editor.tsx",
+        "bytes": 4348,
+        "sha256": "c8eff43005b7437a0e8f9b465cb5b200e0ee6ad5711efbcd71dd0d18d8059f1b"
+      },
+      {
+        "path": "src/components/create/parts/canvas-node-inspector.tsx",
+        "bytes": 16517,
+        "sha256": "8724ee0db77a35d70617c0a7326c7336fa1ed18447a1d6e2ff8935c4dee11e35"
+      },
+      {
+        "path": "src/components/create/parts/canvas-node-picker.tsx",
+        "bytes": 2924,
+        "sha256": "822c1636f48624b92b57bb008c7f94966092aa4de756f5a4e5d726148e84c47a"
+      },
+      {
+        "path": "src/components/create/parts/canvas-nodes/generation-node.tsx",
+        "bytes": 5422,
+        "sha256": "e1a5475559151a68ab536ec8847afb6606bb82364e3e50817dc13bc6daeb72bf"
+      },
+      {
+        "path": "src/components/create/parts/canvas-nodes/node-shell.tsx",
+        "bytes": 2350,
+        "sha256": "d0525b7414ed93ef774180256429b485f6a7a750c2784923308c0cee4a017f0e"
+      },
+      {
+        "path": "src/components/create/parts/canvas-nodes/prompt-node.tsx",
+        "bytes": 1793,
+        "sha256": "43af3d21cff18e478c9e17097d85e097fec6309ff8c679790148e3b5c3fc21b1"
+      },
+      {
+        "path": "src/components/create/parts/canvas-nodes/reference-node.tsx",
+        "bytes": 5232,
+        "sha256": "54c34520567c3a6aa6f0b941eae0d823fef4222e4426079bb243c7b90671357d"
+      },
+      {
+        "path": "src/components/create/parts/canvas-nodes/result-node.tsx",
+        "bytes": 3690,
+        "sha256": "65cf3608bdf02eaed15af9e805947c00bc107e6707f06fc7c0624eb396ebfb8d"
+      },
+      {
+        "path": "src/components/create/parts/canvas-prompt-field.tsx",
+        "bytes": 2085,
+        "sha256": "782d1ea6f084c6a0f406b3cf50c59ec9d71b34427044310110fe3f55342b98a3"
+      },
+      {
+        "path": "src/components/create/parts/canvas-runtime-dialog.tsx",
+        "bytes": 7792,
+        "sha256": "9697a8181344b5f1880a8c537e87a9e86acc0cb6dd052824b63e56c3034bc73c"
+      },
+      {
+        "path": "src/components/create/parts/canvas-sidebar.tsx",
+        "bytes": 2952,
+        "sha256": "cf713bb659b50491a78da649c5fba50244937c16a263d337847dbf647ce944a2"
+      },
+      {
+        "path": "src/components/create/parts/canvas-stage.module.css",
+        "bytes": 24551,
+        "sha256": "f6c2af7423851f4f44fdb54004c089395303286bc215d20e8dcd87d829b1b889"
+      },
+      {
+        "path": "src/components/create/parts/canvas-stage.tsx",
+        "bytes": 33770,
+        "sha256": "4f8697f5abe5467d72b5b12cd98571ce17c94cc32dc52c8835598ecadcd9ba09"
+      },
+      {
+        "path": "src/components/create/parts/canvas-toolbar.tsx",
+        "bytes": 5289,
+        "sha256": "b5fa2dbfd855f8d8b02920c56a6d8c711e0a51c09bd9f72545899231221e02c2"
+      },
+      {
+        "path": "src/components/create/parts/chat-pane.tsx",
+        "bytes": 4530,
+        "sha256": "e4a41cda3a854bfa074db0037375ef1c72a8fcf413b12e6b9c43d9f0521ff423"
+      },
+      {
+        "path": "src/components/create/parts/chat-stream.tsx",
+        "bytes": 2513,
+        "sha256": "29c11a02ed5f7ca8540911bd48aa303900e07d80164343d2a471d11f8f0e6c75"
+      },
+      {
+        "path": "src/components/create/parts/composer.tsx",
+        "bytes": 20028,
+        "sha256": "9b2bf30066cf0b07811a54d2fd22ac7afb2976d18f466401e3c311e827df0a7c"
+      },
+      {
+        "path": "src/components/create/parts/generation-bubble.tsx",
+        "bytes": 14986,
+        "sha256": "7ed7c41500d4a3ca68e2fecb307fa30d4550832c6dae2bd214b3e002049e55b3"
+      },
+      {
+        "path": "src/components/create/parts/image-zoom-modal.tsx",
+        "bytes": 4979,
+        "sha256": "937b10bedba126fb4c11ccd4302940b2c582926d5d8392112318dfde80842077"
+      },
+      {
+        "path": "src/components/create/parts/session-sidebar.tsx",
+        "bytes": 5521,
+        "sha256": "ce3c84e7ab6921c2896c65e36bd0b695e8ca6c1b94dcdcd28277a74ee6967ce5"
+      },
+      {
+        "path": "src/components/create/parts/studio-mode-switch.tsx",
+        "bytes": 1607,
+        "sha256": "f45b07404bbe464637f613ac097bfa212775a83d05e7f748b40c2876070f3dbe"
+      },
+      {
+        "path": "src/components/create/types.ts",
+        "bytes": 3114,
+        "sha256": "863c00cabe0c2ce05d62fe5aa000d0d4db0f24a198dc18e0bb2d058ea5c9fe89"
+      },
+      {
+        "path": "src/components/create/utils.ts",
+        "bytes": 6498,
+        "sha256": "f965e9543ae733f4bd4940033938a7eaf3088dd567842ff84835b5f12e5702e7"
+      },
+      {
+        "path": "src/components/invites/invite-claim-board.tsx",
+        "bytes": 5301,
+        "sha256": "a6614dad3d1a0faa989cbde9d2e62784ca9768e6014ded9b3c8e215fcd964368"
+      },
+      {
+        "path": "src/components/layout/page-transition.tsx",
+        "bytes": 2930,
+        "sha256": "448fcfd3a4c36ef60633f645bc8e393746e8bef53b18968fbafe52b6353f34d0"
+      },
+      {
+        "path": "src/components/marketing/auth-cover.tsx",
+        "bytes": 3011,
+        "sha256": "93c9338ef96c8a4fa8d777a641371289d6ab7acc44f1bd119a925d66cdf30e19"
+      },
+      {
+        "path": "src/components/marketing/auth-form.tsx",
+        "bytes": 8171,
+        "sha256": "40ffc5558cb1d5cfc293ea893ad35a9637a1a2cf790f6a9c2999c57a49da3e38"
+      },
+      {
+        "path": "src/components/marketing/auth-shell.tsx",
+        "bytes": 3701,
+        "sha256": "4c3f051c6ca1b7514323cc2ada79227d5b30abfccb3fc0f882ec81caa935d370"
+      },
+      {
+        "path": "src/components/marketing/featured-gallery.tsx",
+        "bytes": 11247,
+        "sha256": "551199bfd52962f1827b3cb35505f1219398b20f33a8c5c651e6ffafb1ddc30b"
+      },
+      {
+        "path": "src/components/marketing/header-shell.tsx",
+        "bytes": 2076,
+        "sha256": "e2f1c88dd32cff8e4260039fb59c58d0c735a9323eb0c7fa1dc3c4ee9d33234b"
+      },
+      {
+        "path": "src/components/marketing/mobile-nav.tsx",
+        "bytes": 10051,
+        "sha256": "ceec3d8cd59ebf60f59553e56c10be4671c9916af742499059d4b02ccecda632"
+      },
+      {
+        "path": "src/components/marketing/site-header.tsx",
+        "bytes": 8255,
+        "sha256": "5199a1cd49fda36704b701c6a742c25dbc8fef95233f5824a95e85d76d77a68c"
+      },
+      {
+        "path": "src/components/pet/pet-catalog.ts",
+        "bytes": 20372,
+        "sha256": "96c03f5bafcc475945b688a871df138a60a602f7837ca5acb9214f32c4ac3f6d"
+      },
+      {
+        "path": "src/components/pet/pet-companion.tsx",
+        "bytes": 16746,
+        "sha256": "5ccde2440b0ffedaaf10a882ba7e9d0dbf3714873a992a029a2f326b554bd9b4"
+      },
+      {
+        "path": "src/components/pet/pet-state.ts",
+        "bytes": 4157,
+        "sha256": "3ae79b9ab557bfc6d8f2af00b5debf6bff853cea93eda198b788c1d37d1b2915"
+      },
+      {
+        "path": "src/components/pet/pet-toggle.tsx",
+        "bytes": 5753,
+        "sha256": "48a37e0cd2e1fb4c41c1e5f170be030606bcb4e7b9dcc8b6c43a09909b090b3c"
+      },
+      {
+        "path": "src/components/pet/pet-turnaround.ts",
+        "bytes": 6589,
+        "sha256": "95c7634f4cc2ec8faa375377c6fccd1916811e9979d41f1ed1c977b1f9a67978"
+      },
+      {
+        "path": "src/components/prompts/prompt-library-board.tsx",
+        "bytes": 31047,
+        "sha256": "c2ebb9a21bafb0e089703c45cbc6010e3bfc788e2ee92552e661bea9cb28a49a"
+      },
+      {
+        "path": "src/components/settings/profile-form.tsx",
+        "bytes": 15983,
+        "sha256": "bb5cb36ddee880d3e0ba661279145e5c51be9404194213768d4d0fedccbedc77"
+      },
+      {
+        "path": "src/components/settings/redeem-code-form.tsx",
+        "bytes": 2873,
+        "sha256": "9bd76045c00a1cc7d1e5baa2969498fbd32def2f6d3257127d01c34551832959"
+      },
+      {
+        "path": "src/components/ui/alert.tsx",
+        "bytes": 2224,
+        "sha256": "86e8d50556c2dcdbce043972b4eee67256d66738982d60a3f3c7b7cf140856e0"
+      },
+      {
+        "path": "src/components/ui/empty-state.tsx",
+        "bytes": 1163,
+        "sha256": "6390b064a5d8738397aac952ba06ad2f881bb972aeabcadfd0f38fc2ff789c7a"
+      },
+      {
+        "path": "src/components/ui/skeleton.tsx",
+        "bytes": 469,
+        "sha256": "e31ef5d2723f6130f2f288024772a015f5797240a01bcb9246e6c41e365e8947"
+      },
+      {
+        "path": "src/components/ui/spinner.tsx",
+        "bytes": 586,
+        "sha256": "68de5f57675649eeeab60f41dc8d1f76993f5d579d0a1438f8ae082af7d4635c"
+      },
+      {
+        "path": "src/components/video/constants.ts",
+        "bytes": 1160,
+        "sha256": "bcf76edfb60bebacf0be1831e3f5f6cc6b3ae4d01da5efcb84ae8beafe8ca719"
+      },
+      {
+        "path": "src/components/video/parts/video-composer.tsx",
+        "bytes": 9428,
+        "sha256": "2780988f8488fae3937f91cbae9cc271cfb1953564026d158c407659de5fb953"
+      },
+      {
+        "path": "src/components/video/parts/video-generating-progress.tsx",
+        "bytes": 2365,
+        "sha256": "2716c0bfc915b8d3c028417085b6c56513a20e6125d7252638741991570bc72d"
+      },
+      {
+        "path": "src/components/video/parts/video-history-rail.tsx",
+        "bytes": 2308,
+        "sha256": "657ea458b53cf741af9bb0e73e92cc2ebe12040258ba8de982350abe5e52d0cf"
+      },
+      {
+        "path": "src/components/video/parts/video-stage.tsx",
+        "bytes": 3134,
+        "sha256": "4328b552e5588fb525fe0425116c4affa00d8543feb673d0c98c2470f3b6236f"
+      },
+      {
+        "path": "src/components/video/types.ts",
+        "bytes": 368,
+        "sha256": "a7ed410949149f5dd936b276f6249d1ff4497d58eaf9d17b705e3ad8a12ec033"
+      },
+      {
+        "path": "src/components/video/video-studio.tsx",
+        "bytes": 10710,
+        "sha256": "69cc3b75636f3446e1ed3151fdbb5b43715b75293481561a5e11bf85530503c0"
+      },
+      {
+        "path": "src/components/works/download-image.ts",
+        "bytes": 844,
+        "sha256": "a714c809c571a01cef71e3bac11635daf373e7981f61269140178135d117d9b2"
+      },
+      {
+        "path": "src/components/works/image-lightbox.tsx",
+        "bytes": 2844,
+        "sha256": "4643152638ad33b8be85695c13cb931ada48c42dfb897190bd1d33fe9aecac92"
+      },
+      {
+        "path": "src/components/works/my-works-board.tsx",
+        "bytes": 41343,
+        "sha256": "58e0bf9c855347da13d989318189da2fbcf336d66911ebf5f1a19f7e3e5dd73e"
+      },
+      {
+        "path": "src/components/works/prompt-modal.tsx",
+        "bytes": 2656,
+        "sha256": "7c4a19d88d20bb0ec4014e7ab232b90d19c5f21e6f0b5bef8646cbf83dee46bc"
+      },
+      {
+        "path": "src/components/works/video-works-section.tsx",
+        "bytes": 3181,
+        "sha256": "7e1ea4753e3b3977c8c2bd31ffaca8cc508d22f35e6c58c1cc2276de88a2667f"
+      },
+      {
+        "path": "src/components/works/work-detail-panel.tsx",
+        "bytes": 7118,
+        "sha256": "ca326decc3803fd25c35242493bc3bdf7b0b4feed1ae042c1101236f235f565c"
+      },
+      {
+        "path": "src/components/works/work-share-button.tsx",
+        "bytes": 1383,
+        "sha256": "a203a610f4f7770ed1ddfa192b699fb8a73a2d287063c42137adc445ff184bf2"
+      },
+      {
+        "path": "src/components/works/work-showcase-controls.tsx",
+        "bytes": 7984,
+        "sha256": "e574aeec657b24c7ad4a4c03e105e818fc6e2cebb16eaa8e913b0f739dbc8a6c"
+      },
+      {
+        "path": "src/lib/api-config.ts",
+        "bytes": 2109,
+        "sha256": "aacf4d58b6885b2324059475898e360e8396edaf1a2e0d219f1f07e1dc085a53"
+      },
+      {
+        "path": "src/lib/api-errors.ts",
+        "bytes": 537,
+        "sha256": "f1e371d80068785cdb4f5d4427cc2ce5cd76151912b6a66594fe40d89d8fa0b7"
+      },
+      {
+        "path": "src/lib/api-keys.ts",
+        "bytes": 995,
+        "sha256": "440cff8cd9c593ae40cc4a18e9c028545c95b8d7d1f77b7481495fbe06d36667"
+      },
+      {
+        "path": "src/lib/auth/linuxdo-oauth.ts",
+        "bytes": 9212,
+        "sha256": "64245458fce49a1d9c126308a69100b652a9b313007a7534ee554f53e619c998"
+      },
+      {
+        "path": "src/lib/auth/oauth-config.ts",
+        "bytes": 1734,
+        "sha256": "137b11a8e39d5438b2e54bfd17ce8e65072b111dfdcddd50664963b9200d95b7"
+      },
+      {
+        "path": "src/lib/auth/password.ts",
+        "bytes": 314,
+        "sha256": "b87939da95075dd49cdd3e3ecda4afc1750bf13d0be6b7329474b11397435590"
+      },
+      {
+        "path": "src/lib/auth/register-user.ts",
+        "bytes": 2493,
+        "sha256": "d616877fdac766b9e0f85442ea9edcba277ce788c7f816e88a82e89deadae4cd"
+      },
+      {
+        "path": "src/lib/auth/session-token.ts",
+        "bytes": 1900,
+        "sha256": "7ba5fb97c860126159b9e9cca7bc266249b768e0a1f8a813f6a32a0e3f007e16"
+      },
+      {
+        "path": "src/lib/auth/session.ts",
+        "bytes": 1582,
+        "sha256": "cea538f1bb29f46f3db012bf96d0cc29b84731b7ba99013257ca52f2fb851134"
+      },
+      {
+        "path": "src/lib/auth/turnstile.ts",
+        "bytes": 4861,
+        "sha256": "25a5e84d118e5b83bd689c9b4e75222e6c03020bf820deb396310a4c07994879"
+      },
+      {
+        "path": "src/lib/benefits/check-in.ts",
+        "bytes": 1685,
+        "sha256": "fceffff2882f8ad11b19adebb1fa945bd2d281aa529f6318b0b13ee246e05368"
+      },
+      {
+        "path": "src/lib/benefits/config.ts",
+        "bytes": 1470,
+        "sha256": "ea2dd67d3de88e84bf7f6186166e4ad4a8a117d0994c8e65f904f65e1929944f"
+      },
+      {
+        "path": "src/lib/canvas/assets.ts",
+        "bytes": 11775,
+        "sha256": "31d40901fd10644a2b7c90e6270075d4876c1da14be522f094bdd6d118f52421"
+      },
+      {
+        "path": "src/lib/canvas/body-limit.ts",
+        "bytes": 2512,
+        "sha256": "119545d37c2b1c71f05e6112d72c75afb192630c4c0df3cab9d0138854fd0d6c"
+      },
+      {
+        "path": "src/lib/canvas/contracts.ts",
+        "bytes": 15604,
+        "sha256": "755aae3836a91bde8632eb1334a89e98207de0d1117f26f1f7351ee769e9832a"
+      },
+      {
+        "path": "src/lib/canvas/cursors.ts",
+        "bytes": 2332,
+        "sha256": "55cd05bbbd3efbb4d7399632954086834f8701e50ed288d11ee8c261fe12ff4d"
+      },
+      {
+        "path": "src/lib/canvas/documents.ts",
+        "bytes": 7324,
+        "sha256": "a03f933902cdbcfbf4968f8e276e597c51d74a7d560c80b108a74621f56820ae"
+      },
+      {
+        "path": "src/lib/canvas/graph.ts",
+        "bytes": 12742,
+        "sha256": "1178db91fe69261da77d630321550a255b275ee8dafab7a6b74b898a7d6fbbe2"
+      },
+      {
+        "path": "src/lib/canvas/http.ts",
+        "bytes": 2874,
+        "sha256": "425a148adc5c70d5a2f4a74f4226e991a5d22ca31239e9aa5a5de5bfef284230"
+      },
+      {
+        "path": "src/lib/canvas/image-container.ts",
+        "bytes": 8714,
+        "sha256": "eb18de2bc5b63416ba6fba3a8da1303ca81b691e06b52f65c4e1f6ff7095b90d"
+      },
+      {
+        "path": "src/lib/canvas/inputs.ts",
+        "bytes": 4149,
+        "sha256": "f11ed1171abdb45a8f31d28bbe0075ffc9dff64342c0e8bbdb516446e25cefd6"
+      },
+      {
+        "path": "src/lib/canvas/run-submission.ts",
+        "bytes": 8602,
+        "sha256": "391b9dbab37c78b66da7fdb5b1e64435f04502c8f4cde9160b8ace4769dd6183"
+      },
+      {
+        "path": "src/lib/canvas/runs.ts",
+        "bytes": 3577,
+        "sha256": "1f661fe2688b60f9eeef6c8afa10e00b94912edb246b78e8bff0dead094d4ce1"
+      },
+      {
+        "path": "src/lib/canvas/runtime.ts",
+        "bytes": 5420,
+        "sha256": "0ab590add84e71b840146d3ba3784b832c98d47a0832a1940d19b471ae99d230"
+      },
+      {
+        "path": "src/lib/canvas/schema-probe.ts",
+        "bytes": 10295,
+        "sha256": "f4bbeea23b08db4844bab57c0e7c6b26b4ff88ac2192419b5778d41bc5c2ec14"
+      },
+      {
+        "path": "src/lib/canvas/storage.ts",
+        "bytes": 11162,
+        "sha256": "1b4011d55dc99a239293859fedaf5bf232ef9c33a76f35c098b67c627e179b76"
+      },
+      {
+        "path": "src/lib/canvas/transactions.ts",
+        "bytes": 2871,
+        "sha256": "bd2dfb17b5aeae79c58301389932892fcc2070791f1f37ab3a6e032a5a8387d0"
+      },
+      {
+        "path": "src/lib/constants.ts",
+        "bytes": 98,
+        "sha256": "7f093197b2e21392f6e2e9e8f7c82390f3e88f0f1469e461e496d926a5f1b603"
+      },
+      {
+        "path": "src/lib/conversations/contracts.ts",
+        "bytes": 434,
+        "sha256": "3f40420ab526e59a0c6fd1f79108c3324adc6a576888aee23d4a5496c2e45a0e"
+      },
+      {
+        "path": "src/lib/credits.ts",
+        "bytes": 1216,
+        "sha256": "2bd4c9e4603158cc79679d12c733186b967c4eeed71588b5639164e596c8d535"
+      },
+      {
+        "path": "src/lib/db.ts",
+        "bytes": 637,
+        "sha256": "6e12e882c0cbaa69fff993318e56df751d3489562cd717498fa0037a1e6f77c8"
+      },
+      {
+        "path": "src/lib/env.ts",
+        "bytes": 10000,
+        "sha256": "a62aea1411b6991f7665feef9f8496238b3e8f49a66d871957ede3625e57603a"
+      },
+      {
+        "path": "src/lib/external-api/chat.ts",
+        "bytes": 1921,
+        "sha256": "d2bad1ab3a41a1c9bd1fb1f909761b2c45c6d28202d06000d77912d3865b3254"
+      },
+      {
+        "path": "src/lib/external-api/http.ts",
+        "bytes": 5586,
+        "sha256": "53c0cff7c403df006bff76137d4f980e7c1c51463cf2a53a7dba8c43bef9ba96"
+      },
+      {
+        "path": "src/lib/external-api/image-edits.ts",
+        "bytes": 5596,
+        "sha256": "5c40c96e687899b35acb02b9dd7de0eec3a9cf51fea1bfb3ac4b6a5fb891a090"
+      },
+      {
+        "path": "src/lib/external-api/images.ts",
+        "bytes": 1889,
+        "sha256": "60e28d86e872978120cf60b7d06d3ef48b4c57a9757782be9110a54636ea8c43"
+      },
+      {
+        "path": "src/lib/external-api/responses.ts",
+        "bytes": 8639,
+        "sha256": "b136e8c7314a6af680f0c58322e90ab8e18d2015cc7b49091e13519e3333fe75"
+      },
+      {
+        "path": "src/lib/external-api/source-images.ts",
+        "bytes": 7266,
+        "sha256": "be0c3c57e508bece335efdd16beee09bd52a98539a0ecb41e6dedb90381b8efd"
+      },
+      {
+        "path": "src/lib/generation/contracts.ts",
+        "bytes": 6470,
+        "sha256": "8275eca0ece0d47b6254035c51a80f6c8b6926ad695d9ab28183e1c7f120bdb5"
+      },
+      {
+        "path": "src/lib/generation/external-api.ts",
+        "bytes": 8271,
+        "sha256": "4f11feab6cc1cc7ee86b008298a933b40149861bc7a74117735a376e77591ffb"
+      },
+      {
+        "path": "src/lib/generation/gateway-client.ts",
+        "bytes": 10502,
+        "sha256": "1e85003dcf97b8b1d21567cad54065b91deb55f2d8751813a57d525ebf76568a"
+      },
+      {
+        "path": "src/lib/generation/gateway-contract.ts",
+        "bytes": 1023,
+        "sha256": "03e5ac6dfd1e0cd133863391375dd580442abe74daf9ccb6d3c6c3bb03d958b7"
+      },
+      {
+        "path": "src/lib/generation/image-dimensions.ts",
+        "bytes": 3870,
+        "sha256": "dd0cedde1b84d0a8325d9a7266247f1f116586ea8817e45fd6d84e62cf725913"
+      },
+      {
+        "path": "src/lib/generation/job-refund.ts",
+        "bytes": 6316,
+        "sha256": "c0fdccfca95f66bd3eb134af4ccc1d49ac3330cce0c19a91ec12d03d2a0e2cf4"
+      },
+      {
+        "path": "src/lib/generation/limits.ts",
+        "bytes": 140,
+        "sha256": "dec4bab306fd011845ad56a7b2707b80fa8f22f259f2b05801fee908ccc88d12"
+      },
+      {
+        "path": "src/lib/generation/parse-generate-request.ts",
+        "bytes": 7218,
+        "sha256": "4042c6a24633ad13f2686c2127d39175e7c824881ea88b3f0b37063ff141568d"
+      },
+      {
+        "path": "src/lib/generation/sizes.ts",
+        "bytes": 7657,
+        "sha256": "7f77e8aabdc92cf9c237d3403481682d9f78553ccb68997bfdee3cafea313887"
+      },
+      {
+        "path": "src/lib/image-url.ts",
+        "bytes": 2497,
+        "sha256": "881ff9bc73c7f23b998318df57cda6e7b472254968f9db240e1fd40087157806"
+      },
+      {
+        "path": "src/lib/invites/claim-invite.server.ts",
+        "bytes": 1283,
+        "sha256": "664c89b9e029f3fdc55f02ed91704678925aec71008b8b1eb67165c757a00d04"
+      },
+      {
+        "path": "src/lib/invites/claim-invite.ts",
+        "bytes": 612,
+        "sha256": "09bca1b44552a172803619ca09eb0f5c5a0ac0676382ad5cd1fa6f7248b566c8"
+      },
+      {
+        "path": "src/lib/logging/redact.ts",
+        "bytes": 3596,
+        "sha256": "236e59670c0621f78c02cb918a27046bd159b1ca6130bd8c4bd6bf9487f0c046"
+      },
+      {
+        "path": "src/lib/moderation/check.ts",
+        "bytes": 4017,
+        "sha256": "540f621ccbc4280aadfd8e23e250f28c9d80f3831c1cc6d3791de6dc85476362"
+      },
+      {
+        "path": "src/lib/moderation/config.ts",
+        "bytes": 3863,
+        "sha256": "c1a2525aa518b4a7a6a18ae6230f3b246a937c7760076bb39b145061660e6656"
+      },
+      {
+        "path": "src/lib/moderation/sensitive-words.ts",
+        "bytes": 4454,
+        "sha256": "c88884bd1999398e83357fed8c97154f333379e6fb1cc9c232a41c79b0f06929"
+      },
+      {
+        "path": "src/lib/prisma-mappers.ts",
+        "bytes": 13867,
+        "sha256": "046ec67ec422980a7cd3c8447e9426f2e6b0de1ebe6a52ececcd8a3653bb2150"
+      },
+      {
+        "path": "src/lib/prompt-preview.ts",
+        "bytes": 562,
+        "sha256": "4661ba7672656179db9f94153ae5d420995a3291bfe4502ca43a7f02ece1083e"
+      },
+      {
+        "path": "src/lib/prompts/service.ts",
+        "bytes": 6452,
+        "sha256": "c5e816e5bd3f493c37059aa44f47e195ff33d6e90961f982c406a2da88364e18"
+      },
+      {
+        "path": "src/lib/prompts/types.ts",
+        "bytes": 1101,
+        "sha256": "d4e0d438fad4a605aea925a330c4db6cb9ab000852f93f829a943a44841b3dee"
+      },
+      {
+        "path": "src/lib/providers/built-in-provider-core.ts",
+        "bytes": 1046,
+        "sha256": "6796ebb9b51017ea77091384532a5247214963ee937cc49bb6ed2ec8e2371b59"
+      },
+      {
+        "path": "src/lib/providers/built-in-provider.ts",
+        "bytes": 7481,
+        "sha256": "f5422e18326df66e266236bbf2733546694885f6f80214975eab0ff60d833a8f"
+      },
+      {
+        "path": "src/lib/providers/model-catalog.ts",
+        "bytes": 3469,
+        "sha256": "563cd8feeaa40e42a1ac21c3b43636df5a3b902cde87a9c1bb6d824de70eb8d9"
+      },
+      {
+        "path": "src/lib/providers/provider-secret.ts",
+        "bytes": 1266,
+        "sha256": "4dbe0042a2af58faa62ddbd0126995f29801d94bddb1c9c0639b0dd853702d74"
+      },
+      {
+        "path": "src/lib/public-env.ts",
+        "bytes": 169,
+        "sha256": "de1029440c99312789cc32475993b74fb60c3b0307ea58351824f02fca9acade"
+      },
+      {
+        "path": "src/lib/readiness.ts",
+        "bytes": 8693,
+        "sha256": "16bd722dc622eb79d3b1d56077f759255026a94648227736cfadfc6ae1a2e136"
+      },
+      {
+        "path": "src/lib/redeem-codes.ts",
+        "bytes": 2622,
+        "sha256": "4abf62662bd30c856f94e41f06882a8ee0fa5a0049044a4b2de37c56b1e9751b"
+      },
+      {
+        "path": "src/lib/runtime-environment-contract.ts",
+        "bytes": 1927,
+        "sha256": "61aa8eb21eb21a174084700b5715d2716777876fa99ff354f93650a1f7bd9261"
+      },
+      {
+        "path": "src/lib/server/api-auth.ts",
+        "bytes": 1993,
+        "sha256": "30013873b51d80bdad1b6b6695387503306e44b85b2892c9bdb9404fb5d55b7a"
+      },
+      {
+        "path": "src/lib/server/conversation-generations.ts",
+        "bytes": 3297,
+        "sha256": "be77b927306b178ebc7c9faf83fefbdbe605111dc7623486379ccb5a4e9c689e"
+      },
+      {
+        "path": "src/lib/server/current-user.ts",
+        "bytes": 1424,
+        "sha256": "7f389006783bdbf4a722ac063681865bcd62f4e3549925cb8e5e8b4196ed3ce6"
+      },
+      {
+        "path": "src/lib/server/http.ts",
+        "bytes": 826,
+        "sha256": "7609697d458652a6406cbcd933e1b4fa062f8991bd547faeddb39ca7e418fbc7"
+      },
+      {
+        "path": "src/lib/server/login-cover.ts",
+        "bytes": 1084,
+        "sha256": "2ffd1f7b28e074c8672b383594f36bfce154771acfd71118ad24a6914e25e746"
+      },
+      {
+        "path": "src/lib/server/safe-remote-url.ts",
+        "bytes": 6265,
+        "sha256": "d9c04320a5750fa54946a707cce383ebf340283ac9975dde7f5d1bbabaa5cffe"
+      },
+      {
+        "path": "src/lib/server/works.ts",
+        "bytes": 11774,
+        "sha256": "d64e9876c013fbc56c4eecb438b11b2630d8aba0858f8a878ebf035dc02cd421"
+      },
+      {
+        "path": "src/lib/storage/persist-generated-image.ts",
+        "bytes": 4304,
+        "sha256": "5d26b34797f63cddb0feb7f7d781eb8ce28cc3339bc7aebfebfb4ef92405f098"
+      },
+      {
+        "path": "src/lib/types.ts",
+        "bytes": 537,
+        "sha256": "b2a6c5eaca049bb38e8be5a0ac232cb5c1211333e9c49e4062216d2591aece4d"
+      },
+      {
+        "path": "src/lib/utils.ts",
+        "bytes": 175,
+        "sha256": "c0adf27efbfa148d5abcf99e860f8e3e6c8fc77a1f99e023c08ef4f12e6ece29"
+      },
+      {
+        "path": "src/lib/validators.ts",
+        "bytes": 26266,
+        "sha256": "251d75a2e237254e0aa86e4517d9c66b8438633b9b03ccc5628cf37b5dccbb43"
+      },
+      {
+        "path": "src/lib/work-showcase.ts",
+        "bytes": 5473,
+        "sha256": "b303bc7646757440c65a1e78b12e56ee3aa3b7f8cd87daa6c9bc44f850b6f858"
+      },
+      {
+        "path": "contracts/canvas/v1/capability.json",
+        "bytes": 1789,
+        "sha256": "346626947131be935dd35789565e34cbb1fd134ca600a97b8f77aad72b6f7914"
+      },
+      {
+        "path": "contracts/canvas/v1/errors.json",
+        "bytes": 4540,
+        "sha256": "0f324c7b9530b878279cdf7187acfcafda9326e2d2f03c8d9ed0a44ff2e1a21e"
+      },
+      {
+        "path": "contracts/canvas/v1/input.json",
+        "bytes": 893,
+        "sha256": "e8a9444b604eef7da077eac0fa7fcc78198dfd6cc8435a7b1c2180d4a41313af"
+      },
+      {
+        "path": "contracts/canvas/v1/limits.json",
+        "bytes": 1240,
+        "sha256": "df5d132c4fa13a443280a50a0366cf86b5e716ea52181a8e88e2d88ed420eb57"
+      },
+      {
+        "path": "contracts/canvas/v1/retention.json",
+        "bytes": 758,
+        "sha256": "a0d5399181332cbd2e405d55fcc5a3563775fb48e6309bca5f6e837df5fb67cc"
+      },
+      {
+        "path": "contracts/canvas/v1/run.json",
+        "bytes": 710,
+        "sha256": "7f0fbf76ec12af1c27a2ccd5ad0e0bb605714c6b1700df1899e805eac5c4deb4"
+      },
+      {
+        "path": "contracts/canvas/v1/scenarios/catalog-expressions.json",
+        "bytes": 6135,
+        "sha256": "4aa09824193bc74dc0ffb866e6a152990e07796c96bedf2870bb17e691116ea9"
+      },
+      {
+        "path": "contracts/canvas/v1/scenarios/graph.json",
+        "bytes": 5900,
+        "sha256": "30b14c0a85cad8f4331f01fd9594fa21779e814fdd5466bb68d141a34ecb3c9d"
+      },
+      {
+        "path": "contracts/canvas/v1/scenarios/lifecycle.json",
+        "bytes": 1881,
+        "sha256": "511289d3369c8d8187631b8ee4bdff1cc2ccaa32f0bac63362fe4d83bcd7628a"
+      },
+      {
+        "path": "contracts/canvas/v1/scenarios/ownership.json",
+        "bytes": 943,
+        "sha256": "41022641d6364a0281058ca061ca32102865b41c6388479bfd8263316135b0de"
+      },
+      {
+        "path": "contracts/canvas/v1/scenarios/retention.json",
+        "bytes": 2790,
+        "sha256": "4b0e455afa2b445cd60301be1ebdfa833fa1faf4a90969a1581ea54f510ca7d1"
+      },
+      {
+        "path": "contracts/canvas/v1/scenarios/storage-location.json",
+        "bytes": 6785,
+        "sha256": "366e49ffcc0a076b27b81451e08696f5d7e2a25dc385abc0fa236970d7eecc45"
+      },
+      {
+        "path": "contracts/canvas/v1/scene.json",
+        "bytes": 1284,
+        "sha256": "dead45a5451fb76d3e27c9a73e423c2217f3d2df9c230d5ac667a99dcd9235a6"
+      },
+      {
+        "path": "contracts/canvas/v1/schema.json",
+        "bytes": 69835,
+        "sha256": "e69179542807fd6ecf8899df831ee5be5e90074b2b8a9489b5c455cc204da254"
+      },
+      {
+        "path": "contracts/canvas/v1/states.json",
+        "bytes": 794,
+        "sha256": "51599f5b081ba8263f5b4a5077150badff2334c7346d85d46432dc422a92fb24"
+      },
+      {
+        "path": "contracts/gateway/v1/envelope.json",
+        "bytes": 1202,
+        "sha256": "b6a29bb1d878544b807899991888c63c7453e7cbab170ed7bb8246199ee7de03"
+      },
+      {
+        "path": "contracts/gateway/v1/scenarios/envelope.json",
+        "bytes": 3500,
+        "sha256": "032becae251a8728d22d1478ea61f27cee08279e6d0e938f2a7b00b36f2fd703"
+      },
+      {
+        "path": "contracts/generation/v1/errors.json",
+        "bytes": 4054,
+        "sha256": "9d55f1cb646c6f963618e4db96898f9db14efb204198867e8fb87b1e540afe1d"
+      },
+      {
+        "path": "contracts/generation/v1/models.json",
+        "bytes": 728,
+        "sha256": "a30cac55df792dea5477224d495319fd008f582ab23e52db9790530c8cf8bad6"
+      },
+      {
+        "path": "contracts/generation/v1/scenarios/channels.json",
+        "bytes": 1328,
+        "sha256": "2c3ed6a6add4b059ee07958b6903f58af717db22b439fc1f7204e9733172cc8b"
+      },
+      {
+        "path": "contracts/generation/v1/scenarios/lifecycle.json",
+        "bytes": 1403,
+        "sha256": "34bce62ae4c8cefd780dc7cc671d0ef71269b27511371cd12f2d84948df9cd42"
+      },
+      {
+        "path": "contracts/generation/v1/scenarios/media.json",
+        "bytes": 1270,
+        "sha256": "9d05df4bce6aefc115cffed766882fd89d1a942e0626df86cb679c129c18543f"
+      },
+      {
+        "path": "contracts/generation/v1/scenarios/secret.json",
+        "bytes": 406,
+        "sha256": "09d0b91b15781cde02bc915262eae970f47694fe6f66bb3e5dc28228a0579fdd"
+      },
+      {
+        "path": "contracts/generation/v1/schema.json",
+        "bytes": 1534,
+        "sha256": "369e00d933b58ad7efa751dc34c822724df9d3d09a16637c661dcbafb9e7790a"
+      },
+      {
+        "path": "contracts/generation/v1/states.json",
+        "bytes": 1043,
+        "sha256": "28962a5fcc03083cd0a4b274f1960607cc29c7b7500644f71c1ef9e47d2b57fd"
+      },
+      {
+        "path": "contracts/prompts/v1/default-sources.json",
+        "bytes": 2897,
+        "sha256": "badab3c4873599509b5ae6f6d0046c8865288207cafab39b020630a177bd827d"
+      },
+      {
+        "path": "contracts/runtime/v1/environment.json",
+        "bytes": 28826,
+        "sha256": "f58bb7a2dfa70b4b2e3809dd75672175083b6160757cfbada83955dd6fe91bcc"
+      },
+      {
+        "path": "contracts/runtime/v1/redaction.json",
+        "bytes": 1966,
+        "sha256": "a00312a33340a463438c55e7394cfebb816decafbee5ba5bfc7a5cec22e0b811"
+      },
+      {
+        "path": "src/app/globals.css",
+        "bytes": 20836,
+        "sha256": "e870d5b65cdddb382509011d1ef1bae5797248732baa392572d6e5124ea1a111"
+      },
+      {
+        "path": "postcss.config.mjs",
+        "bytes": 101,
+        "sha256": "7b299d3d3b16699ddda397c0b2373b3af4f25f8fc9ccc9b3d9e64ef083bc1c21"
+      }
+    ],
+    "fixtureInputs": [
+      {
+        "path": "src/app/layout.tsx",
+        "sha256": "c9abfc684f429bc2cf712e171a54cc3afeb1304d0105a895e547ccf507ea74c7"
+      },
+      {
+        "path": "src/app/create/page.tsx",
+        "sha256": "e97523e07408bb20f2153ccd734185f1b2bb53b8e09c64963ab4a008f394f9b6"
+      },
+      {
+        "path": "src/app/create/studio.tsx",
+        "sha256": "c0b9589bbfe50eb9c086392a3b891608a3f6dcdd02eb13712421c102843c8bf7"
+      },
+      {
+        "path": "next.config.mjs",
+        "sha256": "1ab1a27cfba3a45100efcb0d945dd73d1e10446721d4476be1a3ebae56cc5190"
+      },
+      {
+        "path": "package.json",
+        "sha256": "77a2502c274b8aee2e4bfd7bad3b6553f4598e40d273f08534f4f7a71e6ad0ce"
+      }
+    ],
+    "helperIdentities": {
+      "studio-browser-api.mjs": {
+        "originalSha256": "573057c9bb7d5609a660c363ecb884ec31104121d89d16e6665a4c22fa4870ab",
+        "copySha256": "08a598d0b86ac92f69c5b550a466133b266ad01505d6b4a1b699fbe5030dea0a",
+        "change": "Fake proxy preserves the requested fixture original bytes"
+      },
+      "studio-browser-cdp.mjs": {
+        "originalSha256": "a8266d666d90b637fd297e696f125b048acd99ff59ff57fd2bba0b9cde67db3b",
+        "copySha256": "40865645fa840043de4905bdb669b32f0fd4db92ec01734e049f92384ba12bf1",
+        "change": "Absolute import of audited isolated environment helper"
+      }
+    },
+    "scope": "Exact current production components/lib/contracts/CSS; actual Next/React Flow/native IndexedDB. Minimal fixture layout, serialized dummy identity/catalogue and loopback fake HTTP only. Not physical phones, native OS IME, real authentication/services/billing or actual CI."
+  },
+  "pass": false,
+  "failedStage": "Manual rerun stable nonoverlapping results, reference viewer/download, focused keyboard isolation",
+  "error": "AssertionError [ERR_ASSERTION]: Visible clipped control: [aria-label=\"关闭\"] {\"x\":1406,\"y\":87.5,\"width\":44,\"height\":-63,\"visibility\":\"visible\",\"hit\":false,\"hitLabel\":\"保存高清原图\",\"label\":\"关闭\",\"disabled\":false}\n    at browser.controlPoint (file:///E:/code/narra-image/.trellis/tasks/10-28-studio-mobile-canvas-editor/checks/mobile-browser-check.mjs:39:12)\n    at async browser.click (file:///E:/code/narra-image/.trellis/tasks/10-28-studio-mobile-canvas-editor/checks/mobile-browser-check.mjs:46:19)\n    at async file:///E:/code/narra-image/.trellis/tasks/10-28-studio-mobile-canvas-editor/checks/mobile-browser-check.mjs:263:65",
+  "failureStates": [
+    {
+      "name": "desktop",
+      "dom": "Narra / isolated mobile fixture\n对话\n画布\n\n两种创作方式，各自保留灵感\n\n我的画布\n1\n新建空白画布\nFixture A\n有未同步修改\n\n本地自动存草稿\n手动保存后可跨设备恢复\n\nFixture A\n本地已保存\n/\n有未同步修改\n保存到账户\n提示词\n参考图\n生成节点\n55%\n节点列表 · 6\n提示词 · Captured cloud prompt · 已填写\n生成 · image-account-default · 生成节点\n参考图 · b519d7 · 原图已就绪\n参考图 · 5347f0 · 原图已就绪\n结果图 · mage-0 · 结果已就绪\n结果图 · mage-0 · 结果已就绪\n提示词\n参考 2\n参考 1\n生成结果\n生成结果\n提示词\n\n描述你的画面\n\n连接到生成节点\n21 / 8000\n生成\n\n只运行当前节点\n\nimage-account-default\n\n自动 模型决定 · PNG\n\n提示词已连接\n2 张参考图 · 固定 1 张输出\n\n生成完成\n\n运行此节点\n\n编辑与连接不会自动生成\n\n参考图\n\n原图已就绪\n\n查看\n替换原图\n参考图\n\n原图已就绪\n\n查看\n替换原图\n结果图\n固定结果，不随重跑替换\n160x120\n查看原图\n下载\n结果图\n固定结果，不随重跑替换\n160x120\n查看原图\n下载\nReact Flow\n拖动空白处平移 · 滚轮缩放 · 拖动卡片顶栏移动\n保存高清原图",
+      "geometry": {
+        "active": "<button type=\"button\" class=\"inline-flex cursor-pointer items-center gap-2 rounded-full bg-white/20 px-6 py-3 text-sm font-medium text-white shadow-lg backdrop-blur-md transition-all duration-200 ease-out hover:bg-[var(--accent)] hover:shadow-xl\" data-fixture-click=\"true\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-download size-4\" aria-hidden=\"true\"><path d=\"M12 15V3\"></path><path d=\"M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4\"></path><path d=\"m7 10 5 5 5-5\"></path></svg>保存高清原图</button>",
+        "flow": "transform: translate(283.795px, 14.7016px) scale(0.550881);",
+        "nodes": [
+          {
+            "id": "ec1b0275-35c0-42f5-98ed-2147c2964f4b",
+            "style": "z-index: 0; transform: translate(50px, 55px); pointer-events: all; visibility: visible; touch-action: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);",
+            "rect": {
+              "x": 551.3385620117188,
+              "y": 341.703125,
+              "width": 158.65362548828125,
+              "height": 142.75555419921875,
+              "top": 341.703125,
+              "right": 709.9921875,
+              "bottom": 484.45867919921875,
+              "left": 551.3385620117188
+            },
+            "text": "提示词 描述你的画面Captured cloud prompt连接到生成节点21 / 8000"
+          },
+          {
+            "id": "81dc4992-2390-4e82-8225-a0e46854e001",
+            "style": "z-index: 0; transform: translate(430px, 55px); pointer-events: all; visibility: visible; touch-action: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);",
+            "rect": {
+              "x": 760.6732177734375,
+              "y": 341.703125,
+              "width": 158.653564453125,
+              "height": 173.82867431640625,
+              "top": 341.703125,
+              "right": 919.3267822265625,
+              "bottom": 515.5317993164062,
+              "left": 760.6732177734375
+            },
+            "text": "生成 只运行当前节点image-account-default自动 模型决定 · PNG提示词已连接2 张参考图 · 固定 1 张输出生成完成运行此节点编辑与连接不会自动生成"
+          },
+          {
+            "id": "140866a5-dbee-44f5-ac9a-7d264eb519d7",
+            "style": "z-index: 0; transform: translate(50px, 415px); pointer-events: all; visibility: visible; touch-action: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);",
+            "rect": {
+              "x": 551.3385620117188,
+              "y": 540.0201416015625,
+              "width": 158.65362548828125,
+              "height": 166.5811767578125,
+              "top": 540.0201416015625,
+              "right": 709.9921875,
+              "bottom": 706.601318359375,
+              "left": 551.3385620117188
+            },
+            "text": "参考图原图已就绪查看替换原图"
+          },
+          {
+            "id": "ba38afe1-2922-459d-963e-2d12a45347f0",
+            "style": "z-index: 0; transform: translate(50px, 775px); pointer-events: all; visibility: visible; touch-action: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);",
+            "rect": {
+              "x": 551.3385620117188,
+              "y": 738.337158203125,
+              "width": 158.65362548828125,
+              "height": 166.58111572265625,
+              "top": 738.337158203125,
+              "right": 709.9921875,
+              "bottom": 904.9182739257812,
+              "left": 551.3385620117188
+            },
+            "text": "参考图原图已就绪查看替换原图"
+          },
+          {
+            "id": "result:canvas-02ba2343-01fb-4486-ae43-8fe561c40c3b-image-0",
+            "style": "z-index: 0; transform: translate(810px, 55px); pointer-events: all; visibility: visible; touch-action: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);",
+            "rect": {
+              "x": 970.0078125,
+              "y": 341.703125,
+              "width": 158.653564453125,
+              "height": 167.16644287109375,
+              "top": 341.703125,
+              "right": 1128.661376953125,
+              "bottom": 508.86956787109375,
+              "left": 970.0078125
+            },
+            "text": "结果图固定结果，不随重跑替换160x120查看原图下载"
+          },
+          {
+            "id": "result:canvas-ba92c483-cb35-4eae-8570-736ecbe69b4f-image-0",
+            "style": "z-index: 0; transform: translate(810px, 415px); pointer-events: all; visibility: visible; touch-action: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);",
+            "rect": {
+              "x": 970.0078125,
+              "y": 540.0201416015625,
+              "width": 158.653564453125,
+              "height": 167.16644287109375,
+              "top": 540.0201416015625,
+              "right": 1128.661376953125,
+              "bottom": 707.1865844726562,
+              "left": 970.0078125
+            },
+            "text": "结果图固定结果，不随重跑替换160x120查看原图下载"
+          }
+        ],
+        "textarea": "Captured cloud prompt"
+      },
+      "nativeDrafts": [
+        {
+          "ownerId": "fixture-owner-a",
+          "canvasId": "c76f1506-22fe-4bbf-9709-684ccf99dfca",
+          "stamp": {
+            "writerId": "6107ae0e-40b1-402a-beeb-5b2cf4905059",
+            "writeRevision": 21
+          },
+          "envelope": {
+            "storageVersion": 1,
+            "ownerId": "fixture-owner-a",
+            "canvasId": "c76f1506-22fe-4bbf-9709-684ccf99dfca",
+            "title": "Fixture A",
+            "scene": {
+              "schemaVersion": 1,
+              "edges": [
+                {
+                  "id": "a0e47e26-6503-48ec-88ad-4ff6c087f937",
+                  "source": "ec1b0275-35c0-42f5-98ed-2147c2964f4b",
+                  "target": "81dc4992-2390-4e82-8225-a0e46854e001",
+                  "kind": "prompt-input"
+                },
+                {
+                  "id": "13379bde-f114-4062-8016-656f6c71cb22",
+                  "source": "140866a5-dbee-44f5-ac9a-7d264eb519d7",
+                  "target": "81dc4992-2390-4e82-8225-a0e46854e001",
+                  "kind": "image-input",
+                  "ordinal": 2
+                },
+                {
+                  "id": "a98894cd-ffb2-40d6-a494-27a231f43a7a",
+                  "source": "ba38afe1-2922-459d-963e-2d12a45347f0",
+                  "target": "81dc4992-2390-4e82-8225-a0e46854e001",
+                  "kind": "image-input",
+                  "ordinal": 1
+                },
+                {
+                  "id": "29087cda-a1c9-4b4b-8366-958687f0339c",
+                  "source": "81dc4992-2390-4e82-8225-a0e46854e001",
+                  "target": "result:canvas-02ba2343-01fb-4486-ae43-8fe561c40c3b-image-0",
+                  "kind": "output-provenance"
+                },
+                {
+                  "id": "3dbb3c2e-5ed0-448b-822a-e9ffe019d454",
+                  "source": "81dc4992-2390-4e82-8225-a0e46854e001",
+                  "target": "result:canvas-ba92c483-cb35-4eae-8570-736ecbe69b4f-image-0",
+                  "kind": "output-provenance"
+                }
+              ],
+              "viewport": {
+                "x": 283.7945205479452,
+                "y": 14.701565557729964,
+                "zoom": 0.550880626223092
+              },
+              "runBindings": [
+                {
+                  "runId": "ba92c483-cb35-4eae-8570-736ecbe69b4f",
+                  "nodeId": "81dc4992-2390-4e82-8225-a0e46854e001",
+                  "jobId": "canvas-ba92c483-cb35-4eae-8570-736ecbe69b4f",
+                  "outputsHandled": true
+                }
+              ],
+              "nodes": [
+                {
+                  "id": "ec1b0275-35c0-42f5-98ed-2147c2964f4b",
+                  "kind": "prompt",
+                  "position": {
+                    "x": 50,
+                    "y": 55
+                  },
+                  "text": "Captured cloud prompt"
+                },
+                {
+                  "id": "81dc4992-2390-4e82-8225-a0e46854e001",
+                  "kind": "generation",
+                  "position": {
+                    "x": 430,
+                    "y": 55
+                  },
+                  "parameters": {
+                    "providerMode": "built_in",
+                    "channelId": "channel-account",
+                    "model": "image-account-default",
+                    "size": "auto",
+                    "quality": "auto",
+                    "outputFormat": "png",
+                    "outputCompression": null,
+                    "moderation": "auto",
+                    "count": 1,
+                    "negativePrompt": null,
+                    "seed": null
+                  }
+                },
+                {
+                  "id": "140866a5-dbee-44f5-ac9a-7d264eb519d7",
+                  "kind": "reference",
+                  "position": {
+                    "x": 50,
+                    "y": 415
+                  },
+                  "source": {
+                    "kind": "imported",
+                    "assetId": "asset-45f934e5-b1c0-40f9-954d-cdba08fa5016"
+                  }
+                },
+                {
+                  "id": "ba38afe1-2922-459d-963e-2d12a45347f0",
+                  "kind": "reference",
+                  "position": {
+                    "x": 50,
+                    "y": 775
+                  },
+                  "source": {
+                    "kind": "imported",
+                    "assetId": "asset-21e0212a-2c1f-440e-bd5d-6862bd4fb7e0"
+                  }
+                },
+                {
+                  "id": "result:canvas-02ba2343-01fb-4486-ae43-8fe561c40c3b-image-0",
+                  "kind": "result",
+                  "position": {
+                    "x": 810,
+                    "y": 55
+                  },
+                  "jobId": "canvas-02ba2343-01fb-4486-ae43-8fe561c40c3b",
+                  "imageId": "canvas-02ba2343-01fb-4486-ae43-8fe561c40c3b-image-0",
+                  "runId": "02ba2343-01fb-4486-ae43-8fe561c40c3b"
+                },
+                {
+                  "id": "result:canvas-ba92c483-cb35-4eae-8570-736ecbe69b4f-image-0",
+                  "kind": "result",
+                  "position": {
+                    "x": 810,
+                    "y": 415
+                  },
+                  "jobId": "canvas-ba92c483-cb35-4eae-8570-736ecbe69b4f",
+                  "imageId": "canvas-ba92c483-cb35-4eae-8570-736ecbe69b4f-image-0",
+                  "runId": "ba92c483-cb35-4eae-8570-736ecbe69b4f"
+                }
+              ]
+            },
+            "editRevision": 17,
+            "cloud": {
+              "id": "c76f1506-22fe-4bbf-9709-684ccf99dfca",
+              "title": "Fixture A",
+              "revision": 4,
+              "lastSavedAt": "2026-10-29T00:00:00.000Z",
+              "hasSavedSnapshot": true,
+              "createdAt": "2026-10-29T00:00:00.000Z",
+              "updatedAt": "2026-10-29T00:00:00.000Z"
+            },
+            "savedEditRevision": 15,
+            "shell": "registered",
+            "deletionEpoch": 1,
+            "deletedAt": null,
+            "pendingSave": null,
+            "outbox": [
+              {
+                "storageVersion": 1,
+                "ownerId": "fixture-owner-a",
+                "canvasId": "c76f1506-22fe-4bbf-9709-684ccf99dfca",
+                "nodeId": "81dc4992-2390-4e82-8225-a0e46854e001",
+                "runId": "ba92c483-cb35-4eae-8570-736ecbe69b4f",
+                "projection": {
+                  "canvasId": "c76f1506-22fe-4bbf-9709-684ccf99dfca",
+                  "nodeId": "81dc4992-2390-4e82-8225-a0e46854e001",
+                  "runId": "ba92c483-cb35-4eae-8570-736ecbe69b4f",
+                  "prompt": {
+                    "sourceNodeId": "ec1b0275-35c0-42f5-98ed-2147c2964f4b",
+                    "text": "Captured cloud prompt"
+                  },
+                  "references": [
+                    {
+                      "sourceNodeId": "ba38afe1-2922-459d-963e-2d12a45347f0",
+                      "ordinal": 1,
+                      "kind": "imported",
+                      "assetId": "asset-21e0212a-2c1f-440e-bd5d-6862bd4fb7e0"
+                    },
+                    {
+                      "sourceNodeId": "140866a5-dbee-44f5-ac9a-7d264eb519d7",
+                      "ordinal": 2,
+                      "kind": "imported",
+                      "assetId": "asset-45f934e5-b1c0-40f9-954d-cdba08fa5016"
+                    }
+                  ],
+                  "params": {
+                    "providerMode": "built_in",
+                    "channelId": "channel-account",
+                    "model": "image-account-default",
+                    "size": "auto",
+                    "quality": "auto",
+                    "outputFormat": "png",
+                    "outputCompression": null,
+                    "moderation": "auto",
+                    "count": 1,
+                    "negativePrompt": null,
+                    "seed": null
+                  }
+                },
+                "phase": "accepted",
+                "jobId": "canvas-ba92c483-cb35-4eae-8570-736ecbe69b4f"
+              }
+            ],
+            "updatedAt": "2026-10-30T15:40:13.423Z"
+          },
+          "fixtureBlobs": [
+            {
+              "blobId": "b250c2f6-63e7-41a4-a8d4-5696f42c8844",
+              "size": 12218,
+              "assetId": "asset-45f934e5-b1c0-40f9-954d-cdba08fa5016",
+              "fileName": "original-a.png"
+            },
+            {
+              "blobId": "ec774baf-ebd3-49f7-87ba-9f586be155e9",
+              "size": 39666,
+              "assetId": "asset-21e0212a-2c1f-440e-bd5d-6862bd4fb7e0",
+              "fileName": "original-b.png"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "separate-device",
+      "dom": "Narra / isolated mobile fixture\n对话\n画布\n\n两种创作方式，各自保留灵感\n\n我的画布\n1\n新建空白画布\nFixture A\n账户快照已保存\n\n本地自动存草稿\n手动保存后可跨设备恢复\n\nFixture A\n本地已保存\n/\n账户快照已保存\n保存到账户\n提示词\n参考图\n生成节点\n55%\n节点列表 · 5\n提示词 · Captured cloud prompt · 已填写\n生成 · image-account-default · 生成节点\n参考图 · b519d7 · 原图已就绪\n参考图 · 5347f0 · 原图已就绪\n结果图 · mage-0 · 结果已就绪\n编辑\n移动\n提示词\n参考 2\n参考 1\n提示词\n\n描述你的画面\n\n连接到生成节点\n21 / 8000\n生成\n\n只运行当前节点\n\nimage-account-default\n\n自动 模型决定 · PNG\n\n提示词已连接\n2 张参考图 · 固定 1 张输出\n\n生成完成\n\n运行此节点\n\n编辑与连接不会自动生成\n\n参考图\n\n原图已就绪\n\n查看\n替换原图\n参考图\n\n原图已就绪\n\n查看\n替换原图\n结果图\n固定结果，不随重跑替换\n160x120\n查看原图\n下载\nReact Flow\n拖动空白处平移 · 滚轮缩放 · 拖动卡片顶栏移动",
+      "geometry": {
+        "active": "<body class=\"min-h-full bg-[var(--surface)] text-[var(--ink)]\"><div hidden=\"\"><!--$--><!--/$--></div><main class=\"flex h-[100dvh] flex-col overflow-hidden bg-[var(--surface)]\"><header class=\"flex h-14 shrink-0 items-center border-b border-[var(--line)] px-3 font-serif text-lg\">Narra / isolated mobile fixture</header><section class=\"relative flex min-h-0 flex-1 flex-col overflow-hidden\"><div class=\"relative flex h-full w-full flex-col overflow-hidden bg-[radial-gradient(circle_at_52%_18%,rgba(255,255,255,0.92),transparent_32%),linear-gradient(180deg,#faf6ef_0%,#f2e9dc_100%)]\"><div class=\"relative z-10 flex shrink-0 items-center justify-between gap-3 border-b border-[var(--line)]/70 bg-[#fffaf2]/85 px-3 py-2 md:px-5\"><div role=\"group\" aria-label=\"创作模式\" class=\"inline-flex rounded-xl border border-[var(--line)] bg-[#f7efe4] p-1\"><button type=\"button\" aria-pressed=\"false\" class=\"inline-flex items-center gap-2 rounded-lg px-4 py-1.5 text-sm font-semibold transition-colors text-[var(--ink-sof",
+        "flow": "transform: translate(388.462px, 14.7016px) scale(0.550881);",
+        "nodes": [
+          {
+            "id": "ec1b0275-35c0-42f5-98ed-2147c2964f4b",
+            "style": "z-index: 0; transform: translate(50px, 55px); pointer-events: all; visibility: visible; touch-action: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);",
+            "rect": {
+              "x": 656.005859375,
+              "y": 341.703125,
+              "width": 158.65362548828125,
+              "height": 142.75555419921875,
+              "top": 341.703125,
+              "right": 814.6594848632812,
+              "bottom": 484.45867919921875,
+              "left": 656.005859375
+            },
+            "text": "提示词 描述你的画面Captured cloud prompt连接到生成节点21 / 8000"
+          },
+          {
+            "id": "81dc4992-2390-4e82-8225-a0e46854e001",
+            "style": "z-index: 1000; transform: translate(430px, 55px); pointer-events: all; visibility: visible; touch-action: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);",
+            "rect": {
+              "x": 865.3405151367188,
+              "y": 341.703125,
+              "width": 158.65362548828125,
+              "height": 173.82867431640625,
+              "top": 341.703125,
+              "right": 1023.994140625,
+              "bottom": 515.5317993164062,
+              "left": 865.3405151367188
+            },
+            "text": "生成 只运行当前节点image-account-default自动 模型决定 · PNG提示词已连接2 张参考图 · 固定 1 张输出生成完成运行此节点编辑与连接不会自动生成"
+          },
+          {
+            "id": "140866a5-dbee-44f5-ac9a-7d264eb519d7",
+            "style": "z-index: 0; transform: translate(50px, 415px); pointer-events: all; visibility: visible; touch-action: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);",
+            "rect": {
+              "x": 656.005859375,
+              "y": 540.0201416015625,
+              "width": 158.65362548828125,
+              "height": 166.5811767578125,
+              "top": 540.0201416015625,
+              "right": 814.6594848632812,
+              "bottom": 706.601318359375,
+              "left": 656.005859375
+            },
+            "text": "参考图原图已就绪查看替换原图"
+          },
+          {
+            "id": "ba38afe1-2922-459d-963e-2d12a45347f0",
+            "style": "z-index: 0; transform: translate(50px, 775px); pointer-events: all; visibility: visible; touch-action: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);",
+            "rect": {
+              "x": 656.005859375,
+              "y": 738.337158203125,
+              "width": 158.65362548828125,
+              "height": 166.58111572265625,
+              "top": 738.337158203125,
+              "right": 814.6594848632812,
+              "bottom": 904.9182739257812,
+              "left": 656.005859375
+            },
+            "text": "参考图原图已就绪查看替换原图"
+          },
+          {
+            "id": "result:canvas-02ba2343-01fb-4486-ae43-8fe561c40c3b-image-0",
+            "style": "z-index: 0; transform: translate(810px, 55px); pointer-events: all; visibility: visible; touch-action: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);",
+            "rect": {
+              "x": 1074.6751708984375,
+              "y": 341.703125,
+              "width": 158.653564453125,
+              "height": 167.16644287109375,
+              "top": 341.703125,
+              "right": 1233.3287353515625,
+              "bottom": 508.86956787109375,
+              "left": 1074.6751708984375
+            },
+            "text": "结果图固定结果，不随重跑替换160x120查看原图下载"
+          }
+        ],
+        "textarea": "Captured cloud prompt"
+      },
+      "nativeDrafts": [
+        {
+          "ownerId": "fixture-owner-a",
+          "canvasId": "c76f1506-22fe-4bbf-9709-684ccf99dfca",
+          "stamp": {
+            "writerId": "c00c34b0-a6f1-42af-96d7-ec2210b68a73",
+            "writeRevision": 9
+          },
+          "envelope": {
+            "storageVersion": 1,
+            "ownerId": "fixture-owner-a",
+            "canvasId": "c76f1506-22fe-4bbf-9709-684ccf99dfca",
+            "title": "Fixture A",
+            "scene": {
+              "schemaVersion": 1,
+              "edges": [
+                {
+                  "id": "a0e47e26-6503-48ec-88ad-4ff6c087f937",
+                  "source": "ec1b0275-35c0-42f5-98ed-2147c2964f4b",
+                  "target": "81dc4992-2390-4e82-8225-a0e46854e001",
+                  "kind": "prompt-input"
+                },
+                {
+                  "id": "13379bde-f114-4062-8016-656f6c71cb22",
+                  "source": "140866a5-dbee-44f5-ac9a-7d264eb519d7",
+                  "target": "81dc4992-2390-4e82-8225-a0e46854e001",
+                  "kind": "image-input",
+                  "ordinal": 2
+                },
+                {
+                  "id": "a98894cd-ffb2-40d6-a494-27a231f43a7a",
+                  "source": "ba38afe1-2922-459d-963e-2d12a45347f0",
+                  "target": "81dc4992-2390-4e82-8225-a0e46854e001",
+                  "kind": "image-input",
+                  "ordinal": 1
+                },
+                {
+                  "id": "29087cda-a1c9-4b4b-8366-958687f0339c",
+                  "source": "81dc4992-2390-4e82-8225-a0e46854e001",
+                  "target": "result:canvas-02ba2343-01fb-4486-ae43-8fe561c40c3b-image-0",
+                  "kind": "output-provenance"
+                }
+              ],
+              "viewport": {
+                "x": 388.46183953033267,
+                "y": 14.701565557729964,
+                "zoom": 0.550880626223092
+              },
+              "runBindings": [
+                {
+                  "runId": "02ba2343-01fb-4486-ae43-8fe561c40c3b",
+                  "nodeId": "81dc4992-2390-4e82-8225-a0e46854e001",
+                  "jobId": "canvas-02ba2343-01fb-4486-ae43-8fe561c40c3b",
+                  "outputsHandled": true
+                }
+              ],
+              "nodes": [
+                {
+                  "id": "ec1b0275-35c0-42f5-98ed-2147c2964f4b",
+                  "kind": "prompt",
+                  "position": {
+                    "x": 50,
+                    "y": 55
+                  },
+                  "text": "Captured cloud prompt"
+                },
+                {
+                  "id": "81dc4992-2390-4e82-8225-a0e46854e001",
+                  "kind": "generation",
+                  "position": {
+                    "x": 430,
+                    "y": 55
+                  },
+                  "parameters": {
+                    "providerMode": "built_in",
+                    "channelId": "channel-account",
+                    "model": "image-account-default",
+                    "size": "auto",
+                    "quality": "auto",
+                    "outputFormat": "png",
+                    "outputCompression": null,
+                    "moderation": "auto",
+                    "count": 1,
+                    "negativePrompt": null,
+                    "seed": null
+                  }
+                },
+                {
+                  "id": "140866a5-dbee-44f5-ac9a-7d264eb519d7",
+                  "kind": "reference",
+                  "position": {
+                    "x": 50,
+                    "y": 415
+                  },
+                  "source": {
+                    "kind": "imported",
+                    "assetId": "asset-45f934e5-b1c0-40f9-954d-cdba08fa5016"
+                  }
+                },
+                {
+                  "id": "ba38afe1-2922-459d-963e-2d12a45347f0",
+                  "kind": "reference",
+                  "position": {
+                    "x": 50,
+                    "y": 775
+                  },
+                  "source": {
+                    "kind": "imported",
+                    "assetId": "asset-21e0212a-2c1f-440e-bd5d-6862bd4fb7e0"
+                  }
+                },
+                {
+                  "id": "result:canvas-02ba2343-01fb-4486-ae43-8fe561c40c3b-image-0",
+                  "kind": "result",
+                  "position": {
+                    "x": 810,
+                    "y": 55
+                  },
+                  "jobId": "canvas-02ba2343-01fb-4486-ae43-8fe561c40c3b",
+                  "imageId": "canvas-02ba2343-01fb-4486-ae43-8fe561c40c3b-image-0",
+                  "runId": "02ba2343-01fb-4486-ae43-8fe561c40c3b"
+                }
+              ]
+            },
+            "editRevision": 4,
+            "cloud": {
+              "id": "c76f1506-22fe-4bbf-9709-684ccf99dfca",
+              "title": "Fixture A",
+              "revision": 4,
+              "lastSavedAt": "2026-10-29T00:00:00.000Z",
+              "hasSavedSnapshot": true,
+              "createdAt": "2026-10-29T00:00:00.000Z",
+              "updatedAt": "2026-10-29T00:00:00.000Z"
+            },
+            "savedEditRevision": 4,
+            "shell": "registered",
+            "deletionEpoch": 0,
+            "deletedAt": null,
+            "pendingSave": null,
+            "outbox": [
+              {
+                "storageVersion": 1,
+                "ownerId": "fixture-owner-a",
+                "canvasId": "c76f1506-22fe-4bbf-9709-684ccf99dfca",
+                "nodeId": "81dc4992-2390-4e82-8225-a0e46854e001",
+                "runId": "02ba2343-01fb-4486-ae43-8fe561c40c3b",
+                "projection": {
+                  "canvasId": "c76f1506-22fe-4bbf-9709-684ccf99dfca",
+                  "nodeId": "81dc4992-2390-4e82-8225-a0e46854e001",
+                  "runId": "02ba2343-01fb-4486-ae43-8fe561c40c3b",
+                  "prompt": {
+                    "sourceNodeId": "ec1b0275-35c0-42f5-98ed-2147c2964f4b",
+                    "text": "Captured cloud prompt"
+                  },
+                  "references": [
+                    {
+                      "sourceNodeId": "ba38afe1-2922-459d-963e-2d12a45347f0",
+                      "ordinal": 1,
+                      "kind": "imported",
+                      "assetId": "asset-21e0212a-2c1f-440e-bd5d-6862bd4fb7e0"
+                    },
+                    {
+                      "sourceNodeId": "140866a5-dbee-44f5-ac9a-7d264eb519d7",
+                      "ordinal": 2,
+                      "kind": "imported",
+                      "assetId": "asset-45f934e5-b1c0-40f9-954d-cdba08fa5016"
+                    }
+                  ],
+                  "params": {
+                    "providerMode": "built_in",
+                    "channelId": "channel-account",
+                    "model": "image-account-default",
+                    "size": "auto",
+                    "quality": "auto",
+                    "outputFormat": "png",
+                    "outputCompression": null,
+                    "moderation": "auto",
+                    "count": 1,
+                    "negativePrompt": null,
+                    "seed": null
+                  }
+                },
+                "phase": "accepted",
+                "jobId": "canvas-02ba2343-01fb-4486-ae43-8fe561c40c3b"
+              }
+            ],
+            "updatedAt": "2026-10-30T15:40:11.615Z"
+          },
+          "fixtureBlobs": []
+        }
+      ]
+    }
+  ],
+  "requests": [
+    {
+      "owner": "fixture-owner-a",
+      "method": "GET",
+      "path": "/api/me/canvases",
+      "body": null,
+      "headers": {
+        "x-narra-canvas-run": null
+      }
+    },
+    {
+      "owner": "fixture-owner-a",
+      "method": "POST",
+      "path": "/api/me/canvases",
+      "body": {
+        "id": "c76f1506-22fe-4bbf-9709-684ccf99dfca",
+        "title": "未命名画布"
+      },
+      "headers": {
+        "x-narra-canvas-run": null
+      }
+    },
+    {
+      "owner": "fixture-owner-a",
+      "method": "PATCH",
+      "path": "/api/me/canvases/c76f1506-22fe-4bbf-9709-684ccf99dfca",
+      "body": {
+        "title": "Fixture A",
+        "expectedRevision": 0
+      },
+      "headers": {
+        "x-narra-canvas-run": null
+      }
+    },
+    {
+      "owner": "fixture-owner-a",
+      "method": "POST",
+      "path": "/api/me/canvas-assets",
+      "body": {
+        "uploadId": "45f934e5-b1c0-40f9-954d-cdba08fa5016",
+        "byteLength": 12218,
+        "sha256": "0884609103a467153a8fa8623bb8dbcf6425c5222744f8626ecb7cbf823d0359",
+        "fileName": "original-a.png"
+      },
+      "headers": {
+        "x-narra-canvas-run": null
+      }
+    },
+    {
+      "owner": "fixture-owner-a",
+      "method": "POST",
+      "path": "/api/me/canvas-assets",
+      "body": {
+        "uploadId": "21e0212a-2c1f-440e-bd5d-6862bd4fb7e0",
+        "byteLength": 39666,
+        "sha256": "2d85c90504eb5ea83d0d8ff18ab544fcbd997e088e31686f38162b5bef6326c0",
+        "fileName": "original-b.png"
+      },
+      "headers": {
+        "x-narra-canvas-run": null
+      }
+    },
+    {
+      "owner": "fixture-owner-a",
+      "method": "PUT",
+      "path": "/api/me/canvases/c76f1506-22fe-4bbf-9709-684ccf99dfca/snapshot",
+      "body": {
+        "saveId": "afe575a6-3298-4b89-8b70-1b915f9abee9",
+        "expectedRevision": 1,
+        "scene": {
+          "schemaVersion": 1,
+          "edges": [
+            {
+              "id": "a0e47e26-6503-48ec-88ad-4ff6c087f937",
+              "source": "ec1b0275-35c0-42f5-98ed-2147c2964f4b",
+              "target": "81dc4992-2390-4e82-8225-a0e46854e001",
+              "kind": "prompt-input"
+            }
+          ],
+          "viewport": {
+            "x": 216,
+            "y": 127.5,
+            "zoom": 1
+          },
+          "runBindings": [],
+          "nodes": [
+            {
+              "id": "ec1b0275-35c0-42f5-98ed-2147c2964f4b",
+              "kind": "prompt",
+              "position": {
+                "x": 50,
+                "y": 55
+              },
+              "text": "Connected canvas prompt"
+            },
+            {
+              "id": "81dc4992-2390-4e82-8225-a0e46854e001",
+              "kind": "generation",
+              "position": {
+                "x": 430,
+                "y": 55
+              },
+              "parameters": {
+                "providerMode": "built_in",
+                "channelId": "channel-account",
+                "model": "image-account-default",
+                "size": "auto",
+                "quality": "auto",
+                "outputFormat": "png",
+                "outputCompression": null,
+                "moderation": "auto",
+                "count": 1,
+                "negativePrompt": null,
+                "seed": null
+              }
+            },
+            {
+              "id": "140866a5-dbee-44f5-ac9a-7d264eb519d7",
+              "kind": "reference",
+              "position": {
+                "x": 50,
+                "y": 415
+              },
+              "source": {
+                "kind": "imported",
+                "assetId": "asset-45f934e5-b1c0-40f9-954d-cdba08fa5016"
+              }
+            },
+            {
+              "id": "ba38afe1-2922-459d-963e-2d12a45347f0",
+              "kind": "reference",
+              "position": {
+                "x": 50,
+                "y": 775
+              },
+              "source": {
+                "kind": "imported",
+                "assetId": "asset-21e0212a-2c1f-440e-bd5d-6862bd4fb7e0"
+              }
+            }
+          ]
+        }
+      },
+      "headers": {
+        "x-narra-canvas-run": null
+      }
+    },
+    {
+      "owner": "fixture-owner-a",
+      "method": "GET",
+      "path": "/api/me/canvas-assets/asset-45f934e5-b1c0-40f9-954d-cdba08fa5016",
+      "body": null,
+      "headers": {
+        "x-narra-canvas-run": null
+      }
+    },
+    {
+      "owner": "fixture-owner-a",
+      "method": "GET",
+      "path": "/api/me/canvas-assets/asset-21e0212a-2c1f-440e-bd5d-6862bd4fb7e0",
+      "body": null,
+      "headers": {
+        "x-narra-canvas-run": null
+      }
+    },
+    {
+      "owner": "fixture-owner-a",
+      "method": "PUT",
+      "path": "/api/me/canvases/c76f1506-22fe-4bbf-9709-684ccf99dfca/snapshot",
+      "body": {
+        "saveId": "44327adc-583e-427e-9b12-f9e79291be36",
+        "expectedRevision": 2,
+        "scene": {
+          "schemaVersion": 1,
+          "edges": [
+            {
+              "id": "a0e47e26-6503-48ec-88ad-4ff6c087f937",
+              "source": "ec1b0275-35c0-42f5-98ed-2147c2964f4b",
+              "target": "81dc4992-2390-4e82-8225-a0e46854e001",
+              "kind": "prompt-input"
+            }
+          ],
+          "viewport": {
+            "x": 388.46183953033267,
+            "y": 14.701565557729964,
+            "zoom": 0.550880626223092
+          },
+          "runBindings": [],
+          "nodes": [
+            {
+              "id": "ec1b0275-35c0-42f5-98ed-2147c2964f4b",
+              "kind": "prompt",
+              "position": {
+                "x": 50,
+                "y": 55
+              },
+              "text": "Captured cloud prompt"
+            },
+            {
+              "id": "81dc4992-2390-4e82-8225-a0e46854e001",
+              "kind": "generation",
+              "position": {
+                "x": 430,
+                "y": 55
+              },
+              "parameters": {
+                "providerMode": "built_in",
+                "channelId": "channel-account",
+                "model": "image-account-default",
+                "size": "auto",
+                "quality": "auto",
+                "outputFormat": "png",
+                "outputCompression": null,
+                "moderation": "auto",
+                "count": 1,
+                "negativePrompt": null,
+                "seed": null
+              }
+            },
+            {
+              "id": "140866a5-dbee-44f5-ac9a-7d264eb519d7",
+              "kind": "reference",
+              "position": {
+                "x": 50,
+                "y": 415
+              },
+              "source": {
+                "kind": "imported",
+                "assetId": "asset-45f934e5-b1c0-40f9-954d-cdba08fa5016"
+              }
+            },
+            {
+              "id": "ba38afe1-2922-459d-963e-2d12a45347f0",
+              "kind": "reference",
+              "position": {
+                "x": 50,
+                "y": 775
+              },
+              "source": {
+                "kind": "imported",
+                "assetId": "asset-21e0212a-2c1f-440e-bd5d-6862bd4fb7e0"
+              }
+            }
+          ]
+        }
+      },
+      "headers": {
+        "x-narra-canvas-run": null
+      }
+    },
+    {
+      "owner": "fixture-owner-a",
+      "method": "GET",
+      "path": "/api/me/canvases",
+      "body": null,
+      "headers": {
+        "x-narra-canvas-run": null
+      }
+    },
+    {
+      "owner": "fixture-owner-a",
+      "method": "GET",
+      "path": "/api/me/canvases/c76f1506-22fe-4bbf-9709-684ccf99dfca",
+      "body": null,
+      "headers": {
+        "x-narra-canvas-run": null
+      }
+    },
+    {
+      "owner": "fixture-owner-a",
+      "method": "POST",
+      "path": "/api/me/canvas-runtime/resolve",
+      "body": {
+        "canvasId": "c76f1506-22fe-4bbf-9709-684ccf99dfca",
+        "runBindings": [],
+        "runIds": [],
+        "jobIds": [],
+        "imageIds": [],
+        "assetIds": [
+          "asset-45f934e5-b1c0-40f9-954d-cdba08fa5016",
+          "asset-21e0212a-2c1f-440e-bd5d-6862bd4fb7e0"
+        ]
+      },
+      "headers": {
+        "x-narra-canvas-run": null
+      }
+    },
+    {
+      "owner": "fixture-owner-a",
+      "method": "GET",
+      "path": "/api/me/canvas-assets/asset-21e0212a-2c1f-440e-bd5d-6862bd4fb7e0",
+      "body": null,
+      "headers": {
+        "x-narra-canvas-run": null
+      }
+    },
+    {
+      "owner": "fixture-owner-a",
+      "method": "GET",
+      "path": "/api/me/canvas-assets/asset-45f934e5-b1c0-40f9-954d-cdba08fa5016",
+      "body": null,
+      "headers": {
+        "x-narra-canvas-run": null
+      }
+    },
+    {
+      "owner": "fixture-owner-a",
+      "method": "POST",
+      "path": "/api/generate",
+      "body": {
+        "canvasRun": {
+          "canvasId": "c76f1506-22fe-4bbf-9709-684ccf99dfca",
+          "nodeId": "81dc4992-2390-4e82-8225-a0e46854e001",
+          "runId": "02ba2343-01fb-4486-ae43-8fe561c40c3b",
+          "input": {
+            "prompt": {
+              "sourceNodeId": "ec1b0275-35c0-42f5-98ed-2147c2964f4b",
+              "text": "Captured cloud prompt"
+            },
+            "references": [
+              {
+                "sourceNodeId": "ba38afe1-2922-459d-963e-2d12a45347f0",
+                "ordinal": 1,
+                "kind": "imported",
+                "assetId": "asset-21e0212a-2c1f-440e-bd5d-6862bd4fb7e0"
+              },
+              {
+                "sourceNodeId": "140866a5-dbee-44f5-ac9a-7d264eb519d7",
+                "ordinal": 2,
+                "kind": "imported",
+                "assetId": "asset-45f934e5-b1c0-40f9-954d-cdba08fa5016"
+              }
+            ]
+          },
+          "parameters": {
+            "providerMode": "built_in",
+            "channelId": "channel-account",
+            "model": "image-account-default",
+            "size": "auto",
+            "quality": "auto",
+            "outputFormat": "png",
+            "outputCompression": null,
+            "moderation": "auto",
+            "count": 1,
+            "negativePrompt": null,
+            "seed": null,
+            "generationType": "image_to_image"
+          }
+        }
+      },
+      "headers": {
+        "x-narra-canvas-run": "1"
+      }
+    },
+    {
+      "owner": "fixture-owner-a",
+      "method": "GET",
+      "path": "/api/me/canvas-assets/asset-45f934e5-b1c0-40f9-954d-cdba08fa5016",
+      "body": null,
+      "headers": {
+        "x-narra-canvas-run": null
+      }
+    },
+    {
+      "owner": "fixture-owner-a",
+      "method": "GET",
+      "path": "/api/me/canvas-assets/asset-21e0212a-2c1f-440e-bd5d-6862bd4fb7e0",
+      "body": null,
+      "headers": {
+        "x-narra-canvas-run": null
+      }
+    },
+    {
+      "owner": "fixture-owner-a",
+      "method": "PUT",
+      "path": "/api/me/canvases/c76f1506-22fe-4bbf-9709-684ccf99dfca/snapshot",
+      "body": {
+        "saveId": "bf57e70b-a3fd-4a3a-9afe-13a63aef2614",
+        "expectedRevision": 3,
+        "scene": {
+          "schemaVersion": 1,
+          "edges": [
+            {
+              "id": "a0e47e26-6503-48ec-88ad-4ff6c087f937",
+              "source": "ec1b0275-35c0-42f5-98ed-2147c2964f4b",
+              "target": "81dc4992-2390-4e82-8225-a0e46854e001",
+              "kind": "prompt-input"
+            },
+            {
+              "id": "13379bde-f114-4062-8016-656f6c71cb22",
+              "source": "140866a5-dbee-44f5-ac9a-7d264eb519d7",
+              "target": "81dc4992-2390-4e82-8225-a0e46854e001",
+              "kind": "image-input",
+              "ordinal": 2
+            },
+            {
+              "id": "a98894cd-ffb2-40d6-a494-27a231f43a7a",
+              "source": "ba38afe1-2922-459d-963e-2d12a45347f0",
+              "target": "81dc4992-2390-4e82-8225-a0e46854e001",
+              "kind": "image-input",
+              "ordinal": 1
+            },
+            {
+              "id": "29087cda-a1c9-4b4b-8366-958687f0339c",
+              "source": "81dc4992-2390-4e82-8225-a0e46854e001",
+              "target": "result:canvas-02ba2343-01fb-4486-ae43-8fe561c40c3b-image-0",
+              "kind": "output-provenance"
+            }
+          ],
+          "viewport": {
+            "x": 388.46183953033267,
+            "y": 14.701565557729964,
+            "zoom": 0.550880626223092
+          },
+          "runBindings": [
+            {
+              "runId": "02ba2343-01fb-4486-ae43-8fe561c40c3b",
+              "nodeId": "81dc4992-2390-4e82-8225-a0e46854e001",
+              "jobId": "canvas-02ba2343-01fb-4486-ae43-8fe561c40c3b",
+              "outputsHandled": true
+            }
+          ],
+          "nodes": [
+            {
+              "id": "ec1b0275-35c0-42f5-98ed-2147c2964f4b",
+              "kind": "prompt",
+              "position": {
+                "x": 50,
+                "y": 55
+              },
+              "text": "Captured cloud prompt"
+            },
+            {
+              "id": "81dc4992-2390-4e82-8225-a0e46854e001",
+              "kind": "generation",
+              "position": {
+                "x": 430,
+                "y": 55
+              },
+              "parameters": {
+                "providerMode": "built_in",
+                "channelId": "channel-account",
+                "model": "image-account-default",
+                "size": "auto",
+                "quality": "auto",
+                "outputFormat": "png",
+                "outputCompression": null,
+                "moderation": "auto",
+                "count": 1,
+                "negativePrompt": null,
+                "seed": null
+              }
+            },
+            {
+              "id": "140866a5-dbee-44f5-ac9a-7d264eb519d7",
+              "kind": "reference",
+              "position": {
+                "x": 50,
+                "y": 415
+              },
+              "source": {
+                "kind": "imported",
+                "assetId": "asset-45f934e5-b1c0-40f9-954d-cdba08fa5016"
+              }
+            },
+            {
+              "id": "ba38afe1-2922-459d-963e-2d12a45347f0",
+              "kind": "reference",
+              "position": {
+                "x": 50,
+                "y": 775
+              },
+              "source": {
+                "kind": "imported",
+                "assetId": "asset-21e0212a-2c1f-440e-bd5d-6862bd4fb7e0"
+              }
+            },
+            {
+              "id": "result:canvas-02ba2343-01fb-4486-ae43-8fe561c40c3b-image-0",
+              "kind": "result",
+              "position": {
+                "x": 810,
+                "y": 55
+              },
+              "jobId": "canvas-02ba2343-01fb-4486-ae43-8fe561c40c3b",
+              "imageId": "canvas-02ba2343-01fb-4486-ae43-8fe561c40c3b-image-0",
+              "runId": "02ba2343-01fb-4486-ae43-8fe561c40c3b"
+            }
+          ]
+        }
+      },
+      "headers": {
+        "x-narra-canvas-run": null
+      }
+    },
+    {
+      "owner": "fixture-owner-a",
+      "method": "GET",
+      "path": "/api/me/canvas-assets/asset-45f934e5-b1c0-40f9-954d-cdba08fa5016",
+      "body": null,
+      "headers": {
+        "x-narra-canvas-run": null
+      }
+    },
+    {
+      "owner": "fixture-owner-a",
+      "method": "GET",
+      "path": "/api/me/canvas-assets/asset-21e0212a-2c1f-440e-bd5d-6862bd4fb7e0",
+      "body": null,
+      "headers": {
+        "x-narra-canvas-run": null
+      }
+    },
+    {
+      "owner": "fixture-owner-a",
+      "method": "PUT",
+      "path": "/api/me/canvases/c76f1506-22fe-4bbf-9709-684ccf99dfca/snapshot",
+      "body": {
+        "saveId": "8958b1b8-1be1-42fb-8acf-dab1e5de4eba",
+        "expectedRevision": 3,
+        "scene": {
+          "schemaVersion": 1,
+          "edges": [
+            {
+              "id": "a0e47e26-6503-48ec-88ad-4ff6c087f937",
+              "source": "ec1b0275-35c0-42f5-98ed-2147c2964f4b",
+              "target": "81dc4992-2390-4e82-8225-a0e46854e001",
+              "kind": "prompt-input"
+            }
+          ],
+          "viewport": {
+            "x": 388.46183953033267,
+            "y": 14.701565557729964,
+            "zoom": 0.550880626223092
+          },
+          "runBindings": [],
+          "nodes": [
+            {
+              "id": "ec1b0275-35c0-42f5-98ed-2147c2964f4b",
+              "kind": "prompt",
+              "position": {
+                "x": 50,
+                "y": 55
+              },
+              "text": "Newer local prompt during Save"
+            },
+            {
+              "id": "81dc4992-2390-4e82-8225-a0e46854e001",
+              "kind": "generation",
+              "position": {
+                "x": 430,
+                "y": 55
+              },
+              "parameters": {
+                "providerMode": "built_in",
+                "channelId": "channel-account",
+                "model": "image-account-default",
+                "size": "auto",
+                "quality": "auto",
+                "outputFormat": "png",
+                "outputCompression": null,
+                "moderation": "auto",
+                "count": 1,
+                "negativePrompt": null,
+                "seed": null
+              }
+            },
+            {
+              "id": "140866a5-dbee-44f5-ac9a-7d264eb519d7",
+              "kind": "reference",
+              "position": {
+                "x": 50,
+                "y": 415
+              },
+              "source": {
+                "kind": "imported",
+                "assetId": "asset-45f934e5-b1c0-40f9-954d-cdba08fa5016"
+              }
+            },
+            {
+              "id": "ba38afe1-2922-459d-963e-2d12a45347f0",
+              "kind": "reference",
+              "position": {
+                "x": 50,
+                "y": 775
+              },
+              "source": {
+                "kind": "imported",
+                "assetId": "asset-21e0212a-2c1f-440e-bd5d-6862bd4fb7e0"
+              }
+            }
+          ]
+        }
+      },
+      "headers": {
+        "x-narra-canvas-run": null
+      }
+    },
+    {
+      "owner": "fixture-owner-a",
+      "method": "GET",
+      "path": "/api/me/canvases/c76f1506-22fe-4bbf-9709-684ccf99dfca",
+      "body": null,
+      "headers": {
+        "x-narra-canvas-run": null
+      }
+    },
+    {
+      "owner": "fixture-owner-a",
+      "method": "POST",
+      "path": "/api/me/canvas-runtime/resolve",
+      "body": {
+        "canvasId": "c76f1506-22fe-4bbf-9709-684ccf99dfca",
+        "runBindings": [
+          {
+            "runId": "02ba2343-01fb-4486-ae43-8fe561c40c3b",
+            "nodeId": "81dc4992-2390-4e82-8225-a0e46854e001",
+            "jobId": "canvas-02ba2343-01fb-4486-ae43-8fe561c40c3b",
+            "outputsHandled": true
+          }
+        ],
+        "runIds": [],
+        "jobIds": [
+          "canvas-02ba2343-01fb-4486-ae43-8fe561c40c3b"
+        ],
+        "imageIds": [
+          "canvas-02ba2343-01fb-4486-ae43-8fe561c40c3b-image-0"
+        ],
+        "assetIds": [
+          "asset-45f934e5-b1c0-40f9-954d-cdba08fa5016",
+          "asset-21e0212a-2c1f-440e-bd5d-6862bd4fb7e0"
+        ]
+      },
+      "headers": {
+        "x-narra-canvas-run": null
+      }
+    },
+    {
+      "owner": "fixture-owner-a",
+      "method": "GET",
+      "path": "/api/me/canvas-assets/asset-21e0212a-2c1f-440e-bd5d-6862bd4fb7e0",
+      "body": null,
+      "headers": {
+        "x-narra-canvas-run": null
+      }
+    },
+    {
+      "owner": "fixture-owner-a",
+      "method": "GET",
+      "path": "/api/me/canvas-assets/asset-45f934e5-b1c0-40f9-954d-cdba08fa5016",
+      "body": null,
+      "headers": {
+        "x-narra-canvas-run": null
+      }
+    },
+    {
+      "owner": "fixture-owner-a",
+      "method": "POST",
+      "path": "/api/generate",
+      "body": {
+        "canvasRun": {
+          "canvasId": "c76f1506-22fe-4bbf-9709-684ccf99dfca",
+          "nodeId": "81dc4992-2390-4e82-8225-a0e46854e001",
+          "runId": "ba92c483-cb35-4eae-8570-736ecbe69b4f",
+          "input": {
+            "prompt": {
+              "sourceNodeId": "ec1b0275-35c0-42f5-98ed-2147c2964f4b",
+              "text": "Captured cloud prompt"
+            },
+            "references": [
+              {
+                "sourceNodeId": "ba38afe1-2922-459d-963e-2d12a45347f0",
+                "ordinal": 1,
+                "kind": "imported",
+                "assetId": "asset-21e0212a-2c1f-440e-bd5d-6862bd4fb7e0"
+              },
+              {
+                "sourceNodeId": "140866a5-dbee-44f5-ac9a-7d264eb519d7",
+                "ordinal": 2,
+                "kind": "imported",
+                "assetId": "asset-45f934e5-b1c0-40f9-954d-cdba08fa5016"
+              }
+            ]
+          },
+          "parameters": {
+            "providerMode": "built_in",
+            "channelId": "channel-account",
+            "model": "image-account-default",
+            "size": "auto",
+            "quality": "auto",
+            "outputFormat": "png",
+            "outputCompression": null,
+            "moderation": "auto",
+            "count": 1,
+            "negativePrompt": null,
+            "seed": null,
+            "generationType": "image_to_image"
+          }
+        }
+      },
+      "headers": {
+        "x-narra-canvas-run": "1"
+      }
+    }
+  ]
+}

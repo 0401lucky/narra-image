@@ -1,0 +1,696 @@
+[
+  {
+    "id": "H5-real-fade-dust-scan-tilt-pause-reduced",
+    "passed": true,
+    "durationMs": 6351,
+    "detail": {
+      "visible": {
+        "before": {
+          "counts": {
+            "frames": 101,
+            "arcs": 3232,
+            "lastArcCount": 32,
+            "perFrame": 32
+          },
+          "active": "true",
+          "dimensions": [
+            550,
+            413
+          ],
+          "rect": {
+            "width": 550,
+            "height": 412.5
+          },
+          "paused": "false",
+          "reduced": "false",
+          "motionActive": "true",
+          "hidden": false,
+          "scan": [
+            {
+              "top": "44.4531px",
+              "opacity": "0.9",
+              "animation": "homepage-module__tSg5yW__scanLine",
+              "state": "running"
+            }
+          ],
+          "frameTransform": "matrix(1, 0, 0, 1, 0, 0)"
+        },
+        "after": {
+          "counts": {
+            "frames": 153,
+            "arcs": 4896,
+            "lastArcCount": 32,
+            "perFrame": 32
+          },
+          "active": "true",
+          "dimensions": [
+            550,
+            413
+          ],
+          "rect": {
+            "width": 550,
+            "height": 412.5
+          },
+          "paused": "false",
+          "reduced": "false",
+          "motionActive": "true",
+          "hidden": false,
+          "scan": [
+            {
+              "top": "78.0938px",
+              "opacity": "0.9",
+              "animation": "homepage-module__tSg5yW__scanLine",
+              "state": "running"
+            }
+          ],
+          "frameTransform": "matrix(1, 0, 0, 1, 0, 0)"
+        }
+      },
+      "scanFirst": {
+        "counts": {
+          "frames": 153,
+          "arcs": 4896,
+          "lastArcCount": 32,
+          "perFrame": 32
+        },
+        "active": "true",
+        "dimensions": [
+          550,
+          413
+        ],
+        "rect": {
+          "width": 550,
+          "height": 412.5
+        },
+        "paused": "false",
+        "reduced": "false",
+        "motionActive": "true",
+        "hidden": false,
+        "scan": [
+          {
+            "top": "78.0938px",
+            "opacity": "0.9",
+            "animation": "homepage-module__tSg5yW__scanLine",
+            "state": "running"
+          }
+        ],
+        "frameTransform": "matrix(1, 0, 0, 1, 0, 0)"
+      },
+      "scanNext": {
+        "counts": {
+          "frames": 218,
+          "arcs": 6976,
+          "lastArcCount": 32,
+          "perFrame": 32
+        },
+        "active": "true",
+        "dimensions": [
+          550,
+          413
+        ],
+        "rect": {
+          "width": 550,
+          "height": 412.5
+        },
+        "paused": "false",
+        "reduced": "false",
+        "motionActive": "true",
+        "hidden": false,
+        "scan": [
+          {
+            "top": "100.719px",
+            "opacity": "0.9",
+            "animation": "homepage-module__tSg5yW__scanLine",
+            "state": "running"
+          }
+        ],
+        "frameTransform": "matrix(1, 0, 0, 1, 0, 0)"
+      },
+      "tilt": {
+        "counts": {
+          "frames": 241,
+          "arcs": 7712,
+          "lastArcCount": 32,
+          "perFrame": 32
+        },
+        "active": "true",
+        "dimensions": [
+          550,
+          413
+        ],
+        "rect": {
+          "width": 553.6104125976562,
+          "height": 417.4544677734375
+        },
+        "paused": "false",
+        "reduced": "false",
+        "motionActive": "true",
+        "hidden": false,
+        "scan": [
+          {
+            "top": "105.391px",
+            "opacity": "0.9",
+            "animation": "homepage-module__tSg5yW__scanLine",
+            "state": "running"
+          }
+        ],
+        "frameTransform": "matrix3d(0.998798, 0.00187773, -0.0489857, 0, 0, 0.999266, 0.0383042, 0, 0.0490217, -0.0382581, 0.998065, 0, 0, 0, 0, 1)"
+      },
+      "fading": {
+        "id": "storybook",
+        "state": "ready",
+        "source": "/marketing/home/lantern-fox-v1.png",
+        "alt": "小狐狸提着暖黄灯笼走过迷雾森林，水彩纸纹中点缀着星光",
+        "natural": [
+          1448,
+          1086
+        ],
+        "attributes": [
+          1448,
+          1086
+        ],
+        "rendered": {
+          "x": 744.61865234375,
+          "y": 204.0294189453125,
+          "width": 568.968994140625,
+          "height": 425.8800048828125,
+          "top": 204.0294189453125,
+          "right": 1313.587646484375,
+          "bottom": 629.909423828125,
+          "left": 744.61865234375
+        },
+        "layout": [
+          550,
+          413
+        ],
+        "objectFit": "cover",
+        "objectPosition": "50% 50%",
+        "complete": true,
+        "selected": [
+          "绘本叙事"
+        ],
+        "prompt": "提着暖黄煤油灯穿过迷雾森林的小狐狸，宫崎骏式温暖手绘水彩质感，星光点缀夜空，细腻纸张纹理",
+        "typed": "提着",
+        "frameText": "Narra Studio · 叙事光影画布胶片光影绘本叙事东方美学风格示意 · 手绘水彩肌理局部补光 · 示意视觉语言 · StyleWarm Fable · 绘本笔触固定示意图 · 非模型参数4:3 · 叙事示意画幅复用画面灵感提着暖黄煤油灯穿过迷雾森林的小狐狸，宫崎骏式温暖手绘水彩质感，星光点缀夜空，细腻纸张纹理提着",
+        "opacity": 0.520835,
+        "animation": "homepage-module__tSg5yW__sceneAppear",
+        "animationState": "running",
+        "viewport": {
+          "width": 556.7013549804688,
+          "height": 416.70953369140625,
+          "left": 750.8760375976562,
+          "right": 1307.577392578125
+        },
+        "overflow": false
+      },
+      "paused": {
+        "before": {
+          "counts": {
+            "frames": 399,
+            "arcs": 12768,
+            "lastArcCount": 32,
+            "perFrame": 32
+          },
+          "active": "false",
+          "dimensions": [
+            550,
+            413
+          ],
+          "rect": {
+            "width": 550,
+            "height": 412.5
+          },
+          "paused": "true",
+          "reduced": "false",
+          "motionActive": "false",
+          "hidden": false,
+          "scan": [],
+          "frameTransform": "matrix3d(1, 4.99971e-20, -1.80015e-10, 0, 0, 1, 2.77738e-10, 0, 1.80015e-10, -2.77738e-10, 1, 0, 0, 0, 0, 1)"
+        },
+        "after": {
+          "counts": {
+            "frames": 399,
+            "arcs": 12768,
+            "lastArcCount": 32,
+            "perFrame": 32
+          },
+          "active": "false",
+          "dimensions": [
+            550,
+            413
+          ],
+          "rect": {
+            "width": 550,
+            "height": 412.5
+          },
+          "paused": "true",
+          "reduced": "false",
+          "motionActive": "false",
+          "hidden": false,
+          "scan": [],
+          "frameTransform": "none"
+        }
+      },
+      "resumed": {
+        "before": {
+          "counts": {
+            "frames": 427,
+            "arcs": 13664,
+            "lastArcCount": 32,
+            "perFrame": 32
+          },
+          "active": "true",
+          "dimensions": [
+            550,
+            413
+          ],
+          "rect": {
+            "width": 550,
+            "height": 412.5
+          },
+          "paused": "false",
+          "reduced": "false",
+          "motionActive": "true",
+          "hidden": false,
+          "scan": [
+            {
+              "top": "8.625px",
+              "opacity": "0.385593",
+              "animation": "homepage-module__tSg5yW__scanLine",
+              "state": "running"
+            }
+          ],
+          "frameTransform": "matrix(1, 0, 0, 1, 0, 0)"
+        },
+        "after": {
+          "counts": {
+            "frames": 479,
+            "arcs": 15328,
+            "lastArcCount": 32,
+            "perFrame": 32
+          },
+          "active": "true",
+          "dimensions": [
+            550,
+            413
+          ],
+          "rect": {
+            "width": 550,
+            "height": 412.5
+          },
+          "paused": "false",
+          "reduced": "false",
+          "motionActive": "true",
+          "hidden": false,
+          "scan": [
+            {
+              "top": "20.9062px",
+              "opacity": "0.899486",
+              "animation": "homepage-module__tSg5yW__scanLine",
+              "state": "running"
+            }
+          ],
+          "frameTransform": "matrix(1, 0, 0, 1, 0, 0)"
+        }
+      },
+      "reduced": {
+        "before": {
+          "counts": {
+            "frames": 479,
+            "arcs": 15328,
+            "lastArcCount": 32,
+            "perFrame": 32
+          },
+          "active": "false",
+          "dimensions": [
+            550,
+            413
+          ],
+          "rect": {
+            "width": 550,
+            "height": 412.5
+          },
+          "paused": "false",
+          "reduced": "true",
+          "motionActive": "false",
+          "hidden": false,
+          "scan": [],
+          "frameTransform": "none"
+        },
+        "after": {
+          "counts": {
+            "frames": 479,
+            "arcs": 15328,
+            "lastArcCount": 32,
+            "perFrame": 32
+          },
+          "active": "false",
+          "dimensions": [
+            550,
+            413
+          ],
+          "rect": {
+            "width": 550,
+            "height": 412.5
+          },
+          "paused": "false",
+          "reduced": "true",
+          "motionActive": "false",
+          "hidden": false,
+          "scan": [],
+          "frameTransform": "none"
+        }
+      },
+      "reducedScene": {
+        "id": "oriental",
+        "state": "ready",
+        "source": "/marketing/home/jiangnan-rain-v2.png",
+        "alt": "江南雨巷的檐角滴着雨，远处暖黄灯笼倒映在青石板上",
+        "natural": [
+          1448,
+          1086
+        ],
+        "attributes": [
+          1448,
+          1086
+        ],
+        "rendered": {
+          "x": 757,
+          "y": 209,
+          "width": 550,
+          "height": 412.5,
+          "top": 209,
+          "right": 1307,
+          "bottom": 621.5,
+          "left": 757
+        },
+        "layout": [
+          550,
+          413
+        ],
+        "objectFit": "cover",
+        "objectPosition": "50% 50%",
+        "complete": true,
+        "selected": [
+          "东方美学"
+        ],
+        "prompt": "江南雨巷檐角滴落的雨水，远处暖黄灯笼倒映在青石板水面，宋代美学克制留白，电影级冷暖色调对比",
+        "typed": "江南雨巷檐角滴落的雨水，远处暖黄灯笼倒映在青石板水面，宋代美学克制留白，电影级冷暖色调对比",
+        "frameText": "Narra Studio · 叙事光影画布胶片光影绘本叙事东方美学风格示意 · 东方水墨留白局部补光 · 示意视觉语言 · StyleOriental Ink · 东方韵味固定示意图 · 非模型参数4:3 · 叙事示意画幅复用画面灵感江南雨巷檐角滴落的雨水，远处暖黄灯笼倒映在青石板水面，宋代美学克制留白，电影级冷暖色调对比江南雨巷檐角滴落的雨水，远处暖黄灯笼倒映在青石板水面，宋代美学克制留白，电影级冷暖色调对比",
+        "opacity": 1,
+        "animation": "none",
+        "animationState": "running",
+        "viewport": {
+          "width": 550,
+          "height": 412.5,
+          "left": 757,
+          "right": 1307
+        },
+        "overflow": false
+      }
+    }
+  },
+  {
+    "id": "H6-real-dust-offscreen-background-unmount-remount",
+    "passed": true,
+    "durationMs": 5399,
+    "detail": {
+      "offscreen": {
+        "before": {
+          "counts": {
+            "frames": 108,
+            "arcs": 3456,
+            "lastArcCount": 32,
+            "perFrame": 32
+          },
+          "active": "false",
+          "dimensions": [
+            550,
+            413
+          ],
+          "rect": {
+            "width": 550,
+            "height": 412.5
+          },
+          "paused": "false",
+          "reduced": "false",
+          "motionActive": "true",
+          "hidden": false,
+          "scan": [
+            {
+              "top": "81.4375px",
+              "opacity": "0.9",
+              "animation": "homepage-module__tSg5yW__scanLine",
+              "state": "paused"
+            }
+          ],
+          "frameTransform": "matrix(1, 0, 0, 1, 0, 0)"
+        },
+        "after": {
+          "counts": {
+            "frames": 108,
+            "arcs": 3456,
+            "lastArcCount": 32,
+            "perFrame": 32
+          },
+          "active": "false",
+          "dimensions": [
+            550,
+            413
+          ],
+          "rect": {
+            "width": 550,
+            "height": 412.5
+          },
+          "paused": "false",
+          "reduced": "false",
+          "motionActive": "true",
+          "hidden": false,
+          "scan": [
+            {
+              "top": "88.8906px",
+              "opacity": "0.9",
+              "animation": "homepage-module__tSg5yW__scanLine",
+              "state": "paused"
+            }
+          ],
+          "frameTransform": "matrix(1, 0, 0, 1, 0, 0)"
+        }
+      },
+      "hidden": {
+        "before": {
+          "counts": {
+            "frames": 164,
+            "arcs": 5248,
+            "lastArcCount": 32,
+            "perFrame": 32
+          },
+          "active": "false",
+          "dimensions": [
+            550,
+            413
+          ],
+          "rect": {
+            "width": 550,
+            "height": 412.5
+          },
+          "paused": "false",
+          "reduced": "false",
+          "motionActive": "false",
+          "hidden": true,
+          "scan": [
+            {
+              "top": "105.203px",
+              "opacity": "0.9",
+              "animation": "homepage-module__tSg5yW__scanLine",
+              "state": "paused"
+            }
+          ],
+          "frameTransform": "matrix(1, 0, 0, 1, 0, 0)"
+        },
+        "after": {
+          "counts": {
+            "frames": 164,
+            "arcs": 5248,
+            "lastArcCount": 32,
+            "perFrame": 32
+          },
+          "active": "false",
+          "dimensions": [
+            550,
+            413
+          ],
+          "rect": {
+            "width": 550,
+            "height": 412.5
+          },
+          "paused": "false",
+          "reduced": "false",
+          "motionActive": "false",
+          "hidden": true,
+          "scan": [
+            {
+              "top": "105.203px",
+              "opacity": "0.9",
+              "animation": "homepage-module__tSg5yW__scanLine",
+              "state": "paused"
+            }
+          ],
+          "frameTransform": "matrix(1, 0, 0, 1, 0, 0)"
+        }
+      },
+      "foreground": {
+        "before": {
+          "counts": {
+            "frames": 166,
+            "arcs": 5312,
+            "lastArcCount": 32,
+            "perFrame": 32
+          },
+          "active": "true",
+          "dimensions": [
+            550,
+            413
+          ],
+          "rect": {
+            "width": 550,
+            "height": 412.5
+          },
+          "paused": "false",
+          "reduced": "false",
+          "motionActive": "true",
+          "hidden": false,
+          "scan": [
+            {
+              "top": "105.203px",
+              "opacity": "0.9",
+              "animation": "homepage-module__tSg5yW__scanLine",
+              "state": "running"
+            }
+          ],
+          "frameTransform": "matrix(1, 0, 0, 1, 0, 0)"
+        },
+        "after": {
+          "counts": {
+            "frames": 213,
+            "arcs": 6816,
+            "lastArcCount": 32,
+            "perFrame": 32
+          },
+          "active": "true",
+          "dimensions": [
+            550,
+            413
+          ],
+          "rect": {
+            "width": 550,
+            "height": 412.5
+          },
+          "paused": "false",
+          "reduced": "false",
+          "motionActive": "true",
+          "hidden": false,
+          "scan": [
+            {
+              "top": "112.125px",
+              "opacity": "0.9",
+              "animation": "homepage-module__tSg5yW__scanLine",
+              "state": "running"
+            }
+          ],
+          "frameTransform": "matrix(1, 0, 0, 1, 0, 0)"
+        }
+      },
+      "unmounted": {
+        "before": {
+          "counts": {
+            "frames": 255,
+            "arcs": 8160,
+            "lastArcCount": 32,
+            "perFrame": 32
+          },
+          "dimensions": null,
+          "rect": null,
+          "hidden": false,
+          "scan": [],
+          "frameTransform": null
+        },
+        "after": {
+          "counts": {
+            "frames": 255,
+            "arcs": 8160,
+            "lastArcCount": 32,
+            "perFrame": 32
+          },
+          "dimensions": null,
+          "rect": null,
+          "hidden": false,
+          "scan": [],
+          "frameTransform": null
+        }
+      },
+      "remounted": {
+        "before": {
+          "counts": {
+            "frames": 258,
+            "arcs": 8256,
+            "lastArcCount": 32,
+            "perFrame": 32
+          },
+          "active": "true",
+          "dimensions": [
+            550,
+            413
+          ],
+          "rect": {
+            "width": 550,
+            "height": 412.5
+          },
+          "paused": "false",
+          "reduced": "false",
+          "motionActive": "true",
+          "hidden": false,
+          "scan": [
+            {
+              "top": "7.625px",
+              "opacity": "0.0169922",
+              "animation": "homepage-module__tSg5yW__scanLine",
+              "state": "running"
+            }
+          ],
+          "frameTransform": "matrix(1, 0, 0, 1, 0, 0)"
+        },
+        "after": {
+          "counts": {
+            "frames": 266,
+            "arcs": 8512,
+            "lastArcCount": 32,
+            "perFrame": 32
+          },
+          "active": "true",
+          "dimensions": [
+            550,
+            413
+          ],
+          "rect": {
+            "width": 550,
+            "height": 412.5
+          },
+          "paused": "false",
+          "reduced": "false",
+          "motionActive": "true",
+          "hidden": false,
+          "scan": [
+            {
+              "top": "8.17188px",
+              "opacity": "0.208218",
+              "animation": "homepage-module__tSg5yW__scanLine",
+              "state": "running"
+            }
+          ],
+          "frameTransform": "matrix(1, 0, 0, 1, 0, 0)"
+        }
+      }
+    }
+  }
+]

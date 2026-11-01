@@ -1,0 +1,50 @@
+{
+  "src/app/page.tsx": {
+    "sha256": "f840b87dd8c1049997111060705be123333466fe3077490441d9bce50845352c",
+    "bytes": 19181
+  },
+  "src/app/layout.tsx": {
+    "sha256": "d478c33a13d8e8d77c110c67b00b88db7dd2c9db3c598ccebb872d875c77be26",
+    "bytes": 819
+  },
+  "src/app/globals.css": {
+    "sha256": "e870d5b65cdddb382509011d1ef1bae5797248732baa392572d6e5124ea1a111",
+    "bytes": 20836
+  },
+  "src/components/marketing/site-header.tsx": {
+    "sha256": "5199a1cd49fda36704b701c6a742c25dbc8fef95233f5824a95e85d76d77a68c",
+    "bytes": 8255
+  },
+  "src/components/marketing/header-shell.tsx": {
+    "sha256": "e2f1c88dd32cff8e4260039fb59c58d0c735a9323eb0c7fa1dc3c4ee9d33234b",
+    "bytes": 2076
+  },
+  "src/components/marketing/mobile-nav.tsx": {
+    "sha256": "ceec3d8cd59ebf60f59553e56c10be4671c9916af742499059d4b02ccecda632",
+    "bytes": 10051
+  },
+  "src/components/marketing/featured-gallery.tsx": {
+    "sha256": "551199bfd52962f1827b3cb35505f1219398b20f33a8c5c651e6ffafb1ddc30b",
+    "bytes": 11247
+  },
+  "src/app/create/page.tsx": {
+    "sha256": "fd098da618e00b7de39f92aec6339e1a98f85c65b8204818261f89162d8963f9",
+    "bytes": 3902
+  },
+  "src/app/works/page.tsx": {
+    "sha256": "a0534baed067c3f9c85d78302d661c19dbeb42c4aecc17fe35ee4ae46d8e3dbd",
+    "bytes": 3516
+  },
+  "src/app/settings/page.tsx": {
+    "sha256": "09c85768157f66fa807d4c239815296db46953e81494a4045d455890c6f9b693",
+    "bytes": 2326
+  },
+  "src/app/admin/page.tsx": {
+    "sha256": "d17a559f4b883357022816fc5e42995b3c5f700fb25bc6492062f73e8fbaa15d",
+    "bytes": 6471
+  },
+  "src/app/admin/layout.tsx": {
+    "sha256": "8948d0d6e23326a208f34d2f98f69bb7ac7741a4ad43c58567f70a9b10129481",
+    "bytes": 551
+  }
+}

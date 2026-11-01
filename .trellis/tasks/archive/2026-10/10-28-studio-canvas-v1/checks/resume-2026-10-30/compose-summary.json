@@ -1,0 +1,148 @@
+{
+  "records": [
+    {
+      "label": "Inspect active Docker context",
+      "args": [
+        "context",
+        "show"
+      ],
+      "code": 0,
+      "durationMs": 73
+    },
+    {
+      "label": "Inspect Docker context endpoint",
+      "args": [
+        "context",
+        "inspect",
+        "desktop-linux",
+        "--format",
+        "{{json .Endpoints.docker.Host}}"
+      ],
+      "code": 0,
+      "durationMs": 67
+    },
+    {
+      "label": "Read installed Compose plugin metadata",
+      "args": [
+        "--host",
+        "npipe:////./pipe/dockerDesktopLinuxEngine",
+        "info",
+        "--format",
+        "{{json .ClientInfo.Plugins}}"
+      ],
+      "code": 0,
+      "durationMs": 314
+    },
+    {
+      "label": "E2E Compose disabled",
+      "args": [
+        "--host",
+        "npipe:////./pipe/dockerDesktopLinuxEngine",
+        "--config",
+        "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-e2e-vgHQDV\\docker",
+        "compose",
+        "--env-file",
+        "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-e2e-vgHQDV\\empty.env",
+        "--project-directory",
+        "E:/code/narra-image",
+        "-f",
+        "E:\\code\\narra-image\\docker-compose.e2e.yml",
+        "--project-name",
+        "narra-e2e-disabled-5ca7fe61bb0c31ea-d9373e47",
+        "config",
+        "--quiet"
+      ],
+      "code": 0,
+      "durationMs": 175
+    },
+    {
+      "label": "E2E Compose enabled",
+      "args": [
+        "--host",
+        "npipe:////./pipe/dockerDesktopLinuxEngine",
+        "--config",
+        "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-e2e-vgHQDV\\docker",
+        "compose",
+        "--env-file",
+        "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-e2e-vgHQDV\\empty.env",
+        "--project-directory",
+        "E:/code/narra-image",
+        "-f",
+        "E:\\code\\narra-image\\docker-compose.e2e.yml",
+        "--project-name",
+        "narra-e2e-enabled-5ca7fe61bb0c31ea-83c4ce40",
+        "config",
+        "--quiet"
+      ],
+      "code": 0,
+      "durationMs": 173
+    },
+    {
+      "label": "E2E Compose mismatch",
+      "args": [
+        "--host",
+        "npipe:////./pipe/dockerDesktopLinuxEngine",
+        "--config",
+        "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-e2e-vgHQDV\\docker",
+        "compose",
+        "--env-file",
+        "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-e2e-vgHQDV\\empty.env",
+        "--project-directory",
+        "E:/code/narra-image",
+        "-f",
+        "E:\\code\\narra-image\\docker-compose.e2e.yml",
+        "--project-name",
+        "narra-e2e-mismatch-5ca7fe61bb0c31ea-b9b69880",
+        "config",
+        "--quiet"
+      ],
+      "code": 0,
+      "durationMs": 187
+    },
+    {
+      "label": "Release Compose canvas=false",
+      "args": [
+        "--host",
+        "npipe:////./pipe/dockerDesktopLinuxEngine",
+        "--config",
+        "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-e2e-vgHQDV\\docker",
+        "compose",
+        "--env-file",
+        "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-e2e-vgHQDV\\empty.env",
+        "--project-directory",
+        "E:/code/narra-image",
+        "-f",
+        "E:\\code\\narra-image\\docker-compose.yml",
+        "config",
+        "--quiet"
+      ],
+      "code": 0,
+      "durationMs": 170
+    },
+    {
+      "label": "Release Compose canvas=true",
+      "args": [
+        "--host",
+        "npipe:////./pipe/dockerDesktopLinuxEngine",
+        "--config",
+        "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-e2e-vgHQDV\\docker",
+        "compose",
+        "--env-file",
+        "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-e2e-vgHQDV\\empty.env",
+        "--project-directory",
+        "E:/code/narra-image",
+        "-f",
+        "E:\\code\\narra-image\\docker-compose.yml",
+        "config",
+        "--quiet"
+      ],
+      "code": 0,
+      "durationMs": 176
+    }
+  ],
+  "dockerResourcesCreated": false,
+  "composeConfigsOnly": true,
+  "pass": true,
+  "endpoint": "npipe:////./pipe/dockerDesktopLinuxEngine",
+  "scratchRemoved": true
+}

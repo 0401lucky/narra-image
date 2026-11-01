@@ -1,0 +1,24 @@
+{
+  "time": "2026-11-01T01:24:57.789994+00:00",
+  "workspace": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\hero-hit-independent-8725c17e\\app",
+  "ownerVerified": true,
+  "unlocked": true,
+  "files": {
+    "cdp.mjs": {
+      "sha256": "42e6d6799f6b175d7442a95981fff6bd5dc01f8e172fc6ce181f521221bc4543",
+      "bytes": 17281
+    },
+    "homepage-checks.mjs": {
+      "sha256": "195c3e9eb978fe59e75d81e405e27ce8072ba34971e96c255c62bcb5ec5456ff",
+      "bytes": 41982
+    },
+    "run-browser.mjs": {
+      "sha256": "5fe1359b6e20d9f6f1b60faf32faf11ca3beef8844b5a9af0731422fc74c7807",
+      "bytes": 27201
+    },
+    "diagnose-gallery-entrance.mjs": {
+      "sha256": "a33a7406757dd68a0676157825a47b7e9e51e3a2cc9c87b3c762f1e067b8f72d",
+      "bytes": 4825
+    }
+  }
+}

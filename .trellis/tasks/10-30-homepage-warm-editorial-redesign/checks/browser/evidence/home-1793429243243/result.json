@@ -1,0 +1,23 @@
+{
+  "runId": "home-1793429243243",
+  "mode": "home",
+  "filter": "^H10-",
+  "evidence": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\browser\\evidence\\home-1793429243243",
+  "app": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\hero-hit-independent-8725c17e\\app",
+  "checks": [
+    {
+      "id": "H10-keyboard-scene-tabs-and-native-copy-all-scenes",
+      "passed": false,
+      "durationMs": 298,
+      "error": "Error: CDP socket closed\n    at WebSocket.<anonymous> (file:///E:/code/narra-image/.trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/browser/cdp.mjs:43:98)\n    at [nodejs.internal.kHybridDispatch] (node:internal/event_target:845:20)\n    at WebSocket.dispatchEvent (node:internal/event_target:778:26)\n    at fireEvent (node:internal/deps/undici/undici:12652:14)\n    at #onSocketClose (node:internal/deps/undici/undici:13911:9)\n    at Socket.onSocketClose (node:internal/deps/undici/undici:13611:72)\n    at Socket.emit (node:events:520:35)\n    at TCP.<anonymous> (node:net:346:12)"
+    }
+  ],
+  "passed": false,
+  "passedScope": "Executable checks only; unresolved acceptance is separate and never a passing navigation case.",
+  "unresolvedAcceptance": [],
+  "limitations": [
+    "Real Next/React/Chromium with synthetic DB only; not live DB/Worker/provider E2E.",
+    "Desktop Chrome CDP emulates viewport/touch; not physical mobile/native IME.",
+    "Local installed Node is not pinned Node24.22.1."
+  ]
+}

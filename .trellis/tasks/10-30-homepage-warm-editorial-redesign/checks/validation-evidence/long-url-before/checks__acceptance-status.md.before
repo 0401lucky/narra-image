@@ -1,0 +1,117 @@
+# Implementation Acceptance Status
+
+## Current Revision
+
+As of 2026-11-01, the three accepted original 1448x1086 PNGs, tilted-hero
+copy correction and phone image-before-prompt composition are verified.
+The newly demonstrated reveal-cleanup race is fixed with guarded scalar
+Motion updates. Native keyboard and exact-fraction hover helpers are
+calibrated with positive and negative ordinary-control checks.
+
+The frozen 807-input revision passes 138 files / 1633 non-DB tests, lint,
+types, offline installed Prisma generation and the unmodified production
+build. The full real-Next/synthetic-DB browser matrix passes **88/88 executable
+checks**, including the new native reveal-interruption check. Two oversized
+Unicode URL failures remain separate; they are not successful navigation.
+
+The independent reviewers confirmed the new source/helper correction, but
+provider quota interrupted the last reviewer's full final report. The
+coordinator audited exact evidence, remaining source deltas and screenshots;
+this does not impersonate an independent final sign-off. See
+`final-continuation-review.md` for attribution and the remaining review gate.
+
+Task status remains `in_progress`. No staging, commit, push, deployment or
+archive is authorized. Earlier status records remain byte-for-byte in
+`validation-evidence/browser-resume-records/` and
+`validation-evidence/resume-01a190d3-records/`.
+
+## Remaining Product Decision And Verification Limits
+
+1. The existing query-string prefill cannot carry every 8000-unit Unicode
+   prompt. ASCII 8000/8001 succeeds with the existing 8000-unit slice; 8000
+   Chinese units encode to 72,015 request-target bytes and return HTTP 431;
+   the tested emoji input encodes to 56,019 bytes and also returns 431.
+   An explicit oversized-link/manual-copy fallback at the gallery entry is
+   proposed but not approved. No threshold, storage, create/auth/draft or
+   HTTP-limit workaround is implemented.
+2. Local Node is 24.11.1, not pinned 24.22.1. No runtime is downloaded, and
+   local checks do not establish pinned-runtime parity.
+3. Actual Next/React/Chromium with a synthetic DB proves the tested UI and
+   transfer contracts, not live-account/DB/Worker/provider/storage E2E,
+   physical mobile/IME, actual CI or release readiness.
+4. Independent final report/sign-off remains incomplete after a provider
+   quota interruption. Its confirmed source findings and the coordinator's
+   completed receipt/visual audit are recorded separately, not conflated.
+
+## Acceptance Matrix
+
+| AC | Current Evidence | Status |
+| --- | --- | --- |
+| AC1 | Real fonts/images at 320/390/768/1024/1440; coordinator visually compares final desktop/phone frames with the clean reference | Passed within fixture/visual scope |
+| AC2 | Six motion groups, real-image effects, calibrated keyboard/hover and interrupted cascade pass in the final 88-check run | Passed |
+| AC3 | Actual API/account/like/paging/copy contracts pass; oversized remix URL remains unresolved | Partial / long-URL decision pending |
+| AC4 | Empty/error retry, keyboard/touch disclosure and manual copy tests plus actual Next browser checks | Passed |
+| AC5 | Real-Motion queued-render regressions, native interrupted reveal/no replay, pause/reduced/hidden/unmount and rapid-switch checks pass | Passed |
+| AC6 | 185 protected source hashes unchanged; default route baseline and actual navigation comparisons pass | Passed |
+| AC7 | Original bookshop/fox/rain-v2 PNGs, all-scene decode, native tilted/touch/keyboard copies and failure/retry pass | Passed |
+| AC8 | Four-column 4:5 thumbnail grid and centered crop; original/detail preserved | Passed |
+| AC9 | 16-to-72 paging, synchronous command gate, retry/dedup/cap tests and real API browser checks | Passed |
+| AC10 | Positive-only URL payload with no generation/config cloning; long Unicode URL baseline fails | Partial / user decision pending |
+| AC11 | Actual guest login without continuation, return/reselect, saved-canvas/manual-chat and successive selections | Passed |
+| AC12 | Actual page props plus real Next raw HTML and navigation/refresh Flight secret-sentinel checks | Passed |
+| AC13 | Owner/admin controls/data intact, access policy unchanged; raw transfer matrix | Passed |
+| AC14 | Real existing-route footer/header links; no invented policy/status pages | Passed |
+
+## Automated And Browser Evidence
+
+- Current product revision: 138 files / 1633 non-DB tests pass, lint has zero
+  errors and nine baseline warnings, TypeScript passes, installed Prisma
+  generation passes with a diagnostic network block, and the unmodified
+  production Next build passes in 23.086 seconds. DB exclusions are unchanged;
+  no migration, fixture adapter or download enters the production build.
+- These five gates were freshly executed on 2026-11-01, not inferred from old
+  source. `validation-evidence/reveal-final/result.json` retains commands,
+  logs and the complete 807-input manifest. The real-Motion semantic RED
+  (five expected failures / two passing controls) and focused GREEN (19/19)
+  are retained in `validation-evidence/reveal-lifecycle/`.
+- Final browser: `browser/evidence/full-1793496819932/result.json`, 88/88
+  executable checks, including 43 privacy transfers. Wrapper
+  `20261101T013339-script-0a5ab5` exits 0 in 285.735 seconds against 600 seconds.
+  The earlier keyboard, hover and reveal failures remain intact.
+- `validation-evidence/reveal-final-verification/result.json` verifies all
+  current source inputs, 21 browser/fixture helpers, 1808 immutable browser
+  build entries, fixture replacements, guard and pre/post identities. Its
+  `process-cleanup.json` records zero surviving owned processes/locks.
+  The independent final report remains the separate incomplete review gate.
+
+## Verified Privacy Slice
+
+- Before fix: 49 unit tests, 16 expected semantic failures and 33 passes.
+- After fix: 10 suites / 99 tests pass; actual outgoing client props retain only
+  the 11 allowed public fields. Hidden positive and negative prompts are null;
+  internal management fields never cross the non-owner boundary.
+- Actual Next with a synthetic DB-only boundary: 43 / 43 raw transfer checks
+  pass, including 32 visibility/permission combinations and 8 real navigation
+  plus refresh transfers; retained in the final 88/88 combined browser run.
+- The existing Next streaming denial may use transport HTTP 200 with
+  `NEXT_HTTP_ERROR_FALLBACK;404` and noindex. Before/after evidence confirms the
+  existing behavior, with no client detail props or secret sentinels. Do not
+  equate that transport detail with an authorization exception.
+
+## Safety And Test Scope
+
+- `validation-environment.md` documents owned snapshots, OS-essential sanitized
+  child environments, exact public `.env.example` exception, independent
+  dependency copies, generated outputs, deadlines and cleanup. Eight final
+  safety self-tests pass. A task-preload `fs.exists` custom-promisification bug
+  was fixed without weakening dotenv rules; red/green evidence is preserved.
+  No real dotenv is read.
+- Source ownership starts at `implementation-baseline.json`; each continuation
+  preserves a fresh byte-identity baseline. Create/canvas, root layout, global
+  styles, package/lock/schema/config and service access edits belonging to
+  other work are preserved, not reset or attributed to this continuation.
+- Final full-suite/build results supplement, rather than substitute for,
+  per-slice evidence and independent review.
+- Browser evidence uses actual Next/React/Chromium with deterministic synthetic
+  service data. It is not live-account/database/Worker/provider/storage E2E,
+  physical iOS/Android testing or production release approval.

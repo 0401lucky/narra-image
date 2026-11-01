@@ -1,0 +1,301 @@
+import assert from "node:assert/strict";
+import { writeFile } from "node:fs/promises";
+
+// Input.dispatchKeyEvent uses a bitmask: Shift is 8, not Alt's 1.
+export const CDP_MODIFIERS = Object.freeze({ Alt: 1, Control: 2, Meta: 4, Shift: 8 });
+
+export const delay = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
+
+export async function waitFor(operation, { timeout = 15000, message = "Condition did not become true" } = {}) {
+  const deadline = Date.now() + timeout;
+  let lastError;
+  while (Date.now() < deadline) {
+    try { const value = await operation(); if (value) return value; } catch (error) { lastError = error; }
+    await delay(100);
+  }
+  throw new Error(message, { cause: lastError });
+}
+
+export class Cdp {
+  constructor(url) {
+    this.socket = new WebSocket(url);
+    this.nextId = 0;
+    this.pending = new Map();
+    this.listeners = new Map();
+    this.ready = new Promise((resolve, reject) => {
+      this.socket.addEventListener("open", resolve, { once: true });
+      this.socket.addEventListener("error", reject, { once: true });
+    });
+    this.socket.addEventListener("message", ({ data }) => {
+      const payload = JSON.parse(data);
+      if (payload.id) {
+        const pending = this.pending.get(payload.id);
+        if (!pending) return;
+        this.pending.delete(payload.id);
+        clearTimeout(pending.timer);
+        if (payload.error) pending.reject(new Error(`${pending.method}: ${JSON.stringify(payload.error)}`));
+        else pending.resolve(payload.result);
+      } else {
+        for (const listener of this.listeners.get(payload.method) ?? []) listener(payload.params);
+      }
+    });
+    this.socket.addEventListener("close", () => {
+      for (const pending of this.pending.values()) { clearTimeout(pending.timer); pending.reject(new Error("CDP socket closed")); }
+      this.pending.clear();
+    });
+  }
+
+  async send(method, params = {}, timeout = 15000) {
+    await this.ready;
+    const id = ++this.nextId;
+    return new Promise((resolve, reject) => {
+      const timer = setTimeout(() => { this.pending.delete(id); reject(new Error(`CDP timeout: ${method}`)); }, timeout);
+      this.pending.set(id, { resolve, reject, timer, method });
+      this.socket.send(JSON.stringify({ id, method, params }));
+    });
+  }
+
+  on(method, listener) {
+    if (!this.listeners.has(method)) this.listeners.set(method, new Set());
+    this.listeners.get(method).add(listener);
+    return () => this.listeners.get(method)?.delete(listener);
+  }
+
+  async evaluate(expression) {
+    const result = await this.send("Runtime.evaluate", { expression, returnByValue: true, awaitPromise: true });
+    if (result.exceptionDetails) throw new Error(JSON.stringify(result.exceptionDetails));
+    return result.result.value;
+  }
+
+  close() { this.socket.close(); }
+}
+
+const queryExpression = (selector, text = null, index = 0) => `(() => {
+  const candidates = [...document.querySelectorAll(${JSON.stringify(selector)})].filter((node) => ${text === null ? "true" : `node.textContent?.includes(${JSON.stringify(text)})`});
+  const visible = candidates.filter((node) => { const style = getComputedStyle(node); const rect = node.getBoundingClientRect(); return rect.width > 0 && rect.height > 0 && style.visibility !== 'hidden' && style.display !== 'none'; });
+  return visible[${index}] ?? null;
+})()`;
+
+export class BrowserPage {
+  constructor(cdp, origin) {
+    this.cdp = cdp;
+    this.origin = origin;
+    this.requests = [];
+    this.errors = [];
+    this.externalRequests = [];
+    this.responses = [];
+    this.bodyTasks = new Set();
+    this.responseInfo = new Map();
+    this.fulfillments = new Map();
+    this.delayedRequests = new Map();
+    this.delayTimers = new Set();
+    this.delayDeliveries = [];
+    this.pointApproaches = [];
+    this.width = 1440;
+    this.height = 1000;
+  }
+
+  async initialize() {
+    const { cdp } = this;
+    await Promise.all([cdp.send("Page.enable"), cdp.send("Runtime.enable"), cdp.send("Network.enable", { maxTotalBufferSize: 32_000_000, maxResourceBufferSize: 16_000_000 }), cdp.send("DOM.enable"), cdp.send("CSS.enable")]);
+    await cdp.send("Page.addScriptToEvaluateOnNewDocument", { source: `(()=>{
+      window.__nativeInputTrace=[];
+      for(const type of ['pointerdown','pointerup','click'])document.addEventListener(type,event=>{
+        const node=event.target,frame=document.querySelector('[data-home-hero-frame]');
+        window.__nativeInputTrace.push({type,at:performance.now(),x:event.clientX,y:event.clientY,trusted:event.isTrusted,pointerType:event.pointerType,detail:event.detail,heroCopy:node?.closest('button')===frame?.querySelector('[role="tabpanel"] > div:last-child button'),target:node?.outerHTML?.slice(0,300),scene:frame?.dataset.sceneId,expanded:node?.closest('[data-gallery-card]')?.querySelector('[data-gallery-disclosure]')?.getAttribute('aria-expanded')});
+        if(window.__nativeInputTrace.length>80)window.__nativeInputTrace.shift();
+      },true);
+    })()` });
+    cdp.on("Runtime.exceptionThrown", ({ exceptionDetails }) => this.errors.push(exceptionDetails.text + " " + (exceptionDetails.exception?.description ?? "")));
+    cdp.on("Network.requestWillBeSent", ({ request, type, requestId }) => this.requests.push({ url: request.url, method: request.method, type, requestId }));
+    cdp.on("Network.responseReceived", ({ requestId, response, type }) => {
+      if (["Document", "Fetch"].includes(type) && response.url.startsWith(this.origin)) this.responseInfo.set(requestId, { url: response.url, status: response.status, type, mimeType: response.mimeType });
+    });
+    cdp.on("Network.loadingFinished", ({ requestId }) => {
+      const info = this.responseInfo.get(requestId);
+      if (!info || !(info.type === "Document" || info.mimeType.includes("component"))) return;
+      const task = cdp.send("Network.getResponseBody", { requestId }).then(({ body, base64Encoded }) => {
+        this.responses.push({ ...info, body: base64Encoded ? Buffer.from(body, "base64").toString("utf8") : body });
+      }).catch(() => {}).finally(() => this.bodyTasks.delete(task));
+      this.bodyTasks.add(task);
+    });
+    cdp.on("Fetch.requestPaused", ({ requestId, request, responseStatusCode, responseHeaders, resourceType }) => {
+      if (responseStatusCode) {
+        const contentType = responseHeaders?.find((header) => header.name.toLowerCase() === "content-type")?.value ?? "";
+        if (resourceType === "Document" || contentType.includes("component")) {
+          const task = cdp.send("Fetch.getResponseBody", { requestId }).then(({ body, base64Encoded }) => {
+            this.responses.push({ url: request.url, status: responseStatusCode, type: resourceType, mimeType: contentType, body: base64Encoded ? Buffer.from(body, "base64").toString("utf8") : body });
+          }).catch((error) => this.errors.push(`Fixture capture: ${error.message}`)).finally(async () => { await cdp.send("Fetch.continueRequest", { requestId }).catch(() => {}); this.bodyTasks.delete(task); });
+          this.bodyTasks.add(task);
+        } else void cdp.send("Fetch.continueRequest", { requestId }).catch(() => {});
+        return;
+      }
+      const fixture = this.fulfillments.get(request.url);
+      if (fixture) {
+        void cdp.send("Fetch.fulfillRequest", { requestId, responseCode: fixture.status ?? 200, responseHeaders: [{ name: "Content-Type", value: fixture.contentType }, { name: "Access-Control-Allow-Origin", value: "*" }], body: Buffer.from(fixture.body).toString("base64") }).catch(() => {});
+        return;
+      }
+      const delayMs = this.delayedRequests.get(request.url);
+      if (delayMs) {
+        const delivery = { url: request.url, delayMs, scheduledAt: Date.now(), continuedAt: null, error: null };
+        this.delayDeliveries.push(delivery);
+        const timer = setTimeout(() => {
+          this.delayTimers.delete(timer);
+          void cdp.send("Fetch.continueRequest", { requestId }).then(() => { delivery.continuedAt = Date.now(); }).catch((error) => { delivery.error = error.message; });
+        }, delayMs);
+        this.delayTimers.add(timer);
+        return;
+      }
+      if (!request.url.startsWith(this.origin + "/") && !request.url.startsWith("data:") && !request.url.startsWith("blob:")) {
+        this.externalRequests.push(request.url);
+        void cdp.send("Fetch.failRequest", { requestId, errorReason: "BlockedByClient" }).catch(() => {});
+      } else void cdp.send("Fetch.continueRequest", { requestId }).catch(() => {});
+    });
+    await cdp.send("Fetch.enable", { patterns: [{ urlPattern: "*", requestStage: "Request" }, { urlPattern: `${this.origin}/*`, resourceType: "Document", requestStage: "Response" }, { urlPattern: `${this.origin}/*`, resourceType: "Fetch", requestStage: "Response" }] });
+    await this.viewport(1440, 1000);
+  }
+
+  async viewport(width, height, touch = false) {
+    this.width = width; this.height = height;
+    await this.cdp.send("Emulation.setDeviceMetricsOverride", { width, height, deviceScaleFactor: 1, mobile: touch });
+    await this.cdp.send("Emulation.setTouchEmulationEnabled", { enabled: touch, maxTouchPoints: touch ? 1 : undefined });
+  }
+
+  serve(url, body, contentType, status = 200) { this.fulfillments.set(new URL(url, this.origin).href, { body, contentType, status }); }
+  unserve(url) { this.fulfillments.delete(new URL(url, this.origin).href); }
+  delayRequest(url, milliseconds) {
+    assert(milliseconds >= 0 && milliseconds <= 10000, "Test-only request delays must be finite");
+    const key = new URL(url, this.origin).href;
+    assert(key.startsWith(this.origin + "/"), "Only local fixture traffic may be delayed");
+    if (milliseconds === 0) this.delayedRequests.delete(key);
+    else this.delayedRequests.set(key, milliseconds);
+  }
+  dispose() { for (const timer of this.delayTimers) clearTimeout(timer); this.delayTimers.clear(); }
+
+  async reducedMotion(reduced) {
+    await this.cdp.send("Emulation.setEmulatedMedia", { features: [{ name: "prefers-reduced-motion", value: reduced ? "reduce" : "no-preference" }] });
+  }
+
+  async navigate(path) {
+    const url = new URL(path, this.origin).href;
+    const result = await this.cdp.send("Page.navigate", { url });
+    assert(!result.errorText, result.errorText);
+    await waitFor(() => this.cdp.evaluate(`location.href === ${JSON.stringify(url)} && document.readyState === 'complete'`), { timeout: 30000, message: `Page not ready: ${path}` });
+    await delay(850);
+  }
+
+  async ready(selector) {
+    return waitFor(() => this.cdp.evaluate(`Boolean(${queryExpression(selector)})`), { timeout: 30000, message: `Element missing: ${selector}` });
+  }
+
+  async inspect(selector, text = null, index = 0, position = null) {
+    return this.cdp.evaluate(`(() => {
+      const node = ${queryExpression(selector, text, index)};
+      if (!node) return null;
+      const r = node.getBoundingClientRect();
+      let l=Math.max(0,r.left),t=Math.max(0,r.top),b=Math.min(innerHeight,r.bottom),rr=Math.min(innerWidth,r.right);
+      let fixed=false;
+      for(let parent=node;parent;parent=parent.parentElement){
+        const style=getComputedStyle(parent); if(style.position==='fixed') fixed=true;
+        if(parent!==node && !fixed && /(hidden|clip|auto|scroll)/.test(style.overflow+style.overflowX+style.overflowY)){
+          const clip=parent.getBoundingClientRect(); l=Math.max(l,clip.left);t=Math.max(t,clip.top);rr=Math.min(rr,clip.right);b=Math.min(b,clip.bottom);
+        }
+      }
+      const position=${JSON.stringify(position)};
+      let x=position?r.left+r.width*position[0]:(l+rr)/2,y=position?r.top+r.height*position[1]:(t+b)/2;
+      const inset=position?1:0;
+      const visible=rr>l&&b>t&&x>=l+inset&&x<rr-inset&&y>=t+inset&&y<b-inset;
+      let hit=visible?document.elementFromPoint(x,y):null;
+      if(!position&&visible&&!(hit===node||node.contains(hit))){for(const [fx,fy] of [[.2,.12],[.5,.12],[.8,.12],[.2,.5],[.8,.5],[.5,.8]]){const px=l+(rr-l)*fx,py=t+(b-t)*fy,candidate=document.elementFromPoint(px,py);if(candidate===node||node.contains(candidate)){x=px;y=py;hit=candidate;break}}}
+      return {left:r.left,top:r.top,right:r.right,bottom:r.bottom,width:r.width,height:r.height,x,y,clip:{left:l,top:t,right:rr,bottom:b},visible,hit:hit===node||node.contains(hit),hitTag:hit?.tagName,hitText:hit?.textContent?.slice(0,100),text:node.textContent?.slice(0,200),disabled:node.disabled===true};
+    })()`);
+  }
+
+  async point(selector, text = null, index = 0, position = null) {
+    for (let attempt = 0; attempt < 10; attempt += 1) {
+      const geometry = await this.inspect(selector, text, index, position);
+      assert(geometry, `No visible-layout element ${selector} ${text ?? ""}`);
+      if (geometry.visible && geometry.hit) return geometry;
+      const scroller = await this.cdp.evaluate(`(()=>{const node=${queryExpression(selector, text, index)};if(!node)return null;const r=node.getBoundingClientRect();for(let parent=node.parentElement;parent&&parent!==document.body;parent=parent.parentElement){const s=getComputedStyle(parent),p=parent.getBoundingClientRect();if(/(auto|scroll)/.test(s.overflowY)&&parent.scrollHeight>parent.clientHeight+1){const delta=r.bottom>p.bottom? r.bottom-p.bottom+12:r.top<p.top?r.top-p.top-12:0;if(delta)return {x:Math.max(1,Math.min(innerWidth-1,(p.left+p.right)/2)),y:Math.max(1,Math.min(innerHeight-1,(p.top+p.bottom)/2)),delta}}}return null})()`);
+      if (scroller) {
+        await this.cdp.send("Input.dispatchMouseEvent", { type: "mouseWheel", x: scroller.x, y: scroller.y, deltaX: 0, deltaY: scroller.delta });
+        await delay(180);
+        continue;
+      }
+      const delta = geometry.top < 110 ? geometry.top - 150 : geometry.bottom > this.height - 20 ? geometry.bottom - this.height + 100 : 0;
+      if (!delta) {
+        if (geometry.visible && !geometry.hit) {
+          this.pointApproaches.push({ selector, text, attempt, before: geometry });
+          // Moving toward a visible animated control is safe; press only after
+          // rechecking the actual native hit target at its new position.
+          await this.cdp.send("Input.dispatchMouseEvent", { type: "mouseMoved", x: geometry.x, y: geometry.y });
+        }
+        await delay(180);
+        continue;
+      }
+      await this.cdp.send("Input.dispatchMouseEvent", { type: "mouseWheel", x: this.width - 24, y: this.height / 2, deltaX: 0, deltaY: delta });
+      await delay(180);
+    }
+    throw new Error(`Control is occluded/clipped: ${selector} ${text ?? ""} ${JSON.stringify(await this.inspect(selector, text, index, position))}`);
+  }
+
+  async click(selector, text = null, index = 0, touch = false) {
+    let geometry = await this.point(selector, text, index);
+    if (!touch) {
+      await this.cdp.send("Input.dispatchMouseEvent", { type: "mouseMoved", x: geometry.x, y: geometry.y });
+      await delay(250);
+      geometry = await this.point(selector, text, index);
+    }
+    const { x, y, disabled } = geometry;
+    assert(!disabled, `Control is disabled: ${selector} ${text ?? ""}`);
+    if (touch) {
+      await this.cdp.send("Input.dispatchTouchEvent", { type: "touchStart", touchPoints: [{ x, y }] });
+      await this.cdp.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] });
+    } else {
+      await this.cdp.send("Input.dispatchMouseEvent", { type: "mousePressed", button: "left", clickCount: 1, x, y });
+      await this.cdp.send("Input.dispatchMouseEvent", { type: "mouseReleased", button: "left", clickCount: 1, x, y });
+    }
+    await delay(180);
+  }
+
+  async hover(selector, text = null, index = 0, position = [0.7, 0.3]) {
+    assert(position.length === 2 && position.every((fraction) => Number.isFinite(fraction) && fraction > 0 && fraction < 1));
+    // A visible sliver does not make the requested fraction visible. Scroll and
+    // hit-test that exact point, then remeasure after pointer-driven transforms.
+    const approached = await this.point(selector, text, index, position);
+    await this.cdp.send("Input.dispatchMouseEvent", { type: "mouseMoved", x: approached.x, y: approached.y });
+    await delay(150);
+    const final = await this.point(selector, text, index, position);
+    await this.cdp.send("Input.dispatchMouseEvent", { type: "mouseMoved", x: final.x, y: final.y });
+    await delay(150);
+    return { approached, final };
+  }
+
+  async key(key, modifiers = 0) {
+    const keyCode = { Tab: 9, Enter: 13, Escape: 27, a: 65, A: 65, ArrowRight: 39, ArrowLeft: 37 }[key];
+    const code = key === "a" || key === "A" ? "KeyA" : key;
+    // Enter's native character semantics trigger button activation in Chromium;
+    // a keyDown without text emits no keypress and is not a complete Enter key.
+    await this.cdp.send("Input.dispatchKeyEvent", { type: "keyDown", key, code, modifiers, windowsVirtualKeyCode: keyCode, nativeVirtualKeyCode: keyCode, ...(key === "Enter" ? { text: "\r", unmodifiedText: "\r" } : {}) });
+    await this.cdp.send("Input.dispatchKeyEvent", { type: "keyUp", key, code, modifiers, windowsVirtualKeyCode: keyCode, nativeVirtualKeyCode: keyCode });
+  }
+
+  async type(selector, value) {
+    await this.click(selector);
+    await this.key("a", CDP_MODIFIERS.Control);
+    await this.cdp.send("Input.insertText", { text: value });
+  }
+
+  async screenshot(file, fullPage = false) {
+    const params = { format: "png", captureBeyondViewport: fullPage };
+    if (fullPage) {
+      const { cssContentSize } = await this.cdp.send("Page.getLayoutMetrics");
+      params.clip = { x: 0, y: 0, width: cssContentSize.width, height: Math.min(cssContentSize.height, 10000), scale: 1 };
+    }
+    const { data } = await this.cdp.send("Page.captureScreenshot", params);
+    await writeFile(file, Buffer.from(data, "base64"));
+  }
+
+  async settledFonts() { return this.cdp.evaluate("document.fonts.ready.then(() => ({status:document.fonts.status, faces:[...document.fonts].filter(f=>f.status==='loaded').map(f=>({family:f.family,weight:f.weight,style:f.style}))}))"); }
+  async flushBodies() { await Promise.all([...this.bodyTasks]); }
+}

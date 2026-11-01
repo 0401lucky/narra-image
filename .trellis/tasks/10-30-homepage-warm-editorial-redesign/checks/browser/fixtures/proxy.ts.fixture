@@ -1,0 +1,29 @@
+import { NextResponse, type NextRequest } from "next/server";
+import fixtureConfig from "./lib/homepage-fixture-config.json";
+
+const pages = new Set(["/", "/create", "/works", "/settings", "/prompts", "/video", "/api-keys", "/login", "/register", "/admin", "/admin/works", "/homepage-fixture/links"]);
+const ids = new Set([
+  ...Array.from({ length: 80 }, (_, index) => `home-${String(index + 1).padStart(3, "0")}`),
+  ...["featured", "private", "pending", "takedown_pending"].flatMap((status) => [`fixture-${status}-public`, `fixture-${status}-hidden`]),
+  "fixture-missing",
+]);
+const assets = new Set(fixtureConfig.assets);
+
+export function proxy(request: NextRequest) {
+  const url = request.nextUrl;
+  const path = url.pathname;
+  const method = request.method;
+  if (!["127.0.0.1", "localhost"].includes(url.hostname) || path.includes("..") || /%2e|%2f|%5c/i.test(path)) return new NextResponse("Not found", { status: 404 });
+  if (method === "GET" || method === "HEAD") {
+    if (pages.has(path) || assets.has(path) || /^\/_next\/static\/[A-Za-z0-9_./-]+$/.test(path)) return NextResponse.next();
+    if (path.startsWith("/works/") && ids.has(path.slice(7))) return NextResponse.next();
+    if (["/api/works/featured", "/api/me/canvases", "/homepage-fixture/control"].includes(path)) return NextResponse.next();
+    if (path === "/_next/image" && assets.has(url.searchParams.get("url") ?? "")) return NextResponse.next();
+  }
+  if (method === "POST" && ["/api/auth/login", "/api/auth/logout", "/api/me/check-in", "/homepage-fixture/control"].includes(path)) return NextResponse.next();
+  const like = /^\/api\/works\/([^/]+)\/like$/.exec(path);
+  if (method === "PUT" && like && ids.has(like[1])) return NextResponse.next();
+  return new NextResponse("Homepage fixture route not allowed", { status: 404 });
+}
+
+export const config = { matcher: ["/((?!_next/static|_next/image).*)", "/_next/image"] };

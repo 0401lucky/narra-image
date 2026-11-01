@@ -1,0 +1,81 @@
+# Homepage Image Delivery Continuation
+
+- Source session: `01a18f8e-7232-7d82-8dc8-c3429f801773`.
+- Resumed session: `01a19012-4c1c-78c3-a256-c449e820adcb`.
+- User request: inspect the named session and continue its existing work.
+- The original session stopped with HTTP 413 from the agent transport at
+  `2026-10-31T03:44:25Z`, after generating and opening the second rainy-lane
+  candidate. This was not an application failure or a new image-provider 503.
+- The old handoff predates the successful image requests. Local session
+  history, key-free provider receipts and original PNGs recover the actual
+  stopping point; no further provider request is needed.
+
+## Scope And Baseline
+
+Continue the already approved, `in_progress` homepage task. Do not create a
+duplicate task, change the unresolved long-URL contract, or broaden this into
+the separate mobile-canvas task. The original implementation approval and
+external-image authorization remain recorded in the existing task artifacts.
+
+`resume-20261031-source-baseline.json` records 823 source/test/spec inputs and
+the initial dirty git status before this continuation's asset publication.
+Existing uncommitted code, mobile changes, shared configuration and guidelines
+must be retained. Prior whole-tree test/build receipts are historical input
+snapshots, not a pass for the final asset revision.
+
+No staging, commit, push, archive, deployment, live dotenv, product DB,
+provider/storage operation or runtime download is authorized. Session-history
+output is credential-redacted; this continuation does not reuse or persist the
+previously supplied API credential or submit new image requests. Actual source validation uses the task's credential-free snapshots
+and existing installed tools only.
+
+## Recovered Assets
+
+Root visually inspected all three selected original outputs. Each is a PNG
+with actual dimensions 1448x1086 (4:3), regardless of the requested 1536x1152.
+They are copied byte-for-byte into `public/marketing/home/`:
+
+- `bookshop-light-v1.png`: warm dusk bookshop, blinds and atmospheric light.
+- `lantern-fox-v1.png`: watercolor fox carrying a lantern through misty woods.
+- `jiangnan-rain-v2.png`: rainy tiled-eave lane and warm lantern reflections;
+  no visible corner emblem in the selected second generation.
+
+The rejected `jiangnan-rain-v1.png` remains evidence only and is not published.
+`assets/image-manifest.json` links selected public paths, actual dimensions,
+hashes, full generation prompts and key-free successful provider receipts.
+These are fixed illustrative assets, not site generation records.
+
+## Continuation Plan
+
+- [x] Recover history, validate the existing manifests and activate only this
+  session's existing task pointer.
+- [x] Capture the current baseline and inspect/publish selected original PNGs.
+- [x] Finish scene constants and real-asset/DOM-dimension regression coverage;
+  5 focused files / 51 tests, snapshot lint/types and 8 safety tests pass.
+- [x] Run isolated focused and full automated gates: 137 files / 1624 non-DB
+  tests, lint (0 errors / 9 baseline warnings), types, network-denied installed
+  Prisma generation and an unmodified production Next build pass. Evidence:
+  `validation-evidence/asset-delivery-final/`.
+- [ ] Complete independent final source/browser review.
+- [ ] Rebuild a fresh real-Next/synthetic-DB browser fixture; exercise actual
+  images, scene effects, lifecycle and the existing full interaction matrix.
+- [ ] Update acceptance and handoff with exact receipts and preserved limits.
+
+Root owns assets/manifests/task records and final integration. The implementer
+owns only scene constants, asset/hero tests and the existing production-source
+validation lane. The browser reviewer owns browser helpers/report and a fresh
+independent runtime. Neither worker may revert or claim the other's changes.
+
+The separate source-review worker stopped with an agent-provider quota HTTP
+403 before delivering a verdict or starting product checks. This is not an
+application finding and is not counted as a completed review. Root executed
+the full automated gates; the independent browser `trellis-check` worker also
+owns the final source review and `asset-delivery-independent-review.md`.
+
+## Still Unresolved
+
+- Oversized Chinese/emoji `/create?prompt=` URLs can return HTTP 431. The
+  previously proposed entry/manual-copy fallback is not approved or implemented.
+- Available local Node 24.11.1 does not prove parity with pinned 24.22.1.
+- Synthetic-service browser checks do not prove live-account/DB/Worker/provider
+  E2E, actual CI, physical mobile-device acceptance or release readiness.

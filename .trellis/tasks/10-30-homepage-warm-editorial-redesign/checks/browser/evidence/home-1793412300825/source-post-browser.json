@@ -1,0 +1,8 @@
+{
+  "stage": "post-browser",
+  "productInputs": 652,
+  "liveScope": "all recorded production inputs",
+  "drift": [
+    "live:src/app/page.tsx"
+  ]
+}

@@ -1,0 +1,148 @@
+{
+  "url": "http://127.0.0.1:49791/",
+  "hidden": false,
+  "motion": {},
+  "active": "<button type=\"button\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-check\" aria-hidden=\"true\"><path d=\"M20 6 9 17l-5-5\"></path></svg>已复制完整提示词</button>",
+  "reveals": [
+    {
+      "opacity": "1",
+      "transform": "none",
+      "rect": {
+        "x": 76,
+        "y": 885.1875,
+        "width": 1280,
+        "height": 593.765625,
+        "top": 885.1875,
+        "right": 1356,
+        "bottom": 1478.953125,
+        "left": 76
+      }
+    },
+    {
+      "opacity": "1",
+      "transform": "none",
+      "rect": {
+        "x": 0,
+        "y": 1558.953125,
+        "width": 1432,
+        "height": 1973.578125,
+        "top": 1558.953125,
+        "right": 1432,
+        "bottom": 3532.53125,
+        "left": 0
+      }
+    },
+    {
+      "opacity": "1",
+      "transform": "none",
+      "rect": {
+        "x": 108,
+        "y": 1858.53125,
+        "width": 289,
+        "height": 361.25,
+        "top": 1858.53125,
+        "right": 397,
+        "bottom": 2219.78125,
+        "left": 108
+      }
+    },
+    {
+      "opacity": "1",
+      "transform": "none",
+      "rect": {
+        "x": 417,
+        "y": 1858.53125,
+        "width": 289,
+        "height": 361.25,
+        "top": 1858.53125,
+        "right": 706,
+        "bottom": 2219.78125,
+        "left": 417
+      }
+    },
+    {
+      "opacity": "1",
+      "transform": "none",
+      "rect": {
+        "x": 726,
+        "y": 1858.53125,
+        "width": 289,
+        "height": 361.25,
+        "top": 1858.53125,
+        "right": 1015,
+        "bottom": 2219.78125,
+        "left": 726
+      }
+    },
+    {
+      "opacity": "1",
+      "transform": "none",
+      "rect": {
+        "x": 1035,
+        "y": 1858.53125,
+        "width": 289,
+        "height": 361.25,
+        "top": 1858.53125,
+        "right": 1324,
+        "bottom": 2219.78125,
+        "left": 1035
+      }
+    },
+    {
+      "opacity": "1",
+      "transform": "none",
+      "rect": {
+        "x": 108,
+        "y": 2239.78125,
+        "width": 289,
+        "height": 361.25,
+        "top": 2239.78125,
+        "right": 397,
+        "bottom": 2601.03125,
+        "left": 108
+      }
+    },
+    {
+      "opacity": "1",
+      "transform": "none",
+      "rect": {
+        "x": 417,
+        "y": 2239.78125,
+        "width": 289,
+        "height": 361.25,
+        "top": 2239.78125,
+        "right": 706,
+        "bottom": 2601.03125,
+        "left": 417
+      }
+    },
+    {
+      "opacity": "1",
+      "transform": "none",
+      "rect": {
+        "x": 726,
+        "y": 2239.78125,
+        "width": 289,
+        "height": 361.25,
+        "top": 2239.78125,
+        "right": 1015,
+        "bottom": 2601.03125,
+        "left": 726
+      }
+    },
+    {
+      "opacity": "1",
+      "transform": "none",
+      "rect": {
+        "x": 1035,
+        "y": 2239.78125,
+        "width": 289,
+        "height": 361.25,
+        "top": 2239.78125,
+        "right": 1324,
+        "bottom": 2601.03125,
+        "left": 1035
+      }
+    }
+  ]
+}

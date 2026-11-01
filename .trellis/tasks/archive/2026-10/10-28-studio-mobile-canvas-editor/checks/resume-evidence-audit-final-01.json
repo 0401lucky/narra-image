@@ -1,0 +1,367 @@
+{
+  "checked_at": "2026-10-31T03:38:59.525044+00:00",
+  "scope": "Mobile/source-bound receipt and record integrity ONLY; not full repository quality or physical acceptance",
+  "integrity_pass": true,
+  "full_root_lint_pass": false,
+  "full_repository_quality_accepted": false,
+  "physical_native_services_actual_ci": "unperformed",
+  "ma1_ma4_accepted": false,
+  "issues": [],
+  "mobile_frozen_paths": 35,
+  "mobile_source_mismatches": [],
+  "current_fixture_input_count": 256,
+  "current_fixture_source_mismatches": [],
+  "browser_groups": 27,
+  "browser_engines": [
+    "Chrome/156.0.8078.74",
+    "Chrome/156.0.8078.74",
+    "Chrome/156.0.8078.74"
+  ],
+  "original_resume_baseline_count": 1514,
+  "whole_resume_baseline_unchanged": false,
+  "user_authorized_homepage_changes": [
+    ".trellis/spec/frontend/index.md",
+    ".trellis/spec/frontend/quality-guidelines.md",
+    "src/tests/unit/featured-gallery-likes.test.tsx",
+    "src/tests/unit/homepage-header-footer.test.tsx",
+    "src/tests/unit/homepage-hero.test.tsx",
+    "src/tests/unit/homepage-motion.test.tsx"
+  ],
+  "user_authorized_homepage_additions": [
+    ".trellis/spec/frontend/homepage-interactions.md"
+  ],
+  "unexplained_nonowned_changes": [],
+  "unexplained_nonowned_additions": [],
+  "shared_specs_modified_by_main": [],
+  "preserved_before_image_count": 167,
+  "head": "1f7948e334c589dc6db38ac045b584f0f5381481",
+  "semantic_index_entries": 810,
+  "staged_paths": [],
+  "fresh_focused_tests": {
+    "files": 22,
+    "tests": 366
+  },
+  "scoped_lint_ts_tsx_files": 34,
+  "root_lint_counts": {
+    "errors": 2504,
+    "warnings": 40844,
+    "foreign_evidence_warnings": 40835,
+    "existing_source_warnings": 9
+  },
+  "receipts": [
+    {
+      "label": "mobile-resume-check-full-01",
+      "code": 0,
+      "timed_out": false,
+      "duration_ms": 45755,
+      "deadline_ms": 300000,
+      "receipt_sha256": "d1dd1f6472de8d8ca1000b8d67143e50d0f4df8c2bf357e3df2ef100094afa77",
+      "logs": [
+        {
+          "path": "checks/receipts/mobile-resume-check-full-01.stdout.log",
+          "sha256": "7120f7f8b812a20e0a96305aa5b9f08585339ef4e0eb7790dcba37f2e81877a2",
+          "bytes": 38996
+        },
+        {
+          "path": "checks/receipts/mobile-resume-check-full-01.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      ]
+    },
+    {
+      "label": "mobile-resume-check-types-01",
+      "code": 0,
+      "timed_out": false,
+      "duration_ms": 28705,
+      "deadline_ms": 120000,
+      "receipt_sha256": "3815eb8da8e6b8d5203d88c20640d78de05d5e26e8e56312bac663998b3f0762",
+      "logs": [
+        {
+          "path": "checks/receipts/mobile-resume-check-types-01.stdout.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        {
+          "path": "checks/receipts/mobile-resume-check-types-01.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      ]
+    },
+    {
+      "label": "mobile-resume-check-lint-01",
+      "code": 1,
+      "timed_out": false,
+      "duration_ms": 124926,
+      "deadline_ms": 180000,
+      "receipt_sha256": "52d5a944ea8571b3dc327f96563227e2e46e9358bb5ab70c9d81a8d4f7540e11",
+      "logs": [
+        {
+          "path": "checks/receipts/mobile-resume-check-lint-01.stdout.log",
+          "sha256": "fc645a3ca80cb3c8491f1d96d5faeb0bd3f01a2bffebdbaf49a2d5045eb60ef3",
+          "bytes": 6101514
+        },
+        {
+          "path": "checks/receipts/mobile-resume-check-lint-01.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      ]
+    },
+    {
+      "label": "mobile-resume-check-focused-lint-01",
+      "code": 0,
+      "timed_out": false,
+      "duration_ms": 5618,
+      "deadline_ms": 180000,
+      "receipt_sha256": "e376f6903658b13a9a79942d977cd723236d25124ad9e8d746a33bc17f6569b7",
+      "logs": [
+        {
+          "path": "checks/receipts/mobile-resume-check-focused-lint-01.stdout.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        {
+          "path": "checks/receipts/mobile-resume-check-focused-lint-01.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      ]
+    },
+    {
+      "label": "mobile-resume-check-focused-tests-01",
+      "code": 0,
+      "timed_out": false,
+      "duration_ms": 13792,
+      "deadline_ms": 180000,
+      "receipt_sha256": "2e921af12194a30e9f9e8dec2ed1bd9c26f801c5dfd4d33cae2ce34b94d5ff9e",
+      "logs": [
+        {
+          "path": "checks/receipts/mobile-resume-check-focused-tests-01.stdout.log",
+          "sha256": "ed628fc5acc5b56bd54a6d933283d012c8c65fd2db7ba436b70a1d6acd2a76ed",
+          "bytes": 8605
+        },
+        {
+          "path": "checks/receipts/mobile-resume-check-focused-tests-01.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      ]
+    },
+    {
+      "label": "mobile-resume-production-build-01",
+      "code": 0,
+      "timed_out": false,
+      "duration_ms": 34931,
+      "deadline_ms": 600000,
+      "receipt_sha256": "2ba1043720aed66a0229544181e75f0650bf318b5d74fdcaeaf4105bee5036eb",
+      "logs": [
+        {
+          "path": "checks/receipts/mobile-resume-production-build-01.stdout.log",
+          "sha256": "2d5804ff3567150a55f8357149f0df350661c51366745f99205ec8606f83404c",
+          "bytes": 4239
+        },
+        {
+          "path": "checks/receipts/mobile-resume-production-build-01.stderr.log",
+          "sha256": "75066079154e16278b8bbb61e3a8fed567403e1667eda92ad7c8eeab0cda5879",
+          "bytes": 93
+        }
+      ]
+    },
+    {
+      "label": "mobile-resume-fixture-source-01",
+      "code": 0,
+      "timed_out": false,
+      "duration_ms": 689,
+      "deadline_ms": 180000,
+      "receipt_sha256": "dee84e5e38aed2bbd6af3b1c9ece2ec1e0aa807dca64c39f25813e4a7e789977",
+      "logs": [
+        {
+          "path": "checks/receipts/mobile-resume-fixture-source-01.stdout.log",
+          "sha256": "db4cb660cc9bd4604b6ad5f5fd0803196a4eda706dbf051d01f3d1914531d7cf",
+          "bytes": 348
+        },
+        {
+          "path": "checks/receipts/mobile-resume-fixture-source-01.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      ]
+    },
+    {
+      "label": "mobile-resume-fixture-build-01",
+      "code": 0,
+      "timed_out": false,
+      "duration_ms": 17324,
+      "deadline_ms": 240000,
+      "receipt_sha256": "a42a38860d14a87faae17f755f89f6c2ade85ff56f43f95c9deda21dc9310e38",
+      "logs": [
+        {
+          "path": "checks/receipts/mobile-resume-fixture-build-01.stdout.log",
+          "sha256": "970348fc0b6b9eead9e15587dedcebf395367108786d06db7c2e1bd9ac6f182f",
+          "bytes": 864
+        },
+        {
+          "path": "checks/receipts/mobile-resume-fixture-build-01.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      ]
+    },
+    {
+      "label": "mobile-resume-fixture-audit-prebuild-01",
+      "code": 0,
+      "timed_out": false,
+      "duration_ms": 232,
+      "deadline_ms": 120000,
+      "receipt_sha256": "f421c126f5fb936e89f6c4b7e2ebaf8c754f12c68cd24fc233bd70b544bea8bb",
+      "logs": [
+        {
+          "path": "checks/receipts/mobile-resume-fixture-audit-prebuild-01.stdout.log",
+          "sha256": "a2268a19afb2091e0f7e3f844283d8393c236f98cfe8bb06282c9079a76d7444",
+          "bytes": 3158
+        },
+        {
+          "path": "checks/receipts/mobile-resume-fixture-audit-prebuild-01.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      ]
+    },
+    {
+      "label": "mobile-resume-fixture-audit-postbuild-01",
+      "code": 0,
+      "timed_out": false,
+      "duration_ms": 260,
+      "deadline_ms": 120000,
+      "receipt_sha256": "29eef274a1459613a60c2fa445bf8adea89b1faa3dc1aabf4052bf1dd77ba0c2",
+      "logs": [
+        {
+          "path": "checks/receipts/mobile-resume-fixture-audit-postbuild-01.stdout.log",
+          "sha256": "3621724758895491b44ab14b36f2bb1f38d753820a0a1408ce83e7cd7bac7f20",
+          "bytes": 3159
+        },
+        {
+          "path": "checks/receipts/mobile-resume-fixture-audit-postbuild-01.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      ]
+    },
+    {
+      "label": "mobile-resume-fixture-audit-prebrowser-01",
+      "code": 0,
+      "timed_out": false,
+      "duration_ms": 249,
+      "deadline_ms": 120000,
+      "receipt_sha256": "906f27612caf246b4a22c403e311989cc4fdd90b637f1676526651edcd82ca30",
+      "logs": [
+        {
+          "path": "checks/receipts/mobile-resume-fixture-audit-prebrowser-01.stdout.log",
+          "sha256": "2081e39c7174efd89e23d5ddc0d61a4529c40eb7b357ec03ca46fcdfa8d2c44d",
+          "bytes": 3170
+        },
+        {
+          "path": "checks/receipts/mobile-resume-fixture-audit-prebrowser-01.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      ]
+    },
+    {
+      "label": "mobile-resume-browser-01",
+      "code": 0,
+      "timed_out": false,
+      "duration_ms": 161238,
+      "deadline_ms": 600000,
+      "receipt_sha256": "56100f59f6436effbd80bdc9d846c02cfb3df572b6b35945dbd81665e5cdf2c1",
+      "logs": [
+        {
+          "path": "checks/receipts/mobile-resume-browser-01.stdout.log",
+          "sha256": "c774eebad1eb968e4c09c304885fc61aa22e601206f3c6b7a60f53afbd8f0ef7",
+          "bytes": 3350
+        },
+        {
+          "path": "checks/receipts/mobile-resume-browser-01.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      ]
+    },
+    {
+      "label": "mobile-resume-fixture-audit-postbrowser-01",
+      "code": 0,
+      "timed_out": false,
+      "duration_ms": 279,
+      "deadline_ms": 120000,
+      "receipt_sha256": "b9b544663099c996cb911d7e839bacf376c3434c7b1d80454428dcfe7d8463b1",
+      "logs": [
+        {
+          "path": "checks/receipts/mobile-resume-fixture-audit-postbrowser-01.stdout.log",
+          "sha256": "9b6f6d7dab6c6e74822c8d600d53ef68ad2b25ca98a053bcc099e9bb7583a89d",
+          "bytes": 3171
+        },
+        {
+          "path": "checks/receipts/mobile-resume-fixture-audit-postbrowser-01.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      ]
+    }
+  ],
+  "checked_capture_manifest_entries": 1550,
+  "owned_task_artifact_identities": [
+    {
+      "path": ".trellis/tasks/10-28-studio-mobile-canvas-editor/prd.md",
+      "sha256": "3a5e9fef356e10b3031e58933db635c62fcd79f339670d5604b2f5b5a720e8fa"
+    },
+    {
+      "path": ".trellis/tasks/10-28-studio-mobile-canvas-editor/design.md",
+      "sha256": "0141e3fea2fb77c766321b27795f06284b3641c4e9e715d83f62b5e608cffd4c"
+    },
+    {
+      "path": ".trellis/tasks/10-28-studio-mobile-canvas-editor/implement.md",
+      "sha256": "6eb0956b0e012def68364ced4ec271d9894c58537b58bd68723139fcd9c8131a"
+    },
+    {
+      "path": ".trellis/tasks/10-28-studio-mobile-canvas-editor/verification.md",
+      "sha256": "67c513d69f06de278fbda1ca2a21dc64f84eabbd08e3ae94a45a8b48b587deea"
+    },
+    {
+      "path": ".trellis/tasks/10-28-studio-mobile-canvas-editor/handoff.md",
+      "sha256": "915c8a46d35964df44c6b760fb38d92819a7dcb77f98916f6c8e6323a7f34724"
+    },
+    {
+      "path": ".trellis/tasks/10-28-studio-mobile-canvas-editor/task.json",
+      "sha256": "0c8c297e0f27c790c39da59ff52af1a78f9831224e920a5b37c4647e617565c8"
+    },
+    {
+      "path": ".trellis/tasks/10-28-studio-mobile-canvas-editor/implement.jsonl",
+      "sha256": "617cee42f44d95fdd8aeedb1353023a70424b243aa3303d46facc884618189b4"
+    },
+    {
+      "path": ".trellis/tasks/10-28-studio-mobile-canvas-editor/check.jsonl",
+      "sha256": "73c9633d9fb69b8b2add0abe4014efb9914df23be7084a5faa65bd3e70c82809"
+    },
+    {
+      "path": ".trellis/tasks/10-28-studio-mobile-canvas-editor/checks/resume-user-approval-2026-10-31.md",
+      "sha256": "ed1b1fd0a0880067f3995ef4cdc01777a43ce7759fc915c758289da589600fe2"
+    },
+    {
+      "path": ".trellis/tasks/10-28-studio-mobile-canvas-editor/checks/mobile-resume-verification-2026-10-31.md",
+      "sha256": "efede5d379fabab1c846100276df896707ae7d964ea55acc0b292103b7e51b80"
+    },
+    {
+      "path": ".trellis/tasks/10-28-studio-mobile-canvas-editor/checks/mobile-resume-independent-review-2026-10-31.md",
+      "sha256": "e2523f923bf5a4b2c7dff06e59a5ad901437c496a2104c4befef9c08cfd3943d"
+    }
+  ],
+  "git_diff_check": {
+    "code": 0,
+    "stdout": "",
+    "stderr": "warning: in the working copy of 'package.json', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'pnpm-lock.yaml', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'scripts/verify-e2e.mjs', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'src/components/marketing/featured-gallery.tsx', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'src/tests/unit/featured-gallery.test.tsx', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'worker/internal/worker/config.go', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'worker/internal/worker/config_test.go', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'worker/internal/worker/runtime_state.go', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'worker/internal/worker/server.go', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'worker/internal/worker/worker.go', LF will be replaced by CRLF the next time Git touches it\n"
+  },
+  "real_dotenv_read": false,
+  "no_stage_commit_archive_journal_deploy": true
+}

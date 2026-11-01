@@ -1,0 +1,37 @@
+{
+  "stage": "pre-browser",
+  "productInputs": 652,
+  "liveScope": "all recorded production inputs except source-test files",
+  "helperInputs": {
+    "run-browser.mjs": "10f467aef8020b00aa69dcbc4cf36eaf1865945b5c36376c98875314d8f36db8",
+    "cdp.mjs": "336f1ea7f4229b52da537ba241ce0680e39fbe0c6ec72198bb9478583faa714d",
+    "homepage-checks.mjs": "03e016386bc390ab57b183a19e186bc5f9dbf3712239da037ad05899e7aed680",
+    "reference-checks.mjs": "c6bd5700efdb030c6b76735238b7f9ef8524796027f10b99e52ac556c87a0a3e",
+    "prepare-fixture.mjs": "1f2c34d0253bd94f12e0ca3f299386c063611405e9c351cb866954e238634eb3",
+    "sync-fixture.mjs": "2e0e9881ea6871cb3b4451108679ccb097dec30bf07b88e941516b066f3bac59"
+  },
+  "buildId": "_E1J84EFyVZBzR5VAcNpS",
+  "fixtureInputs": {
+    "src/lib/db.ts": {
+      "source": "db.ts.fixture",
+      "sha256": "591f36b65b9d95a8e92b3a7df54dbf8f708104ac836b06ea9903be4a4e2d2411",
+      "priorSha256": "6e12e882c0cbaa69fff993318e56df751d3489562cd717498fa0037a1e6f77c8"
+    },
+    "src/app/homepage-fixture/control/route.ts": {
+      "source": "control-route.ts.fixture",
+      "sha256": "fe7cba0e3078fe6fd2933db1a45f950ebe355f840617485f24a0f09db3746ecf",
+      "priorSha256": null
+    },
+    "src/app/homepage-fixture/links/page.tsx": {
+      "source": "links-page.tsx.fixture",
+      "sha256": "055ae2a4ce387caa6d7e22b59d68b7c94ed407e4a32f972e9a1c36bf1949e1c7",
+      "priorSha256": null
+    },
+    "src/proxy.ts": {
+      "source": "proxy.ts.fixture",
+      "sha256": "9550d083bc6fc1946aed9e0bd258103bd60482144f1f6677da6ebee0da2aec01",
+      "priorSha256": null
+    }
+  },
+  "drift": []
+}

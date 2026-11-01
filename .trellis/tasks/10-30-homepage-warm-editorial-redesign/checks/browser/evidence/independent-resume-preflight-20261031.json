@@ -1,0 +1,40 @@
+{
+  "capturedAt": "2026-10-31T07:25:01.808023+00:00",
+  "sourceFiles": 806,
+  "matchesFinalManifest": true,
+  "finalManifestSha256": "dc982bd1eca62a63c1687864f62c6e6f7301a2b09c14b064a1a881a546d02db5",
+  "lanes": {
+    "hero-hit-independent-8725c17e": {
+      "workspace": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\hero-hit-independent-8725c17e\\app",
+      "ownerVerified": true,
+      "unlocked": true,
+      "sourceFiles": 806,
+      "manifestSha256": "dcf7771e64dcb9a3011ed976d86eba2fec4eaf94abec41b4d13f399e314ab270",
+      "auditedLinks": null,
+      "fixtureManifestSha256": "aa7ab59d472fe939660d3fc8f3a4599c1f140ec69877845a7d2769e866533631",
+      "replacementCount": 4,
+      "helperCount": 17,
+      "buildId": "Y8dN8TJT4RKdTGv_zoeWQ",
+      "latestBuildReceipt": "20261031T064343-build-6025ca.json",
+      "latestBuildExit": 0,
+      "latestBuildDuration": 22.202,
+      "drift": []
+    },
+    "hhi-d6837226": {
+      "workspace": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\hhi-d6837226\\app",
+      "ownerVerified": true,
+      "unlocked": true,
+      "sourceFiles": 806,
+      "manifestSha256": "a25ac2f2a1794dcc8f99febc8b731b8187eac245403fa32b64bffeece0a51052",
+      "auditedLinks": null,
+      "fixtureManifestSha256": null,
+      "replacementCount": 0,
+      "helperCount": 0,
+      "buildId": null,
+      "latestBuildReceipt": null,
+      "latestBuildExit": null,
+      "latestBuildDuration": null,
+      "drift": []
+    }
+  }
+}

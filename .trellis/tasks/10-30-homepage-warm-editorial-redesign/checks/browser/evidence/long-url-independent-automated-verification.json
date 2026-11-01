@@ -1,0 +1,60 @@
+{
+  "checkedAt": "2026-11-01T02:53:51.165754+00:00",
+  "sourceCount": 809,
+  "sourceAllMatch": true,
+  "sourceManifestSha256": "f5b5f889df0e5c42c0cedae1c7aac57efc10385ee66db75e66334a3f1fd364fe",
+  "automatedGatePassed": true,
+  "receiptAudit": [
+    {
+      "id": "20261101T024629-test-bounded-8995a2",
+      "exitCode": 0,
+      "durationSeconds": 122.088,
+      "timeoutSeconds": 900,
+      "receiptSha256": "7008c6048433bb12c1e06e67902bcbf33f658dd73ade2631cb3f18cdccf742cd",
+      "stdoutSha256": "dd5c6056d95ced86edafe1e85b94bad22b9e0c129f1420d296b691509748fc6b",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "20261101T025018-lint-d9d51a",
+      "exitCode": 0,
+      "durationSeconds": 15.761,
+      "timeoutSeconds": 180,
+      "receiptSha256": "bfb9bd4e5e4da67adc9ccabc4d29ad079a3d37a23fb0d228d6db80fd666f316d",
+      "stdoutSha256": "96616bc9288e15368773b94cb90ce2b55870b552b74f0cebbcc73e1a869e2779",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "20261101T025051-types-a1cfbb",
+      "exitCode": 0,
+      "durationSeconds": 5.953,
+      "timeoutSeconds": 180,
+      "receiptSha256": "69cbca7231f913582c6cd040767017a337a4dfe2cfe1fa0340ba407651a34ee0",
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "20261101T025115-prisma-no-network-233457",
+      "exitCode": 0,
+      "durationSeconds": 2.598,
+      "timeoutSeconds": 120,
+      "receiptSha256": "55bb1e584ad699421c2803b393d0a1b3ca0610bf49ad789fecdb2d6b0080fabf",
+      "stdoutSha256": "e28ead55d0873d3645015c634e583b2c559ee2bac8eea6ed496cb95a4bc90baa",
+      "stderrSha256": "75066079154e16278b8bbb61e3a8fed567403e1667eda92ad7c8eeab0cda5879"
+    },
+    {
+      "id": "20261101T025135-build-0b2d77",
+      "exitCode": 0,
+      "durationSeconds": 22.891,
+      "timeoutSeconds": 600,
+      "receiptSha256": "db0b6b0284cbd5e149b641a344464ad4f8818d15b617590f1fec58604c1e23cd",
+      "stdoutSha256": "d253dc7e64811636454b4e107e9e77a7418041688eaddc2aae2625b0f4f7d54a",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "metadataCandidateCount": 31,
+  "verification": "Independent read/hash audit; these stages executed by coordinator, not duplicated",
+  "nodeVersion": "v24.22.1",
+  "nodeBinarySha256": "d702daa815eabbff763c7d3808e235cf031cf2ca70211b56847bc72f51e240e5",
+  "fullTestCount": 1704,
+  "testFileCount": 140
+}

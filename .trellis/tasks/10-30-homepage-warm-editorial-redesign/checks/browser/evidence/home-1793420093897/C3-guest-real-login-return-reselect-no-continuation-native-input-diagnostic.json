@@ -1,0 +1,211 @@
+{
+  "trace": [
+    {
+      "type": "pointerdown",
+      "at": 2518.3999999910593,
+      "x": 332.51019287109375,
+      "y": 869.3589477539062,
+      "target": "<a data-gallery-remix=\"true\" aria-describedby=\"_r_2_\" class=\"gallery-module__AxK02G__remixButton\" href=\"/login\">登录后做同款<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" c",
+      "scene": "film",
+      "expanded": "true"
+    },
+    {
+      "type": "pointerup",
+      "at": 2524.8999999910593,
+      "x": 332.51019287109375,
+      "y": 869.3589477539062,
+      "target": "<a data-gallery-remix=\"true\" aria-describedby=\"_r_2_\" class=\"gallery-module__AxK02G__remixButton\" href=\"/login\">登录后做同款<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" c",
+      "scene": "film",
+      "expanded": "true"
+    },
+    {
+      "type": "click",
+      "at": 2525.2000000029802,
+      "x": 332,
+      "y": 869,
+      "target": "<a data-gallery-remix=\"true\" aria-describedby=\"_r_2_\" class=\"gallery-module__AxK02G__remixButton\" href=\"/login\">登录后做同款<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" c",
+      "scene": "film",
+      "expanded": "true"
+    },
+    {
+      "type": "pointerdown",
+      "at": 3024.7999999970198,
+      "x": 955,
+      "y": 517,
+      "target": "<input id=\"auth-email\" autocomplete=\"username\" required=\"\" placeholder=\"you@example.com\" class=\"auth-input\" type=\"email\" name=\"email\">"
+    },
+    {
+      "type": "pointerup",
+      "at": 3027.3999999910593,
+      "x": 955,
+      "y": 517,
+      "target": "<input id=\"auth-email\" autocomplete=\"username\" required=\"\" placeholder=\"you@example.com\" class=\"auth-input\" type=\"email\" name=\"email\">"
+    },
+    {
+      "type": "click",
+      "at": 3027.7999999970198,
+      "x": 955,
+      "y": 517,
+      "target": "<input id=\"auth-email\" autocomplete=\"username\" required=\"\" placeholder=\"you@example.com\" class=\"auth-input\" type=\"email\" name=\"email\">"
+    },
+    {
+      "type": "pointerdown",
+      "at": 3488.5999999940395,
+      "x": 959,
+      "y": 585,
+      "target": "<input id=\"auth-password\" autocomplete=\"current-password\" required=\"\" placeholder=\"至少 8 位\" class=\"auth-input\" type=\"password\" name=\"password\">"
+    },
+    {
+      "type": "pointerup",
+      "at": 3491.5999999940395,
+      "x": 959,
+      "y": 585,
+      "target": "<input id=\"auth-password\" autocomplete=\"current-password\" required=\"\" placeholder=\"至少 8 位\" class=\"auth-input\" type=\"password\" name=\"password\">"
+    },
+    {
+      "type": "click",
+      "at": 3491.7999999970198,
+      "x": 959,
+      "y": 585,
+      "target": "<input id=\"auth-password\" autocomplete=\"current-password\" required=\"\" placeholder=\"至少 8 位\" class=\"auth-input\" type=\"password\" name=\"password\">"
+    },
+    {
+      "type": "pointerdown",
+      "at": 3947.2999999970198,
+      "x": 958.9921875,
+      "y": 645,
+      "target": "<span class=\"flex items-center justify-center gap-2\">登录进入创作台<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-arrow-right size-4\" aria-hidden=\"true\""
+    },
+    {
+      "type": "pointerup",
+      "at": 3949.2999999970198,
+      "x": 958.9921875,
+      "y": 645,
+      "target": "<span class=\"flex items-center justify-center gap-2\">登录进入创作台<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-arrow-right size-4\" aria-hidden=\"true\""
+    },
+    {
+      "type": "click",
+      "at": 3949.5,
+      "x": 958,
+      "y": 645,
+      "target": "<span class=\"flex items-center justify-center gap-2\">登录进入创作台<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-arrow-right size-4\" aria-hidden=\"true\""
+    },
+    {
+      "type": "pointerdown",
+      "at": 4554.29999999702,
+      "x": 130.265625,
+      "y": 44,
+      "target": "<a class=\"flex min-w-0 items-center gap-2 whitespace-nowrap md:gap-3\" href=\"/\"><span class=\"editorial-title shrink-0 text-xl font-semibold uppercase tracking-[0.26em] text-[#9b5a20] sm:text-2xl\">Narra</span><span class=\"editorial-title truncate text-2xl font-semibold text-[#21170f] sm:text-3xl\">Imag"
+    },
+    {
+      "type": "pointerup",
+      "at": 4556.29999999702,
+      "x": 130.265625,
+      "y": 44,
+      "target": "<a class=\"flex min-w-0 items-center gap-2 whitespace-nowrap md:gap-3\" href=\"/\"><span class=\"editorial-title shrink-0 text-xl font-semibold uppercase tracking-[0.26em] text-[#9b5a20] sm:text-2xl\">Narra</span><span class=\"editorial-title truncate text-2xl font-semibold text-[#21170f] sm:text-3xl\">Imag"
+    },
+    {
+      "type": "click",
+      "at": 4556.70000000298,
+      "x": 130,
+      "y": 44,
+      "target": "<a class=\"flex min-w-0 items-center gap-2 whitespace-nowrap md:gap-3\" href=\"/\"><span class=\"editorial-title shrink-0 text-xl font-semibold uppercase tracking-[0.26em] text-[#9b5a20] sm:text-2xl\">Narra</span><span class=\"editorial-title truncate text-2xl font-semibold text-[#21170f] sm:text-3xl\">Imag"
+    },
+    {
+      "type": "pointerdown",
+      "at": 6554,
+      "x": 361.52105712890625,
+      "y": 165.99893188476562,
+      "target": "<span>收起</span>",
+      "scene": "film",
+      "expanded": "true"
+    },
+    {
+      "type": "pointerup",
+      "at": 6560.5,
+      "x": 361.52105712890625,
+      "y": 165.99893188476562,
+      "target": "<span>收起</span>",
+      "scene": "film",
+      "expanded": "true"
+    },
+    {
+      "type": "click",
+      "at": 6560.5999999940395,
+      "x": 361,
+      "y": 165,
+      "target": "<span>收起</span>",
+      "scene": "film",
+      "expanded": "true"
+    }
+  ],
+  "motion": {
+    "active": "true",
+    "paused": "false",
+    "reduced": "false"
+  },
+  "frame": {
+    "transform": "matrix(1, 0, 0, 1, 0, 0)",
+    "pointer": "false",
+    "rx": "0deg",
+    "ry": "0deg"
+  },
+  "buttons": [
+    {
+      "text": "胶片光影",
+      "rect": {
+        "x": 1083,
+        "y": -2056,
+        "width": 70,
+        "height": 30,
+        "top": -2056,
+        "right": 1153,
+        "bottom": -2026,
+        "left": 1083
+      },
+      "stack": []
+    },
+    {
+      "text": "绘本叙事",
+      "rect": {
+        "x": 1156,
+        "y": -2056,
+        "width": 70,
+        "height": 30,
+        "top": -2056,
+        "right": 1226,
+        "bottom": -2026,
+        "left": 1156
+      },
+      "stack": []
+    },
+    {
+      "text": "东方美学",
+      "rect": {
+        "x": 1229,
+        "y": -2056,
+        "width": 70,
+        "height": 30,
+        "top": -2056,
+        "right": 1299,
+        "bottom": -2026,
+        "left": 1229
+      },
+      "stack": []
+    },
+    {
+      "text": "复用画面灵感",
+      "rect": {
+        "x": 1198,
+        "y": -1682.296875,
+        "width": 82,
+        "height": 28,
+        "top": -1682.296875,
+        "right": 1280,
+        "bottom": -1654.296875,
+        "left": 1198
+      },
+      "stack": []
+    }
+  ]
+}

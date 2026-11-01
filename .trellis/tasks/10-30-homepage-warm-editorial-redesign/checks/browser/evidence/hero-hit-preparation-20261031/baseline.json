@@ -1,0 +1,71 @@
+{
+  "capturedAt": "2026-10-31T04:36:52.234936+00:00",
+  "workspace": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\hero-hit-independent-8725c17e\\app",
+  "sourceBaseline": {
+    "src/components/marketing/homepage/homepage.module.css": {
+      "sha256": "ec7be31b074f036be8b0396692091fc8185b8d4922675b8f1e3bc0b9bf101786",
+      "bytes": 22437
+    },
+    "src/components/marketing/homepage/hero-scene.tsx": {
+      "sha256": "ae39dec877127642b7ea13c3b56b497689c25d7714db431ddec4cfcba0aad60d",
+      "bytes": 8275
+    },
+    "src/tests/unit/homepage-hero.test.tsx": {
+      "sha256": "2842f2b7d1f7749029a4e0417be31ac41364234927251c5ed4a83e292ccc7e2e",
+      "bytes": 10661
+    }
+  },
+  "helperBaseline": {
+    "cdp.mjs": {
+      "sha256": "c6124c79dd61425243daf77092af7d09ec2273a7a19f5d3093db7eaa13b2a10b",
+      "bytes": 16631
+    },
+    "diagnose-hero-hit.mjs": {
+      "sha256": "ec4e580ba304e4aa4368942c285005366380194eed389fd03e56ca46cff9bf5b",
+      "bytes": 2886
+    },
+    "generate-prisma.mjs": {
+      "sha256": "54707ec4d1571529648b553044960e9d44e1f3b03c2a8222ba0590c5c1befbd9",
+      "bytes": 1159
+    },
+    "hero-image-checks.mjs": {
+      "sha256": "55ab57092950cc94b3f3bfc1e5ea108b9f585cdac0a5ff282d60b62796c88502",
+      "bytes": 19035
+    },
+    "hero-scene-contract.mjs": {
+      "sha256": "e0d5a470fdb834f270ea193ca914a0a705dec0e692527390aa7cb44d1e30c705",
+      "bytes": 1663
+    },
+    "homepage-checks.mjs": {
+      "sha256": "c2f168d288e2147f978d8ad4ec256e2f71ebd2edd784e1c6aab0b03809a2a673",
+      "bytes": 41796
+    },
+    "input-identity.mjs": {
+      "sha256": "cc8655f672d344737404076e330fe739fae34e1307f0f9bb1e98bb9081bac038",
+      "bytes": 2117
+    },
+    "prepare-fixture.mjs": {
+      "sha256": "4ba66a6b049be9dfb8ede783f54e6c2336f2f7e1ae56bc859b192fa121ac9c40",
+      "bytes": 8629
+    },
+    "reference-checks.mjs": {
+      "sha256": "c6bd5700efdb030c6b76735238b7f9ef8524796027f10b99e52ac556c87a0a3e",
+      "bytes": 4691
+    },
+    "run-browser.mjs": {
+      "sha256": "722a53645d041b12588bd1759921cd55871dcce1fd81d0f91b06b67b97d393de",
+      "bytes": 26580
+    },
+    "sync-fixture.mjs": {
+      "sha256": "2e0e9881ea6871cb3b4451108679ccb097dec30bf07b88e941516b066f3bac59",
+      "bytes": 2836
+    },
+    "verify-helpers.mjs": {
+      "sha256": "d86a29cbde410b948cd285e8de1fabf947264870f226cd3fc88c9022812b0432",
+      "bytes": 1304
+    }
+  },
+  "guardSha256": "bd9ec3da5da5787ffc8378f8ed97835428d4b5a9c80a21a099ccca2c4d077e55",
+  "historicalRed": "browser/evidence/diagnostic-1793420516503/hero-native-hit-diagnostic.json",
+  "notes": "Fresh pre-fix snapshot captured before implementer edits. Original failed receipts remain immutable. Node 24.11.1 is not pinned 24.22.1."
+}

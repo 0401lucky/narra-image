@@ -1,0 +1,12 @@
+{
+  "id": "20261101T024448-test-f4ac89",
+  "files": 1,
+  "testsPassed": 12,
+  "exitCode": 0,
+  "durationSeconds": 2.557,
+  "nodeVersion": "v24.22.1",
+  "timedOut": false,
+  "sourceChanges": [],
+  "snapshotModifications": [],
+  "scope": "One-file retry only; does not relabel the failed 14-file attempt as a passing run."
+}

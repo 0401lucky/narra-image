@@ -1,0 +1,37 @@
+{
+  "output": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-canvas-v1-e9e6cb3e34884a1cbeada1b036cfffea\\native-idb-1793271384420",
+  "scope": "Real Chromium native IndexedDB using production draft-store module; no Next, API, provider, DB or object storage",
+  "checks": [
+    {
+      "check": "Explicit open, atomic scene/Blob original round trip and signed viewport",
+      "pass": true
+    },
+    {
+      "check": "Native two-connection writer CAS and account/composite Blob isolation",
+      "pass": true
+    },
+    {
+      "check": "Forbidden runtime field rejected without overwriting native record",
+      "pass": true
+    },
+    {
+      "check": "Real browser page reload restores original bytes, edits and viewport",
+      "pass": true
+    },
+    {
+      "check": "Atomic tombstone and Blob detach permanently reject resurrection",
+      "pass": true
+    },
+    {
+      "check": "Unsupported persisted version remains an error, unrelated account draft preserved",
+      "pass": true
+    },
+    {
+      "check": "Closed connections permit deletion of the exact random fixture database only",
+      "pass": true
+    }
+  ],
+  "errors": [],
+  "chrome": "Chrome/156.0.8078.48",
+  "pass": true
+}

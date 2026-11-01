@@ -1,0 +1,11 @@
+{
+  "kind": "homepage-warm-editorial-redesign-g0-v1",
+  "token": "8725c17e5e164312644df075",
+  "workspace": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\hero-hit-independent-8725c17e\\app",
+  "createdAt": "2026-10-31T04:32:52.523197+00:00",
+  "node": "D:\\node\\node.exe",
+  "sourceFiles": 806,
+  "nodeVersion": "v24.11.1",
+  "requiredNodeVersion": "v24.22.1",
+  "pinnedRuntimeParity": false
+}

@@ -1,0 +1,45 @@
+"use client";
+
+// 模式只切换展示层；浏览器偏好与桌面能力在挂载后读取，不触碰两份业务草稿。
+import { useCallback, useEffect, useState } from "react";
+
+export type StudioMode = "conversation" | "canvas";
+type UseStudioModeResult = {
+  mode: StudioMode;
+  canvasReadOnly: boolean;
+  changeMode: (mode: StudioMode) => void;
+};
+
+export function useStudioMode(ownerId: string, canvasEnabled: boolean): UseStudioModeResult {
+  const [mode, setMode] = useState<StudioMode>("conversation");
+  const [canvasReadOnly, setCanvasReadOnly] = useState(true);
+  const preferenceKey = `narra_studio_mode_v1:${ownerId}`;
+
+  useEffect(() => {
+    let restored: StudioMode = "conversation";
+    if (canvasEnabled) {
+      try { if (window.localStorage.getItem(preferenceKey) === "canvas") restored = "canvas"; }
+      catch { /* A blocked preference store does not disable either workspace. */ }
+    }
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Browser preferences are mount-only, never SSR inputs.
+    setMode(restored);
+  }, [canvasEnabled, preferenceKey]);
+
+  useEffect(() => {
+    if (!canvasEnabled || typeof window.matchMedia !== "function") return;
+    const desktop = window.matchMedia("(min-width: 768px)");
+    const update = () => setCanvasReadOnly(!desktop.matches);
+    update();
+    desktop.addEventListener("change", update);
+    return () => desktop.removeEventListener("change", update);
+  }, [canvasEnabled]);
+
+  const changeMode = useCallback((next: StudioMode) => {
+    if (next === "canvas" && !canvasEnabled) return;
+    setMode(next);
+    try { window.localStorage.setItem(preferenceKey, next); }
+    catch { /* The current mode still works without a durable preference. */ }
+  }, [canvasEnabled, preferenceKey]);
+
+  return { mode: canvasEnabled ? mode : "conversation", canvasReadOnly, changeMode };
+}

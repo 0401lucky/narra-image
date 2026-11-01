@@ -1,0 +1,26 @@
+{
+  "receiptId": "20261101T024055-build-73445f",
+  "cause": "Turbopack JSON module parser rejects unpaired surrogate fixture value; product unchanged",
+  "files": {
+    "prepare-fixture.mjs": {
+      "sha256": "7c0d0a08d3989fc562853aff0260bd008288bc6144bc2bc4dcbf2763f42ad42d",
+      "bytes": 8718
+    },
+    "fixtures/db.ts.fixture": {
+      "sha256": "299c43f65294f1981036a279d1ceadc7d586e606f5df8e2b361ea7f3a7ffc4af",
+      "bytes": 12785
+    },
+    "long-url-contract.mjs": {
+      "sha256": "e107c233d4230411a8a3c042a0c7b8b24065304ab00d0ea9e9129fa6f2d9e638",
+      "bytes": 2175
+    },
+    "long-url-checks.mjs": {
+      "sha256": "6175ddddd1136bd980ac53a7785dc4e2b505e5d445f5c86a3b4407ccd3fe0a32",
+      "bytes": 17823
+    },
+    "fixture-config": {
+      "sha256": "6fecf9c519ce934e960ae81e8b004bc86b7ff244d221badedf7ea478cb41c122",
+      "bytes": 92246
+    }
+  }
+}

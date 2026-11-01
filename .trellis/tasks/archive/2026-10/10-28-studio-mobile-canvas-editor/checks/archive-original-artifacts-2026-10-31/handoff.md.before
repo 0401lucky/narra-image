@@ -1,0 +1,116 @@
+# Mobile Canvas Handoff - Mobile Scope And Pending Gates
+
+Date: 2026-10-31, Asia/Shanghai. Continue only
+`.trellis/tasks/10-28-studio-mobile-canvas-editor`.
+
+## Latest Continuation
+
+- Read `checks/mobile-resume-verification-2026-10-31.md` first. The same 35 mobile
+  product/test files remain frozen; this continuation makes no product edits.
+- New source-bound browser-08/fixture-05 and scoped mobile lint results are
+  distinct from the earlier full-test/type/production-build snapshot. The
+  full-root lint receipt fails on foreign generated/vendor task evidence and
+  is retained, not relabelled as a scoped or repository pass.
+- The user explicitly confirmed the homepage is another agent's work. Preserve
+  its ongoing changes; do not fix shared ESLint configuration, delete foreign
+  artifacts or repeatedly chase a moving whole-tree snapshot in mobile scope.
+- Complete/review this task's scoped records only. MA1-MA4 remain unchecked;
+  physical devices, real services and actual CI are still unperformed. No
+  staging, commit, archive, journal closeout or deployment is authorized.
+
+## Original Implementation Checkpoint
+
+- Existing task is independent `P3 / in_progress`, not a new child or duplicate.
+  User final approval and task activation already completed on 2026-10-30;
+  do not run task start again merely to resume.
+- Approved phone editor code and local automated verification are complete.
+  Independent Trellis implement/check roles executed the product work; main
+  owns planning/spec/evidence records and isolated browser validation.
+- `verification.md` maps all MA criteria to actual layer evidence. MA1-MA4
+  remain unchecked because required physical/native-device evidence is missing.
+  No full-MA, rollout or production acceptance is claimed.
+- All implementation and prior source work remains uncommitted; empty staging,
+  unchanged HEAD `1f7948e334c589dc6db38ac045b584f0f5381481`.
+  No push/deploy/production enablement/real dotenv/DB/S3/paid generation.
+
+## What Changed
+
+- Phone capability is independent of width/pointer/keyboard while genuine
+  owner/enabled/ready/readOnly/deleting guards and mounted runtime remain.
+- Explicit unscaled editor/current-scene chooser/Locate; mounted nonsecret raw
+  parameter drafts; synchronous native prompt/IME guards and Save/Run validation.
+- Panel source connect/atomic replace/disconnect/order and captured management/
+  file intents. Browse scene pan/pinch is separate from explicit whole-card
+  Move; renderer preview accepts only a valid captured single-pointer drop.
+- Scoped visible bounds, short-height native scrolling, accessible button/label
+  targets and browser accessibility page pinch. Existing Chinese cream/orange
+  styling/fonts, desktop ports/header dragging and phone chat remain.
+- Same scene v1/account/canvas/asset/run chain, local automatic domain drafts
+  versus manual captured account snapshot, original-image holds and canonical
+  result suppression. No graph scheduler/mode copying/media deletion/cancel/
+  refund behavior was added.
+
+## Exact Scope And Evidence
+
+- 35 product/test paths: 23 baseline modifications + 12 additions. Before-edit
+  byte copies and 1337 original identities preserve attribution despite earlier
+  untracked canvas files. Do not reset, stash or infer the mobile delta solely
+  from `git diff HEAD`.
+- Final source: `checks/source-freeze-after-zoom-2026-10-30.json`; source,
+  snapshot and index audits in `checks/preservation-*.json`. Main updates four
+  frontend specs only; operations/backend/schema/Worker/dependencies/global
+  CSS/chat/existing lifecycle-hook baselines are unchanged by mobile.
+- Role reports: `checks/mobile-implementation-report.md`,
+  `checks/mobile-independent-review.md`, `checks/mobile-zoom-followup-review.md`.
+  Five independent findings were fixed; red receipts remain unchanged.
+- Final ordinary suite: 125 files / 1442 tests; types pass; lint zero errors /
+  nine baseline warnings; production build pass; Worker TS 6 files / 32 tests.
+  DB suites are excluded, not newly accepted.
+- Fresh fixture-04/browser-07: actual Next/React Flow/native IndexedDB and exact
+  current copied source, copied installed dependencies, dummy identity and
+  loopback fake HTTP. 27 groups pass on Windows Chrome/156.0.8078.74.
+  Screenshots/original downloads/report are retained in
+  `checks/browser-evidence/mobile-browser-07/`; wrapper triplets in
+  `checks/receipts/`, byte hashes in evidence-capture manifests.
+- Rejected fixture installation and six browser-tooling failures are explained
+  in `checks/browser-tooling-correction.md`. Neither the initial build exit 0
+  nor intermediate groups are relabelled as final acceptance.
+
+## Resume And Remaining Gates
+
+1. Read the latest continuation record and this task/PRD/design/implement/
+   verification plus applicable frontend and
+   operations specs; inspect current-task source and latest git/source hashes.
+   Preserve all uncommitted work and unrelated homepage-task artifacts/pointer.
+   The unrelated full-root lint issue requires its own owner coordination; a
+   passing scoped mobile check cannot close that global gate.
+2. Complete `checks/manual-device-matrix.md` with actual iOS18+ Safari and
+   Android12+ Chrome current/previous stable engines, >=360 CSS px, recorded
+   hardware/browser/native Chinese keyboard versions. Test touch/Move/cancel,
+   IME/caret, real keyboard/orientation/safe areas, page zoom, OS picker/download,
+   chat and short-layout actions. Desktop CDP is not a substitute.
+3. Device/LAN setup, real login/services/CAPTCHA vendor/paid provider or actual
+   CI requires separate safe authorization. No real endpoint, production flag,
+   Docker startup or database fallback is authorized by this handoff.
+4. If device/browser testing identifies a genuine scoped bug, dispatch the
+   existing Trellis check/implement roles with `Active task: <this path>`,
+   explicit ownership, no recursive agents and the current source baseline.
+   Retain red evidence, reopen only affected source and rerun relevant full/
+   build/fresh-source browser gates; main does not bypass product-edit workflow.
+5. Only after required evidence is reviewed consider MA/device acceptance and
+   separately authorized closeout. No automatic archive/journal/commit/push/
+   deploy; user's no-commit/no-production policy remains in force.
+
+## Verification Tooling Notes
+
+- Use the identity-pinned Node and safe-run recorded in implement.md; unique
+  labels prevent overwriting evidence. Never run bare checks that read `.env`.
+- Read `checks/mobile-browser-tooling.json` for the owned root; do not hardcode
+  the rejected fixture UUID. Build via pinned Node and copied Next binary,
+  never `pnpm exec` in a generated dependency fixture.
+- Fresh source audit is mandatory before/after browser verdict. Future code
+  changes invalidate affected build/browser evidence. Retained raw receipts
+  are historical facts, not authorization to skip reruns or physical gates.
+- Keep owned temp profiles/caches/rejected roots unless explicitly cleaned with
+  resolved path/owner verification. No broad process kills, user Temp cleanup,
+  recursive shell-composed deletion or destructive Git commands.

@@ -1,0 +1,1937 @@
+{
+  "samples": [
+    {
+      "label": "before-point",
+      "at": 1344.8999999910593,
+      "width": 1440,
+      "height": 1000,
+      "scrollY": 0,
+      "hidden": false,
+      "card": {
+        "tag": "ARTICLE",
+        "rect": {
+          "x": 108,
+          "y": 1807.046875,
+          "width": 289,
+          "height": 361.25,
+          "top": 1807.046875,
+          "right": 397,
+          "bottom": 2168.296875,
+          "left": 108
+        },
+        "opacity": "1",
+        "transform": "none",
+        "inline": null,
+        "animations": []
+      },
+      "entrance": {
+        "tag": "DIV",
+        "rect": {
+          "x": 108,
+          "y": 1807.046875,
+          "width": 289,
+          "height": 361.25,
+          "top": 1807.046875,
+          "right": 397,
+          "bottom": 2168.296875,
+          "left": 108
+        },
+        "opacity": "1",
+        "transform": "none",
+        "inline": null,
+        "animations": []
+      },
+      "section": {
+        "tag": "SECTION",
+        "rect": {
+          "x": 0,
+          "y": 1530.265625,
+          "width": 1432,
+          "height": 1950.78125,
+          "top": 1530.265625,
+          "right": 1432,
+          "bottom": 3481.046875,
+          "left": 0
+        },
+        "opacity": "1",
+        "transform": "none",
+        "inline": null,
+        "animations": []
+      },
+      "pointer": [],
+      "styleWrites": []
+    },
+    {
+      "label": "after-original-point",
+      "at": 2129.5999999940395,
+      "width": 1440,
+      "height": 1000,
+      "scrollY": 1671,
+      "hidden": false,
+      "card": {
+        "tag": "ARTICLE",
+        "rect": {
+          "x": 108,
+          "y": 144.25244140625,
+          "width": 289,
+          "height": 361.25,
+          "top": 144.25244140625,
+          "right": 397,
+          "bottom": 505.50244140625,
+          "left": 108
+        },
+        "opacity": "1",
+        "transform": "none",
+        "inline": null,
+        "animations": []
+      },
+      "entrance": {
+        "tag": "DIV",
+        "rect": {
+          "x": 108,
+          "y": 144.25244140625,
+          "width": 289,
+          "height": 361.25,
+          "top": 144.25244140625,
+          "right": 397,
+          "bottom": 505.50244140625,
+          "left": 108
+        },
+        "opacity": "0.683627",
+        "transform": "matrix(1, 0, 0, 1, 0, 7.56036)",
+        "inline": "transform: translateY(7.56036px); opacity: 0.683627;",
+        "animations": []
+      },
+      "section": {
+        "tag": "SECTION",
+        "rect": {
+          "x": 0,
+          "y": -140.0892333984375,
+          "width": 1432,
+          "height": 3475.78125,
+          "top": -140.0892333984375,
+          "right": 1432,
+          "bottom": 3335.6920166015625,
+          "left": 0
+        },
+        "opacity": "0.972412",
+        "transform": "matrix(1, 0, 0, 1, 0, 0.645157)",
+        "inline": "transform: translateY(0.645157px);",
+        "animations": [
+          {
+            "playState": "running",
+            "currentTime": 405.6000000000002,
+            "startTime": 1651.5,
+            "pending": false,
+            "timing": {
+              "delay": 0,
+              "direction": "normal",
+              "duration": 750,
+              "easing": "cubic-bezier(0.22, 1, 0.36, 1)",
+              "endDelay": 0,
+              "fill": "both",
+              "iterationStart": 0,
+              "iterations": 1,
+              "activeDuration": 750,
+              "currentIteration": 0,
+              "endTime": 750,
+              "localTime": 405.6000000000002,
+              "progress": 0.9724118736791392
+            },
+            "keyframes": [
+              {
+                "offset": null,
+                "easing": "linear",
+                "composite": "auto",
+                "opacity": "0",
+                "computedOffset": 0
+              },
+              {
+                "offset": null,
+                "easing": "linear",
+                "composite": "auto",
+                "opacity": "1",
+                "computedOffset": 1
+              }
+            ]
+          }
+        ]
+      },
+      "pointer": [
+        {
+          "type": "wheel",
+          "x": 1416,
+          "y": 500,
+          "trusted": true,
+          "target": "SECTION"
+        },
+        {
+          "type": "wheel",
+          "x": 1416,
+          "y": 500,
+          "trusted": true,
+          "target": "SECTION"
+        },
+        {
+          "type": "wheel",
+          "x": 1416,
+          "y": 500,
+          "trusted": true,
+          "target": "SECTION"
+        }
+      ],
+      "styleWrites": [
+        {
+          "at": 1670.5999999940395,
+          "old": null,
+          "current": "transform: translateY(21.4424px);"
+        },
+        {
+          "at": 1794.8999999910593,
+          "old": "transform: translateY(21.4424px);",
+          "current": "transform: translateY(8.29937px);"
+        },
+        {
+          "at": 1806.199999988079,
+          "old": "transform: translateY(8.29937px);",
+          "current": "transform: none; opacity: 1;"
+        },
+        {
+          "at": 1806.199999988079,
+          "old": "transform: translateY(8.29937px); opacity: 0.683627;",
+          "current": "transform: none; opacity: 1;"
+        },
+        {
+          "at": 1806.199999988079,
+          "old": "transform: translateY(8.29937px); opacity: 1;",
+          "current": "transform: none; opacity: 1;"
+        },
+        {
+          "at": 1815.5999999940395,
+          "old": "transform: none; opacity: 1;",
+          "current": "transform: translateY(7.56036px); opacity: 0.683627;"
+        },
+        {
+          "at": 1815.5999999940395,
+          "old": "transform: none; opacity: 0.683627;",
+          "current": "transform: translateY(7.56036px); opacity: 0.683627;"
+        }
+      ]
+    },
+    {
+      "label": "before-original-hover",
+      "at": 2933.8999999910593,
+      "width": 1440,
+      "height": 1000,
+      "scrollY": 1671,
+      "hidden": false,
+      "card": {
+        "tag": "ARTICLE",
+        "rect": {
+          "x": 108,
+          "y": 143.60723876953125,
+          "width": 289,
+          "height": 361.25,
+          "top": 143.60723876953125,
+          "right": 397,
+          "bottom": 504.85723876953125,
+          "left": 108
+        },
+        "opacity": "1",
+        "transform": "none",
+        "inline": null,
+        "animations": []
+      },
+      "entrance": {
+        "tag": "DIV",
+        "rect": {
+          "x": 108,
+          "y": 143.60723876953125,
+          "width": 289,
+          "height": 361.25,
+          "top": 143.60723876953125,
+          "right": 397,
+          "bottom": 504.85723876953125,
+          "left": 108
+        },
+        "opacity": "0.683627",
+        "transform": "matrix(1, 0, 0, 1, 0, 7.56036)",
+        "inline": "transform: translateY(7.56036px); opacity: 0.683627;",
+        "animations": []
+      },
+      "section": {
+        "tag": "SECTION",
+        "rect": {
+          "x": 0,
+          "y": -140.734375,
+          "width": 1432,
+          "height": 3475.78125,
+          "top": -140.734375,
+          "right": 1432,
+          "bottom": 3335.046875,
+          "left": 0
+        },
+        "opacity": "1",
+        "transform": "none",
+        "inline": "transform: none; opacity: 1;",
+        "animations": []
+      },
+      "pointer": [
+        {
+          "type": "wheel",
+          "x": 1416,
+          "y": 500,
+          "trusted": true,
+          "target": "SECTION"
+        },
+        {
+          "type": "wheel",
+          "x": 1416,
+          "y": 500,
+          "trusted": true,
+          "target": "SECTION"
+        },
+        {
+          "type": "wheel",
+          "x": 1416,
+          "y": 500,
+          "trusted": true,
+          "target": "SECTION"
+        }
+      ],
+      "styleWrites": [
+        {
+          "at": 1670.5999999940395,
+          "old": null,
+          "current": "transform: translateY(21.4424px);"
+        },
+        {
+          "at": 1794.8999999910593,
+          "old": "transform: translateY(21.4424px);",
+          "current": "transform: translateY(8.29937px);"
+        },
+        {
+          "at": 1806.199999988079,
+          "old": "transform: translateY(8.29937px);",
+          "current": "transform: none; opacity: 1;"
+        },
+        {
+          "at": 1806.199999988079,
+          "old": "transform: translateY(8.29937px); opacity: 0.683627;",
+          "current": "transform: none; opacity: 1;"
+        },
+        {
+          "at": 1806.199999988079,
+          "old": "transform: translateY(8.29937px); opacity: 1;",
+          "current": "transform: none; opacity: 1;"
+        },
+        {
+          "at": 1815.5999999940395,
+          "old": "transform: none; opacity: 1;",
+          "current": "transform: translateY(7.56036px); opacity: 0.683627;"
+        },
+        {
+          "at": 1815.5999999940395,
+          "old": "transform: none; opacity: 0.683627;",
+          "current": "transform: translateY(7.56036px); opacity: 0.683627;"
+        }
+      ]
+    },
+    {
+      "label": "original-hover-request",
+      "x": 339.20000000000005,
+      "y": 233.91973876953125,
+      "insideViewport": true
+    },
+    {
+      "label": "original-hover-0",
+      "at": 3499.199999988079,
+      "width": 1440,
+      "height": 1000,
+      "scrollY": 1671,
+      "hidden": false,
+      "card": {
+        "tag": "ARTICLE",
+        "rect": {
+          "x": 108,
+          "y": 143.60723876953125,
+          "width": 289,
+          "height": 361.25,
+          "top": 143.60723876953125,
+          "right": 397,
+          "bottom": 504.85723876953125,
+          "left": 108
+        },
+        "opacity": "1",
+        "transform": "none",
+        "inline": null,
+        "animations": []
+      },
+      "entrance": {
+        "tag": "DIV",
+        "rect": {
+          "x": 108,
+          "y": 143.60723876953125,
+          "width": 289,
+          "height": 361.25,
+          "top": 143.60723876953125,
+          "right": 397,
+          "bottom": 504.85723876953125,
+          "left": 108
+        },
+        "opacity": "0.683627",
+        "transform": "matrix(1, 0, 0, 1, 0, 7.56036)",
+        "inline": "transform: translateY(7.56036px); opacity: 0.683627;",
+        "animations": []
+      },
+      "section": {
+        "tag": "SECTION",
+        "rect": {
+          "x": 0,
+          "y": -140.734375,
+          "width": 1432,
+          "height": 3475.78125,
+          "top": -140.734375,
+          "right": 1432,
+          "bottom": 3335.046875,
+          "left": 0
+        },
+        "opacity": "1",
+        "transform": "none",
+        "inline": "transform: none; opacity: 1;",
+        "animations": []
+      },
+      "pointer": [
+        {
+          "type": "wheel",
+          "x": 1416,
+          "y": 500,
+          "trusted": true,
+          "target": "SECTION"
+        },
+        {
+          "type": "wheel",
+          "x": 1416,
+          "y": 500,
+          "trusted": true,
+          "target": "SECTION"
+        },
+        {
+          "type": "wheel",
+          "x": 1416,
+          "y": 500,
+          "trusted": true,
+          "target": "SECTION"
+        },
+        {
+          "type": "pointermove",
+          "x": 339.20001220703125,
+          "y": 233.91973876953125,
+          "trusted": true,
+          "target": "A"
+        }
+      ],
+      "styleWrites": [
+        {
+          "at": 1670.5999999940395,
+          "old": null,
+          "current": "transform: translateY(21.4424px);"
+        },
+        {
+          "at": 1794.8999999910593,
+          "old": "transform: translateY(21.4424px);",
+          "current": "transform: translateY(8.29937px);"
+        },
+        {
+          "at": 1806.199999988079,
+          "old": "transform: translateY(8.29937px);",
+          "current": "transform: none; opacity: 1;"
+        },
+        {
+          "at": 1806.199999988079,
+          "old": "transform: translateY(8.29937px); opacity: 0.683627;",
+          "current": "transform: none; opacity: 1;"
+        },
+        {
+          "at": 1806.199999988079,
+          "old": "transform: translateY(8.29937px); opacity: 1;",
+          "current": "transform: none; opacity: 1;"
+        },
+        {
+          "at": 1815.5999999940395,
+          "old": "transform: none; opacity: 1;",
+          "current": "transform: translateY(7.56036px); opacity: 0.683627;"
+        },
+        {
+          "at": 1815.5999999940395,
+          "old": "transform: none; opacity: 0.683627;",
+          "current": "transform: translateY(7.56036px); opacity: 0.683627;"
+        }
+      ]
+    },
+    {
+      "label": "original-hover-1",
+      "at": 3900.8999999910593,
+      "width": 1440,
+      "height": 1000,
+      "scrollY": 1671,
+      "hidden": false,
+      "card": {
+        "tag": "ARTICLE",
+        "rect": {
+          "x": 108,
+          "y": 143.60723876953125,
+          "width": 289,
+          "height": 361.25,
+          "top": 143.60723876953125,
+          "right": 397,
+          "bottom": 504.85723876953125,
+          "left": 108
+        },
+        "opacity": "1",
+        "transform": "none",
+        "inline": null,
+        "animations": []
+      },
+      "entrance": {
+        "tag": "DIV",
+        "rect": {
+          "x": 108,
+          "y": 143.60723876953125,
+          "width": 289,
+          "height": 361.25,
+          "top": 143.60723876953125,
+          "right": 397,
+          "bottom": 504.85723876953125,
+          "left": 108
+        },
+        "opacity": "0.683627",
+        "transform": "matrix(1, 0, 0, 1, 0, 7.56036)",
+        "inline": "transform: translateY(7.56036px); opacity: 0.683627;",
+        "animations": []
+      },
+      "section": {
+        "tag": "SECTION",
+        "rect": {
+          "x": 0,
+          "y": -140.734375,
+          "width": 1432,
+          "height": 3475.78125,
+          "top": -140.734375,
+          "right": 1432,
+          "bottom": 3335.046875,
+          "left": 0
+        },
+        "opacity": "1",
+        "transform": "none",
+        "inline": "transform: none; opacity: 1;",
+        "animations": []
+      },
+      "pointer": [
+        {
+          "type": "wheel",
+          "x": 1416,
+          "y": 500,
+          "trusted": true,
+          "target": "SECTION"
+        },
+        {
+          "type": "wheel",
+          "x": 1416,
+          "y": 500,
+          "trusted": true,
+          "target": "SECTION"
+        },
+        {
+          "type": "wheel",
+          "x": 1416,
+          "y": 500,
+          "trusted": true,
+          "target": "SECTION"
+        },
+        {
+          "type": "pointermove",
+          "x": 339.20001220703125,
+          "y": 233.91973876953125,
+          "trusted": true,
+          "target": "A"
+        }
+      ],
+      "styleWrites": [
+        {
+          "at": 1670.5999999940395,
+          "old": null,
+          "current": "transform: translateY(21.4424px);"
+        },
+        {
+          "at": 1794.8999999910593,
+          "old": "transform: translateY(21.4424px);",
+          "current": "transform: translateY(8.29937px);"
+        },
+        {
+          "at": 1806.199999988079,
+          "old": "transform: translateY(8.29937px);",
+          "current": "transform: none; opacity: 1;"
+        },
+        {
+          "at": 1806.199999988079,
+          "old": "transform: translateY(8.29937px); opacity: 0.683627;",
+          "current": "transform: none; opacity: 1;"
+        },
+        {
+          "at": 1806.199999988079,
+          "old": "transform: translateY(8.29937px); opacity: 1;",
+          "current": "transform: none; opacity: 1;"
+        },
+        {
+          "at": 1815.5999999940395,
+          "old": "transform: none; opacity: 1;",
+          "current": "transform: translateY(7.56036px); opacity: 0.683627;"
+        },
+        {
+          "at": 1815.5999999940395,
+          "old": "transform: none; opacity: 0.683627;",
+          "current": "transform: translateY(7.56036px); opacity: 0.683627;"
+        }
+      ]
+    },
+    {
+      "label": "original-hover-2",
+      "at": 4302.899999991059,
+      "width": 1440,
+      "height": 1000,
+      "scrollY": 1671,
+      "hidden": false,
+      "card": {
+        "tag": "ARTICLE",
+        "rect": {
+          "x": 108,
+          "y": 143.60723876953125,
+          "width": 289,
+          "height": 361.25,
+          "top": 143.60723876953125,
+          "right": 397,
+          "bottom": 504.85723876953125,
+          "left": 108
+        },
+        "opacity": "1",
+        "transform": "none",
+        "inline": null,
+        "animations": []
+      },
+      "entrance": {
+        "tag": "DIV",
+        "rect": {
+          "x": 108,
+          "y": 143.60723876953125,
+          "width": 289,
+          "height": 361.25,
+          "top": 143.60723876953125,
+          "right": 397,
+          "bottom": 504.85723876953125,
+          "left": 108
+        },
+        "opacity": "0.683627",
+        "transform": "matrix(1, 0, 0, 1, 0, 7.56036)",
+        "inline": "transform: translateY(7.56036px); opacity: 0.683627;",
+        "animations": []
+      },
+      "section": {
+        "tag": "SECTION",
+        "rect": {
+          "x": 0,
+          "y": -140.734375,
+          "width": 1432,
+          "height": 3475.78125,
+          "top": -140.734375,
+          "right": 1432,
+          "bottom": 3335.046875,
+          "left": 0
+        },
+        "opacity": "1",
+        "transform": "none",
+        "inline": "transform: none; opacity: 1;",
+        "animations": []
+      },
+      "pointer": [
+        {
+          "type": "wheel",
+          "x": 1416,
+          "y": 500,
+          "trusted": true,
+          "target": "SECTION"
+        },
+        {
+          "type": "wheel",
+          "x": 1416,
+          "y": 500,
+          "trusted": true,
+          "target": "SECTION"
+        },
+        {
+          "type": "wheel",
+          "x": 1416,
+          "y": 500,
+          "trusted": true,
+          "target": "SECTION"
+        },
+        {
+          "type": "pointermove",
+          "x": 339.20001220703125,
+          "y": 233.91973876953125,
+          "trusted": true,
+          "target": "A"
+        }
+      ],
+      "styleWrites": [
+        {
+          "at": 1670.5999999940395,
+          "old": null,
+          "current": "transform: translateY(21.4424px);"
+        },
+        {
+          "at": 1794.8999999910593,
+          "old": "transform: translateY(21.4424px);",
+          "current": "transform: translateY(8.29937px);"
+        },
+        {
+          "at": 1806.199999988079,
+          "old": "transform: translateY(8.29937px);",
+          "current": "transform: none; opacity: 1;"
+        },
+        {
+          "at": 1806.199999988079,
+          "old": "transform: translateY(8.29937px); opacity: 0.683627;",
+          "current": "transform: none; opacity: 1;"
+        },
+        {
+          "at": 1806.199999988079,
+          "old": "transform: translateY(8.29937px); opacity: 1;",
+          "current": "transform: none; opacity: 1;"
+        },
+        {
+          "at": 1815.5999999940395,
+          "old": "transform: none; opacity: 1;",
+          "current": "transform: translateY(7.56036px); opacity: 0.683627;"
+        },
+        {
+          "at": 1815.5999999940395,
+          "old": "transform: none; opacity: 0.683627;",
+          "current": "transform: translateY(7.56036px); opacity: 0.683627;"
+        }
+      ]
+    },
+    {
+      "label": "original-hover-3",
+      "at": 4704.79999999702,
+      "width": 1440,
+      "height": 1000,
+      "scrollY": 1671,
+      "hidden": false,
+      "card": {
+        "tag": "ARTICLE",
+        "rect": {
+          "x": 108,
+          "y": 143.60723876953125,
+          "width": 289,
+          "height": 361.25,
+          "top": 143.60723876953125,
+          "right": 397,
+          "bottom": 504.85723876953125,
+          "left": 108
+        },
+        "opacity": "1",
+        "transform": "none",
+        "inline": null,
+        "animations": []
+      },
+      "entrance": {
+        "tag": "DIV",
+        "rect": {
+          "x": 108,
+          "y": 143.60723876953125,
+          "width": 289,
+          "height": 361.25,
+          "top": 143.60723876953125,
+          "right": 397,
+          "bottom": 504.85723876953125,
+          "left": 108
+        },
+        "opacity": "0.683627",
+        "transform": "matrix(1, 0, 0, 1, 0, 7.56036)",
+        "inline": "transform: translateY(7.56036px); opacity: 0.683627;",
+        "animations": []
+      },
+      "section": {
+        "tag": "SECTION",
+        "rect": {
+          "x": 0,
+          "y": -140.734375,
+          "width": 1432,
+          "height": 3475.78125,
+          "top": -140.734375,
+          "right": 1432,
+          "bottom": 3335.046875,
+          "left": 0
+        },
+        "opacity": "1",
+        "transform": "none",
+        "inline": "transform: none; opacity: 1;",
+        "animations": []
+      },
+      "pointer": [
+        {
+          "type": "wheel",
+          "x": 1416,
+          "y": 500,
+          "trusted": true,
+          "target": "SECTION"
+        },
+        {
+          "type": "wheel",
+          "x": 1416,
+          "y": 500,
+          "trusted": true,
+          "target": "SECTION"
+        },
+        {
+          "type": "wheel",
+          "x": 1416,
+          "y": 500,
+          "trusted": true,
+          "target": "SECTION"
+        },
+        {
+          "type": "pointermove",
+          "x": 339.20001220703125,
+          "y": 233.91973876953125,
+          "trusted": true,
+          "target": "A"
+        }
+      ],
+      "styleWrites": [
+        {
+          "at": 1670.5999999940395,
+          "old": null,
+          "current": "transform: translateY(21.4424px);"
+        },
+        {
+          "at": 1794.8999999910593,
+          "old": "transform: translateY(21.4424px);",
+          "current": "transform: translateY(8.29937px);"
+        },
+        {
+          "at": 1806.199999988079,
+          "old": "transform: translateY(8.29937px);",
+          "current": "transform: none; opacity: 1;"
+        },
+        {
+          "at": 1806.199999988079,
+          "old": "transform: translateY(8.29937px); opacity: 0.683627;",
+          "current": "transform: none; opacity: 1;"
+        },
+        {
+          "at": 1806.199999988079,
+          "old": "transform: translateY(8.29937px); opacity: 1;",
+          "current": "transform: none; opacity: 1;"
+        },
+        {
+          "at": 1815.5999999940395,
+          "old": "transform: none; opacity: 1;",
+          "current": "transform: translateY(7.56036px); opacity: 0.683627;"
+        },
+        {
+          "at": 1815.5999999940395,
+          "old": "transform: none; opacity: 0.683627;",
+          "current": "transform: translateY(7.56036px); opacity: 0.683627;"
+        }
+      ]
+    },
+    {
+      "label": "original-hover-4",
+      "at": 5107.0999999940395,
+      "width": 1440,
+      "height": 1000,
+      "scrollY": 1671,
+      "hidden": false,
+      "card": {
+        "tag": "ARTICLE",
+        "rect": {
+          "x": 108,
+          "y": 143.60723876953125,
+          "width": 289,
+          "height": 361.25,
+          "top": 143.60723876953125,
+          "right": 397,
+          "bottom": 504.85723876953125,
+          "left": 108
+        },
+        "opacity": "1",
+        "transform": "none",
+        "inline": null,
+        "animations": []
+      },
+      "entrance": {
+        "tag": "DIV",
+        "rect": {
+          "x": 108,
+          "y": 143.60723876953125,
+          "width": 289,
+          "height": 361.25,
+          "top": 143.60723876953125,
+          "right": 397,
+          "bottom": 504.85723876953125,
+          "left": 108
+        },
+        "opacity": "0.683627",
+        "transform": "matrix(1, 0, 0, 1, 0, 7.56036)",
+        "inline": "transform: translateY(7.56036px); opacity: 0.683627;",
+        "animations": []
+      },
+      "section": {
+        "tag": "SECTION",
+        "rect": {
+          "x": 0,
+          "y": -140.734375,
+          "width": 1432,
+          "height": 3475.78125,
+          "top": -140.734375,
+          "right": 1432,
+          "bottom": 3335.046875,
+          "left": 0
+        },
+        "opacity": "1",
+        "transform": "none",
+        "inline": "transform: none; opacity: 1;",
+        "animations": []
+      },
+      "pointer": [
+        {
+          "type": "wheel",
+          "x": 1416,
+          "y": 500,
+          "trusted": true,
+          "target": "SECTION"
+        },
+        {
+          "type": "wheel",
+          "x": 1416,
+          "y": 500,
+          "trusted": true,
+          "target": "SECTION"
+        },
+        {
+          "type": "wheel",
+          "x": 1416,
+          "y": 500,
+          "trusted": true,
+          "target": "SECTION"
+        },
+        {
+          "type": "pointermove",
+          "x": 339.20001220703125,
+          "y": 233.91973876953125,
+          "trusted": true,
+          "target": "A"
+        }
+      ],
+      "styleWrites": [
+        {
+          "at": 1670.5999999940395,
+          "old": null,
+          "current": "transform: translateY(21.4424px);"
+        },
+        {
+          "at": 1794.8999999910593,
+          "old": "transform: translateY(21.4424px);",
+          "current": "transform: translateY(8.29937px);"
+        },
+        {
+          "at": 1806.199999988079,
+          "old": "transform: translateY(8.29937px);",
+          "current": "transform: none; opacity: 1;"
+        },
+        {
+          "at": 1806.199999988079,
+          "old": "transform: translateY(8.29937px); opacity: 0.683627;",
+          "current": "transform: none; opacity: 1;"
+        },
+        {
+          "at": 1806.199999988079,
+          "old": "transform: translateY(8.29937px); opacity: 1;",
+          "current": "transform: none; opacity: 1;"
+        },
+        {
+          "at": 1815.5999999940395,
+          "old": "transform: none; opacity: 1;",
+          "current": "transform: translateY(7.56036px); opacity: 0.683627;"
+        },
+        {
+          "at": 1815.5999999940395,
+          "old": "transform: none; opacity: 0.683627;",
+          "current": "transform: translateY(7.56036px); opacity: 0.683627;"
+        }
+      ]
+    },
+    {
+      "label": "before-full-card-native-scroll",
+      "at": 5380.29999999702,
+      "width": 1440,
+      "height": 1000,
+      "scrollY": 1671,
+      "hidden": false,
+      "card": {
+        "tag": "ARTICLE",
+        "rect": {
+          "x": 108,
+          "y": 143.60723876953125,
+          "width": 289,
+          "height": 361.25,
+          "top": 143.60723876953125,
+          "right": 397,
+          "bottom": 504.85723876953125,
+          "left": 108
+        },
+        "opacity": "1",
+        "transform": "none",
+        "inline": null,
+        "animations": []
+      },
+      "entrance": {
+        "tag": "DIV",
+        "rect": {
+          "x": 108,
+          "y": 143.60723876953125,
+          "width": 289,
+          "height": 361.25,
+          "top": 143.60723876953125,
+          "right": 397,
+          "bottom": 504.85723876953125,
+          "left": 108
+        },
+        "opacity": "0.683627",
+        "transform": "matrix(1, 0, 0, 1, 0, 7.56036)",
+        "inline": "transform: translateY(7.56036px); opacity: 0.683627;",
+        "animations": []
+      },
+      "section": {
+        "tag": "SECTION",
+        "rect": {
+          "x": 0,
+          "y": -140.734375,
+          "width": 1432,
+          "height": 3475.78125,
+          "top": -140.734375,
+          "right": 1432,
+          "bottom": 3335.046875,
+          "left": 0
+        },
+        "opacity": "1",
+        "transform": "none",
+        "inline": "transform: none; opacity: 1;",
+        "animations": []
+      },
+      "pointer": [
+        {
+          "type": "wheel",
+          "x": 1416,
+          "y": 500,
+          "trusted": true,
+          "target": "SECTION"
+        },
+        {
+          "type": "wheel",
+          "x": 1416,
+          "y": 500,
+          "trusted": true,
+          "target": "SECTION"
+        },
+        {
+          "type": "wheel",
+          "x": 1416,
+          "y": 500,
+          "trusted": true,
+          "target": "SECTION"
+        },
+        {
+          "type": "pointermove",
+          "x": 339.20001220703125,
+          "y": 233.91973876953125,
+          "trusted": true,
+          "target": "A"
+        }
+      ],
+      "styleWrites": [
+        {
+          "at": 1670.5999999940395,
+          "old": null,
+          "current": "transform: translateY(21.4424px);"
+        },
+        {
+          "at": 1794.8999999910593,
+          "old": "transform: translateY(21.4424px);",
+          "current": "transform: translateY(8.29937px);"
+        },
+        {
+          "at": 1806.199999988079,
+          "old": "transform: translateY(8.29937px);",
+          "current": "transform: none; opacity: 1;"
+        },
+        {
+          "at": 1806.199999988079,
+          "old": "transform: translateY(8.29937px); opacity: 0.683627;",
+          "current": "transform: none; opacity: 1;"
+        },
+        {
+          "at": 1806.199999988079,
+          "old": "transform: translateY(8.29937px); opacity: 1;",
+          "current": "transform: none; opacity: 1;"
+        },
+        {
+          "at": 1815.5999999940395,
+          "old": "transform: none; opacity: 1;",
+          "current": "transform: translateY(7.56036px); opacity: 0.683627;"
+        },
+        {
+          "at": 1815.5999999940395,
+          "old": "transform: none; opacity: 0.683627;",
+          "current": "transform: translateY(7.56036px); opacity: 0.683627;"
+        }
+      ]
+    },
+    {
+      "label": "after-full-card-native-scroll",
+      "at": 5632.699999988079,
+      "width": 1440,
+      "height": 1000,
+      "scrollY": 1555,
+      "hidden": false,
+      "card": {
+        "tag": "ARTICLE",
+        "rect": {
+          "x": 108,
+          "y": 259.60723876953125,
+          "width": 289,
+          "height": 361.25,
+          "top": 259.60723876953125,
+          "right": 397,
+          "bottom": 620.8572387695312,
+          "left": 108
+        },
+        "opacity": "1",
+        "transform": "none",
+        "inline": null,
+        "animations": []
+      },
+      "entrance": {
+        "tag": "DIV",
+        "rect": {
+          "x": 108,
+          "y": 259.60723876953125,
+          "width": 289,
+          "height": 361.25,
+          "top": 259.60723876953125,
+          "right": 397,
+          "bottom": 620.8572387695312,
+          "left": 108
+        },
+        "opacity": "0.683627",
+        "transform": "matrix(1, 0, 0, 1, 0, 7.56036)",
+        "inline": "transform: translateY(7.56036px); opacity: 0.683627;",
+        "animations": []
+      },
+      "section": {
+        "tag": "SECTION",
+        "rect": {
+          "x": 0,
+          "y": -24.734375,
+          "width": 1432,
+          "height": 3475.78125,
+          "top": -24.734375,
+          "right": 1432,
+          "bottom": 3451.046875,
+          "left": 0
+        },
+        "opacity": "1",
+        "transform": "none",
+        "inline": "transform: none; opacity: 1;",
+        "animations": []
+      },
+      "pointer": [
+        {
+          "type": "wheel",
+          "x": 1416,
+          "y": 500,
+          "trusted": true,
+          "target": "SECTION"
+        },
+        {
+          "type": "wheel",
+          "x": 1416,
+          "y": 500,
+          "trusted": true,
+          "target": "SECTION"
+        },
+        {
+          "type": "wheel",
+          "x": 1416,
+          "y": 500,
+          "trusted": true,
+          "target": "SECTION"
+        },
+        {
+          "type": "pointermove",
+          "x": 339.20001220703125,
+          "y": 233.91973876953125,
+          "trusted": true,
+          "target": "A"
+        },
+        {
+          "type": "wheel",
+          "x": 1416,
+          "y": 500,
+          "trusted": true,
+          "target": "SECTION"
+        }
+      ],
+      "styleWrites": [
+        {
+          "at": 1670.5999999940395,
+          "old": null,
+          "current": "transform: translateY(21.4424px);"
+        },
+        {
+          "at": 1794.8999999910593,
+          "old": "transform: translateY(21.4424px);",
+          "current": "transform: translateY(8.29937px);"
+        },
+        {
+          "at": 1806.199999988079,
+          "old": "transform: translateY(8.29937px);",
+          "current": "transform: none; opacity: 1;"
+        },
+        {
+          "at": 1806.199999988079,
+          "old": "transform: translateY(8.29937px); opacity: 0.683627;",
+          "current": "transform: none; opacity: 1;"
+        },
+        {
+          "at": 1806.199999988079,
+          "old": "transform: translateY(8.29937px); opacity: 1;",
+          "current": "transform: none; opacity: 1;"
+        },
+        {
+          "at": 1815.5999999940395,
+          "old": "transform: none; opacity: 1;",
+          "current": "transform: translateY(7.56036px); opacity: 0.683627;"
+        },
+        {
+          "at": 1815.5999999940395,
+          "old": "transform: none; opacity: 0.683627;",
+          "current": "transform: translateY(7.56036px); opacity: 0.683627;"
+        }
+      ]
+    },
+    {
+      "label": "visible-hover-0",
+      "at": 6041.5999999940395,
+      "width": 1440,
+      "height": 1000,
+      "scrollY": 1555,
+      "hidden": false,
+      "card": {
+        "tag": "ARTICLE",
+        "rect": {
+          "x": 108,
+          "y": 259.60723876953125,
+          "width": 289,
+          "height": 361.25,
+          "top": 259.60723876953125,
+          "right": 397,
+          "bottom": 620.8572387695312,
+          "left": 108
+        },
+        "opacity": "1",
+        "transform": "none",
+        "inline": null,
+        "animations": []
+      },
+      "entrance": {
+        "tag": "DIV",
+        "rect": {
+          "x": 108,
+          "y": 259.60723876953125,
+          "width": 289,
+          "height": 361.25,
+          "top": 259.60723876953125,
+          "right": 397,
+          "bottom": 620.8572387695312,
+          "left": 108
+        },
+        "opacity": "0.683627",
+        "transform": "matrix(1, 0, 0, 1, 0, 7.56036)",
+        "inline": "transform: translateY(7.56036px); opacity: 0.683627;",
+        "animations": []
+      },
+      "section": {
+        "tag": "SECTION",
+        "rect": {
+          "x": 0,
+          "y": -24.734375,
+          "width": 1432,
+          "height": 3475.78125,
+          "top": -24.734375,
+          "right": 1432,
+          "bottom": 3451.046875,
+          "left": 0
+        },
+        "opacity": "1",
+        "transform": "none",
+        "inline": "transform: none; opacity: 1;",
+        "animations": []
+      },
+      "pointer": [
+        {
+          "type": "wheel",
+          "x": 1416,
+          "y": 500,
+          "trusted": true,
+          "target": "SECTION"
+        },
+        {
+          "type": "wheel",
+          "x": 1416,
+          "y": 500,
+          "trusted": true,
+          "target": "SECTION"
+        },
+        {
+          "type": "wheel",
+          "x": 1416,
+          "y": 500,
+          "trusted": true,
+          "target": "SECTION"
+        },
+        {
+          "type": "pointermove",
+          "x": 339.20001220703125,
+          "y": 233.91973876953125,
+          "trusted": true,
+          "target": "A"
+        },
+        {
+          "type": "wheel",
+          "x": 1416,
+          "y": 500,
+          "trusted": true,
+          "target": "SECTION"
+        },
+        {
+          "type": "pointermove",
+          "x": 339.20001220703125,
+          "y": 349.91973876953125,
+          "trusted": true,
+          "target": "IMG"
+        }
+      ],
+      "styleWrites": [
+        {
+          "at": 1670.5999999940395,
+          "old": null,
+          "current": "transform: translateY(21.4424px);"
+        },
+        {
+          "at": 1794.8999999910593,
+          "old": "transform: translateY(21.4424px);",
+          "current": "transform: translateY(8.29937px);"
+        },
+        {
+          "at": 1806.199999988079,
+          "old": "transform: translateY(8.29937px);",
+          "current": "transform: none; opacity: 1;"
+        },
+        {
+          "at": 1806.199999988079,
+          "old": "transform: translateY(8.29937px); opacity: 0.683627;",
+          "current": "transform: none; opacity: 1;"
+        },
+        {
+          "at": 1806.199999988079,
+          "old": "transform: translateY(8.29937px); opacity: 1;",
+          "current": "transform: none; opacity: 1;"
+        },
+        {
+          "at": 1815.5999999940395,
+          "old": "transform: none; opacity: 1;",
+          "current": "transform: translateY(7.56036px); opacity: 0.683627;"
+        },
+        {
+          "at": 1815.5999999940395,
+          "old": "transform: none; opacity: 0.683627;",
+          "current": "transform: translateY(7.56036px); opacity: 0.683627;"
+        }
+      ]
+    },
+    {
+      "label": "visible-hover-1",
+      "at": 6442.899999991059,
+      "width": 1440,
+      "height": 1000,
+      "scrollY": 1555,
+      "hidden": false,
+      "card": {
+        "tag": "ARTICLE",
+        "rect": {
+          "x": 108,
+          "y": 259.60723876953125,
+          "width": 289,
+          "height": 361.25,
+          "top": 259.60723876953125,
+          "right": 397,
+          "bottom": 620.8572387695312,
+          "left": 108
+        },
+        "opacity": "1",
+        "transform": "none",
+        "inline": null,
+        "animations": []
+      },
+      "entrance": {
+        "tag": "DIV",
+        "rect": {
+          "x": 108,
+          "y": 259.60723876953125,
+          "width": 289,
+          "height": 361.25,
+          "top": 259.60723876953125,
+          "right": 397,
+          "bottom": 620.8572387695312,
+          "left": 108
+        },
+        "opacity": "0.683627",
+        "transform": "matrix(1, 0, 0, 1, 0, 7.56036)",
+        "inline": "transform: translateY(7.56036px); opacity: 0.683627;",
+        "animations": []
+      },
+      "section": {
+        "tag": "SECTION",
+        "rect": {
+          "x": 0,
+          "y": -24.734375,
+          "width": 1432,
+          "height": 3475.78125,
+          "top": -24.734375,
+          "right": 1432,
+          "bottom": 3451.046875,
+          "left": 0
+        },
+        "opacity": "1",
+        "transform": "none",
+        "inline": "transform: none; opacity: 1;",
+        "animations": []
+      },
+      "pointer": [
+        {
+          "type": "wheel",
+          "x": 1416,
+          "y": 500,
+          "trusted": true,
+          "target": "SECTION"
+        },
+        {
+          "type": "wheel",
+          "x": 1416,
+          "y": 500,
+          "trusted": true,
+          "target": "SECTION"
+        },
+        {
+          "type": "wheel",
+          "x": 1416,
+          "y": 500,
+          "trusted": true,
+          "target": "SECTION"
+        },
+        {
+          "type": "pointermove",
+          "x": 339.20001220703125,
+          "y": 233.91973876953125,
+          "trusted": true,
+          "target": "A"
+        },
+        {
+          "type": "wheel",
+          "x": 1416,
+          "y": 500,
+          "trusted": true,
+          "target": "SECTION"
+        },
+        {
+          "type": "pointermove",
+          "x": 339.20001220703125,
+          "y": 349.91973876953125,
+          "trusted": true,
+          "target": "IMG"
+        }
+      ],
+      "styleWrites": [
+        {
+          "at": 1670.5999999940395,
+          "old": null,
+          "current": "transform: translateY(21.4424px);"
+        },
+        {
+          "at": 1794.8999999910593,
+          "old": "transform: translateY(21.4424px);",
+          "current": "transform: translateY(8.29937px);"
+        },
+        {
+          "at": 1806.199999988079,
+          "old": "transform: translateY(8.29937px);",
+          "current": "transform: none; opacity: 1;"
+        },
+        {
+          "at": 1806.199999988079,
+          "old": "transform: translateY(8.29937px); opacity: 0.683627;",
+          "current": "transform: none; opacity: 1;"
+        },
+        {
+          "at": 1806.199999988079,
+          "old": "transform: translateY(8.29937px); opacity: 1;",
+          "current": "transform: none; opacity: 1;"
+        },
+        {
+          "at": 1815.5999999940395,
+          "old": "transform: none; opacity: 1;",
+          "current": "transform: translateY(7.56036px); opacity: 0.683627;"
+        },
+        {
+          "at": 1815.5999999940395,
+          "old": "transform: none; opacity: 0.683627;",
+          "current": "transform: translateY(7.56036px); opacity: 0.683627;"
+        }
+      ]
+    },
+    {
+      "label": "visible-hover-2",
+      "at": 6845.399999991059,
+      "width": 1440,
+      "height": 1000,
+      "scrollY": 1555,
+      "hidden": false,
+      "card": {
+        "tag": "ARTICLE",
+        "rect": {
+          "x": 108,
+          "y": 259.60723876953125,
+          "width": 289,
+          "height": 361.25,
+          "top": 259.60723876953125,
+          "right": 397,
+          "bottom": 620.8572387695312,
+          "left": 108
+        },
+        "opacity": "1",
+        "transform": "none",
+        "inline": null,
+        "animations": []
+      },
+      "entrance": {
+        "tag": "DIV",
+        "rect": {
+          "x": 108,
+          "y": 259.60723876953125,
+          "width": 289,
+          "height": 361.25,
+          "top": 259.60723876953125,
+          "right": 397,
+          "bottom": 620.8572387695312,
+          "left": 108
+        },
+        "opacity": "0.683627",
+        "transform": "matrix(1, 0, 0, 1, 0, 7.56036)",
+        "inline": "transform: translateY(7.56036px); opacity: 0.683627;",
+        "animations": []
+      },
+      "section": {
+        "tag": "SECTION",
+        "rect": {
+          "x": 0,
+          "y": -24.734375,
+          "width": 1432,
+          "height": 3475.78125,
+          "top": -24.734375,
+          "right": 1432,
+          "bottom": 3451.046875,
+          "left": 0
+        },
+        "opacity": "1",
+        "transform": "none",
+        "inline": "transform: none; opacity: 1;",
+        "animations": []
+      },
+      "pointer": [
+        {
+          "type": "wheel",
+          "x": 1416,
+          "y": 500,
+          "trusted": true,
+          "target": "SECTION"
+        },
+        {
+          "type": "wheel",
+          "x": 1416,
+          "y": 500,
+          "trusted": true,
+          "target": "SECTION"
+        },
+        {
+          "type": "wheel",
+          "x": 1416,
+          "y": 500,
+          "trusted": true,
+          "target": "SECTION"
+        },
+        {
+          "type": "pointermove",
+          "x": 339.20001220703125,
+          "y": 233.91973876953125,
+          "trusted": true,
+          "target": "A"
+        },
+        {
+          "type": "wheel",
+          "x": 1416,
+          "y": 500,
+          "trusted": true,
+          "target": "SECTION"
+        },
+        {
+          "type": "pointermove",
+          "x": 339.20001220703125,
+          "y": 349.91973876953125,
+          "trusted": true,
+          "target": "IMG"
+        }
+      ],
+      "styleWrites": [
+        {
+          "at": 1670.5999999940395,
+          "old": null,
+          "current": "transform: translateY(21.4424px);"
+        },
+        {
+          "at": 1794.8999999910593,
+          "old": "transform: translateY(21.4424px);",
+          "current": "transform: translateY(8.29937px);"
+        },
+        {
+          "at": 1806.199999988079,
+          "old": "transform: translateY(8.29937px);",
+          "current": "transform: none; opacity: 1;"
+        },
+        {
+          "at": 1806.199999988079,
+          "old": "transform: translateY(8.29937px); opacity: 0.683627;",
+          "current": "transform: none; opacity: 1;"
+        },
+        {
+          "at": 1806.199999988079,
+          "old": "transform: translateY(8.29937px); opacity: 1;",
+          "current": "transform: none; opacity: 1;"
+        },
+        {
+          "at": 1815.5999999940395,
+          "old": "transform: none; opacity: 1;",
+          "current": "transform: translateY(7.56036px); opacity: 0.683627;"
+        },
+        {
+          "at": 1815.5999999940395,
+          "old": "transform: none; opacity: 0.683627;",
+          "current": "transform: translateY(7.56036px); opacity: 0.683627;"
+        }
+      ]
+    },
+    {
+      "label": "visible-hover-3",
+      "at": 7248.29999999702,
+      "width": 1440,
+      "height": 1000,
+      "scrollY": 1555,
+      "hidden": false,
+      "card": {
+        "tag": "ARTICLE",
+        "rect": {
+          "x": 108,
+          "y": 259.60723876953125,
+          "width": 289,
+          "height": 361.25,
+          "top": 259.60723876953125,
+          "right": 397,
+          "bottom": 620.8572387695312,
+          "left": 108
+        },
+        "opacity": "1",
+        "transform": "none",
+        "inline": null,
+        "animations": []
+      },
+      "entrance": {
+        "tag": "DIV",
+        "rect": {
+          "x": 108,
+          "y": 259.60723876953125,
+          "width": 289,
+          "height": 361.25,
+          "top": 259.60723876953125,
+          "right": 397,
+          "bottom": 620.8572387695312,
+          "left": 108
+        },
+        "opacity": "0.683627",
+        "transform": "matrix(1, 0, 0, 1, 0, 7.56036)",
+        "inline": "transform: translateY(7.56036px); opacity: 0.683627;",
+        "animations": []
+      },
+      "section": {
+        "tag": "SECTION",
+        "rect": {
+          "x": 0,
+          "y": -24.734375,
+          "width": 1432,
+          "height": 3475.78125,
+          "top": -24.734375,
+          "right": 1432,
+          "bottom": 3451.046875,
+          "left": 0
+        },
+        "opacity": "1",
+        "transform": "none",
+        "inline": "transform: none; opacity: 1;",
+        "animations": []
+      },
+      "pointer": [
+        {
+          "type": "wheel",
+          "x": 1416,
+          "y": 500,
+          "trusted": true,
+          "target": "SECTION"
+        },
+        {
+          "type": "wheel",
+          "x": 1416,
+          "y": 500,
+          "trusted": true,
+          "target": "SECTION"
+        },
+        {
+          "type": "wheel",
+          "x": 1416,
+          "y": 500,
+          "trusted": true,
+          "target": "SECTION"
+        },
+        {
+          "type": "pointermove",
+          "x": 339.20001220703125,
+          "y": 233.91973876953125,
+          "trusted": true,
+          "target": "A"
+        },
+        {
+          "type": "wheel",
+          "x": 1416,
+          "y": 500,
+          "trusted": true,
+          "target": "SECTION"
+        },
+        {
+          "type": "pointermove",
+          "x": 339.20001220703125,
+          "y": 349.91973876953125,
+          "trusted": true,
+          "target": "IMG"
+        }
+      ],
+      "styleWrites": [
+        {
+          "at": 1670.5999999940395,
+          "old": null,
+          "current": "transform: translateY(21.4424px);"
+        },
+        {
+          "at": 1794.8999999910593,
+          "old": "transform: translateY(21.4424px);",
+          "current": "transform: translateY(8.29937px);"
+        },
+        {
+          "at": 1806.199999988079,
+          "old": "transform: translateY(8.29937px);",
+          "current": "transform: none; opacity: 1;"
+        },
+        {
+          "at": 1806.199999988079,
+          "old": "transform: translateY(8.29937px); opacity: 0.683627;",
+          "current": "transform: none; opacity: 1;"
+        },
+        {
+          "at": 1806.199999988079,
+          "old": "transform: translateY(8.29937px); opacity: 1;",
+          "current": "transform: none; opacity: 1;"
+        },
+        {
+          "at": 1815.5999999940395,
+          "old": "transform: none; opacity: 1;",
+          "current": "transform: translateY(7.56036px); opacity: 0.683627;"
+        },
+        {
+          "at": 1815.5999999940395,
+          "old": "transform: none; opacity: 0.683627;",
+          "current": "transform: translateY(7.56036px); opacity: 0.683627;"
+        }
+      ]
+    },
+    {
+      "label": "visible-hover-4",
+      "at": 7649.5,
+      "width": 1440,
+      "height": 1000,
+      "scrollY": 1555,
+      "hidden": false,
+      "card": {
+        "tag": "ARTICLE",
+        "rect": {
+          "x": 108,
+          "y": 259.60723876953125,
+          "width": 289,
+          "height": 361.25,
+          "top": 259.60723876953125,
+          "right": 397,
+          "bottom": 620.8572387695312,
+          "left": 108
+        },
+        "opacity": "1",
+        "transform": "none",
+        "inline": null,
+        "animations": []
+      },
+      "entrance": {
+        "tag": "DIV",
+        "rect": {
+          "x": 108,
+          "y": 259.60723876953125,
+          "width": 289,
+          "height": 361.25,
+          "top": 259.60723876953125,
+          "right": 397,
+          "bottom": 620.8572387695312,
+          "left": 108
+        },
+        "opacity": "0.683627",
+        "transform": "matrix(1, 0, 0, 1, 0, 7.56036)",
+        "inline": "transform: translateY(7.56036px); opacity: 0.683627;",
+        "animations": []
+      },
+      "section": {
+        "tag": "SECTION",
+        "rect": {
+          "x": 0,
+          "y": -24.734375,
+          "width": 1432,
+          "height": 3475.78125,
+          "top": -24.734375,
+          "right": 1432,
+          "bottom": 3451.046875,
+          "left": 0
+        },
+        "opacity": "1",
+        "transform": "none",
+        "inline": "transform: none; opacity: 1;",
+        "animations": []
+      },
+      "pointer": [
+        {
+          "type": "wheel",
+          "x": 1416,
+          "y": 500,
+          "trusted": true,
+          "target": "SECTION"
+        },
+        {
+          "type": "wheel",
+          "x": 1416,
+          "y": 500,
+          "trusted": true,
+          "target": "SECTION"
+        },
+        {
+          "type": "wheel",
+          "x": 1416,
+          "y": 500,
+          "trusted": true,
+          "target": "SECTION"
+        },
+        {
+          "type": "pointermove",
+          "x": 339.20001220703125,
+          "y": 233.91973876953125,
+          "trusted": true,
+          "target": "A"
+        },
+        {
+          "type": "wheel",
+          "x": 1416,
+          "y": 500,
+          "trusted": true,
+          "target": "SECTION"
+        },
+        {
+          "type": "pointermove",
+          "x": 339.20001220703125,
+          "y": 349.91973876953125,
+          "trusted": true,
+          "target": "IMG"
+        }
+      ],
+      "styleWrites": [
+        {
+          "at": 1670.5999999940395,
+          "old": null,
+          "current": "transform: translateY(21.4424px);"
+        },
+        {
+          "at": 1794.8999999910593,
+          "old": "transform: translateY(21.4424px);",
+          "current": "transform: translateY(8.29937px);"
+        },
+        {
+          "at": 1806.199999988079,
+          "old": "transform: translateY(8.29937px);",
+          "current": "transform: none; opacity: 1;"
+        },
+        {
+          "at": 1806.199999988079,
+          "old": "transform: translateY(8.29937px); opacity: 0.683627;",
+          "current": "transform: none; opacity: 1;"
+        },
+        {
+          "at": 1806.199999988079,
+          "old": "transform: translateY(8.29937px); opacity: 1;",
+          "current": "transform: none; opacity: 1;"
+        },
+        {
+          "at": 1815.5999999940395,
+          "old": "transform: none; opacity: 1;",
+          "current": "transform: translateY(7.56036px); opacity: 0.683627;"
+        },
+        {
+          "at": 1815.5999999940395,
+          "old": "transform: none; opacity: 0.683627;",
+          "current": "transform: translateY(7.56036px); opacity: 0.683627;"
+        }
+      ]
+    }
+  ],
+  "noProductMutation": true
+}

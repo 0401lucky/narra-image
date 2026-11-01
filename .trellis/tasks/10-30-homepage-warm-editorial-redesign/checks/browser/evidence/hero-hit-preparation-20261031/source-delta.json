@@ -1,0 +1,32 @@
+{
+  "workspace": "E:\\code\\narra-image\\.trellis\\tasks\\10-30-homepage-warm-editorial-redesign\\checks\\.runtime\\hero-hit-independent-8725c17e\\app",
+  "beforeCount": 806,
+  "afterCount": 806,
+  "changes": [
+    {
+      "file": "src/components/marketing/homepage/homepage.module.css",
+      "before": {
+        "sha256": "ec7be31b074f036be8b0396692091fc8185b8d4922675b8f1e3bc0b9bf101786",
+        "bytes": 22437
+      },
+      "after": {
+        "sha256": "7ea47efd76599b4e4a9ed92f78aff3533b0445db436ffb5c307bb2f4ee990fb0",
+        "bytes": 22539
+      }
+    },
+    {
+      "file": "src/tests/unit/homepage-hero.test.tsx",
+      "before": {
+        "sha256": "2842f2b7d1f7749029a4e0417be31ac41364234927251c5ed4a83e292ccc7e2e",
+        "bytes": 10661
+      },
+      "after": {
+        "sha256": "72323da97e95d01809908c26aafb734fef4a5aea24fc9a895468aa82e60c5902",
+        "bytes": 11648
+      }
+    }
+  ],
+  "unchanged": 804,
+  "liveDrift": [],
+  "note": "Before bytes retained; fixture DB replacement is recorded separately and is not part of this production-source comparison."
+}

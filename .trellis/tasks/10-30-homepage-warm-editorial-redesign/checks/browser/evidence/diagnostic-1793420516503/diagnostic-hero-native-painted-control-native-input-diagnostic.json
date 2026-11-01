@@ -1,0 +1,317 @@
+{
+  "trace": [
+    {
+      "type": "pointerdown",
+      "at": 2451.4000000059605,
+      "x": 1188.044189453125,
+      "y": 170.15228271484375,
+      "target": "<button id=\"_R_j5fnbb_-tab-storybook\" type=\"button\" role=\"tab\" aria-selected=\"false\" aria-controls=\"_R_j5fnbb_-scene\" tabindex=\"-1\" data-pending=\"false\" class=\"homepage-module__tSg5yW__sceneTab\">绘本叙事</button>",
+      "scene": "film"
+    },
+    {
+      "type": "pointerup",
+      "at": 2454.7000000029802,
+      "x": 1188.044189453125,
+      "y": 170.15228271484375,
+      "target": "<button id=\"_R_j5fnbb_-tab-storybook\" type=\"button\" role=\"tab\" aria-selected=\"false\" aria-controls=\"_R_j5fnbb_-scene\" tabindex=\"-1\" data-pending=\"false\" class=\"homepage-module__tSg5yW__sceneTab\">绘本叙事</button>",
+      "scene": "film"
+    },
+    {
+      "type": "click",
+      "at": 2455.1000000089407,
+      "x": 1188,
+      "y": 170,
+      "target": "<button id=\"_R_j5fnbb_-tab-storybook\" type=\"button\" role=\"tab\" aria-selected=\"false\" aria-controls=\"_R_j5fnbb_-scene\" tabindex=\"-1\" data-pending=\"false\" class=\"homepage-module__tSg5yW__sceneTab\">绘本叙事</button>",
+      "scene": "film"
+    },
+    {
+      "type": "pointerdown",
+      "at": 2901.2000000029802,
+      "x": 1258.1536865234375,
+      "y": 171.9351043701172,
+      "target": "<button id=\"_R_j5fnbb_-tab-oriental\" type=\"button\" role=\"tab\" aria-selected=\"false\" aria-controls=\"_R_j5fnbb_-scene\" tabindex=\"-1\" data-pending=\"false\" class=\"homepage-module__tSg5yW__sceneTab\">东方美学</button>",
+      "scene": "storybook"
+    },
+    {
+      "type": "pointerup",
+      "at": 2902.300000011921,
+      "x": 1258.1536865234375,
+      "y": 171.9351043701172,
+      "target": "<button id=\"_R_j5fnbb_-tab-oriental\" type=\"button\" role=\"tab\" aria-selected=\"false\" aria-controls=\"_R_j5fnbb_-scene\" tabindex=\"-1\" data-pending=\"false\" class=\"homepage-module__tSg5yW__sceneTab\">东方美学</button>",
+      "scene": "storybook"
+    },
+    {
+      "type": "click",
+      "at": 2902.5,
+      "x": 1258,
+      "y": 171,
+      "target": "<button id=\"_R_j5fnbb_-tab-oriental\" type=\"button\" role=\"tab\" aria-selected=\"false\" aria-controls=\"_R_j5fnbb_-scene\" tabindex=\"-1\" data-pending=\"false\" class=\"homepage-module__tSg5yW__sceneTab\">东方美学</button>",
+      "scene": "storybook"
+    },
+    {
+      "type": "pointerdown",
+      "at": 4443.20000000298,
+      "x": 1235.5814208984375,
+      "y": 526.8629760742188,
+      "target": "<img data-home-scene-image=\"true\" alt=\"江南雨巷的檐角滴着雨，远处暖黄灯笼倒映在青石板上\" width=\"1448\" height=\"1086\" loading=\"eager\" fetchpriority=\"auto\" decoding=\"async\" draggable=\"false\" class=\"homepage-module__tSg5yW__sceneImage\" src=\"/marketing/home/jiangnan-rain-v2.png\">",
+      "scene": "oriental"
+    },
+    {
+      "type": "pointerup",
+      "at": 4444.20000000298,
+      "x": 1235.5814208984375,
+      "y": 526.8629760742188,
+      "target": "<img data-home-scene-image=\"true\" alt=\"江南雨巷的檐角滴着雨，远处暖黄灯笼倒映在青石板上\" width=\"1448\" height=\"1086\" loading=\"eager\" fetchpriority=\"auto\" decoding=\"async\" draggable=\"false\" class=\"homepage-module__tSg5yW__sceneImage\" src=\"/marketing/home/jiangnan-rain-v2.png\">",
+      "scene": "oriental"
+    },
+    {
+      "type": "click",
+      "at": 4444.4000000059605,
+      "x": 1235,
+      "y": 526,
+      "target": "<img data-home-scene-image=\"true\" alt=\"江南雨巷的檐角滴着雨，远处暖黄灯笼倒映在青石板上\" width=\"1448\" height=\"1086\" loading=\"eager\" fetchpriority=\"auto\" decoding=\"async\" draggable=\"false\" class=\"homepage-module__tSg5yW__sceneImage\" src=\"/marketing/home/jiangnan-rain-v2.png\">",
+      "scene": "oriental"
+    }
+  ],
+  "motion": {
+    "active": "true",
+    "paused": "false",
+    "reduced": "false"
+  },
+  "frame": {
+    "transform": "matrix3d(0.998441, -0.00244463, -0.0557679, 0, 0, 0.999041, -0.0437938, 0, 0.0558215, 0.0437255, 0.997483, 0, 0, 0, 0, 1)",
+    "pointer": "true",
+    "rx": "-2.51deg",
+    "ry": "3.20deg"
+  },
+  "buttons": [
+    {
+      "text": "胶片光影",
+      "rect": {
+        "x": 1083.1796875,
+        "y": 148.52108764648438,
+        "width": 69.98388671875,
+        "height": 30.970306396484375,
+        "top": 148.52108764648438,
+        "right": 1153.16357421875,
+        "bottom": 179.49139404296875,
+        "left": 1083.1796875
+      },
+      "stack": [
+        {
+          "tag": "BUTTON",
+          "classes": "homepage-module__tSg5yW__sceneTab",
+          "text": "胶片光影",
+          "transform": "none",
+          "z": "auto"
+        },
+        {
+          "tag": "DIV",
+          "classes": "homepage-module__tSg5yW__sceneTabs",
+          "text": "胶片光影绘本叙事东方美学",
+          "transform": "none",
+          "z": "auto"
+        },
+        {
+          "tag": "DIV",
+          "classes": "homepage-module__tSg5yW__sceneToolbar",
+          "text": "Narra Studio · 叙事光影画布胶片光影绘本叙事东方美学",
+          "transform": "none",
+          "z": "auto"
+        },
+        {
+          "tag": "DIV",
+          "classes": "homepage-module__tSg5yW__heroFrame",
+          "text": "Narra Studio · 叙事光影画布胶片光影绘本叙事东方美学风格示意 · 东方水墨留白局部补光 · 示意视觉语言 · StyleOriental Ink ",
+          "transform": "matrix3d(0.998441, -0.00244463, -0.0557679, 0, 0, 0.999041, -0.0437938, 0, 0.0558215, 0.0437255, 0.997483, 0, 0, 0, 0, 1)",
+          "z": "auto"
+        },
+        {
+          "tag": "DIV",
+          "classes": "homepage-module__tSg5yW__heroArt",
+          "text": "Narra Studio · 叙事光影画布胶片光影绘本叙事东方美学风格示意 · 东方水墨留白局部补光 · 示意视觉语言 · StyleOriental Ink ",
+          "transform": "none",
+          "z": "auto"
+        },
+        {
+          "tag": "DIV",
+          "classes": "homepage-module__tSg5yW__heroGrid",
+          "text": "Narra Image 叙事级 AI 影像创作系统在“叙事性”的光影中，编织属于你的灵感画面Narra Image 融合了前沿的图像生成算法与极具人文温度的画布",
+          "transform": "none",
+          "z": "auto"
+        }
+      ]
+    },
+    {
+      "text": "绘本叙事",
+      "rect": {
+        "x": 1156.01416015625,
+        "y": 149.21380615234375,
+        "width": 69.58935546875,
+        "height": 30.862396240234375,
+        "top": 149.21380615234375,
+        "right": 1225.603515625,
+        "bottom": 180.07620239257812,
+        "left": 1156.01416015625
+      },
+      "stack": [
+        {
+          "tag": "BUTTON",
+          "classes": "homepage-module__tSg5yW__sceneTab",
+          "text": "绘本叙事",
+          "transform": "none",
+          "z": "auto"
+        },
+        {
+          "tag": "DIV",
+          "classes": "homepage-module__tSg5yW__sceneTabs",
+          "text": "胶片光影绘本叙事东方美学",
+          "transform": "none",
+          "z": "auto"
+        },
+        {
+          "tag": "DIV",
+          "classes": "homepage-module__tSg5yW__sceneToolbar",
+          "text": "Narra Studio · 叙事光影画布胶片光影绘本叙事东方美学",
+          "transform": "none",
+          "z": "auto"
+        },
+        {
+          "tag": "DIV",
+          "classes": "homepage-module__tSg5yW__heroFrame",
+          "text": "Narra Studio · 叙事光影画布胶片光影绘本叙事东方美学风格示意 · 东方水墨留白局部补光 · 示意视觉语言 · StyleOriental Ink ",
+          "transform": "matrix3d(0.998441, -0.00244463, -0.0557679, 0, 0, 0.999041, -0.0437938, 0, 0.0558215, 0.0437255, 0.997483, 0, 0, 0, 0, 1)",
+          "z": "auto"
+        },
+        {
+          "tag": "DIV",
+          "classes": "homepage-module__tSg5yW__heroArt",
+          "text": "Narra Studio · 叙事光影画布胶片光影绘本叙事东方美学风格示意 · 东方水墨留白局部补光 · 示意视觉语言 · StyleOriental Ink ",
+          "transform": "none",
+          "z": "auto"
+        },
+        {
+          "tag": "DIV",
+          "classes": "homepage-module__tSg5yW__heroGrid",
+          "text": "Narra Image 叙事级 AI 影像创作系统在“叙事性”的光影中，编织属于你的灵感画面Narra Image 融合了前沿的图像生成算法与极具人文温度的画布",
+          "transform": "none",
+          "z": "auto"
+        }
+      ]
+    },
+    {
+      "text": "东方美学",
+      "rect": {
+        "x": 1228.355224609375,
+        "y": 149.90184020996094,
+        "width": 69.19873046875,
+        "height": 30.755233764648438,
+        "top": 149.90184020996094,
+        "right": 1297.553955078125,
+        "bottom": 180.65707397460938,
+        "left": 1228.355224609375
+      },
+      "stack": [
+        {
+          "tag": "BUTTON",
+          "classes": "homepage-module__tSg5yW__sceneTab",
+          "text": "东方美学",
+          "transform": "none",
+          "z": "auto"
+        },
+        {
+          "tag": "DIV",
+          "classes": "homepage-module__tSg5yW__sceneTabs",
+          "text": "胶片光影绘本叙事东方美学",
+          "transform": "none",
+          "z": "auto"
+        },
+        {
+          "tag": "DIV",
+          "classes": "homepage-module__tSg5yW__sceneToolbar",
+          "text": "Narra Studio · 叙事光影画布胶片光影绘本叙事东方美学",
+          "transform": "none",
+          "z": "auto"
+        },
+        {
+          "tag": "DIV",
+          "classes": "homepage-module__tSg5yW__heroFrame",
+          "text": "Narra Studio · 叙事光影画布胶片光影绘本叙事东方美学风格示意 · 东方水墨留白局部补光 · 示意视觉语言 · StyleOriental Ink ",
+          "transform": "matrix3d(0.998441, -0.00244463, -0.0557679, 0, 0, 0.999041, -0.0437938, 0, 0.0558215, 0.0437255, 0.997483, 0, 0, 0, 0, 1)",
+          "z": "auto"
+        },
+        {
+          "tag": "DIV",
+          "classes": "homepage-module__tSg5yW__heroArt",
+          "text": "Narra Studio · 叙事光影画布胶片光影绘本叙事东方美学风格示意 · 东方水墨留白局部补光 · 示意视觉语言 · StyleOriental Ink ",
+          "transform": "none",
+          "z": "auto"
+        },
+        {
+          "tag": "DIV",
+          "classes": "homepage-module__tSg5yW__heroGrid",
+          "text": "Narra Image 叙事级 AI 影像创作系统在“叙事性”的光影中，编织属于你的灵感画面Narra Image 融合了前沿的图像生成算法与极具人文温度的画布",
+          "transform": "none",
+          "z": "auto"
+        }
+      ]
+    },
+    {
+      "text": "复用画面灵感",
+      "rect": {
+        "x": 1195.52734375,
+        "y": 512.815673828125,
+        "width": 80.108154296875,
+        "height": 28.0946044921875,
+        "top": 512.815673828125,
+        "right": 1275.635498046875,
+        "bottom": 540.9102783203125,
+        "left": 1195.52734375
+      },
+      "stack": [
+        {
+          "tag": "BUTTON",
+          "classes": "",
+          "text": "复用画面灵感",
+          "transform": "none",
+          "z": "auto"
+        },
+        {
+          "tag": "DIV",
+          "classes": "homepage-module__tSg5yW__promptToolbar",
+          "text": "4:3 · 叙事示意画幅复用画面灵感",
+          "transform": "none",
+          "z": "auto"
+        },
+        {
+          "tag": "DIV",
+          "classes": "homepage-module__tSg5yW__promptOverlay",
+          "text": "4:3 · 叙事示意画幅复用画面灵感江南雨巷檐角滴落的雨水，远处暖黄灯笼倒映在青石板水面，宋代美学克制留白，电影级冷暖色调对比江南雨巷檐角滴落的雨水，远处暖黄灯",
+          "transform": "none",
+          "z": "auto"
+        },
+        {
+          "tag": "IMG",
+          "classes": "homepage-module__tSg5yW__sceneImage",
+          "text": "",
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "z": "auto"
+        },
+        {
+          "tag": "DIV",
+          "classes": "homepage-module__tSg5yW__sceneViewport",
+          "text": "风格示意 · 东方水墨留白局部补光 · 示意视觉语言 · StyleOriental Ink · 东方韵味固定示意图 · 非模型参数",
+          "transform": "none",
+          "z": "auto"
+        },
+        {
+          "tag": "DIV",
+          "classes": "homepage-module__tSg5yW__sceneStage",
+          "text": "风格示意 · 东方水墨留白局部补光 · 示意视觉语言 · StyleOriental Ink · 东方韵味固定示意图 · 非模型参数4:3 · 叙事示意画幅复用",
+          "transform": "none",
+          "z": "auto"
+        }
+      ]
+    }
+  ]
+}

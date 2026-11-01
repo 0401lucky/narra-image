@@ -1,0 +1,44 @@
+{
+  "checked_at": "2026-10-31T04:17:13.673411+00:00",
+  "scope": "User-authorized administrative archive ONLY; not MA/device/global-quality acceptance",
+  "archive_pass": true,
+  "archive_path": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor",
+  "archive_command_no_commit": true,
+  "verified_resolved_source": "E:\\code\\narra-image\\.trellis\\tasks\\10-28-studio-mobile-canvas-editor",
+  "verified_resolved_destination": "E:\\code\\narra-image\\.trellis\\tasks\\archive\\2026-10\\10-28-studio-mobile-canvas-editor",
+  "source_absent": true,
+  "moved_file_identities": 664,
+  "pre_move_manifest_sha256": "97293c45634b1351af6315fecd10d791077b0ee6185fe647894ae84f4f0a19d3",
+  "move_byte_mismatches": [],
+  "expected_cli_metadata_changes": [
+    "status",
+    "completedAt"
+  ],
+  "post_move_reference_updates": [
+    "task.json",
+    "implement.jsonl",
+    "check.jsonl"
+  ],
+  "context_entries": {
+    "implement.jsonl": 25,
+    "check.jsonl": 28
+  },
+  "context_validation_pass": true,
+  "original_artifact_backup_count": 7,
+  "mobile_product_test_paths_unchanged": 35,
+  "head": "1f7948e334c589dc6db38ac045b584f0f5381481",
+  "semantic_index_unchanged": true,
+  "staged_paths": [],
+  "cleared_mobile_session_contexts": 2,
+  "preserved_other_session_contexts": 3,
+  "task_status": "completed",
+  "physical_device_acceptance": "pending",
+  "ma1_ma4_acceptance": "not_accepted",
+  "ma1_ma4_boxes_checked": false,
+  "full_root_lint_pass": false,
+  "code_commit": false,
+  "journal_closeout": false,
+  "deployment": false,
+  "homepage_or_shared_source_edit": false,
+  "real_dotenv_read": false
+}
