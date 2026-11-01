@@ -8,6 +8,11 @@
 # .trellis/spec/cli/backend/directory-structure.md for details.
 .trellis/workspace/*/journal-*.md merge=union
 
+# Vite SSR must see an LF-terminated shebang in directly imported CLI modules.
+scripts/verify-canvas-contracts-db.mjs text eol=lf
+scripts/verify-e2e.mjs text eol=lf
+scripts/fixtures/canvas-object-store.mjs text eol=lf
+
 # Preserve original license and forensic before-image bytes, including whitespace.
 # Application source, task helpers and authored documentation keep normal checks.
 .trellis/tasks/**/checks/**/*.before -text whitespace=-blank-at-eol,-blank-at-eof

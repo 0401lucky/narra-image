@@ -59,6 +59,7 @@ pnpm verify:e2e
 - Canvas DB wrapper 使用独立 360 秒截止及 20 秒清理预留，不嵌套到 Worker 的 57 秒父截止。缺少哨兵或 runner 自建 localhost 数据库必须失败；本地镜像缺失返回前置条件失败，不拉取镜像、不回退 `.env`。
 - 验证环境显式隔离构建与测试：仅构建注入非 loopback 的测试 `APP_URL`；要求缺失/默认环境的测试不得继承它。Prisma 使用隔离 config 或精确 `.env` 读取保护，禁止读取开发凭证。
 - Windows wrapper 会通过命令 shell 执行 `pnpm`；含 `=>`、重定向等字符的内联 JavaScript 不得经 `pnpm exec node -e` 传入。改用脚本文件和直接 Node argv，防止意外重定向写入工作区。
+- Vitest 直接导入带 shebang 的 CLI `.mjs` 时，脚本必须保留 LF 换行。Vite 8 的 SSR shebang 匹配不消费 CRLF 的 `\r`，可能把绑定插在 `#!` 前并报 `Invalid or unexpected token`；`node --check` 仍可能通过。`.gitattributes` 已固定三个 Canvas CLI / fixture 路径，验证须实际加载原测试套件，不能删除 shebang 或绕过测试。
 - 每个验证 wrapper 保留真实退出码并受全局截止保护（见各 `verify-*.mjs`）。
 - 环境变量修改必须先改 `contracts/runtime/v1/environment.json` 再同步 `src/lib/env.ts`、`.env.example`、README 与测试（`runtime-environment-contract.test.ts` 会校验一致性）。
 

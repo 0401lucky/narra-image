@@ -36,6 +36,9 @@
 - 场景限制 512 KiB/200 nodes/400 edges；每账户 100 live shells；原图 8 MiB、每账户 1 GiB/1000 accounted imports、3 active uploads。数值以共享 `limits.json` 为准，不是容量测量。
 - Save 包括所有参考节点原图，不只已连接或提交过的。原图 registry 必须先于 PUT 建立；payload 身份不可变，READY 重试复用，UPLOADING 返回 202，未知 PUT 保留 key、计账和隔离状态。
 - S3 location 身份为共享规范化 `[origin,region,bucket]` UTF-8 JSON 的 SHA-256，加 `s3-v1:`；Node/Go 消费同一组向量。URL 前缀不是所有权证明。
+- Node 的 `CanvasStorageAdapter.getBucketVersioning(signal)` 与 Go `canvasGCStorage.Verify(ctx)` 按规范化 location 选择探测：普通 S3 使用有界原始 XML 的 `GetBucketVersioning`；官方 R2 使用带认证的 `HeadBucket`。接口名称和 readiness 的 `storage: "unversioned"` 不变。
+- R2 专用证明仅适用于 `https://<32 位十六进制账户 ID>[.eu|.fedramp|.us].r2.cloudflarestorage.com`，且同一请求对确切 bucket 返回原始 HTTP 200、没有版本 / delete-marker 响应头、未取消或重定向。官方服务端点范围与认证成功缺一不可；不接受单纯域名猜测、SDK 空字段或权限错误。
+- R2 不实现 `GetBucketVersioning` / `PutBucketVersioning`，不能把该接口的 403 当作凭据失效，也不能对任意服务把 403 / 501 转为无版本成功。HTTP、非默认端口、自定义域名、尾点和类似后缀不享有 R2 例外，仍须通过普通 S3 证明。事实依据为 [R2 S3 API 兼容表](https://developers.cloudflare.com/r2/api/s3/api/) 与 [地域端点说明](https://developers.cloudflare.com/r2/reference/data-location/)。
 - saved-snapshot roots 与所有已提交任务 roots 保护原图，包括完成任务。只回收新登记、无根且脱离满 604800 秒的 IMPORT；作品、旧未登记媒体永不进入此 GC。
 - 删除 canvas/node/result 不删除生成任务、媒体对象、不取消或退款。账户/管理员删除保留 immutable principal/job/key inventory，通过 nullable live FK 兼容既有删除规则。
 - 单一 Worker GC loop 在 schema/storage/topology 就绪后运行；60 秒默认/最小间隔、20 默认/100 最大批次；单对象 30 秒、单 pass 45 秒；90 秒 singleton lease 和逐 asset token。七天不是可缩短的环境参数。
@@ -53,6 +56,9 @@
 | 不可用原图、错误 owner、未完成结果 | Save/Run 失败并保留组织，不用全局媒体替换。 |
 | GetBucketVersioning 200 空正文或错误根 | UNKNOWN，不能从 SDK 空 Status 推断 UNVERSIONED。 |
 | 合法空 VersioningConfiguration | 仍需准确 location、HTTP 200、单请求 raw-wire 证明；正文上限 16 KiB。 |
+| 官方 R2 账户端点的认证 HeadBucket | 仅确切 bucket 的原始 HTTP 200 可用；单次请求、禁止重定向、不写入测试对象。 |
+| R2 HEAD 失败 / 无原始响应证明 / 取消 / 超时 / 版本相关头 | `CANVAS_STORAGE_CAPABILITY_INVALID`，不执行导入或 GC 领取；不能回退为成功。 |
+| 类似 R2 的非官方域名 / HTTP / 非默认端口 | 普通 S3 XML 校验，不能仅依据域名后缀放行。 |
 | XML 非法字符（包括注释）、未知根/属性/namespace、DTD、Status 子节点 | fail closed，不导入/领取回收。Node/Go 对齐测试。 |
 | 已知版本或迟到 version receipt | 隔离/永久版本栅栏，保留计账；禁止无版本删除确认或 READY 复活。 |
 | 远端删除失败/未知 | 保留 inventory、deleting fence、有限退避，不能上报回收字节。 |
@@ -65,6 +71,7 @@
 
 - Good：显式保存一个尚未运行的原图，成功 snapshot 原子建立 saved root；以后 Save/Run 复用 asset ID。
 - Base：功能关闭时旧对话 JSON/multipart、生成作品、取消/退款契约保持兼容。
+- R2 Good：官方 HTTPS 账户端点的带签名 HEAD 成功，Node / Go 都报告同一 bucket 已验证；R2 Bad：将任意 `AccessDenied` 或 `NotImplemented` 解释为无版本存储。
 - Bad：HTTP 200 加 SDK 零值 Status 就报告存储能力已验证；按 key 前缀清空对象；删除布局时自动取消或退款；丢 ACK 后换 run ID。
 
 ## 6. 必需测试
@@ -74,6 +81,7 @@
 - SQL 错误映射回归从实际 canvas migration 的 `canvas_raise` 提取 SQLSTATE，再穿过真实 Prisma adapter 的 raw/CRUD 包装和路由/fence 分支；不能只用手写 `P0001` mock。非白名单 `23514` 必须保留安全未知错误行为。
 - 真实 `pg` 夹具若把同一个参数同时用于 `VARCHAR` principal 字段和 `TEXT` 外键/存储字段，显式写 `$n::text` 后交给目标列转换，避免 PostgreSQL 42P08 在测试构造阶段提前失败。该修复只改变 fixture 参数类型，不应通过改生产 schema 或移除实际锁/CAS断言来规避。
 - Node/Go raw storage wire：合法与非法 XML、16 KiB 限制、超时、迟到 receipt、版本状态、空/错误根 SDK 成功反例。
+- Node/Go R2 探测测试复用 `storage-location.json` 的 `probeVectors`；通过真实 SDK + 模拟传输核验规范化端点、签名、确切 bucket、HEAD / GET 选择、单次请求、版本头、失败和取消。Go 的默认 HTTP 客户端可能跟随 307 / 308，专用探测客户端必须禁用并测试重定向目标零访问；不改变普通媒体客户端的配置。
 - Go `canvas_*`：共享 grammar/location/retention vectors，实际 Worker.Run 的多消费者单 scheduler、drain/panic/topology loss、有界 join。
 - 独立 `verify:canvas-contracts:db`：完整与 additive migrations、真实 catalogue、锁/lease/CAS/GC 竞争；必须有 runner sentinel 和 disposable localhost，缺基础设施明确未通过。
 - `src/tests/integration/canvas-contracts/canvas-contracts-db.test.ts` 的跨模式回归使用真实 Prisma/会话 loader 与 GET：超过一页的旧任务必须在更多新画布/孤儿任务干扰下完整、有序恢复，更新 `updatedAt` 不改变创建游标；foreign/missing parent、跨 owner/parent/scope 游标不得回退到全局内容。
@@ -92,6 +100,15 @@ const unversioned = response.$metadata.httpStatusCode === 200 && !response.Statu
 
 // Good: reuse the bounded, raw-envelope-verified adapter contract.
 await verifyCanvasStorageCapability(adapter, adapter.location, timeoutMs);
+```
+
+```ts
+// Bad: an unsupported operation or denied credential proves no capability.
+if (error.name === "AccessDenied") return { verified: true };
+
+// Good: the adapter selects an authenticated HEAD only for official R2 origins;
+// all other providers still require a verified unversioned S3 XML response.
+await verifyCanvasStorageCapability(createCanvasStorageAdapter(environment));
 ```
 
 ```ts

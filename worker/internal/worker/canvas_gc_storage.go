@@ -24,6 +24,7 @@ var (
 	errCanvasGCAssetInvalid    = errors.New("CANVAS_INVALID_INPUT")
 	canvasXMLDeclaration       = regexp.MustCompile(`^<\?xml[ \t\r\n]+version[ \t\r\n]*=[ \t\r\n]*(?:"1\.0"|'1\.0')(?:[ \t\r\n]+encoding[ \t\r\n]*=[ \t\r\n]*(?:"(?i:UTF-8)"|'(?i:UTF-8)'))?(?:[ \t\r\n]+standalone[ \t\r\n]*=[ \t\r\n]*(?:"(?:yes|no)"|'(?:yes|no)'))?[ \t\r\n]*\?>`)
 	canvasXMLOpening           = regexp.MustCompile(`^<((?:[A-Za-z_][A-Za-z0-9_.-]*:)?VersioningConfiguration)(?:[ \t\r\n]+xmlns(?::[A-Za-z_][A-Za-z0-9_.-]*)?[ \t\r\n]*=[ \t\r\n]*(?:"[^"<&]*"|'[^'<&]*'))*[ \t\r\n]*(/?)>`)
+	canvasR2Endpoint           = regexp.MustCompile(`^https://[0-9a-f]{32}(?:\.(?:eu|fedramp|us))?\.r2\.cloudflarestorage\.com$`)
 )
 
 const (
@@ -46,8 +47,13 @@ type canvasObjectStorageClient interface {
 	DeleteObject(context.Context, *s3.DeleteObjectInput, ...func(*s3.Options)) (*s3.DeleteObjectOutput, error)
 }
 
+type canvasR2HeadClient interface {
+	HeadBucket(context.Context, *s3.HeadBucketInput, ...func(*s3.Options)) (*s3.HeadBucketOutput, error)
+}
+
 type canvasS3GCStorage struct {
 	client   canvasObjectStorageClient
+	r2Client canvasR2HeadClient
 	location CanvasStorageLocation
 }
 
@@ -63,14 +69,84 @@ func newCanvasGCStorage(storage *Storage) (canvasGCStorage, error) {
 	if !ok {
 		return nil, errCanvasStorageCapability
 	}
-	return &canvasS3GCStorage{client: client, location: location}, nil
+	adapter := &canvasS3GCStorage{client: client, location: location}
+	if canvasR2Endpoint.MatchString(location.Endpoint) {
+		adapter.r2Client, err = newCanvasR2ProbeClient(client, location)
+		if err != nil {
+			return nil, err
+		}
+	}
+	return adapter, nil
 }
 
 func (storage *canvasS3GCStorage) Location() CanvasStorageLocation { return storage.location }
 
 func canvasSingleAttempt(options *s3.Options) { options.RetryMaxAttempts = 1 }
 
+func newCanvasR2ProbeClient(client canvasObjectStorageClient, location CanvasStorageLocation) (canvasR2HeadClient, error) {
+	sdkClient, ok := client.(*s3.Client)
+	if !ok {
+		return nil, errCanvasStorageCapability
+	}
+	options := sdkClient.Options()
+	probeHTTPClient := options.HTTPClient
+	if buildable, ok := probeHTTPClient.(interface{ Freeze() aws.HTTPClient }); ok {
+		probeHTTPClient = buildable.Freeze()
+	}
+	httpClient, ok := probeHTTPClient.(*http.Client)
+	if !ok || httpClient == nil {
+		return nil, errCanvasStorageCapability
+	}
+	// The SDK's default HTTP client follows 307/308. Clone only the R2 probe
+	// client so no redirect can establish bucket identity or send credentials
+	// elsewhere, while media writes and exact-key deletes keep their client.
+	noRedirects := *httpClient
+	noRedirects.CheckRedirect = func(*http.Request, []*http.Request) error { return http.ErrUseLastResponse }
+	options.HTTPClient = &noRedirects
+	options.BaseEndpoint = aws.String(location.Endpoint)
+	options.Region = location.Region
+	options.UsePathStyle = true
+	return s3.New(options), nil
+}
+
 type canvasVerifiedVersioningBodyKey struct{}
+type canvasVerifiedR2BucketKey struct{}
+
+func canvasR2ProbeOptions(location CanvasStorageLocation) func(*s3.Options) {
+	return func(options *s3.Options) {
+		canvasSingleAttempt(options)
+		options.APIOptions = append(options.APIOptions, func(stack *middleware.Stack) error {
+			guard := middleware.DeserializeMiddlewareFunc("CanvasR2Bucket", func(ctx context.Context, input middleware.DeserializeInput, next middleware.DeserializeHandler) (middleware.DeserializeOutput, middleware.Metadata, error) {
+				output, metadata, err := next.HandleDeserialize(ctx, input)
+				if err != nil {
+					return output, metadata, err
+				}
+				response, ok := output.RawResponse.(*smithyhttp.Response)
+				if !ok || response == nil || response.Response == nil {
+					return output, metadata, errCanvasStorageCapability
+				}
+				if response.Body != nil {
+					defer response.Body.Close()
+				}
+				request := response.Request
+				if ctx.Err() != nil || response.StatusCode != http.StatusOK || request == nil || request.URL == nil ||
+					request.Method != http.MethodHead || request.Response != nil || request.URL.Scheme+"://"+request.URL.Host != location.Endpoint ||
+					request.URL.EscapedPath() != "/"+location.Bucket || request.URL.RawQuery != "" ||
+					!strings.HasPrefix(request.Header.Get("Authorization"), "AWS4-HMAC-SHA256 ") {
+					return output, metadata, errCanvasStorageCapability
+				}
+				for name := range response.Header {
+					if strings.EqualFold(name, "x-amz-version-id") || strings.EqualFold(name, "x-amz-delete-marker") {
+						return output, metadata, errCanvasStorageCapability
+					}
+				}
+				metadata.Set(canvasVerifiedR2BucketKey{}, true)
+				return output, metadata, nil
+			})
+			return stack.Deserialize.Insert(guard, "OperationDeserializer", middleware.After)
+		})
+	}
+}
 
 func canvasVersioningProbeOptions(options *s3.Options) {
 	canvasSingleAttempt(options)
@@ -223,8 +299,21 @@ func canvasStorageResponseStatus(metadata middleware.Metadata) int {
 
 func (storage *canvasS3GCStorage) Verify(ctx context.Context) error {
 	location, err := NewCanvasStorageLocation(storage.location.Endpoint, storage.location.Region, storage.location.Bucket)
-	if err != nil || location != storage.location {
+	if err != nil || location != storage.location || ctx.Err() != nil {
 		return errCanvasStorageCapability
+	}
+	if canvasR2Endpoint.MatchString(location.Endpoint) {
+		if storage.r2Client == nil {
+			return errCanvasStorageCapability
+		}
+		// R2 has no object versioning API. The official TLS endpoint plus an
+		// authenticated HEAD for this exact bucket proves its supported storage
+		// capability; an unsupported/denied response never acts as a fallback.
+		receipt, err := storage.r2Client.HeadBucket(ctx, &s3.HeadBucketInput{Bucket: aws.String(location.Bucket)}, canvasR2ProbeOptions(location))
+		if err != nil || ctx.Err() != nil || receipt == nil || receipt.ResultMetadata.Get(canvasVerifiedR2BucketKey{}) != true || canvasStorageResponseStatus(receipt.ResultMetadata) != http.StatusOK {
+			return errCanvasStorageCapability
+		}
+		return nil
 	}
 	receipt, err := storage.client.GetBucketVersioning(ctx, &s3.GetBucketVersioningInput{
 		Bucket: aws.String(location.Bucket),

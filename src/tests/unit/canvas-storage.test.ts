@@ -7,6 +7,7 @@ const sdk = vi.hoisted(() => ({ send: vi.fn(), options: vi.fn(), middleware: vi.
 vi.mock("@aws-sdk/client-s3", () => ({
   S3Client: class { constructor(options: unknown) { sdk.options(options); } send = sdk.send; destroy() {} },
   GetBucketVersioningCommand: class { readonly kind = "versioning"; middlewareStack = { add: sdk.middleware }; constructor(readonly input: unknown) {} },
+  HeadBucketCommand: class { readonly kind = "head"; middlewareStack = { add: sdk.middleware }; constructor(readonly input: unknown) {} },
   PutObjectCommand: class { readonly kind = "put"; constructor(readonly input: unknown) {} },
 }));
 vi.mock("@/lib/env", () => ({ getEnv: () => ({}) }));
@@ -116,6 +117,14 @@ describe("injected canvas storage adapter", () => {
     sdk.send.mockResolvedValueOnce({ $metadata: { httpStatusCode: 200 } });
     await expect(verifyCanvasStorageCapability(createCanvasStorageAdapter(canvasStorageTestEnv))).rejects.toMatchObject({ code: "CANVAS_STORAGE_CAPABILITY_INVALID" });
     expect(sdk.send).toHaveBeenCalledOnce();
+  });
+
+  it("does not verify an R2 HEAD metadata-only receipt that bypasses the wire guard", async () => {
+    sdk.send.mockResolvedValueOnce({ $metadata: { httpStatusCode: 200 } });
+    const adapter = createCanvasStorageAdapter({ ...canvasStorageTestEnv, S3_ENDPOINT: "https://0123456789abcdef0123456789abcdef.r2.cloudflarestorage.com" });
+    await expect(verifyCanvasStorageCapability(adapter)).rejects.toMatchObject({ code: "CANVAS_STORAGE_CAPABILITY_INVALID" });
+    expect(sdk.send).toHaveBeenCalledOnce();
+    expect(sdk.send.mock.calls[0][0].kind).toBe("head");
   });
 
   it("only projects trusted matching location URLs; credentials/keys never enter the DTO", () => {

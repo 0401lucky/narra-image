@@ -2,7 +2,7 @@ import "server-only";
 
 import { createHash } from "node:crypto";
 import { Readable } from "node:stream";
-import { GetBucketVersioningCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { GetBucketVersioningCommand, HeadBucketCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 
 import { getEnv } from "@/lib/env";
 import { stringifyLogRecord } from "@/lib/logging/redact";
@@ -20,6 +20,7 @@ type RegisteredLocation = { storageLocation: string; storageEndpoint: string; st
 const STORAGE_TIMEOUT_MS = 30_000;
 const VERSIONING_BODY_LIMIT = 16 * 1024;
 const S3_XML_NAMESPACE = "http://s3.amazonaws.com/doc/2006-03-01/";
+const R2_CANONICAL_ENDPOINT = /^https:\/\/[0-9a-f]{32}(?:\.(?:eu|fedramp|us))?\.r2\.cloudflarestorage\.com$/;
 
 async function readCanvasVersioningBody(body: unknown, signal: AbortSignal): Promise<Buffer> {
   const stream = body instanceof Readable ? body : null;
@@ -100,6 +101,30 @@ export function canvasStorageLocation(input: CanvasStorageLocationInputV1): Canv
   return { endpoint: new URL(input.endpoint.trim()).origin, region: input.region.trim(), bucket: input.bucket.trim(), id: `s3-v1:${createHash("sha256").update(material, "utf8").digest("hex")}` };
 }
 
+async function probeCanvasR2Bucket(client: S3Client, location: CanvasStorageLocation, signal: AbortSignal) {
+  const command = new HeadBucketCommand({ Bucket: location.bucket });
+  let wireVerified = false;
+  command.middlewareStack.add((next) => async (args) => {
+    const output = await next(args);
+    const response = output.response;
+    // HEAD has no payload. Release its transport stream without waiting for an
+    // unexpected body, including on failures rejected before SDK decoding.
+    if (response && typeof response === "object" && "body" in response && response.body instanceof Readable) {
+      response.body.destroy();
+      response.body = Buffer.alloc(0);
+    }
+    if (signal.aborted || !response || typeof response !== "object" || !("statusCode" in response) || response.statusCode !== 200
+      || !("headers" in response) || !response.headers || typeof response.headers !== "object" || Array.isArray(response.headers)
+      || Object.keys(response.headers).some((name) => ["x-amz-version-id", "x-amz-delete-marker"].includes(name.toLowerCase()))) {
+      throw new CanvasContractError("CANVAS_STORAGE_CAPABILITY_INVALID");
+    }
+    wireVerified = true;
+    return output;
+  }, { name: "canvasR2BucketResponseGuard", step: "deserialize", priority: "low" });
+  const result = await client.send(command, { abortSignal: signal });
+  return { locationId: location.id, verified: wireVerified && !signal.aborted && result.$metadata.httpStatusCode === 200 };
+}
+
 export function createCanvasStorageAdapter(environment: StorageEnvironment = getEnv()): CanvasStorageAdapter {
   if (!environment.S3_ENDPOINT || !environment.S3_BUCKET || !environment.S3_ACCESS_KEY_ID || !environment.S3_SECRET_ACCESS_KEY) throw new CanvasContractError("CANVAS_STORAGE_UNAVAILABLE");
   const location = canvasStorageLocation({ endpoint: environment.S3_ENDPOINT, region: environment.S3_REGION, bucket: environment.S3_BUCKET });
@@ -107,6 +132,7 @@ export function createCanvasStorageAdapter(environment: StorageEnvironment = get
     endpoint: location.endpoint,
     region: location.region,
     forcePathStyle: true,
+    followRegionRedirects: false,
     maxAttempts: 1,
     credentials: { accessKeyId: environment.S3_ACCESS_KEY_ID, secretAccessKey: environment.S3_SECRET_ACCESS_KEY },
   });
@@ -114,6 +140,11 @@ export function createCanvasStorageAdapter(environment: StorageEnvironment = get
     location,
     close: () => client.destroy(),
     async getBucketVersioning(signal) {
+      if (signal.aborted) throw new CanvasContractError("CANVAS_STORAGE_CAPABILITY_INVALID");
+      // R2 has no object versioning API. Only its exact HTTPS account endpoints
+      // may use a signed, successful bucket HEAD as unversioned capability proof.
+      // An error from ordinary S3 must never select this alternate probe.
+      if (R2_CANONICAL_ENDPOINT.test(location.endpoint)) return probeCanvasR2Bucket(client, location, signal);
       const command = new GetBucketVersioningCommand({ Bucket: location.bucket });
       let wireVerified = false;
       command.middlewareStack.add((next) => async (args) => {

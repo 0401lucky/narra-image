@@ -3,6 +3,7 @@
 import { PassThrough, Readable } from "node:stream";
 import type { S3ClientConfig } from "@aws-sdk/client-s3";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import storageLocations from "../../../contracts/canvas/v1/scenarios/storage-location.json";
 
 const wire = vi.hoisted(() => ({ handle: vi.fn(), destroy: vi.fn(), options: vi.fn() }));
 vi.mock("@aws-sdk/client-s3", async (importOriginal) => {
@@ -30,6 +31,7 @@ const environment = {
   S3_SECRET_ACCESS_KEY: "fake-secret",
   S3_PUBLIC_BASE_URL: "",
 };
+const r2Environment = { ...environment, S3_ENDPOINT: "https://0123456789abcdef0123456789abcdef.r2.cloudflarestorage.com", S3_REGION: "auto" };
 const namespace = "http://s3.amazonaws.com/doc/2006-03-01/";
 const unversioned = `<VersioningConfiguration xmlns="${namespace}"/>`;
 const bodyLimit = 16 * 1024;
@@ -123,7 +125,129 @@ function response(body: string | Buffer | Readable, statusCode = 200) {
   return { response: { statusCode, headers: { "content-type": "application/xml" }, body: body instanceof Readable ? body : Readable.from([Buffer.from(body)]) } };
 }
 
+function headResponse(statusCode = 200, headers: Record<string, string> = {}) {
+  return { response: { statusCode, headers, body: Readable.from([]) } };
+}
+
 beforeEach(() => { vi.clearAllMocks(); wire.handle.mockReset(); });
+
+describe("canvas R2 capability with a signed bucket HEAD", () => {
+  it.each(storageLocations.probeVectors)("uses the shared endpoint policy: $id", async ({ endpoint, probe }) => {
+    if (probe === null) {
+      expect(() => createCanvasStorageAdapter({ ...environment, S3_ENDPOINT: endpoint })).toThrow();
+      expect(wire.handle).not.toHaveBeenCalled();
+      return;
+    }
+    wire.handle.mockImplementation(async () => probe === "HeadBucket" ? headResponse() : response(unversioned));
+    const adapter = createCanvasStorageAdapter({ ...environment, S3_ENDPOINT: endpoint });
+    try {
+      await expect(verifyCanvasStorageCapability(adapter)).resolves.toBeUndefined();
+      expect(wire.handle).toHaveBeenCalledOnce();
+      const request = wire.handle.mock.calls[0][0];
+      expect(request).toMatchObject({
+        method: probe === "HeadBucket" ? "HEAD" : "GET",
+        hostname: new URL(endpoint.trim()).hostname,
+        path: `/${environment.S3_BUCKET}/`,
+      });
+      expect(request.headers.authorization).toMatch(/^AWS4-HMAC-SHA256 Credential=fake-access\//);
+      expect(request.headers.authorization).toMatch(/SignedHeaders=[^,]*\bhost\b/);
+      if (probe === "HeadBucket") expect(request.query ?? {}).not.toHaveProperty("versioning");
+      else expect(request.query).toHaveProperty("versioning", "");
+      expect(wire.options).toHaveBeenCalledWith(expect.objectContaining({ maxAttempts: 1, forcePathStyle: true, followRegionRedirects: false }));
+    } finally { adapter.close?.(); }
+  });
+
+  it.each([201, 202, 204, 301, 302, 307, 308, 400, 401, 403, 404, 429, 500, 501, 503])("rejects R2 HTTP %i without following redirects, retrying, or falling back", async (status) => {
+    const result = headResponse(status, { location: "https://redirect.invalid/other-bucket", "x-amz-bucket-region": "us-west-2" });
+    const body = result.response.body;
+    wire.handle.mockResolvedValue(result);
+    const adapter = createCanvasStorageAdapter(r2Environment);
+    try {
+      await expect(verifyCanvasStorageCapability(adapter)).rejects.toMatchObject({ code: "CANVAS_STORAGE_CAPABILITY_INVALID" });
+      expect(wire.handle).toHaveBeenCalledOnce();
+      expect(wire.handle.mock.calls[0][0].method).toBe("HEAD");
+      expect(body.destroyed).toBe(true);
+    } finally { adapter.close?.(); }
+  });
+
+  it.each([
+    ["x-amz-version-id", "unexpected-version"],
+    ["x-amz-version-id", "null"],
+    ["x-amz-version-id", ""],
+    ["X-Amz-Version-Id", "version"],
+    ["x-amz-delete-marker", "true"],
+    ["x-amz-delete-marker", "false"],
+    ["X-Amz-Delete-Marker", ""],
+  ])("rejects contradictory R2 capability header %s=%j", async (header, value) => {
+    wire.handle.mockResolvedValue(headResponse(200, { [header]: value }));
+    const adapter = createCanvasStorageAdapter(r2Environment);
+    try {
+      await expect(verifyCanvasStorageCapability(adapter)).rejects.toMatchObject({ code: "CANVAS_STORAGE_CAPABILITY_INVALID" });
+      expect(wire.handle).toHaveBeenCalledOnce();
+      expect(wire.handle.mock.calls[0][0].method).toBe("HEAD");
+    } finally { adapter.close?.(); }
+  });
+
+  it("rechecks authentication on every probe instead of caching a successful bucket HEAD", async () => {
+    wire.handle.mockResolvedValueOnce(headResponse()).mockResolvedValueOnce(headResponse(403));
+    const adapter = createCanvasStorageAdapter(r2Environment);
+    try {
+      await expect(verifyCanvasStorageCapability(adapter)).resolves.toBeUndefined();
+      await expect(verifyCanvasStorageCapability(adapter)).rejects.toMatchObject({ code: "CANVAS_STORAGE_CAPABILITY_INVALID" });
+      expect(wire.handle.mock.calls.map(([request]) => request.method)).toEqual(["HEAD", "HEAD"]);
+    } finally { adapter.close?.(); }
+  });
+
+  it("rejects a location mismatch before a signed R2 request", async () => {
+    const adapter = createCanvasStorageAdapter(r2Environment);
+    try {
+      await expect(verifyCanvasStorageCapability(adapter, { ...adapter.location, bucket: "other-bucket" })).rejects.toMatchObject({ code: "CANVAS_STORAGE_CAPABILITY_INVALID" });
+      expect(wire.handle).not.toHaveBeenCalled();
+    } finally { adapter.close?.(); }
+  });
+
+  it("rejects a cancelled probe before sending to R2", async () => {
+    const adapter = createCanvasStorageAdapter(r2Environment);
+    const controller = new AbortController(); controller.abort();
+    try {
+      await expect(adapter.getBucketVersioning(controller.signal)).rejects.toMatchObject({ code: "CANVAS_STORAGE_CAPABILITY_INVALID" });
+      expect(wire.handle).not.toHaveBeenCalled();
+    } finally { adapter.close?.(); }
+  });
+
+  it("does not accept a successful R2 reply received after cancellation", async () => {
+    const controller = new AbortController();
+    wire.handle.mockImplementation(async () => { controller.abort(); return headResponse(); });
+    const adapter = createCanvasStorageAdapter(r2Environment);
+    try {
+      await expect(adapter.getBucketVersioning(controller.signal)).rejects.toMatchObject({ code: "CANVAS_STORAGE_CAPABILITY_INVALID" });
+      expect(wire.handle).toHaveBeenCalledOnce();
+    } finally { adapter.close?.(); }
+  });
+
+  it("bounds a stalled R2 request and passes cancellation to the transport", async () => {
+    wire.handle.mockImplementation((_request, { abortSignal }: { abortSignal: AbortSignal }) => new Promise((_resolve, reject) => {
+      abortSignal.addEventListener("abort", () => reject(Object.assign(new Error("cancelled mock transport"), { name: "AbortError" })), { once: true });
+    }));
+    const adapter = createCanvasStorageAdapter(r2Environment);
+    try {
+      await expect(verifyCanvasStorageCapability(adapter, adapter.location, 100)).rejects.toMatchObject({ code: "CANVAS_STORAGE_CAPABILITY_INVALID" });
+      expect(wire.handle).toHaveBeenCalledOnce();
+      expect(wire.handle.mock.calls[0][1].abortSignal.aborted).toBe(true);
+    } finally { adapter.close?.(); }
+  });
+
+  it("maps transport failures to the stable canvas error without exposing provider details", async () => {
+    wire.handle.mockRejectedValue(new Error("private provider endpoint/credential failure"));
+    const adapter = createCanvasStorageAdapter(r2Environment);
+    try {
+      const failure = await verifyCanvasStorageCapability(adapter).catch((error: Error) => error);
+      expect(failure).toMatchObject({ code: "CANVAS_STORAGE_CAPABILITY_INVALID" });
+      expect(String(failure)).not.toContain("private provider");
+      expect(wire.handle).toHaveBeenCalledOnce();
+    } finally { adapter.close?.(); }
+  });
+});
 
 describe("canvas versioning capability with real SDK deserialization", () => {
   it.each(invalidEnvelopes)("fails closed on HTTP 200 with %s", async (_name, body) => {

@@ -267,5 +267,30 @@
       },
       "valid": false
     }
+  ],
+  "probeVectors": [
+    {"id":"r2-default","endpoint":"https://0123456789abcdef0123456789abcdef.r2.cloudflarestorage.com","probe":"HeadBucket"},
+    {"id":"r2-eu","endpoint":"https://0123456789abcdef0123456789abcdef.eu.r2.cloudflarestorage.com","probe":"HeadBucket"},
+    {"id":"r2-fedramp","endpoint":"https://0123456789abcdef0123456789abcdef.fedramp.r2.cloudflarestorage.com","probe":"HeadBucket"},
+    {"id":"r2-us","endpoint":"https://0123456789abcdef0123456789abcdef.us.r2.cloudflarestorage.com","probe":"HeadBucket"},
+    {"id":"r2-canonicalized","endpoint":" HTTPS://0123456789ABCDEF0123456789ABCDEF.R2.CLOUDFLARESTORAGE.COM:443/ ","probe":"HeadBucket"},
+    {"id":"ordinary-s3","endpoint":"https://s3.example.test","probe":"GetBucketVersioning"},
+    {"id":"local-s3","endpoint":"http://127.0.0.1:9000","probe":"GetBucketVersioning"},
+    {"id":"r2-insecure-http","endpoint":"http://0123456789abcdef0123456789abcdef.r2.cloudflarestorage.com","probe":"GetBucketVersioning"},
+    {"id":"r2-nondefault-port","endpoint":"https://0123456789abcdef0123456789abcdef.r2.cloudflarestorage.com:8443","probe":"GetBucketVersioning"},
+    {"id":"r2-trailing-dot","endpoint":"https://0123456789abcdef0123456789abcdef.r2.cloudflarestorage.com.","probe":"GetBucketVersioning"},
+    {"id":"r2-spoofed-suffix","endpoint":"https://0123456789abcdef0123456789abcdef.r2.cloudflarestorage.com.attacker.test","probe":"GetBucketVersioning"},
+    {"id":"r2-extra-prefix","endpoint":"https://extra.0123456789abcdef0123456789abcdef.r2.cloudflarestorage.com","probe":"GetBucketVersioning"},
+    {"id":"r2-missing-account","endpoint":"https://r2.cloudflarestorage.com","probe":"GetBucketVersioning"},
+    {"id":"r2-short-account","endpoint":"https://0123456789abcdef0123456789abcde.r2.cloudflarestorage.com","probe":"GetBucketVersioning"},
+    {"id":"r2-long-account","endpoint":"https://0123456789abcdef0123456789abcdef0.r2.cloudflarestorage.com","probe":"GetBucketVersioning"},
+    {"id":"r2-nonhex-account","endpoint":"https://g123456789abcdef0123456789abcdef.r2.cloudflarestorage.com","probe":"GetBucketVersioning"},
+    {"id":"r2-unknown-jurisdiction","endpoint":"https://0123456789abcdef0123456789abcdef.apac.r2.cloudflarestorage.com","probe":"GetBucketVersioning"},
+    {"id":"r2-public-url","endpoint":"https://pub-0123456789abcdef0123456789abcdef.r2.dev","probe":"GetBucketVersioning"},
+    {"id":"r2-userinfo","endpoint":"https://user@0123456789abcdef0123456789abcdef.r2.cloudflarestorage.com","probe":null},
+    {"id":"r2-path","endpoint":"https://0123456789abcdef0123456789abcdef.r2.cloudflarestorage.com/bucket","probe":null},
+    {"id":"r2-query","endpoint":"https://0123456789abcdef0123456789abcdef.r2.cloudflarestorage.com/?override=1","probe":null},
+    {"id":"r2-fragment","endpoint":"https://0123456789abcdef0123456789abcdef.r2.cloudflarestorage.com/#bucket","probe":null},
+    {"id":"r2-encoded-host","endpoint":"https://%30123456789abcdef0123456789abcdef.r2.cloudflarestorage.com","probe":null}
   ]
 }

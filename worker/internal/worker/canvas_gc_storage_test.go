@@ -41,6 +41,7 @@ func TestCanvasS3VerifiesOnlyKnownUnversionedReceipts(t *testing.T) {
 		{"unknown", `<VersioningConfiguration><Status>Unknown</Status></VersioningConfiguration>`, 200, false},
 		{"denied", `<Error><Code>AccessDenied</Code></Error>`, 403, false},
 		{"server-error", `<Error><Code>InternalError</Code></Error>`, 503, false},
+		{"unsupported-is-not-unversioned", `<Error><Code>NotImplemented</Code></Error>`, 501, false},
 		{"wrong-status", `<VersioningConfiguration/>`, 202, false},
 		{"invalid-xml", `<VersioningConfiguration`, 200, false},
 		{"empty-body-is-unknown", ``, 200, false},

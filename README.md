@@ -134,12 +134,20 @@ pnpm dev
 让应用就绪。Worker 在 schema/拓扑/存储通过后启动 GC，探针和每次领取前
 重新检查能力；死亡的调度器、未知 schema 或存储均不能报告 Canvas 可用。
 
-Canvas 导入必须配置 S3，且 `GetBucketVersioning` 验证为无版本存储；版本已启用、
-暂停、拒绝访问或未知结果均关闭导入/回收，不能仅凭配置或 URL 猜测。GC 只删除
+Canvas 导入必须配置 S3。普通 S3 通过 `GetBucketVersioning` 的原始响应验证无版本状态；
+Cloudflare R2 未实现此接口，官方 HTTPS 账户端点（含 `eu`、`fedramp`、`us`）使用
+带认证的 `HeadBucket`，仅确切 bucket 的 HTTP 200 且无版本相关响应头时通过。
+自定义端点仍按普通 S3 检查；版本已启用、暂停、拒绝访问或未知结果均关闭导入/回收。
+R2 探测不接受重定向。配置凭据或收到 403 本身不构成可用证明。GC 只删除
 已登记 IMPORT 的原始位置和精确 key，保护已保存快照及所有已提交任务的输入根，
 不删除生成作品或旧媒体。删除失败保留库存、物理占用和有界退避；UNKNOWN PUT
 即使遇到缺失 key 也保留墓碑及占用以核对迟到写入。Worker `/metrics` 的 `canvas`
 计数展示领取、失败、fence 失效及确认回收字节，不把远程失败计为已回收。
+
+部署新镜像后，需在 app 与 Worker 的运行环境中显式设置 `CANVAS_ENABLED=true`，
+embedded 部署需重新创建应用容器，内嵌 Worker 会继承同一开关；dedicated 部署需
+重新创建应用与独立 Worker 容器。完整 readiness 通过后，创作页显示“对话 / 画布”
+切换；管理员后台没有独立的画布开关。
 
 发布顺序是 additive migration → app/Worker 关闭 Canvas → 隔离数据库/模拟存储及
 双拓扑门禁 → 显式启用并验证。关闭开关可停止 Canvas 写入/GC；回滚仍须通过
