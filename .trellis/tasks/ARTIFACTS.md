@@ -34,6 +34,11 @@ Original font licenses and retained `.before` snapshots keep their exact bytes.
 The narrow `.gitattributes` whitespace exceptions apply only to those originals,
 not application source, task helpers or authored documentation. Ordinary source
 and notices must pass the default staged whitespace check without exemptions.
+Forensic `.before`/`.after` snapshots and the named original licenses also use
+`-text`: otherwise `core.autocrlf` would change their bytes in Git despite the
+whitespace exception. Verify original raw files against index blobs before
+archiving; normal source/receipt text retains the repository's line-ending
+policy, so its local byte hashes must be interpreted with that policy in mind.
 
 ESLint excludes `.trellis/tasks/**` because historical fixtures, reference
 scripts and generated snapshots are not application source. The executable

@@ -10,8 +10,9 @@
 
 # Preserve original license and forensic before-image bytes, including whitespace.
 # Application source, task helpers and authored documentation keep normal checks.
-.trellis/tasks/**/checks/**/*.before whitespace=-blank-at-eol,-blank-at-eof
-.trellis/tasks/**/research/asset-evidence/cormorant-garamond-OFL.txt whitespace=-blank-at-eol,-blank-at-eof
-.trellis/tasks/**/research/asset-evidence/plus-jakarta-sans-OFL.txt whitespace=-blank-at-eol,-blank-at-eof
-public/marketing/home/fonts/cormorant-garamond-OFL.txt whitespace=-blank-at-eol,-blank-at-eof
-public/marketing/home/fonts/plus-jakarta-sans-OFL.txt whitespace=-blank-at-eol,-blank-at-eof
+.trellis/tasks/**/checks/**/*.before -text whitespace=-blank-at-eol,-blank-at-eof
+.trellis/tasks/**/checks/**/*.after -text
+.trellis/tasks/**/research/asset-evidence/cormorant-garamond-OFL.txt -text whitespace=-blank-at-eol,-blank-at-eof
+.trellis/tasks/**/research/asset-evidence/plus-jakarta-sans-OFL.txt -text whitespace=-blank-at-eol,-blank-at-eof
+public/marketing/home/fonts/cormorant-garamond-OFL.txt -text whitespace=-blank-at-eol,-blank-at-eof
+public/marketing/home/fonts/plus-jakarta-sans-OFL.txt -text whitespace=-blank-at-eol,-blank-at-eof

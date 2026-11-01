@@ -1,0 +1,682 @@
+{
+  "scope": "Post-work-commit archival-only original-byte preservation; no product input edits",
+  "originalsIndexExact": 315,
+  "originalsRestoredFromGitNormalization": [
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/archive-original-artifacts-2026-10-31/check.jsonl.before",
+      "rawSha256": "73c9633d9fb69b8b2add0abe4014efb9914df23be7084a5faa65bd3e70c82809",
+      "priorNormalizedSha256": "264beab1c351829a69a5191444747a5557b72750d1fc8a6224c59fb0712764fa"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/archive-original-artifacts-2026-10-31/implement.jsonl.before",
+      "rawSha256": "617cee42f44d95fdd8aeedb1353023a70424b243aa3303d46facc884618189b4",
+      "priorNormalizedSha256": "ef71c0832feda8fc66cffd096621f3e67d88ee3dd0c9c955a1c5901dfe339480"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/archive-original-artifacts-2026-10-31/prd.md.before",
+      "rawSha256": "3a5e9fef356e10b3031e58933db635c62fcd79f339670d5604b2f5b5a720e8fa",
+      "priorNormalizedSha256": "521eee777ea44d648cd6ceab163b6ac08198412b2d92bbd61fecae95247dc61b"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/archive-original-artifacts-2026-10-31/task.json.before",
+      "rawSha256": "0c8c297e0f27c790c39da59ff52af1a78f9831224e920a5b37c4647e617565c8",
+      "priorNormalizedSha256": "6412f8305a728a346db4144c5c1029359e3380499703f117324a0ad71ca54291"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/browser-harness-01/mobile-browser-check.mjs.before",
+      "rawSha256": "5bdf45f3a8285802312dd3dc6594611c852b8f957203834facd8913e04122745",
+      "priorNormalizedSha256": "27625176f60785463a63b84043774511216a6db75d5186e94cb56256d88a977c"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/browser-harness-03/mobile-browser-check.mjs.before",
+      "rawSha256": "4ef4af4300dd24bc1635d2b07675d6321affe01563fd9d1401c139cf57d7a43c",
+      "priorNormalizedSha256": "5861d1a6461048db510094c05d0ca7b36a6ec6aa264f19106efbef86b1835e9e"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/browser-harness-04/mobile-browser-check.mjs.before",
+      "rawSha256": "4ef4af4300dd24bc1635d2b07675d6321affe01563fd9d1401c139cf57d7a43c",
+      "priorNormalizedSha256": "5861d1a6461048db510094c05d0ca7b36a6ec6aa264f19106efbef86b1835e9e"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/browser-harness-05/mobile-browser-check.mjs.before",
+      "rawSha256": "4ef4af4300dd24bc1635d2b07675d6321affe01563fd9d1401c139cf57d7a43c",
+      "priorNormalizedSha256": "5861d1a6461048db510094c05d0ca7b36a6ec6aa264f19106efbef86b1835e9e"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/browser-harness-06/mobile-browser-check.mjs.before",
+      "rawSha256": "4ef4af4300dd24bc1635d2b07675d6321affe01563fd9d1401c139cf57d7a43c",
+      "priorNormalizedSha256": "5861d1a6461048db510094c05d0ca7b36a6ec6aa264f19106efbef86b1835e9e"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/components/create/constants.ts.before",
+      "rawSha256": "19a3b49a461263d23b3ba04ca82f0d5a63dd89c73fc7d3a762810293a7d7ac72",
+      "priorNormalizedSha256": "bef63fbd744b4058adadeeba2e243d39bd2f3e6466bfd56bdfbbef10622ad5a1"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/components/create/generator-studio.tsx.before",
+      "rawSha256": "e6d8495981b33ecae1fa5e1b4f4ee54be775679f52b7e684ce80ab6494a4b218",
+      "priorNormalizedSha256": "756e238ac3bcb891622cb1dd75ba8f44a4916d441ba2106b02796cc2d4132420"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/components/create/hooks/use-image-poller.ts.before",
+      "rawSha256": "cb0e7fa27a6a4e3a0a9a831051a98f3f3dfeebdf13f75d021965dde0b131d1bb",
+      "priorNormalizedSha256": "150eefde65681c305817ed385dbcfeaf0637082148755aaa3a1b371a1c9a77fa"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/components/create/hooks/use-reference-images.ts.before",
+      "rawSha256": "b07240da847f402b8684f054a5408c62801b24a495d54b77b12139203529f0c9",
+      "priorNormalizedSha256": "a75658ea5656d242d10165b36aab4e42d8a9aad4eff7e50dee370752b19deed0"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/components/create/hooks/use-sessions.ts.before",
+      "rawSha256": "9432887ef6e39d202db242bd8b55ed65282b9e691abcd115d798376f1d39a459",
+      "priorNormalizedSha256": "972441f1b7e67955f503f0356e756c7a45169d070d1103edf1005bb217262d0e"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/components/create/parts/advanced-settings.tsx.before",
+      "rawSha256": "8bdfff53673f7d7349b3036f887ed6a709e1dc233ffcdb5fb6ed48ff16e986cb",
+      "priorNormalizedSha256": "92bafbbe4ce48b55dd2fff0d8b3fae303ddb8384858a2c310381c69d78f984c3"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/components/create/parts/chat-stream.tsx.before",
+      "rawSha256": "29c11a02ed5f7ca8540911bd48aa303900e07d80164343d2a471d11f8f0e6c75",
+      "priorNormalizedSha256": "6c9d192b2743d66a2afdc64fc72b1f9c8a1b7f3a6500dd186b7e6b8f3d3429a4"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/components/create/parts/composer.tsx.before",
+      "rawSha256": "9b2bf30066cf0b07811a54d2fd22ac7afb2976d18f466401e3c311e827df0a7c",
+      "priorNormalizedSha256": "1965d9d18250b4cf8214659dc4ed713898f324a6ce82bca0102cba14fd6d77c9"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/components/create/parts/generation-bubble.tsx.before",
+      "rawSha256": "7ed7c41500d4a3ca68e2fecb307fa30d4550832c6dae2bd214b3e002049e55b3",
+      "priorNormalizedSha256": "0eef28c9cb2b79d38a4b97718c55f9526e984eac29914f737ce0e14b32a7dd33"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/components/create/parts/image-zoom-modal.tsx.before",
+      "rawSha256": "fad3d27d3a31611cc703b76374475a33dfd28bf706c4d2e3f4a89ee530ecb071",
+      "priorNormalizedSha256": "0751f584b28770472d79b46fa65104c73bde714607db30e0772619e2569ca006"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/components/create/parts/session-sidebar.tsx.before",
+      "rawSha256": "ce3c84e7ab6921c2896c65e36bd0b695e8ca6c1b94dcdcd28277a74ee6967ce5",
+      "priorNormalizedSha256": "559b398a6e039678b5acd71088a08b946e158597d23dcedb5549d09f00de39e6"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/components/create/types.ts.before",
+      "rawSha256": "863c00cabe0c2ce05d62fe5aa000d0d4db0f24a198dc18e0bb2d058ea5c9fe89",
+      "priorNormalizedSha256": "ef220a29e6f0167da23b78c53f13bdb6e2a61db6bb242e91e01d9590066fc577"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/components/create/utils.ts.before",
+      "rawSha256": "f965e9543ae733f4bd4940033938a7eaf3088dd567842ff84835b5f12e5702e7",
+      "priorNormalizedSha256": "b9d8af9d2781ebe19c24b0d8fa5f45d56f34afda2efbb01a40cca6c639e795a8"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/admin-channels-provider.test.ts.before",
+      "rawSha256": "01466976e6d0992fb387b2e2e909c969a2c19bff89a3f4586b0976a7edd1d086",
+      "priorNormalizedSha256": "e6b1522caca8195dc9fefee2372a50444a68f52700c50b446526a29c6d83b116"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/admin-channels-route.test.ts.before",
+      "rawSha256": "06b95ccc6aa0a95bc4f913599bc11387f4e78a14f573151dd0a8173ce1d06651",
+      "priorNormalizedSha256": "b64a2ca7b77cf5c45cfdc7085797461a2b1cb8b02568afdd5b76c8a6a280e0b9"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/admin-generations-cleanup-route.test.ts.before",
+      "rawSha256": "de06ed2ef37e1a6f3cbff8b1eb6d84ebca90bbd065217ee135b7acfc07a21e81",
+      "priorNormalizedSha256": "3a8bb0a181943952940b915ed8253ddfb7378a76220ce77eaf57d855f1d5d764"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/admin-generations-page.test.tsx.before",
+      "rawSha256": "c6d226136e33c852226723822a29918f6be38380c77442f8c3cd2e910c570cd2",
+      "priorNormalizedSha256": "4bba5259857217dc95b797261c81c9623e71e1f00bf4db43f1ce764c3d381062"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/admin-generations-route.test.ts.before",
+      "rawSha256": "8d16496e7642f65178f9c8fa8e3e38d5771b38972dbec653fecb9017b7edf13b",
+      "priorNormalizedSha256": "549108c79cacd8b44780ec8c0b8fb79e63357abfc7813afcc8e15bd29d789f31"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/admin-invite-batch-route.test.ts.before",
+      "rawSha256": "0478a9627b9dced78a48686f49b42302cc35033ceec8c3d39471d45ae00c78b0",
+      "priorNormalizedSha256": "1aaa95f735fc1447698b0dde6b0ba07c7be0cdad0b86d6aeb99fb83e08c5d0fc"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/admin-user-delete-route.test.ts.before",
+      "rawSha256": "30963f87dfcf0291b53800b7ab6d9e28af97d150bec79f2581f798c93b72aad4",
+      "priorNormalizedSha256": "5219e3cb86efc52d5ca13d43125c0f99ae2143b1fbfb07ef8f8f56d32ae005f5"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/api-config.test.ts.before",
+      "rawSha256": "62a4241bc6d133fa4aad979066ede3d9d9e06d84f79e6a585301d45d071e6ec3",
+      "priorNormalizedSha256": "812a09c841ec6356c07a1ef4f48e885b1d6c9e7093383e25a3ee6b746830c0a0"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/api-key-console.test.tsx.before",
+      "rawSha256": "12344e5aa0b6351ede3ca4d3726861e37e74464b1e4cd1e22c2a92f54732a826",
+      "priorNormalizedSha256": "72cf0d0b61e2517cb5988aabfefe522572b5cb808f61981df04a94019dce9634"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/auth-form.test.tsx.before",
+      "rawSha256": "520719ba4213a872ee5d1c051447bbff59a3793a160f444fbfaed2c8b8f3a170",
+      "priorNormalizedSha256": "e4d09894e2603e63a18862466d8ce16848c3780bd5593f9d4fc4478603a4ddb2"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/built-in-provider.test.ts.before",
+      "rawSha256": "23bcd56164b493b503e126b430dc70a2e52746992cf7833647c0029913c582ed",
+      "priorNormalizedSha256": "c7a80f13083838e8685e3e07b5973a02d84e6a30f7027d5c723e0d937932dadd"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/channel-manager.test.tsx.before",
+      "rawSha256": "41045a6001d6614210e7050742918b3d16d0f9481e38042fc79219a14c12916f",
+      "priorNormalizedSha256": "6b22524be0747e9a2b3b172f3330ac0ac4d0d49f0c05ea8a1a0eaf6862d65028"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/channel-validators.test.ts.before",
+      "rawSha256": "d078f496b139601a8812010b9ead1c84a2f0ef47851918a89cb6427a29a33055",
+      "priorNormalizedSha256": "e95e25346bf7451a5d41b9c286c567a01e61c5593c79f63edc85ab6313002def"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/check-in.test.ts.before",
+      "rawSha256": "db3c13c845b39b67914cd6ecf9f91594d36a58b88b7b3f6775f39ffc744f2875",
+      "priorNormalizedSha256": "d5f80baba30e8255af101c29cc6e8e30c6b5e0ed204a0c1a748fabd3e552ee71"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/credits.test.ts.before",
+      "rawSha256": "d18d18011ba912c37c4c59e142bf2991e3bddba8423446d340c8d64a4c385af0",
+      "priorNormalizedSha256": "f6b538c7dfdbde7229cf52ce0bca98a1201769f97f79691fe3544a899116f16d"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/env-security.test.ts.before",
+      "rawSha256": "e7d809a4722c7465b6bc7b5540b729d77c35422f29fafc46b1aeee14dcfeacd1",
+      "priorNormalizedSha256": "183ca3c2f7e3943ec0732ff1ea7488efa747899376b4f51dff6d50d832128867"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/external-generation-service.test.ts.before",
+      "rawSha256": "72864c55c2cd8fc24655553409be4501ee4eba4838b8b8dc8d90a33d0a74e4e0",
+      "priorNormalizedSha256": "90b3e9b9fa5080f3feb491cd56869596a5db3cf0d811d9b5189ac6842e309c5d"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/external-source-images.test.ts.before",
+      "rawSha256": "c0828b9fa57c80907a86da200a1bcfa5fd2d089d508791e9a98f1288eea56ade",
+      "priorNormalizedSha256": "4342b4b1a681108a2fd759a65aa654cf72cbfb5eca782f5c732143b6e2f20776"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/external-v1-routes.test.ts.before",
+      "rawSha256": "179d606d61d86a12c34b4c37ae1d20f3234a1455f3b2c1861c0c2106a9279cc8",
+      "priorNormalizedSha256": "1547363dbbc6d5eccdb73915c7c7bdd2980f14c61407399b13d4afbbbf8ed034"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/featured-gallery.test.tsx.before",
+      "rawSha256": "94a6de3811a53ba393adf6de15c119dcd23e6cd2760db764cedda06889cfd305",
+      "priorNormalizedSha256": "19063a577faba28fa037fd9fe0a4cda60a6dfd8c7f4f54d3450c8a36914f44e4"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/featured-route.test.ts.before",
+      "rawSha256": "7f3dfd173cef36e99e4a6ecc5dd7cef807fa13e3b8001f592396ee6c0a5430f0",
+      "priorNormalizedSha256": "2d2b7bc2f783b2194b85cf8b01d8de0d0b9580f1355dec2329071b3a3b99bcad"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/featured-video-serialization.test.ts.before",
+      "rawSha256": "8a0758a8ddc53e487605aa3602c8f82c21dffbf7d42fd66626c204e88e6a8e25",
+      "priorNormalizedSha256": "c613800b8bff4ae8094b14424b3da89e7efcda7fd24b87a5a7f4c67b1840d215"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/featured-works.test.ts.before",
+      "rawSha256": "f1f3bcffe5134fd37aae204189a471025e10e395a2204ad3b28f3e7c236dd3e0",
+      "priorNormalizedSha256": "743fb4e04b1e73b5a4be7df3d88a909539a010298c50cb7177541c0f42a6f049"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/gateway-client.test.ts.before",
+      "rawSha256": "ea181db8b1f085f6f29edc5fcf3172af23f41be87fae6d82b4c2de01361a31b9",
+      "priorNormalizedSha256": "64772d5a90f7aaa2ca5bc1c3a1fbcc622b04acb0f6cd21b24ad2fef005c8ed24"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/generate-route-security.test.ts.before",
+      "rawSha256": "92bcb878db1358fbe2ea70db20f29d4ea19326522447fced070c5052a2680443",
+      "priorNormalizedSha256": "1a13a643a7ff0ceacdccfb5707213804148c06beba2109410278f8cc95a1edec"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/generation-admin-list.test.tsx.before",
+      "rawSha256": "7bc73fd1eff7e61e7eebad43403af1cba68b1152555c187688a5aafa95c42c1f",
+      "priorNormalizedSha256": "9bd9a438d6283dfeff58d5aae44acd34239b1a0b6007401dc959ece17b2d8bb9"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/generation-cancel-route.test.ts.before",
+      "rawSha256": "17131ba651b21b38cf383904b38174ab4ef4d3a2a8b02903ea5569a0fcddd887",
+      "priorNormalizedSha256": "3bd6ecdd2d20418c854328ab2fbd0250332701953738087ed2e08ee553b30287"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/generation-search-bar.test.tsx.before",
+      "rawSha256": "9ec5dc2332488f5e605884a462c4b65bfefa24a22713fc4bcdcd2f8de9ee445c",
+      "priorNormalizedSha256": "d7c69ec76c37e65c841ac1ee81538b9571b5d36abba2c407718e4984f25f16e0"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/generation-serialization.test.ts.before",
+      "rawSha256": "e0689bc4bf8bafa8b0b68205e9bb7cf4398308502fd994f7e26a56ea226bc799",
+      "priorNormalizedSha256": "f057444fbf563bb4c8a9cd65e47903dade31b3050ae11164e0b40f67c275c13f"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/generation-sizes.test.ts.before",
+      "rawSha256": "1016f88cd213860a6b4bfe910171ee5533b6920dc2e96757ae66c86addf3988d",
+      "priorNormalizedSha256": "7d2a6d20e33a9adc9c12346a70117eb17b2b8f8363c7426338c807808e704ca3"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/generator-studio-edit.test.tsx.before",
+      "rawSha256": "c53e26cbfce779e2b525271437d6069a99557f6f763c1735c447bc865805aed7",
+      "priorNormalizedSha256": "fa85933c8debd7a350a470ad9f37dbbfb2e50cb9f54f708772da4520f7dbfd7c"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/generator-studio-feedback.test.tsx.before",
+      "rawSha256": "57ca78d15a83794b26e7b44e6ee67c249737925b89c7f53568ef8b5939633728",
+      "priorNormalizedSha256": "eae42163c3fd49bf249ea6aea9330e7f70c00faf3f9d34f7184a22f295b5d4b3"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/generator-studio-ratio.test.tsx.before",
+      "rawSha256": "8601dd021e0516b80c7b840c48a52a90be3966f5877971534ede6d91786f5340",
+      "priorNormalizedSha256": "1a0af129ab87b1c29fec5657b1ceaf0fb7cfbeae19c0edff010b38c70c5bf710"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/generator-studio-retry-cancel.test.tsx.before",
+      "rawSha256": "fa99cd77bc114967b5bc740fae336c39772d8dc4e0c2519e48b77eb3ddd15ce8",
+      "priorNormalizedSha256": "8178bdb86c23b376e0eaf440f5f8ef9ff59486610b9d61df14129afd404bf685"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/generator-studio-session-history.test.tsx.before",
+      "rawSha256": "0b647397a8d63852140d35de41797de3806d9cc4a6002852de5b83ee64a92e84",
+      "priorNormalizedSha256": "40d3f70e1cbcd3a89ccd100f4988dc35b50ff77ef8642951c904e5c442003058"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/health-routes.test.ts.before",
+      "rawSha256": "d7eac1a43c112387ebfedc303081ab481f944a79156162e2fd60b8ce9a008397",
+      "priorNormalizedSha256": "ae7981f4b93357652cf49923945891bea2a06bcda80c9d310e78449af9b783d9"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/image-dimensions.test.ts.before",
+      "rawSha256": "0a802e65033e26785070d081f0f2560a01f6c86176c1bf04352ed5aa2c86d44d",
+      "priorNormalizedSha256": "37360e1d81ae30759ddb5ced40f24feeba884e4b6b6eb923e46dff25a2a1be25"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/image-lightbox.test.tsx.before",
+      "rawSha256": "be49b96bb891d66e5b8dc07c87cfec2c7c1c5629cba2c08862fa2e30e90a7bc1",
+      "priorNormalizedSha256": "ebde2619c8afd7df68139a26924954e1cbd94106983e10a94414e711f235817d"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/image-url.test.ts.before",
+      "rawSha256": "46da4bcba46d82eaaa4b4dcabed6779483e1b6a526fcf1d51f9db0a9d72fa276",
+      "priorNormalizedSha256": "0a972ed0895f833f1e3990861d77bf63ba1ca9712d66ef96f70acdbfac1bc87f"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/invite-batch-view-button.test.tsx.before",
+      "rawSha256": "56aa90306bda10327e12fe6d58f9c1cab777540b65f1255a9a2375ea19763ae6",
+      "priorNormalizedSha256": "5d9e4be971af53ea22f8ef65a77107a874245443127de808711ea6e3c6549799"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/invite-claim.test.ts.before",
+      "rawSha256": "3e7def739b524ebc4ce5052e3faaffd41553dae02bc28c1f9866c0b14d8f477b",
+      "priorNormalizedSha256": "cd016d2e773c5faed59469460b40c5e659042e86d514eef3ee2dfa86614170e4"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/job-refund.test.ts.before",
+      "rawSha256": "6d5f52abe49f54f5b0aef59320a43d27e27354569839e96b441b87a8330545da",
+      "priorNormalizedSha256": "d5a8ab4e50041a0ef4f0b97f729b6c3c8b468cc333e4564c54759e16a11f88d3"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/linuxdo-oauth.test.ts.before",
+      "rawSha256": "b1a0a1eab69fb0e814df967cc2eeb9970d9f8f6ff101e2fc470218468e1a0a1d",
+      "priorNormalizedSha256": "607713accd4f782112712074f4d21a6244d938ec1bdef74fe566666a90efc184"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/log-redaction.test.ts.before",
+      "rawSha256": "9d8dc9e69c0b6cb3591910280e4fd7a4617093b88f9e68343b043fd45bea5230",
+      "priorNormalizedSha256": "72bae2885c8e8bd21674bc3a462ef531f76d83792eeda416f480442ef457d101"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/model-catalog-fetch.test.ts.before",
+      "rawSha256": "3153593749bbc6f0677a53b6143ec040b4cce16e01e2329f63e440219d3aa6fb",
+      "priorNormalizedSha256": "90a6263da90470a12c86985e6277cd5c8b60656ad323957dae13b34244a287db"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/model-catalog.test.ts.before",
+      "rawSha256": "61e5ed41d3f3c6693a363924777a6dd275f9c6c73fae914d97af41021ba5b8ac",
+      "priorNormalizedSha256": "82d2a37585a383000bf18871192b5edb548125980db7be2604c53cc94d604e1e"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/moderation-check.test.ts.before",
+      "rawSha256": "1152f37710adfe6118f8f3cbb92a68ff31d0065fe5aa7cae8b5c313ccc15bfbe",
+      "priorNormalizedSha256": "0271dbb0a95a7ae701d4baac6579afc159a3c73c8b4923ea691ac2e061290145"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/moderation-config.test.ts.before",
+      "rawSha256": "b38c8e9828740de116bb0e33fef8755ad8ee431ee6609a69d70813d1968129b0",
+      "priorNormalizedSha256": "41d0d8f7cdfc1ef0735f5e1ca8c3881ed1abeb149773dded005c709c6cfa4fcb"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/my-works-board.test.tsx.before",
+      "rawSha256": "1a2f67a35d205500f92b3a8f85c3a240e7246e94e6d3910ef721d32b994b6d38",
+      "priorNormalizedSha256": "47d3a19bb9fa1a7492fd5066f8f7a1ee9300fb741d4def16a17715297b620e81"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/parse-generate-request.test.ts.before",
+      "rawSha256": "65c0ba7ac9bd5a43784e4baf129e3f32205ea3c74882c580c72610a878b80f97",
+      "priorNormalizedSha256": "b2a47e67ee3f43efaa8e67c05ce02ab98d10212f47f28585327b4251046ed850"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/persist-generated-image.test.ts.before",
+      "rawSha256": "9977403875558cb8f15904699011aa3e6b09df2564b881d9066dbe2f00538a58",
+      "priorNormalizedSha256": "de13e3ed59d5cb530c9bb76844644c982e1cb1cbd1a6283c3d3ca59eff1e5f1c"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/pet-companion.test.tsx.before",
+      "rawSha256": "4ae58180292693918f6f0f6aef5a3920859bb510d7314096e00cf7ad8b6dbdb6",
+      "priorNormalizedSha256": "4811691e929a80a0389456b6b206e84c4bae1c08c045cabf91dfe67f2c4c0b17"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/prisma-client.test.ts.before",
+      "rawSha256": "414b5aff57abc41a31a86612c262bdd8bc5b49f6d30936029e3919fcfd942ba5",
+      "priorNormalizedSha256": "ac49829b8d2efe75af4c328c051e1ce94b91605770d586063a5982d967463836"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/prisma-mappers.test.ts.before",
+      "rawSha256": "6c602786d316d27439d3e15cee9089aeb66082b8d62f9748faabf8d2f66f2988",
+      "priorNormalizedSha256": "7cffd9e0d23e118850571032b930a0b3682f1f335d02d4ea7c7ef5c71931f233"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/prompt-modal-copy.test.tsx.before",
+      "rawSha256": "194843a611494e8c61842aa44bbf008e36e621d7f806220d597a390c5595a2c1",
+      "priorNormalizedSha256": "13a84414e9da74a9ea226709418943146dd916fb698ab067f60352a2e4efc73c"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/prompt-preview.test.ts.before",
+      "rawSha256": "5ae5ec48c302f0654526b36cb035c448bebb32f936bc2a42fd1ed4b15a84aeae",
+      "priorNormalizedSha256": "13dc2c1e5d4e4d036d7afbab34ee542e4eac0618105ca39c3aa9f3c0a8c56ecb"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/prompt-sync-forwarder.test.ts.before",
+      "rawSha256": "59621ebcdec90a4113d6a2ceede144b2d4646ff8866fa1b0d4daa98405b70aea",
+      "priorNormalizedSha256": "2fc65000e2db1aec22fb2191bfac98acd2cdf7b907d17a6446630ee7b95a6d60"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/provider-models-probe-route.test.ts.before",
+      "rawSha256": "d6c3c977515ea36c25735e34563372f42390f3636926166ad2d4d675cbf5debe",
+      "priorNormalizedSha256": "92c752c8396b1a948ff3901d49a5dd5fec030d1e68c60e02fd0efb3e53b8e221"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/provider-secret.test.ts.before",
+      "rawSha256": "86805253cfac2b08e28b7a3859e339cf6b7cf102f4fb915ccd45ee83216dcf13",
+      "priorNormalizedSha256": "19711a5b44ee93d788fca161706f27b8ea75ebf3a07b7d597d87d350e9f0d001"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/proxy-image-route.test.ts.before",
+      "rawSha256": "4739829e7f7ee497e433a90606f3bd907d8d0d0942559d329ef2d2d96ca45638",
+      "priorNormalizedSha256": "17a6c3b39935f51b2b93151c872ab9aea3cccbeb13d8d22b84571b9fe5b5b916"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/proxy-video-route.test.ts.before",
+      "rawSha256": "b62c1568fbba23f4e29b98b24981111b7db7f8c975848c27e9795f68717d399e",
+      "priorNormalizedSha256": "6a1851db07e8d0eceb1acd29dc47512ddd1cc929485779c8843430b6a56d98db"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/readiness.test.ts.before",
+      "rawSha256": "790f21e77a79f352d8c3367d8f2daca2ad1d4f5c702fe45bb0859f43108cf931",
+      "priorNormalizedSha256": "1d0751aaed10df1d4657e40f9dcbace3ef27ba265921be086bc7e3637d477920"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/redeem-code.test.ts.before",
+      "rawSha256": "5d7c86bf53af1b23ce24e130d4b17e69bafa088e8cedf269f6d66d68fe0b7b9f",
+      "priorNormalizedSha256": "8f1ba7ace8f6bd3372cf54ea8bca7353e7de5acec2ac0b3e6d8a6a8ba717528d"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/register-route-bootstrap.test.ts.before",
+      "rawSha256": "0b95ab9d1bd4e4126af039a16802b8207fecad47a375b17924c1f078af0407ef",
+      "priorNormalizedSha256": "24ada15e970039119081e5bc9c96976bdf4e264a0b95ea2969199d918df8c5e7"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/register-user.test.ts.before",
+      "rawSha256": "9f10debd70d5292881c599f7879086b3cf3dbbea58124c69ffc02975cd7f07c6",
+      "priorNormalizedSha256": "3d0565d5848202e1ec756a408734d08c3358590b64150241fa956e6089cf88b7"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/safe-remote-url.test.ts.before",
+      "rawSha256": "3afe3ac77f61863548d4ff54368e37f57e939f8681114a8c2055dd09ecad8fa1",
+      "priorNormalizedSha256": "0e445842234935cbb7ae76b8d88ec5fff27263bc779848ca699e1b979dec90ab"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/sensitive-words.test.ts.before",
+      "rawSha256": "5b03397b3b9076f32491e36716f2ec49e220568a1c3db2260ff98e2cd714f5ca",
+      "priorNormalizedSha256": "54d2d8e0ec705cc68388ca923a2955ba1fe56a6505417ecb72dae65110c945a2"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/session-token.test.ts.before",
+      "rawSha256": "cfcb3b67d05c5a004c16b039d9ab75132f3c84262c984d9547e53cb57a209180",
+      "priorNormalizedSha256": "3e075772bb1c0a3765afb60e7a4e41a5e1fbf79e9660c3fcb1364faeb1ac7efd"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/use-image-poller.test.tsx.before",
+      "rawSha256": "6266e2b336047aa64fd5c6bda691b448e782227efd16afd7700e01dd0f6f4fe7",
+      "priorNormalizedSha256": "3df6cc45ea196afe8e935bde90f9bd0c8cdaca29748c7f98c929e7f9ffb025ca"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/video-generating-progress.test.tsx.before",
+      "rawSha256": "4c9bd8da8872b93960a585dcf06b79b317723105e1ec49e2fce4a9113a2b19a7",
+      "priorNormalizedSha256": "6bade561b3ab13d27b980b5d2f0ac9f1ec57667a42dafb7e7967aa3b6a9bb9f3"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/video-stage.test.tsx.before",
+      "rawSha256": "49b0605b0ef2b2e2d8c5f37167ba056fc1875e4d6966495684f9afed11e08ec4",
+      "priorNormalizedSha256": "0fadeb39d7f12e3fc9b15e4c09bde3021682a09bed83b696b7c02f981836e203"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/work-delete-route.test.ts.before",
+      "rawSha256": "d53a79107534d1644d96fdb1e2666d11018c79dd653016e3c9fff244d37221df",
+      "priorNormalizedSha256": "114c9024d6302a1c2321e3d4be9af7501e5fc766f45b7c604f1ed749b4eee2f4"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/work-like-route.test.ts.before",
+      "rawSha256": "8579b5db36982ea74a4fec518de085f81892794a8335e946be5ff57799913613",
+      "priorNormalizedSha256": "0734e653ac6c5f7e8ae17fb041f500889c5dec3be1fa99507248361c1c8a0af2"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/work-share-button.test.tsx.before",
+      "rawSha256": "68676fa29aab5fc5e2bed035457f091524676a3fbb5836ea2294cd329b394240",
+      "priorNormalizedSha256": "5088685bb243700f66b63ad62e7fc094e04b4afb280dfa59aa30a92a31e8d9df"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-10/10-28-studio-mobile-canvas-editor/checks/pre-implementation-2026-10-30-02/source/src/tests/unit/work-showcase.test.ts.before",
+      "rawSha256": "bd46301e94c78db37df3cc652178ccb094c54f4396bbcf6dcfebc23bc7f1ccb5",
+      "priorNormalizedSha256": "74d8c856c9a7352133ddc7b3cd5bc575cb936dbdb09f3ad053415ce6e0ad1485"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-11/10-30-homepage-warm-editorial-redesign/checks/browser/baseline-inputs/src/app/admin/layout.tsx.before",
+      "rawSha256": "8948d0d6e23326a208f34d2f98f69bb7ac7741a4ad43c58567f70a9b10129481",
+      "priorNormalizedSha256": "585a185f47951785218a9feb33d929875b3fa90f0fdcda86f8ed6f7a59b5bf5c"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-11/10-30-homepage-warm-editorial-redesign/checks/browser/baseline-inputs/src/app/admin/page.tsx.before",
+      "rawSha256": "d17a559f4b883357022816fc5e42995b3c5f700fb25bc6492062f73e8fbaa15d",
+      "priorNormalizedSha256": "08aa7350854e6cc9b4e900ba1c077832e9c97e82e51747148d06df1175c657e2"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-11/10-30-homepage-warm-editorial-redesign/checks/browser/baseline-inputs/src/app/create/page.tsx.before",
+      "rawSha256": "fd098da618e00b7de39f92aec6339e1a98f85c65b8204818261f89162d8963f9",
+      "priorNormalizedSha256": "b1849782301df99af31b09a242d4c53c05d1eee9598b53b233215ed5b0b62886"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-11/10-30-homepage-warm-editorial-redesign/checks/browser/baseline-inputs/src/app/globals.css.before",
+      "rawSha256": "e870d5b65cdddb382509011d1ef1bae5797248732baa392572d6e5124ea1a111",
+      "priorNormalizedSha256": "95d40ab58d5322efaaf1262180e79821ccdaadfe832b23b09807af459b735910"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-11/10-30-homepage-warm-editorial-redesign/checks/browser/baseline-inputs/src/app/layout.tsx.before",
+      "rawSha256": "d478c33a13d8e8d77c110c67b00b88db7dd2c9db3c598ccebb872d875c77be26",
+      "priorNormalizedSha256": "150c6509e0876045c8384bc5906eff5c1429c3cb9e9b0f72084a0130a1baceb0"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-11/10-30-homepage-warm-editorial-redesign/checks/browser/baseline-inputs/src/app/page.tsx.before",
+      "rawSha256": "f840b87dd8c1049997111060705be123333466fe3077490441d9bce50845352c",
+      "priorNormalizedSha256": "b861b707933dd277f11fac062bceff2f732ba9d9de7479e64bbbe27310255c40"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-11/10-30-homepage-warm-editorial-redesign/checks/browser/baseline-inputs/src/app/settings/page.tsx.before",
+      "rawSha256": "09c85768157f66fa807d4c239815296db46953e81494a4045d455890c6f9b693",
+      "priorNormalizedSha256": "f6d8904a64847187ad7829b6251f94414b27470d9358654eaf6ff39253445185"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-11/10-30-homepage-warm-editorial-redesign/checks/browser/baseline-inputs/src/app/works/page.tsx.before",
+      "rawSha256": "a0534baed067c3f9c85d78302d661c19dbeb42c4aecc17fe35ee4ae46d8e3dbd",
+      "priorNormalizedSha256": "c779c0c8d34740bd2b30fe6e6cf8cfa3eb00d29b3d9fd63bca332bd97d2c5076"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-11/10-30-homepage-warm-editorial-redesign/checks/browser/baseline-inputs/src/components/marketing/featured-gallery.tsx.before",
+      "rawSha256": "551199bfd52962f1827b3cb35505f1219398b20f33a8c5c651e6ffafb1ddc30b",
+      "priorNormalizedSha256": "9eb0ee85ead248ff8666236a975a7d4e3d3d5f7835840f060710321bad0be493"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-11/10-30-homepage-warm-editorial-redesign/checks/browser/baseline-inputs/src/components/marketing/header-shell.tsx.before",
+      "rawSha256": "e2f1c88dd32cff8e4260039fb59c58d0c735a9323eb0c7fa1dc3c4ee9d33234b",
+      "priorNormalizedSha256": "b6d2977bfe384ac4be81dcee7dae80ae8c71f12954145a394aebcf773b78199a"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-11/10-30-homepage-warm-editorial-redesign/checks/browser/baseline-inputs/src/components/marketing/mobile-nav.tsx.before",
+      "rawSha256": "ceec3d8cd59ebf60f59553e56c10be4671c9916af742499059d4b02ccecda632",
+      "priorNormalizedSha256": "df46f68779ce90b7a09c222499527ac2bf6bf7aa4b35b9a031a0fbf22c0dcfef"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-11/10-30-homepage-warm-editorial-redesign/checks/browser/baseline-inputs/src/components/marketing/site-header.tsx.before",
+      "rawSha256": "5199a1cd49fda36704b701c6a742c25dbc8fef95233f5824a95e85d76d77a68c",
+      "priorNormalizedSha256": "52c94b607530f1c07a888396858a334a33d75421b1d3e9ebc965b7a58b3620d0"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-11/10-30-homepage-warm-editorial-redesign/checks/browser/evidence/gallery-entrance-before-20261031/run-browser.mjs.before",
+      "rawSha256": "e3f62cda0843e65d4f7bb897b964904b2a92091ca2c990057c038f871acb57c5",
+      "priorNormalizedSha256": "76f1739bd692a15393d69d817880504a8599826618be3ea2ac7132ef7e791d30"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-11/10-30-homepage-warm-editorial-redesign/checks/browser/evidence/hero-hit-preparation-20261031/before-helpers/prepare-fixture.mjs.before",
+      "rawSha256": "4ba66a6b049be9dfb8ede783f54e6c2336f2f7e1ae56bc859b192fa121ac9c40",
+      "priorNormalizedSha256": "132efa04670c0db962a05614cb9244004519b1d691c64bb9b500aae276d99fad"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-11/10-30-homepage-warm-editorial-redesign/checks/browser/evidence/hero-hit-preparation-20261031/before-helpers/reference-checks.mjs.before",
+      "rawSha256": "c6bd5700efdb030c6b76735238b7f9ef8524796027f10b99e52ac556c87a0a3e",
+      "priorNormalizedSha256": "ad0d97adb24ce761979fcffe74f6ee44614b7ba670c1a7309792f740c4bd6c90"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-11/10-30-homepage-warm-editorial-redesign/checks/browser/evidence/hero-hit-preparation-20261031/before-helpers/run-browser.mjs.before",
+      "rawSha256": "722a53645d041b12588bd1759921cd55871dcce1fd81d0f91b06b67b97d393de",
+      "priorNormalizedSha256": "ec85bb0ea215dd8dd434ac41ef37f06ac33f5575aaf6269d0a7b6fe3b88628c4"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-11/10-30-homepage-warm-editorial-redesign/checks/browser/evidence/hover-fraction-before-20261101/run-browser.mjs.before",
+      "rawSha256": "5fe1359b6e20d9f6f1b60faf32faf11ca3beef8844b5a9af0731422fc74c7807",
+      "priorNormalizedSha256": "b72a37ea3833ae38ed8a46c355daf38db77683958394a3b3715d824b16b72b60"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-11/10-30-homepage-warm-editorial-redesign/checks/browser/evidence/long-url-helper-before-20261101/eslint.config.mjs.before",
+      "rawSha256": "0da84bf3df87aab3ce7526411b87f973e9b831a0ec680b5bcebf809f13e129ec",
+      "priorNormalizedSha256": "c74e4c35a8af5ab085db5489a3030ec75ed5c361738e2e8dd8e6cfaf856e2f16"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-11/10-30-homepage-warm-editorial-redesign/checks/browser/evidence/long-url-helper-before-20261101/prepare-fixture.mjs.before",
+      "rawSha256": "4ba66a6b049be9dfb8ede783f54e6c2336f2f7e1ae56bc859b192fa121ac9c40",
+      "priorNormalizedSha256": "132efa04670c0db962a05614cb9244004519b1d691c64bb9b500aae276d99fad"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-11/10-30-homepage-warm-editorial-redesign/checks/browser/evidence/long-url-helper-before-20261101/run-browser.mjs.before",
+      "rawSha256": "5fe1359b6e20d9f6f1b60faf32faf11ca3beef8844b5a9af0731422fc74c7807",
+      "priorNormalizedSha256": "b72a37ea3833ae38ed8a46c355daf38db77683958394a3b3715d824b16b72b60"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-11/10-30-homepage-warm-editorial-redesign/checks/browser/evidence/long-url-json-fixture-red/prepare-fixture.mjs.before",
+      "rawSha256": "7c0d0a08d3989fc562853aff0260bd008288bc6144bc2bc4dcbf2763f42ad42d",
+      "priorNormalizedSha256": "6d518d2f4fb025f30b1247b221eff37f9b7a38fb3af35c66f876c49c28eeffb2"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-11/10-30-homepage-warm-editorial-redesign/checks/browser/evidence/resume-preparation-1793418995856/prepare-fixture.mjs.before",
+      "rawSha256": "cdee1f912bbfddd2f21ecd3bb5404359194182feae0216ed7087ed03529023a3",
+      "priorNormalizedSha256": "3ad737b051ab2fd28d2f7a18423288c3340fe72064db57ffd09470ffae5d025f"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-11/10-30-homepage-warm-editorial-redesign/checks/browser/evidence/resume-preparation-1793418995856/run-browser.mjs.before",
+      "rawSha256": "57bacb2e521e5dabe9406bf865006062694a47629fa1dcf361a2efbb8737d4c3",
+      "priorNormalizedSha256": "f29f59b45c93ed5e9e39b9a08df89bde453d19d3c4ce5cb0c187eb81802117ce"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-11/10-30-homepage-warm-editorial-redesign/checks/validation-evidence/browser-resume-records/prd.md.before",
+      "rawSha256": "3bf8f282924ea3d7eb632730cc61229fbb38c57d46776c054ac55b276e3068af",
+      "priorNormalizedSha256": "be1a2ca358288168d23e6f0c4af9ea26bda548c502fd63e94063b2709b245c6b"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-11/10-30-homepage-warm-editorial-redesign/checks/validation-evidence/long-url-before/check.jsonl.before",
+      "rawSha256": "22255e5b9e87557518501f8da41029cd4501ac3816bbdee80e5d210cd1454150",
+      "priorNormalizedSha256": "12befba6ad852aca7869d5719c32e065b06d914f139695bc396ec908ebbe1fe5"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-11/10-30-homepage-warm-editorial-redesign/checks/validation-evidence/long-url-before/implement.jsonl.before",
+      "rawSha256": "5bf849522828054718263a71e82de9a0959c5065726b771978f0bda8ed189661",
+      "priorNormalizedSha256": "418c9d147385cf4add9f7ac8221c30b0ce7dbb0eca5c94ffafdd2599182b38ba"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-11/10-30-homepage-warm-editorial-redesign/checks/validation-evidence/long-url-before/prd.md.before",
+      "rawSha256": "b00a2ee6d806c3908da009d5b4a236aa27109c625cf5518c35b59701a0a5fd9f",
+      "priorNormalizedSha256": "ed54c1918c0a696f10a7a3dfcf4bdd578967e466186be259f9cddc54c3baa359"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-11/10-30-homepage-warm-editorial-redesign/checks/validation-evidence/long-url-before/task.json.before",
+      "rawSha256": "0431bd68016281d61159cfe347ee1ccf2e2e883df61ab63c4ed54d1317273ade",
+      "priorNormalizedSha256": "95cef7a0d0b19d6703fb6c02929401d0573ca5a60739a6cccc99a05f4eb110d3"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-11/10-30-homepage-warm-editorial-redesign/checks/validation-evidence/privacy-red/source/src/app/works/[id]/page.tsx.before",
+      "rawSha256": "20214b1d801be7510d6f8409dd4e0ccfec04b25a1907f741bb14c460d036f3da",
+      "priorNormalizedSha256": "4b77b81b325f98c3e5f7ce91a99f4618aa1803088b39ec50c924e5fcffea2d60"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-11/10-30-homepage-warm-editorial-redesign/checks/validation-evidence/privacy-red/source/src/components/works/work-detail-panel.tsx.before",
+      "rawSha256": "ca326decc3803fd25c35242493bc3bdf7b0b4feed1ae042c1101236f235f565c",
+      "priorNormalizedSha256": "46bf5225b506301617962510887b1d297ef02233b053ab70a29272756389176b"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-11/10-30-homepage-warm-editorial-redesign/checks/validation-evidence/privacy-red/source/src/lib/prisma-mappers.ts.before",
+      "rawSha256": "046ec67ec422980a7cd3c8447e9426f2e6b0de1ebe6a52ececcd8a3653bb2150",
+      "priorNormalizedSha256": "ac6b9ee1546a302c12c22ae5061d61c2ef5dce7f457287eaa6b412ec5e111cd5"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-11/10-30-homepage-warm-editorial-redesign/checks/validation-evidence/privacy-red/source/src/tests/unit/featured-route.test.ts.before",
+      "rawSha256": "706601b51d76c65e48e6e4d19427a20c7b33ad2cb5d7bab644936c73cdcbf45d",
+      "priorNormalizedSha256": "cab2605447f69f1a63c7071631eefa13371d9a0c6e72ab37ccf092523423ca69"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-11/10-30-homepage-warm-editorial-redesign/checks/validation-evidence/privacy-red/source/src/tests/unit/prisma-mappers.test.ts.before",
+      "rawSha256": "fbd6a84cdde4863b6edf04661730aa1f67cb2c03e5ff0256961690b84cc0690b",
+      "priorNormalizedSha256": "6e2da763396ecaef58f088ac015517338a7ba428cc04a18a279530975e9ebdbe"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-11/10-30-homepage-warm-editorial-redesign/checks/validation-evidence/resume-01a190d3-records/check.jsonl.before",
+      "rawSha256": "22255e5b9e87557518501f8da41029cd4501ac3816bbdee80e5d210cd1454150",
+      "priorNormalizedSha256": "12befba6ad852aca7869d5719c32e065b06d914f139695bc396ec908ebbe1fe5"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-11/10-30-homepage-warm-editorial-redesign/checks/validation-evidence/resume-01a190d3-records/implement.jsonl.before",
+      "rawSha256": "5bf849522828054718263a71e82de9a0959c5065726b771978f0bda8ed189661",
+      "priorNormalizedSha256": "418c9d147385cf4add9f7ac8221c30b0ce7dbb0eca5c94ffafdd2599182b38ba"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-11/10-30-homepage-warm-editorial-redesign/checks/validation-evidence/resume-01a190d3-records/prd.md.before",
+      "rawSha256": "3bf8f282924ea3d7eb632730cc61229fbb38c57d46776c054ac55b276e3068af",
+      "priorNormalizedSha256": "be1a2ca358288168d23e6f0c4af9ea26bda548c502fd63e94063b2709b245c6b"
+    },
+    {
+      "file": ".trellis/tasks/archive/2026-11/10-30-homepage-warm-editorial-redesign/checks/validation-evidence/resume-01a190d3-records/task.json.before",
+      "rawSha256": "6855f9d5bda16e67637759535d98fc4747fe778a6cb87670eb79af8138dba2a8",
+      "priorNormalizedSha256": "5cf3d8f7c69ea84ef5130d27853aee867c1312d66bbcfddf3bff4493bc72e7c4"
+    }
+  ],
+  "compiledInputs": 809,
+  "compiledInputDrift": [],
+  "policy": "Narrow -text only .before/.after and exact Cormorant/PlusJakarta OFLs; whitespace exceptions unchanged, no source/helper/docs exemption",
+  "priorGateGitAttributeHashHistorical": true,
+  "productGateRerunRequired": false,
+  "gitAddRenormalizeScopedToListedOriginals": true
+}

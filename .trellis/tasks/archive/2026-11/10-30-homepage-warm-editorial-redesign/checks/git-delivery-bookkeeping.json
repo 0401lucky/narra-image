@@ -1,0 +1,13 @@
+{
+  "archivedAt": "2026-11-01T06:15:51.893075+00:00",
+  "archivedTask": ".trellis/tasks/archive/2026-11/10-30-homepage-warm-editorial-redesign",
+  "sourceWorkCommit": "d1960ecc53ceadcda70e3bf9616cc8020c70b570",
+  "recordsWorkCommit": "f689ff7d78eecba5864b334b50fe8b230c22aa5f",
+  "trellisArchiveStatusAndPointers": "completed by existing cmd_archive",
+  "directoryMovesValidated": 62,
+  "ignoredRuntimeRetainedAt": ".trellis/tasks/10-30-homepage-warm-editorial-redesign/checks/.runtime",
+  "runtimeMoved": false,
+  "rawCapturesDeleted": false,
+  "reason": "Preserve absolute internal dependency junctions and historical owned-lane paths; no task.json remains in the runtime-only source directory.",
+  "pushPerformed": false
+}

@@ -1,0 +1,17 @@
+{"file":".trellis/spec/frontend/index.md","reason":"Frontend convention entry point; preserve the existing Next/React architecture."}
+{"file":".trellis/spec/frontend/directory-structure.md","reason":"Feature-local homepage components/hooks and server/client ownership."}
+{"file":".trellis/spec/frontend/component-guidelines.md","reason":"Explicit default/home variants, named exports, composition and accessible controls."}
+{"file":".trellis/spec/frontend/hook-guidelines.md","reason":"Lifecycle cleanup, refs, ordinary interaction commands and bounded async work."}
+{"file":".trellis/spec/frontend/state-management.md","reason":"SSR bootstrap, viewer isolation and preservation of mounted local drafts."}
+{"file":".trellis/spec/frontend/type-safety.md","reason":"Public DTOs, nullable protected data, defensive responses and type-only imports."}
+{"file":".trellis/spec/frontend/public-work-data.md","reason":"Verified allowlisted non-owner detail projection, explicit featured permission and raw Next transfer regression contract."}
+{"file":".trellis/spec/frontend/homepage-interactions.md","reason":"Implemented homepage-local theme/motion boundaries, guarded gallery commands and verified URL-prefill limitation."}
+{"file":".trellis/spec/frontend/quality-guidelines.md","reason":"Required lint/types/tests/build and honest distinctions between mocked and real-service evidence."}
+{"file":".trellis/spec/frontend/canvas-studio.md","reason":"Compatibility only: preserve saved mode, owner isolation and no automatic import/generation; do not revert concurrent mobile-canvas behavior."}
+{"file":".trellis/spec/operations/release-hardening.md","reason":"Test environment, credentials, process/cleanup and release-wrapper safety; no production infra changes."}
+{"file":".trellis/spec/guides/code-reuse-thinking-guide.md","reason":"Reuse existing image, permission, navigation, clipboard and state contracts before adding helpers."}
+{"file":".trellis/spec/guides/cross-layer-thinking-guide.md","reason":"Trace DB permission through serialized data, actual client props and UI actions."}
+{"file":".trellis/tasks/10-30-homepage-warm-editorial-redesign/research/homepage-reference-analysis.md","reason":"Reference geometry, six motion groups, approved footer/business deviations and recovered decisions."}
+{"file":".trellis/tasks/10-30-homepage-warm-editorial-redesign/research/prompt-reuse-contracts.md","reason":"Public prompt, login/mode and minimal detail-privacy contracts; no unauthorized data reuse."}
+{"file":".trellis/tasks/10-30-homepage-warm-editorial-redesign/research/homepage-asset-delivery.md","reason":"Approved replacement hero scenes, actual font/license evidence and local delivery constraints."}
+{"file":".trellis/tasks/10-30-homepage-warm-editorial-redesign/research/homepage-validation-plan.md","reason":"Concrete missing tests, safe isolated commands and real-Next synthetic-service fixture boundaries."}

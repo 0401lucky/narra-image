@@ -1,0 +1,101 @@
+import { redirect } from "next/navigation";
+
+import { getCheckInSummary } from "@/lib/benefits/config";
+import { db } from "@/lib/db";
+import { serializeUser } from "@/lib/prisma-mappers";
+import { getCurrentUserRecord } from "@/lib/server/current-user";
+import { getPublicTurnstileConfig } from "@/lib/auth/turnstile";
+import { getEnv } from "@/lib/env";
+import { GeneratorStudio } from "@/components/create/generator-studio";
+import { SiteHeader } from "@/components/marketing/site-header";
+import { getActiveChannels } from "@/lib/providers/built-in-provider";
+import { failStalePendingGenerationJobs } from "@/lib/generation/job-refund";
+import type { ConversationGenerationsPage } from "@/lib/conversations/contracts";
+import { ConversationContentError, listConversationGenerations, listStudioConversations } from "@/lib/server/conversation-generations";
+
+export const dynamic = "force-dynamic";
+
+type CreatePageProps = {
+  searchParams?: Promise<Record<string, string | string[] | undefined>> | Record<string, string | string[] | undefined>;
+};
+
+export default async function CreatePage({ searchParams }: CreatePageProps) {
+  const user = await getCurrentUserRecord();
+  if (!user) {
+    redirect("/login");
+  }
+
+  await failStalePendingGenerationJobs({ userId: user.id });
+
+  const [channels, checkInSummary, conversations, savedProvider, turnstileConfig] = await Promise.all([
+    getActiveChannels(),
+    getCheckInSummary(user.id),
+    listStudioConversations(user.id),
+    db.savedProviderConfig.findUnique({
+      where: { userId: user.id },
+      select: {
+        baseUrl: true,
+        id: true,
+        label: true,
+        model: true,
+        models: true,
+        updatedAt: true,
+      },
+    }),
+    getPublicTurnstileConfig(),
+  ]);
+
+  let initialGenerationPage: ConversationGenerationsPage | null = null;
+  if (conversations[0]) {
+    try {
+      initialGenerationPage = await listConversationGenerations({ ownerId: user.id, conversationId: conversations[0].id });
+    } catch (error) {
+      // Another device may delete the selected parent between these bounded reads.
+      if (!(error instanceof ConversationContentError) || error.code !== "CONVERSATION_NOT_FOUND") throw error;
+    }
+  }
+
+  const currentUser = serializeUser(user);
+  const params = await searchParams;
+  const rawPrompt = Array.isArray(params?.prompt) ? params?.prompt[0] : params?.prompt;
+  const initialPrompt = typeof rawPrompt === "string" ? rawPrompt.slice(0, 8000) : "";
+  const serializedChannels = channels.map((ch) => ({
+    creditCost: ch.creditCost,
+    defaultModel: ch.defaultModel,
+    id: ch.id,
+    models: ch.models,
+    name: ch.name,
+  }));
+
+  return (
+    <main className="flex h-[100dvh] flex-col overflow-hidden bg-[#f5efe6]">
+      <SiteHeader currentUser={currentUser} showCheckIn={false} activeHref="/create" />
+
+      <section className="relative flex flex-1 flex-col overflow-hidden">
+        <GeneratorStudio
+          ownerId={user.id}
+          canvasEnabled={getEnv().CANVAS_ENABLED}
+          checkInSummary={checkInSummary}
+          currentUser={currentUser}
+          initialPrompt={initialPrompt}
+          initialGenerationPage={initialGenerationPage}
+          initialConversations={conversations.map((conversation) => ({ ...conversation, generationIds: [] }))}
+          channels={serializedChannels}
+          savedProvider={
+            savedProvider
+              ? {
+                  ...savedProvider,
+                  updatedAt: savedProvider.updatedAt.toISOString(),
+                }
+              : null
+          }
+          turnstile={{
+            isEnabled: turnstileConfig.isEnabled,
+            siteKey: turnstileConfig.siteKey,
+            protectGenerate: turnstileConfig.protectGenerate,
+          }}
+        />
+      </section>
+    </main>
+  );
+}

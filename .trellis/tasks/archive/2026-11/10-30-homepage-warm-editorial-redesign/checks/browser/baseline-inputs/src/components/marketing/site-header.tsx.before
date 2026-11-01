@@ -1,0 +1,186 @@
+/* eslint-disable @next/next/no-img-element */
+import Link from "next/link";
+
+import { getCheckInSummary } from "@/lib/benefits/config";
+import { cn } from "@/lib/utils";
+import { LogoutButton } from "@/components/auth/logout-button";
+import { CheckInButton } from "@/components/benefits/check-in-button";
+import { HeaderShell } from "@/components/marketing/header-shell";
+import { PetToggle } from "@/components/pet/pet-toggle";
+import { getThumbUrl } from "@/lib/image-url";
+import { MobileNav } from "@/components/marketing/mobile-nav";
+
+type SiteHeaderProps = {
+  currentUser: {
+    id: string;
+    credits: number;
+    role: "user" | "admin";
+    nickname?: string | null;
+    avatarUrl?: string | null;
+  } | null;
+  activeHref?: string;
+  className?: string;
+  showCheckIn?: boolean;
+};
+
+export async function SiteHeader({
+  activeHref,
+  currentUser,
+  className,
+  showCheckIn = true,
+}: SiteHeaderProps) {
+  const links = [
+    { href: "/", label: "首页" },
+    { href: "/create", label: "创作台" },
+    { href: "/prompts", label: "提示词库" },
+    { href: "/video", label: "视频" },
+    { href: "/works", label: "作品" },
+    ...(currentUser ? [{ href: "/api-keys", label: "API" }] : []),
+    ...(currentUser?.role === "admin"
+      ? [{ href: "/admin", label: "管理后台" }]
+      : []),
+  ];
+  const checkInSummary = currentUser && showCheckIn
+    ? await getCheckInSummary(currentUser.id)
+    : null;
+
+  const displayName = currentUser?.nickname || undefined;
+
+  return (
+    <HeaderShell>
+      <header
+        className={cn(
+          "mx-auto w-full max-w-[104rem] px-4 py-3 sm:px-6 md:px-10 md:py-4",
+          className,
+        )}
+      >
+      <div className="relative flex flex-wrap items-center gap-3 lg:flex-nowrap lg:justify-between">
+        <div className="flex min-w-0 shrink-0 items-center gap-2 md:min-w-56 md:gap-3">
+          <Link href="/" prefetch={false} className="flex min-w-0 items-center gap-2 whitespace-nowrap md:gap-3">
+            <span className="editorial-title shrink-0 text-xl font-semibold uppercase tracking-[0.26em] text-[#9b5a20] sm:text-2xl">
+              Narra
+            </span>
+            <span className="editorial-title truncate text-2xl font-semibold text-[#21170f] sm:text-3xl">
+              Image
+            </span>
+          </Link>
+          <a
+            href="https://github.com/0401lucky/narra-image"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="GitHub 仓库"
+            title="GitHub 仓库"
+            className="hidden size-9 shrink-0 items-center justify-center rounded-full text-[var(--ink-soft)] transition hover:bg-[var(--surface-strong)] hover:text-[var(--ink)] sm:flex"
+          >
+            <svg
+              viewBox="0 0 16 16"
+              fill="currentColor"
+              aria-hidden="true"
+              className="size-4"
+            >
+              <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z" />
+            </svg>
+          </a>
+        </div>
+
+        <nav className="absolute left-1/2 hidden shrink-0 -translate-x-1/2 items-center gap-1 rounded-full border border-[var(--line)] bg-[#eee5d8]/75 p-1 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)] lg:flex xl:left-[44.5%] 2xl:left-[43.5%]">
+          {links.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              prefetch={false}
+              className={cn(
+                "whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium transition xl:px-5",
+                activeHref === link.href
+                  ? "bg-[#fffaf2] text-[#21170f] shadow-sm ring-1 ring-[var(--line)]"
+                  : "text-[var(--ink-soft)] hover:bg-[#fffaf2]/60 hover:text-[#21170f]",
+              )}
+            >
+              {link.label}
+            </Link>
+          ))}
+        </nav>
+
+        <div className="ml-auto flex min-w-0 shrink-0 items-center justify-end gap-2 md:gap-3">
+          {currentUser ? (
+            <div className="flex min-w-0 shrink-0 items-center gap-1.5 sm:gap-2">
+              <div className="flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border border-[var(--line)] bg-[#fffaf2]/80 px-2.5 py-1.5 text-xs shadow-[0_12px_30px_rgba(84,52,29,0.08)] backdrop-blur-xl sm:gap-2 sm:px-4 sm:py-2 sm:text-sm">
+                <span className="text-[var(--ink-soft)] max-[420px]:hidden sm:hidden">积分</span>
+                <span className="hidden text-[var(--ink-soft)] sm:inline">剩余积分</span>
+                <span className="font-semibold text-[var(--accent)]">
+                  {currentUser.credits}
+                </span>
+                {checkInSummary ? (
+                  <span className="hidden shrink-0 xl:inline-flex">
+                    <CheckInButton
+                      checkedInToday={checkInSummary.checkedInToday}
+                      rewardCredits={checkInSummary.checkInReward}
+                      variant="compact"
+                    />
+                  </span>
+                ) : null}
+                <span className="hidden shrink-0 min-[1500px]:inline-flex">
+                  <PetToggle />
+                </span>
+              </div>
+
+              {checkInSummary ? (
+                <span className="hidden shrink-0 min-[480px]:inline-flex xl:hidden">
+                  <CheckInButton
+                    checkedInToday={checkInSummary.checkedInToday}
+                    rewardCredits={checkInSummary.checkInReward}
+                    variant="compact"
+                  />
+                </span>
+              ) : null}
+
+              {/* 用户头像 — 点击跳转设置页 */}
+              <Link
+                href="/settings"
+                prefetch={false}
+                className="group relative flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-[#fffaf2] bg-[var(--surface-strong)] shadow-[0_12px_28px_rgba(84,52,29,0.14)] transition hover:border-[var(--accent)]"
+                title={displayName ?? "个人设置"}
+              >
+                {currentUser.avatarUrl ? (
+                  <img
+                    src={getThumbUrl(currentUser.avatarUrl, 64)}
+                    alt="头像"
+                    loading="lazy"
+                    decoding="async"
+                    className="size-full object-cover"
+                  />
+                ) : (
+                  <span className="text-xs font-semibold text-[var(--ink-soft)] transition group-hover:text-[var(--accent)]">
+                    {(displayName ?? currentUser.id)[0]?.toUpperCase()}
+                  </span>
+                )}
+              </Link>
+
+              <span className="hidden sm:inline-flex shrink-0">
+                <LogoutButton />
+              </span>
+            </div>
+          ) : null}
+          {!currentUser ? (
+            <Link
+              href="/login"
+              prefetch={false}
+              className="inline-flex shrink-0 whitespace-nowrap rounded-full bg-[#21170f] px-4 py-2 text-sm font-semibold text-white shadow-[0_14px_30px_rgba(33,23,15,0.22)] transition hover:-translate-y-0.5 hover:bg-[var(--accent)] sm:px-5 sm:py-2.5"
+            >
+              登录开启
+            </Link>
+          ) : null}
+
+          {/* 移动端汉堡包菜单抽屉 */}
+          <MobileNav
+            currentUser={currentUser}
+            links={links}
+            activeHref={activeHref}
+            checkInSummary={checkInSummary}
+          />
+        </div>
+      </div>
+      </header>
+    </HeaderShell>
+  );
+}

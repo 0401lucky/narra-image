@@ -1,0 +1,50 @@
+{
+  "checkedAt": "2026-11-01T06:22:30.562994+00:00",
+  "reviewer": "final_delivery_review",
+  "verdict": "PASS-archive-only",
+  "scope": "Read-only Git index/attribute and frozen-source verification; report/addendum only, no source edits, product reruns or Git mutations.",
+  "headAtReview": "f689ff7d78eecba5864b334b50fe8b230c22aa5f",
+  "originalsIndexExact": 315,
+  "counts": {
+    "before": 308,
+    "after": 3,
+    "OFL": 4
+  },
+  "restoredFromPriorLfNormalization": 134,
+  "restorationChangesOnlyCrLfToLfInPriorBlobs": true,
+  "allOriginalIndexBlobsEqualCurrentRawBytes": true,
+  "originalIdentityVectorSha256": "89bccd171114589dbd086ba430874ea36cde9a4df2f7c25f4d3b67fb24015b60",
+  "originalIdentityVectorFormat": "SHA256 of compact ASCII JSON [{path,sha256,bytes}] in Git ls-files stage order",
+  "compiledInputs": 809,
+  "compiledInputDrift": [],
+  "sourceManifestSha256": "c94793261bc0bf091e6f6c3e44a96960184fe973c09e760e56bd101a518fe150",
+  "coreAutocrlf": "true",
+  "attributes": {
+    "rawSha256": "e0d5f8292d2c1064e6e10f339ebdfe17ea6b754315b0b78790ff77b7284ecebf",
+    "indexSha256": "e70627a0e30807e6db2d4206f3ed28f49946240fb2436a8f61daa5669054228d",
+    "textRules": 6,
+    "whitespaceRules": 5,
+    "whitespaceRulesUnchanged": true,
+    "afterReceivesNoWhitespaceExemption": true,
+    "all809And315AndRepresentativeDocumentationAttributesVerified": true,
+    "sourceDocsHelpersUnaffectedExceptNamedOriginalOfls": true,
+    "journalMergeUnion": true
+  },
+  "stagedScope": {
+    "pathCount": 1669,
+    "outsideTaskPaths": [
+      ".gitattributes"
+    ],
+    "olderArchivedChangesAreOnlyOriginals": true,
+    "defaultGitDiffCachedCheck": 0,
+    "indexStableDuringReview": true
+  },
+  "priorGateAttributeHash": "historical; this archive-only -text amendment is separately verified and not backdated into product receipts",
+  "productRerunRequired": false,
+  "rootProofSha256": "b3e0be3eda3b79a4d77f209fe046931689cebec1a4cd3d779112ee2909842ed7",
+  "limits": [
+    "Local source hashes are not index hashes for ordinary text under core.autocrlf; exact raw preservation applies only to explicit original-byte paths.",
+    "No claim of physical mobile/native IME/OS download, combined live services, actual CI or deployment.",
+    "Final archive commit and normal push remain coordinator-owned."
+  ]
+}
