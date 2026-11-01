@@ -8,8 +8,8 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-1.md`
-- **Total Sessions**: 6
-- **Last Active**: 2026-10-30
+- **Total Sessions**: 7
+- **Last Active**: 2026-11-01
 <!-- @@@/auto:current-status -->
 
 ---
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-1.md` | ~363 | Active |
+| `journal-1.md` | ~402 | Active |
 <!-- @@@/auto:active-documents -->
 
 ---
@@ -29,6 +29,7 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 7 | 2026-11-01 | Deliver homepage and accumulated studio tasks | `d1960ecc53ceadcda70e3bf9616cc8020c70b570`, `f689ff7d78eecba5864b334b50fe8b230c22aa5f` | `main` |
 | 6 | 2026-10-30 | Studio 双模式：恢复验收证据并完成无提交归档 | - | `main` |
 | 5 | 2026-10-30 | Canvas v1：补齐真实数据库与运行时验证并归档 | - | `main` |
 | 4 | 2026-10-30 | Canvas v1 跨会话续接：恢复修复与最终本地验证 | - | `main` |

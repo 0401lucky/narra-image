@@ -361,3 +361,42 @@
 
 - 所有实现仍未提交或部署；提交、生产数据库/真实 S3/provider、启用功能需另行授权。物理手机、原生输入法与实际 CI 仍未验证。
 - 手机编辑继续 planning/deferred，MA1-MA4 未验收；先明确触控/键盘设计与验证目标，再单独审阅实施计划。
+
+
+## Session 7: Deliver homepage and accumulated studio tasks
+
+**Date**: 2026-11-01
+**Task**: Deliver homepage and accumulated studio tasks
+**Branch**: `main`
+
+### Summary
+
+Completed the approved long-prompt fallback and final homepage/privacy verification; committed current and prior studio/history/canvas/mobile work, preserved original evidence bytes and archived the accepted homepage task. User authorized normal GitHub main push.
+
+### Main Changes
+
+- Deliver warm editorial homepage with three original scenes/fonts, real gallery/account flows, public-work privacy and 8192-byte remix fallback.
+- Include previously uncommitted studio history cleanup, dual-mode canvas, mobile editor and matching Node/Go/schema/verification contracts.
+- Retain compact source-bound task evidence; exclude raw captures/runtime copies and keep exact forensic/license bytes.
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `d1960ecc53ceadcda70e3bf9616cc8020c70b570` | (see git log) |
+| `f689ff7d78eecba5864b334b50fe8b230c22aa5f` | (see git log) |
+
+### Testing
+
+- [OK] Pinned Node24.22.1:140files/1704nonDBtests;metadata-inclusive lint0errors/9baselinewarnings;types/offlinePrisma/unmodifiedbuild pass.
+- [OK] Final full unfiltered browser103/103:43privacy+60homepage/native; independent source/receipt/policy review pass.
+- [OK] Staged source/records/archive credential-pattern, size and whitespace audits pass; no live dotenv or service operations.
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- Perform the user-authorized normal push to origin main; no force push or deployment.
+- Physical mobile/nativeIME/OSdownloads, live-service E2E and actual GitHub CI remain unverified; CANVAS_ENABLED=false rollout default.
