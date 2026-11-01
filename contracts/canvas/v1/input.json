@@ -1,0 +1,18 @@
+{
+  "contract": "narra.canvas.input",
+  "version": 1,
+  "transport": {"header": "X-Narra-Canvas-Run", "value": "1", "contentType": "application/json", "requiredBeforeBuffering": true},
+  "wireFields": ["canvasId", "nodeId", "runId", "input", "parameters"],
+  "inputFields": ["prompt", "references"],
+  "promptFields": ["sourceNodeId", "text"],
+  "importedReferenceFields": ["sourceNodeId", "ordinal", "kind", "assetId"],
+  "resultReferenceFields": ["sourceNodeId", "ordinal", "kind", "jobId", "imageId"],
+  "localReferenceFields": ["sourceNodeId", "ordinal", "kind", "blobId", "uploadId"],
+  "ordinalBase": 1,
+  "exactPromptInputsAtRun": 1,
+  "generationTypes": ["text_to_image", "image_to_image"],
+  "noRecursiveResolution": true,
+  "priorImmutableResultFeedbackAllowed": true,
+  "executionMatchesSavedSceneRequired": false,
+  "transientRequestFields": ["turnstileToken", "customProvider"]
+}

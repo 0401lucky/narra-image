@@ -1,0 +1,74 @@
+import type { AriaLabelConfig } from "@xyflow/react";
+
+import type { CanvasDocumentView, CanvasReferenceView, CanvasRunView } from "./controller-types";
+
+export { CANVAS_CARD_SPACING } from "./commands";
+
+export const CANVAS_PORTS = {
+  promptOutput: "prompt-out",
+  promptInput: "prompt-in",
+  imageOutput: "image-out",
+  imageInput: "image-in",
+  provenanceOutput: "result-out",
+  provenanceInput: "result-in",
+} as const;
+
+export const CANVAS_CAMERA = { minZoom: 0.1, maxZoom: 2, fitPadding: 0.16 } as const;
+export const CANVAS_DRAG_HANDLE = "canvas-node-drag-handle";
+// nokey also isolates button/link keys from React Flow's node shortcuts.
+export const CANVAS_INPUT_CLASS = "nodrag nopan nowheel nokey";
+
+export const CANVAS_NODE_LABELS = {
+  prompt: "提示词",
+  reference: "参考图",
+  generation: "生成",
+  result: "结果图",
+} as const;
+
+export const CANVAS_LOCAL_LABELS: Record<CanvasDocumentView["localState"], string> = {
+  pending: "本地保存中",
+  saved: "本地已保存",
+  failed: "本地保存失败",
+  conflict: "本地版本冲突",
+};
+
+export const CANVAS_CLOUD_LABELS: Record<CanvasDocumentView["cloudState"], string> = {
+  local: "尚未保存到账户",
+  dirty: "有未同步修改",
+  saving: "正在保存账户快照",
+  saved: "账户快照已保存",
+  failed: "账户保存失败",
+  conflict: "账户版本冲突",
+};
+
+export const CANVAS_REFERENCE_LABELS: Record<CanvasReferenceView["state"], string> = {
+  local: "本地原图 · 保存或运行时上传",
+  ready: "原图已就绪",
+  missing: "原图不可用，请重新选择文件",
+  uploading: "原图上传中",
+};
+
+export const CANVAS_RUN_LABELS: Record<CanvasRunView["phase"], string> = {
+  preparing: "正在准备输入",
+  submitting: "正在提交请求",
+  uncertain: "请求结果待确认",
+  pending: "正在生成",
+  succeeded: "生成完成",
+  failed: "生成失败",
+  rejected: "请求未被接受",
+  unavailable: "任务状态不可用",
+};
+
+export const CANVAS_ARIA_LABELS: Partial<AriaLabelConfig> = {
+  "node.a11yDescription.default": "按 Enter 或空格选择节点，方向键移动，Delete 删除。输入框内的按键只编辑文字。",
+  "node.a11yDescription.keyboardDisabled": "按 Enter 或空格选择节点，通过节点列表定位、编辑或移动。",
+  "node.a11yDescription.ariaLiveMessage": ({ x, y }) => `节点位置：${Math.round(x)}，${Math.round(y)}`,
+  "edge.a11yDescription.default": "按 Enter 或空格选择连接，Delete 移除输入连接。",
+  "controls.ariaLabel": "画布视图控制",
+  "controls.zoomIn.ariaLabel": "放大画布",
+  "controls.zoomOut.ariaLabel": "缩小画布",
+  "controls.fitView.ariaLabel": "适应全部节点",
+  "controls.interactive.ariaLabel": "切换画布交互",
+  "minimap.ariaLabel": "画布概览",
+  "handle.ariaLabel": "节点连接端口",
+};

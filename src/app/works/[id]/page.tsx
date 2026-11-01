@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { db } from "@/lib/db";
 import { SiteHeader } from "@/components/marketing/site-header";
 import { WorkDetailPanel } from "@/components/works/work-detail-panel";
-import { serializeUser } from "@/lib/prisma-mappers";
+import { serializePublicWorkDetail, serializeUser } from "@/lib/prisma-mappers";
 import { getEnv } from "@/lib/env";
 import { getCurrentUserRecord } from "@/lib/server/current-user";
 import { getWorkById } from "@/lib/server/works";
@@ -67,7 +67,15 @@ export default async function WorkDetailPage({
           </p>
         </div>
 
-        <WorkDetailPanel detailUrl={detailUrl} isOwner={isOwner} work={work} />
+        {isOwner ? (
+          <WorkDetailPanel detailUrl={detailUrl} isOwner work={work} />
+        ) : (
+          <WorkDetailPanel
+            detailUrl={detailUrl}
+            isOwner={false}
+            work={serializePublicWorkDetail(work)}
+          />
+        )}
       </section>
     </main>
   );

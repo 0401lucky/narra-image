@@ -2,13 +2,14 @@ import { spawn, spawnSync } from "node:child_process";
 import { createHash, randomBytes, randomUUID } from "node:crypto";
 import {
   existsSync,
-  mkdtempSync,
   readFileSync,
   readdirSync,
-  rmSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
+import { cleanupDisposablePrismaWorkspace, createDisposablePrismaWorkspace, disposableTestEnvironment } from "../../../../scripts/lib/disposable-test-environment.mjs";
+import { LocalDockerSession } from "../../../../scripts/lib/local-docker-safety.mjs";
+import { workerBaselineChecksums, workerMigrationPlan, WORKER_ADDITIVE_MIGRATIONS } from "./migration-plan";
 
 const EXIT = {
   success: 0,
@@ -34,10 +35,8 @@ const SCRATCH_PARENT = path.resolve(
 const SCRATCH_PREFIX = "narra-worker-contracts-prisma-";
 const OWNER_LABEL_KEY = "com.narra.worker-contracts.owner";
 const BASELINE_MARKER = "WORKER_CONTRACTS_BASELINE_MIGRATION";
-const ADDITIVE_MIGRATIONS = [
-  "20260807130000_generation_worker_contract_v1",
-  "20260807140000_generation_media_storage_meta",
-];
+const ADDITIVE_MIGRATIONS = WORKER_ADDITIVE_MIGRATIONS;
+const dockerSession = new LocalDockerSession();
 
 const PROJECT_ROOT = path.resolve(__dirname, "../../../..");
 const MIGRATIONS_ROOT = path.join(PROJECT_ROOT, "prisma/migrations");
@@ -95,6 +94,7 @@ type DisposablePostgres = {
   databasePassword: string;
   hostPort?: number;
   creationAttempted: boolean;
+  containerId?: string;
 };
 
 function failure(exitCode: ExitCode, message: string): RunnerFailure {
@@ -147,7 +147,12 @@ function resolveExecutable(spec: CommandSpec): {
   };
 }
 
+export function prepareWorkerContractCommand(spec: CommandSpec, session = dockerSession): CommandSpec {
+  return spec.executable === "docker" ? { ...spec, ...session.command(spec.args, spec.env) } : spec;
+}
+
 function runCommand(spec: CommandSpec, deadlineAt: number): Promise<CommandResult> {
+  spec = prepareWorkerContractCommand(spec);
   const remainingMs = deadlineAt - Date.now();
   const timeoutMs = Math.min(spec.timeoutMs ?? remainingMs, remainingMs);
   if (timeoutMs <= 0) {
@@ -261,7 +266,7 @@ function parseBaselineMarkers(snapshot: string): string[] {
   return [...snapshot.matchAll(pattern)].map((match) => match[1]).sort();
 }
 
-function assertRequiredTargetsAndBaseline(): BaselineMigration[] {
+function assertRequiredTargetsAndBaseline(): { baseline: BaselineMigration[]; pending: BaselineMigration[] } {
   const requiredTargets = [
     ["Prisma schema", PRISMA_SCHEMA],
     ["Prisma CLI", PRISMA_CLI],
@@ -294,12 +299,6 @@ function assertRequiredTargetsAndBaseline(): BaselineMigration[] {
       );
     }
   }
-  if (migrationNames.at(-1) !== ADDITIVE_MIGRATIONS.at(-1)) {
-    throw failure(
-      EXIT.preflight,
-      `[worker-contracts:db] ${ADDITIVE_MIGRATIONS.at(-1)} 必须是最新 migration`,
-    );
-  }
 
   const snapshot = readFileSync(LEGACY_SNAPSHOT, "utf8");
   if (!snapshot.includes('CREATE TABLE "_prisma_migrations"')) {
@@ -309,24 +308,18 @@ function assertRequiredTargetsAndBaseline(): BaselineMigration[] {
     );
   }
 
-  const expectedBaselineNames = migrationNames.filter(
-    (name) => !ADDITIVE_MIGRATIONS.includes(name),
-  );
   const markerNames = parseBaselineMarkers(snapshot);
-  if (JSON.stringify(markerNames) !== JSON.stringify(expectedBaselineNames)) {
-    throw failure(
-      EXIT.preflight,
-      "[worker-contracts:db] legacy snapshot baseline 与 migration 目录不一致",
-    );
-  }
-
-  return expectedBaselineNames.map((name) => ({
-    name,
-    checksum: migrationChecksum(name),
-  }));
+  const { baselineNames, pendingNames } = workerMigrationPlan(migrationNames, markerNames);
+  const checksummed = (name: string) => ({ name, checksum: migrationChecksum(name) });
+  return { baseline: workerBaselineChecksums(snapshot, baselineNames, (name) => readFileSync(path.join(MIGRATIONS_ROOT, name, "migration.sql"))), pending: pendingNames.map(checksummed) };
 }
 
 async function assertDockerPrerequisites(deadlineAt: number): Promise<void> {
+  await dockerSession.pin(async (args: string[], label: string) => {
+    const result = await runCommand({ executable: "docker", args, label, capture: true, timeoutMs: DOCKER_PROBE_TIMEOUT_MS }, deadlineAt);
+    if (result.code !== 0 || !result.stdout.trim()) throw failure(EXIT.preflight, `${label} failed; local Docker is required`);
+    return result.stdout.trim();
+  });
   const probes: CommandSpec[] = [
     {
       label: "检查 Docker CLI",
@@ -361,6 +354,7 @@ async function assertDockerPrerequisites(deadlineAt: number): Promise<void> {
       );
     }
   }
+  dockerSession.prepare();
 }
 
 function createResourceIdentity(): DisposablePostgres {
@@ -418,11 +412,11 @@ async function assertContainerNameAvailable(
   }
 }
 
-async function readOwnerLabel(
+async function readContainerIdentity(
   resource: DisposablePostgres,
   deadlineAt: number,
 ): Promise<CommandResult> {
-  return runCommand(
+  const result = await runCommand(
     {
       label: "校验容器 owner label",
       executable: "docker",
@@ -430,7 +424,7 @@ async function readOwnerLabel(
         "container",
         "inspect",
         "--format",
-        `{{ index .Config.Labels "${OWNER_LABEL_KEY}" }}`,
+        "{{json .}}",
         resource.containerName,
       ],
       capture: true,
@@ -438,6 +432,14 @@ async function readOwnerLabel(
     },
     deadlineAt,
   );
+  if (result.code !== 0) return result;
+  try {
+    const container = JSON.parse(result.stdout.trim());
+    if (/^[a-f0-9]{64}$/.test(container.Id ?? "") && container.Name === `/${resource.containerName}`
+      && container.Config?.Labels?.[OWNER_LABEL_KEY] === resource.ownerToken
+      && (!resource.containerId || resource.containerId === container.Id)) return { ...result, stdout: container.Id };
+  } catch { /* Reject incomplete or invalid ownership receipts. */ }
+  return { ...result, code: 1, stdout: "", stderr: "Container identity/owner mismatch" };
 }
 
 async function startDisposablePostgres(
@@ -445,7 +447,7 @@ async function startDisposablePostgres(
   deadlineAt: number,
 ): Promise<void> {
   const dockerEnv = {
-    ...process.env,
+    NODE_ENV: "test" as const,
     POSTGRES_USER: resource.databaseUser,
     POSTGRES_PASSWORD: resource.databasePassword,
     POSTGRES_DB: resource.databaseName,
@@ -487,10 +489,11 @@ async function startDisposablePostgres(
       "[worker-contracts:db] 无法启动一次性 PostgreSQL",
     );
   }
-  const labelResult = await readOwnerLabel(resource, deadlineAt);
+  if (/^[a-f0-9]{64}$/.test(result.stdout.trim())) resource.containerId = result.stdout.trim();
+  const labelResult = await readContainerIdentity(resource, deadlineAt);
   if (
     labelResult.code !== 0 ||
-    labelResult.stdout.trim() !== resource.ownerToken
+    !labelResult.stdout.trim()
   ) {
     printCapturedFailure(labelResult);
     throw failure(
@@ -498,6 +501,7 @@ async function startDisposablePostgres(
       "[worker-contracts:db] 新容器 owner label 校验失败",
     );
   }
+  resource.containerId = labelResult.stdout.trim();
 
   const mountsResult = await runCommand(
     {
@@ -656,16 +660,7 @@ function buildDatabaseUrl(resource: DisposablePostgres): string {
 }
 
 function buildDatabaseEnvironment(databaseUrl: string): NodeJS.ProcessEnv {
-  const env = { ...process.env };
-  delete env.DOTENV_CONFIG_PATH;
-  delete env.DOTENV_CONFIG_OVERRIDE;
-  delete env.DOTENV_KEY;
-  env.DATABASE_URL = databaseUrl;
-  env.TEST_DATABASE_URL = databaseUrl;
-  env.WORKER_CONTRACTS_REQUIRE_DB = "1";
-  env.NODE_ENV = "test";
-  env.PRISMA_HIDE_UPDATE_MESSAGE = "1";
-  return env;
+  return disposableTestEnvironment(databaseUrl, { WORKER_CONTRACTS_REQUIRE_DB: "1" });
 }
 
 async function loadLegacySnapshot(
@@ -758,6 +753,7 @@ function assertMigrationSet(
 async function runPrismaStages(
   databaseEnv: NodeJS.ProcessEnv,
   deadlineAt: number,
+  configPath: string,
 ): Promise<void> {
   const baseSpec = {
     executable: process.execPath,
@@ -768,7 +764,7 @@ async function runPrismaStages(
     {
       ...baseSpec,
       label: "Prisma generate（隔离 cwd，不加载项目 .env）",
-      args: [PRISMA_CLI, "generate", "--schema", PRISMA_SCHEMA],
+      args: [PRISMA_CLI, "generate", "--config", configPath],
     },
     deadlineAt,
     EXIT.prisma,
@@ -777,7 +773,7 @@ async function runPrismaStages(
     {
       ...baseSpec,
       label: "Prisma validate（隔离 cwd，不加载项目 .env）",
-      args: [PRISMA_CLI, "validate", "--schema", PRISMA_SCHEMA],
+      args: [PRISMA_CLI, "validate", "--config", configPath],
     },
     deadlineAt,
     EXIT.prisma,
@@ -787,12 +783,13 @@ async function runPrismaStages(
 async function deployAdditiveMigration(
   databaseEnv: NodeJS.ProcessEnv,
   deadlineAt: number,
+  configPath: string,
 ): Promise<void> {
   await runChecked(
     {
-      label: "部署唯一待执行的 additive migration",
+      label: "部署已校验的完整 additive migration tail",
       executable: process.execPath,
-      args: [PRISMA_CLI, "migrate", "deploy", "--schema", PRISMA_SCHEMA],
+      args: [PRISMA_CLI, "migrate", "deploy", "--config", configPath],
       cwd: PROJECT_ROOT,
       env: databaseEnv,
     },
@@ -861,10 +858,10 @@ async function cleanupContainer(
   }
   if (!existing.stdout.trim()) return true;
 
-  const labelResult = await readOwnerLabel(resource, deadlineAt);
+  const labelResult = await readContainerIdentity(resource, deadlineAt);
   if (
     labelResult.code !== 0 ||
-    labelResult.stdout.trim() !== resource.ownerToken
+    !labelResult.stdout.trim()
   ) {
     printCapturedFailure(labelResult);
     console.error(
@@ -881,8 +878,7 @@ async function cleanupContainer(
         "container",
         "rm",
         "--force",
-        "--volumes",
-        resource.containerName,
+        labelResult.stdout.trim(),
       ],
       capture: true,
       timeoutMs: Math.max(1, deadlineAt - Date.now()),
@@ -902,40 +898,15 @@ async function cleanupContainer(
   return !verifyRemoved.stdout.trim();
 }
 
-function cleanupScratchDirectory(scratchDirectory?: string): boolean {
-  if (!scratchDirectory) return true;
-  const resolved = path.resolve(scratchDirectory);
-  const safeParent = SCRATCH_PARENT;
-  if (
-    path.dirname(resolved).toLowerCase() !== safeParent.toLowerCase() ||
-    !path.basename(resolved).startsWith(SCRATCH_PREFIX)
-  ) {
-    console.error(
-      `[worker-contracts:db] 拒绝删除非 runner 临时目录：${resolved}`,
-    );
-    return false;
-  }
-
-  try {
-    rmSync(resolved, { recursive: true, force: true });
-    return !existsSync(resolved);
-  } catch (error) {
-    console.error(
-      `[worker-contracts:db] 临时目录清理失败：${error instanceof Error ? error.message : String(error)}`,
-    );
-    return false;
-  }
-}
-
 async function main(): Promise<ExitCode> {
   const runnerDeadlineAt = Date.now() + GLOBAL_DEADLINE_MS;
   const workDeadlineAt = runnerDeadlineAt - CLEANUP_RESERVE_MS;
   const resource = createResourceIdentity();
-  let scratchDirectory: string | undefined;
+  let workspace: ReturnType<typeof createDisposablePrismaWorkspace> | undefined;
   let exitCode: ExitCode = EXIT.success;
 
   try {
-    const baselineMigrations = assertRequiredTargetsAndBaseline();
+    const migrationPlan = assertRequiredTargetsAndBaseline();
     await assertDockerPrerequisites(workDeadlineAt);
     await assertContainerNameAvailable(resource, workDeadlineAt);
     await startDisposablePostgres(resource, workDeadlineAt);
@@ -949,11 +920,8 @@ async function main(): Promise<ExitCode> {
         `[worker-contracts:db] 临时目录父级不存在：${SCRATCH_PARENT}`,
       );
     }
-    scratchDirectory = mkdtempSync(
-      path.join(SCRATCH_PARENT, SCRATCH_PREFIX),
-    );
-
-    await runPrismaStages(databaseEnv, workDeadlineAt);
+    workspace = createDisposablePrismaWorkspace({ prefix: SCRATCH_PREFIX, parent: SCRATCH_PARENT });
+    await runPrismaStages(databaseEnv, workDeadlineAt, workspace.configPath);
     await loadLegacySnapshot(
       resource,
       readFileSync(LEGACY_SNAPSHOT, "utf8"),
@@ -964,18 +932,15 @@ async function main(): Promise<ExitCode> {
       resource,
       workDeadlineAt,
     );
-    assertMigrationSet(beforeDeploy, baselineMigrations, "部署前");
+    assertMigrationSet(beforeDeploy, migrationPlan.baseline, "部署前");
 
-    await deployAdditiveMigration(databaseEnv, workDeadlineAt);
+    await deployAdditiveMigration(databaseEnv, workDeadlineAt, workspace.configPath);
     const afterDeploy = await queryAppliedMigrations(resource, workDeadlineAt);
     assertMigrationSet(
       afterDeploy,
       [
-        ...baselineMigrations,
-        ...ADDITIVE_MIGRATIONS.map((name) => ({
-          name,
-          checksum: migrationChecksum(name),
-        })),
+        ...migrationPlan.baseline,
+        ...migrationPlan.pending,
       ].sort((left, right) => left.name.localeCompare(right.name)),
       "部署后",
     );
@@ -992,13 +957,14 @@ async function main(): Promise<ExitCode> {
     );
   } finally {
     const containerCleaned = await cleanupContainer(resource, runnerDeadlineAt);
-    const scratchCleaned = cleanupScratchDirectory(scratchDirectory);
-    if (!containerCleaned || !scratchCleaned) exitCode = EXIT.cleanup;
+    const scratchCleaned = cleanupDisposablePrismaWorkspace(workspace);
+    const dockerCleaned = containerCleaned && dockerSession.cleanup();
+    if (!containerCleaned || !scratchCleaned || !dockerCleaned) exitCode = EXIT.cleanup;
   }
 
   return exitCode;
 }
 
-void main().then((exitCode) => {
-  process.exitCode = exitCode;
-});
+if (path.resolve(process.argv[1] ?? "") === path.join(PROJECT_ROOT, "src/tests/integration/worker-contracts/postgres-runner.ts")) {
+  void main().then((exitCode) => { process.exitCode = exitCode; });
+}

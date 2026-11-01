@@ -3,7 +3,7 @@
 // 创作台容器组件。仅负责状态编排与子组件接线，
 // 各子组件、hooks 与工具函数已拆分到同目录的 hooks / parts / utils / constants / types 下。
 import { PanelLeftOpen } from "lucide-react";
-import { useCallback, useEffect, useMemo, useRef, useState, useTransition } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
@@ -24,15 +24,27 @@ import {
   TurnstileWidget,
   type TurnstileWidgetHandle,
 } from "@/components/auth/turnstile-widget";
+import type { ConversationGenerationsPage } from "@/lib/conversations/contracts";
+import { canvasGenerationParametersSchema } from "@/lib/validators";
+import { Alert } from "@/components/ui/alert";
 
-import { useImagePoller } from "./hooks/use-image-poller";
+import { useCanvasDocuments } from "./hooks/use-canvas-documents";
+import { useCanvasEditor } from "./hooks/use-canvas-editor";
+import { useCanvasImageViewer } from "./hooks/use-canvas-image-viewer";
+import { useCanvasRuntimeLease } from "./hooks/use-canvas-runtime-lease";
+import { useConversationGenerations } from "./hooks/use-conversation-generations";
+import { useStudioMode, type StudioMode } from "./hooks/use-studio-mode";
+import { useStudioJobs } from "./hooks/use-studio-jobs";
 import { useReferenceImages } from "./hooks/use-reference-images";
 import { useSessions } from "./hooks/use-sessions";
 import { MAX_REFERENCE_IMAGES } from "./constants";
-import { ChatStream } from "./parts/chat-stream";
-import { Composer } from "./parts/composer";
-import { HistoryRail } from "./parts/history-rail";
+import { ChatPane } from "./parts/chat-pane";
+import { CanvasLazyPane } from "./parts/canvas-lazy-pane";
+import { CanvasRuntimeDialog } from "./parts/canvas-runtime-dialog";
+import type { CanvasNodeTarget } from "./parts/canvas-stage";
 import { SessionSidebar } from "./parts/session-sidebar";
+import { StudioModeSwitch } from "./parts/studio-mode-switch";
+import { isGenerationItem } from "./generation-item";
 import { getSizeSelectValue, toReusableGenerationConfig } from "./utils";
 import type {
   ChannelInfo,
@@ -56,6 +68,8 @@ const ImageZoomModal = dynamic(
 );
 
 type GeneratorStudioProps = {
+  ownerId: string;
+  canvasEnabled?: boolean;
   compact?: boolean;
   checkInSummary: {
     checkInReward: number;
@@ -63,6 +77,7 @@ type GeneratorStudioProps = {
   };
   currentUser: ViewerUser;
   initialGenerations?: GenerationItem[];
+  initialGenerationPage?: ConversationGenerationsPage | null;
   initialConversations?: SessionInfo[];
   initialPrompt?: string;
   channels?: ChannelInfo[];
@@ -76,9 +91,36 @@ const EMPTY_GENERATIONS: GenerationItem[] = [];
 const EMPTY_CONVERSATIONS: SessionInfo[] = [];
 const EMPTY_CHANNELS: ChannelInfo[] = [];
 
-export function GeneratorStudio({
+type StudioRequest = {
+  controller: AbortController;
+  isCurrent: () => boolean;
+  finish: () => void;
+};
+
+type ChatCommand = {
+  origin: { ownerId: string; conversationId: string | null; draftEpoch: number };
+  conversationId: string | null;
+  draftRevision: number;
+  phase: "preparing" | "submitted";
+  request: StudioRequest;
+  releasePreviews: () => void;
+};
+
+type PendingConversationDelete = {
+  accepted: Map<string, { replaceGenerationId?: string | null }>;
+};
+
+export function GeneratorStudio(props: GeneratorStudioProps) {
+  // 同一账户刷新只更新服务端目录/余额；切换账户则销毁所有草稿、预览与请求作用域。
+  return <StudioWorkspace key={props.ownerId} {...props} />;
+}
+
+function StudioWorkspace({
+  ownerId,
+  canvasEnabled = false,
   currentUser,
   initialGenerations = EMPTY_GENERATIONS,
+  initialGenerationPage = null,
   initialConversations = EMPTY_CONVERSATIONS,
   initialPrompt = "",
   channels = EMPTY_CHANNELS,
@@ -86,10 +128,51 @@ export function GeneratorStudio({
   turnstile = null,
 }: GeneratorStudioProps) {
   const router = useRouter();
-  const [isPending, startTransition] = useTransition();
+  const { mode, canvasReadOnly, touchPresentation, changeMode } = useStudioMode(ownerId, canvasEnabled);
+  const [isPending, setIsPending] = useState(false);
+  const runtimeRef = useRef({ active: false, epoch: 0, requests: new Set<AbortController>() });
+  const draftRef = useRef({ epoch: 0, revision: 0, conversationId: null as string | null });
+  const commandRef = useRef<ChatCommand | null>(null);
+  const providerProbeRef = useRef<StudioRequest | null>(null);
+  const [focusRequest, setFocusRequest] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const challengeRef = useRef<{ token: string | null; revision: number }>({ token: null, revision: 0 });
   const turnstileWidgetRef = useRef<TurnstileWidgetHandle>(null);
+
+  useEffect(() => {
+    const runtime = runtimeRef.current;
+    runtime.active = true;
+    runtime.epoch += 1;
+    return () => {
+      runtime.active = false;
+      runtime.epoch += 1;
+      runtime.requests.forEach((controller) => controller.abort());
+      runtime.requests.clear();
+      commandRef.current?.releasePreviews();
+      commandRef.current = null;
+    };
+  }, []);
+
+  const beginRequest = useCallback((): StudioRequest | null => {
+    const runtime = runtimeRef.current;
+    if (!runtime.active) return null;
+    const epoch = runtime.epoch;
+    const controller = new AbortController();
+    runtime.requests.add(controller);
+    return {
+      controller,
+      isCurrent: () => runtime.active && runtime.epoch === epoch && !controller.signal.aborted,
+      finish: () => runtime.requests.delete(controller),
+    };
+  }, []);
+
+  const updateChallenge = useCallback((token: string | null) => {
+    if (!runtimeRef.current.active) return;
+    challengeRef.current = { token, revision: challengeRef.current.revision + 1 };
+    setTurnstileToken(token);
+  }, []);
+  const clearChallenge = useCallback(() => updateChallenge(null), [updateChallenge]);
   const needsTurnstile = Boolean(
     turnstile?.isEnabled && turnstile?.siteKey && turnstile?.protectGenerate,
   );
@@ -145,7 +228,6 @@ export function GeneratorStudio({
   // 会话状态：基于服务端 API 持久化（本次修复 #8 落地）。
   const {
     sessions,
-    refresh: refreshSessions,
     createSession,
     renameSession,
     appendGeneration: appendGenerationToSession,
@@ -153,22 +235,29 @@ export function GeneratorStudio({
     readLastActive,
     writeLastActive,
     replaceGeneration: replaceGenerationInSession,
-  } = useSessions(initialConversations);
-  const [activeSessionId, setActiveSessionId] = useState<string | null>(null);
-  const [sessionGenerations, setSessionGenerations] = useState<GenerationItem[]>([]);
+    isSessionLive,
+  } = useSessions(ownerId, initialConversations);
+  const {
+    conversationId: activeSessionId,
+    generations: sessionGenerations,
+    loading: loadingConversation,
+    loadingOlder: loadingOlderGenerations,
+    error: conversationLoadError,
+    hasMore: hasOlderGenerations,
+    selectConversation: setActiveSessionId,
+    registerConversation,
+    forgetConversation,
+    acceptGeneration,
+    updateGeneration,
+    loadOlder: loadOlderGenerations,
+    reload: reloadConversation,
+  } = useConversationGenerations({ ownerId, initialPage: initialGenerationPage, initialConversations, initialGenerations });
 
-  const scrollAreaRef = useRef<HTMLDivElement | null>(null);
-  const composerShellRef = useRef<HTMLDivElement | null>(null);
-  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
-  const isComposingRef = useRef(false);
-  const [composerBottomInset, setComposerBottomInset] = useState(0);
-  // 缓存"看到过"的所有 generation，用于跨会话切换时还原本次会话期间产生的新数据。
-  const allGenerationsRef = useRef<Map<string, GenerationItem>>(new Map());
   // 初始化标记：只允许首次挂载时用服务端初始 props 决定会话视图。
   const didInitSessionRef = useRef(false);
 
   // 初始化：选择上次活跃会话或最新一条。
-  // 会话列表为空时不展示任何历史 generation —— 已删除会话的图仍保留在右侧历史图片栏与作品页，
+  // 会话列表为空时不展示任何历史 generation —— 已删除会话的图仍保留在作品页，
   // 但不属于任何活跃会话，不应聚合回中间对话流。
   // 该 effect 只跑一次：initialGenerations / initialConversations 在每次 router.refresh() 后都是新引用，
   // 若允许重跑会把用户"新建对话 / 删除会话"后的本地状态覆盖回旧会话。
@@ -183,107 +272,80 @@ export function GeneratorStudio({
     const target = stored.find((s) => s.id === lastId) ?? stored[0] ?? null;
     if (target) {
       // readLastActive 依赖 localStorage，只能在挂载后读取（SSR 期间拿不到），因此这里必须用 effect 同步状态。
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setActiveSessionId(target.id);
+      draftRef.current.conversationId = target.id;
       writeLastActive(target.id);
-      const gens = target.generationIds
-        .map((id) => initialGenerations.find((g) => g.id === id))
-        .filter((g): g is GenerationItem => g !== undefined)
-        .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
-      setSessionGenerations(gens);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialGenerations, initialConversations]);
 
-  // 累积所有看到过的 generation 到 ref，避免切换会话时丢失本会话产生的新数据。
+  const knownStatusesRef = useRef(new Map<string, GenerationItem["status"]>());
+  const registeredJobsRef = useRef(new Map<string, GenerationItem>());
+  const deletingConversationsRef = useRef(new Map<string, PendingConversationDelete>());
+  const handleConversationJobUpdate = useCallback((conversationId: string, updated: GenerationItem) => {
+    const previous = knownStatusesRef.current.get(updated.id);
+    knownStatusesRef.current.set(updated.id, updated.status);
+    if (!deletingConversationsRef.current.has(conversationId)) updateGeneration(updated);
+    if (previous === "pending" && updated.status !== "pending") router.refresh();
+  }, [router, updateGeneration]);
+  const { registerConversation: registerConversationJob, getJob, updateJob, canvasJobs } = useStudioJobs({
+    ownerId, onConversationUpdate: handleConversationJobUpdate,
+  });
+  const defaultCanvasParameters = useMemo(() => canvasGenerationParametersSchema.parse({
+    model: channels[0]?.defaultModel || "gpt-image-2",
+    channelId: channels[0]?.id ?? null,
+  }), [channels]);
+  const canvasRuntime = useCanvasRuntimeLease({ ownerId, enabled: canvasEnabled, readOnly: canvasReadOnly, savedProvider, turnstile });
+  const { controller: canvasController, snapshot: canvasSnapshot } = useCanvasDocuments({
+    ownerId, enabled: canvasEnabled, readOnly: canvasReadOnly,
+    defaultParameters: defaultCanvasParameters, jobs: canvasJobs,
+    acquireTransientLease: canvasRuntime.acquireTransientLease,
+  });
+  const canvasEditor = useCanvasEditor(canvasSnapshot, canvasController);
+  const canvasViewer = useCanvasImageViewer(canvasController, getJob);
+  const didSeedJobsRef = useRef(false);
+
   useEffect(() => {
-    for (const generation of initialGenerations) {
-      allGenerationsRef.current.set(generation.id, generation);
+    let live = true;
+    let refreshQueued = false;
+    const unsubscribe = canvasJobs.subscribe((origin, job) => {
+      if (origin.ownerId !== ownerId) return;
+      const previous = knownStatusesRef.current.get(job.id);
+      knownStatusesRef.current.set(job.id, job.status);
+      if (previous !== undefined && (previous !== "pending" || job.status === "pending")) return;
+      if (refreshQueued) return;
+      refreshQueued = true;
+      // Refresh account balance on acceptance/settlement, coalescing hydration batches.
+      queueMicrotask(() => {
+        refreshQueued = false;
+        if (live) router.refresh();
+      });
+    });
+    return () => { live = false; unsubscribe(); };
+  }, [canvasJobs, ownerId, router]);
+
+  useEffect(() => {
+    if (didSeedJobsRef.current) return;
+    didSeedJobsRef.current = true;
+    const knownConversations = new Set(initialConversations.map((session) => session.id));
+    for (const generation of [...initialGenerations, ...(initialGenerationPage?.generations ?? [])]) {
+      if (!generation.conversationId || !knownConversations.has(generation.conversationId)) continue;
+      const canonical = registerConversationJob(generation.conversationId, generation);
+      registeredJobsRef.current.set(generation.id, canonical);
     }
+  }, [initialConversations, initialGenerationPage, initialGenerations, registerConversationJob]);
+
+  // 已见任务的轮询属于根控制器，不随所选会话或未来的渲染器卸载而停止。
+  useEffect(() => {
+    if (!activeSessionId) return;
     for (const generation of sessionGenerations) {
-      allGenerationsRef.current.set(generation.id, generation);
+      if (registeredJobsRef.current.get(generation.id) === generation) continue;
+      const canonical = registerConversationJob(activeSessionId, generation);
+      registeredJobsRef.current.set(generation.id, canonical);
+      if (canonical !== generation) updateGeneration(canonical);
     }
-  }, [initialGenerations, sessionGenerations]);
+  }, [activeSessionId, registerConversationJob, sessionGenerations, updateGeneration]);
 
-  // 仅当用户视图已经接近底部（80px 内）时才强制滚动，避免用户向上回看时被打断。
-  useEffect(() => {
-    const el = scrollAreaRef.current;
-    if (!el || typeof el.scrollTo !== "function") return;
-    const distanceFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight;
-    if (distanceFromBottom < 80) {
-      el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
-    }
-  }, [sessionGenerations, isPending]);
-
-  // 文本框自适应高度。
-  useEffect(() => {
-    if (textareaRef.current) {
-      textareaRef.current.style.height = "auto";
-      textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 144)}px`;
-    }
-  }, [prompt]);
-
-  // Composer 是底部悬浮覆盖层；对话流底部留白需要跟随它的实际高度，
-  // 否则参考图、错误提示或桌面高级设置展开后会遮住最后一条消息。
-  useEffect(() => {
-    const shell = composerShellRef.current;
-    if (!shell) return;
-
-    const updateBottomInset = () => {
-      const nextInset = Math.ceil(shell.getBoundingClientRect().height);
-      setComposerBottomInset((current) => (current === nextInset ? current : nextInset));
-    };
-
-    updateBottomInset();
-
-    if (typeof ResizeObserver === "undefined") {
-      window.addEventListener("resize", updateBottomInset);
-      return () => window.removeEventListener("resize", updateBottomInset);
-    }
-
-    const observer = new ResizeObserver(updateBottomInset);
-    observer.observe(shell);
-    window.addEventListener("resize", updateBottomInset);
-
-    return () => {
-      observer.disconnect();
-      window.removeEventListener("resize", updateBottomInset);
-    };
-  }, []);
-
-  // 单图轮询：拆为独立 hook，外部传入更新回调。
-  const handlePollerUpdate = useCallback((updated: GenerationItem) => {
-    setSessionGenerations((current) =>
-      current.map((generation) => (generation.id === updated.id ? updated : generation)),
-    );
-    if (updated.status !== "pending") {
-      router.refresh();
-    }
-  }, [router]);
-  useImagePoller({ generations: sessionGenerations, onUpdate: handlePollerUpdate });
-
-  // 历史图片栏数据：合并初始历史 + 当前会话新生成图，按 id 去重，按 generation 时间倒序。
-  const historyImages = useMemo(() => {
-    const seen = new Set<string>();
-    const merged: Array<{ id: string; url: string; createdAt: string; generation: GenerationItem }> = [];
-    for (const generation of [...initialGenerations, ...sessionGenerations]) {
-      if (generation.status !== "succeeded") continue;
-      for (const image of generation.images) {
-        if (seen.has(image.id)) continue;
-        seen.add(image.id);
-        merged.push({
-          createdAt: generation.createdAt,
-          generation,
-          id: image.id,
-          url: image.url,
-        });
-      }
-    }
-    merged.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-    return merged;
-  }, [initialGenerations, sessionGenerations]);
-
-  const sortedGenerations = sessionGenerations;
   const sizeSelectValue = customSizeMode ? "custom" : getSizeSelectValue(size);
   const normalizedCustomSize = normalizeGenerationSize(`${customWidth}x${customHeight}`);
 
@@ -378,19 +440,23 @@ export function GeneratorStudio({
         baseUrl,
         label,
         model: customModel,
-        models: customProvider.models,
+        models: [...customProvider.models],
         remember: customProvider.remember,
       },
     };
   }
 
   async function handleProbeCustomProviderModels() {
+    providerProbeRef.current?.controller.abort();
     const baseUrl = customProvider.baseUrl.trim();
     if (!baseUrl) {
       setCustomProviderProbeMessage("请先填写 Base URL");
       return;
     }
 
+    const request = beginRequest();
+    if (!request) return;
+    providerProbeRef.current = request;
     setCustomProviderProbePending(true);
     setCustomProviderProbeMessage(null);
     try {
@@ -401,11 +467,14 @@ export function GeneratorStudio({
           apiKey: customProvider.apiKey.trim() || undefined,
           baseUrl,
         }),
+        signal: request.controller.signal,
       });
+      if (!request.isCurrent()) return;
       const result = (await response.json()) as {
         data?: { models?: Array<{ id: string } | string> };
         error?: string;
       };
+      if (!request.isCurrent()) return;
 
       if (!response.ok) {
         setCustomProviderProbeMessage(result.error || "模型拉取失败，请手动填写模型名");
@@ -428,10 +497,19 @@ export function GeneratorStudio({
       }));
       setCustomProviderProbeMessage(`已拉取 ${nextModels.length} 个模型`);
     } catch (err) {
-      setCustomProviderProbeMessage(err instanceof Error ? err.message : "模型拉取失败，请手动填写模型名");
+      if (request.isCurrent()) setCustomProviderProbeMessage(err instanceof Error ? err.message : "模型拉取失败，请手动填写模型名");
     } finally {
-      setCustomProviderProbePending(false);
+      if (request.isCurrent()) setCustomProviderProbePending(false);
+      if (providerProbeRef.current === request) providerProbeRef.current = null;
+      request.finish();
     }
+  }
+
+  function handleChangeCustomProvider(next: CustomProviderDraft) {
+    providerProbeRef.current?.controller.abort();
+    providerProbeRef.current = null;
+    setCustomProviderProbePending(false);
+    setCustomProvider(next);
   }
 
   function getActiveCustomProviderSubmitPayload(): CustomProviderSubmitResult {
@@ -468,14 +546,19 @@ export function GeneratorStudio({
   }
 
   async function handleDownload(url: string) {
+    const request = beginRequest();
+    if (!request) return;
+    let blobUrl: string | null = null;
     try {
-      const proxyUrl = `/api/proxy-image?url=${encodeURIComponent(url)}`;
-      const response = await fetch(proxyUrl);
+      const proxyUrl = url.startsWith("blob:") ? url : `/api/proxy-image?url=${encodeURIComponent(url)}`;
+      const response = await fetch(proxyUrl, { signal: request.controller.signal });
+      if (!request.isCurrent()) return;
       if (!response.ok || !response.headers.get("content-type")?.startsWith("image/")) {
         throw new Error("图片下载失败");
       }
       const blob = await response.blob();
-      const blobUrl = URL.createObjectURL(blob);
+      if (!request.isCurrent()) return;
+      blobUrl = URL.createObjectURL(blob);
       const a = document.createElement("a");
       const pathname = new URL(url, window.location.href).pathname;
       const nameFromUrl = pathname.split("/").filter(Boolean).pop();
@@ -484,9 +567,11 @@ export function GeneratorStudio({
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
-      URL.revokeObjectURL(blobUrl);
     } catch {
-      window.open(url, "_blank", "noopener,noreferrer");
+      if (request.isCurrent()) window.open(url, "_blank", "noopener,noreferrer");
+    } finally {
+      if (blobUrl) URL.revokeObjectURL(blobUrl);
+      request.finish();
     }
   }
 
@@ -499,6 +584,8 @@ export function GeneratorStudio({
   }
 
   type GenerateSnapshot = {
+    challenge: { token: string | null; revision: number };
+    needsTurnstile: boolean;
     count: number;
     customProvider: CustomProviderSubmitPayload | null;
     generationType: GenerationType;
@@ -520,12 +607,66 @@ export function GeneratorStudio({
     size: GenerationSizeToken;
   };
 
+  function isCurrentDraft(command: ChatCommand) {
+    const draft = draftRef.current;
+    return command.request.isCurrent() && command.origin.ownerId === ownerId
+      && draft.epoch === command.origin.draftEpoch && draft.conversationId === command.conversationId;
+  }
+
+  function startChatCommand(snapshot: GenerateSnapshot, clearInput: boolean) {
+    if (commandRef.current) return;
+    const request = beginRequest();
+    if (!request) return;
+    const draft = draftRef.current;
+    let ownsPreviews = clearInput;
+    const command: ChatCommand = {
+      origin: Object.freeze({ ownerId, conversationId: draft.conversationId, draftEpoch: draft.epoch }),
+      conversationId: draft.conversationId,
+      draftRevision: ++draft.revision,
+      phase: "preparing",
+      request,
+      releasePreviews: () => {
+        if (!ownsPreviews) return;
+        ownsPreviews = false;
+        snapshot.referenceImages.forEach((image) => URL.revokeObjectURL(image.previewUrl));
+      },
+    };
+    commandRef.current = command;
+    setIsPending(true);
+
+    if (clearInput) {
+      setPrompt("");
+      setReferenceImages([]);
+      if (snapshot.generationType === "image_to_image") setGenerationType("text_to_image");
+    }
+
+    const restoreSnapshot = (message: string) => {
+      if (!isCurrentDraft(command) || draftRef.current.revision !== command.draftRevision) return;
+      if (command.conversationId && !isSessionLive(command.conversationId)) return;
+      setError(message);
+      if (clearInput) {
+        setPrompt(snapshot.prompt);
+        setReferenceImages(snapshot.referenceImages);
+        setGenerationType(snapshot.generationType);
+        ownsPreviews = false;
+      } else if (!prompt && referenceImages.length === 0) {
+        setPrompt(snapshot.prompt);
+      }
+    };
+    void handleGenerate(command, snapshot, restoreSnapshot);
+  }
+
   function handleSubmit() {
+    if (commandRef.current) return;
     if (!currentUser) {
       router.push("/login");
       return;
     }
     setError(null);
+    if (needsTurnstile && !challengeRef.current.token) {
+      setError("请先完成人机验证");
+      return;
+    }
     if (generationType === "image_to_image" && referenceImages.length === 0) {
       setError("请先上传参考图");
       return;
@@ -538,9 +679,10 @@ export function GeneratorStudio({
       return;
     }
 
-    // 快照本次发送的内容并立即清空输入区。
-    // 必须在 startTransition 之外执行：transition 内的 setState 是低优先级，会被推迟到 await 完成后才提交。
+    // 引用顺序、参数和本次验证凭据在任何异步准备之前捕获。
     const snapshot: GenerateSnapshot = {
+      challenge: { ...challengeRef.current },
+      needsTurnstile,
       count,
       customProvider: customProviderResult.payload,
       generationType,
@@ -552,63 +694,61 @@ export function GeneratorStudio({
       prompt,
       providerMode,
       quality,
-      referenceImages: referenceImages.slice(),
+      referenceImages: referenceImages.map((image) => ({ ...image })),
       customProviderBaseUrl: customProvider.baseUrl.trim(),
       customProviderLabel: customProvider.label.trim() || "我的 API",
-      customProviderModels: customProvider.models,
+      customProviderModels: [...customProvider.models],
       customProviderRemember: customProvider.remember,
       selectedChannelId,
       size,
     };
 
-    setPrompt("");
-    setReferenceImages([]);
-    if (snapshot.generationType === "image_to_image") {
-      setGenerationType("text_to_image");
-    }
-
-    startTransition(() => {
-      void handleGenerate(snapshot);
-    });
+    startChatCommand(snapshot, true);
   }
 
-  async function handleGenerate(snapshot: GenerateSnapshot) {
-    function restoreSnapshot(message: string) {
-      setError(message);
-      setPrompt((current) => (current ? current : snapshot.prompt));
-      setReferenceImages((current) => {
-        if (current.length > 0) {
-          // 已有新参考图，丢弃旧的预览以避免内存泄漏。
-          snapshot.referenceImages.forEach((image) => URL.revokeObjectURL(image.previewUrl));
-          return current;
-        }
-        return snapshot.referenceImages;
-      });
-      if (snapshot.generationType === "image_to_image") {
-        setGenerationType("image_to_image");
-      }
+  function attachConversationGeneration(conversationId: string, generation: GenerationItem, replaceGenerationId?: string | null) {
+    if (!isSessionLive(conversationId) || !acceptGeneration(conversationId, generation, replaceGenerationId)) return;
+    if (replaceGenerationId) {
+      replaceGenerationInSession(conversationId, replaceGenerationId, generation.id);
+    } else {
+      appendGenerationToSession(conversationId, generation.id);
     }
+    const session = sessions.find((item) => item.id === conversationId);
+    if (session && (session.generationCount ?? session.generationIds.length) === 0 && session.title === "新对话") {
+      void renameSession(conversationId, generation.prompt.slice(0, 30) || "新对话");
+    }
+  }
 
+  async function handleGenerate(command: ChatCommand, snapshot: GenerateSnapshot, restoreSnapshot: (message: string) => void) {
     try {
-      // 若当前没有活跃会话，先在服务端创建一个；保证 generation 一定挂在某个 conversation 下。
-      let conversationId = activeSessionId;
+      let conversationId = command.origin.conversationId;
       if (!conversationId) {
-        const created = await createSession(snapshot.prompt.slice(0, 30) || "新对话");
+        const created = await createSession(snapshot.prompt.slice(0, 30) || "新对话", {
+          signal: command.request.controller.signal,
+          isCurrent: () => isCurrentDraft(command),
+        });
+        if (!isCurrentDraft(command)) return;
         if (!created) {
           // 会话创建失败必须中止：否则 generation 会以无归属的"孤儿"落库，
-          // 刷新页面后只能从右侧历史图片栏看到，用户会以为图丢了。
+          // 无归属的图只会保留在作品页，不能在刷新后回填到新建或无关会话。
           restoreSnapshot("创建会话失败，请稍后再试");
           return;
         }
         conversationId = created.id;
+        command.conversationId = conversationId;
+        draftRef.current.conversationId = conversationId;
+        registerConversation(created);
         setActiveSessionId(created.id);
         writeLastActive(created.id);
       }
 
+      if (!command.request.isCurrent() || !isSessionLive(conversationId)) return;
+      command.phase = "submitted";
       const response =
         snapshot.generationType === "image_to_image"
           ? await fetch("/api/generate", {
               method: "POST",
+              signal: command.request.controller.signal,
               body: (() => {
                 const formData = new FormData();
                 formData.append("generationType", "image_to_image");
@@ -648,14 +788,15 @@ export function GeneratorStudio({
                     formData.append("referenceImages", referenceImage.file);
                   }
                 });
-                if (turnstileToken) {
-                  formData.append("turnstileToken", turnstileToken);
+                if (snapshot.challenge.token) {
+                  formData.append("turnstileToken", snapshot.challenge.token);
                 }
                 return formData;
               })(),
             })
           : await fetch("/api/generate", {
               method: "POST",
+              signal: command.request.controller.signal,
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
                 channelId: snapshot.providerMode === "built_in" ? snapshot.selectedChannelId : undefined,
@@ -673,72 +814,59 @@ export function GeneratorStudio({
                 quality: snapshot.quality,
                 replaceGenerationId: snapshot.replaceGenerationId || undefined,
                 size: snapshot.size,
-                turnstileToken: turnstileToken || undefined,
+                turnstileToken: snapshot.challenge.token || undefined,
               }),
             });
 
-      // Turnstile token 一次性有效，无论成败都要重置以便下次提交
-      if (needsTurnstile) {
-        setTurnstileToken(null);
-        turnstileWidgetRef.current?.reset();
-      }
-
+      if (!command.request.isCurrent()) return;
       const result = (await response.json()) as {
-        data?: { generation: GenerationItem };
-        error?: string;
-      };
+        data?: { generation?: unknown };
+        error?: unknown;
+      } | null;
+      if (!command.request.isCurrent()) return;
 
       if (!response.ok) {
-        restoreSnapshot(result.error || "生成失败，请稍后再试");
+        restoreSnapshot(typeof result?.error === "string" && result.error ? result.error : "生成失败，请稍后再试");
         return;
       }
-      const generation = result.data?.generation;
-      if (!generation) {
-        restoreSnapshot("服务端没有返回图片");
+      const generation = result?.data?.generation;
+      if (!isGenerationItem(generation)
+        || (generation.conversationId != null && generation.conversationId !== conversationId)) {
+        restoreSnapshot("服务端返回的生成内容不正确，请稍后再试");
         return;
       }
 
-      // 成功后释放快照中的参考图预览 URL。
-      snapshot.referenceImages.forEach((image) => URL.revokeObjectURL(image.previewUrl));
-
-      setSessionGenerations((current) => {
-        if (!snapshot.replaceGenerationId) {
-          return [...current, generation];
-        }
-        let replaced = false;
-        const next = current.map((item) => {
-          if (item.id !== snapshot.replaceGenerationId) return item;
-          replaced = true;
-          return generation;
-        });
-        return replaced ? next : [...next, generation];
-      });
-      router.refresh();
-      // 把 generation 写入会话本地状态；服务端在 /api/generate 已自动绑定 conversationId 与刷新 title。
-      const targetConversationId = generation.conversationId ?? activeSessionId;
-      if (targetConversationId) {
-        if (snapshot.replaceGenerationId) {
-          replaceGenerationInSession(targetConversationId, snapshot.replaceGenerationId, generation.id);
-        } else {
-          appendGenerationToSession(targetConversationId, generation.id);
-        }
-        // 若是会话内首条 generation 且 title 还是默认的"新对话"，本地同步一份 title。
-        const session = sessions.find((s) => s.id === targetConversationId);
-        if (session && session.generationIds.length === 0 && session.title === "新对话") {
-          void renameSession(targetConversationId, generation.prompt.slice(0, 30) || "新对话");
-        }
+      const canonical = registerConversationJob(conversationId, generation);
+      registeredJobsRef.current.set(canonical.id, canonical);
+      const deletion = deletingConversationsRef.current.get(conversationId);
+      if (deletion) {
+        deletion.accepted.set(canonical.id, { replaceGenerationId: snapshot.replaceGenerationId });
       } else {
-        // 兜底：服务端没返回 conversationId（理论上不应发生），刷新一次会话列表。
-        void refreshSessions();
+        attachConversationGeneration(conversationId, canonical, snapshot.replaceGenerationId);
       }
-    } catch (err) {
-      restoreSnapshot(err instanceof Error ? err.message : "生成失败，请稍后再试");
+      router.refresh();
+    } catch {
+      restoreSnapshot("生成失败，请稍后再试");
+    } finally {
+      // 只重置被本次请求消耗的验证凭据，不清掉等待期间新完成的验证。
+      if (command.request.isCurrent() && command.phase === "submitted" && snapshot.needsTurnstile
+        && challengeRef.current.revision === snapshot.challenge.revision) {
+        clearChallenge();
+        turnstileWidgetRef.current?.reset();
+      }
+      command.releasePreviews();
+      if (commandRef.current === command) {
+        commandRef.current = null;
+        if (command.request.isCurrent()) setIsPending(false);
+      }
+      command.request.finish();
     }
   }
 
   function handleReferenceFiles(files: File[] | FileList | null) {
     const result = addFiles(files);
     if (result === "empty") return;
+    draftRef.current.revision += 1;
     if (result === "exceeded") {
       setError("最多上传 16 张参考图");
     } else {
@@ -750,6 +878,7 @@ export function GeneratorStudio({
   }
 
   function handleRemoveReference(id: string) {
+    draftRef.current.revision += 1;
     removeImage(id);
     // 若移除后没有参考图且 prompt 为空，则回到文生图模式。
     if (referenceImages.length === 1 && prompt.trim() === "") {
@@ -763,6 +892,7 @@ export function GeneratorStudio({
       return;
     }
 
+    draftRef.current.revision += 1;
     const image: ReferenceImage = {
       id: `${Date.now()}_url_${Math.random().toString(36).slice(2, 8)}`,
       file: null,
@@ -774,12 +904,11 @@ export function GeneratorStudio({
     setCount(1);
     setPrompt("");
     setError(null);
-    requestAnimationFrame(() => {
-      textareaRef.current?.focus({ preventScroll: true });
-    });
+    setFocusRequest((current) => current + 1);
   }
 
   function handleReuseConfig(generation: GenerationItem) {
+    draftRef.current.revision += 1;
     const config = toReusableGenerationConfig(
       generation,
       channels.map((channel) => channel.id),
@@ -823,9 +952,27 @@ export function GeneratorStudio({
     );
     setShowSettings(false);
     setError(null);
-    requestAnimationFrame(() => {
-      textareaRef.current?.focus({ preventScroll: true });
-    });
+    setFocusRequest((current) => current + 1);
+  }
+
+  function handleChangePrompt(value: string) {
+    draftRef.current.revision += 1;
+    setPrompt(value);
+  }
+
+  function handleChangeGenerationType(value: GenerationType) {
+    draftRef.current.revision += 1;
+    setGenerationType(value);
+  }
+
+  function handleMoveReference(id: string, direction: -1 | 1) {
+    draftRef.current.revision += 1;
+    moveImage(id, direction);
+  }
+
+  function handleReorderReference(sourceId: string, targetId: string) {
+    draftRef.current.revision += 1;
+    reorderImage(sourceId, targetId);
   }
 
   function handlePaste(e: React.ClipboardEvent) {
@@ -846,41 +993,57 @@ export function GeneratorStudio({
   // 取消仍在 pending/processing 的 generation：服务端标记失败并退还预扣积分。
   async function handleCancelGeneration(target: GenerationItem) {
     if (target.status !== "pending") return;
+    const request = beginRequest();
+    if (!request) return;
+    const origin = { ...draftRef.current };
+    const showError = (message: string) => {
+      if (request.isCurrent() && draftRef.current.epoch === origin.epoch
+        && draftRef.current.conversationId === origin.conversationId) setError(message);
+    };
     try {
       const response = await fetch(`/api/me/generations/${target.id}`, {
         method: "DELETE",
+        signal: request.controller.signal,
       });
+      if (!request.isCurrent()) return;
       const result = (await response.json()) as {
-        data?: { generation?: GenerationItem };
-        error?: string;
-      };
+        data?: { generation?: unknown };
+        error?: unknown;
+      } | null;
+      if (!request.isCurrent()) return;
 
       if (!response.ok) {
-        setError(result.error || "取消生成失败，请稍后再试");
+        showError(typeof result?.error === "string" && result.error ? result.error : "取消生成失败，请稍后再试");
         return;
       }
 
-      const updated = result.data?.generation;
-      if (updated) {
-        setSessionGenerations((current) =>
-          current.map((generation) => (generation.id === updated.id ? updated : generation)),
-        );
+      const updated = result?.data?.generation;
+      if (!isGenerationItem(updated) || updated.id !== target.id) {
+        showError("服务端返回的任务状态不正确，请稍后再试");
+        return;
       }
+      updateJob(updated);
       router.refresh();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "取消生成失败，请稍后再试");
+    } catch {
+      showError("取消生成失败，请稍后再试");
+    } finally {
+      request.finish();
     }
   }
 
   // 失败重试：使用原 generation 的 prompt + 当前选项重新触发，等价于用户手动重新填写一次。
   // 注意：不复用原 sourceImageUrls（图生图）——参考图在原文件已不可用，重试时退回文生图。
   function handleRetryGeneration(target: GenerationItem) {
-    if (target.status === "pending") return;
+    if (target.status === "pending" || commandRef.current) return;
     if (!currentUser) {
       router.push("/login");
       return;
     }
     setError(null);
+    if (needsTurnstile && !challengeRef.current.token) {
+      setError("请先完成人机验证");
+      return;
+    }
     const customProviderResult = getActiveCustomProviderSubmitPayload();
     if (customProviderResult.error) {
       setShowSettings(true);
@@ -888,6 +1051,8 @@ export function GeneratorStudio({
       return;
     }
     const snapshot: GenerateSnapshot = {
+      challenge: { ...challengeRef.current },
+      needsTurnstile,
       count,
       customProvider: customProviderResult.payload,
       generationType: "text_to_image",
@@ -904,21 +1069,34 @@ export function GeneratorStudio({
       replaceGenerationId: target.id,
       customProviderBaseUrl: customProvider.baseUrl.trim(),
       customProviderLabel: customProvider.label.trim() || "我的 API",
-      customProviderModels: customProvider.models,
+      customProviderModels: [...customProvider.models],
       customProviderRemember: customProvider.remember,
       selectedChannelId,
       size,
     };
-    startTransition(() => {
-      void handleGenerate(snapshot);
-    });
+    startChatCommand(snapshot, false);
+  }
+
+  function invalidateDraft() {
+    draftRef.current.epoch += 1;
+    draftRef.current.revision += 1;
+    const command = commandRef.current;
+    // 已开始的生成继续回到捕获的会话；尚未创建完成的旧草稿不能再提交。
+    if (command?.phase === "preparing") {
+      command.request.controller.abort();
+      command.request.finish();
+      command.releasePreviews();
+      commandRef.current = null;
+      setIsPending(false);
+    }
   }
 
   function handleNewConversation() {
+    invalidateDraft();
+    draftRef.current.conversationId = null;
     // 暂不立即创建服务端会话，等首次发送 generation 时再 createSession，避免空会话堆积。
     setActiveSessionId(null);
     writeLastActive(null);
-    setSessionGenerations([]);
     setPrompt("");
     setNegativePrompt("");
     clearReferenceImages();
@@ -928,18 +1106,11 @@ export function GeneratorStudio({
   }
 
   function switchToSession(sessionId: string) {
+    if (!isSessionLive(sessionId)) return;
+    invalidateDraft();
+    draftRef.current.conversationId = sessionId;
     setActiveSessionId(sessionId);
     writeLastActive(sessionId);
-    const session = sessions.find((s) => s.id === sessionId);
-    if (session) {
-      // 优先从 ref 缓存中读，命中不到再回退 initialGenerations，
-      // 这样能包含"当前会话生成、未刷入 SSR 数据"的 generation。
-      const gens = session.generationIds
-        .map((id) => allGenerationsRef.current.get(id) ?? initialGenerations.find((g) => g.id === id))
-        .filter((g): g is GenerationItem => g !== undefined)
-        .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
-      setSessionGenerations(gens);
-    }
     setPrompt("");
     setNegativePrompt("");
     clearReferenceImages();
@@ -948,10 +1119,40 @@ export function GeneratorStudio({
   }
 
   function deleteSession(sessionId: string) {
-    void deleteSessionRemote(sessionId);
-    if (activeSessionId === sessionId) {
+    if (!isSessionLive(sessionId) || deletingConversationsRef.current.has(sessionId)) return;
+    const request = beginRequest();
+    if (!request) return;
+    const deletion: PendingConversationDelete = { accepted: new Map() };
+    deletingConversationsRef.current.set(sessionId, deletion);
+    invalidateDraft();
+    if (draftRef.current.conversationId === sessionId) {
       handleNewConversation();
     }
+    void (async () => {
+      try {
+        const deleted = await deleteSessionRemote(sessionId);
+        if (!request.isCurrent() || deletingConversationsRef.current.get(sessionId) !== deletion) return;
+        deletingConversationsRef.current.delete(sessionId);
+        if (deleted) {
+          forgetConversation(sessionId);
+          return;
+        }
+        // A failed Delete restores attachment from the retained canonical cache, never another POST.
+        for (const [jobId, acceptance] of deletion.accepted) {
+          const canonical = getJob(jobId);
+          if (canonical) attachConversationGeneration(sessionId, canonical, acceptance.replaceGenerationId);
+        }
+        for (const [jobId, registered] of registeredJobsRef.current) {
+          if (registered.conversationId !== sessionId) continue;
+          const canonical = getJob(jobId);
+          if (canonical) updateGeneration(canonical);
+        }
+        setError("删除会话失败，请稍后重试");
+      } finally {
+        if (deletingConversationsRef.current.get(sessionId) === deletion) deletingConversationsRef.current.delete(sessionId);
+        request.finish();
+      }
+    })();
   }
 
   function handleChannelChange(newChannelId: string) {
@@ -966,13 +1167,37 @@ export function GeneratorStudio({
   function openCustomProviderSettings() {
     setProviderMode("custom");
     setShowSettings(true);
-    requestAnimationFrame(() => {
-      textareaRef.current?.focus({ preventScroll: true });
-    });
+    setFocusRequest((current) => current + 1);
+  }
+
+  function handleModeChange(next: StudioMode) {
+    canvasViewer.close();
+    changeMode(next);
+  }
+
+  function openCanvasProviderSettings(target: CanvasNodeTarget) {
+    if (canvasReadOnly || canvasSnapshot.activeCanvasId !== target.canvasId) return;
+    const node = canvasSnapshot.active?.scene.nodes.find((item) => item.id === target.nodeId);
+    if (node?.kind === "generation") canvasRuntime.openProviderSettings(target, node.parameters);
   }
 
   return (
-    <div className="relative flex h-full w-full overflow-hidden bg-[radial-gradient(circle_at_52%_18%,rgba(255,255,255,0.92),transparent_32%),linear-gradient(180deg,#faf6ef_0%,#f2e9dc_100%)]">
+    <div className="relative flex h-full w-full flex-col overflow-hidden bg-[radial-gradient(circle_at_52%_18%,rgba(255,255,255,0.92),transparent_32%),linear-gradient(180deg,#faf6ef_0%,#f2e9dc_100%)]">
+      {canvasEnabled && <StudioModeSwitch mode={mode} onChange={handleModeChange} />}
+      <div className="relative flex min-h-0 flex-1 overflow-hidden">
+      {mode === "canvas" ? (
+        <div className="flex min-h-0 min-w-0 flex-1 flex-col">
+        {canvasViewer.error && <Alert onDismiss={canvasViewer.dismissError}>{canvasViewer.error}</Alert>}
+        <CanvasLazyPane snapshot={canvasSnapshot} controller={canvasController} channels={channels} editor={canvasEditor} touchPresentation={touchPresentation}
+          onViewImage={canvasViewer.open}
+          onDownloadImage={(target) => { void canvasViewer.download(target, handleDownload); }}
+          onOpenProviderSettings={openCanvasProviderSettings}
+          onReturnToChat={() => handleModeChange("conversation")} />
+        <ImageZoomModal src={canvasViewer.image?.src ?? null} meta={canvasViewer.image?.meta}
+          onClose={canvasViewer.close} onDownload={() => { void canvasViewer.downloadCurrent(handleDownload); }} />
+        {canvasRuntime.dialog && <CanvasRuntimeDialog key={canvasRuntime.dialog.id} {...canvasRuntime} dialog={canvasRuntime.dialog} />}
+        </div>
+      ) : <>
       <SessionSidebar
         sessions={sessions}
         activeSessionId={activeSessionId}
@@ -981,22 +1206,19 @@ export function GeneratorStudio({
         onNewConversation={handleNewConversation}
         onSwitchSession={switchToSession}
         onDeleteSession={deleteSession}
-        historyImages={historyImages}
-        onPickImage={(url) => {
-          setZoomedImage(url);
-          setSidebarOpen(false);
-        }}
       />
 
-      <div className="relative flex min-w-0 flex-1 flex-col border-x border-[var(--line)]/80 bg-[linear-gradient(180deg,rgba(255,251,246,0.62)_0%,rgba(247,241,232,0.36)_100%)]">
+      <div className="relative flex min-w-0 flex-1 flex-col border-[var(--line)]/80 bg-[linear-gradient(180deg,rgba(255,251,246,0.62)_0%,rgba(247,241,232,0.36)_100%)] md:border-l">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_72%_16%,rgba(217,100,58,0.08),transparent_28%),radial-gradient(circle_at_28%_86%,rgba(255,255,255,0.58),transparent_34%)]" />
         <div className="relative z-10 flex items-center justify-between border-b border-[var(--line)]/50 bg-[#fffaf2]/70 px-4 py-2.5 backdrop-blur-md md:hidden shrink-0">
           <div className="flex items-center gap-3">
             <button
+              type="button"
+              aria-label="打开对话导航"
               onClick={() => setSidebarOpen(true)}
               className="rounded-xl border border-[var(--line)] bg-white/80 p-2 text-[var(--ink-soft)] shadow-sm transition hover:bg-white hover:text-[var(--ink)] active:scale-95"
             >
-              <PanelLeftOpen className="size-5" />
+              <PanelLeftOpen aria-hidden className="size-5" />
             </button>
             <div className="flex flex-col">
               <span className="text-[10px] uppercase tracking-wider text-[var(--ink-soft)]/70 font-semibold leading-tight">当前会话</span>
@@ -1013,70 +1235,69 @@ export function GeneratorStudio({
           )}
         </div>
 
-        <ChatStream
-          ref={scrollAreaRef}
-          generations={sortedGenerations}
-          onZoom={handleZoomImage}
-          onDownload={handleDownload}
-          onUseForEdit={(url) => void handleUseImageForEdit(url)}
-          bottomInset={composerBottomInset}
-          onReuseConfig={handleReuseConfig}
-          onRetry={handleRetryGeneration}
-          onCancel={handleCancelGeneration}
-        />
-
-        <Composer
-          ref={textareaRef}
-          shellRef={composerShellRef}
-          prompt={prompt}
-          onChangePrompt={setPrompt}
-          onPaste={handlePaste}
-          onCompositionStart={() => { isComposingRef.current = true; }}
-          onCompositionEnd={() => { isComposingRef.current = false; }}
-          onKeyDownEnter={handleSubmit}
-          isComposing={() => isComposingRef.current}
-          isPending={isPending}
-          error={error}
-          onDismissError={() => setError(null)}
-          generationType={generationType}
-          onChangeGenerationType={setGenerationType}
-          referenceImages={referenceImages}
-          onPickFiles={handleReferenceFiles}
-          onPickImageUrl={handleUseImageForEdit}
-          onRemoveReference={handleRemoveReference}
-          onMoveReference={moveImage}
-          onReorderReference={reorderImage}
-          size={size}
-          sizeSelectValue={sizeSelectValue}
-          onSizeSelect={handleSizeSelect}
-          showSettings={showSettings}
-          onToggleSettings={() => setShowSettings((s) => !s)}
-          channels={channels}
-          selectedChannelId={selectedChannelId}
-          onChangeChannel={handleChannelChange}
-          modelOptions={modelOptions}
-          model={model}
-          onChangeModel={setModel}
-          providerMode={providerMode}
-          activeModel={activeModel}
-          onOpenCustomProviderSettings={openCustomProviderSettings}
-          onSubmit={handleSubmit}
-          canSubmit={Boolean(
-            (prompt.trim() || referenceImages.length > 0) &&
-              (!needsTurnstile || turnstileToken),
-          )}
-          onClickImageMode={() => setGenerationType("image_to_image")}
-          turnstileSlot={
-            needsTurnstile && turnstile?.siteKey ? (
+        <ChatPane
+          focusRequest={focusRequest}
+          history={{
+            conversationId: activeSessionId,
+            loading: loadingConversation,
+            loadingOlder: loadingOlderGenerations,
+            error: conversationLoadError,
+            hasMore: hasOlderGenerations,
+            onReload: reloadConversation,
+            onLoadOlder: loadOlderGenerations,
+          }}
+          stream={{
+            generations: sessionGenerations,
+            onZoom: handleZoomImage,
+            onDownload: handleDownload,
+            onUseForEdit: handleUseImageForEdit,
+            onReuseConfig: handleReuseConfig,
+            onRetry: handleRetryGeneration,
+            onCancel: handleCancelGeneration,
+          }}
+          composer={{
+            prompt,
+            onChangePrompt: handleChangePrompt,
+            onPaste: handlePaste,
+            onKeyDownEnter: handleSubmit,
+            isPending,
+            error,
+            onDismissError: () => setError(null),
+            generationType,
+            onChangeGenerationType: handleChangeGenerationType,
+            referenceImages,
+            onPickFiles: handleReferenceFiles,
+            onPickImageUrl: handleUseImageForEdit,
+            onRemoveReference: handleRemoveReference,
+            onMoveReference: handleMoveReference,
+            onReorderReference: handleReorderReference,
+            size,
+            sizeSelectValue,
+            onSizeSelect: handleSizeSelect,
+            showSettings,
+            onToggleSettings: () => setShowSettings((current) => !current),
+            channels,
+            selectedChannelId,
+            onChangeChannel: handleChannelChange,
+            modelOptions,
+            model,
+            onChangeModel: setModel,
+            providerMode,
+            activeModel,
+            onOpenCustomProviderSettings: openCustomProviderSettings,
+            onSubmit: handleSubmit,
+            canSubmit: Boolean((prompt.trim() || referenceImages.length > 0) && (!needsTurnstile || turnstileToken)),
+            onClickImageMode: () => handleChangeGenerationType("image_to_image"),
+            turnstileSlot: needsTurnstile && turnstile?.siteKey ? (
               <TurnstileWidget
                 ref={turnstileWidgetRef}
                 siteKey={turnstile.siteKey}
-                onVerify={(token) => setTurnstileToken(token)}
-                onExpire={() => setTurnstileToken(null)}
-                onError={() => setTurnstileToken(null)}
+                onVerify={updateChallenge}
+                onExpire={clearChallenge}
+                onError={clearChallenge}
               />
-            ) : undefined
-          }
+            ) : undefined,
+          }}
         >
           <AdvancedSettings
             open={showSettings}
@@ -1101,7 +1322,7 @@ export function GeneratorStudio({
             providerMode={providerMode}
             onChangeProviderMode={setProviderMode}
             customProvider={customProvider}
-            onChangeCustomProvider={setCustomProvider}
+            onChangeCustomProvider={handleChangeCustomProvider}
             customModelOptions={customModelOptions}
             savedProviderConfigured={savedProviderConfigured}
             onProbeCustomProviderModels={handleProbeCustomProviderModels}
@@ -1115,7 +1336,7 @@ export function GeneratorStudio({
             onChangeModeration={setModeration}
             onChangeNegativePrompt={setNegativePrompt}
           />
-        </Composer>
+        </ChatPane>
 
         <ImageZoomModal
           src={zoomedImage}
@@ -1186,7 +1407,7 @@ export function GeneratorStudio({
                     providerMode={providerMode}
                     onChangeProviderMode={setProviderMode}
                     customProvider={customProvider}
-                    onChangeCustomProvider={setCustomProvider}
+                    onChangeCustomProvider={handleChangeCustomProvider}
                     customModelOptions={customModelOptions}
                     savedProviderConfigured={savedProviderConfigured}
                     onProbeCustomProviderModels={handleProbeCustomProviderModels}
@@ -1206,13 +1427,8 @@ export function GeneratorStudio({
           )}
         </AnimatePresence>
       </div>
-
-      <HistoryRail
-        images={historyImages}
-        onPickImage={(url) => setZoomedImage(url)}
-        onUseForEdit={handleUseImageForEdit}
-        onReuseConfig={handleReuseConfig}
-      />
+      </>}
+      </div>
     </div>
   );
 }

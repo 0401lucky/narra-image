@@ -1,4 +1,6 @@
-import { generateSchema } from "@/lib/validators";
+import { readCanvasJson } from "@/lib/canvas/body-limit";
+import { CANVAS_LIMITS, CANVAS_RUN_OPT_IN_HEADER, CANVAS_RUN_OPT_IN_VALUE, CanvasContractError } from "@/lib/canvas/contracts";
+import { canvasGenerateRequestSchema, generateSchema } from "@/lib/validators";
 
 function toNullableString(value: FormDataEntryValue | null) {
   if (typeof value !== "string") {
@@ -49,6 +51,7 @@ function getReferenceImageUrls(formData: FormData): string[] {
 
 export async function parseGenerateRequest(request: Request | FormData) {
   const parseFormData = (formData: FormData) => {
+    if (formData.has("canvasRun")) throw new CanvasContractError("CANVAS_RUN_OPT_IN_REQUIRED");
     const images = getReferenceImages(formData);
     const imageUrls = getReferenceImageUrls(formData);
 
@@ -110,6 +113,7 @@ export async function parseGenerateRequest(request: Request | FormData) {
 
     return {
       ...body,
+      canvasRun: null,
       channelId: toNullableString(formData.get("channelId")) || undefined,
       conversationId: toNullableString(formData.get("conversationId")) || undefined,
       count: 1,
@@ -125,6 +129,31 @@ export async function parseGenerateRequest(request: Request | FormData) {
     return parseFormData(request);
   }
 
+  const canvasHeader = request.headers.get(CANVAS_RUN_OPT_IN_HEADER);
+  if (canvasHeader !== null) {
+    if (canvasHeader !== CANVAS_RUN_OPT_IN_VALUE) throw new CanvasContractError("CANVAS_INVALID_INPUT");
+    // Keep the legacy parser free of auth/database dependencies unless this
+    // explicitly selected bounded transport is being parsed.
+    const { parseCanvasInput } = await import("@/lib/canvas/http");
+    const input = parseCanvasInput(canvasGenerateRequestSchema, await readCanvasJson(request, CANVAS_LIMITS.runBodyBytes));
+    const body = generateSchema.parse({
+      ...input.canvasRun.parameters,
+      prompt: input.canvasRun.input.prompt.text,
+      customProvider: input.canvasRun.parameters.providerMode === "custom" ? input.customProvider : null,
+    });
+    return {
+      ...body,
+      canvasRun: input.canvasRun,
+      channelId: input.canvasRun.parameters.channelId ?? undefined,
+      conversationId: undefined,
+      image: null,
+      images: [] as File[],
+      imageUrls: [] as string[],
+      replaceGenerationId: undefined,
+      turnstileToken: input.turnstileToken,
+    };
+  }
+
   const contentType = request.headers.get("content-type")?.toLowerCase() ?? "";
 
   if (contentType.includes("multipart/form-data")) {
@@ -132,6 +161,7 @@ export async function parseGenerateRequest(request: Request | FormData) {
   }
 
   const json = await request.json() as Record<string, unknown>;
+  if (json && typeof json === "object" && Object.hasOwn(json, "canvasRun")) throw new CanvasContractError("CANVAS_RUN_OPT_IN_REQUIRED");
   const body = generateSchema.parse({
     ...json,
     outputCompression: json.outputCompression ?? json.output_compression,
@@ -140,6 +170,7 @@ export async function parseGenerateRequest(request: Request | FormData) {
 
   return {
     ...body,
+    canvasRun: null,
     channelId: json.channelId as string | undefined,
     conversationId: typeof json.conversationId === "string" ? json.conversationId : undefined,
     image: null,

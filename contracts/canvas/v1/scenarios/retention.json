@@ -1,0 +1,140 @@
+{
+  "version": 1,
+  "databaseNowMs": 2000000000000,
+  "facts": {
+    "kind": "IMPORT",
+    "registered": true,
+    "knownKey": true,
+    "state": "READY",
+    "savedRoots": 0,
+    "jobRoots": 0,
+    "detachedAtMs": 1999395200000,
+    "uploadExpiresAtMs": null,
+    "preparationExpiresAtMs": null,
+    "deleteExpiresAtMs": null,
+    "nextDeleteAtMs": null,
+    "needsReconciliation": false
+  },
+  "vectors": [
+    {
+      "id": "seven-day-boundary",
+      "changes": {},
+      "eligible": true
+    },
+    {
+      "id": "one-millisecond-before",
+      "changes": {
+        "detachedAtMs": 1999395200001
+      },
+      "eligible": false
+    },
+    {
+      "id": "saved-root",
+      "changes": {
+        "savedRoots": 1
+      },
+      "eligible": false
+    },
+    {
+      "id": "completed-job-root",
+      "changes": {
+        "jobRoots": 1
+      },
+      "eligible": false
+    },
+    {
+      "id": "preparation-lease",
+      "changes": {
+        "preparationExpiresAtMs": 2000000000001
+      },
+      "eligible": false
+    },
+    {
+      "id": "lease-boundary",
+      "changes": {
+        "preparationExpiresAtMs": 2000000000000
+      },
+      "eligible": true
+    },
+    {
+      "id": "uploading",
+      "changes": {
+        "state": "UPLOADING"
+      },
+      "eligible": false
+    },
+    {
+      "id": "quarantined-known-key",
+      "changes": {
+        "state": "QUARANTINED"
+      },
+      "eligible": true
+    },
+    {
+      "id": "generated",
+      "changes": {
+        "kind": "GENERATED"
+      },
+      "eligible": false
+    },
+    {
+      "id": "legacy",
+      "changes": {
+        "kind": "LEGACY"
+      },
+      "eligible": false
+    },
+    {
+      "id": "unregistered",
+      "changes": {
+        "registered": false
+      },
+      "eligible": false
+    },
+    {
+      "id": "reattached",
+      "changes": {
+        "detachedAtMs": null
+      },
+      "eligible": false
+    },
+    {
+      "id": "retry-after-backoff",
+      "changes": {
+        "state": "DELETING"
+      },
+      "eligible": true
+    },
+    {
+      "id": "delete-lease",
+      "changes": {
+        "state": "DELETING",
+        "deleteExpiresAtMs": 2000000000001
+      },
+      "eligible": false
+    },
+    {
+      "id": "delete-backoff",
+      "changes": {
+        "state": "DELETING",
+        "nextDeleteAtMs": 2000000000001
+      },
+      "eligible": false
+    },
+    {
+      "id": "known-delete-tombstone",
+      "changes": {
+        "state": "DELETED"
+      },
+      "eligible": false
+    },
+    {
+      "id": "ambiguous-put-reconciliation",
+      "changes": {
+        "state": "DELETED",
+        "needsReconciliation": true
+      },
+      "eligible": true
+    }
+  ]
+}

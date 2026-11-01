@@ -1,6 +1,7 @@
 import { randomBytes, randomUUID } from "node:crypto";
 
 import { runStage } from "./command-runner.mjs";
+import { LocalDockerSession } from "./local-docker-safety.mjs";
 
 const DOCKER_PROBE_TIMEOUT_MS = 5_000;
 const POSTGRES_READY_TIMEOUT_MS = 20_000;
@@ -24,14 +25,15 @@ function printCaptured(result) {
   if (result.stderr?.trim()) console.error(result.stderr.trim());
 }
 
-async function runDocker(args, options) {
+async function runDocker(resource, args, options) {
+  const isolated = resource.docker.command(args, options.env);
   return runStage(
     {
       label: options.label,
       executable: "docker",
-      args,
+      args: isolated.args,
       capture: options.capture ?? true,
-      env: options.env,
+      env: isolated.env,
       input: options.input,
       timeoutMs: options.timeoutMs,
     },
@@ -42,8 +44,8 @@ async function runDocker(args, options) {
   );
 }
 
-async function runDockerChecked(args, options) {
-  const result = await runDocker(args, options);
+async function runDockerChecked(resource, args, options) {
+  const result = await runDocker(resource, args, options);
   if (result.code === 0) return result;
   printCaptured(result);
   throw failure(
@@ -68,6 +70,8 @@ export function createPostgresResource(options = {}) {
     adminDatabase: `narra_admin_${suffix}`,
     hostPort: null,
     creationAttempted: false,
+    containerId: null,
+    docker: new LocalDockerSession(),
   };
   assertSafeName(resource.containerName, prefix, "容器名");
   assertSafeName(resource.adminDatabase, "narra_admin_", "数据库名");
@@ -75,6 +79,11 @@ export function createPostgresResource(options = {}) {
 }
 
 export async function assertDockerPrerequisites(resource, options) {
+  await resource.docker.pin(async (args, label) => {
+    const result = await runDocker(resource, args, { ...options, label, timeoutMs: DOCKER_PROBE_TIMEOUT_MS });
+    if (result.code !== 0 || !result.stdout.trim()) throw failure(2, `${label} failed; local Docker is required`);
+    return result.stdout.trim();
+  });
   const probes = [
     ["检查 Docker CLI", ["--version"]],
     ["检查 Docker daemon", ["info", "--format", "{{.ServerVersion}}"]],
@@ -84,7 +93,7 @@ export async function assertDockerPrerequisites(resource, options) {
     ],
   ];
   for (const [label, args] of probes) {
-    const result = await runDocker(args, {
+    const result = await runDocker(resource, args, {
       ...options,
       label,
       timeoutMs: DOCKER_PROBE_TIMEOUT_MS,
@@ -94,10 +103,11 @@ export async function assertDockerPrerequisites(resource, options) {
       throw failure(2, `${label}失败；runner 不会自动 pull 镜像`);
     }
   }
+  resource.docker.prepare();
 }
 
 async function findContainer(resource, options) {
-  return runDocker(
+  return runDocker(resource,
     [
       "container",
       "ls",
@@ -114,13 +124,13 @@ async function findContainer(resource, options) {
   );
 }
 
-async function readOwner(resource, options) {
-  return runDocker(
+async function readContainerIdentity(resource, options) {
+  const result = await runDocker(resource,
     [
       "container",
       "inspect",
       "--format",
-      `{{ index .Config.Labels "${resource.ownerLabelKey}" }}`,
+      "{{json .}}",
       resource.containerName,
     ],
     {
@@ -129,6 +139,14 @@ async function readOwner(resource, options) {
       timeoutMs: DOCKER_PROBE_TIMEOUT_MS,
     },
   );
+  if (result.code !== 0) return null;
+  try {
+    const container = JSON.parse(result.stdout.trim());
+    if (!/^[a-f0-9]{64}$/.test(container.Id ?? "") || container.Name !== `/${resource.containerName}`
+      || container.Config?.Labels?.[resource.ownerLabelKey] !== resource.ownerToken
+      || (resource.containerId && container.Id !== resource.containerId)) return null;
+    return container.Id;
+  } catch { return null; }
 }
 
 export async function startPostgres(resource, options) {
@@ -139,13 +157,12 @@ export async function startPostgres(resource, options) {
   }
 
   const dockerEnv = {
-    ...process.env,
     POSTGRES_USER: resource.databaseUser,
     POSTGRES_PASSWORD: resource.databasePassword,
     POSTGRES_DB: resource.adminDatabase,
   };
   resource.creationAttempted = true;
-  await runDockerChecked(
+  const started = await runDockerChecked(resource,
     [
       "run",
       "--detach",
@@ -174,13 +191,14 @@ export async function startPostgres(resource, options) {
     },
   );
 
-  const owner = await readOwner(resource, options);
-  if (owner.code !== 0 || owner.stdout.trim() !== resource.ownerToken) {
-    printCaptured(owner);
+  if (/^[a-f0-9]{64}$/.test(started.stdout.trim())) resource.containerId = started.stdout.trim();
+  const identity = await readContainerIdentity(resource, options);
+  if (!identity) {
     throw failure(8, "新建容器 owner label 校验失败");
   }
+  resource.containerId = identity;
 
-  const mountsResult = await runDockerChecked(
+  const mountsResult = await runDockerChecked(resource,
     [
       "container",
       "inspect",
@@ -200,7 +218,7 @@ export async function startPostgres(resource, options) {
   } catch {
     throw failure(8, "无法解析 PostgreSQL mount 信息");
   }
-  const tmpfsResult = await runDockerChecked(
+  const tmpfsResult = await runDockerChecked(resource,
     [
       "container",
       "inspect",
@@ -227,7 +245,7 @@ export async function startPostgres(resource, options) {
     throw failure(8, "PostgreSQL 数据目录不是无持久卷的 tmpfs");
   }
 
-  const portResult = await runDockerChecked(
+  const portResult = await runDockerChecked(resource,
     [
       "container",
       "inspect",
@@ -258,7 +276,7 @@ export async function waitForPostgres(resource, options) {
     Date.now() + POSTGRES_READY_TIMEOUT_MS,
   );
   while (Date.now() < readyDeadlineAt) {
-    const result = await runDocker(
+    const result = await runDocker(resource,
       [
         "exec",
         resource.containerName,
@@ -328,7 +346,7 @@ export async function runPsql(resource, options) {
   ];
   if (options.tuplesOnly) args.push("--tuples-only", "--no-align");
   if (options.command) args.push("--command", options.command);
-  return runDockerChecked(args, {
+  return runDockerChecked(resource, args, {
     ...options,
     label: options.label ?? "执行 disposable PostgreSQL SQL",
     input: options.input,
@@ -345,7 +363,7 @@ export async function createDatabase(resource, databaseName, options) {
   });
 }
 
-export async function cleanupPostgres(resource, options) {
+async function cleanupPostgresContainer(resource, options) {
   if (!resource.creationAttempted) return true;
   assertSafeName(resource.containerName, resource.prefix, "容器名");
   const existing = await findContainer(resource, options);
@@ -355,23 +373,21 @@ export async function cleanupPostgres(resource, options) {
   }
   if (!existing.stdout.trim()) return true;
 
-  const owner = await readOwner(resource, options);
-  if (owner.code !== 0 || owner.stdout.trim() !== resource.ownerToken) {
-    printCaptured(owner);
+  const identity = await readContainerIdentity(resource, options);
+  if (!identity) {
     console.error(`拒绝清理 owner 不匹配的容器：${resource.containerName}`);
     return false;
   }
-  const removed = await runDocker(
+  const removed = await runDocker(resource,
     [
       "container",
       "rm",
       "--force",
-      "--volumes",
-      resource.containerName,
+      identity,
     ],
     {
       ...options,
-      label: "清理 disposable PostgreSQL 及关联卷",
+      label: "清理精确归属的 disposable PostgreSQL 容器（不删除卷）",
     },
   );
   if (removed.code !== 0) {
@@ -380,4 +396,16 @@ export async function cleanupPostgres(resource, options) {
   }
   const verify = await findContainer(resource, options);
   return verify.code === 0 && !verify.stdout.trim();
+}
+
+export async function cleanupPostgres(resource, options) {
+  let cleaned = false;
+  try { cleaned = await cleanupPostgresContainer(resource, options); }
+  catch { return false; }
+  finally {
+    // Retain the pinned config if container cleanup must be retried.
+    if (cleaned && !resource.docker.cleanup()) cleaned = false;
+  }
+  if (cleaned) resource.creationAttempted = false;
+  return cleaned;
 }

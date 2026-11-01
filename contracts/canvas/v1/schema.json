@@ -1,0 +1,2728 @@
+{
+  "contract": "narra.canvas.schema",
+  "version": 1,
+  "migration": "20261029090000_canvas_v1",
+  "migrationSha256": "1247ec0bb7985a465028e4e05abb0b0ffa6ce80e964d57b37351c2943c3513f4",
+  "bodyFingerprint": "MD5 of pg_proc.prosrc UTF-8 after CRLF-to-LF conversion only; lone carriage returns remain significant; includes complete function body, not just function names",
+  "catalogQuery": "WITH canvas_tables AS (\n  SELECT c.oid, c.relname, c.relkind, c.relpersistence FROM pg_catalog.pg_class AS c\n  JOIN pg_catalog.pg_namespace AS n ON n.oid = c.relnamespace\n  WHERE n.nspname = current_schema() AND c.relname IN ('Canvas','CanvasImportAsset','CanvasSavedAssetUse','CanvasRun','CanvasJobAssetUse','CanvasGcLease')\n), inventory AS (\n  SELECT 'table'::text AS kind, t.relname::text AS name, jsonb_build_object('kind',t.relkind,'persistence',t.relpersistence) AS definition FROM canvas_tables AS t\n  UNION ALL\n  SELECT 'column', t.relname || '.' || a.attname,\n    jsonb_build_object('type',format_type(a.atttypid,a.atttypmod),'nullable',NOT a.attnotnull,'default',pg_get_expr(d.adbin,d.adrelid))\n  FROM canvas_tables AS t JOIN pg_catalog.pg_attribute AS a ON a.attrelid=t.oid\n  LEFT JOIN pg_catalog.pg_attrdef AS d ON d.adrelid=t.oid AND d.adnum=a.attnum\n  WHERE a.attnum>0 AND NOT a.attisdropped\n  UNION ALL\n  SELECT 'enum', t.typname, jsonb_agg(e.enumlabel ORDER BY e.enumsortorder)\n  FROM pg_catalog.pg_type AS t JOIN pg_catalog.pg_namespace AS n ON n.oid=t.typnamespace\n  JOIN pg_catalog.pg_enum AS e ON e.enumtypid=t.oid\n  WHERE n.nspname=current_schema() AND t.typname IN ('CanvasImportAssetState','CanvasRunState','CanvasPutOutcome','CanvasDeleteOutcome') GROUP BY t.typname\n  UNION ALL\n  SELECT 'index', c.relname, jsonb_build_object('table',t.relname,'unique',i.indisunique,'primary',i.indisprimary,'valid',i.indisvalid,'ready',i.indisready,'method',m.amname,\n    'columns',(SELECT jsonb_agg(a.attname ORDER BY k.n) FROM unnest(i.indkey) WITH ORDINALITY AS k(attnum,n) JOIN pg_catalog.pg_attribute AS a ON a.attrelid=t.oid AND a.attnum=k.attnum WHERE k.n<=i.indnkeyatts),\n    'options',to_jsonb(i.indoption::smallint[]),'expressions',i.indexprs IS NOT NULL,'predicate',i.indpred IS NOT NULL,'nullsNotDistinct',i.indnullsnotdistinct,'includedColumns',i.indnatts-i.indnkeyatts)\n  FROM canvas_tables AS t JOIN pg_catalog.pg_index AS i ON i.indrelid=t.oid\n  JOIN pg_catalog.pg_class AS c ON c.oid=i.indexrelid JOIN pg_catalog.pg_am AS m ON m.oid=c.relam\n  UNION ALL\n  SELECT 'constraint', c.conname, jsonb_build_object('table',t.relname,'type',c.contype,'deferrable',c.condeferrable,'deferred',c.condeferred,'validated',c.convalidated)\n    || CASE WHEN c.contype='c' THEN jsonb_build_object('expression',pg_get_expr(c.conbin,c.conrelid)) ELSE jsonb_build_object('columns',(SELECT jsonb_agg(a.attname ORDER BY k.n) FROM unnest(c.conkey) WITH ORDINALITY AS k(attnum,n) JOIN pg_catalog.pg_attribute AS a ON a.attrelid=t.oid AND a.attnum=k.attnum)) END\n    || CASE WHEN c.contype='f' THEN jsonb_build_object('referenceTable',r.relname,'referenceCurrentSchema',rn.nspname=current_schema(),'referenceColumns',(SELECT jsonb_agg(a.attname ORDER BY k.n) FROM unnest(c.confkey) WITH ORDINALITY AS k(attnum,n) JOIN pg_catalog.pg_attribute AS a ON a.attrelid=c.confrelid AND a.attnum=k.attnum),'deleteAction',c.confdeltype,'updateAction',c.confupdtype,'matchType',c.confmatchtype) ELSE '{}'::jsonb END\n  FROM canvas_tables AS t JOIN pg_catalog.pg_constraint AS c ON c.conrelid=t.oid\n  LEFT JOIN pg_catalog.pg_class AS r ON r.oid=c.confrelid LEFT JOIN pg_catalog.pg_namespace AS rn ON rn.oid=r.relnamespace WHERE c.contype IN ('p','u','f','c')\n  UNION ALL\n  SELECT 'function', p.proname, jsonb_build_object('arguments',COALESCE((SELECT jsonb_agg(format_type(v.type,NULL) ORDER BY v.n) FROM unnest(p.proargtypes::oid[]) WITH ORDINALITY AS v(type,n)),'[]'::jsonb),\n    'argumentNames',COALESCE(to_jsonb(p.proargnames[1:p.pronargs]),'[]'::jsonb),'defaultCount',p.pronargdefaults,'argumentDefaults',pg_get_expr(p.proargdefaults,0),\n    'returnType',format_type(p.prorettype,NULL),'returnsSet',p.proretset,'outputColumns',COALESCE((SELECT jsonb_agg(jsonb_build_object('name',p.proargnames[v.n],'type',format_type(v.type,NULL)) ORDER BY v.n) FROM unnest(p.proallargtypes) WITH ORDINALITY AS v(type,n) WHERE p.proargmodes[v.n] IN ('o','b','t')),'[]'::jsonb),\n    'language',l.lanname,'volatility',p.provolatile,'securityDefiner',p.prosecdef,'strict',p.proisstrict,'config',to_jsonb(p.proconfig),'bodyMd5',md5(replace(p.prosrc,chr(13)||chr(10),chr(10))))\n  FROM pg_catalog.pg_proc AS p JOIN pg_catalog.pg_namespace AS n ON n.oid=p.pronamespace JOIN pg_catalog.pg_language AS l ON l.oid=p.prolang\n  WHERE n.nspname=current_schema() AND left(p.proname,7)='canvas_'\n  UNION ALL\n  SELECT 'trigger', g.tgname, jsonb_build_object('table',t.relname,'function',p.proname,'functionCurrentSchema',n.nspname=current_schema(),'type',g.tgtype,'enabled',g.tgenabled,'deferrable',g.tgdeferrable,'deferred',g.tginitdeferred,'arguments',g.tgnargs,'condition',pg_get_expr(g.tgqual,g.tgrelid))\n  FROM canvas_tables AS t JOIN pg_catalog.pg_trigger AS g ON g.tgrelid=t.oid\n  JOIN pg_catalog.pg_proc AS p ON p.oid=g.tgfoid JOIN pg_catalog.pg_namespace AS n ON n.oid=p.pronamespace WHERE NOT g.tgisinternal\n)\nSELECT kind, name, definition FROM inventory ORDER BY kind, name",
+  "objects": [
+    {
+      "kind": "enum",
+      "name": "CanvasImportAssetState",
+      "definition": [
+        "UPLOADING",
+        "READY",
+        "QUARANTINED",
+        "DELETING",
+        "DELETED"
+      ]
+    },
+    {
+      "kind": "enum",
+      "name": "CanvasRunState",
+      "definition": [
+        "PREPARING",
+        "COMMITTED",
+        "REJECTED"
+      ]
+    },
+    {
+      "kind": "enum",
+      "name": "CanvasPutOutcome",
+      "definition": [
+        "NOT_STARTED",
+        "CONFIRMED",
+        "UNKNOWN"
+      ]
+    },
+    {
+      "kind": "enum",
+      "name": "CanvasDeleteOutcome",
+      "definition": [
+        "NOT_STARTED",
+        "DELETED",
+        "MISSING",
+        "FAILED",
+        "UNKNOWN"
+      ]
+    },
+    {
+      "kind": "table",
+      "name": "Canvas",
+      "definition": {
+        "kind": "r",
+        "persistence": "p"
+      }
+    },
+    {
+      "kind": "column",
+      "name": "Canvas.id",
+      "definition": {
+        "type": "uuid",
+        "nullable": false,
+        "default": null
+      }
+    },
+    {
+      "kind": "column",
+      "name": "Canvas.ownerId",
+      "definition": {
+        "type": "character varying(128)",
+        "nullable": false,
+        "default": null
+      }
+    },
+    {
+      "kind": "column",
+      "name": "Canvas.userId",
+      "definition": {
+        "type": "text",
+        "nullable": true,
+        "default": null
+      }
+    },
+    {
+      "kind": "column",
+      "name": "Canvas.title",
+      "definition": {
+        "type": "character varying(120)",
+        "nullable": false,
+        "default": null
+      }
+    },
+    {
+      "kind": "column",
+      "name": "Canvas.revision",
+      "definition": {
+        "type": "integer",
+        "nullable": false,
+        "default": "0"
+      }
+    },
+    {
+      "kind": "column",
+      "name": "Canvas.scene",
+      "definition": {
+        "type": "jsonb",
+        "nullable": true,
+        "default": null
+      }
+    },
+    {
+      "kind": "column",
+      "name": "Canvas.lastSavedAt",
+      "definition": {
+        "type": "timestamp(3) with time zone",
+        "nullable": true,
+        "default": null
+      }
+    },
+    {
+      "kind": "column",
+      "name": "Canvas.lastSaveId",
+      "definition": {
+        "type": "uuid",
+        "nullable": true,
+        "default": null
+      }
+    },
+    {
+      "kind": "column",
+      "name": "Canvas.lastSaveHash",
+      "definition": {
+        "type": "character(64)",
+        "nullable": true,
+        "default": null
+      }
+    },
+    {
+      "kind": "column",
+      "name": "Canvas.lastSaveRevision",
+      "definition": {
+        "type": "integer",
+        "nullable": true,
+        "default": null
+      }
+    },
+    {
+      "kind": "column",
+      "name": "Canvas.deletedAt",
+      "definition": {
+        "type": "timestamp(3) with time zone",
+        "nullable": true,
+        "default": null
+      }
+    },
+    {
+      "kind": "column",
+      "name": "Canvas.createdAt",
+      "definition": {
+        "type": "timestamp(3) with time zone",
+        "nullable": false,
+        "default": "clock_timestamp()"
+      }
+    },
+    {
+      "kind": "column",
+      "name": "Canvas.updatedAt",
+      "definition": {
+        "type": "timestamp(3) with time zone",
+        "nullable": false,
+        "default": "clock_timestamp()"
+      }
+    },
+    {
+      "kind": "constraint",
+      "name": "Canvas_pkey",
+      "definition": {
+        "table": "Canvas",
+        "type": "p",
+        "columns": [
+          "id"
+        ],
+        "deferrable": false,
+        "deferred": false,
+        "validated": true
+      }
+    },
+    {
+      "kind": "index",
+      "name": "Canvas_pkey",
+      "definition": {
+        "table": "Canvas",
+        "unique": true,
+        "primary": true,
+        "valid": true,
+        "ready": true,
+        "method": "btree",
+        "columns": [
+          "id"
+        ],
+        "options": [
+          0
+        ],
+        "expressions": false,
+        "predicate": false,
+        "nullsNotDistinct": false,
+        "includedColumns": 0
+      }
+    },
+    {
+      "kind": "table",
+      "name": "CanvasImportAsset",
+      "definition": {
+        "kind": "r",
+        "persistence": "p"
+      }
+    },
+    {
+      "kind": "column",
+      "name": "CanvasImportAsset.id",
+      "definition": {
+        "type": "character varying(128)",
+        "nullable": false,
+        "default": null
+      }
+    },
+    {
+      "kind": "column",
+      "name": "CanvasImportAsset.ownerId",
+      "definition": {
+        "type": "character varying(128)",
+        "nullable": false,
+        "default": null
+      }
+    },
+    {
+      "kind": "column",
+      "name": "CanvasImportAsset.userId",
+      "definition": {
+        "type": "text",
+        "nullable": true,
+        "default": null
+      }
+    },
+    {
+      "kind": "column",
+      "name": "CanvasImportAsset.uploadId",
+      "definition": {
+        "type": "uuid",
+        "nullable": false,
+        "default": null
+      }
+    },
+    {
+      "kind": "column",
+      "name": "CanvasImportAsset.kind",
+      "definition": {
+        "type": "character varying(16)",
+        "nullable": false,
+        "default": "'IMPORT'"
+      }
+    },
+    {
+      "kind": "column",
+      "name": "CanvasImportAsset.sha256",
+      "definition": {
+        "type": "character(64)",
+        "nullable": false,
+        "default": null
+      }
+    },
+    {
+      "kind": "column",
+      "name": "CanvasImportAsset.byteLength",
+      "definition": {
+        "type": "integer",
+        "nullable": false,
+        "default": null
+      }
+    },
+    {
+      "kind": "column",
+      "name": "CanvasImportAsset.mimeType",
+      "definition": {
+        "type": "character varying(64)",
+        "nullable": false,
+        "default": null
+      }
+    },
+    {
+      "kind": "column",
+      "name": "CanvasImportAsset.storageLocation",
+      "definition": {
+        "type": "character varying(128)",
+        "nullable": false,
+        "default": null
+      }
+    },
+    {
+      "kind": "column",
+      "name": "CanvasImportAsset.storageEndpoint",
+      "definition": {
+        "type": "character varying(512)",
+        "nullable": false,
+        "default": null
+      }
+    },
+    {
+      "kind": "column",
+      "name": "CanvasImportAsset.storageRegion",
+      "definition": {
+        "type": "character varying(128)",
+        "nullable": false,
+        "default": null
+      }
+    },
+    {
+      "kind": "column",
+      "name": "CanvasImportAsset.storageBucket",
+      "definition": {
+        "type": "character varying(255)",
+        "nullable": false,
+        "default": null
+      }
+    },
+    {
+      "kind": "column",
+      "name": "CanvasImportAsset.storageKey",
+      "definition": {
+        "type": "character varying(512)",
+        "nullable": false,
+        "default": null
+      }
+    },
+    {
+      "kind": "column",
+      "name": "CanvasImportAsset.storageVersionId",
+      "definition": {
+        "type": "character varying(1024)",
+        "nullable": true,
+        "default": null
+      }
+    },
+    {
+      "kind": "column",
+      "name": "CanvasImportAsset.state",
+      "definition": {
+        "type": "\"CanvasImportAssetState\"",
+        "nullable": false,
+        "default": "'UPLOADING'"
+      }
+    },
+    {
+      "kind": "column",
+      "name": "CanvasImportAsset.uploadToken",
+      "definition": {
+        "type": "uuid",
+        "nullable": false,
+        "default": null
+      }
+    },
+    {
+      "kind": "column",
+      "name": "CanvasImportAsset.uploadExpiresAt",
+      "definition": {
+        "type": "timestamp(3) with time zone",
+        "nullable": false,
+        "default": null
+      }
+    },
+    {
+      "kind": "column",
+      "name": "CanvasImportAsset.preparationExpiresAt",
+      "definition": {
+        "type": "timestamp(3) with time zone",
+        "nullable": true,
+        "default": null
+      }
+    },
+    {
+      "kind": "column",
+      "name": "CanvasImportAsset.readyAt",
+      "definition": {
+        "type": "timestamp(3) with time zone",
+        "nullable": true,
+        "default": null
+      }
+    },
+    {
+      "kind": "column",
+      "name": "CanvasImportAsset.detachedAt",
+      "definition": {
+        "type": "timestamp(3) with time zone",
+        "nullable": true,
+        "default": null
+      }
+    },
+    {
+      "kind": "column",
+      "name": "CanvasImportAsset.putOutcome",
+      "definition": {
+        "type": "\"CanvasPutOutcome\"",
+        "nullable": false,
+        "default": "'NOT_STARTED'"
+      }
+    },
+    {
+      "kind": "column",
+      "name": "CanvasImportAsset.deleteOutcome",
+      "definition": {
+        "type": "\"CanvasDeleteOutcome\"",
+        "nullable": false,
+        "default": "'NOT_STARTED'"
+      }
+    },
+    {
+      "kind": "column",
+      "name": "CanvasImportAsset.deleteToken",
+      "definition": {
+        "type": "uuid",
+        "nullable": true,
+        "default": null
+      }
+    },
+    {
+      "kind": "column",
+      "name": "CanvasImportAsset.deleteExpiresAt",
+      "definition": {
+        "type": "timestamp(3) with time zone",
+        "nullable": true,
+        "default": null
+      }
+    },
+    {
+      "kind": "column",
+      "name": "CanvasImportAsset.deleteAttempts",
+      "definition": {
+        "type": "integer",
+        "nullable": false,
+        "default": "0"
+      }
+    },
+    {
+      "kind": "column",
+      "name": "CanvasImportAsset.nextDeleteAt",
+      "definition": {
+        "type": "timestamp(3) with time zone",
+        "nullable": true,
+        "default": null
+      }
+    },
+    {
+      "kind": "column",
+      "name": "CanvasImportAsset.deletedAt",
+      "definition": {
+        "type": "timestamp(3) with time zone",
+        "nullable": true,
+        "default": null
+      }
+    },
+    {
+      "kind": "column",
+      "name": "CanvasImportAsset.lastStorageErrorCode",
+      "definition": {
+        "type": "character varying(64)",
+        "nullable": true,
+        "default": null
+      }
+    },
+    {
+      "kind": "column",
+      "name": "CanvasImportAsset.physicalBytesAccounted",
+      "definition": {
+        "type": "boolean",
+        "nullable": false,
+        "default": "true"
+      }
+    },
+    {
+      "kind": "column",
+      "name": "CanvasImportAsset.needsReconciliation",
+      "definition": {
+        "type": "boolean",
+        "nullable": false,
+        "default": "false"
+      }
+    },
+    {
+      "kind": "column",
+      "name": "CanvasImportAsset.createdAt",
+      "definition": {
+        "type": "timestamp(3) with time zone",
+        "nullable": false,
+        "default": "clock_timestamp()"
+      }
+    },
+    {
+      "kind": "column",
+      "name": "CanvasImportAsset.updatedAt",
+      "definition": {
+        "type": "timestamp(3) with time zone",
+        "nullable": false,
+        "default": "clock_timestamp()"
+      }
+    },
+    {
+      "kind": "constraint",
+      "name": "CanvasImportAsset_pkey",
+      "definition": {
+        "table": "CanvasImportAsset",
+        "type": "p",
+        "columns": [
+          "id"
+        ],
+        "deferrable": false,
+        "deferred": false,
+        "validated": true
+      }
+    },
+    {
+      "kind": "index",
+      "name": "CanvasImportAsset_pkey",
+      "definition": {
+        "table": "CanvasImportAsset",
+        "unique": true,
+        "primary": true,
+        "valid": true,
+        "ready": true,
+        "method": "btree",
+        "columns": [
+          "id"
+        ],
+        "options": [
+          0
+        ],
+        "expressions": false,
+        "predicate": false,
+        "nullsNotDistinct": false,
+        "includedColumns": 0
+      }
+    },
+    {
+      "kind": "table",
+      "name": "CanvasSavedAssetUse",
+      "definition": {
+        "kind": "r",
+        "persistence": "p"
+      }
+    },
+    {
+      "kind": "column",
+      "name": "CanvasSavedAssetUse.canvasId",
+      "definition": {
+        "type": "uuid",
+        "nullable": false,
+        "default": null
+      }
+    },
+    {
+      "kind": "column",
+      "name": "CanvasSavedAssetUse.assetId",
+      "definition": {
+        "type": "character varying(128)",
+        "nullable": false,
+        "default": null
+      }
+    },
+    {
+      "kind": "column",
+      "name": "CanvasSavedAssetUse.ownerId",
+      "definition": {
+        "type": "character varying(128)",
+        "nullable": false,
+        "default": null
+      }
+    },
+    {
+      "kind": "column",
+      "name": "CanvasSavedAssetUse.createdAt",
+      "definition": {
+        "type": "timestamp(3) with time zone",
+        "nullable": false,
+        "default": "clock_timestamp()"
+      }
+    },
+    {
+      "kind": "constraint",
+      "name": "CanvasSavedAssetUse_pkey",
+      "definition": {
+        "table": "CanvasSavedAssetUse",
+        "type": "p",
+        "columns": [
+          "canvasId",
+          "assetId"
+        ],
+        "deferrable": false,
+        "deferred": false,
+        "validated": true
+      }
+    },
+    {
+      "kind": "index",
+      "name": "CanvasSavedAssetUse_pkey",
+      "definition": {
+        "table": "CanvasSavedAssetUse",
+        "unique": true,
+        "primary": true,
+        "valid": true,
+        "ready": true,
+        "method": "btree",
+        "columns": [
+          "canvasId",
+          "assetId"
+        ],
+        "options": [
+          0,
+          0
+        ],
+        "expressions": false,
+        "predicate": false,
+        "nullsNotDistinct": false,
+        "includedColumns": 0
+      }
+    },
+    {
+      "kind": "table",
+      "name": "CanvasRun",
+      "definition": {
+        "kind": "r",
+        "persistence": "p"
+      }
+    },
+    {
+      "kind": "column",
+      "name": "CanvasRun.id",
+      "definition": {
+        "type": "character varying(128)",
+        "nullable": false,
+        "default": null
+      }
+    },
+    {
+      "kind": "column",
+      "name": "CanvasRun.ownerId",
+      "definition": {
+        "type": "character varying(128)",
+        "nullable": false,
+        "default": null
+      }
+    },
+    {
+      "kind": "column",
+      "name": "CanvasRun.userId",
+      "definition": {
+        "type": "text",
+        "nullable": true,
+        "default": null
+      }
+    },
+    {
+      "kind": "column",
+      "name": "CanvasRun.canvasId",
+      "definition": {
+        "type": "uuid",
+        "nullable": false,
+        "default": null
+      }
+    },
+    {
+      "kind": "column",
+      "name": "CanvasRun.nodeId",
+      "definition": {
+        "type": "uuid",
+        "nullable": false,
+        "default": null
+      }
+    },
+    {
+      "kind": "column",
+      "name": "CanvasRun.runId",
+      "definition": {
+        "type": "uuid",
+        "nullable": false,
+        "default": null
+      }
+    },
+    {
+      "kind": "column",
+      "name": "CanvasRun.intentHash",
+      "definition": {
+        "type": "character(64)",
+        "nullable": false,
+        "default": null
+      }
+    },
+    {
+      "kind": "column",
+      "name": "CanvasRun.credentialFingerprint",
+      "definition": {
+        "type": "character(64)",
+        "nullable": true,
+        "default": null
+      }
+    },
+    {
+      "kind": "column",
+      "name": "CanvasRun.inputSnapshot",
+      "definition": {
+        "type": "jsonb",
+        "nullable": false,
+        "default": null
+      }
+    },
+    {
+      "kind": "column",
+      "name": "CanvasRun.state",
+      "definition": {
+        "type": "\"CanvasRunState\"",
+        "nullable": false,
+        "default": "'PREPARING'"
+      }
+    },
+    {
+      "kind": "column",
+      "name": "CanvasRun.preparationToken",
+      "definition": {
+        "type": "uuid",
+        "nullable": false,
+        "default": null
+      }
+    },
+    {
+      "kind": "column",
+      "name": "CanvasRun.preparationExpiresAt",
+      "definition": {
+        "type": "timestamp(3) with time zone",
+        "nullable": false,
+        "default": null
+      }
+    },
+    {
+      "kind": "column",
+      "name": "CanvasRun.originalJobId",
+      "definition": {
+        "type": "character varying(128)",
+        "nullable": true,
+        "default": null
+      }
+    },
+    {
+      "kind": "column",
+      "name": "CanvasRun.liveJobId",
+      "definition": {
+        "type": "text",
+        "nullable": true,
+        "default": null
+      }
+    },
+    {
+      "kind": "column",
+      "name": "CanvasRun.rejectionCode",
+      "definition": {
+        "type": "character varying(64)",
+        "nullable": true,
+        "default": null
+      }
+    },
+    {
+      "kind": "column",
+      "name": "CanvasRun.committedAt",
+      "definition": {
+        "type": "timestamp(3) with time zone",
+        "nullable": true,
+        "default": null
+      }
+    },
+    {
+      "kind": "column",
+      "name": "CanvasRun.rejectedAt",
+      "definition": {
+        "type": "timestamp(3) with time zone",
+        "nullable": true,
+        "default": null
+      }
+    },
+    {
+      "kind": "column",
+      "name": "CanvasRun.createdAt",
+      "definition": {
+        "type": "timestamp(3) with time zone",
+        "nullable": false,
+        "default": "clock_timestamp()"
+      }
+    },
+    {
+      "kind": "column",
+      "name": "CanvasRun.updatedAt",
+      "definition": {
+        "type": "timestamp(3) with time zone",
+        "nullable": false,
+        "default": "clock_timestamp()"
+      }
+    },
+    {
+      "kind": "constraint",
+      "name": "CanvasRun_pkey",
+      "definition": {
+        "table": "CanvasRun",
+        "type": "p",
+        "columns": [
+          "id"
+        ],
+        "deferrable": false,
+        "deferred": false,
+        "validated": true
+      }
+    },
+    {
+      "kind": "index",
+      "name": "CanvasRun_pkey",
+      "definition": {
+        "table": "CanvasRun",
+        "unique": true,
+        "primary": true,
+        "valid": true,
+        "ready": true,
+        "method": "btree",
+        "columns": [
+          "id"
+        ],
+        "options": [
+          0
+        ],
+        "expressions": false,
+        "predicate": false,
+        "nullsNotDistinct": false,
+        "includedColumns": 0
+      }
+    },
+    {
+      "kind": "table",
+      "name": "CanvasJobAssetUse",
+      "definition": {
+        "kind": "r",
+        "persistence": "p"
+      }
+    },
+    {
+      "kind": "column",
+      "name": "CanvasJobAssetUse.id",
+      "definition": {
+        "type": "character varying(128)",
+        "nullable": false,
+        "default": null
+      }
+    },
+    {
+      "kind": "column",
+      "name": "CanvasJobAssetUse.ownerId",
+      "definition": {
+        "type": "character varying(128)",
+        "nullable": false,
+        "default": null
+      }
+    },
+    {
+      "kind": "column",
+      "name": "CanvasJobAssetUse.runId",
+      "definition": {
+        "type": "character varying(128)",
+        "nullable": false,
+        "default": null
+      }
+    },
+    {
+      "kind": "column",
+      "name": "CanvasJobAssetUse.assetId",
+      "definition": {
+        "type": "character varying(128)",
+        "nullable": false,
+        "default": null
+      }
+    },
+    {
+      "kind": "column",
+      "name": "CanvasJobAssetUse.originalJobId",
+      "definition": {
+        "type": "character varying(128)",
+        "nullable": false,
+        "default": null
+      }
+    },
+    {
+      "kind": "column",
+      "name": "CanvasJobAssetUse.liveJobId",
+      "definition": {
+        "type": "text",
+        "nullable": true,
+        "default": null
+      }
+    },
+    {
+      "kind": "column",
+      "name": "CanvasJobAssetUse.ordinal",
+      "definition": {
+        "type": "integer",
+        "nullable": false,
+        "default": null
+      }
+    },
+    {
+      "kind": "column",
+      "name": "CanvasJobAssetUse.createdAt",
+      "definition": {
+        "type": "timestamp(3) with time zone",
+        "nullable": false,
+        "default": "clock_timestamp()"
+      }
+    },
+    {
+      "kind": "constraint",
+      "name": "CanvasJobAssetUse_pkey",
+      "definition": {
+        "table": "CanvasJobAssetUse",
+        "type": "p",
+        "columns": [
+          "id"
+        ],
+        "deferrable": false,
+        "deferred": false,
+        "validated": true
+      }
+    },
+    {
+      "kind": "index",
+      "name": "CanvasJobAssetUse_pkey",
+      "definition": {
+        "table": "CanvasJobAssetUse",
+        "unique": true,
+        "primary": true,
+        "valid": true,
+        "ready": true,
+        "method": "btree",
+        "columns": [
+          "id"
+        ],
+        "options": [
+          0
+        ],
+        "expressions": false,
+        "predicate": false,
+        "nullsNotDistinct": false,
+        "includedColumns": 0
+      }
+    },
+    {
+      "kind": "table",
+      "name": "CanvasGcLease",
+      "definition": {
+        "kind": "r",
+        "persistence": "p"
+      }
+    },
+    {
+      "kind": "column",
+      "name": "CanvasGcLease.id",
+      "definition": {
+        "type": "character varying(64)",
+        "nullable": false,
+        "default": "'canvas-imports'"
+      }
+    },
+    {
+      "kind": "column",
+      "name": "CanvasGcLease.token",
+      "definition": {
+        "type": "uuid",
+        "nullable": true,
+        "default": null
+      }
+    },
+    {
+      "kind": "column",
+      "name": "CanvasGcLease.expiresAt",
+      "definition": {
+        "type": "timestamp(3) with time zone",
+        "nullable": true,
+        "default": null
+      }
+    },
+    {
+      "kind": "column",
+      "name": "CanvasGcLease.updatedAt",
+      "definition": {
+        "type": "timestamp(3) with time zone",
+        "nullable": false,
+        "default": "clock_timestamp()"
+      }
+    },
+    {
+      "kind": "constraint",
+      "name": "CanvasGcLease_pkey",
+      "definition": {
+        "table": "CanvasGcLease",
+        "type": "p",
+        "columns": [
+          "id"
+        ],
+        "deferrable": false,
+        "deferred": false,
+        "validated": true
+      }
+    },
+    {
+      "kind": "index",
+      "name": "CanvasGcLease_pkey",
+      "definition": {
+        "table": "CanvasGcLease",
+        "unique": true,
+        "primary": true,
+        "valid": true,
+        "ready": true,
+        "method": "btree",
+        "columns": [
+          "id"
+        ],
+        "options": [
+          0
+        ],
+        "expressions": false,
+        "predicate": false,
+        "nullsNotDistinct": false,
+        "includedColumns": 0
+      }
+    },
+    {
+      "kind": "index",
+      "name": "Canvas_owner_metadata_idx",
+      "definition": {
+        "table": "Canvas",
+        "unique": false,
+        "primary": false,
+        "valid": true,
+        "ready": true,
+        "method": "btree",
+        "columns": [
+          "ownerId",
+          "deletedAt",
+          "updatedAt",
+          "id"
+        ],
+        "options": [
+          0,
+          0,
+          3,
+          3
+        ],
+        "expressions": false,
+        "predicate": false,
+        "nullsNotDistinct": false,
+        "includedColumns": 0
+      }
+    },
+    {
+      "kind": "index",
+      "name": "Canvas_id_owner_key",
+      "definition": {
+        "table": "Canvas",
+        "unique": true,
+        "primary": false,
+        "valid": true,
+        "ready": true,
+        "method": "btree",
+        "columns": [
+          "id",
+          "ownerId"
+        ],
+        "options": [
+          0,
+          0
+        ],
+        "expressions": false,
+        "predicate": false,
+        "nullsNotDistinct": false,
+        "includedColumns": 0
+      }
+    },
+    {
+      "kind": "index",
+      "name": "CanvasImportAsset_owner_quota_idx",
+      "definition": {
+        "table": "CanvasImportAsset",
+        "unique": false,
+        "primary": false,
+        "valid": true,
+        "ready": true,
+        "method": "btree",
+        "columns": [
+          "ownerId",
+          "physicalBytesAccounted"
+        ],
+        "options": [
+          0,
+          0
+        ],
+        "expressions": false,
+        "predicate": false,
+        "nullsNotDistinct": false,
+        "includedColumns": 0
+      }
+    },
+    {
+      "kind": "index",
+      "name": "CanvasImportAsset_owner_upload_idx",
+      "definition": {
+        "table": "CanvasImportAsset",
+        "unique": false,
+        "primary": false,
+        "valid": true,
+        "ready": true,
+        "method": "btree",
+        "columns": [
+          "ownerId",
+          "state",
+          "uploadExpiresAt"
+        ],
+        "options": [
+          0,
+          0,
+          0
+        ],
+        "expressions": false,
+        "predicate": false,
+        "nullsNotDistinct": false,
+        "includedColumns": 0
+      }
+    },
+    {
+      "kind": "index",
+      "name": "CanvasImportAsset_gc_idx",
+      "definition": {
+        "table": "CanvasImportAsset",
+        "unique": false,
+        "primary": false,
+        "valid": true,
+        "ready": true,
+        "method": "btree",
+        "columns": [
+          "storageLocation",
+          "state",
+          "nextDeleteAt",
+          "detachedAt"
+        ],
+        "options": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "expressions": false,
+        "predicate": false,
+        "nullsNotDistinct": false,
+        "includedColumns": 0
+      }
+    },
+    {
+      "kind": "index",
+      "name": "CanvasImportAsset_id_owner_key",
+      "definition": {
+        "table": "CanvasImportAsset",
+        "unique": true,
+        "primary": false,
+        "valid": true,
+        "ready": true,
+        "method": "btree",
+        "columns": [
+          "id",
+          "ownerId"
+        ],
+        "options": [
+          0,
+          0
+        ],
+        "expressions": false,
+        "predicate": false,
+        "nullsNotDistinct": false,
+        "includedColumns": 0
+      }
+    },
+    {
+      "kind": "index",
+      "name": "CanvasImportAsset_owner_upload_key",
+      "definition": {
+        "table": "CanvasImportAsset",
+        "unique": true,
+        "primary": false,
+        "valid": true,
+        "ready": true,
+        "method": "btree",
+        "columns": [
+          "ownerId",
+          "uploadId"
+        ],
+        "options": [
+          0,
+          0
+        ],
+        "expressions": false,
+        "predicate": false,
+        "nullsNotDistinct": false,
+        "includedColumns": 0
+      }
+    },
+    {
+      "kind": "index",
+      "name": "CanvasImportAsset_physical_key",
+      "definition": {
+        "table": "CanvasImportAsset",
+        "unique": true,
+        "primary": false,
+        "valid": true,
+        "ready": true,
+        "method": "btree",
+        "columns": [
+          "storageEndpoint",
+          "storageBucket",
+          "storageKey"
+        ],
+        "options": [
+          0,
+          0,
+          0
+        ],
+        "expressions": false,
+        "predicate": false,
+        "nullsNotDistinct": false,
+        "includedColumns": 0
+      }
+    },
+    {
+      "kind": "index",
+      "name": "CanvasSavedAssetUse_asset_idx",
+      "definition": {
+        "table": "CanvasSavedAssetUse",
+        "unique": false,
+        "primary": false,
+        "valid": true,
+        "ready": true,
+        "method": "btree",
+        "columns": [
+          "assetId"
+        ],
+        "options": [
+          0
+        ],
+        "expressions": false,
+        "predicate": false,
+        "nullsNotDistinct": false,
+        "includedColumns": 0
+      }
+    },
+    {
+      "kind": "index",
+      "name": "CanvasRun_original_job_key",
+      "definition": {
+        "table": "CanvasRun",
+        "unique": true,
+        "primary": false,
+        "valid": true,
+        "ready": true,
+        "method": "btree",
+        "columns": [
+          "originalJobId"
+        ],
+        "options": [
+          0
+        ],
+        "expressions": false,
+        "predicate": false,
+        "nullsNotDistinct": false,
+        "includedColumns": 0
+      }
+    },
+    {
+      "kind": "index",
+      "name": "CanvasRun_live_job_key",
+      "definition": {
+        "table": "CanvasRun",
+        "unique": true,
+        "primary": false,
+        "valid": true,
+        "ready": true,
+        "method": "btree",
+        "columns": [
+          "liveJobId"
+        ],
+        "options": [
+          0
+        ],
+        "expressions": false,
+        "predicate": false,
+        "nullsNotDistinct": false,
+        "includedColumns": 0
+      }
+    },
+    {
+      "kind": "index",
+      "name": "CanvasRun_node_admission_idx",
+      "definition": {
+        "table": "CanvasRun",
+        "unique": false,
+        "primary": false,
+        "valid": true,
+        "ready": true,
+        "method": "btree",
+        "columns": [
+          "canvasId",
+          "nodeId",
+          "state",
+          "preparationExpiresAt"
+        ],
+        "options": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "expressions": false,
+        "predicate": false,
+        "nullsNotDistinct": false,
+        "includedColumns": 0
+      }
+    },
+    {
+      "kind": "index",
+      "name": "CanvasRun_owner_canvas_idx",
+      "definition": {
+        "table": "CanvasRun",
+        "unique": false,
+        "primary": false,
+        "valid": true,
+        "ready": true,
+        "method": "btree",
+        "columns": [
+          "ownerId",
+          "canvasId",
+          "createdAt"
+        ],
+        "options": [
+          0,
+          0,
+          0
+        ],
+        "expressions": false,
+        "predicate": false,
+        "nullsNotDistinct": false,
+        "includedColumns": 0
+      }
+    },
+    {
+      "kind": "index",
+      "name": "CanvasRun_id_owner_key",
+      "definition": {
+        "table": "CanvasRun",
+        "unique": true,
+        "primary": false,
+        "valid": true,
+        "ready": true,
+        "method": "btree",
+        "columns": [
+          "id",
+          "ownerId"
+        ],
+        "options": [
+          0,
+          0
+        ],
+        "expressions": false,
+        "predicate": false,
+        "nullsNotDistinct": false,
+        "includedColumns": 0
+      }
+    },
+    {
+      "kind": "index",
+      "name": "CanvasRun_owner_run_key",
+      "definition": {
+        "table": "CanvasRun",
+        "unique": true,
+        "primary": false,
+        "valid": true,
+        "ready": true,
+        "method": "btree",
+        "columns": [
+          "ownerId",
+          "runId"
+        ],
+        "options": [
+          0,
+          0
+        ],
+        "expressions": false,
+        "predicate": false,
+        "nullsNotDistinct": false,
+        "includedColumns": 0
+      }
+    },
+    {
+      "kind": "index",
+      "name": "CanvasJobAssetUse_asset_idx",
+      "definition": {
+        "table": "CanvasJobAssetUse",
+        "unique": false,
+        "primary": false,
+        "valid": true,
+        "ready": true,
+        "method": "btree",
+        "columns": [
+          "assetId"
+        ],
+        "options": [
+          0
+        ],
+        "expressions": false,
+        "predicate": false,
+        "nullsNotDistinct": false,
+        "includedColumns": 0
+      }
+    },
+    {
+      "kind": "index",
+      "name": "CanvasJobAssetUse_original_job_idx",
+      "definition": {
+        "table": "CanvasJobAssetUse",
+        "unique": false,
+        "primary": false,
+        "valid": true,
+        "ready": true,
+        "method": "btree",
+        "columns": [
+          "originalJobId"
+        ],
+        "options": [
+          0
+        ],
+        "expressions": false,
+        "predicate": false,
+        "nullsNotDistinct": false,
+        "includedColumns": 0
+      }
+    },
+    {
+      "kind": "index",
+      "name": "CanvasJobAssetUse_run_ordinal_key",
+      "definition": {
+        "table": "CanvasJobAssetUse",
+        "unique": true,
+        "primary": false,
+        "valid": true,
+        "ready": true,
+        "method": "btree",
+        "columns": [
+          "runId",
+          "ordinal"
+        ],
+        "options": [
+          0,
+          0
+        ],
+        "expressions": false,
+        "predicate": false,
+        "nullsNotDistinct": false,
+        "includedColumns": 0
+      }
+    },
+    {
+      "kind": "index",
+      "name": "CanvasJobAssetUse_run_asset_key",
+      "definition": {
+        "table": "CanvasJobAssetUse",
+        "unique": true,
+        "primary": false,
+        "valid": true,
+        "ready": true,
+        "method": "btree",
+        "columns": [
+          "runId",
+          "assetId"
+        ],
+        "options": [
+          0,
+          0
+        ],
+        "expressions": false,
+        "predicate": false,
+        "nullsNotDistinct": false,
+        "includedColumns": 0
+      }
+    },
+    {
+      "kind": "constraint",
+      "name": "Canvas_userId_fkey",
+      "definition": {
+        "table": "Canvas",
+        "type": "f",
+        "columns": [
+          "userId"
+        ],
+        "referenceTable": "User",
+        "referenceCurrentSchema": true,
+        "referenceColumns": [
+          "id"
+        ],
+        "deleteAction": "n",
+        "updateAction": "r",
+        "matchType": "s",
+        "deferrable": false,
+        "deferred": false,
+        "validated": true
+      }
+    },
+    {
+      "kind": "constraint",
+      "name": "CanvasImportAsset_userId_fkey",
+      "definition": {
+        "table": "CanvasImportAsset",
+        "type": "f",
+        "columns": [
+          "userId"
+        ],
+        "referenceTable": "User",
+        "referenceCurrentSchema": true,
+        "referenceColumns": [
+          "id"
+        ],
+        "deleteAction": "n",
+        "updateAction": "r",
+        "matchType": "s",
+        "deferrable": false,
+        "deferred": false,
+        "validated": true
+      }
+    },
+    {
+      "kind": "constraint",
+      "name": "CanvasSavedAssetUse_canvasId_ownerId_fkey",
+      "definition": {
+        "table": "CanvasSavedAssetUse",
+        "type": "f",
+        "columns": [
+          "canvasId",
+          "ownerId"
+        ],
+        "referenceTable": "Canvas",
+        "referenceCurrentSchema": true,
+        "referenceColumns": [
+          "id",
+          "ownerId"
+        ],
+        "deleteAction": "r",
+        "updateAction": "r",
+        "matchType": "s",
+        "deferrable": false,
+        "deferred": false,
+        "validated": true
+      }
+    },
+    {
+      "kind": "constraint",
+      "name": "CanvasSavedAssetUse_assetId_ownerId_fkey",
+      "definition": {
+        "table": "CanvasSavedAssetUse",
+        "type": "f",
+        "columns": [
+          "assetId",
+          "ownerId"
+        ],
+        "referenceTable": "CanvasImportAsset",
+        "referenceCurrentSchema": true,
+        "referenceColumns": [
+          "id",
+          "ownerId"
+        ],
+        "deleteAction": "r",
+        "updateAction": "r",
+        "matchType": "s",
+        "deferrable": false,
+        "deferred": false,
+        "validated": true
+      }
+    },
+    {
+      "kind": "constraint",
+      "name": "CanvasRun_userId_fkey",
+      "definition": {
+        "table": "CanvasRun",
+        "type": "f",
+        "columns": [
+          "userId"
+        ],
+        "referenceTable": "User",
+        "referenceCurrentSchema": true,
+        "referenceColumns": [
+          "id"
+        ],
+        "deleteAction": "n",
+        "updateAction": "r",
+        "matchType": "s",
+        "deferrable": false,
+        "deferred": false,
+        "validated": true
+      }
+    },
+    {
+      "kind": "constraint",
+      "name": "CanvasRun_canvasId_ownerId_fkey",
+      "definition": {
+        "table": "CanvasRun",
+        "type": "f",
+        "columns": [
+          "canvasId",
+          "ownerId"
+        ],
+        "referenceTable": "Canvas",
+        "referenceCurrentSchema": true,
+        "referenceColumns": [
+          "id",
+          "ownerId"
+        ],
+        "deleteAction": "r",
+        "updateAction": "r",
+        "matchType": "s",
+        "deferrable": false,
+        "deferred": false,
+        "validated": true
+      }
+    },
+    {
+      "kind": "constraint",
+      "name": "CanvasRun_liveJobId_fkey",
+      "definition": {
+        "table": "CanvasRun",
+        "type": "f",
+        "columns": [
+          "liveJobId"
+        ],
+        "referenceTable": "GenerationJob",
+        "referenceCurrentSchema": true,
+        "referenceColumns": [
+          "id"
+        ],
+        "deleteAction": "n",
+        "updateAction": "r",
+        "matchType": "s",
+        "deferrable": false,
+        "deferred": false,
+        "validated": true
+      }
+    },
+    {
+      "kind": "constraint",
+      "name": "CanvasJobAssetUse_runId_ownerId_fkey",
+      "definition": {
+        "table": "CanvasJobAssetUse",
+        "type": "f",
+        "columns": [
+          "runId",
+          "ownerId"
+        ],
+        "referenceTable": "CanvasRun",
+        "referenceCurrentSchema": true,
+        "referenceColumns": [
+          "id",
+          "ownerId"
+        ],
+        "deleteAction": "r",
+        "updateAction": "r",
+        "matchType": "s",
+        "deferrable": false,
+        "deferred": false,
+        "validated": true
+      }
+    },
+    {
+      "kind": "constraint",
+      "name": "CanvasJobAssetUse_assetId_ownerId_fkey",
+      "definition": {
+        "table": "CanvasJobAssetUse",
+        "type": "f",
+        "columns": [
+          "assetId",
+          "ownerId"
+        ],
+        "referenceTable": "CanvasImportAsset",
+        "referenceCurrentSchema": true,
+        "referenceColumns": [
+          "id",
+          "ownerId"
+        ],
+        "deleteAction": "r",
+        "updateAction": "r",
+        "matchType": "s",
+        "deferrable": false,
+        "deferred": false,
+        "validated": true
+      }
+    },
+    {
+      "kind": "constraint",
+      "name": "CanvasJobAssetUse_liveJobId_fkey",
+      "definition": {
+        "table": "CanvasJobAssetUse",
+        "type": "f",
+        "columns": [
+          "liveJobId"
+        ],
+        "referenceTable": "GenerationJob",
+        "referenceCurrentSchema": true,
+        "referenceColumns": [
+          "id"
+        ],
+        "deleteAction": "n",
+        "updateAction": "r",
+        "matchType": "s",
+        "deferrable": false,
+        "deferred": false,
+        "validated": true
+      }
+    },
+    {
+      "kind": "constraint",
+      "name": "Canvas_revision_check",
+      "definition": {
+        "table": "Canvas",
+        "type": "c",
+        "expression": "revision >= 0 AND revision < 2147483647",
+        "deferrable": false,
+        "deferred": false,
+        "validated": true
+      }
+    },
+    {
+      "kind": "constraint",
+      "name": "Canvas_receipt_check",
+      "definition": {
+        "table": "Canvas",
+        "type": "c",
+        "expression": "(scene IS NULL AND \"lastSaveId\" IS NULL AND \"lastSaveHash\" IS NULL AND \"lastSaveRevision\" IS NULL AND \"lastSavedAt\" IS NULL) OR (scene IS NOT NULL AND \"deletedAt\" IS NULL AND \"lastSaveId\" IS NOT NULL AND \"lastSaveHash\" IS NOT NULL AND \"lastSaveHash\" ~ '^[a-f0-9]{64}$' AND \"lastSaveRevision\" IS NOT NULL AND \"lastSaveRevision\" > 0 AND \"lastSaveRevision\" <= revision AND \"lastSavedAt\" IS NOT NULL)",
+        "deferrable": false,
+        "deferred": false,
+        "validated": true
+      }
+    },
+    {
+      "kind": "constraint",
+      "name": "CanvasImportAsset_verified_payload_check",
+      "definition": {
+        "table": "CanvasImportAsset",
+        "type": "c",
+        "expression": "kind = 'IMPORT' AND \"byteLength\" BETWEEN 1 AND 8388608 AND sha256 ~ '^[a-f0-9]{64}$' AND \"mimeType\" IN ('image/png','image/jpeg','image/webp') AND length(\"storageLocation\") > 0 AND length(\"storageEndpoint\") > 0 AND length(\"storageRegion\") > 0 AND length(\"storageBucket\") > 0 AND length(\"storageKey\") > 0",
+        "deferrable": false,
+        "deferred": false,
+        "validated": true
+      }
+    },
+    {
+      "kind": "constraint",
+      "name": "CanvasImportAsset_ready_check",
+      "definition": {
+        "table": "CanvasImportAsset",
+        "type": "c",
+        "expression": "state <> 'READY' OR (\"readyAt\" IS NOT NULL AND \"putOutcome\" = 'CONFIRMED' AND \"storageVersionId\" IS NULL)",
+        "deferrable": false,
+        "deferred": false,
+        "validated": true
+      }
+    },
+    {
+      "kind": "constraint",
+      "name": "CanvasImportAsset_delete_fence_check",
+      "definition": {
+        "table": "CanvasImportAsset",
+        "type": "c",
+        "expression": "state NOT IN ('DELETING','DELETED') OR (\"deleteToken\" IS NOT NULL AND \"deleteExpiresAt\" IS NOT NULL AND \"deleteAttempts\" > 0)",
+        "deferrable": false,
+        "deferred": false,
+        "validated": true
+      }
+    },
+    {
+      "kind": "constraint",
+      "name": "CanvasImportAsset_accounting_check",
+      "definition": {
+        "table": "CanvasImportAsset",
+        "type": "c",
+        "expression": "\"physicalBytesAccounted\" OR (state = 'DELETED' AND \"putOutcome\" <> 'UNKNOWN' AND \"deleteOutcome\" IN ('DELETED','MISSING'))",
+        "deferrable": false,
+        "deferred": false,
+        "validated": true
+      }
+    },
+    {
+      "kind": "constraint",
+      "name": "CanvasRun_intent_check",
+      "definition": {
+        "table": "CanvasRun",
+        "type": "c",
+        "expression": "\"intentHash\" ~ '^[a-f0-9]{64}$' AND (\"credentialFingerprint\" IS NULL OR \"credentialFingerprint\" ~ '^[a-f0-9]{64}$')",
+        "deferrable": false,
+        "deferred": false,
+        "validated": true
+      }
+    },
+    {
+      "kind": "constraint",
+      "name": "CanvasRun_state_check",
+      "definition": {
+        "table": "CanvasRun",
+        "type": "c",
+        "expression": "(state = 'PREPARING' AND \"originalJobId\" IS NULL AND \"liveJobId\" IS NULL AND \"committedAt\" IS NULL AND \"rejectedAt\" IS NULL) OR (state = 'COMMITTED' AND \"originalJobId\" IS NOT NULL AND \"committedAt\" IS NOT NULL AND \"rejectedAt\" IS NULL) OR (state = 'REJECTED' AND \"originalJobId\" IS NULL AND \"liveJobId\" IS NULL AND \"rejectionCode\" IS NOT NULL AND \"rejectedAt\" IS NOT NULL)",
+        "deferrable": false,
+        "deferred": false,
+        "validated": true
+      }
+    },
+    {
+      "kind": "constraint",
+      "name": "CanvasRun_rejection_code_check",
+      "definition": {
+        "table": "CanvasRun",
+        "type": "c",
+        "expression": "\"rejectionCode\" IS NULL OR \"rejectionCode\" ~ '^CANVAS_[A-Z_]+$'",
+        "deferrable": false,
+        "deferred": false,
+        "validated": true
+      }
+    },
+    {
+      "kind": "constraint",
+      "name": "CanvasImportAsset_last_error_check",
+      "definition": {
+        "table": "CanvasImportAsset",
+        "type": "c",
+        "expression": "\"lastStorageErrorCode\" IS NULL OR \"lastStorageErrorCode\" ~ '^CANVAS_[A-Z_]+$'",
+        "deferrable": false,
+        "deferred": false,
+        "validated": true
+      }
+    },
+    {
+      "kind": "constraint",
+      "name": "CanvasJobAssetUse_ordinal_check",
+      "definition": {
+        "table": "CanvasJobAssetUse",
+        "type": "c",
+        "expression": "ordinal BETWEEN 1 AND 16",
+        "deferrable": false,
+        "deferred": false,
+        "validated": true
+      }
+    },
+    {
+      "kind": "constraint",
+      "name": "CanvasGcLease_singleton_check",
+      "definition": {
+        "table": "CanvasGcLease",
+        "type": "c",
+        "expression": "id = 'canvas-imports' AND ((token IS NULL AND \"expiresAt\" IS NULL) OR (token IS NOT NULL AND \"expiresAt\" IS NOT NULL))",
+        "deferrable": false,
+        "deferred": false,
+        "validated": true
+      }
+    },
+    {
+      "kind": "function",
+      "name": "canvas_raise",
+      "definition": {
+        "arguments": [
+          "text"
+        ],
+        "argumentNames": [
+          "p_code"
+        ],
+        "defaultCount": 0,
+        "argumentDefaults": null,
+        "returnType": "void",
+        "returnsSet": false,
+        "outputColumns": [],
+        "language": "plpgsql",
+        "volatility": "v",
+        "securityDefiner": false,
+        "strict": false,
+        "config": null,
+        "bodyMd5": "fc61246601dae1b59219edfc5f84f0bc"
+      }
+    },
+    {
+      "kind": "function",
+      "name": "canvas_is_canonical_id",
+      "definition": {
+        "arguments": [
+          "text"
+        ],
+        "argumentNames": [
+          "p_value"
+        ],
+        "defaultCount": 0,
+        "argumentDefaults": null,
+        "returnType": "boolean",
+        "returnsSet": false,
+        "outputColumns": [],
+        "language": "sql",
+        "volatility": "i",
+        "securityDefiner": false,
+        "strict": false,
+        "config": null,
+        "bodyMd5": "1a0d25ffc47beb268d7401c027a02724"
+      }
+    },
+    {
+      "kind": "function",
+      "name": "canvas_is_client_id",
+      "definition": {
+        "arguments": [
+          "text"
+        ],
+        "argumentNames": [
+          "p_value"
+        ],
+        "defaultCount": 0,
+        "argumentDefaults": null,
+        "returnType": "boolean",
+        "returnsSet": false,
+        "outputColumns": [],
+        "language": "sql",
+        "volatility": "i",
+        "securityDefiner": false,
+        "strict": false,
+        "config": null,
+        "bodyMd5": "4a9bb83e82a3303f66b345562c490736"
+      }
+    },
+    {
+      "kind": "function",
+      "name": "canvas_assert_keys",
+      "definition": {
+        "arguments": [
+          "jsonb",
+          "text[]",
+          "text[]"
+        ],
+        "argumentNames": [
+          "p_value",
+          "p_required",
+          "p_allowed"
+        ],
+        "defaultCount": 0,
+        "argumentDefaults": null,
+        "returnType": "void",
+        "returnsSet": false,
+        "outputColumns": [],
+        "language": "plpgsql",
+        "volatility": "i",
+        "securityDefiner": false,
+        "strict": false,
+        "config": null,
+        "bodyMd5": "3cfb3d839acb77e4e09854575d13aabc"
+      }
+    },
+    {
+      "kind": "function",
+      "name": "canvas_assert_parameters",
+      "definition": {
+        "arguments": [
+          "jsonb",
+          "boolean",
+          "integer"
+        ],
+        "argumentNames": [
+          "p_value",
+          "p_run",
+          "p_images"
+        ],
+        "defaultCount": 2,
+        "argumentDefaults": "false, 0",
+        "returnType": "void",
+        "returnsSet": false,
+        "outputColumns": [],
+        "language": "plpgsql",
+        "volatility": "i",
+        "securityDefiner": false,
+        "strict": false,
+        "config": null,
+        "bodyMd5": "44ca8ea25aa3bc18f0b9539d77f84725"
+      }
+    },
+    {
+      "kind": "function",
+      "name": "canvas_assert_run_snapshot",
+      "definition": {
+        "arguments": [
+          "jsonb"
+        ],
+        "argumentNames": [
+          "p_value"
+        ],
+        "defaultCount": 0,
+        "argumentDefaults": null,
+        "returnType": "void",
+        "returnsSet": false,
+        "outputColumns": [],
+        "language": "plpgsql",
+        "volatility": "i",
+        "securityDefiner": false,
+        "strict": false,
+        "config": null,
+        "bodyMd5": "a71d60a41365aa94276c1407c01da158"
+      }
+    },
+    {
+      "kind": "function",
+      "name": "canvas_assert_position",
+      "definition": {
+        "arguments": [
+          "jsonb",
+          "boolean"
+        ],
+        "argumentNames": [
+          "p_value",
+          "p_viewport"
+        ],
+        "defaultCount": 1,
+        "argumentDefaults": "false",
+        "returnType": "void",
+        "returnsSet": false,
+        "outputColumns": [],
+        "language": "plpgsql",
+        "volatility": "i",
+        "securityDefiner": false,
+        "strict": false,
+        "config": null,
+        "bodyMd5": "ffc4333e68048a939283acf35a4e0794"
+      }
+    },
+    {
+      "kind": "function",
+      "name": "canvas_assert_scene",
+      "definition": {
+        "arguments": [
+          "jsonb"
+        ],
+        "argumentNames": [
+          "p_scene"
+        ],
+        "defaultCount": 0,
+        "argumentDefaults": null,
+        "returnType": "void",
+        "returnsSet": false,
+        "outputColumns": [],
+        "language": "plpgsql",
+        "volatility": "i",
+        "securityDefiner": false,
+        "strict": false,
+        "config": null,
+        "bodyMd5": "2205f992f65927952677d300f5da9e31"
+      }
+    },
+    {
+      "kind": "function",
+      "name": "canvas_lock_owner",
+      "definition": {
+        "arguments": [
+          "text"
+        ],
+        "argumentNames": [
+          "p_owner"
+        ],
+        "defaultCount": 0,
+        "argumentDefaults": null,
+        "returnType": "void",
+        "returnsSet": false,
+        "outputColumns": [],
+        "language": "plpgsql",
+        "volatility": "v",
+        "securityDefiner": false,
+        "strict": false,
+        "config": null,
+        "bodyMd5": "e06e07f9ca22b03fb631f936363fe9cf"
+      }
+    },
+    {
+      "kind": "function",
+      "name": "canvas_lock_assets",
+      "definition": {
+        "arguments": [
+          "text",
+          "text[]",
+          "boolean"
+        ],
+        "argumentNames": [
+          "p_owner",
+          "p_ids",
+          "p_require_ready"
+        ],
+        "defaultCount": 1,
+        "argumentDefaults": "true",
+        "returnType": "void",
+        "returnsSet": false,
+        "outputColumns": [],
+        "language": "plpgsql",
+        "volatility": "v",
+        "securityDefiner": false,
+        "strict": false,
+        "config": null,
+        "bodyMd5": "7a9bbf9b58f4287573f725128d31c9fc"
+      }
+    },
+    {
+      "kind": "function",
+      "name": "canvas_guard_document",
+      "definition": {
+        "arguments": [],
+        "argumentNames": [],
+        "defaultCount": 0,
+        "argumentDefaults": null,
+        "returnType": "trigger",
+        "returnsSet": false,
+        "outputColumns": [],
+        "language": "plpgsql",
+        "volatility": "v",
+        "securityDefiner": false,
+        "strict": false,
+        "config": null,
+        "bodyMd5": "d50c01e174007fbdbab38d97e32aad0a"
+      }
+    },
+    {
+      "kind": "function",
+      "name": "canvas_guard_import_asset",
+      "definition": {
+        "arguments": [],
+        "argumentNames": [],
+        "defaultCount": 0,
+        "argumentDefaults": null,
+        "returnType": "trigger",
+        "returnsSet": false,
+        "outputColumns": [],
+        "language": "plpgsql",
+        "volatility": "v",
+        "securityDefiner": false,
+        "strict": false,
+        "config": null,
+        "bodyMd5": "b58467722b362a5ac13c8a94c6b28237"
+      }
+    },
+    {
+      "kind": "function",
+      "name": "canvas_refresh_asset_detach",
+      "definition": {
+        "arguments": [],
+        "argumentNames": [],
+        "defaultCount": 0,
+        "argumentDefaults": null,
+        "returnType": "trigger",
+        "returnsSet": false,
+        "outputColumns": [],
+        "language": "plpgsql",
+        "volatility": "v",
+        "securityDefiner": false,
+        "strict": false,
+        "config": null,
+        "bodyMd5": "d4e191ae6d5d554db54733989a45d213"
+      }
+    },
+    {
+      "kind": "function",
+      "name": "canvas_guard_saved_asset_use",
+      "definition": {
+        "arguments": [],
+        "argumentNames": [],
+        "defaultCount": 0,
+        "argumentDefaults": null,
+        "returnType": "trigger",
+        "returnsSet": false,
+        "outputColumns": [],
+        "language": "plpgsql",
+        "volatility": "v",
+        "securityDefiner": false,
+        "strict": false,
+        "config": null,
+        "bodyMd5": "a63cf620eda9a2870377bf008344d027"
+      }
+    },
+    {
+      "kind": "function",
+      "name": "canvas_guard_run",
+      "definition": {
+        "arguments": [],
+        "argumentNames": [],
+        "defaultCount": 0,
+        "argumentDefaults": null,
+        "returnType": "trigger",
+        "returnsSet": false,
+        "outputColumns": [],
+        "language": "plpgsql",
+        "volatility": "v",
+        "securityDefiner": false,
+        "strict": false,
+        "config": null,
+        "bodyMd5": "887410380d5377cdc4a3eed6684dacb7"
+      }
+    },
+    {
+      "kind": "function",
+      "name": "canvas_guard_job_asset_use",
+      "definition": {
+        "arguments": [],
+        "argumentNames": [],
+        "defaultCount": 0,
+        "argumentDefaults": null,
+        "returnType": "trigger",
+        "returnsSet": false,
+        "outputColumns": [],
+        "language": "plpgsql",
+        "volatility": "v",
+        "securityDefiner": false,
+        "strict": false,
+        "config": null,
+        "bodyMd5": "893697b67db65a6bd5ca5469f721a820"
+      }
+    },
+    {
+      "kind": "function",
+      "name": "canvas_check_committed_roots",
+      "definition": {
+        "arguments": [],
+        "argumentNames": [],
+        "defaultCount": 0,
+        "argumentDefaults": null,
+        "returnType": "trigger",
+        "returnsSet": false,
+        "outputColumns": [],
+        "language": "plpgsql",
+        "volatility": "v",
+        "securityDefiner": false,
+        "strict": false,
+        "config": null,
+        "bodyMd5": "9d9e6b4c6c2b86cecc063406618774be"
+      }
+    },
+    {
+      "kind": "function",
+      "name": "canvas_check_saved_roots",
+      "definition": {
+        "arguments": [],
+        "argumentNames": [],
+        "defaultCount": 0,
+        "argumentDefaults": null,
+        "returnType": "trigger",
+        "returnsSet": false,
+        "outputColumns": [],
+        "language": "plpgsql",
+        "volatility": "v",
+        "securityDefiner": false,
+        "strict": false,
+        "config": null,
+        "bodyMd5": "6fea3fd7afdb8cabe7d36e67812e38b7"
+      }
+    },
+    {
+      "kind": "function",
+      "name": "canvas_validate_scene_resources",
+      "definition": {
+        "arguments": [
+          "text",
+          "uuid",
+          "jsonb"
+        ],
+        "argumentNames": [
+          "p_owner",
+          "p_canvas",
+          "p_scene"
+        ],
+        "defaultCount": 0,
+        "argumentDefaults": null,
+        "returnType": "void",
+        "returnsSet": false,
+        "outputColumns": [],
+        "language": "plpgsql",
+        "volatility": "v",
+        "securityDefiner": false,
+        "strict": false,
+        "config": null,
+        "bodyMd5": "43fb63a152dc82abeb24470bc6597a94"
+      }
+    },
+    {
+      "kind": "function",
+      "name": "canvas_save_snapshot",
+      "definition": {
+        "arguments": [
+          "text",
+          "uuid",
+          "integer",
+          "uuid",
+          "jsonb",
+          "text"
+        ],
+        "argumentNames": [
+          "p_owner",
+          "p_canvas",
+          "p_expected_revision",
+          "p_save_id",
+          "p_scene",
+          "p_scene_hash"
+        ],
+        "defaultCount": 0,
+        "argumentDefaults": null,
+        "returnType": "record",
+        "returnsSet": true,
+        "outputColumns": [
+          {
+            "name": "acknowledgedRevision",
+            "type": "integer"
+          },
+          {
+            "name": "currentRevision",
+            "type": "integer"
+          },
+          {
+            "name": "sceneHash",
+            "type": "text"
+          },
+          {
+            "name": "replayed",
+            "type": "boolean"
+          }
+        ],
+        "language": "plpgsql",
+        "volatility": "v",
+        "securityDefiner": false,
+        "strict": false,
+        "config": null,
+        "bodyMd5": "eb2e649c7a43d3fff1e099bf9c3228b7"
+      }
+    },
+    {
+      "kind": "function",
+      "name": "canvas_delete_document",
+      "definition": {
+        "arguments": [
+          "text",
+          "uuid",
+          "integer"
+        ],
+        "argumentNames": [
+          "p_owner",
+          "p_canvas",
+          "p_expected_revision"
+        ],
+        "defaultCount": 0,
+        "argumentDefaults": null,
+        "returnType": "integer",
+        "returnsSet": false,
+        "outputColumns": [],
+        "language": "plpgsql",
+        "volatility": "v",
+        "securityDefiner": false,
+        "strict": false,
+        "config": null,
+        "bodyMd5": "45e8f2d07f3fd311c79703a419125053"
+      }
+    },
+    {
+      "kind": "function",
+      "name": "canvas_reserve_run",
+      "definition": {
+        "arguments": [
+          "text",
+          "uuid",
+          "uuid",
+          "uuid",
+          "text",
+          "jsonb",
+          "text"
+        ],
+        "argumentNames": [
+          "p_owner",
+          "p_canvas",
+          "p_node",
+          "p_run",
+          "p_intent_hash",
+          "p_snapshot",
+          "p_credential_fingerprint"
+        ],
+        "defaultCount": 1,
+        "argumentDefaults": "NULL",
+        "returnType": "record",
+        "returnsSet": true,
+        "outputColumns": [
+          {
+            "name": "id",
+            "type": "text"
+          },
+          {
+            "name": "state",
+            "type": "\"CanvasRunState\""
+          },
+          {
+            "name": "preparationToken",
+            "type": "uuid"
+          },
+          {
+            "name": "preparationExpiresAt",
+            "type": "timestamp with time zone"
+          },
+          {
+            "name": "originalJobId",
+            "type": "text"
+          },
+          {
+            "name": "liveJobId",
+            "type": "text"
+          },
+          {
+            "name": "replayed",
+            "type": "boolean"
+          }
+        ],
+        "language": "plpgsql",
+        "volatility": "v",
+        "securityDefiner": false,
+        "strict": false,
+        "config": null,
+        "bodyMd5": "b65920bd0a308c356d4db530a8df4e92"
+      }
+    },
+    {
+      "kind": "function",
+      "name": "canvas_commit_run",
+      "definition": {
+        "arguments": [
+          "text",
+          "uuid",
+          "uuid",
+          "text"
+        ],
+        "argumentNames": [
+          "p_owner",
+          "p_run",
+          "p_preparation_token",
+          "p_job_id"
+        ],
+        "defaultCount": 0,
+        "argumentDefaults": null,
+        "returnType": "text",
+        "returnsSet": false,
+        "outputColumns": [],
+        "language": "plpgsql",
+        "volatility": "v",
+        "securityDefiner": false,
+        "strict": false,
+        "config": null,
+        "bodyMd5": "76a99b8e8d982660708fd7ba08d12e35"
+      }
+    },
+    {
+      "kind": "function",
+      "name": "canvas_reject_run",
+      "definition": {
+        "arguments": [
+          "text",
+          "uuid",
+          "uuid",
+          "text"
+        ],
+        "argumentNames": [
+          "p_owner",
+          "p_run",
+          "p_preparation_token",
+          "p_error_code"
+        ],
+        "defaultCount": 0,
+        "argumentDefaults": null,
+        "returnType": "boolean",
+        "returnsSet": false,
+        "outputColumns": [],
+        "language": "plpgsql",
+        "volatility": "v",
+        "securityDefiner": false,
+        "strict": false,
+        "config": null,
+        "bodyMd5": "1c90f327e90c21e0451f87ff50455ec4"
+      }
+    },
+    {
+      "kind": "function",
+      "name": "canvas_acquire_gc_lease",
+      "definition": {
+        "arguments": [
+          "uuid"
+        ],
+        "argumentNames": [
+          "p_token"
+        ],
+        "defaultCount": 0,
+        "argumentDefaults": null,
+        "returnType": "boolean",
+        "returnsSet": false,
+        "outputColumns": [],
+        "language": "plpgsql",
+        "volatility": "v",
+        "securityDefiner": false,
+        "strict": false,
+        "config": null,
+        "bodyMd5": "9d7ea42e469af69ab9378f339d6deb64"
+      }
+    },
+    {
+      "kind": "function",
+      "name": "canvas_claim_imports",
+      "definition": {
+        "arguments": [
+          "uuid",
+          "text",
+          "integer"
+        ],
+        "argumentNames": [
+          "p_sweep_token",
+          "p_storage_location",
+          "p_limit"
+        ],
+        "defaultCount": 1,
+        "argumentDefaults": "20",
+        "returnType": "\"CanvasImportAsset\"",
+        "returnsSet": true,
+        "outputColumns": [],
+        "language": "plpgsql",
+        "volatility": "v",
+        "securityDefiner": false,
+        "strict": false,
+        "config": null,
+        "bodyMd5": "79c6854e973d0e79bc837ab16a3e0efb"
+      }
+    },
+    {
+      "kind": "function",
+      "name": "canvas_finish_asset_delete",
+      "definition": {
+        "arguments": [
+          "text",
+          "uuid",
+          "\"CanvasDeleteOutcome\"",
+          "text"
+        ],
+        "argumentNames": [
+          "p_asset_id",
+          "p_delete_token",
+          "p_outcome",
+          "p_error_code"
+        ],
+        "defaultCount": 1,
+        "argumentDefaults": "NULL",
+        "returnType": "boolean",
+        "returnsSet": false,
+        "outputColumns": [],
+        "language": "plpgsql",
+        "volatility": "v",
+        "securityDefiner": false,
+        "strict": false,
+        "config": null,
+        "bodyMd5": "13c73ecf6c4eca07b7f0af46e3fe2c49"
+      }
+    },
+    {
+      "kind": "trigger",
+      "name": "Canvas_document_guard",
+      "definition": {
+        "table": "Canvas",
+        "function": "canvas_guard_document",
+        "functionCurrentSchema": true,
+        "type": 31,
+        "enabled": "O",
+        "deferrable": false,
+        "deferred": false,
+        "arguments": 0,
+        "condition": null
+      }
+    },
+    {
+      "kind": "trigger",
+      "name": "CanvasImportAsset_lifecycle_guard",
+      "definition": {
+        "table": "CanvasImportAsset",
+        "function": "canvas_guard_import_asset",
+        "functionCurrentSchema": true,
+        "type": 31,
+        "enabled": "O",
+        "deferrable": false,
+        "deferred": false,
+        "arguments": 0,
+        "condition": null
+      }
+    },
+    {
+      "kind": "trigger",
+      "name": "CanvasSavedAssetUse_ready_guard",
+      "definition": {
+        "table": "CanvasSavedAssetUse",
+        "function": "canvas_guard_saved_asset_use",
+        "functionCurrentSchema": true,
+        "type": 31,
+        "enabled": "O",
+        "deferrable": false,
+        "deferred": false,
+        "arguments": 0,
+        "condition": null
+      }
+    },
+    {
+      "kind": "trigger",
+      "name": "CanvasSavedAssetUse_detach_guard",
+      "definition": {
+        "table": "CanvasSavedAssetUse",
+        "function": "canvas_refresh_asset_detach",
+        "functionCurrentSchema": true,
+        "type": 13,
+        "enabled": "O",
+        "deferrable": false,
+        "deferred": false,
+        "arguments": 0,
+        "condition": null
+      }
+    },
+    {
+      "kind": "trigger",
+      "name": "CanvasRun_lifecycle_guard",
+      "definition": {
+        "table": "CanvasRun",
+        "function": "canvas_guard_run",
+        "functionCurrentSchema": true,
+        "type": 31,
+        "enabled": "O",
+        "deferrable": false,
+        "deferred": false,
+        "arguments": 0,
+        "condition": null
+      }
+    },
+    {
+      "kind": "trigger",
+      "name": "CanvasJobAssetUse_immutable_guard",
+      "definition": {
+        "table": "CanvasJobAssetUse",
+        "function": "canvas_guard_job_asset_use",
+        "functionCurrentSchema": true,
+        "type": 31,
+        "enabled": "O",
+        "deferrable": false,
+        "deferred": false,
+        "arguments": 0,
+        "condition": null
+      }
+    },
+    {
+      "kind": "trigger",
+      "name": "CanvasJobAssetUse_detach_guard",
+      "definition": {
+        "table": "CanvasJobAssetUse",
+        "function": "canvas_refresh_asset_detach",
+        "functionCurrentSchema": true,
+        "type": 5,
+        "enabled": "O",
+        "deferrable": false,
+        "deferred": false,
+        "arguments": 0,
+        "condition": null
+      }
+    },
+    {
+      "kind": "trigger",
+      "name": "CanvasRun_committed_roots_guard",
+      "definition": {
+        "table": "CanvasRun",
+        "function": "canvas_check_committed_roots",
+        "functionCurrentSchema": true,
+        "type": 21,
+        "enabled": "O",
+        "deferrable": true,
+        "deferred": true,
+        "arguments": 0,
+        "condition": null
+      }
+    },
+    {
+      "kind": "trigger",
+      "name": "Canvas_saved_roots_guard",
+      "definition": {
+        "table": "Canvas",
+        "function": "canvas_check_saved_roots",
+        "functionCurrentSchema": true,
+        "type": 21,
+        "enabled": "O",
+        "deferrable": true,
+        "deferred": true,
+        "arguments": 0,
+        "condition": null
+      }
+    },
+    {
+      "kind": "trigger",
+      "name": "CanvasSavedAssetUse_snapshot_guard",
+      "definition": {
+        "table": "CanvasSavedAssetUse",
+        "function": "canvas_check_saved_roots",
+        "functionCurrentSchema": true,
+        "type": 13,
+        "enabled": "O",
+        "deferrable": true,
+        "deferred": true,
+        "arguments": 0,
+        "condition": null
+      }
+    }
+  ],
+  "expressionConformance": "contracts/canvas/v1/scenarios/catalog-expressions.json",
+  "bodyLineEndings": "CRLF_TO_LF_ONLY"
+}

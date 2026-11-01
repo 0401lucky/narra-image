@@ -49,6 +49,10 @@ export const SIZE_DOWNGRADE_TOLERANCE = 0.05;
 // 单个 generation 任务的轮询参数。
 export const POLL_DELAYS_MS = [1500, 2000, 3000, 5000, 8000];
 export const POLL_MAX_ATTEMPTS = 200;
+export const POLL_REQUEST_TIMEOUT_MS = 15_000;
+
+// Read-only studio requests must release their loading state after a bounded wait.
+export const STUDIO_READ_TIMEOUT_MS = 30_000;
 
 // localStorage 键。如果未来要做 schema 升级，新键名带上 _v2 即可。
 export const SESSIONS_STORAGE_KEY = "narra_sessions";

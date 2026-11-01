@@ -49,7 +49,6 @@ src/components/create/
   parts/
     chat-stream.tsx
     composer.tsx
-    history-rail.tsx
     session-sidebar.tsx
 ```
 

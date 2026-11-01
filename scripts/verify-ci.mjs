@@ -61,9 +61,11 @@ const STAGES = [
       "--testTimeout=30000",
       "--exclude",
       "src/tests/integration/worker-contracts/worker-contracts-db.test.ts",
+      "--exclude",
+      "src/tests/integration/canvas-contracts/canvas-contracts-db.test.ts",
     ],
     // 全量组件/单测进程独立截止；单个用例由 --testTimeout=30000 兜底。
-    // DB 集成测试由 verify:worker-contracts:db 单独覆盖，不在此重复。
+    // Sentinelled DB suites have independent worker/canvas wrappers and deadlines.
     timeoutMs: 300_000,
   },
   {

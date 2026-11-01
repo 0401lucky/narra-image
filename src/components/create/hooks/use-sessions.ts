@@ -1,16 +1,10 @@
 "use client";
 
-// 会话状态 Hook（服务端持久化版本）。
-// 数据存储：通过 /api/me/conversations 与 /api/me/conversations/[id] 完整迁移到 PostgreSQL。
-// 改进点（相对 localStorage 版本）：
-// 1) 跨设备一致：服务端为唯一事实来源，多设备登录看到同一份会话；
-// 2) 支持管理后台审计：会话与 generation 通过外键关联，运维可见；
-// 3) localStorage 仅缓存 lastActiveConversationId，提升下次进入页面的体感。
-import { useCallback, useEffect, useState } from "react";
+// 会话元数据只在账户首次挂载时初始化，不把刷新结果覆盖到本地操作上。
+// 所有异步写入检查账户/挂载轮次；新会话还检查调用方捕获的草稿是否仍有效。
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import type { SessionInfo } from "../types";
-
-const ACTIVE_KEY = "narra_active_conversation_id";
 
 type ApiResponse<T> = {
   data?: T;
@@ -25,149 +19,238 @@ type ConversationDTO = {
   generationIds: string[];
 };
 
-function dtoToSessionInfo(dto: ConversationDTO): SessionInfo {
+function dtoToSessionInfo(value: unknown): SessionInfo | null {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return null;
+  const dto = value as Partial<ConversationDTO>;
+  if (typeof dto.id !== "string" || !dto.id.trim() || typeof dto.title !== "string"
+    || typeof dto.createdAt !== "string" || !Number.isFinite(Date.parse(dto.createdAt))
+    || !Array.isArray(dto.generationIds)
+    || !dto.generationIds.every((id) => typeof id === "string" && id.trim())) return null;
   return {
     createdAt: dto.createdAt,
-    generationIds: dto.generationIds,
+    generationIds: [...dto.generationIds],
+    generationCount: dto.generationIds.length,
     id: dto.id,
     title: dto.title,
   };
 }
 
-export function useSessions(initial: SessionInfo[] = []) {
-  const [sessions, setSessions] = useState<SessionInfo[]>(initial);
+type CreateSessionOptions = {
+  signal?: AbortSignal;
+  isCurrent?: () => boolean;
+};
 
-  // 拉取最新会话列表；用于初始化和外部强刷新。
-  const refresh = useCallback(async () => {
-    try {
-      const response = await fetch("/api/me/conversations");
-      if (!response.ok) return;
-      const json = (await response.json()) as ApiResponse<{ conversations: ConversationDTO[] }>;
-      if (json.data?.conversations) {
-        setSessions(json.data.conversations.map(dtoToSessionInfo));
-      }
-    } catch {
-      // 静默失败：保持现有 sessions。前端已有本地状态可用，下一次操作会重试。
+type SessionContext = {
+  scope: object;
+  active: boolean;
+  epoch: number;
+  sessions: SessionInfo[];
+  deleting: Set<string>;
+  deleted: Set<string>;
+  requests: Set<AbortController>;
+};
+
+type UseSessionsResult = {
+  sessions: SessionInfo[];
+  createSession: (title?: string, options?: CreateSessionOptions) => Promise<SessionInfo | null>;
+  renameSession: (id: string, title: string) => Promise<void>;
+  appendGeneration: (sessionId: string, generationId: string) => void;
+  replaceGeneration: (sessionId: string, previousId: string, nextId: string) => void;
+  deleteSession: (id: string) => Promise<boolean>;
+  isSessionLive: (id: string) => boolean;
+  readLastActive: () => string | null;
+  writeLastActive: (id: string | null) => void;
+};
+
+export function useSessions(ownerId: string, initial: SessionInfo[] = []): UseSessionsResult {
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const bootstrap = useMemo(() => ({ ownerId, initial }), [ownerId]);
+  const contextRef = useRef<SessionContext | null>(null);
+  const [view, setView] = useState(() => ({ scope: bootstrap, sessions: initial }));
+  const activeKey = `narra_active_conversation_id:${ownerId}`;
+
+  const getContext = useCallback(() => {
+    const context = contextRef.current;
+    return context?.scope === bootstrap && context.active ? context : null;
+  }, [bootstrap]);
+  const publish = useCallback((context: SessionContext) => {
+    if (getContext() === context) setView({ scope: bootstrap, sessions: context.sessions });
+  }, [bootstrap, getContext]);
+
+  useEffect(() => {
+    if (contextRef.current?.scope !== bootstrap) {
+      contextRef.current = {
+        scope: bootstrap, active: false, epoch: 0, sessions: bootstrap.initial,
+        deleting: new Set(), deleted: new Set(), requests: new Set(),
+      };
     }
-  }, []);
+    const context = contextRef.current;
+    context.active = true;
+    context.epoch += 1;
+    publish(context);
+    return () => {
+      context.active = false;
+      context.epoch += 1;
+      context.requests.forEach((controller) => controller.abort());
+      context.requests.clear();
+    };
+  }, [bootstrap, publish]);
 
-  // 创建会话；可选 title。
-  const createSession = useCallback(async (title?: string): Promise<SessionInfo | null> => {
+  const beginRequest = useCallback((signal?: AbortSignal) => {
+    const context = getContext();
+    if (!context || signal?.aborted) return null;
+    const controller = new AbortController();
+    const epoch = context.epoch;
+    const abort = () => controller.abort();
+    signal?.addEventListener("abort", abort, { once: true });
+    context.requests.add(controller);
+    return {
+      context,
+      signal: controller.signal,
+      isCurrent: () => getContext() === context && context.epoch === epoch && !controller.signal.aborted,
+      finish: () => {
+        context.requests.delete(controller);
+        signal?.removeEventListener("abort", abort);
+      },
+    };
+  }, [getContext]);
+
+  const createSession = useCallback(async (title?: string, options: CreateSessionOptions = {}): Promise<SessionInfo | null> => {
+    if (options.isCurrent && !options.isCurrent()) return null;
+    const request = beginRequest(options.signal);
+    if (!request) return null;
+    const isCurrent = () => request.isCurrent() && (!options.isCurrent || options.isCurrent());
     try {
       const response = await fetch("/api/me/conversations", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(title ? { title } : {}),
+        signal: request.signal,
       });
-      if (!response.ok) return null;
-      const json = (await response.json()) as ApiResponse<{ conversation: ConversationDTO }>;
-      const dto = json.data?.conversation;
-      if (!dto) return null;
-      const next = dtoToSessionInfo(dto);
-      setSessions((prev) => [next, ...prev]);
+      if (!isCurrent() || !response.ok) return null;
+      const json = (await response.json()) as ApiResponse<{ conversation: unknown }> | null;
+      if (!isCurrent()) return null;
+      const next = dtoToSessionInfo(json?.data?.conversation);
+      if (!next || request.context.deleted.has(next.id)) return null;
+      request.context.sessions = [next, ...request.context.sessions.filter((session) => session.id !== next.id)];
+      publish(request.context);
       return next;
     } catch {
       return null;
+    } finally {
+      request.finish();
     }
-  }, []);
+  }, [beginRequest, publish]);
+
+  const isSessionLive = useCallback((id: string) => {
+    const context = getContext();
+    return Boolean(context && !context.deleting.has(id) && !context.deleted.has(id)
+      && context.sessions.some((session) => session.id === id));
+  }, [getContext]);
 
   // 重命名会话；title 由调用方决定（一般在首次发送 generation 后调用）。
   const renameSession = useCallback(async (id: string, title: string) => {
+    if (!isSessionLive(id)) return;
+    const request = beginRequest();
+    if (!request) return;
     try {
-      const response = await fetch(`/api/me/conversations/${id}`, {
+      const response = await fetch(`/api/me/conversations/${encodeURIComponent(id)}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ title }),
+        signal: request.signal,
       });
-      if (!response.ok) return;
-      setSessions((prev) => prev.map((s) => (s.id === id ? { ...s, title } : s)));
+      if (!request.isCurrent() || !response.ok || !isSessionLive(id)) return;
+      request.context.sessions = request.context.sessions.map((session) => session.id === id ? { ...session, title } : session);
+      publish(request.context);
     } catch {
-      // 失败时保持本地状态；下一次 refresh 会纠正。
+      // 保留本地元数据，重新打开页面时再读取服务端快照。
+    } finally {
+      request.finish();
     }
-  }, []);
+  }, [beginRequest, isSessionLive, publish]);
 
   // 在本地状态中追加 generationId（不发起 API 调用，因为 generation 写入时已经把 conversationId 写到 GenerationJob 上）。
   const appendGeneration = useCallback((sessionId: string, generationId: string) => {
-    setSessions((prev) =>
-      prev.map((s) =>
-        s.id === sessionId
-          ? { ...s, generationIds: [...s.generationIds, generationId] }
-          : s,
-      ),
+    const context = getContext();
+    if (!context || !isSessionLive(sessionId)) return;
+    context.sessions = context.sessions.map((s) =>
+      s.id === sessionId && !s.generationIds.includes(generationId)
+        ? { ...s, generationIds: [...s.generationIds, generationId], generationCount: (s.generationCount ?? s.generationIds.length) + 1 }
+        : s,
     );
-  }, []);
+    publish(context);
+  }, [getContext, isSessionLive, publish]);
 
   const replaceGeneration = useCallback((sessionId: string, previousId: string, nextId: string) => {
-    setSessions((prev) =>
-      prev.map((s) => {
-        if (s.id !== sessionId) return s;
-        if (!s.generationIds.includes(previousId)) {
-          return s.generationIds.includes(nextId)
-            ? s
-            : { ...s, generationIds: [...s.generationIds, nextId] };
-        }
-        const generationIds = s.generationIds
-          .map((id) => (id === previousId ? nextId : id))
-          .filter((id, index, ids) => ids.indexOf(id) === index);
-        return { ...s, generationIds };
-      }),
-    );
-  }, []);
+    const context = getContext();
+    if (!context || !isSessionLive(sessionId)) return;
+    context.sessions = context.sessions.map((s) => {
+      if (s.id !== sessionId) return s;
+      if (!s.generationIds.includes(previousId)) {
+        return s.generationIds.includes(nextId)
+          ? s
+          : { ...s, generationIds: [...s.generationIds, nextId] };
+      }
+      const generationIds = s.generationIds
+        .map((id) => (id === previousId ? nextId : id))
+        .filter((id, index, ids) => ids.indexOf(id) === index);
+      return { ...s, generationIds };
+    });
+    publish(context);
+  }, [getContext, isSessionLive, publish]);
 
   // 删除会话。
   const deleteSession = useCallback(async (id: string) => {
+    if (!isSessionLive(id)) return false;
+    const request = beginRequest();
+    if (!request) return false;
+    request.context.deleting.add(id);
     try {
-      const response = await fetch(`/api/me/conversations/${id}`, {
+      const response = await fetch(`/api/me/conversations/${encodeURIComponent(id)}`, {
         method: "DELETE",
+        signal: request.signal,
       });
-      if (!response.ok) return;
-      setSessions((prev) => prev.filter((s) => s.id !== id));
+      if (!request.isCurrent() || !response.ok) return false;
+      request.context.deleted.add(id);
+      request.context.sessions = request.context.sessions.filter((session) => session.id !== id);
+      publish(request.context);
+      return true;
     } catch {
-      // 静默失败；用户可重试。
+      return false;
+    } finally {
+      request.context.deleting.delete(id);
+      request.finish();
     }
-  }, []);
+  }, [beginRequest, isSessionLive, publish]);
 
   // 读写"上次活跃的会话 id"，仅用 localStorage 做体感缓存（不存核心数据）。
   const readLastActive = useCallback(() => {
-    if (typeof window === "undefined") return null;
+    if (!getContext() || typeof window === "undefined") return null;
     try {
-      return localStorage.getItem(ACTIVE_KEY);
+      return localStorage.getItem(activeKey);
     } catch {
       return null;
     }
-  }, []);
+  }, [activeKey, getContext]);
   const writeLastActive = useCallback((id: string | null) => {
-    if (typeof window === "undefined") return;
+    if (!getContext() || typeof window === "undefined") return;
     try {
-      if (id) localStorage.setItem(ACTIVE_KEY, id);
-      else localStorage.removeItem(ACTIVE_KEY);
+      if (id) localStorage.setItem(activeKey, id);
+      else localStorage.removeItem(activeKey);
     } catch {
       // 隐私模式或配额不足：忽略。
     }
-  }, []);
-
-  // 跨标签同步：当其它标签更新了"上次活跃会话"时，自动 refresh。
-  // 数据本身存于服务端，所以这里不需要监听特定 key 的变化做合并。
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    function handleStorage(event: StorageEvent) {
-      if (event.key === ACTIVE_KEY) {
-        // 仅当其它标签切换了活跃会话；此处不强制 refresh 减少抖动。
-      }
-    }
-    window.addEventListener("storage", handleStorage);
-    return () => window.removeEventListener("storage", handleStorage);
-  }, []);
+  }, [activeKey, getContext]);
 
   return {
-    sessions,
-    setSessions,
-    refresh,
+    sessions: view.scope === bootstrap ? view.sessions : [],
     createSession,
     renameSession,
     appendGeneration,
     replaceGeneration,
     deleteSession,
+    isSessionLive,
     readLastActive,
     writeLastActive,
   };

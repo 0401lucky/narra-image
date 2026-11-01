@@ -28,6 +28,7 @@
     "verify:worker-contracts:ts": "node scripts/verify-worker-contracts.mjs ts",
     "verify:worker-contracts:go": "node scripts/verify-worker-contracts.mjs go",
     "verify:worker-contracts:db": "node scripts/verify-worker-contracts.mjs db",
+    "verify:canvas-contracts:db": "node scripts/verify-canvas-contracts-db.mjs",
     "verify:gateway:ts": "node scripts/verify-gateway.mjs ts",
     "verify:gateway:go": "node scripts/verify-gateway.mjs go",
     "verify:gateway:db": "node scripts/verify-gateway.mjs db"
@@ -37,6 +38,7 @@
     "@aws-sdk/s3-request-presigner": "^3.1034.0",
     "@prisma/adapter-pg": "^7.8.0",
     "@prisma/client": "^7.7.0",
+    "@xyflow/react": "12.12.0",
     "bcryptjs": "^3.0.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

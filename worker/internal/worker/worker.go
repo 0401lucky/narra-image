@@ -18,18 +18,24 @@ import (
 const maxExpiredJobsPerSweep = 20
 
 type Worker struct {
-	cfg              Config
-	checkSchema      func(context.Context) (SchemaContractReport, error)
-	consumerLoop     func(context.Context, context.Context, int)
-	logger           *slog.Logger
-	metricsCollector func(context.Context) (metricsResponse, error)
-	pingDatabase     func(context.Context) error
-	pool             *pgxpool.Pool
-	promptSyncRunner func(context.Context, string) ([]PromptSyncResult, error)
-	state            *runtimeState
-	storage          *Storage
-	storageFactory   func(context.Context, Config) (*Storage, error)
-	topologyConnect  topologyConnectionFactory
+	cfg                   Config
+	canvasContractLoader  func() (CanvasContract, error)
+	canvasGC              *canvasGCScheduler
+	canvasRepository      canvasGCRepository
+	canvasSchedulerRunner func(context.Context, *canvasGCScheduler)
+	canvasStorageFactory  func(*Storage) (canvasGCStorage, error)
+	checkCanvasSchema     func(context.Context) (SchemaContractReport, error)
+	checkSchema           func(context.Context) (SchemaContractReport, error)
+	consumerLoop          func(context.Context, context.Context, int)
+	logger                *slog.Logger
+	metricsCollector      func(context.Context) (metricsResponse, error)
+	pingDatabase          func(context.Context) error
+	pool                  *pgxpool.Pool
+	promptSyncRunner      func(context.Context, string) ([]PromptSyncResult, error)
+	state                 *runtimeState
+	storage               *Storage
+	storageFactory        func(context.Context, Config) (*Storage, error)
+	topologyConnect       topologyConnectionFactory
 }
 
 type GenerationJob struct {
@@ -70,14 +76,21 @@ func New(pool *pgxpool.Pool, cfg Config, logger *slog.Logger) *Worker {
 		logger = slog.New(&redactingHandler{next: logger.Handler()})
 	}
 	worker := &Worker{
-		cfg:            cfg,
-		logger:         logger,
-		pool:           pool,
-		state:          newRuntimeState(time.Now()),
-		storageFactory: NewStorage,
+		cfg:                   cfg,
+		logger:                logger,
+		pool:                  pool,
+		state:                 newRuntimeState(time.Now()),
+		storageFactory:        NewStorage,
+		canvasContractLoader:  LoadCanvasContract,
+		canvasStorageFactory:  newCanvasGCStorage,
+		canvasSchedulerRunner: func(ctx context.Context, scheduler *canvasGCScheduler) { scheduler.Run(ctx) },
 	}
 	worker.consumerLoop = worker.runLoop
 	if pool != nil {
+		worker.canvasRepository = &postgresCanvasGCRepository{db: pool}
+		worker.checkCanvasSchema = func(ctx context.Context) (SchemaContractReport, error) {
+			return CheckCanvasSchemaContract(ctx, pool)
+		}
 		worker.checkSchema = func(ctx context.Context) (SchemaContractReport, error) {
 			return CheckSchemaContract(ctx, pool)
 		}
@@ -88,6 +101,7 @@ func New(pool *pgxpool.Pool, cfg Config, logger *slog.Logger) *Worker {
 }
 
 func (w *Worker) Run(ctx context.Context) error {
+	w.state.requireCanvas(w.cfg.CanvasEnabled)
 	httpRuntime, err := w.startHTTPServer()
 	if err != nil {
 		w.state.markStopped()
@@ -144,13 +158,18 @@ func (w *Worker) Run(ctx context.Context) error {
 		}()
 		startupErr = w.waitForSchema(runtimeCtx)
 	}
+	if startupErr == nil && w.cfg.CanvasEnabled {
+		startupErr = w.setupCanvasRuntime(runtimeCtx)
+	}
 	if startupErr != nil && !shutdown.requested() {
 		shutdown.request(startupErr)
 	}
 
 	var consumers sync.WaitGroup
+	var canvasGC sync.WaitGroup
 	consumersStarted := startupErr == nil && !shutdown.requested()
 	if consumersStarted {
+		w.state.markConsumersRunning(true)
 		for index := 0; index < w.cfg.Concurrency; index++ {
 			consumers.Add(1)
 			go func(slot int) {
@@ -168,8 +187,32 @@ func (w *Worker) Run(ctx context.Context) error {
 				}
 			}(index + 1)
 		}
-		w.state.markConsumersRunning(true)
-		if !w.state.markReady() {
+		startGC := make(chan struct{})
+		if w.cfg.CanvasEnabled {
+			started := make(chan struct{})
+			canvasGC.Add(1)
+			go func() {
+				defer canvasGC.Done()
+				defer func() {
+					w.state.markCanvasGCRunning(false)
+					if panicValue := recover(); panicValue != nil {
+						shutdown.request(fmt.Errorf("canvas GC panic: %v", panicValue))
+					} else if runtimeCtx.Err() == nil {
+						shutdown.request(errors.New("canvas GC scheduler exited unexpectedly"))
+					}
+				}()
+				w.state.markCanvasGCRunning(true)
+				close(started)
+				select {
+				case <-runtimeCtx.Done():
+					return
+				case <-startGC:
+					w.canvasSchedulerRunner(runtimeCtx, w.canvasGC)
+				}
+			}()
+			<-started
+		}
+		if shutdown.requested() || !w.state.markReady() {
 			shutdown.request(errors.New("Worker 状态无法进入 ready"))
 		} else {
 			w.logger.Info(
@@ -181,6 +224,7 @@ func (w *Worker) Run(ctx context.Context) error {
 				"job_timeout_ms", w.cfg.JobTimeout.Milliseconds(),
 			)
 		}
+		close(startGC)
 		if w.cfg.PromptSyncEnabled && w.pool != nil {
 			go func() {
 				w.runPromptSyncScheduler(runtimeCtx, func(syncCtx context.Context) ([]PromptSyncResult, error) {
@@ -215,6 +259,7 @@ func (w *Worker) Run(ctx context.Context) error {
 		drained := make(chan struct{})
 		go func() {
 			consumers.Wait()
+			canvasGC.Wait()
 			close(drained)
 		}()
 		drainErr = waitForProcessingDrain(

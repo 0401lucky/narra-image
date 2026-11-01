@@ -56,7 +56,7 @@ describe("创作台：失败重试 / 取消生成 入口", () => {
 
   it("失败 generation 显示重试按钮", () => {
     render(
-      <GeneratorStudio
+      <GeneratorStudio ownerId="owner_test"
         checkInSummary={baseCheckIn}
         currentUser={baseUser}
         initialConversations={[
@@ -135,7 +135,7 @@ describe("创作台：失败重试 / 取消生成 入口", () => {
     );
 
     const { container } = render(
-      <GeneratorStudio
+      <GeneratorStudio ownerId="owner_test"
         checkInSummary={baseCheckIn}
         currentUser={baseUser}
         initialConversations={[
@@ -222,7 +222,7 @@ describe("创作台：失败重试 / 取消生成 入口", () => {
       }),
     );
     render(
-      <GeneratorStudio
+      <GeneratorStudio ownerId="owner_test"
         checkInSummary={baseCheckIn}
         currentUser={baseUser}
         initialConversations={[
@@ -267,7 +267,7 @@ describe("创作台：失败重试 / 取消生成 入口", () => {
 
   it("成功 generation 不显示重试或取消按钮", () => {
     render(
-      <GeneratorStudio
+      <GeneratorStudio ownerId="owner_test"
         checkInSummary={baseCheckIn}
         currentUser={baseUser}
         initialConversations={[
@@ -329,7 +329,7 @@ describe("创作台：模式切换可访问性", () => {
 
   it("模式切换按钮通过 aria-pressed 标识当前模式", () => {
     render(
-      <GeneratorStudio
+      <GeneratorStudio ownerId="owner_test"
         checkInSummary={baseCheckIn}
         currentUser={baseUser}
         initialGenerations={[]}

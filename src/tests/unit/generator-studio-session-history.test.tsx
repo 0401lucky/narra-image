@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import type { ComponentProps } from "react";
 
@@ -21,7 +21,7 @@ type Generation = NonNullable<StudioProps["initialGenerations"]>[number];
 type Conversation = NonNullable<StudioProps["initialConversations"]>[number];
 
 const EMPTY_STATE_TEXT = "你好，你想创作什么？";
-const ACTIVE_CONVERSATION_ID = "narra_active_conversation_id";
+const ACTIVE_CONVERSATION_ID = "narra_active_conversation_id:owner_test";
 
 function mockLocalStorage(initial: Record<string, string> = {}) {
   const store = new Map<string, string>(Object.entries(initial));
@@ -38,6 +38,7 @@ function mockLocalStorage(initial: Record<string, string> = {}) {
 }
 
 const baseProps = {
+  ownerId: "owner_test",
   checkInSummary: {
     checkInReward: 50,
     checkedInToday: false,
@@ -139,7 +140,84 @@ describe("创作台：会话视图与历史 generation 隔离", () => {
     expect(screen.queryByText(EMPTY_STATE_TEXT)).toBeNull();
   });
 
-  it("删除活跃会话后中间清空，且服务端 props 刷新不会让内容复活", async () => {
+  it.each([
+    { device: "桌面", width: 1440 },
+    { device: "手机", width: 390 },
+  ])("$device 只展示活跃对话图片，不再渲染历史图片栏或最近图片标签", async ({ width }) => {
+    vi.stubGlobal("innerWidth", width);
+    const user = userEvent.setup();
+    render(
+      <GeneratorStudio
+        {...baseProps}
+        initialConversations={[
+          createConversation({ generationIds: ["job_1"], title: "会话一" }),
+          createConversation({ generationIds: ["job_2"], id: "conversation_2", title: "会话二" }),
+        ]}
+        initialGenerations={[
+          createSucceededGeneration({ conversationId: "conversation_1" }),
+          createSucceededGeneration({
+            conversationId: "conversation_2",
+            id: "job_2",
+            prompt: "无关会话的图",
+          }),
+          createSucceededGeneration({ id: "job_orphan", prompt: "孤儿历史内容" }),
+        ]}
+      />,
+    );
+
+    if (width < 768) {
+      await user.click(screen.getByRole("button", { name: "打开对话导航" }));
+    }
+
+    const navigation = screen.getByRole("complementary", { name: "对话导航" });
+    expect(within(navigation).getByText("对话历史")).toBeInTheDocument();
+    expect(within(navigation).getByRole("button", { name: /新建对话/ })).toBeInTheDocument();
+    expect(within(navigation).queryByRole("img")).toBeNull();
+    expect(screen.queryByText("历史图片")).toBeNull();
+    expect(screen.queryByText("最近图片")).toBeNull();
+    expect(screen.queryByAltText("历史图片")).toBeNull();
+    expect(screen.queryByTitle("点击放大查看，右键可复用配置")).toBeNull();
+    expect(screen.getAllByAltText("生成结果")).toHaveLength(1);
+    expect(screen.queryByText("无关会话的图")).toBeNull();
+    expect(screen.queryByText("孤儿历史内容")).toBeNull();
+  });
+
+  it("手机对话导航仍可打开、关闭和选择会话", async () => {
+    vi.stubGlobal("innerWidth", 390);
+    const user = userEvent.setup();
+    render(
+      <GeneratorStudio
+        {...baseProps}
+        initialConversations={[
+          createConversation({ generationIds: ["job_1"], title: "会话一" }),
+          createConversation({ generationIds: ["job_2"], id: "conversation_2", title: "会话二" }),
+        ]}
+        initialGenerations={[
+          createSucceededGeneration({ conversationId: "conversation_1" }),
+          createSucceededGeneration({
+            conversationId: "conversation_2",
+            id: "job_2",
+            prompt: "第二个会话的图",
+          }),
+        ]}
+      />,
+    );
+
+    const navigation = screen.getByRole("complementary", { name: "对话导航" });
+    await user.click(screen.getByRole("button", { name: "打开对话导航" }));
+    expect(navigation).toHaveClass("translate-x-0");
+    await user.click(within(navigation).getByRole("button", { name: "关闭对话导航" }));
+    expect(navigation).toHaveClass("-translate-x-full");
+    await user.click(screen.getByRole("button", { name: "打开对话导航" }));
+    await user.click(within(navigation).getByText("会话二"));
+
+    expect(screen.getByText("第二个会话的图")).toBeInTheDocument();
+    expect(screen.queryByText("会话内的图")).toBeNull();
+    expect(navigation).toHaveClass("-translate-x-full");
+  });
+
+  it.each([1440, 390])("%ipx 下删除活跃会话后中间清空，且服务端 props 刷新不会让内容复活", async (width) => {
+    vi.stubGlobal("innerWidth", width);
     const user = userEvent.setup();
     const conversations = [
       createConversation({ generationIds: ["job_1"], title: "会话一" }),
@@ -157,6 +235,9 @@ describe("创作台：会话视图与历史 generation 隔离", () => {
     );
     expect(screen.getByText("会话内的图")).toBeInTheDocument();
 
+    if (width < 768) {
+      await user.click(screen.getByRole("button", { name: "打开对话导航" }));
+    }
     await user.click(screen.getByRole("button", { name: "删除会话 会话一" }));
 
     await waitFor(() => {
@@ -175,9 +256,22 @@ describe("创作台：会话视图与历史 generation 隔离", () => {
 
     expect(screen.queryByText("会话内的图")).toBeNull();
     expect(screen.getByText(EMPTY_STATE_TEXT)).toBeInTheDocument();
+
+    // 删除后的新快照保留孤儿图片，但不能重新把它放入对话或侧栏。
+    rerender(
+      <GeneratorStudio
+        {...baseProps}
+        initialConversations={[]}
+        initialGenerations={generations.map((generation) => ({ ...generation, conversationId: null }))}
+      />,
+    );
+    expect(screen.queryByText("会话内的图")).toBeNull();
+    expect(screen.queryByAltText("生成结果")).toBeNull();
+    expect(screen.queryByAltText("历史图片")).toBeNull();
   });
 
-  it("点击新建对话后服务端 props 刷新不会拉回旧会话", async () => {
+  it.each([1440, 390])("%ipx 下点击新建对话后服务端 props 刷新不会拉回旧会话", async (width) => {
+    vi.stubGlobal("innerWidth", width);
     const user = userEvent.setup();
     const conversations = [
       createConversation({ generationIds: ["job_1"], title: "会话一" }),
@@ -195,6 +289,9 @@ describe("创作台：会话视图与历史 generation 隔离", () => {
     );
     expect(screen.getByText("会话内的图")).toBeInTheDocument();
 
+    if (width < 768) {
+      await user.click(screen.getByRole("button", { name: "打开对话导航" }));
+    }
     await user.click(screen.getAllByRole("button", { name: /新建对话/ })[0]);
 
     await waitFor(() => {
@@ -241,6 +338,7 @@ describe("创作台：会话视图与历史 generation 隔离", () => {
     expect(await screen.findByText("创建会话失败，请稍后再试")).toBeInTheDocument();
     // 生成请求不应发出：否则会落一条 conversationId 为 NULL 的孤儿 generation。
     expect(requestedUrls).not.toContain("/api/generate");
+    expect(screen.getByPlaceholderText("输入提示词生成图片，或直接粘贴图片进入图生图...")).toHaveValue("会话创建失败用例");
     expect(screen.getByText(EMPTY_STATE_TEXT)).toBeInTheDocument();
   });
 

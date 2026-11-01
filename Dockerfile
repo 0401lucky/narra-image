@@ -26,6 +26,7 @@ ENV AUTH_SECRET="docker-build-secret-4f2a1c9e7b6d5a0f8e3d2c1b0a9f8e7d"
 ENV APP_URL="https://narra-build.invalid"
 ENV BUILTIN_PROVIDER_BASE_URL="https://example.com/v1"
 ENV BUILTIN_PROVIDER_API_KEY="docker-build-demo-key"
+ENV NEXT_TELEMETRY_DISABLED=1
 
 RUN pnpm build
 

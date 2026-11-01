@@ -50,7 +50,7 @@ describe("创作台连续编辑", () => {
 
   it("已有结果图时提供加入编辑入口", () => {
     render(
-      <GeneratorStudio
+      <GeneratorStudio ownerId="owner_test"
         checkInSummary={{
           checkInReward: 50,
           checkedInToday: false,
@@ -100,7 +100,7 @@ describe("创作台连续编辑", () => {
     const user = userEvent.setup();
 
     render(
-      <GeneratorStudio
+      <GeneratorStudio ownerId="owner_test"
         checkInSummary={{
           checkInReward: 50,
           checkedInToday: false,

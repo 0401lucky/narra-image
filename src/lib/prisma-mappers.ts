@@ -13,7 +13,7 @@ import {
 
 import type { ProviderMode as UiProviderMode, UserRole } from "@/lib/types";
 import type { GenerationType as UiGenerationType } from "@/lib/types";
-import type { WorkShowcaseStatus } from "@/lib/work-showcase";
+import { canShowWorkPrompt, type WorkShowcaseStatus } from "@/lib/work-showcase";
 
 export type SerializedGeneration = {
   cancelRequestedAt: string | null;
@@ -140,6 +140,20 @@ export type SerializedAdminWork = SerializedWork & {
   };
 };
 
+export type SerializedPublicWorkDetail = {
+  authorNickname: string | null;
+  createdAt: string;
+  featuredAt: string | null;
+  id: string;
+  model: string;
+  negativePrompt: string | null;
+  prompt: string | null;
+  showcaseStatus: WorkShowcaseStatus;
+  showPromptPublic: boolean;
+  size: string;
+  url: string;
+};
+
 export type SerializedFeaturedWork = {
   authorAvatar: string | null;
   authorName: string;
@@ -149,6 +163,7 @@ export type SerializedFeaturedWork = {
   likeCount: number;
   likedByMe: boolean;
   prompt: string;
+  showPromptPublic: boolean;
   // 形如 "1024x1536"。让前端在图片解码前就能用真实长宽比预留容器高度，
   // 避免 CSS columns 瀑布流在滚动期因图片陆续到达而重排跳列。
   size: string;
@@ -255,6 +270,29 @@ export function serializeAdminWork(work: AdminWorkRecord): SerializedAdminWork {
   };
 }
 
+// Public detail props are an allowlist: future owner/review fields must stay server-side.
+export function serializePublicWorkDetail(work: SerializedWork): SerializedPublicWorkDetail {
+  const showPrompt = canShowWorkPrompt({
+    isOwner: false,
+    showcaseStatus: work.showcaseStatus,
+    showPromptPublic: work.showPromptPublic,
+  });
+
+  return {
+    authorNickname: work.authorNickname,
+    createdAt: work.createdAt,
+    featuredAt: work.featuredAt,
+    id: work.id,
+    model: work.model,
+    negativePrompt: showPrompt ? work.negativePrompt : null,
+    prompt: showPrompt ? work.prompt : null,
+    showcaseStatus: work.showcaseStatus,
+    showPromptPublic: work.showPromptPublic,
+    size: work.size,
+    url: work.url,
+  };
+}
+
 export type FeaturedWorkRecord = WorkRecord & {
   job: WorkJobFields & {
     user: WorkAuthorFields;
@@ -278,6 +316,7 @@ export function serializeFeaturedWork(work: FeaturedWorkRecord): SerializedFeatu
     likeCount: work._count?.likes ?? 0,
     likedByMe: Boolean(work.likes?.length),
     prompt: work.showPromptPublic ? work.job.prompt : "作者未公开提示词",
+    showPromptPublic: work.showPromptPublic,
     size: work.job.size,
     title: work.job.model,
   };

@@ -7,7 +7,7 @@
 
 ## 2. 现状（真实模式）
 
-- **不使用任何全局状态库**（无 zustand / redux / jotai / react-query）。依赖只有 React 自带能力 + Next.js server 能力。
+- **不使用应用全局状态库**（无 redux / jotai / react-query）。React Flow 的传递依赖 zustand 仅封装在渲染库内部；账户任务/草稿仍由挂载的 React 工作台控制器持有，不能直接将库 store 作为业务状态。
 - 状态分三层：
   1. **服务端数据**（事实来源）——Server Components 直接查 `@/lib/db`（Prisma），`serialize` 成纯 JSON 后作为初始 props 传给 client 组件。
   2. **本地 UI 状态**——`useState`，只在组件内可见。
@@ -75,7 +75,13 @@ useEffect(() => {
 
 ### 5.3 全局列表不能当作"兜底展示"数据源
 
-页面级查询（如 `create/page.tsx` 取用户最近 50 条 generation）是**跨会话的全局列表**，只能喂给「历史图片栏 / 作品页」这类全局视图；中间业务视图展示什么，必须由**当前活跃会话**决定。
+创作台的旧最近 50 条 generation 查询曾同时承担会话恢复，不能当作历史栏专用查询直接删除。画布任务先验证 `src/lib/server/conversation-generations.ts` 和 `GET /api/me/conversations/:id/generations`，再将 `create/page.tsx` 替换为有界会话摘要及一个指定会话的首批内容。
+
+新加载器按 `userId + conversationId` 查询，使用不可变 `(createdAt,id)` 游标；默认 50、最多 100 条。游标同时校验账户、conversation scope 和 parent ID。`use-conversation-generations.ts` 通过账户/选择/请求轮次及 AbortSignal 拒绝迟到页面，明确显示加载/错误和更早记录入口，合并时保留已接收任务及较新的终态。导航的 `generationCount` 不等于当前加载的 ID 数量。
+
+fetch 与 JSON 解析共用 `STUDIO_READ_TIMEOUT_MS=30000` 截止；超时显示错误并释放请求/loading，重试保留失败的原游标和已加载内容。取消需同时结束等待和保护迟到 continuation，不能假设底层 Promise 一定遵守 AbortSignal。
+
+禁止把跨会话/画布的全局列表、孤儿记录或所有 canvas runs 投影为局部内容。创作台桌面历史栏和手机「最近图片」标签均保持移除；删除会话只移除组织归属，任务和图片仍保留在「我的作品」。空会话或无活跃会话只展示空状态。旧无查询参数的全局 generation API 仍兼容原调用方，不作为新加载器的兜底。
 
 **反例（已修复的 bug）**：会话列表为空时，把 `initialGenerations` 中 `conversationId` 为 NULL 的"孤儿"generation 全部倒进中间对话流。由于删除会话的后端语义是 `onDelete: SetNull`（图保留、归属置空），"删光会话"会触发该兜底，把**此前所有会话的图聚合在同一屏**，看起来像删除失效。
 
@@ -85,15 +91,20 @@ if (stored.length === 0 && orphans.length > 0) {
   setSessionGenerations(orphans);
   return;
 }
-// Good：会话为空就展示空状态；历史图仍由右侧历史栏 / 作品页承载
+// Good：会话为空就展示空状态；保留的历史图由作品页承载
 ```
 
-**回归测试**：`src/tests/unit/generator-studio-session-history.test.tsx`。
+**回归测试**：`src/tests/unit/generator-studio-session-history.test.tsx`、`src/tests/unit/conversation-generations-api.test.ts`、`src/tests/unit/use-conversation-generations.test.tsx`。
 
 ## 6. 表单状态
 
 - 表单输入用受控 `useState` 或 FormData；提交前用 zod schema（`src/lib/validators.ts`）校验，错误消息中文。
 - 提交结果错误用 `Alert` 组件（`variant` 区分 error/warning/success/info）展示，不写裸 `alert()`。
+- React Flow 节点输入、renderer-only dimensions、双模式草稿/运行生命周期遵循 [Canvas Studio](./canvas-studio.md)。被动外部 store 转发的受控文本必须保证原生事件内同步 value，防止 IME 被旧值写回打断。
+- `useCanvasEditor(view,controller)` 的 feature-local registry 由 owner/controller 生命周期持有，并以 `useSyncExternalStore` 订阅；不是应用全局 store 或第二份 canonical scene。目标 key 为 `[ownerId,canvasId,nodeId]`，允许字段仅 model/size/outputCompression/negativePrompt/seed，不含 API key/CAPTCHA。
+- raw 参数与 custom-size-open 意图放在懒 renderer 之上，Close/节点/模式/横竖屏改变不清除。提示词即时进 domain，本地自动保存仍只保存已接受 domain；未应用参数仅内存，必须显示 pending/refresh-loss，不冒充账号 snapshot 已保存。
+- `editor.applyPending(canvasId,nodeId?)` 返回 `CanvasFieldCommitResult`；先验证捕获范围的所有字段，再应用/清除同一版本 raw input，然后既有 Run/Save 才捕获。非法值保留/focus，迟到 ACK 不能清除后来编辑。显式空 Custom 与已接受 canonical `auto` 分开。
+- 受控 parameter 与 prompt 外部更新均须保护 focused composition；正常 blur/compositionend 再同步。viewport/media 只更新 CSS/手势展示，不改变 controller permission/lifetime，也不把 Move preview、测量、指针或 editor UI 写入 scene。
 
 ## 7. 禁止与常见错误
 

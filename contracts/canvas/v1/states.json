@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "assetStates": ["UPLOADING", "READY", "QUARANTINED", "DELETING", "DELETED"],
+  "assetTransitions": {
+    "UPLOADING": ["READY", "QUARANTINED"],
+    "READY": ["DELETING"],
+    "QUARANTINED": ["DELETING"],
+    "DELETING": ["DELETED"],
+    "DELETED": []
+  },
+  "runStates": ["PREPARING", "COMMITTED", "REJECTED"],
+  "runTransitions": {"PREPARING": ["COMMITTED", "REJECTED"], "COMMITTED": [], "REJECTED": []},
+  "putOutcomes": ["NOT_STARTED", "CONFIRMED", "UNKNOWN"],
+  "deleteOutcomes": ["NOT_STARTED", "DELETED", "MISSING", "FAILED", "UNKNOWN"],
+  "activeCanonicalJobStates": ["PENDING", "PROCESSING"],
+  "committedReplayBefore": ["captcha", "provider", "balance", "media", "canvasTombstone"],
+  "sameKeyNeverRecreatesMissingJob": true,
+  "singlePutPerUploadIdentity": true
+}

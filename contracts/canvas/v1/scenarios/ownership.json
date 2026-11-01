@@ -1,0 +1,40 @@
+{
+  "version": 1,
+  "immutablePrincipalField": "ownerId",
+  "nullableLiveOwnerField": "userId",
+  "immutableJobField": "originalJobId",
+  "nullableLiveJobField": "liveJobId",
+  "rootTables": [
+    "CanvasSavedAssetUse",
+    "CanvasJobAssetUse"
+  ],
+  "inventoryTables": [
+    "Canvas",
+    "CanvasImportAsset",
+    "CanvasRun",
+    "CanvasJobAssetUse"
+  ],
+  "deleteVectors": [
+    {
+      "operation": "canvasDelete",
+      "jobsRetained": true,
+      "savedRootsRetained": false,
+      "jobRootsRetained": true,
+      "inventoryRetained": true
+    },
+    {
+      "operation": "jobDelete",
+      "jobsRetained": false,
+      "savedRootsRetained": true,
+      "jobRootsRetained": true,
+      "inventoryRetained": true
+    },
+    {
+      "operation": "userDelete",
+      "jobsRetained": false,
+      "savedRootsRetained": true,
+      "jobRootsRetained": true,
+      "inventoryRetained": true
+    }
+  ]
+}

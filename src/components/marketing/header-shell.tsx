@@ -1,19 +1,30 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
+
+import { cn } from "@/lib/utils";
+
+import type { HeaderVariant } from "./homepage/types";
+import homeStyles from "./homepage/header.module.css";
 
 const HIDE_THRESHOLD = 80;
 const DELTA = 6;
 
-// Header 容器：滚动方向感知 hide-on-scroll，桌面端体感更轻；移动端为避免误判保持显示
-export function HeaderShell({ children }: { children: React.ReactNode }) {
+type HeaderShellProps = { children: ReactNode; variant?: HeaderVariant };
+const variantStyles: Record<HeaderVariant, string> = {
+  default: "sticky top-0 z-30 border-b border-[var(--line)] bg-[#f5efe6]/92 shadow-[0_10px_35px_rgba(84,52,29,0.06)] backdrop-blur-2xl transition-transform duration-200 ease-out",
+  home: homeStyles.shell,
+};
+
+// 首页始终固定；其他页面保留原有桌面滚动隐藏行为。
+export function HeaderShell({ children, variant = "default" }: HeaderShellProps) {
   const [hidden, setHidden] = useState(false);
   const hiddenRef = useRef(false);
   const lastY = useRef(0);
   const frameRef = useRef<number | null>(null);
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    if (variant === "home" || typeof window === "undefined") return;
 
     function setHiddenState(nextHidden: boolean) {
       if (hiddenRef.current === nextHidden) return;
@@ -53,14 +64,12 @@ export function HeaderShell({ children }: { children: React.ReactNode }) {
         window.cancelAnimationFrame(frameRef.current);
       }
     };
-  }, []);
+  }, [variant]);
 
   return (
     <div
-      className={
-        "sticky top-0 z-30 border-b border-[var(--line)] bg-[#f5efe6]/92 shadow-[0_10px_35px_rgba(84,52,29,0.06)] backdrop-blur-2xl transition-transform duration-200 ease-out " +
-        (hidden ? "-translate-y-full" : "translate-y-0")
-      }
+      className={cn(variantStyles[variant], variant === "default" && (hidden ? "-translate-y-full" : "translate-y-0"))}
+      data-header-variant={variant}
     >
       {children}
     </div>

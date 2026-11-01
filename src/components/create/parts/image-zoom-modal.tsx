@@ -4,6 +4,9 @@
 import { Download, ImagePlus, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect } from "react";
+import { cn } from "@/lib/utils";
+import { useCanvasMobileViewport } from "../hooks/use-canvas-mobile-viewport";
+import styles from "./canvas-stage.module.css";
 
 type ImageZoomModalProps = {
   src: string | null;
@@ -13,15 +16,16 @@ type ImageZoomModalProps = {
   } | null;
   onClose: () => void;
   onDownload: (url: string) => void;
-  onUseForEdit: (url: string) => void;
+  onUseForEdit?: (url: string) => void;
 };
 
 export function ImageZoomModal({ src, meta, onClose, onDownload, onUseForEdit }: ImageZoomModalProps) {
+  const viewport = useCanvasMobileViewport(undefined, Boolean(src));
   // 监听 Escape 关闭，弥补原实现只能点背景关闭的可访问性短板。
   useEffect(() => {
     if (!src) return;
     function handleKey(event: KeyboardEvent) {
-      if (event.key === "Escape") onClose();
+      if (event.key === "Escape" && !event.isComposing && event.keyCode !== 229) onClose();
     }
     document.addEventListener("keydown", handleKey);
     return () => document.removeEventListener("keydown", handleKey);
@@ -36,7 +40,8 @@ export function ImageZoomModal({ src, meta, onClose, onDownload, onUseForEdit }:
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
-          className="fixed inset-0 z-50 flex select-none items-center justify-center bg-black/80 p-4 backdrop-blur-md"
+          className={cn("fixed inset-0 z-50 flex select-none items-center justify-center bg-black/80 p-4 backdrop-blur-md", styles.visibleDialogBackdrop, styles.imageViewer)}
+          style={viewport.style}
           onClick={onClose}
         >
           <button
@@ -48,7 +53,7 @@ export function ImageZoomModal({ src, meta, onClose, onDownload, onUseForEdit }:
             }}
             aria-label="关闭"
           >
-            <X className="size-6" strokeWidth={2.6} />
+            <X aria-hidden className="size-6" strokeWidth={2.6} />
           </button>
           <motion.img
             initial={{ scale: 0.96, opacity: 0 }}
@@ -79,26 +84,30 @@ export function ImageZoomModal({ src, meta, onClose, onDownload, onUseForEdit }:
           )}
           <div className="absolute bottom-8 flex items-center gap-4">
             <button
+              type="button"
               onClick={(e) => {
                 e.stopPropagation();
                 onDownload(src);
               }}
               className="inline-flex cursor-pointer items-center gap-2 rounded-full bg-white/20 px-6 py-3 text-sm font-medium text-white shadow-lg backdrop-blur-md transition-all duration-200 ease-out hover:bg-[var(--accent)] hover:shadow-xl"
             >
-              <Download className="size-4" />
+              <Download aria-hidden className="size-4" />
               保存高清原图
             </button>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onUseForEdit(src);
-                onClose();
-              }}
-              className="inline-flex cursor-pointer items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-medium text-black shadow-lg transition-all duration-200 ease-out hover:bg-[var(--accent)] hover:text-white hover:shadow-xl"
-            >
-              <ImagePlus className="size-4" />
-              加入编辑
-            </button>
+            {onUseForEdit && (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onUseForEdit(src);
+                  onClose();
+                }}
+                className="inline-flex cursor-pointer items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-medium text-black shadow-lg transition-all duration-200 ease-out hover:bg-[var(--accent)] hover:text-white hover:shadow-xl"
+              >
+                <ImagePlus aria-hidden className="size-4" />
+                加入编辑
+              </button>
+            )}
           </div>
         </motion.div>
       )}

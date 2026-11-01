@@ -1,0 +1,18 @@
+# Keep bulky/local captures on disk; version contracts, reports and hash receipts.
+**/.runtime/
+**/__pycache__/
+**/checks/**/*.stdout.log
+**/checks/**/*.stderr.log
+**/checks/**/*.png
+**/checks/**/*.jpg
+**/checks/**/*.jpeg
+**/checks/**/*.webp
+**/checks/**/*.image
+**/checks/**/*.html
+**/checks/**/*.rsc
+**/checks/**/*-network.json
+**/checks/browser/reference-assets/tailwind-cdn.js
+**/research/asset-evidence/*.jpg
+**/research/asset-evidence/*.png
+**/research/asset-evidence/*.woff2
+**/research/asset-evidence/*.html

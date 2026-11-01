@@ -25,6 +25,7 @@ export type UserRole = "user" | "admin";
 ## 3. 输入校验（zod）
 
 - 所有外部输入（API body、表单、URL 参数）必须经 zod schema 校验，schema 集中在 `src/lib/validators.ts`。
+- 窄例外：`create/canvas/draft-store.ts` 的 IndexedDB 私有 envelope、write stamp 和 Blob record 格式由 feature 存储边界持有，必须严格校验并组合中央 scene/outbox/metadata schemas，避免 `lib` 反向依赖组件类型。不得借此复制公共 API 字段、剥离未知运行期字段后假装有效，或允许凭证/预览 URL 持久化。
 - 错误消息写中文，内联在 schema 上：
 
 ```ts

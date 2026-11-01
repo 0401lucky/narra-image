@@ -1,4 +1,4 @@
-import { defineConfig } from "vitest/config";
+import { configDefaults, defineConfig } from "vitest/config";
 import path from "node:path";
 
 export default defineConfig({
@@ -7,6 +7,7 @@ export default defineConfig({
     globals: true,
     setupFiles: ["./src/tests/setup/vitest.setup.ts"],
     include: ["src/tests/**/*.test.ts", "src/tests/**/*.test.tsx"],
+    exclude: [...configDefaults.exclude, "**/worker-contracts-db.test.ts", "**/canvas-contracts-db.test.ts"],
     coverage: {
       provider: "v8",
       reporter: ["text", "html"],

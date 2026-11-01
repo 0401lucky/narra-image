@@ -1,0 +1,97 @@
+{
+  "version": 1,
+  "assetVectors": [
+    {
+      "from": "UPLOADING",
+      "to": "READY",
+      "allowed": true
+    },
+    {
+      "from": "UPLOADING",
+      "to": "QUARANTINED",
+      "allowed": true
+    },
+    {
+      "from": "READY",
+      "to": "DELETING",
+      "allowed": true
+    },
+    {
+      "from": "QUARANTINED",
+      "to": "DELETING",
+      "allowed": true
+    },
+    {
+      "from": "DELETING",
+      "to": "READY",
+      "allowed": false
+    },
+    {
+      "from": "DELETED",
+      "to": "UPLOADING",
+      "allowed": false
+    }
+  ],
+  "runVectors": [
+    {
+      "from": "PREPARING",
+      "to": "COMMITTED",
+      "allowed": true
+    },
+    {
+      "from": "COMMITTED",
+      "to": "PREPARING",
+      "allowed": false
+    },
+    {
+      "from": "REJECTED",
+      "to": "PREPARING",
+      "allowed": false
+    }
+  ],
+  "capabilityVectors": [
+    {
+      "versioning": "UNVERSIONED",
+      "verified": true,
+      "locationMatched": true,
+      "allowed": true
+    },
+    {
+      "versioning": "UNVERSIONED",
+      "verified": false,
+      "locationMatched": true,
+      "allowed": false
+    },
+    {
+      "versioning": "UNVERSIONED",
+      "verified": true,
+      "locationMatched": false,
+      "allowed": false
+    },
+    {
+      "versioning": "ENABLED",
+      "verified": true,
+      "locationMatched": true,
+      "allowed": false
+    },
+    {
+      "versioning": "SUSPENDED",
+      "verified": true,
+      "locationMatched": true,
+      "allowed": false
+    },
+    {
+      "versioning": "UNKNOWN",
+      "verified": true,
+      "locationMatched": true,
+      "allowed": false
+    },
+    {
+      "versioning": "UNVERSIONED",
+      "verified": true,
+      "locationMatched": true,
+      "putVersionId": "unexpected-version",
+      "allowed": false
+    }
+  ]
+}

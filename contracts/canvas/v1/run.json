@@ -1,0 +1,15 @@
+{
+  "contract": "narra.canvas.run",
+  "version": 1,
+  "originFields": ["canvasId", "nodeId", "runId"],
+  "outboxFields": ["storageVersion", "ownerId", "canvasId", "nodeId", "runId", "projection", "phase", "jobId"],
+  "outboxPhases": ["prepared", "uncertain", "accepted", "rejected"],
+  "acceptedBindingFields": ["runId", "nodeId", "jobId", "outputsHandled"],
+  "oneAcceptedBindingPerGenerationNode": true,
+  "lookupIsReadOnly": true,
+  "reloadSubmits": false,
+  "deletedOrganizationCancels": false,
+  "deleteResultResetsOutputsHandled": false,
+  "immutableFields": ["ownerId", "canvasId", "nodeId", "runId", "intentHash", "inputSnapshot", "originalJobId"],
+  "nullableLiveRelations": ["userId", "liveJobId"]
+}

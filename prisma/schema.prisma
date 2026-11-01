@@ -72,6 +72,34 @@ enum PromptSourceStatus {
   FAILED
 }
 
+enum CanvasImportAssetState {
+  UPLOADING
+  READY
+  QUARANTINED
+  DELETING
+  DELETED
+}
+
+enum CanvasRunState {
+  PREPARING
+  COMMITTED
+  REJECTED
+}
+
+enum CanvasPutOutcome {
+  NOT_STARTED
+  CONFIRMED
+  UNKNOWN
+}
+
+enum CanvasDeleteOutcome {
+  NOT_STARTED
+  DELETED
+  MISSING
+  FAILED
+  UNKNOWN
+}
+
 model User {
   id                   String               @id @default(cuid())
   email                String               @unique
@@ -101,6 +129,9 @@ model User {
   conversations        Conversation[]
   apiKeys              ApiKey[]
   contentReviews       ContentReview[]
+  canvases             Canvas[]
+  canvasImports        CanvasImportAsset[]
+  canvasRuns           CanvasRun[]
 
   @@index([oauthProvider, oauthId])
 }
@@ -454,6 +485,8 @@ model GenerationJob {
   images                  GenerationImage[]
   videos                  GeneratedVideo[]
   attempts                GenerationAttempt[]
+  canvasRuns              CanvasRun[]
+  canvasAssetUses         CanvasJobAssetUse[]
 
   @@index([apiKeyId])
   @@index([apiKeyId, clientSource, createdAt])
@@ -558,4 +591,140 @@ model GeneratedVideo {
   @@index([showcaseStatus, featuredAt(sort: Desc), id(sort: Desc)])
   @@index([jobId, createdAt])
   @@index([createdAt(sort: Desc), id(sort: Desc)])
+}
+
+model Canvas {
+  id               String    @id @db.Uuid
+  ownerId          String    @db.VarChar(128)
+  userId           String?
+  title            String    @db.VarChar(120)
+  revision         Int       @default(0)
+  scene            Json?
+  lastSavedAt      DateTime? @db.Timestamptz(3)
+  lastSaveId       String?   @db.Uuid
+  lastSaveHash     String?   @db.Char(64)
+  lastSaveRevision Int?
+  deletedAt        DateTime? @db.Timestamptz(3)
+  createdAt        DateTime  @default(dbgenerated("clock_timestamp()")) @db.Timestamptz(3)
+  updatedAt        DateTime  @default(dbgenerated("clock_timestamp()")) @db.Timestamptz(3)
+  user             User?     @relation(fields: [userId], references: [id], onDelete: SetNull, onUpdate: Restrict)
+  savedAssetUses   CanvasSavedAssetUse[]
+  runs             CanvasRun[]
+
+  @@unique([id, ownerId], map: "Canvas_id_owner_key")
+  @@index([ownerId, deletedAt, updatedAt(sort: Desc), id(sort: Desc)], map: "Canvas_owner_metadata_idx")
+}
+
+model CanvasImportAsset {
+  id                     String                 @id @default(cuid()) @db.VarChar(128)
+  ownerId                String                 @db.VarChar(128)
+  userId                 String?
+  uploadId               String                 @db.Uuid
+  kind                   String                 @default("IMPORT") @db.VarChar(16)
+  sha256                 String                 @db.Char(64)
+  byteLength             Int
+  mimeType               String                 @db.VarChar(64)
+  storageLocation        String                 @db.VarChar(128)
+  storageEndpoint        String                 @db.VarChar(512)
+  storageRegion          String                 @db.VarChar(128)
+  storageBucket          String                 @db.VarChar(255)
+  storageKey             String                 @db.VarChar(512)
+  storageVersionId       String?                @db.VarChar(1024)
+  state                  CanvasImportAssetState @default(UPLOADING)
+  uploadToken            String                 @db.Uuid
+  uploadExpiresAt        DateTime               @db.Timestamptz(3)
+  preparationExpiresAt   DateTime?              @db.Timestamptz(3)
+  readyAt                DateTime?              @db.Timestamptz(3)
+  detachedAt             DateTime?              @db.Timestamptz(3)
+  putOutcome             CanvasPutOutcome       @default(NOT_STARTED)
+  deleteOutcome          CanvasDeleteOutcome    @default(NOT_STARTED)
+  deleteToken            String?                @db.Uuid
+  deleteExpiresAt        DateTime?              @db.Timestamptz(3)
+  deleteAttempts         Int                    @default(0)
+  nextDeleteAt           DateTime?              @db.Timestamptz(3)
+  deletedAt              DateTime?              @db.Timestamptz(3)
+  lastStorageErrorCode   String?                @db.VarChar(64)
+  physicalBytesAccounted Boolean                @default(true)
+  needsReconciliation    Boolean                @default(false)
+  createdAt              DateTime               @default(dbgenerated("clock_timestamp()")) @db.Timestamptz(3)
+  updatedAt              DateTime               @default(dbgenerated("clock_timestamp()")) @db.Timestamptz(3)
+  user                   User?                  @relation(fields: [userId], references: [id], onDelete: SetNull, onUpdate: Restrict)
+  savedAssetUses         CanvasSavedAssetUse[]
+  jobAssetUses           CanvasJobAssetUse[]
+
+  @@unique([id, ownerId], map: "CanvasImportAsset_id_owner_key")
+  @@unique([ownerId, uploadId], map: "CanvasImportAsset_owner_upload_key")
+  @@unique([storageEndpoint, storageBucket, storageKey], map: "CanvasImportAsset_physical_key")
+  @@index([ownerId, physicalBytesAccounted], map: "CanvasImportAsset_owner_quota_idx")
+  @@index([ownerId, state, uploadExpiresAt], map: "CanvasImportAsset_owner_upload_idx")
+  @@index([storageLocation, state, nextDeleteAt, detachedAt], map: "CanvasImportAsset_gc_idx")
+}
+
+model CanvasSavedAssetUse {
+  canvasId  String            @db.Uuid
+  assetId   String            @db.VarChar(128)
+  ownerId   String            @db.VarChar(128)
+  createdAt DateTime          @default(dbgenerated("clock_timestamp()")) @db.Timestamptz(3)
+  canvas    Canvas            @relation(fields: [canvasId, ownerId], references: [id, ownerId], onDelete: Restrict, onUpdate: Restrict)
+  asset     CanvasImportAsset @relation(fields: [assetId, ownerId], references: [id, ownerId], onDelete: Restrict, onUpdate: Restrict)
+
+  @@id([canvasId, assetId])
+  @@index([assetId], map: "CanvasSavedAssetUse_asset_idx")
+}
+
+model CanvasRun {
+  id                   String         @id @default(cuid()) @db.VarChar(128)
+  ownerId              String         @db.VarChar(128)
+  userId               String?
+  canvasId             String         @db.Uuid
+  nodeId               String         @db.Uuid
+  runId                String         @db.Uuid
+  intentHash           String         @db.Char(64)
+  credentialFingerprint String?       @db.Char(64)
+  inputSnapshot        Json
+  state                CanvasRunState @default(PREPARING)
+  preparationToken     String         @db.Uuid
+  preparationExpiresAt DateTime       @db.Timestamptz(3)
+  originalJobId        String?        @unique(map: "CanvasRun_original_job_key") @db.VarChar(128)
+  liveJobId            String?        @unique(map: "CanvasRun_live_job_key")
+  rejectionCode        String?        @db.VarChar(64)
+  committedAt          DateTime?      @db.Timestamptz(3)
+  rejectedAt           DateTime?      @db.Timestamptz(3)
+  createdAt            DateTime       @default(dbgenerated("clock_timestamp()")) @db.Timestamptz(3)
+  updatedAt            DateTime       @default(dbgenerated("clock_timestamp()")) @db.Timestamptz(3)
+  user                 User?          @relation(fields: [userId], references: [id], onDelete: SetNull, onUpdate: Restrict)
+  canvas               Canvas         @relation(fields: [canvasId, ownerId], references: [id, ownerId], onDelete: Restrict, onUpdate: Restrict)
+  liveJob              GenerationJob? @relation(fields: [liveJobId], references: [id], onDelete: SetNull, onUpdate: Restrict)
+  jobAssetUses         CanvasJobAssetUse[]
+
+  @@unique([id, ownerId], map: "CanvasRun_id_owner_key")
+  @@unique([ownerId, runId], map: "CanvasRun_owner_run_key")
+  @@index([canvasId, nodeId, state, preparationExpiresAt], map: "CanvasRun_node_admission_idx")
+  @@index([ownerId, canvasId, createdAt], map: "CanvasRun_owner_canvas_idx")
+}
+
+model CanvasJobAssetUse {
+  id            String            @id @default(cuid()) @db.VarChar(128)
+  ownerId       String            @db.VarChar(128)
+  runId         String            @db.VarChar(128)
+  assetId       String            @db.VarChar(128)
+  originalJobId String            @db.VarChar(128)
+  liveJobId     String?
+  ordinal       Int
+  createdAt     DateTime          @default(dbgenerated("clock_timestamp()")) @db.Timestamptz(3)
+  run           CanvasRun         @relation(fields: [runId, ownerId], references: [id, ownerId], onDelete: Restrict, onUpdate: Restrict)
+  asset         CanvasImportAsset @relation(fields: [assetId, ownerId], references: [id, ownerId], onDelete: Restrict, onUpdate: Restrict)
+  liveJob       GenerationJob?    @relation(fields: [liveJobId], references: [id], onDelete: SetNull, onUpdate: Restrict)
+
+  @@unique([runId, ordinal], map: "CanvasJobAssetUse_run_ordinal_key")
+  @@unique([runId, assetId], map: "CanvasJobAssetUse_run_asset_key")
+  @@index([assetId], map: "CanvasJobAssetUse_asset_idx")
+  @@index([originalJobId], map: "CanvasJobAssetUse_original_job_idx")
+}
+
+model CanvasGcLease {
+  id        String    @id @default("canvas-imports") @db.VarChar(64)
+  token     String?   @db.Uuid
+  expiresAt DateTime? @db.Timestamptz(3)
+  updatedAt DateTime  @default(dbgenerated("clock_timestamp()")) @db.Timestamptz(3)
 }

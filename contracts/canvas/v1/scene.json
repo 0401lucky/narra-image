@@ -1,0 +1,27 @@
+{
+  "contract": "narra.canvas.scene",
+  "version": 1,
+  "fields": ["schemaVersion", "nodes", "edges", "viewport", "runBindings"],
+  "nodeKinds": ["prompt", "reference", "generation", "result"],
+  "nodeFields": {
+    "prompt": ["id", "kind", "position", "text"],
+    "reference": ["id", "kind", "position", "source"],
+    "generation": ["id", "kind", "position", "parameters"],
+    "result": ["id", "kind", "position", "jobId", "imageId", "runId"]
+  },
+  "edgeFields": {
+    "prompt-input": ["id", "kind", "source", "target"],
+    "image-input": ["id", "kind", "source", "target", "ordinal"],
+    "output-provenance": ["id", "kind", "source", "target"]
+  },
+  "bindingFields": ["runId", "nodeId", "jobId", "outputsHandled"],
+  "importedSourceFields": ["kind", "assetId"],
+  "localSourceFields": ["kind", "blobId", "uploadId"],
+  "generationParameterFields": ["providerMode", "channelId", "model", "size", "quality", "outputFormat", "outputCompression", "moderation", "count", "negativePrompt", "seed"],
+  "resultIdPrefix": "result:",
+  "clientIdPattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+  "negativeFiniteCoordinatesAllowed": true,
+  "incompletePromptSaveAllowed": true,
+  "cloudBindingsRequireJobId": true,
+  "libraryStateAllowed": false
+}

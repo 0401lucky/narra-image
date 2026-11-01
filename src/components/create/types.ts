@@ -58,6 +58,7 @@ export type GenerationItem = {
   sourceImageUrls?: string[];
   startedAt?: string | null;
   status: "pending" | "succeeded" | "failed";
+  updatedAt?: string;
 };
 
 export type ChannelInfo = {
@@ -114,6 +115,7 @@ export type SessionInfo = {
   id: string;
   title: string;
   generationIds: string[];
+  generationCount?: number;
   createdAt: string;
 };
 

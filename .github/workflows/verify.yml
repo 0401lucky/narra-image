@@ -40,7 +40,7 @@ jobs:
   verify-migrations:
     name: verify:migrations
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 35
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -71,6 +71,10 @@ jobs:
         run: pnpm verify:migrations
         timeout-minutes: 20
 
+      - name: Run independent canvas DB contracts
+        run: pnpm verify:canvas-contracts:db
+        timeout-minutes: 8
+
   verify-e2e:
     name: verify:e2e
     runs-on: ubuntu-latest
@@ -98,8 +102,12 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Prepare disposable PostgreSQL image
-        run: docker pull postgres:17-alpine
+      - name: Prepare disposable E2E base images
+        run: |
+          docker pull postgres:17-alpine
+          docker pull node:24.22.1-alpine
+          docker pull golang:1.25-alpine
+          docker pull alpine:3.22
 
       - name: Run verify:e2e
         run: pnpm verify:e2e

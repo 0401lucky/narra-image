@@ -42,7 +42,9 @@ pnpm verify:worker-contracts:db
 - `WORKER_CONTRACTS_REQUIRE_DB=1`：DB 测试强制 sentinel，缺失时必须失败，不能 skip。
 - `DATABASE_URL/TEST_DATABASE_URL`：只能由 runner 构造为随机名称的 `127.0.0.1` disposable 数据库；禁止回退 `.env`、开发库或生产库。
 
-Prisma 7 命令必须从项目根目录运行以加载 `prisma.config.ts`。runner 应预先注入 disposable `DATABASE_URL`，因此本地 `.env` 不能覆盖连接目标。Go/pgx 消费 Prisma URL 前必须复用 `normalizeDatabaseURL`，把 `schema` 转换为 `search_path`。
+worker/canvas DB runner 的 Prisma 7 命令从项目根运行，但通过 `--config` 指定 `createDisposablePrismaWorkspace` 创建的隔离配置，不加载项目 `prisma.config.ts`。`disposableTestEnvironment` 仅注入 runner URL 并使用 deny-env preload；禁止只凭 URL 已设置就声称本地 `.env` 未读取。Go/pgx 消费 Prisma URL 前必须复用 `normalizeDatabaseURL`，把 `schema` 转换为 `search_path`。
+
+Docker 命令通过 `LocalDockerSession` 验证并固定本地 unix/npipe endpoint，完成镜像 preflight 后使用空且带 owner 的 config；不继承远端 context/auth/proxy。清理只移除精确核对 ID/名称/owner 的容器，不删除关联卷。旧 migration wrapper 的非 Docker 环境仍需外层隔离，见 `operations/release-hardening.md`。
 
 ## 4. 校验与错误矩阵
 
@@ -70,6 +72,7 @@ Prisma 7 命令必须从项目根目录运行以加载 `prisma.config.ts`。runn
 - Node 单测：入队渠道校验、取消三阶段、等待超时、管理员清理和退款 CAS。
 - Go 单测：claim 原子性、handoff、有限重试、租约过期、公平性、停止与成功写回 ordinal。
 - Disposable PostgreSQL：legacy snapshot -> additive migration；schema/trigger、attempt 唯一、UNKNOWN 不退款、重复退款、stale ordinal 不写媒体。
+- `local-docker-safety.test.ts`：远端 context 在 daemon/创建前失败、probe 后 context 改变仍固定原本地 endpoint、私密环境不继承、配置/owner 不匹配拒绝清理、standalone worker 命令边界使用同一防护。
 - 最终门禁：`tsc --noEmit`、三个 verify wrapper、`go build ./...`、`git diff --check`。
 
 ## 7. 错误与正确示例

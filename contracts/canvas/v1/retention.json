@@ -1,0 +1,18 @@
+{
+  "contract": "narra.canvas.retention",
+  "version": 1,
+  "graceSeconds": 604800,
+  "clock": "database",
+  "eligibleKind": "IMPORT",
+  "protectedRoots": ["CanvasSavedAssetUse", "CanvasJobAssetUse"],
+  "jobRootsSurvive": ["SUCCEEDED", "FAILED", "canvasDelete", "nodeDelete", "jobDelete", "userDelete"],
+  "excludedKinds": ["GENERATED", "LEGACY"],
+  "eligibilityStarts": ["lastAuthoritativeRootDetach", "orphanReady", "quarantine"],
+  "deleteRecordedKeyOnly": true,
+  "retainInventoryAfterDelete": true,
+  "uncertainPutRetainsPhysicalAccounting": true,
+  "neverReuseUploadIdentityOrKey": true,
+  "lockOrder": ["ownerQuotaGate", "canvas", "run", "sortedAssets"],
+  "gcLockOrder": ["sweepLease", "sortedAssets"],
+  "preparationProtectionOnlyIncreases": true
+}

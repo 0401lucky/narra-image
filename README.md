@@ -90,6 +90,11 @@ pnpm dev
 - Worker 契约与拓扑：`WORKER_CONTRACTS_V1_ENABLED` 默认关闭；
   `ENABLE_EMBEDDED_WORKER` 决定 supervisor 是否派生 Worker；
   `WORKER_RUNTIME_MODE` 必须显式为 `embedded` 或 `dedicated`。
+- Canvas v1：`CANVAS_ENABLED` 默认关闭，app/Worker 必须一致。
+  `CANVAS_ASSET_GC_INTERVAL_SECONDS` 默认 60 秒（最少 60，最大 2147483647）；
+  `CANVAS_ASSET_GC_BATCH_SIZE` 默认 20（1-100）。每个 Worker 只有一个
+  可取消、随进程停止的 GC 调度器，数据库租约约束多副本领取。
+  七天无根导入宽限期固定，不受这两个调度参数影响。
 - 应用 readiness：`WORKER_INTERNAL_URL`、`WORKER_READINESS_REQUIRED`、
   `WORKER_READINESS_TIMEOUT_MS`。超时表示单次请求 Worker `/readyz`
   的上限，默认 2000ms、允许 100–30000ms。
@@ -121,6 +126,25 @@ pnpm dev
   `WORKER_READINESS_REQUIRED=true` 时检查 Worker `/readyz`。成功必须是
   HTTP 200 且 Worker JSON 中 `status` 为 `ready`；失败只向客户端返回稳定
   错误码，不暴露 DSN、SQL、上游正文或密钥。
+
+`CANVAS_ENABLED=true` 时，Next 还会核验实际 Canvas schema 和自身存储能力，
+并要求 Worker `/readyz` 的 `capabilities.canvas` 精确返回
+`{"version":1,"schema":"ready","storage":"unversioned","gc":"running"}`；
+即使 `WORKER_READINESS_REQUIRED=false`，旧版或关闭 Canvas 的 Worker 也不能
+让应用就绪。Worker 在 schema/拓扑/存储通过后启动 GC，探针和每次领取前
+重新检查能力；死亡的调度器、未知 schema 或存储均不能报告 Canvas 可用。
+
+Canvas 导入必须配置 S3，且 `GetBucketVersioning` 验证为无版本存储；版本已启用、
+暂停、拒绝访问或未知结果均关闭导入/回收，不能仅凭配置或 URL 猜测。GC 只删除
+已登记 IMPORT 的原始位置和精确 key，保护已保存快照及所有已提交任务的输入根，
+不删除生成作品或旧媒体。删除失败保留库存、物理占用和有界退避；UNKNOWN PUT
+即使遇到缺失 key 也保留墓碑及占用以核对迟到写入。Worker `/metrics` 的 `canvas`
+计数展示领取、失败、fence 失效及确认回收字节，不把远程失败计为已回收。
+
+发布顺序是 additive migration → app/Worker 关闭 Canvas → 隔离数据库/模拟存储及
+双拓扑门禁 → 显式启用并验证。关闭开关可停止 Canvas 写入/GC；回滚仍须通过
+现有 Worker rollback preflight，保留 schema、快照、引用、库存、任务和媒体。
+默认关闭或构建成功不代表启用态验收通过，也不授权真实数据库/对象存储操作。
 
 ## 提示词库同步
 

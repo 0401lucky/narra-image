@@ -1,11 +1,21 @@
-import { GenerationStatus } from "@prisma/client";
+import { GenerationStatus, type Prisma } from "@prisma/client";
 
 import { db } from "@/lib/db";
 import { getEnv } from "@/lib/env";
+import { CANVAS_RUN_OPT_IN_HEADER, CanvasContractError, type CanvasRunSubmissionDtoV1 } from "@/lib/canvas/contracts";
+import { canvasErrorResponse, canvasJson, requireCanvasOwner } from "@/lib/canvas/http";
+import { isCanvasCanonicalDataUrl, readCanvasRunInputs, type CanvasResolvedRunInputs } from "@/lib/canvas/inputs";
+import {
+  canvasRunResponse, commitCanvasRun, createCanvasRunAttempt, prepareCanvasRunCommit, recoverCanvasRunResponse, rejectCanvasRun, reserveCanvasRun,
+  type CanvasRunAttempt, type CanvasRunPreparation,
+} from "@/lib/canvas/run-submission";
+import { serializeCanvasGeneration } from "@/lib/canvas/runs";
+import { canvasTransaction, isCanvasTransactionRetryable } from "@/lib/canvas/transactions";
 import {
   GenerationContractError,
   channelSupportsModel,
   generationContractWriteFields,
+  getGenerationErrorDefinition,
   normalizeProviderModels,
 } from "@/lib/generation/contracts";
 import { parseGenerateRequest } from "@/lib/generation/parse-generate-request";
@@ -22,7 +32,7 @@ import {
 } from "@/lib/providers/built-in-provider";
 import { decryptProviderSecret, encryptProviderSecret } from "@/lib/providers/provider-secret";
 import { requireTurnstile } from "@/lib/auth/turnstile";
-import { requireCurrentUserRecord } from "@/lib/server/current-user";
+import { getCurrentUserRecord, requireCurrentUserRecord } from "@/lib/server/current-user";
 import { checkGenerationInput } from "@/lib/moderation/check";
 import { getErrorMessage, jsonError, jsonOk } from "@/lib/server/http";
 import { assertPublicHttpUrl } from "@/lib/server/safe-remote-url";
@@ -37,12 +47,36 @@ async function assertGenerationPublicHttpUrl(url: string, fieldName: string) {
   }
 }
 
+class GenerationCreditError extends Error {}
+
 export async function POST(request: Request) {
   let jobId: string | null = null;
+  const canvasTransport = request.headers.has(CANVAS_RUN_OPT_IN_HEADER);
+  let canvasAttempt: CanvasRunAttempt | null = null;
+  let canvasPreparation: CanvasRunPreparation | null = null;
+  let canvasCommitAttempted = false;
+  let canvasCommitted = false;
+
+  async function rejectPreparationResponse(response: Response): Promise<Response> {
+    if (canvasPreparation) {
+      const rejected = await rejectCanvasRun(canvasPreparation, "CANVAS_RUN_REJECTED");
+      if (!rejected) return recoverCanvasRunResponse(canvasPreparation);
+      response.headers.set("Cache-Control", "private, no-store");
+    }
+    return response;
+  }
 
   try {
-    const user = await requireCurrentUserRecord();
+    const user = canvasTransport ? await getCurrentUserRecord() : await requireCurrentUserRecord();
+    if (canvasTransport) await requireCanvasOwner({ getUser: async () => user });
+    if (!user) throw new CanvasContractError("CANVAS_UNAUTHENTICATED");
     const body = await parseGenerateRequest(request);
+    if (body.canvasRun) {
+      canvasAttempt = createCanvasRunAttempt(user.id, body.canvasRun, body.customProvider);
+      const reservation = await reserveCanvasRun(canvasAttempt);
+      if (reservation.kind === "replay") return canvasRunResponse(reservation.lookup);
+      canvasPreparation = reservation.preparation;
+    }
     await requireTurnstile("generate", body.turnstileToken);
 
     // 内容审核：敏感词 / AI 命中则阻断本次生成（不扣积分、不建 job）
@@ -52,7 +86,7 @@ export async function POST(request: Request) {
       negativePrompt: body.negativePrompt,
     });
     if (!moderation.allowed) {
-      return jsonError(moderation.message, 400);
+      return rejectPreparationResponse(jsonError(moderation.message, 400));
     }
     const env = getEnv();
 
@@ -84,7 +118,7 @@ export async function POST(request: Request) {
         providerMode: body.providerMode,
       })
     ) {
-      return jsonError("积分不足，请联系管理员补充", 402);
+      return rejectPreparationResponse(jsonError("积分不足，请联系管理员补充", 402));
     }
 
     let customProvider = body.customProvider ?? null;
@@ -96,7 +130,7 @@ export async function POST(request: Request) {
       });
 
       if (!saved) {
-        return jsonError("请先填写自填渠道配置", 400);
+        return rejectPreparationResponse(jsonError("请先填写自填渠道配置", 400));
       }
 
       customProvider = {
@@ -123,7 +157,9 @@ export async function POST(request: Request) {
     }
 
     // 此处做入队前校验；Worker 仍需对实际请求和重定向目标重复校验。
-    const urlChecks = body.imageUrls.map((url) =>
+    const canvasInputs = canvasPreparation ? await readCanvasRunInputs(user.id, canvasPreparation.run) : null;
+    const referenceUrls = canvasInputs?.sourceImageUrls ?? body.imageUrls;
+    const urlChecks = referenceUrls.filter((url) => !canvasInputs || !isCanvasCanonicalDataUrl(url)).map((url) =>
       assertGenerationPublicHttpUrl(url, "参考图 URL")
     );
     if (body.providerMode === "custom" && customProvider) {
@@ -167,14 +203,17 @@ export async function POST(request: Request) {
         }),
       ),
     );
-    const sourceImageUrls = [...uploadedUrls, ...body.imageUrls];
+    const sourceImageUrls = canvasInputs?.sourceImageUrls ?? [...uploadedUrls, ...body.imageUrls];
     const contractFields = generationContractWriteFields(
       env.WORKER_CONTRACTS_V1_ENABLED,
     );
 
     // 创建 PENDING 任务并预扣积分。模型调用转交给 Go Worker，
     // 让请求链路保持短平快，也避免 Next 进程重启导致后台生成丢失。
-    const job = await db.$transaction(async (tx) => {
+    const preparation = canvasPreparation;
+    const createJob = async (tx: Prisma.TransactionClient) => {
+      let currentInputs: CanvasResolvedRunInputs | null = null;
+      if (preparation && canvasInputs) currentInputs = await prepareCanvasRunCommit(tx, preparation, canvasInputs);
       const created = await tx.generationJob.create({
         data: {
           ...(conversationToBind ? { conversationId: conversationToBind } : {}),
@@ -208,7 +247,7 @@ export async function POST(request: Request) {
           moderation: body.moderation,
           seed: body.seed,
           size: body.size,
-          sourceImageUrls,
+          sourceImageUrls: currentInputs?.sourceImageUrls ?? sourceImageUrls,
           status: GenerationStatus.PENDING,
           handoffState: contractFields.handoffState,
           userId: user.id,
@@ -255,18 +294,52 @@ export async function POST(request: Request) {
           data: { credits: { decrement: cost } },
         });
         if (charged.count === 0) {
+          if (preparation) throw new GenerationCreditError("积分不足，请联系管理员补充");
           throw new Error("积分不足，请联系管理员补充");
         }
       }
 
+      if (preparation) await commitCanvasRun(tx, preparation, created.id);
       return created;
-    });
+    };
+    if (preparation) canvasCommitAttempted = true;
+    const job = preparation ? await canvasTransaction(createJob) : await db.$transaction(createJob);
+    if (preparation) {
+      canvasCommitted = true;
+      return canvasJson({
+        generation: serializeCanvasGeneration(job),
+        canvasRun: { canvasId: preparation.run.canvasId, nodeId: preparation.run.nodeId, runId: preparation.run.runId, jobId: job.id },
+      } satisfies CanvasRunSubmissionDtoV1);
+    }
     jobId = job.id;
 
     return jsonOk({
       generation: serializeGeneration(job),
     });
   } catch (error) {
+    if (canvasAttempt) {
+      const knownRollback = error instanceof CanvasContractError || error instanceof GenerationCreditError || isCanvasTransactionRetryable(error);
+      if (canvasCommitted || (canvasCommitAttempted && !knownRollback)
+        || (!canvasPreparation && !(error instanceof CanvasContractError))) {
+        return recoverCanvasRunResponse(canvasAttempt);
+      }
+      if (canvasPreparation) {
+        const rejected = await rejectCanvasRun(canvasPreparation, error instanceof CanvasContractError ? error.code : "CANVAS_RUN_REJECTED");
+        if (!rejected) return recoverCanvasRunResponse(canvasAttempt);
+      }
+      if (error instanceof GenerationCreditError) {
+        const response = jsonError(error.message, 402);
+        response.headers.set("Cache-Control", "private, no-store");
+        return response;
+      }
+      if (error instanceof GenerationContractError) {
+        const response = jsonError(getGenerationErrorDefinition(error.code).userMessage, error.status, error.code);
+        response.headers.set("Cache-Control", "private, no-store");
+        return response;
+      }
+      return canvasErrorResponse(error instanceof CanvasContractError ? error : new CanvasContractError("CANVAS_RUN_REJECTED"));
+    }
+    if (canvasTransport || error instanceof CanvasContractError) return canvasErrorResponse(error);
     if (jobId) {
       await failGenerationJobAndRefund({
         errorMessage: getErrorMessage(error),

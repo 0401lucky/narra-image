@@ -2,13 +2,16 @@ import { redirect } from "next/navigation";
 
 import { getCheckInSummary } from "@/lib/benefits/config";
 import { db } from "@/lib/db";
-import { serializeConversation, serializeGeneration, serializeUser } from "@/lib/prisma-mappers";
+import { serializeUser } from "@/lib/prisma-mappers";
 import { getCurrentUserRecord } from "@/lib/server/current-user";
 import { getPublicTurnstileConfig } from "@/lib/auth/turnstile";
+import { getEnv } from "@/lib/env";
 import { GeneratorStudio } from "@/components/create/generator-studio";
 import { SiteHeader } from "@/components/marketing/site-header";
 import { getActiveChannels } from "@/lib/providers/built-in-provider";
 import { failStalePendingGenerationJobs } from "@/lib/generation/job-refund";
+import type { ConversationGenerationsPage } from "@/lib/conversations/contracts";
+import { ConversationContentError, listConversationGenerations, listStudioConversations } from "@/lib/server/conversation-generations";
 
 export const dynamic = "force-dynamic";
 
@@ -24,30 +27,10 @@ export default async function CreatePage({ searchParams }: CreatePageProps) {
 
   await failStalePendingGenerationJobs({ userId: user.id });
 
-  const [jobs, channels, checkInSummary, conversations, savedProvider, turnstileConfig] = await Promise.all([
-    db.generationJob.findMany({
-      where: { userId: user.id },
-      include: {
-        images: {
-          orderBy: { createdAt: "asc" },
-        },
-      },
-      orderBy: { createdAt: "desc" },
-      take: 50,
-    }),
+  const [channels, checkInSummary, conversations, savedProvider, turnstileConfig] = await Promise.all([
     getActiveChannels(),
     getCheckInSummary(user.id),
-    db.conversation.findMany({
-      where: { userId: user.id },
-      orderBy: { createdAt: "desc" },
-      include: {
-        generations: {
-          select: { id: true, createdAt: true },
-          orderBy: { createdAt: "asc" },
-        },
-      },
-      take: 100,
-    }),
+    listStudioConversations(user.id),
     db.savedProviderConfig.findUnique({
       where: { userId: user.id },
       select: {
@@ -61,6 +44,16 @@ export default async function CreatePage({ searchParams }: CreatePageProps) {
     }),
     getPublicTurnstileConfig(),
   ]);
+
+  let initialGenerationPage: ConversationGenerationsPage | null = null;
+  if (conversations[0]) {
+    try {
+      initialGenerationPage = await listConversationGenerations({ ownerId: user.id, conversationId: conversations[0].id });
+    } catch (error) {
+      // Another device may delete the selected parent between these bounded reads.
+      if (!(error instanceof ConversationContentError) || error.code !== "CONVERSATION_NOT_FOUND") throw error;
+    }
+  }
 
   const currentUser = serializeUser(user);
   const params = await searchParams;
@@ -80,11 +73,13 @@ export default async function CreatePage({ searchParams }: CreatePageProps) {
 
       <section className="relative flex flex-1 flex-col overflow-hidden">
         <GeneratorStudio
+          ownerId={user.id}
+          canvasEnabled={getEnv().CANVAS_ENABLED}
           checkInSummary={checkInSummary}
           currentUser={currentUser}
           initialPrompt={initialPrompt}
-          initialGenerations={jobs.map(serializeGeneration)}
-          initialConversations={conversations.map(serializeConversation)}
+          initialGenerationPage={initialGenerationPage}
+          initialConversations={conversations.map((conversation) => ({ ...conversation, generationIds: [] }))}
           channels={serializedChannels}
           savedProvider={
             savedProvider

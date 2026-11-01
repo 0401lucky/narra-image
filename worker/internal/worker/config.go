@@ -22,6 +22,9 @@ type Config struct {
 	BuiltInProviderModel           string
 	BuiltInProviderName            string
 	BuiltInProviderCreditCost      int
+	CanvasEnabled                  bool
+	CanvasAssetGCInterval          time.Duration
+	CanvasAssetGCBatchSize         int
 	Concurrency                    int
 	ContractsV1Enabled             bool
 	DatabaseURL                    string
@@ -85,6 +88,18 @@ func LoadConfig() (Config, error) {
 	if err != nil {
 		return Config{}, err
 	}
+	canvasEnabled, err := getenvStrictBool("CANVAS_ENABLED", false)
+	if err != nil {
+		return Config{}, err
+	}
+	canvasGCIntervalSeconds, err := getenvBoundedInt("CANVAS_ASSET_GC_INTERVAL_SECONDS", 60, 60, 2147483647)
+	if err != nil {
+		return Config{}, err
+	}
+	canvasGCBatchSize, err := getenvBoundedInt("CANVAS_ASSET_GC_BATCH_SIZE", 20, 1, 100)
+	if err != nil {
+		return Config{}, err
+	}
 
 	hostname, _ := os.Hostname()
 	if hostname == "" {
@@ -102,6 +117,9 @@ func LoadConfig() (Config, error) {
 		BuiltInProviderModel:           getenv("BUILTIN_PROVIDER_MODEL", "gpt-image-2"),
 		BuiltInProviderName:            getenv("BUILTIN_PROVIDER_NAME", "Studio"),
 		BuiltInProviderCreditCost:      getenvInt("BUILTIN_PROVIDER_CREDIT_COST", 5),
+		CanvasEnabled:                  canvasEnabled,
+		CanvasAssetGCInterval:          time.Duration(canvasGCIntervalSeconds) * time.Second,
+		CanvasAssetGCBatchSize:         canvasGCBatchSize,
 		Concurrency:                    getenvInt("WORKER_CONCURRENCY", 2),
 		ContractsV1Enabled:             getenvBool("WORKER_CONTRACTS_V1_ENABLED", false),
 		DatabaseURL:                    databaseURL,
@@ -229,6 +247,21 @@ func getenvBool(key string, fallback bool) bool {
 		return fallback
 	}
 	return value == "true" || value == "1" || value == "yes"
+}
+
+func getenvStrictBool(key string, fallback bool) (bool, error) {
+	raw := os.Getenv(key)
+	if raw == "" {
+		return fallback, nil
+	}
+	switch strings.ToLower(strings.TrimSpace(raw)) {
+	case "true", "1", "yes":
+		return true, nil
+	case "false", "0", "no":
+		return false, nil
+	default:
+		return false, fmt.Errorf("%s must be a boolean", key)
+	}
 }
 
 func normalizeDatabaseURL(raw string) string {

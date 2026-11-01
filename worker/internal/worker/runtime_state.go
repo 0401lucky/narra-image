@@ -15,6 +15,8 @@ const (
 
 const (
 	readinessCodeBooting             = "BOOTING"
+	readinessCodeCanvasNotReady      = "CANVAS_NOT_READY"
+	readinessCodeCanvasGCNotReady    = "CANVAS_GC_NOT_RUNNING"
 	readinessCodeConsumerNotReady    = "CONSUMER_NOT_READY"
 	readinessCodeDatabaseUnavailable = "DATABASE_UNAVAILABLE"
 	readinessCodeDraining            = "DRAINING"
@@ -37,6 +39,8 @@ const (
 var ErrShutdownHardTimeout = errors.New("Worker 超过硬停止期限")
 
 type runtimeSnapshot struct {
+	CanvasConfigured bool
+	CanvasGCRunning  bool
 	ConsumersRunning bool
 	Phase            runtimePhase
 	ReadinessCode    string
@@ -46,6 +50,9 @@ type runtimeSnapshot struct {
 
 type runtimeState struct {
 	mu               sync.RWMutex
+	canvasRequired   bool
+	canvasConfigured bool
+	canvasGCRunning  bool
 	consumersRunning bool
 	phase            runtimePhase
 	readinessCode    string
@@ -65,6 +72,8 @@ func (state *runtimeState) snapshot() runtimeSnapshot {
 	state.mu.RLock()
 	defer state.mu.RUnlock()
 	return runtimeSnapshot{
+		CanvasConfigured: state.canvasConfigured,
+		CanvasGCRunning:  state.canvasGCRunning,
 		ConsumersRunning: state.consumersRunning,
 		Phase:            state.phase,
 		ReadinessCode:    state.readinessCode,
@@ -104,12 +113,35 @@ func (state *runtimeState) markConsumersRunning(running bool) {
 func (state *runtimeState) markReady() bool {
 	state.mu.Lock()
 	defer state.mu.Unlock()
-	if state.phase != runtimePhaseBooting || !state.topologyHeld || !state.consumersRunning {
+	if state.phase != runtimePhaseBooting || !state.topologyHeld || !state.consumersRunning ||
+		(state.canvasRequired && (!state.canvasConfigured || !state.canvasGCRunning)) {
 		return false
 	}
 	state.phase = runtimePhaseReady
 	state.readinessCode = ""
 	return true
+}
+
+func (state *runtimeState) requireCanvas(required bool) {
+	state.mu.Lock()
+	defer state.mu.Unlock()
+	state.canvasRequired = required
+}
+
+func (state *runtimeState) markCanvasConfigured() {
+	state.mu.Lock()
+	defer state.mu.Unlock()
+	state.canvasConfigured = true
+}
+
+func (state *runtimeState) markCanvasGCRunning(running bool) {
+	state.mu.Lock()
+	defer state.mu.Unlock()
+	state.canvasGCRunning = running
+	if !running && state.phase == runtimePhaseReady {
+		state.phase = runtimePhaseDraining
+		state.readinessCode = readinessCodeCanvasGCNotReady
+	}
 }
 
 func (state *runtimeState) beginDraining(code string) {
@@ -130,6 +162,7 @@ func (state *runtimeState) markStopped() {
 	defer state.mu.Unlock()
 	state.phase = runtimePhaseStopped
 	state.consumersRunning = false
+	state.canvasGCRunning = false
 	state.topologyHeld = false
 	if state.readinessCode == "" {
 		state.readinessCode = readinessCodeDraining

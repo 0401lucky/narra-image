@@ -1,0 +1,55 @@
+"use client";
+
+import { Handle, Position } from "@xyflow/react";
+import { GripHorizontal, Trash2 } from "lucide-react";
+import type { ReactNode } from "react";
+
+import { cn } from "@/lib/utils";
+
+import { CANVAS_DRAG_HANDLE, CANVAS_INPUT_CLASS, CANVAS_NODE_LABELS } from "../../canvas/renderer-constants";
+import type { CanvasFlowNode } from "../../canvas/renderer-types";
+import styles from "../canvas-stage.module.css";
+
+type CanvasNodeShellProps = {
+  kind: NonNullable<CanvasFlowNode["type"]>;
+  selected: boolean;
+  readOnly: boolean;
+  previewOnly?: boolean;
+  onRemove: () => void;
+  children: ReactNode;
+};
+
+export function CanvasNodeShell({ kind, selected, readOnly, previewOnly = false, onRemove, children }: CanvasNodeShellProps) {
+  return (
+    <article className={cn(styles.node, selected && styles.selectedNode, readOnly && styles.readOnlyNode)} data-node-kind={kind}>
+      <header className={cn(styles.nodeHeader, !readOnly && !previewOnly && CANVAS_DRAG_HANDLE)}>
+        <span className={styles.nodeKind}>{CANVAS_NODE_LABELS[kind]}</span>
+        {!readOnly && !previewOnly && <GripHorizontal aria-hidden className="size-4 text-[var(--ink-soft)]/50" />}
+        {!readOnly && !previewOnly && (
+          <button type="button" className={cn(CANVAS_INPUT_CLASS, styles.iconButton)} aria-label={`删除${CANVAS_NODE_LABELS[kind]}节点`} title="只移除节点，不删除作品或取消任务" onClick={(event) => { event.stopPropagation(); onRemove(); }}>
+            <Trash2 aria-hidden className="size-3.5" />
+          </button>
+        )}
+      </header>
+      {children}
+    </article>
+  );
+}
+
+type CanvasPortProps = {
+  id: string;
+  type: "source" | "target";
+  label: string;
+  readOnly: boolean;
+  variant?: "prompt" | "image" | "provenance";
+};
+
+export function CanvasPort({ id, type, label, readOnly, variant = "image" }: CanvasPortProps) {
+  const connectable = !readOnly && variant !== "provenance";
+  return (
+    <Handle id={id} type={type} position={type === "source" ? Position.Right : Position.Left}
+      isConnectable={connectable} isConnectableStart={connectable} isConnectableEnd={connectable}
+      aria-label={label} title={label}
+      className={cn(styles.handle, variant === "prompt" && styles.promptHandle, variant === "provenance" && styles.provenanceHandle, readOnly && styles.hiddenHandle)} />
+  );
+}

@@ -23,6 +23,8 @@
 - failed migration 只能走显式 `scripts/migrations/repair.mjs`（allowlist + checksum 核对）。
 - 缺失前置迁移走 `scripts/migrations/prehistory.mjs`；`20260423000000_initial_schema` 是 synthetic foundation，禁止修改已发布 migration SQL/checksum。
 - 所有自动 migration 测试只用 runner 自建随机 localhost PostgreSQL（tmpfs、owner label、`--pull=never`），拒绝回退 `.env`/开发/生产库。
+- shared PostgreSQL helper 与 standalone worker DB runner 使用 `scripts/lib/local-docker-safety.mjs` 的 `LocalDockerSession`：只读解析 context 后只接受 local unix/npipe endpoint，随后每条 Docker 命令固定 `--host`。本地镜像检查通过后才建空 Docker config，容器操作不得继承用户 auth/proxy/context；删除需同时核对原 ID、精确名称和 owner label，不传 `--volumes`。
+- worker/canvas DB runner 使用 `createDisposablePrismaWorkspace` 的显式隔离 Prisma config 与 `disposableTestEnvironment` 的 deny-env preload；仅注入 URL 不等于阻止读取本地凭证。旧 `verify:migrations` 的 `buildDatabaseEnvironment` 仍继承调用者环境，执行它必须额外使用已审计外层隔离/deny-env，不能宣称所有旧 wrapper 已自主隔离。
 
 ## 4. Health 与 Readiness 语义
 
@@ -34,7 +36,7 @@
 
 ## 5. 环境变量单一契约
 
-- `contracts/runtime/v1/runtime-environment-contract.json` 是唯一事实源：定义 owner、允许读取路径、类型、默认值、生产约束、secret、build/runtime 属性。
+- `contracts/runtime/v1/environment.json` 是唯一事实源：定义 owner、允许读取路径、类型、默认值、生产约束、secret、build/runtime 属性。
 - manifest 覆盖的变量必须由各自唯一 loader 读取（Node `src/lib/env.ts`、Go `worker/internal/worker/config.go`）；owner 外直接读 `process.env`/`os.Getenv` 会令静态审计失败。
 - 生产 `AUTH_SECRET` 至少 32 位并拒绝公开占位值；生产 `APP_URL` 必须显式且非 loopback。
 - Compose 注入完整且已编码的 `DATABASE_URL`，禁止 YAML 拼接连接串。
@@ -57,8 +59,16 @@ docker compose -f docker-compose.e2e.yml config --quiet
 ```
 
 - 每个单元测试进程约 57s 独立截止；全量 vitest 进程独立 300s（单用例 30s）；migration/DB runner 与 E2E 使用各自更长独立截止，禁止嵌套进 60s 父截止。
-- GitHub Actions 只调用仓库内 wrapper（`.github/workflows/verify.yml`），不复制命令清单。
-- E2E 资源随机命名、带 `com.narra.e2e.owner` label、PostgreSQL tmpfs；兜底清理 `down --volumes` 只作用于 owner 校验通过的 runner 自建资源。
+- GitHub Actions 的验证阶段只调用仓库内 wrapper（`.github/workflows/verify.yml`），不复制场景命令；安装依赖及明确的基础镜像准备仍在独立 prerequisite 步骤完成。
+- E2E 资源随机命名、带 `com.narra.e2e.owner` label、PostgreSQL tmpfs。`scripts/lib/e2e-safety.mjs` 先验证本地 unix/npipe Docker endpoint 并固定连接，再检查所有本地基础镜像；缺失返回 2，不能拉取或回退其他数据库。
+- E2E 与 DB runner 复用 `local-docker-safety.mjs` 的 endpoint、OS-only env 和 owner-marked scratch 校验。`LocalDockerSession.pin(probe)` 前仅允许 context 读取；`prepare()` 后才允许容器命令；scratch/config 的 resolved path、owner 和空配置必须在使用及清理时核对。验证缺镜像的安全退出不等于验证成功创建/清理容器。
+- CI 在 wrapper 外显式准备 PostgreSQL17、Node24.22.1、Go1.25、Alpine3.22 四个 E2E 基础镜像；本地显式准备需用户授权。wrapper 只使用已核验的本地镜像/ID，保留 `--pull=false`/`--pull=never`，不能因缓存缺失自动联网拉镜像。
+- E2E 网络保持 owner-labelled `--internal` 且不发布 app/embedded 端口；Docker29 的 internal bridge 可能保留请求的 HostConfig port binding 却不分配实际 host port。不要改成外部网络绕过：`checkedCompose exec` 执行固定 `canvas-object-store.mjs app-http`，目的地固定容器内 `127.0.0.1:3000`，会话 cookie/请求体仅走有界 stdin、不进入 argv/日志。
+- fixture HTTP 只允许就绪、`/create` 及指定画布 API 路径/方法，禁止任意 host/query/编码路径/重定向。envelope256KiB、正文128KiB、响应1MiB，读取和 HTTP 各有10秒截止；这只是测试通道，不是生产反向代理或新 API。
+- fixture 复用共享请求头时用 `Headers.set` 做大小写不敏感覆盖；对象展开同时带 `content-type`/`Content-Type` 会组合成 `application/json, application/json`，应修 fixture，不能放宽生产 JSON Content-Type 校验。图片 fixture 先经生产容器/CRC 校验，不能用任意字节冒充原图。
+- 本地经典 Docker builder 使用已核验 base ID、`--pull=false` 和 `--force-rm`；`.dockerignore` 排除嵌套 dotenv/package 凭证、assistant metadata、node_modules/build 输出与无关子仓库。应用 builder 设 `NEXT_TELEMETRY_DISABLED=1`，不为隐藏工具弃用提示而改变生产 module-type。
+- Compose 必须使用 runner 创建的空 `--env-file` 和隔离 Docker config；只保留经路径/文件校验的 Compose plugin 信息，不继承本地 auth、proxy、context 或 `.env`。所有启动禁用 pull 和隐式 build。
+- E2E 清理只移除逐个验证 ID、owner/project label 及本轮创建记录的精确 container/network/image。禁止 `down --volumes`、`--rmi local`、任意调用者镜像删除及无限清理截止；实际容器清理验证缺基础设施时必须报告未执行。
 
 ## 8. 回滚安全
 

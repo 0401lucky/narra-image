@@ -48,6 +48,7 @@ type runtimeMetrics struct {
 }
 
 type metricsResponse struct {
+	Canvas        *canvasGCMetrics   `json:"canvas,omitempty"`
 	Completed     completionMetrics  `json:"completed"`
 	GeneratedAt   string             `json:"generated_at"`
 	Queue         queueMetrics       `json:"queue"`
@@ -58,8 +59,9 @@ type metricsResponse struct {
 }
 
 type readinessResult struct {
-	Code  string `json:"code,omitempty"`
-	Ready bool   `json:"-"`
+	Code   string                 `json:"code,omitempty"`
+	Ready  bool                   `json:"-"`
+	Canvas *CanvasReadyCapability `json:"-"`
 }
 
 type workerHTTPServer struct {
@@ -150,11 +152,15 @@ func (w *Worker) handleReady(writer http.ResponseWriter, request *http.Request) 
 		return
 	}
 
-	writeJSON(writer, http.StatusOK, map[string]any{
+	payload := map[string]any{
 		"generated_at":   time.Now().UTC().Format(time.RFC3339),
 		"schema_version": workerHTTPAPISchemaVersion,
 		"status":         "ready",
-	})
+	}
+	if result.Canvas != nil {
+		payload["capabilities"] = map[string]any{"canvas": result.Canvas}
+	}
+	writeJSON(writer, http.StatusOK, payload)
 }
 
 func (w *Worker) evaluateReadiness(ctx context.Context) readinessResult {
@@ -176,6 +182,20 @@ func (w *Worker) evaluateReadiness(ctx context.Context) readinessResult {
 	if err != nil || !report.Ready() {
 		return readinessResult{Code: readinessCodeSchemaNotReady}
 	}
+	var canvas *CanvasReadyCapability
+	if w.cfg.CanvasEnabled {
+		result := w.canvasReadiness(ctx, w.state.snapshot())
+		if !result.Ready {
+			return result
+		}
+		canvas = result.Canvas
+	}
+	// Probes can await network I/O. Re-read the lifecycle fence rather than
+	// publishing a pre-drain/pre-lock-loss snapshot after that wait.
+	snapshot = w.state.snapshot()
+	if snapshot.Phase == runtimePhaseDraining || snapshot.Phase == runtimePhaseStopped {
+		return readinessResult{Code: snapshot.ReadinessCode}
+	}
 	if !snapshot.TopologyHeld {
 		if snapshot.ReadinessCode == readinessCodeTopologyConflict || snapshot.ReadinessCode == readinessCodeTopologyLockLost {
 			return readinessResult{Code: snapshot.ReadinessCode}
@@ -188,7 +208,10 @@ func (w *Worker) evaluateReadiness(ctx context.Context) readinessResult {
 	if snapshot.Phase != runtimePhaseReady {
 		return readinessResult{Code: readinessCodeBooting}
 	}
-	return readinessResult{Ready: true}
+	if w.cfg.CanvasEnabled && !snapshot.CanvasGCRunning {
+		return readinessResult{Code: readinessCodeCanvasGCNotReady}
+	}
+	return readinessResult{Ready: true, Canvas: canvas}
 }
 
 func (w *Worker) handleMetrics(writer http.ResponseWriter, request *http.Request) {
@@ -255,6 +278,10 @@ func (w *Worker) collectMetrics(ctx context.Context) (metricsResponse, error) {
 		},
 		SchemaVersion: workerHTTPAPISchemaVersion,
 		WorkerID:      w.cfg.WorkerID,
+	}
+	if w.cfg.CanvasEnabled && snapshot.CanvasConfigured && w.canvasGC != nil {
+		metrics := w.canvasGC.snapshot(snapshot.CanvasGCRunning)
+		response.Canvas = &metrics
 	}
 
 	err := w.pool.QueryRow(ctx, `

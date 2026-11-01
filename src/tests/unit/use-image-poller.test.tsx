@@ -1,6 +1,7 @@
-import { render, screen, waitFor } from "@testing-library/react";
-import { useState } from "react";
+import { act, cleanup, render, renderHook, screen } from "@testing-library/react";
+import { useEffect, useState } from "react";
 
+import { POLL_DELAYS_MS, POLL_MAX_ATTEMPTS, POLL_REQUEST_TIMEOUT_MS } from "@/components/create/constants";
 import { useImagePoller } from "@/components/create/hooks/use-image-poller";
 import type { GenerationItem } from "@/components/create/types";
 
@@ -46,10 +47,31 @@ function PollerProbe() {
   );
 }
 
+function deferred<T>() {
+  let resolve!: (value: T) => void;
+  const promise = new Promise<T>((done) => { resolve = done; });
+  return { promise, resolve };
+}
+
+type PendingRead = { url: string; signal: AbortSignal; reply: ReturnType<typeof deferred<Response>> };
+const responseFor = (generation: GenerationItem) => new Response(JSON.stringify({ data: { generation } }));
+const originalHidden = Object.getOwnPropertyDescriptor(document, "hidden");
+
 describe("useImagePoller", () => {
   let documentHidden = false;
+  let reads: PendingRead[];
+
+  async function advance(ms: number) {
+    await act(async () => { await vi.advanceTimersByTimeAsync(ms); });
+  }
+
+  async function finish(index: number, generation = succeededGeneration) {
+    await act(async () => { reads[index].reply.resolve(responseFor(generation)); });
+  }
 
   beforeEach(() => {
+    vi.useFakeTimers();
+    reads = [];
     documentHidden = false;
     Object.defineProperty(document, "hidden", {
       configurable: true,
@@ -57,35 +79,306 @@ describe("useImagePoller", () => {
     });
     vi.stubGlobal(
       "fetch",
-      vi.fn(async () => ({
-        json: async () => ({
-          data: {
-            generation: succeededGeneration,
-          },
-        }),
-        ok: true,
-      })),
+      vi.fn((url: string, options: RequestInit) => {
+        const read: PendingRead = { url, signal: options.signal as AbortSignal, reply: deferred<Response>() };
+        reads.push(read);
+        return read.reply.promise;
+      }),
     );
   });
 
   afterEach(() => {
+    cleanup();
+    vi.useRealTimers();
     vi.unstubAllGlobals();
+    if (originalHidden) Object.defineProperty(document, "hidden", originalHidden);
+    else Reflect.deleteProperty(document, "hidden");
   });
 
   it("页面恢复可见时立即补拉 pending 任务状态", async () => {
     documentHidden = true;
     render(<PollerProbe />);
 
-    await new Promise((resolve) => setTimeout(resolve, 0));
+    await advance(100_000);
     expect(fetch).not.toHaveBeenCalled();
+    expect(vi.getTimerCount()).toBe(0);
 
     documentHidden = false;
     document.dispatchEvent(new Event("visibilitychange"));
-
-    await waitFor(() => {
-      expect(screen.getByText("succeeded")).toBeInTheDocument();
-    });
+    await advance(0);
+    await finish(0);
+    expect(screen.getByText("succeeded")).toBeInTheDocument();
     expect(screen.getByText("https://example.com/done.png")).toBeInTheDocument();
-    expect(fetch).toHaveBeenCalledWith("/api/me/generations/job_pending");
+    expect(fetch).toHaveBeenCalledWith("/api/me/generations/job_pending", {
+      cache: "no-store", credentials: "same-origin", signal: expect.any(AbortSignal),
+    });
+  });
+
+  it("shares a single in-flight read across timer, visibility, focus and pageshow events", async () => {
+    const onUpdate = vi.fn();
+    renderHook(() => useImagePoller({ generations: [pendingGeneration, pendingGeneration], onUpdate }));
+    await advance(POLL_DELAYS_MS[0]);
+    expect(reads).toHaveLength(1);
+    document.dispatchEvent(new Event("visibilitychange"));
+    window.dispatchEvent(new Event("focus"));
+    window.dispatchEvent(new Event("pageshow"));
+    await advance(10_000);
+    expect(reads).toHaveLength(1);
+    await finish(0, pendingGeneration);
+    expect(onUpdate).not.toHaveBeenCalled();
+    await advance(POLL_DELAYS_MS[1] - 1);
+    expect(reads).toHaveLength(1);
+    await advance(1);
+    expect(reads).toHaveLength(2);
+    await finish(1);
+    expect(onUpdate).toHaveBeenCalledOnce();
+  });
+
+  it("pauses scheduled work and resumes at the same attempt when the page becomes visible", async () => {
+    const onUpdate = vi.fn();
+    renderHook(() => useImagePoller({ generations: [pendingGeneration], onUpdate }));
+    await advance(POLL_DELAYS_MS[0]);
+    documentHidden = true;
+    document.dispatchEvent(new Event("visibilitychange"));
+    await finish(0, pendingGeneration);
+    await advance(100_000);
+    window.dispatchEvent(new Event("focus"));
+    window.dispatchEvent(new Event("pageshow"));
+    await advance(0);
+    expect(reads).toHaveLength(1);
+    expect(vi.getTimerCount()).toBe(0);
+    documentHidden = false;
+    document.dispatchEvent(new Event("visibilitychange"));
+    window.dispatchEvent(new Event("focus"));
+    window.dispatchEvent(new Event("pageshow"));
+    await advance(0);
+    expect(reads).toHaveLength(2);
+    await finish(1, pendingGeneration);
+    await advance(POLL_DELAYS_MS[2] - 1);
+    expect(reads).toHaveLength(2);
+    await advance(1);
+    expect(reads).toHaveLength(3);
+  });
+
+  it("invalidates an unsubscribed entry even when the same job ID is immediately subscribed again", async () => {
+    const onUpdate = vi.fn();
+    const { rerender } = renderHook(({ generations }) => useImagePoller({ generations, onUpdate }), {
+      initialProps: { generations: [pendingGeneration] },
+    });
+    await advance(POLL_DELAYS_MS[0]);
+    rerender({ generations: [] });
+    expect(reads[0].signal.aborted).toBe(true);
+    expect(vi.getTimerCount()).toBe(0);
+    rerender({ generations: [pendingGeneration] });
+    await advance(POLL_DELAYS_MS[0]);
+    expect(reads).toHaveLength(2);
+    await finish(0);
+    expect(onUpdate).not.toHaveBeenCalled();
+    expect(reads[1].signal.aborted).toBe(false);
+    await finish(1, { ...succeededGeneration, prompt: "current subscription" });
+    expect(onUpdate).toHaveBeenCalledWith(expect.objectContaining({ prompt: "current subscription" }));
+    await advance(100_000);
+    expect(reads).toHaveLength(2);
+  });
+
+  it("guards a deferred JSON response after a terminal prop update removes its subscription", async () => {
+    const json = deferred<{ data: { generation: GenerationItem } }>();
+    const onUpdate = vi.fn();
+    const { rerender } = renderHook(({ generations }) => useImagePoller({ generations, onUpdate }), {
+      initialProps: { generations: [pendingGeneration] },
+    });
+    await advance(POLL_DELAYS_MS[0]);
+    await act(async () => { reads[0].reply.resolve({ ok: true, json: () => json.promise } as Response); });
+    rerender({ generations: [succeededGeneration] });
+    expect(reads[0].signal.aborted).toBe(true);
+    await act(async () => { json.resolve({ data: { generation: pendingGeneration } }); });
+    window.dispatchEvent(new Event("focus"));
+    await advance(100_000);
+    expect(onUpdate).not.toHaveBeenCalled();
+    expect(reads).toHaveLength(1);
+    expect(vi.getTimerCount()).toBe(0);
+  });
+
+  it("rejects old requests after owner A -> B -> A even if the job ID is unchanged", async () => {
+    const onUpdate = vi.fn();
+    const { rerender } = renderHook(({ ownerId }) => useImagePoller({ ownerId, generations: [pendingGeneration], onUpdate }), {
+      initialProps: { ownerId: "owner_a" },
+    });
+    await advance(POLL_DELAYS_MS[0]);
+    rerender({ ownerId: "owner_b" });
+    await advance(POLL_DELAYS_MS[0]);
+    rerender({ ownerId: "owner_a" });
+    await advance(POLL_DELAYS_MS[0]);
+    expect(reads).toHaveLength(3);
+    expect(reads[0].signal.aborted).toBe(true);
+    expect(reads[1].signal.aborted).toBe(true);
+    await finish(0);
+    await finish(1);
+    expect(onUpdate).not.toHaveBeenCalled();
+    await finish(2, { ...succeededGeneration, prompt: "new owner epoch" });
+    expect(onUpdate).toHaveBeenCalledOnce();
+    expect(onUpdate).toHaveBeenCalledWith(expect.objectContaining({ prompt: "new owner epoch" }));
+  });
+
+  it("uses the latest callback without aborting or restarting a pending read on rerender", async () => {
+    const oldUpdate = vi.fn();
+    const newUpdate = vi.fn();
+    const { rerender } = renderHook(({ onUpdate }) => useImagePoller({ generations: [pendingGeneration], onUpdate }), {
+      initialProps: { onUpdate: oldUpdate },
+    });
+    await advance(POLL_DELAYS_MS[0]);
+    rerender({ onUpdate: newUpdate });
+    expect(reads[0].signal.aborted).toBe(false);
+    window.dispatchEvent(new Event("focus"));
+    await advance(POLL_REQUEST_TIMEOUT_MS - 1);
+    expect(reads).toHaveLength(1);
+    await finish(0);
+    expect(oldUpdate).not.toHaveBeenCalled();
+    expect(newUpdate).toHaveBeenCalledWith(succeededGeneration);
+  });
+
+  it.each(["fetch", "json"])("times out a stuck %s read even if it ignores abort, and ignores its eventual terminal result", async (phase) => {
+    const json = deferred<{ data: { generation: GenerationItem } }>();
+    const onUpdate = vi.fn();
+    renderHook(() => useImagePoller({ generations: [pendingGeneration], onUpdate }));
+    await advance(POLL_DELAYS_MS[0]);
+    if (phase === "json") {
+      await act(async () => { reads[0].reply.resolve({ ok: true, json: () => json.promise } as Response); });
+    }
+    await advance(POLL_REQUEST_TIMEOUT_MS - 1);
+    expect(reads[0].signal.aborted).toBe(false);
+    await advance(1);
+    expect(reads[0].signal.aborted).toBe(true);
+    expect(onUpdate).not.toHaveBeenCalled();
+    await advance(POLL_DELAYS_MS[1]);
+    expect(reads).toHaveLength(2);
+    if (phase === "json") {
+      await act(async () => { json.resolve({ data: { generation: succeededGeneration } }); });
+    } else {
+      await finish(0);
+    }
+    expect(onUpdate).not.toHaveBeenCalled();
+    expect(reads[1].signal.aborted).toBe(false);
+    await finish(1, { ...succeededGeneration, prompt: "current read" });
+    expect(onUpdate).toHaveBeenCalledOnce();
+    expect(onUpdate).toHaveBeenCalledWith(expect.objectContaining({ prompt: "current read" }));
+    expect(vi.getTimerCount()).toBe(0);
+  });
+
+  it("also reaches the attempt cap when every transport ignores abort and never resolves", async () => {
+    const onUpdate = vi.fn();
+    renderHook(() => useImagePoller({ generations: [pendingGeneration], onUpdate }));
+    await act(async () => { await vi.runAllTimersAsync(); });
+    expect(reads).toHaveLength(POLL_MAX_ATTEMPTS);
+    expect(reads.every((read) => read.signal.aborted)).toBe(true);
+    expect(vi.getTimerCount()).toBe(0);
+    window.dispatchEvent(new Event("focus"));
+    window.dispatchEvent(new Event("pageshow"));
+    await advance(POLL_REQUEST_TIMEOUT_MS * 2);
+    expect(reads).toHaveLength(POLL_MAX_ATTEMPTS);
+    await finish(0);
+    await finish(reads.length - 1);
+    expect(onUpdate).not.toHaveBeenCalled();
+    expect(vi.getTimerCount()).toBe(0);
+  });
+
+  it("invalidates StrictMode's first mount and releases timers, listeners and requests on unmount", async () => {
+    const onUpdate = vi.fn();
+    const { unmount } = renderHook(() => {
+      useImagePoller({ generations: [pendingGeneration], onUpdate });
+      useEffect(() => { vi.advanceTimersByTime(POLL_DELAYS_MS[0]); }, []);
+    }, { reactStrictMode: true });
+    expect(reads).toHaveLength(2);
+    expect(reads[0].signal.aborted).toBe(true);
+    expect(reads[1].signal.aborted).toBe(false);
+    await finish(0);
+    expect(onUpdate).not.toHaveBeenCalled();
+    unmount();
+    expect(reads[1].signal.aborted).toBe(true);
+    await finish(1);
+    window.dispatchEvent(new Event("focus"));
+    window.dispatchEvent(new Event("pageshow"));
+    document.dispatchEvent(new Event("visibilitychange"));
+    await advance(100_000);
+    expect(onUpdate).not.toHaveBeenCalled();
+    expect(reads).toHaveLength(2);
+    expect(vi.getTimerCount()).toBe(0);
+  });
+
+  it.each(["succeeded", "failed"] as const)("keeps a %s entry stopped even when the caller rerenders stale pending props", async (status) => {
+    const onUpdate = vi.fn();
+    const { rerender } = renderHook(({ generations }) => useImagePoller({ generations, onUpdate }), {
+      initialProps: { generations: [pendingGeneration] },
+    });
+    await advance(POLL_DELAYS_MS[0]);
+    await finish(0, { ...succeededGeneration, status });
+    rerender({ generations: [{ ...pendingGeneration }] });
+    window.dispatchEvent(new Event("focus"));
+    document.dispatchEvent(new Event("visibilitychange"));
+    await advance(100_000);
+    expect(onUpdate).toHaveBeenCalledOnce();
+    expect(reads).toHaveLength(1);
+    expect(vi.getTimerCount()).toBe(0);
+  });
+
+  it("bounds attempts without letting rerenders or foreground events restart the exhausted entry", async () => {
+    vi.mocked(fetch).mockImplementation(async () => responseFor(pendingGeneration));
+    const onUpdate = vi.fn();
+    const { rerender } = renderHook(({ generations }) => useImagePoller({ generations, onUpdate }), {
+      initialProps: { generations: [pendingGeneration] },
+    });
+    await act(async () => { await vi.runAllTimersAsync(); });
+    expect(fetch).toHaveBeenCalledTimes(POLL_MAX_ATTEMPTS);
+    expect(onUpdate).not.toHaveBeenCalled();
+    expect(vi.getTimerCount()).toBe(0);
+    rerender({ generations: [{ ...pendingGeneration }] });
+    window.dispatchEvent(new Event("focus"));
+    window.dispatchEvent(new Event("pageshow"));
+    await act(async () => { await vi.runAllTimersAsync(); });
+    expect(fetch).toHaveBeenCalledTimes(POLL_MAX_ATTEMPTS);
+    rerender({ generations: [] });
+    rerender({ generations: [pendingGeneration] });
+    await advance(POLL_DELAYS_MS[0]);
+    expect(fetch).toHaveBeenCalledTimes(POLL_MAX_ATTEMPTS + 1);
+  });
+
+  it("backs off errors and mismatched responses instead of publishing a different job", async () => {
+    const onUpdate = vi.fn();
+    renderHook(() => useImagePoller({ generations: [pendingGeneration], onUpdate }));
+    await advance(POLL_DELAYS_MS[0]);
+    await act(async () => { reads[0].reply.resolve(new Response("unavailable", { status: 503 })); });
+    await advance(POLL_DELAYS_MS[1]);
+    await finish(1, { ...succeededGeneration, id: "unrelated_job" });
+    expect(onUpdate).not.toHaveBeenCalled();
+    await advance(POLL_DELAYS_MS[2]);
+    await finish(2);
+    expect(onUpdate).toHaveBeenCalledWith(succeededGeneration);
+    expect(vi.getTimerCount()).toBe(0);
+  });
+
+  it.each([{ images: [null] }, { videos: [null] }, { outputFormat: 123 }])("keeps polling instead of publishing a malformed terminal DTO %j", async (fields) => {
+    const onUpdate = vi.fn();
+    renderHook(() => useImagePoller({ generations: [pendingGeneration], onUpdate }));
+    await advance(POLL_DELAYS_MS[0]);
+    await act(async () => {
+      reads[0].reply.resolve(new Response(JSON.stringify({ data: { generation: { ...succeededGeneration, ...fields } } })));
+    });
+    expect(onUpdate).not.toHaveBeenCalled();
+    await advance(POLL_DELAYS_MS[1]);
+    expect(reads).toHaveLength(2);
+    await finish(1);
+    expect(onUpdate).toHaveBeenCalledOnce();
+    expect(onUpdate).toHaveBeenCalledWith(succeededGeneration);
+  });
+
+  it("preserves the owner-less VideoStudio API and complete video terminal DTO", async () => {
+    const video: GenerationItem = { ...pendingGeneration, generationType: "text_to_video", videos: [] };
+    const completed: GenerationItem = { ...video, status: "succeeded", videos: [{ id: "video_done", url: "https://media.invalid/video.mp4" }] };
+    const onUpdate = vi.fn();
+    renderHook(() => useImagePoller({ generations: [video], onUpdate }));
+    await advance(POLL_DELAYS_MS[0]);
+    await finish(0, completed);
+    expect(onUpdate).toHaveBeenCalledWith(completed);
+    expect(vi.getTimerCount()).toBe(0);
   });
 });

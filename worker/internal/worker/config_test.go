@@ -220,3 +220,42 @@ func TestLoadConfigReadsNodeEnv(t *testing.T) {
 		t.Fatalf("unexpected node env: %q", cfg.NodeEnv)
 	}
 }
+
+func TestLoadConfigCanvasDefaultsAndBounds(t *testing.T) {
+	setRequiredConfigEnv(t, RuntimeModeDedicated)
+	t.Setenv("CANVAS_ENABLED", "")
+	t.Setenv("CANVAS_ASSET_GC_INTERVAL_SECONDS", "")
+	t.Setenv("CANVAS_ASSET_GC_BATCH_SIZE", "")
+	cfg, err := LoadConfig()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if cfg.CanvasEnabled || cfg.CanvasAssetGCInterval != time.Minute || cfg.CanvasAssetGCBatchSize != 20 {
+		t.Fatalf("incorrect canvas rollout defaults: %+v", cfg)
+	}
+	t.Setenv("CANVAS_ENABLED", " YES ")
+	t.Setenv("CANVAS_ASSET_GC_INTERVAL_SECONDS", "120")
+	t.Setenv("CANVAS_ASSET_GC_BATCH_SIZE", "100")
+	cfg, err = LoadConfig()
+	if err != nil || !cfg.CanvasEnabled || cfg.CanvasAssetGCInterval != 2*time.Minute || cfg.CanvasAssetGCBatchSize != 100 {
+		t.Fatalf("canvas controls not parsed: %+v %v", cfg, err)
+	}
+	for _, invalid := range []struct{ name, value string }{
+		{"CANVAS_ENABLED", "enabled"},
+		{"CANVAS_ENABLED", " "},
+		{"CANVAS_ASSET_GC_INTERVAL_SECONDS", "59"},
+		{"CANVAS_ASSET_GC_INTERVAL_SECONDS", "2147483648"},
+		{"CANVAS_ASSET_GC_INTERVAL_SECONDS", "1.5"},
+		{"CANVAS_ASSET_GC_BATCH_SIZE", "0"},
+		{"CANVAS_ASSET_GC_BATCH_SIZE", "101"},
+		{"CANVAS_ASSET_GC_BATCH_SIZE", "none"},
+	} {
+		t.Run(invalid.name+"/"+invalid.value, func(t *testing.T) {
+			t.Setenv("CANVAS_ENABLED", "false")
+			t.Setenv(invalid.name, invalid.value)
+			if _, err := LoadConfig(); err == nil {
+				t.Fatalf("invalid setting accepted, even while disabled: %+v", invalid)
+			}
+		})
+	}
+}

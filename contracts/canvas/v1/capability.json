@@ -1,0 +1,35 @@
+{
+  "contract": "narra.canvas.capability",
+  "version": 1,
+  "featureFlag": "CANVAS_ENABLED",
+  "defaultEnabled": false,
+  "readyCapabilityPath": ["capabilities", "canvas"],
+  "readyCapability": {"version": 1, "schema": "ready", "storage": "unversioned", "gc": "running"},
+  "versioningStates": ["UNVERSIONED", "ENABLED", "SUSPENDED", "UNKNOWN"],
+  "requiredStorageVersioning": "UNVERSIONED",
+  "storageLocation": {
+    "prefix": "s3-v1:",
+    "digest": "SHA-256",
+    "encoding": "UTF-8",
+    "material": "JSON array [canonicalEndpoint, trimmedRegion, trimmedBucket] without whitespace",
+    "endpoint": "ASCII HTTP(S) origin only; trim surrounding whitespace, lowercase scheme and host, omit default port and optional root slash; reject userinfo, non-root path, query, fragment, backslash, Unicode or percent-encoded hosts; IPv4 must already be dotted decimal without leading zeros and bracketed IPv6 must already be compressed (case-insensitive); ports are decimal 1..65535 without leading zeros",
+    "regionAndBucket": "Trim surrounding whitespace; ASCII [A-Za-z0-9][A-Za-z0-9._-]*; region 1..128 and bucket 1..255 characters; preserve case",
+    "excluded": ["credentials", "publicUrl"],
+    "requireRecordedTupleMatchBeforeDelete": true
+  },
+  "verifyLocationBeforeClaim": true,
+  "unexpectedPutVersionQuarantined": true,
+  "latePutVersionReceipt": {
+    "states": ["DELETING", "DELETED"],
+    "requiredPutOutcome": "UNKNOWN",
+    "immutableVersionId": true,
+    "stateTransitionAllowed": false,
+    "physicalBytesAccounted": true,
+    "needsReconciliation": true,
+    "errorCode": "CANVAS_STORAGE_CAPABILITY_INVALID",
+    "futureClaimsAllowed": false,
+    "pendingFinalizationAllowed": false
+  },
+  "schemaProbeMustVerifyGuardBodies": true,
+  "unknownCapabilityMayDelete": false
+}

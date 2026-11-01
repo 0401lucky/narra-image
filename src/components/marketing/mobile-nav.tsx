@@ -21,6 +21,8 @@ import { LogoutButton } from "@/components/auth/logout-button";
 import { CheckInButton } from "@/components/benefits/check-in-button";
 import { PetToggle } from "@/components/pet/pet-toggle";
 import { getThumbUrl } from "@/lib/image-url";
+import { HomeMobileNav } from "./homepage/home-mobile-nav";
+import type { HeaderVariant } from "./homepage/types";
 
 type MobileNavProps = {
   currentUser: {
@@ -30,6 +32,7 @@ type MobileNavProps = {
     nickname?: string | null;
     avatarUrl?: string | null;
   } | null;
+  variant?: HeaderVariant;
   links: { href: string; label: string }[];
   activeHref?: string;
   checkInSummary: {
@@ -49,6 +52,13 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
 };
 
 export function MobileNav({
+  variant = "default",
+  ...props
+}: MobileNavProps) {
+  return variant === "home" ? <HomeMobileNav {...props} /> : <DefaultMobileNav {...props} />;
+}
+
+function DefaultMobileNav({
   currentUser,
   links,
   activeHref,

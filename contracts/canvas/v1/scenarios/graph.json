@@ -1,0 +1,254 @@
+{
+  "version": 1,
+  "origin": {
+    "canvasId": "00000000-0000-4000-8000-000000001000",
+    "nodeId": "00000000-0000-4000-8000-000000000003",
+    "runId": "00000000-0000-4000-8000-000000000051"
+  },
+  "scene": {
+    "schemaVersion": 1,
+    "nodes": [
+      {
+        "id": "00000000-0000-4000-8000-000000000001",
+        "kind": "prompt",
+        "position": {
+          "x": -320.5,
+          "y": -80
+        },
+        "text": " fixture prompt "
+      },
+      {
+        "id": "00000000-0000-4000-8000-000000000002",
+        "kind": "reference",
+        "position": {
+          "x": -200,
+          "y": 160
+        },
+        "source": {
+          "kind": "imported",
+          "assetId": "fixture-asset-1"
+        }
+      },
+      {
+        "id": "00000000-0000-4000-8000-000000000003",
+        "kind": "generation",
+        "position": {
+          "x": 80,
+          "y": 0
+        },
+        "parameters": {
+          "providerMode": "built_in",
+          "channelId": null,
+          "model": "gpt-image-2",
+          "size": "auto",
+          "quality": "auto",
+          "outputFormat": "png",
+          "outputCompression": null,
+          "moderation": "auto",
+          "count": 4,
+          "negativePrompt": "negative",
+          "seed": 7
+        }
+      },
+      {
+        "id": "result:fixture-image-1",
+        "kind": "result",
+        "position": {
+          "x": 480,
+          "y": 160
+        },
+        "jobId": "fixture-job-1",
+        "imageId": "fixture-image-1",
+        "runId": "00000000-0000-4000-8000-000000000050"
+      },
+      {
+        "id": "00000000-0000-4000-8000-000000000005",
+        "kind": "reference",
+        "position": {
+          "x": -700,
+          "y": 200
+        },
+        "source": {
+          "kind": "imported",
+          "assetId": "fixture-unused-asset"
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "00000000-0000-4000-8000-000000000101",
+        "kind": "prompt-input",
+        "source": "00000000-0000-4000-8000-000000000001",
+        "target": "00000000-0000-4000-8000-000000000003"
+      },
+      {
+        "id": "00000000-0000-4000-8000-000000000102",
+        "kind": "image-input",
+        "source": "00000000-0000-4000-8000-000000000002",
+        "target": "00000000-0000-4000-8000-000000000003",
+        "ordinal": 1
+      },
+      {
+        "id": "00000000-0000-4000-8000-000000000103",
+        "kind": "image-input",
+        "source": "result:fixture-image-1",
+        "target": "00000000-0000-4000-8000-000000000003",
+        "ordinal": 2
+      },
+      {
+        "id": "00000000-0000-4000-8000-000000000104",
+        "kind": "output-provenance",
+        "source": "00000000-0000-4000-8000-000000000003",
+        "target": "result:fixture-image-1"
+      }
+    ],
+    "viewport": {
+      "x": -50,
+      "y": 20,
+      "zoom": 0.25
+    },
+    "runBindings": [
+      {
+        "runId": "00000000-0000-4000-8000-000000000050",
+        "nodeId": "00000000-0000-4000-8000-000000000003",
+        "jobId": "fixture-job-1",
+        "outputsHandled": true
+      }
+    ]
+  },
+  "runtime": {
+    "ownerId": "fixture-owner",
+    "assets": {
+      "fixture-asset-1": {
+        "assetId": "fixture-asset-1",
+        "ownerId": "fixture-owner",
+        "state": "READY",
+        "byteLength": 1024
+      }
+    },
+    "images": {
+      "fixture-image-1": {
+        "imageId": "fixture-image-1",
+        "jobId": "fixture-job-1",
+        "ownerId": "fixture-owner",
+        "status": "SUCCEEDED",
+        "available": true
+      }
+    }
+  },
+  "vectors": [
+    {
+      "id": "immutable-result-feedback",
+      "patches": [],
+      "valid": true
+    },
+    {
+      "id": "ordinal-gap",
+      "patches": [
+        {
+          "path": [
+            "edges",
+            2,
+            "ordinal"
+          ],
+          "value": 3
+        }
+      ],
+      "valid": false,
+      "errorCode": "CANVAS_REFERENCE_ORDER_INVALID"
+    },
+    {
+      "id": "unknown-source",
+      "patches": [
+        {
+          "path": [
+            "edges",
+            0,
+            "source"
+          ],
+          "value": "00000000-0000-4000-8000-000000000999"
+        }
+      ],
+      "valid": false,
+      "errorCode": "CANVAS_INVALID_CONNECTION"
+    },
+    {
+      "id": "self-link",
+      "patches": [
+        {
+          "path": [
+            "edges",
+            0,
+            "source"
+          ],
+          "value": "00000000-0000-4000-8000-000000000003"
+        }
+      ],
+      "valid": false,
+      "errorCode": "CANVAS_INVALID_CONNECTION"
+    },
+    {
+      "id": "generation-is-not-image",
+      "patches": [
+        {
+          "path": [
+            "edges",
+            1,
+            "source"
+          ],
+          "value": "00000000-0000-4000-8000-000000000001"
+        }
+      ],
+      "valid": false,
+      "errorCode": "CANVAS_INVALID_CONNECTION"
+    },
+    {
+      "id": "wrong-result-identity",
+      "patches": [
+        {
+          "path": [
+            "nodes",
+            3,
+            "id"
+          ],
+          "value": "result:other-image"
+        }
+      ],
+      "valid": false,
+      "errorCode": "CANVAS_ORIGIN_MISMATCH"
+    },
+    {
+      "id": "wrong-output-origin",
+      "patches": [
+        {
+          "path": [
+            "runBindings",
+            0,
+            "jobId"
+          ],
+          "value": "other-job"
+        }
+      ],
+      "valid": false,
+      "errorCode": "CANVAS_ORIGIN_MISMATCH"
+    }
+  ],
+  "cardinalityVectors": [
+    {
+      "count": 0,
+      "valid": true
+    },
+    {
+      "count": 1,
+      "valid": true
+    },
+    {
+      "count": 16,
+      "valid": true
+    },
+    {
+      "count": 17,
+      "valid": false
+    }
+  ]
+}

@@ -1,0 +1,271 @@
+{
+  "version": 1,
+  "vectors": [
+    {
+      "id": "standard",
+      "input": {
+        "endpoint": "https://s3.example.test",
+        "region": "auto",
+        "bucket": "canvas-test"
+      },
+      "valid": true,
+      "material": "[\"https://s3.example.test\",\"auto\",\"canvas-test\"]",
+      "storageLocation": "s3-v1:a0175a37f25a9712f69eaacec61c0e730e7d7fc44b1c471592a410c551db44b8"
+    },
+    {
+      "id": "case-and-default-port",
+      "input": {
+        "endpoint": " HTTPS://S3.Example.Test:443/ ",
+        "region": " auto ",
+        "bucket": " canvas-test "
+      },
+      "valid": true,
+      "material": "[\"https://s3.example.test\",\"auto\",\"canvas-test\"]",
+      "storageLocation": "s3-v1:a0175a37f25a9712f69eaacec61c0e730e7d7fc44b1c471592a410c551db44b8"
+    },
+    {
+      "id": "http-default-port",
+      "input": {
+        "endpoint": "http://127.0.0.1:80/",
+        "region": "test-1",
+        "bucket": "bucket"
+      },
+      "valid": true,
+      "material": "[\"http://127.0.0.1\",\"test-1\",\"bucket\"]",
+      "storageLocation": "s3-v1:79ea54bafaab42164c31be5db66a64a3c6f655e0060f8e39cd8fd59de51d1eab"
+    },
+    {
+      "id": "disposable-port",
+      "input": {
+        "endpoint": "http://127.0.0.1:19000/",
+        "region": "auto",
+        "bucket": "bucket"
+      },
+      "valid": true,
+      "material": "[\"http://127.0.0.1:19000\",\"auto\",\"bucket\"]",
+      "storageLocation": "s3-v1:950ad83377c3a498d1fc49799646b1d2b89505ec24a84d1b9efe57c21157bd22"
+    },
+    {
+      "id": "ipv6-loopback",
+      "input": {
+        "endpoint": "http://[::1]:19000/",
+        "region": "auto",
+        "bucket": "bucket"
+      },
+      "valid": true,
+      "material": "[\"http://[::1]:19000\",\"auto\",\"bucket\"]",
+      "storageLocation": "s3-v1:b75c518baaf23d91f9d68f92c4da56599a36124b16d24c25b48f6cd4b3a4c375"
+    },
+    {
+      "id": "ipv6-case",
+      "input": {
+        "endpoint": "https://[2001:DB8::A]:443",
+        "region": "region-1",
+        "bucket": "bucket"
+      },
+      "valid": true,
+      "material": "[\"https://[2001:db8::a]\",\"region-1\",\"bucket\"]",
+      "storageLocation": "s3-v1:5d178d1c694c55a98b7d9baecea97b8a612e526677ced3c7f749a696588f7216"
+    },
+    {
+      "id": "ascii-punycode",
+      "input": {
+        "endpoint": "https://xn--bcher-kva.example/",
+        "region": "auto",
+        "bucket": "bucket"
+      },
+      "valid": true,
+      "material": "[\"https://xn--bcher-kva.example\",\"auto\",\"bucket\"]",
+      "storageLocation": "s3-v1:6a4a7ee7ce235d23869c2b3e44345354d377daaba21349b0d13a3e56b7279234"
+    },
+    {
+      "id": "path",
+      "input": {
+        "endpoint": "https://s3.example.test/storage",
+        "region": "auto",
+        "bucket": "bucket"
+      },
+      "valid": false
+    },
+    {
+      "id": "extra-slashes",
+      "input": {
+        "endpoint": "https://s3.example.test//",
+        "region": "auto",
+        "bucket": "bucket"
+      },
+      "valid": false
+    },
+    {
+      "id": "userinfo",
+      "input": {
+        "endpoint": "https://user:fixture@s3.example.test",
+        "region": "auto",
+        "bucket": "bucket"
+      },
+      "valid": false
+    },
+    {
+      "id": "query",
+      "input": {
+        "endpoint": "https://s3.example.test?x=1",
+        "region": "auto",
+        "bucket": "bucket"
+      },
+      "valid": false
+    },
+    {
+      "id": "empty-query",
+      "input": {
+        "endpoint": "https://s3.example.test?",
+        "region": "auto",
+        "bucket": "bucket"
+      },
+      "valid": false
+    },
+    {
+      "id": "fragment",
+      "input": {
+        "endpoint": "https://s3.example.test#x",
+        "region": "auto",
+        "bucket": "bucket"
+      },
+      "valid": false
+    },
+    {
+      "id": "unicode-host",
+      "input": {
+        "endpoint": "https://b\u00fccher.example",
+        "region": "auto",
+        "bucket": "bucket"
+      },
+      "valid": false
+    },
+    {
+      "id": "encoded-host",
+      "input": {
+        "endpoint": "https://%73%33.example.test",
+        "region": "auto",
+        "bucket": "bucket"
+      },
+      "valid": false
+    },
+    {
+      "id": "short-ipv4",
+      "input": {
+        "endpoint": "http://127.1",
+        "region": "auto",
+        "bucket": "bucket"
+      },
+      "valid": false
+    },
+    {
+      "id": "hex-ipv4",
+      "input": {
+        "endpoint": "http://0x7f000001",
+        "region": "auto",
+        "bucket": "bucket"
+      },
+      "valid": false
+    },
+    {
+      "id": "octal-ipv4",
+      "input": {
+        "endpoint": "http://0177.0.0.1",
+        "region": "auto",
+        "bucket": "bucket"
+      },
+      "valid": false
+    },
+    {
+      "id": "expanded-ipv6",
+      "input": {
+        "endpoint": "http://[0:0:0:0:0:0:0:1]",
+        "region": "auto",
+        "bucket": "bucket"
+      },
+      "valid": false
+    },
+    {
+      "id": "ipv6-zone",
+      "input": {
+        "endpoint": "http://[fe80::1%25eth0]",
+        "region": "auto",
+        "bucket": "bucket"
+      },
+      "valid": false
+    },
+    {
+      "id": "zero-port",
+      "input": {
+        "endpoint": "http://127.0.0.1:0",
+        "region": "auto",
+        "bucket": "bucket"
+      },
+      "valid": false
+    },
+    {
+      "id": "padded-port",
+      "input": {
+        "endpoint": "https://s3.example.test:0443",
+        "region": "auto",
+        "bucket": "bucket"
+      },
+      "valid": false
+    },
+    {
+      "id": "backslash",
+      "input": {
+        "endpoint": "https://s3.example.test\\",
+        "region": "auto",
+        "bucket": "bucket"
+      },
+      "valid": false
+    },
+    {
+      "id": "not-http",
+      "input": {
+        "endpoint": "file://s3.example.test",
+        "region": "auto",
+        "bucket": "bucket"
+      },
+      "valid": false
+    },
+    {
+      "id": "blank-region",
+      "input": {
+        "endpoint": "https://s3.example.test",
+        "region": " ",
+        "bucket": "bucket"
+      },
+      "valid": false
+    },
+    {
+      "id": "blank-bucket",
+      "input": {
+        "endpoint": "https://s3.example.test",
+        "region": "auto",
+        "bucket": " "
+      },
+      "valid": false
+    },
+    {
+      "id": "bucket-path",
+      "input": {
+        "endpoint": "https://s3.example.test",
+        "region": "auto",
+        "bucket": "bucket/key"
+      },
+      "valid": false
+    },
+    {
+      "id": "non-ascii-region",
+      "input": {
+        "endpoint": "https://s3.example.test",
+        "region": "\u533a\u57df",
+        "bucket": "bucket"
+      },
+      "valid": false
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import type { ComponentProps } from "react";
 
@@ -45,6 +45,7 @@ function mockLocalStorage() {
 }
 
 const baseProps = {
+  ownerId: "owner_test",
   checkInSummary: {
     checkInReward: 50,
     checkedInToday: false,
@@ -132,6 +133,21 @@ function renderStudio(props: Partial<StudioProps> = {}) {
       {...props}
     />,
   );
+}
+
+function renderConversationGeneration(overrides: Partial<Generation> = {}) {
+  const generation = createSucceededGeneration({ conversationId: "conversation_1", ...overrides });
+  return renderStudio({
+    initialConversations: [
+      {
+        createdAt: generation.createdAt,
+        generationIds: [generation.id],
+        id: "conversation_1",
+        title: "测试会话",
+      },
+    ],
+    initialGenerations: [generation],
+  });
 }
 
 function getComposerDropTarget() {
@@ -248,7 +264,7 @@ describe("创作台反馈改进", () => {
     expect(screen.getByPlaceholderText("描述你希望如何修改这些参考图...")).toBeInTheDocument();
   });
 
-  it("支持把历史图片拖入输入区作为参考图", () => {
+  it("保留内部图片 URL 拖拽协议，移除历史栏后仍可作为参考图", () => {
     renderStudio({
       initialGenerations: [createSucceededGeneration()],
     });
@@ -262,6 +278,21 @@ describe("创作台反馈改进", () => {
     });
 
     expect(screen.getByAltText("Reference")).toHaveAttribute("src", "https://example.com/image.png");
+    expect(screen.getByPlaceholderText("描述你希望如何修改这些参考图...")).toBeInTheDocument();
+  });
+
+  it("支持把普通图片 URL 拖入输入区作为参考图", () => {
+    renderStudio();
+
+    fireEvent.drop(getComposerDropTarget(), {
+      dataTransfer: {
+        files: [],
+        getData: (type: string) => (type === "text/uri-list" ? "https://example.com/source.png" : ""),
+        types: ["text/uri-list"],
+      },
+    });
+
+    expect(screen.getByAltText("Reference")).toHaveAttribute("src", "https://example.com/source.png");
     expect(screen.getByPlaceholderText("描述你希望如何修改这些参考图...")).toBeInTheDocument();
   });
 
@@ -319,41 +350,18 @@ describe("创作台反馈改进", () => {
   });
 
   it("结果图固定展示实际分辨率和比例", () => {
-    renderStudio({
-      initialConversations: [
-        {
-          createdAt: "2026-04-23T08:00:00.000Z",
-          generationIds: ["job_1"],
-          id: "conversation_1",
-          title: "测试会话",
-        },
-      ],
-      initialGenerations: [createSucceededGeneration({ conversationId: "conversation_1" })],
-    });
+    renderConversationGeneration();
 
     expect(screen.getByText("2048x1152")).toBeInTheDocument();
     expect(screen.getByText("16:9")).toBeInTheDocument();
   });
 
-  it("可以复用历史生成配置并回填参考图", async () => {
+  it("可以从对话图片复用生成配置并回填参考图", async () => {
     const user = userEvent.setup();
-    renderStudio({
-      initialConversations: [
-        {
-          createdAt: "2026-04-23T08:00:00.000Z",
-          generationIds: ["job_1"],
-          id: "conversation_1",
-          title: "测试会话",
-        },
-      ],
-      initialGenerations: [
-        createSucceededGeneration({
-          conversationId: "conversation_1",
-          generationType: "image_to_image",
-          sourceImageUrl: "https://example.com/source.png",
-          sourceImageUrls: ["https://example.com/source.png"],
-        }),
-      ],
+    renderConversationGeneration({
+      generationType: "image_to_image",
+      sourceImageUrl: "https://example.com/source.png",
+      sourceImageUrls: ["https://example.com/source.png"],
     });
 
     await user.click(screen.getByRole("button", { name: "复用配置" }));
@@ -364,21 +372,96 @@ describe("创作台反馈改进", () => {
     expect(screen.getAllByAltText("Reference").some((item) => item.getAttribute("src") === "https://example.com/source.png")).toBe(true);
   });
 
-  it("历史栏右键菜单可以复用生成配置", async () => {
+  it("不再提供历史栏右键菜单，对话图片仍可直接复用配置", async () => {
     const user = userEvent.setup();
-    renderStudio({
-      initialGenerations: [createSucceededGeneration()],
-    });
+    renderConversationGeneration();
 
-    fireEvent.contextMenu(screen.getByTitle("点击放大查看，右键可复用配置"), {
+    expect(screen.queryByTitle("点击放大查看，右键可复用配置")).toBeNull();
+    fireEvent.contextMenu(screen.getByAltText("生成结果"), {
       clientX: 300,
       clientY: 120,
     });
 
-    await user.click(screen.getByRole("menuitem", { name: "复用配置" }));
+    expect(screen.queryByRole("menu")).toBeNull();
+    expect(screen.queryByRole("menuitem", { name: "复用配置" })).toBeNull();
+    await user.click(screen.getByRole("button", { name: "复用配置" }));
 
     expect(screen.getByRole("textbox")).toHaveValue("电影感夜景肖像");
     expect(screen.getByRole("combobox", { name: "尺寸" })).toHaveValue("2048x1152");
+  });
+
+  it("移除历史栏后对话图片仍可放大并从遮罩加入编辑", async () => {
+    const user = userEvent.setup();
+    renderConversationGeneration();
+
+    await user.click(screen.getByTitle("放大查看"));
+    expect(await screen.findByAltText("放大查看")).toHaveAttribute("src", "https://example.com/image.png");
+
+    const closeButton = screen.getByRole("button", { name: "关闭" });
+    const overlay = closeButton.parentElement;
+    if (!overlay) throw new Error("找不到图片放大遮罩");
+    await user.click(within(overlay).getByRole("button", { name: "加入编辑" }));
+
+    expect(await screen.findByAltText("Reference")).toHaveAttribute("src", "https://example.com/image.png");
+    expect(screen.getByPlaceholderText("描述你希望如何修改这些参考图...")).toBeInTheDocument();
+    await waitFor(() => expect(screen.queryByAltText("放大查看")).toBeNull());
+  });
+
+  it("移除历史栏后对话图片仍通过代理下载原图", async () => {
+    const user = userEvent.setup();
+    let downloaded: { href: string; filename: string } | null = null;
+    const clickSpy = vi.spyOn(HTMLAnchorElement.prototype, "click").mockImplementation(function (this: HTMLAnchorElement) {
+      downloaded = { href: this.href, filename: this.download };
+    });
+    const objectUrlSpy = vi.spyOn(URL, "createObjectURL").mockReturnValue("blob:download");
+    const fetchMock = vi.fn(async () => ({
+      blob: async () => new Blob(["fake-image"], { type: "image/png" }),
+      headers: new Headers({ "content-type": "image/png" }),
+      ok: true,
+    }));
+    vi.stubGlobal("fetch", fetchMock);
+
+    try {
+      renderConversationGeneration();
+      await user.click(screen.getByTitle("下载保存"));
+
+      await waitFor(() => expect(downloaded).toEqual({ href: "blob:download", filename: "image.png" }));
+      expect(fetchMock).toHaveBeenCalledWith(`/api/proxy-image?url=${encodeURIComponent("https://example.com/image.png")}`, { signal: expect.any(AbortSignal) });
+      expect(document.querySelector("a[download]")).toBeNull();
+    } finally {
+      clickSpy.mockRestore();
+      objectUrlSpy.mockRestore();
+    }
+  });
+
+  it("创建对话失败时恢复图生图输入和参考图顺序，不提交生成", async () => {
+    const user = userEvent.setup();
+    const requestedUrls: string[] = [];
+    vi.stubGlobal("fetch", vi.fn(async (input: RequestInfo | URL) => {
+      requestedUrls.push(typeof input === "string" ? input : input.toString());
+      return { json: async () => ({ error: "会话创建失败" }), ok: false };
+    }));
+    renderStudio();
+    fireEvent.drop(getComposerDropTarget(), {
+      dataTransfer: {
+        files: [
+          new File(["fake-a"], "source-a.png", { type: "image/png" }),
+          new File(["fake-b"], "source-b.png", { type: "image/png" }),
+        ],
+        types: ["Files"],
+      },
+    });
+    await user.click(screen.getByRole("button", { name: "参考图 2 前移" }));
+    await user.type(screen.getByPlaceholderText("描述你希望如何修改这些参考图..."), "保留草稿和参考顺序");
+    await user.click(screen.getByRole("button", { name: "发送" }));
+
+    expect(await screen.findByText("创建会话失败，请稍后再试")).toBeInTheDocument();
+    expect(screen.getByPlaceholderText("描述你希望如何修改这些参考图...")).toHaveValue("保留草稿和参考顺序");
+    expect(screen.getAllByAltText("Reference").map((image) => image.getAttribute("src"))).toEqual([
+      "blob:source-b.png",
+      "blob:source-a.png",
+    ]);
+    expect(requestedUrls).not.toContain("/api/generate");
   });
 
   it("自填 API 文生图提交时发送 customProvider", async () => {
@@ -469,7 +552,7 @@ describe("创作台反馈改进", () => {
     expect((formData.get("referenceImages") as File | null)?.name).toBe("source-a.png");
   });
 
-  it("历史图片作为参考图提交时发送 referenceImageUrls", async () => {
+  it("保留内部图片 URL 拖拽协议，作为参考图提交时发送 referenceImageUrls", async () => {
     const user = userEvent.setup();
     const { generateRequests } = mockGenerateFetch();
     renderStudio({

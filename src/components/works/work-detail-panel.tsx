@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { Download, Expand, FileText } from "lucide-react";
 
-import type { SerializedWork } from "@/lib/prisma-mappers";
+import type { SerializedPublicWorkDetail, SerializedWork } from "@/lib/prisma-mappers";
 import { buildPromptPreview } from "@/lib/prompt-preview";
 import { getThumbUrl } from "@/lib/image-url";
 import { canShowWorkPrompt, isFeaturedWork } from "@/lib/work-showcase";
@@ -35,9 +35,10 @@ function formatTime(value: string | null) {
 
 type WorkDetailPanelProps = {
   detailUrl: string;
-  isOwner: boolean;
-  work: SerializedWork;
-};
+} & (
+  | { isOwner: true; work: SerializedWork }
+  | { isOwner: false; work: SerializedPublicWorkDetail }
+);
 
 export function WorkDetailPanel({
   detailUrl,
@@ -47,12 +48,12 @@ export function WorkDetailPanel({
   const [zoomed, setZoomed] = useState(false);
   const [showPromptModal, setShowPromptModal] = useState(false);
 
-  const showPrompt = canShowWorkPrompt({
+  const showPrompt = work.prompt !== null && canShowWorkPrompt({
     isOwner,
     showcaseStatus: work.showcaseStatus,
     showPromptPublic: work.showPromptPublic,
   });
-  const promptPreview = buildPromptPreview(work.prompt, 150);
+  const promptPreview = buildPromptPreview(work.prompt ?? "", 150);
   const displayImageUrl = getThumbUrl(work.url, 1920, 90);
 
   return (
@@ -172,7 +173,7 @@ export function WorkDetailPanel({
         <PromptModal
           negativePrompt={work.negativePrompt}
           onClose={() => setShowPromptModal(false)}
-          prompt={work.prompt}
+          prompt={work.prompt ?? ""}
         />
       ) : null}
     </>

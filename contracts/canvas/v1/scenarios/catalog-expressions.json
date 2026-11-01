@@ -1,0 +1,107 @@
+{
+  "contract": "narra.canvas.catalog-expressions",
+  "version": 1,
+  "grammar": {
+    "scope": "Only canvas schema CHECK expressions, scalar column defaults, and comma-separated function argument defaults. Unknown syntax must make readiness fail, not be discarded.",
+    "tokens": "ASCII unquoted identifiers (fold to lowercase), double-quoted identifiers (preserve case and decode doubled quotes), single-quoted strings (decode doubled quotes), unsigned decimal integers, parentheses, brackets, commas, ::, = <> != < > <= >= ~ !~ ~* !~*.",
+    "precedenceLowToHigh": ["OR", "AND", "NOT", "comparison / IS [NOT] NULL / IN / NOT IN / BETWEEN", "primary / cast"],
+    "primary": "Identifiers, strings, integers, TRUE/FALSE/NULL, parentheses, nonempty ARRAY literals, clock_timestamp() with no arguments, length(primary) with one argument.",
+    "normalization": "JSON tuple AST with tags shown in the vectors. Remove grouping only by building the AST. Flatten adjacent AND or OR nodes separately, without sorting operands. Expand BETWEEN to >= AND <=. Normalize != to <>; = ANY(ARRAY[...]) to IN; <> ALL(ARRAY[...]) to NOT IN.",
+    "casts": "Only unbounded text / character varying casts on string literals or identifiers whose checked schema column is text/character(n)/character varying(n), and on arrays of strings; checked canvas enum casts on valid string labels; text or checked enum casts on NULL. Preserve quoted type case. Reject other casts, type modifiers, collations, schema-qualified names, comments, arithmetic and unrecognized syntax.",
+    "limits": "At most 32768 input characters. Function-default lists additionally compare the catalog default count and input argument names/types; split only the supported scalar defaults on commas.",
+    "bodyDigest": "Function bodies use MD5 after CRLF-to-LF conversion only; lone carriage returns remain significant. SQL is never executed by normalization."
+  },
+  "equivalent": [
+    {
+      "id": "integer-range-and-parentheses",
+      "expressions": ["ordinal BETWEEN 1 AND 16", "((ordinal >= 1) AND (ordinal <= 16))", "\"ordinal\" >= 01 AND \"ordinal\" <= 16"],
+      "canonical": ["and", [">=", ["id", "ordinal"], ["number", "1"]], ["<=", ["id", "ordinal"], ["number", "16"]]]
+    },
+    {
+      "id": "enum-in-any",
+      "expressions": ["state IN ('READY', 'QUARANTINED')", "state = ANY (ARRAY['READY'::\"CanvasImportAssetState\",'QUARANTINED'::\"CanvasImportAssetState\"])", "(\"state\" = ANY (ARRAY['READY'::\"CanvasImportAssetState\", 'QUARANTINED'::\"CanvasImportAssetState\"]))"],
+      "canonical": ["in", ["id", "state"], ["string", "READY"], ["string", "QUARANTINED"]]
+    },
+    {
+      "id": "enum-not-in-all",
+      "expressions": ["state NOT IN ('DELETING','DELETED')", "state <> ALL (ARRAY['DELETING'::\"CanvasImportAssetState\",'DELETED'::\"CanvasImportAssetState\"])", "state != ALL (ARRAY['DELETING'::\"CanvasImportAssetState\",'DELETED'::\"CanvasImportAssetState\"])"] ,
+      "canonical": ["not-in", ["id", "state"], ["string", "DELETING"], ["string", "DELETED"]]
+    },
+    {
+      "id": "varchar-deparser-casts",
+      "expressions": ["\"mimeType\" IN ('image/png','image/jpeg')", "((\"mimeType\")::text = ANY ((ARRAY['image/png'::character varying, 'image/jpeg'::character varying])::text[]))"],
+      "canonical": ["in", ["id", "mimeType"], ["string", "image/png"], ["string", "image/jpeg"]]
+    },
+    {
+      "id": "text-default",
+      "expressions": ["'IMPORT'", "'IMPORT'::character varying", "('IMPORT'::text)"],
+      "canonical": ["string", "IMPORT"]
+    },
+    {
+      "id": "enum-default",
+      "expressions": ["'UPLOADING'", "'UPLOADING'::\"CanvasImportAssetState\""],
+      "canonical": ["string", "UPLOADING"]
+    },
+    {
+      "id": "nullable-default",
+      "expressions": ["NULL", "NULL::text"],
+      "canonical": ["literal", "null"]
+    },
+    {
+      "id": "true-default",
+      "expressions": ["TRUE", "(true)"],
+      "canonical": ["literal", "true"]
+    },
+    {
+      "id": "database-clock-default",
+      "expressions": ["clock_timestamp()", "CLOCK_TIMESTAMP ( )"],
+      "canonical": ["call", "clock_timestamp"]
+    },
+    {
+      "id": "text-length",
+      "expressions": ["length(\"storageKey\") > 0", "(length((\"storageKey\")::text) > 0)"],
+      "canonical": [">", ["call", "length", ["id", "storageKey"]], ["number", "0"]]
+    },
+    {
+      "id": "same-operator-association",
+      "expressions": ["a AND (b AND c)", "(a AND b) AND c"],
+      "canonical": ["and", ["id", "a"], ["id", "b"], ["id", "c"]]
+    },
+    {
+      "id": "quoted-text-escaping",
+      "expressions": ["\"a\"\"b\" = 'can''t'", "(\"a\"\"b\" = 'can''t'::text)"],
+      "canonical": ["=", ["id", "a\"b"], ["string", "can't"]]
+    }
+  ],
+  "different": [
+    {"id": "boolean-precedence", "left": "a AND (b OR c)", "right": "(a AND b) OR c"},
+    {"id": "regex-negation", "left": "sha256 ~ '^[a-f0-9]{64}$'", "right": "sha256 !~ '^[a-f0-9]{64}$'"},
+    {"id": "regex-case", "left": "sha256 ~ '^[a-f0-9]{64}$'", "right": "sha256 ~* '^[a-f0-9]{64}$'"},
+    {"id": "quoted-identifier-case", "left": "\"intentHash\" IS NULL", "right": "\"intenthash\" IS NULL"},
+    {"id": "string-case", "left": "'READY'::\"CanvasImportAssetState\"", "right": "'ready'"},
+    {"id": "string-parentheses", "left": "'a(b)'", "right": "'ab'"},
+    {"id": "array-elements", "left": "state IN ('READY','DELETED')", "right": "state IN ('READY,DELETED')"},
+    {"id": "null-negation", "left": "\"readyAt\" IS NULL", "right": "\"readyAt\" IS NOT NULL"},
+    {"id": "prefix-not", "left": "NOT (a AND b)", "right": "NOT a AND b"}
+  ],
+  "unsupported": [
+    "",
+    "(ordinal >= 1",
+    "ordinal + 0 BETWEEN 1 AND 16",
+    "ordinal::boolean::integer BETWEEN 1 AND 16",
+    "'IMPORT'::character varying(1)",
+    "state::text = 'READY'",
+    "'READY'::\"canvasimportassetstate\"",
+    "'foreign-label'::\"CanvasImportAssetState\"",
+    "length(\"storageKey\") COLLATE \"C\"",
+    "pg_catalog.length(\"storageKey\")",
+    "now()",
+    "true /* changed */",
+    "true; SELECT 1",
+    "E'\\x41'",
+    "1.0",
+    "'unterminated",
+    "ARRAY[]",
+    "state = ANY (other_column)"
+  ]
+}

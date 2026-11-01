@@ -738,33 +738,6 @@ textarea {
   animation: skeleton-fade-in 0.4s ease-out forwards;
 }
 
-/* 创作台右侧历史图片栏：纯 CSS 无缝向上滚动，悬停暂停 */
-@keyframes history-rail-scroll {
-  0% {
-    transform: translateY(0);
-  }
-  100% {
-    transform: translateY(-50%);
-  }
-}
-.history-rail {
-  /* 上下淡出，避免边缘硬切 */
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 32px, #000 calc(100% - 32px), transparent 100%);
-  mask-image: linear-gradient(to bottom, transparent 0, #000 32px, #000 calc(100% - 32px), transparent 100%);
-}
-.history-rail-track {
-  animation: history-rail-scroll var(--history-rail-duration, 60s) linear infinite;
-  will-change: transform;
-}
-.history-rail:hover .history-rail-track {
-  animation-play-state: paused;
-}
-@media (prefers-reduced-motion: reduce) {
-  .history-rail-track {
-    animation: none;
-  }
-}
-
 /* 全局 a11y 兜底：尊重用户的 reduced-motion 偏好，关掉所有动画/过渡 */
 @media (prefers-reduced-motion: reduce) {
   *,

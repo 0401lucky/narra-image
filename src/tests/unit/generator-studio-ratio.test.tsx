@@ -36,6 +36,7 @@ function mockLocalStorage() {
 }
 
 const baseProps = {
+  ownerId: "owner_test",
   checkInSummary: {
     checkInReward: 50,
     checkedInToday: false,

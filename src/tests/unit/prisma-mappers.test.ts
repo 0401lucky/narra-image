@@ -38,7 +38,10 @@ describe("精选作品序列化", () => {
   };
 
   it("提示词允许公开时返回真实 prompt", () => {
-    expect(serializeFeaturedWork(baseWork).prompt).toBe("电影感夜景肖像");
+    expect(serializeFeaturedWork(baseWork)).toMatchObject({
+      prompt: "电影感夜景肖像",
+      showPromptPublic: true,
+    });
   });
 
   it("提示词隐藏时返回占位文案，避免首页泄露 prompt", () => {
@@ -46,7 +49,16 @@ describe("精选作品序列化", () => {
       serializeFeaturedWork({
         ...baseWork,
         showPromptPublic: false,
-      }).prompt,
-    ).toBe("作者未公开提示词");
+      }),
+    ).toMatchObject({ prompt: "作者未公开提示词", showPromptPublic: false });
+  });
+
+  it("真实公开提示词恰好等于旧占位文案时仍明确允许复用", () => {
+    expect(
+      serializeFeaturedWork({
+        ...baseWork,
+        job: { ...baseWork.job, prompt: "作者未公开提示词" },
+      }),
+    ).toMatchObject({ prompt: "作者未公开提示词", showPromptPublic: true });
   });
 });

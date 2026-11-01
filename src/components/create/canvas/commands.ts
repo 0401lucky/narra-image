@@ -1,0 +1,219 @@
+import {
+  CANVAS_LIMITS,
+  CanvasContractError,
+  canvasResultNodeId,
+  normalizeCanvasRunParametersV1,
+  type AcceptedCanvasRunBindingV1,
+  type CanvasGenerationParametersV1,
+  type CanvasLocalNodeV1,
+  type CanvasLocalSceneV1,
+  type CanvasPositionV1,
+  type CanvasRunOutboxEntryV1,
+} from "@/lib/canvas/contracts";
+import {
+  assertCanvasOutputCapacityV1,
+  compactCanvasImageOrdinalsV1,
+  removeCanvasNodeV1,
+  validateCanvasGraphV1,
+} from "@/lib/canvas/graph";
+import { canvasLocalSceneSchema } from "@/lib/validators";
+
+import type { GenerationItem } from "../types";
+import type { CanvasRuntimeRequest } from "./client-api";
+
+// Default card clearance, not persisted DOM measurements or automatic relayout.
+export const CANVAS_CARD_SPACING = { width: 320, height: 360, column: 380 } as const;
+
+export type CanvasCapacityReservation = { runId: string; nodeId: string; count: number | null; outputsHandled: boolean };
+export type CanvasEditCommand =
+  | { kind: "add"; node: Exclude<CanvasLocalNodeV1, { kind: "result" }> }
+  | { kind: "move"; nodeId: string; position: CanvasPositionV1 }
+  | { kind: "prompt"; nodeId: string; text: string }
+  | { kind: "parameters"; nodeId: string; parameters: CanvasGenerationParametersV1 }
+  | { kind: "reference"; nodeId: string; source: Extract<CanvasLocalNodeV1, { kind: "reference" }>["source"] }
+  | { kind: "connect"; id: string; source: string; target: string }
+  | { kind: "replace-connection"; edgeId: string; source: string }
+  | { kind: "disconnect"; edgeId: string }
+  | { kind: "reorder"; nodeId: string; sourceIds: string[] }
+  | { kind: "remove"; nodeId: string };
+
+export function emptyCanvasScene(): CanvasLocalSceneV1 {
+  return { schemaVersion: 1, nodes: [], edges: [], viewport: { x: 0, y: 0, zoom: 1 }, runBindings: [] };
+}
+
+export function copyCanvasScene<T extends CanvasLocalSceneV1>(scene: T): T {
+  // Domain JSON has already passed the shared schema; never clone a renderer store.
+  return JSON.parse(JSON.stringify(scene)) as T;
+}
+
+export function canvasInsertionPosition(occupied: readonly CanvasPositionV1[], preferred: CanvasPositionV1): CanvasPositionV1 {
+  if (!Number.isFinite(preferred.x) || !Number.isFinite(preferred.y)) throw new CanvasContractError("CANVAS_INVALID_INPUT");
+  const blockers = occupied.filter((position) => Math.abs(position.x - preferred.x) < CANVAS_CARD_SPACING.width)
+    .sort((left, right) => left.y - right.y);
+  const place = (startY: number): CanvasPositionV1 | null => {
+    let y = startY;
+    for (const position of blockers) {
+      if (Math.abs(position.y - y) >= CANVAS_CARD_SPACING.height) continue;
+      let nextY = position.y + CANVAS_CARD_SPACING.height;
+      if (nextY - position.y < CANVAS_CARD_SPACING.height) nextY += Math.max(1, Math.abs(position.y) * Number.EPSILON);
+      if (!Number.isFinite(nextY) || nextY - position.y < CANVAS_CARD_SPACING.height) return null;
+      y = nextY;
+    }
+    return { x: preferred.x, y };
+  };
+  // Sorted blockers require one bounded scan. Extreme finite coordinates may
+  // have no representable space below them; retry this column at a finite origin.
+  const result = place(preferred.y) ?? place(0);
+  if (!result) throw new CanvasContractError("CANVAS_INVALID_INPUT");
+  return result;
+}
+
+export function applyCanvasEdit(scene: CanvasLocalSceneV1, command: CanvasEditCommand, reservations: readonly CanvasCapacityReservation[]): CanvasLocalSceneV1 {
+  let next = copyCanvasScene(scene);
+  const nodeId = "nodeId" in command ? command.nodeId : null;
+  const node = next.nodes.find((entry) => entry.id === nodeId);
+  switch (command.kind) {
+    case "add":
+      assertCanvasOutputCapacityV1(scene, reservations, { nodes: 1 });
+      next.nodes.push(command.node);
+      break;
+    case "move":
+      if (!node) throw new CanvasContractError("CANVAS_INVALID_CONNECTION");
+      node.position = { ...command.position };
+      break;
+    case "prompt":
+      if (node?.kind !== "prompt") throw new CanvasContractError("CANVAS_INVALID_CONNECTION");
+      node.text = command.text;
+      break;
+    case "parameters":
+      if (node?.kind !== "generation") throw new CanvasContractError("CANVAS_INVALID_CONNECTION");
+      node.parameters = { ...command.parameters };
+      break;
+    case "reference":
+      if (node?.kind !== "reference") throw new CanvasContractError("CANVAS_INVALID_CONNECTION");
+      node.source = { ...command.source };
+      break;
+    case "remove":
+      next = removeCanvasNodeV1(next, command.nodeId);
+      break;
+    case "connect": {
+      assertCanvasOutputCapacityV1(scene, reservations, { edges: 1 });
+      const source = next.nodes.find((entry) => entry.id === command.source);
+      const target = next.nodes.find((entry) => entry.id === command.target);
+      if (!source || target?.kind !== "generation" || source.kind === "generation") throw new CanvasContractError("CANVAS_INVALID_CONNECTION");
+      const base = { id: command.id, source: source.id, target: target.id };
+      next.edges.push(source.kind === "prompt" ? { ...base, kind: "prompt-input" } : {
+        ...base, kind: "image-input", ordinal: 1 + next.edges.filter((edge) => edge.kind === "image-input" && edge.target === target.id).length,
+      });
+      break;
+    }
+    case "replace-connection": {
+      const edge = next.edges.find((item) => item.id === command.edgeId);
+      if (!edge || edge.kind === "output-provenance") throw new CanvasContractError("CANVAS_INVALID_CONNECTION");
+      // The copied candidate keeps the original identity/ordinal. A rejected
+      // graph is never published, and no capacity reservation is released.
+      edge.source = command.source;
+      break;
+    }
+    case "disconnect":
+      next.edges = compactCanvasImageOrdinalsV1(next.edges.filter((edge) => edge.id !== command.edgeId));
+      break;
+    case "reorder": {
+      const inputs = next.edges.filter((edge) => edge.kind === "image-input" && edge.target === command.nodeId);
+      if (inputs.length !== command.sourceIds.length || new Set(command.sourceIds).size !== inputs.length
+        || inputs.some((edge) => !command.sourceIds.includes(edge.source))) throw new CanvasContractError("CANVAS_REFERENCE_ORDER_INVALID");
+      next.edges = next.edges.map((edge) => edge.kind === "image-input" && edge.target === command.nodeId
+        ? { ...edge, ordinal: command.sourceIds.indexOf(edge.source) + 1 } : edge);
+      break;
+    }
+  }
+  const problems = validateCanvasGraphV1(next);
+  if (problems.length) throw new CanvasContractError(problems[0].code);
+  const parsed = canvasLocalSceneSchema.safeParse(next);
+  if (!parsed.success) throw new CanvasContractError("CANVAS_INVALID_INPUT");
+  return parsed.data;
+}
+
+export function canvasReservations(
+  scene: CanvasLocalSceneV1,
+  outbox: readonly CanvasRunOutboxEntryV1[],
+  readJob: (id: string) => GenerationItem | null,
+): CanvasCapacityReservation[] {
+  const reservations = scene.runBindings.map((binding) => {
+    const original = outbox.find((entry) => entry.runId === binding.runId);
+    return {
+      runId: binding.runId, nodeId: binding.nodeId, outputsHandled: binding.outputsHandled,
+      count: binding.outputsHandled ? null : readJob(binding.jobId)?.count
+        ?? (original ? normalizeCanvasRunParametersV1(original.projection.params, original.projection.references.length).count : null),
+    };
+  });
+  for (const entry of outbox) {
+    // Acceptance can be durable while Delete temporarily suppresses attachment.
+    // Its unbound output batch still owns capacity until reconciliation handles it.
+    if (entry.phase === "rejected" || reservations.some((reservation) => reservation.runId === entry.runId)
+      || !scene.nodes.some((node) => node.id === entry.nodeId && node.kind === "generation")) continue;
+    reservations.push({ runId: entry.runId, nodeId: entry.nodeId, outputsHandled: false, count: normalizeCanvasRunParametersV1(entry.projection.params, entry.projection.references.length).count });
+  }
+  return reservations;
+}
+
+export function materializeCanvasTerminal(
+  scene: CanvasLocalSceneV1,
+  binding: AcceptedCanvasRunBindingV1,
+  job: GenerationItem,
+  reservations: readonly CanvasCapacityReservation[],
+  uuid: () => string,
+): CanvasLocalSceneV1 {
+  const source = scene.nodes.find((node) => node.id === binding.nodeId && node.kind === "generation");
+  if (!source || job.id !== binding.jobId || job.status === "pending" || binding.outputsHandled) return scene;
+  if (job.status === "succeeded" && (!job.images.length || new Set(job.images.map((image) => image.id)).size !== job.images.length)) {
+    throw new CanvasContractError("CANVAS_JOB_UNAVAILABLE");
+  }
+  const additions = job.status === "succeeded" ? job.images.filter((image) => !scene.nodes.some((node) => node.id === canvasResultNodeId(image.id))) : [];
+  // Closing a failed/already-present batch consumes no space; unknown sibling
+  // counts must still block actual additions, not this durable handled marker.
+  if (additions.length) assertCanvasOutputCapacityV1(scene, reservations.filter((entry) => entry.runId !== binding.runId), { nodes: additions.length, edges: additions.length });
+  const next = copyCanvasScene(scene);
+  const occupied = next.nodes.map((node) => node.position);
+  const preferred = { x: source.position.x + CANVAS_CARD_SPACING.column, y: source.position.y };
+  additions.forEach((image) => {
+    const id = canvasResultNodeId(image.id);
+    const position = canvasInsertionPosition(occupied, preferred);
+    occupied.push(position);
+    next.nodes.push({ id, kind: "result", jobId: job.id, imageId: image.id, runId: binding.runId, position });
+    next.edges.push({ id: uuid(), kind: "output-provenance", source: source.id, target: id });
+  });
+  next.runBindings = next.runBindings.map((entry) => entry.runId === binding.runId ? { ...entry, outputsHandled: true } : entry);
+  const parsed = canvasLocalSceneSchema.safeParse(next);
+  if (!parsed.success) throw new CanvasContractError("CANVAS_INVALID_INPUT");
+  return parsed.data;
+}
+
+export function canvasRuntimeRequests(canvasId: string, scene: CanvasLocalSceneV1, mappedAssetIds: readonly string[] = []): CanvasRuntimeRequest[] {
+  const slots = new Map<string, { kind: "run"; binding: AcceptedCanvasRunBindingV1 } | { kind: "runId" | "job" | "image" | "asset"; id: string }>();
+  for (const binding of scene.runBindings) slots.set(`run:${binding.runId}`, { kind: "run", binding });
+  for (const node of scene.nodes) {
+    if (node.kind === "result") {
+      slots.set(`job:${node.jobId}`, { kind: "job", id: node.jobId });
+      slots.set(`image:${node.imageId}`, { kind: "image", id: node.imageId });
+      if (node.runId && !slots.has(`run:${node.runId}`)) slots.set(`run:${node.runId}`, { kind: "runId", id: node.runId });
+    } else if (node.kind === "reference" && node.source.kind === "imported") slots.set(`asset:${node.source.assetId}`, { kind: "asset", id: node.source.assetId });
+  }
+  for (const id of mappedAssetIds) slots.set(`asset:${id}`, { kind: "asset", id });
+  const requests: CanvasRuntimeRequest[] = [];
+  const entries = [...slots.values()];
+  for (let offset = 0; offset < entries.length; offset += CANVAS_LIMITS.runtimeIdSlots) {
+    const request: CanvasRuntimeRequest = { canvasId, runBindings: [], runIds: [], jobIds: [], imageIds: [], assetIds: [] };
+    for (const slot of entries.slice(offset, offset + CANVAS_LIMITS.runtimeIdSlots)) {
+      switch (slot.kind) {
+        case "run": request.runBindings.push({ ...slot.binding }); break;
+        case "runId": request.runIds.push(slot.id); break;
+        case "job": request.jobIds.push(slot.id); break;
+        case "image": request.imageIds.push(slot.id); break;
+        case "asset": request.assetIds.push(slot.id); break;
+      }
+    }
+    requests.push(request);
+  }
+  return requests;
+}

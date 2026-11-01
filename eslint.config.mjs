@@ -15,6 +15,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Task evidence includes generated/vendor snapshots, not application source.
+    ".trellis/tasks/**",
     // 本地 pi 工具目录，不属于仓库源码：
     ".pi/**",
   ]),

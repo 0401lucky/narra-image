@@ -7,3 +7,11 @@
 # picking either side (task state lives in task.json, not index.md). See
 # .trellis/spec/cli/backend/directory-structure.md for details.
 .trellis/workspace/*/journal-*.md merge=union
+
+# Preserve original license and forensic before-image bytes, including whitespace.
+# Application source, task helpers and authored documentation keep normal checks.
+.trellis/tasks/**/checks/**/*.before whitespace=-blank-at-eol,-blank-at-eof
+.trellis/tasks/**/research/asset-evidence/cormorant-garamond-OFL.txt whitespace=-blank-at-eol,-blank-at-eof
+.trellis/tasks/**/research/asset-evidence/plus-jakarta-sans-OFL.txt whitespace=-blank-at-eol,-blank-at-eof
+public/marketing/home/fonts/cormorant-garamond-OFL.txt whitespace=-blank-at-eol,-blank-at-eof
+public/marketing/home/fonts/plus-jakarta-sans-OFL.txt whitespace=-blank-at-eol,-blank-at-eof

@@ -9,6 +9,8 @@ import { HeaderShell } from "@/components/marketing/header-shell";
 import { PetToggle } from "@/components/pet/pet-toggle";
 import { getThumbUrl } from "@/lib/image-url";
 import { MobileNav } from "@/components/marketing/mobile-nav";
+import { HomeHeader } from "./homepage/home-header";
+import type { HeaderVariant } from "./homepage/types";
 
 type SiteHeaderProps = {
   currentUser: {
@@ -21,6 +23,7 @@ type SiteHeaderProps = {
   activeHref?: string;
   className?: string;
   showCheckIn?: boolean;
+  variant?: HeaderVariant;
 };
 
 export async function SiteHeader({
@@ -28,6 +31,7 @@ export async function SiteHeader({
   currentUser,
   className,
   showCheckIn = true,
+  variant = "default",
 }: SiteHeaderProps) {
   const links = [
     { href: "/", label: "首页" },
@@ -45,6 +49,20 @@ export async function SiteHeader({
     : null;
 
   const displayName = currentUser?.nickname || undefined;
+
+  if (variant === "home") {
+    return (
+      <HeaderShell variant="home">
+        <HomeHeader
+          currentUser={currentUser}
+          links={links}
+          activeHref={activeHref}
+          className={className}
+          checkInSummary={checkInSummary}
+        />
+      </HeaderShell>
+    );
+  }
 
   return (
     <HeaderShell>
