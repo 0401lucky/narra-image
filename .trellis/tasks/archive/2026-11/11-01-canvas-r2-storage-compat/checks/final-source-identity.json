@@ -1,0 +1,81 @@
+{
+  "checked_at": "2026-11-01T08:29:20.833413+00:00",
+  "source_files": [
+    {
+      "file": "src/lib/canvas/storage.ts",
+      "sha256": "ef5fc27527631c5f31c623ae3f5f437ae06d997121167f0e2d6d4477cd71c173",
+      "verified_copy_matches": true
+    },
+    {
+      "file": "src/tests/unit/canvas-storage.test.ts",
+      "sha256": "e029d978b27f6d93c552d7676c94e947daeb779e2045de19042a5eac67e3556c",
+      "verified_copy_matches": true
+    },
+    {
+      "file": "src/tests/unit/canvas-storage-capability-response.test.ts",
+      "sha256": "0c0c3de2c9780b0487d5b9b4622ddd4df73a005fffe8787c5ba1976e5477472f",
+      "verified_copy_matches": true
+    },
+    {
+      "file": "worker/internal/worker/canvas_gc_storage.go",
+      "sha256": "5759cc360d13511edb95b9dcae42a4910edd675dda9728382ab1f4a4834aff0f",
+      "verified_copy_matches": true
+    },
+    {
+      "file": "worker/internal/worker/canvas_gc_storage_test.go",
+      "sha256": "bea19ee05d9424afe351452aa7cd2517de4045f9d3c2bd0f5fd1de1020328701",
+      "verified_copy_matches": true
+    },
+    {
+      "file": "worker/internal/worker/canvas_r2_storage_test.go",
+      "sha256": "89d8f54bef961451db85175c810fa776ece1df09bcf02ab941a7137417275fd3",
+      "verified_copy_matches": true
+    },
+    {
+      "file": "contracts/canvas/v1/scenarios/storage-location.json",
+      "sha256": "63dd72e6d58583cd1950dff6568f41c602b3564d1b47054c9bfe54b2dc703b62",
+      "verified_copy_matches": true
+    },
+    {
+      "file": "scripts/verify-canvas-contracts-db.mjs",
+      "sha256": "36d42e23f7a5e3e5eddad75a4b71b3c32d13235b3b942e7febc0a2cd0ed6b851",
+      "verified_copy_matches": true
+    },
+    {
+      "file": "scripts/verify-e2e.mjs",
+      "sha256": "b36d6adfc9341394846233e2d50c0f4524117ee4c88d136f26fa4f51c931176c",
+      "verified_copy_matches": true
+    },
+    {
+      "file": "scripts/fixtures/canvas-object-store.mjs",
+      "sha256": "ee58bf50e709fab385210797d63ae176709ec56c2a297969ae5759db8100985f",
+      "verified_copy_matches": true
+    },
+    {
+      "file": ".gitattributes",
+      "sha256": "ea3f5c60603972ad532dfaf1e328db7a2bfb32748c3571df3a4b4b577be7166f",
+      "verified_copy_matches": true
+    },
+    {
+      "file": "README.md",
+      "sha256": "65a0effc8c2d329ea812e251b3887ae186c323c837da1705239224a29ce58104",
+      "verified_copy_matches": true
+    }
+  ],
+  "user_files_preserved": {
+    ".gitignore": "CCE51018CC0C483C78C950E4F7057A98CEBA29FAA3C4508C779694743BDFA95F",
+    ".serena/project.yml": "EEE6A3F00746F9E747AC3BB3376D145FB4E12BF5F8B4D5A2DAF903BB08A41638"
+  },
+  "retained_captures": [
+    {
+      "original": "D:\\code\\_tmp\\narra-canvas-r2-verify-gpjo1prx\\source-capture-20261101T082329320119Z.json",
+      "retained": "source-capture-20261101T082329320119Z.json",
+      "sha256": "04c297ae7bf867dd555ce86d472ec4e94a8317cb37f858891a2a11e82e649c22"
+    },
+    {
+      "original": "D:\\code\\_tmp\\narra-canvas-r2-verify-gpjo1prx\\source-capture.json",
+      "retained": "source-capture.json",
+      "sha256": "1dd88301bc87de6f03598c2212ca73192ab7bf2b1ea6477aaae1840679cb1361"
+    }
+  ]
+}

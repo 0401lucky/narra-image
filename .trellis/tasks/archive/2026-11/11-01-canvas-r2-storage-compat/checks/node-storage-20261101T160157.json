@@ -1,0 +1,16 @@
+{
+  "exit_code": 0,
+  "duration_seconds": 1.649,
+  "command": [
+    "C:\\Users\\lucky0401\\AppData\\Roaming\\fnm\\node-versions\\v24.22.1\\installation\\node.exe",
+    "D:\\code\\Claude code program\\narra image\\node_modules\\vitest\\vitest.mjs",
+    "run",
+    "src/tests/unit/canvas-storage.test.ts",
+    "src/tests/unit/canvas-storage-capability-response.test.ts",
+    "--reporter=dot",
+    "--testTimeout=30000",
+    "--maxWorkers=2"
+  ],
+  "node": "C:\\Users\\lucky0401\\AppData\\Roaming\\fnm\\node-versions\\v24.22.1\\installation\\node.exe",
+  "dotenv_guard": true
+}

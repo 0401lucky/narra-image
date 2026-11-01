@@ -1,0 +1,11 @@
+{
+  "src/lib/canvas/storage.ts": "ef5fc27527631c5f31c623ae3f5f437ae06d997121167f0e2d6d4477cd71c173",
+  "src/tests/unit/canvas-storage.test.ts": "e029d978b27f6d93c552d7676c94e947daeb779e2045de19042a5eac67e3556c",
+  "src/tests/unit/canvas-storage-capability-response.test.ts": "0c0c3de2c9780b0487d5b9b4622ddd4df73a005fffe8787c5ba1976e5477472f",
+  "worker/internal/worker/canvas_gc_storage.go": "5759cc360d13511edb95b9dcae42a4910edd675dda9728382ab1f4a4834aff0f",
+  "worker/internal/worker/canvas_gc_storage_test.go": "bea19ee05d9424afe351452aa7cd2517de4045f9d3c2bd0f5fd1de1020328701",
+  "worker/internal/worker/canvas_r2_storage_test.go": "89d8f54bef961451db85175c810fa776ece1df09bcf02ab941a7137417275fd3",
+  "contracts/canvas/v1/scenarios/storage-location.json": "63dd72e6d58583cd1950dff6568f41c602b3564d1b47054c9bfe54b2dc703b62",
+  "README.md": "65a0effc8c2d329ea812e251b3887ae186c323c837da1705239224a29ce58104",
+  ".trellis/spec/operations/canvas-contracts.md": "220a2cd17d7c5f70d907bf16425f21c73eb04190b0c48828698a570b03a81789"
+}

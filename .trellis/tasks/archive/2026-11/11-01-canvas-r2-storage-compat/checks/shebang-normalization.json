@@ -1,0 +1,20 @@
+[
+  {
+    "file": "scripts/verify-canvas-contracts-db.mjs",
+    "before_sha256": "d1b7ef3824fed8967d5c7fd132563dfde3148f460bcf776770719f347500dc94",
+    "after_sha256": "36d42e23f7a5e3e5eddad75a4b71b3c32d13235b3b942e7febc0a2cd0ed6b851",
+    "matches_git_baseline_bytes": true
+  },
+  {
+    "file": "scripts/verify-e2e.mjs",
+    "before_sha256": "e20deb6cf29d57bf8c54c6745cfb1f1f6f60312376590d5d132030555ac17552",
+    "after_sha256": "b36d6adfc9341394846233e2d50c0f4524117ee4c88d136f26fa4f51c931176c",
+    "matches_git_baseline_bytes": true
+  },
+  {
+    "file": "scripts/fixtures/canvas-object-store.mjs",
+    "before_sha256": "82e0745a07ef3f93ac0f063e377ae3abd785aeca5dd2a24f57eeb098d3dd9bf8",
+    "after_sha256": "ee58bf50e709fab385210797d63ae176709ec56c2a297969ae5759db8100985f",
+    "matches_git_baseline_bytes": true
+  }
+]

@@ -1,0 +1,16 @@
+{
+  "stage": "go-build",
+  "command": [
+    "C:\\Program Files\\Go\\bin\\go.exe",
+    "-C",
+    "worker",
+    "build",
+    "./..."
+  ],
+  "cwd": "D:\\code\\_tmp\\narra-canvas-r2-verify-gpjo1prx\\app",
+  "exit_code": 0,
+  "seconds": 2.453,
+  "timeout_seconds": 180,
+  "dotenv_guard": true,
+  "source_capture": "D:\\code\\_tmp\\narra-canvas-r2-verify-gpjo1prx\\source-capture.json"
+}

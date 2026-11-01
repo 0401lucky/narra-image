@@ -1,0 +1,22 @@
+{
+  "stage": "test",
+  "command": [
+    "C:\\Users\\lucky0401\\AppData\\Roaming\\fnm\\node-versions\\v24.22.1\\installation\\node.exe",
+    "node_modules/vitest/vitest.mjs",
+    "run",
+    "--reporter=dot",
+    "--testTimeout=30000",
+    "--maxWorkers=2",
+    "src/tests/unit/canvas-disposable-runner.test.ts",
+    "src/tests/unit/canvas-e2e-http-fixture.test.ts",
+    "src/tests/unit/canvas-e2e-runtime-fixture.test.ts",
+    "src/tests/unit/canvas-object-store-fixture.test.ts",
+    "src/tests/unit/canvas-e2e-runner.test.ts"
+  ],
+  "cwd": "D:\\code\\_tmp\\narra-canvas-r2-verify-gpjo1prx\\app",
+  "exit_code": 0,
+  "seconds": 8.703,
+  "timeout_seconds": 360,
+  "dotenv_guard": true,
+  "source_capture": "D:\\code\\_tmp\\narra-canvas-r2-verify-gpjo1prx\\source-capture.json"
+}

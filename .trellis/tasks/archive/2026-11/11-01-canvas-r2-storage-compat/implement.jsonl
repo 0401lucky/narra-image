@@ -1,0 +1,4 @@
+{"file":".trellis/spec/operations/canvas-contracts.md","reason":"存储能力、原图 roots / GC、失败关闭与两端一致性"}
+{"file":".trellis/spec/operations/release-hardening.md","reason":"readiness、环境与本地验证隔离"}
+{"file":".trellis/spec/frontend/quality-guidelines.md","reason":"真实 SDK 模拟传输、测试与类型检查约定"}
+{"file":".trellis/tasks/archive/2026-11/11-01-canvas-r2-storage-compat/research/r2-evidence.md","reason":"官方 R2 能力与原诊断"}

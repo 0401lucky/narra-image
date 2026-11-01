@@ -1,0 +1,20 @@
+[
+  {
+    "file": "verify-canvas-contracts-db.mjs",
+    "crlf": 110,
+    "node_syntax_exit": 0,
+    "stderr": ""
+  },
+  {
+    "file": "verify-e2e.mjs",
+    "crlf": 331,
+    "node_syntax_exit": 0,
+    "stderr": ""
+  },
+  {
+    "file": "canvas-object-store.mjs",
+    "crlf": 324,
+    "node_syntax_exit": 0,
+    "stderr": ""
+  }
+]

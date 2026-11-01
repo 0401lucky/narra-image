@@ -1,0 +1,18 @@
+{
+  "stage": "go-test",
+  "command": [
+    "C:\\Program Files\\Go\\bin\\go.exe",
+    "-C",
+    "worker",
+    "test",
+    "-count=1",
+    "-timeout=90s",
+    "./..."
+  ],
+  "cwd": "D:\\code\\_tmp\\narra-canvas-r2-verify-gpjo1prx\\app",
+  "exit_code": 0,
+  "seconds": 10.016,
+  "timeout_seconds": 180,
+  "dotenv_guard": true,
+  "source_capture": "D:\\code\\_tmp\\narra-canvas-r2-verify-gpjo1prx\\source-capture.json"
+}

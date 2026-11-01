@@ -1,0 +1,16 @@
+{
+  "stage": "go-vet",
+  "command": [
+    "C:\\Program Files\\Go\\bin\\go.exe",
+    "-C",
+    "worker",
+    "vet",
+    "./..."
+  ],
+  "cwd": "D:\\code\\_tmp\\narra-canvas-r2-verify-gpjo1prx\\app",
+  "exit_code": 0,
+  "seconds": 5.875,
+  "timeout_seconds": 180,
+  "dotenv_guard": true,
+  "source_capture": "D:\\code\\_tmp\\narra-canvas-r2-verify-gpjo1prx\\source-capture.json"
+}

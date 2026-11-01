@@ -1,0 +1,14 @@
+{
+  "stage": "prisma",
+  "command": [
+    "C:\\Users\\lucky0401\\AppData\\Roaming\\fnm\\node-versions\\v24.22.1\\installation\\node.exe",
+    "node_modules/prisma/build/index.js",
+    "generate"
+  ],
+  "cwd": "D:\\code\\_tmp\\narra-canvas-r2-verify-gpjo1prx\\app",
+  "exit_code": 0,
+  "seconds": 11.172,
+  "timeout_seconds": 120,
+  "dotenv_guard": true,
+  "source_capture": "D:\\code\\_tmp\\narra-canvas-r2-verify-gpjo1prx\\source-capture.json"
+}

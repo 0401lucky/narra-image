@@ -1,0 +1,14 @@
+{
+  "stage": "lint",
+  "command": [
+    "C:\\Users\\lucky0401\\AppData\\Roaming\\fnm\\node-versions\\v24.22.1\\installation\\node.exe",
+    "D:\\code\\_tmp\\narra-canvas-r2-verify-gpjo1prx\\app\\node_modules\\eslint\\bin\\eslint.js",
+    "."
+  ],
+  "cwd": "D:\\code\\Claude code program\\narra image",
+  "exit_code": 0,
+  "seconds": 77.406,
+  "timeout_seconds": 180,
+  "dotenv_guard": true,
+  "source_capture": "D:\\code\\_tmp\\narra-canvas-r2-verify-gpjo1prx\\source-capture.json"
+}
