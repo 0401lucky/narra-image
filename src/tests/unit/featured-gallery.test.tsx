@@ -1,5 +1,6 @@
 import { act, cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { renderToStaticMarkup } from "react-dom/server";
 
 const { router } = vi.hoisted(() => ({ router: { push: vi.fn() } }));
 vi.mock("next/navigation", () => ({ useRouter: () => router }));
@@ -29,6 +30,7 @@ afterEach(() => {
   vi.useRealTimers();
   vi.restoreAllMocks();
   vi.unstubAllGlobals();
+  vi.unstubAllEnvs();
   if (originalClipboard) Object.defineProperty(navigator, "clipboard", originalClipboard);
   else Reflect.deleteProperty(navigator, "clipboard");
 });
@@ -113,6 +115,50 @@ describe("live editorial gallery", () => {
     expect(screen.getByText(/图片暂时无法加载/)).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "查看作品 title-work_1" })).toHaveAttribute("href", "/works/work_1");
   });
+
+  it("renders legacy CDN images over HTTPS without an empty srcset, including in server markup", () => {
+    const work = createGalleryWork("work_1", {
+      image: "http://image.204152.xyz/user/result.png",
+      authorAvatar: "http://image.204152.xyz/avatars/user/avatar.png",
+    });
+    const markup = renderToStaticMarkup(<FeaturedGallery works={[work]} />);
+    expect(markup).toContain('src="https://image.204152.xyz/user/result.png"');
+    expect(markup).not.toMatch(/\bsrcset=""/i);
+
+    const { container } = render(<FeaturedGallery works={[work]} />);
+    const image = screen.getByAltText("title-work_1");
+    expect(image).toHaveAttribute("src", "https://image.204152.xyz/user/result.png");
+    expect(image).not.toHaveAttribute("srcset");
+    expect(container.querySelector('img[alt=""]')).toHaveAttribute(
+      "src", "https://image.204152.xyz/avatars/user/avatar.png",
+    );
+    fireEvent.error(image);
+    expect(screen.getByText(/图片暂时无法加载/)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "查看作品 title-work_1" })).toHaveAttribute("href", "/works/work_1");
+  });
+
+  it("never downgrades a legacy CDN image to HTTP when the optimizer fails", () => {
+    vi.stubEnv("NEXT_PUBLIC_IMAGE_OPTIMIZER_BYPASS_HOSTS", "other.invalid");
+    render(<FeaturedGallery works={[createGalleryWork("work_1", {
+      image: "http://image.204152.xyz/user/result.png",
+    })]} />);
+    const image = screen.getByAltText("title-work_1");
+    expect(image).toHaveAttribute("src", expect.stringContaining("/_next/image?url=https%3A"));
+    expect(image).toHaveAttribute("srcset", expect.stringContaining(" 640w"));
+    fireEvent.error(image);
+    expect(image).toHaveAttribute("src", "https://image.204152.xyz/user/result.png");
+    expect(image).not.toHaveAttribute("srcset");
+    fireEvent.error(image);
+    expect(screen.getByText(/图片暂时无法加载/)).toBeInTheDocument();
+  });
+
+  it.each(["data:image/png;base64,dGVzdA==", "blob:https://unit.invalid/preview"])(
+    "omits empty srcset for local image previews: %s", (image) => {
+      render(<FeaturedGallery works={[createGalleryWork("work_1", { image })]} />);
+      expect(screen.getByAltText("title-work_1")).toHaveAttribute("src", image);
+      expect(screen.getByAltText("title-work_1")).not.toHaveAttribute("srcset");
+    },
+  );
 
   it("separates the entrance/tilt/clipping/depth layers and the five controls", () => {
     const { container } = render(<FeaturedGallery works={[createGalleryWork("work_1")]} isAuthenticated />);

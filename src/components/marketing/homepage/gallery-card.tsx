@@ -7,7 +7,7 @@ import Link from "next/link";
 import { ArrowUpRight, Check, ChevronDown, Copy, Heart, LockKeyhole, User } from "lucide-react";
 
 import { GENERATION_PROMPT_MAX_LENGTH } from "@/lib/generation/limits";
-import { getThumbSrcSet, getThumbUrl } from "@/lib/image-url";
+import { getThumbSrcSet, getThumbUrl, normalizeImageUrl } from "@/lib/image-url";
 import type { SerializedFeaturedWork } from "@/lib/prisma-mappers";
 import { cn } from "@/lib/utils";
 
@@ -33,13 +33,14 @@ function fallbackToOriginalImage(
   onUnavailable: () => void,
 ) {
   const image = event.currentTarget;
-  if (!originalSrc || image.dataset.originalFallback === "true" || image.getAttribute("src") === originalSrc) {
+  const fallbackSrc = normalizeImageUrl(originalSrc);
+  if (!fallbackSrc || image.dataset.originalFallback === "true" || image.getAttribute("src") === fallbackSrc) {
     onUnavailable();
     return;
   }
   image.dataset.originalFallback = "true";
   image.removeAttribute("srcset");
-  image.src = originalSrc;
+  image.src = fallbackSrc;
 }
 
 function promptHref(prompt: string | null) {
@@ -133,7 +134,7 @@ export function GalleryCard({ work, index, isAuthenticated, remixHintId }: Galle
               <img
                 data-gallery-image
                 src={getThumbUrl(work.image, 1080)}
-                srcSet={getThumbSrcSet(work.image, [640, 828, 1080, 1200, 1920])}
+                srcSet={getThumbSrcSet(work.image, [640, 828, 1080, 1200, 1920]) || undefined}
                 sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
                 alt={work.title}
                 width={640}

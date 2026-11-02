@@ -10,7 +10,16 @@ import { getPublicEnv } from "@/lib/public-env";
  * @param width   目标宽度，必须命中 next.config 的 imageSizes/deviceSizes
  * @param quality 0-100，默认 75
  */
-const DEFAULT_OPTIMIZER_BYPASS_HOSTS = ["image.204152.xyz"];
+const LEGACY_IMAGE_HOST = "image.204152.xyz";
+const DEFAULT_OPTIMIZER_BYPASS_HOSTS = [LEGACY_IMAGE_HOST];
+
+export function normalizeImageUrl(src: string): string {
+  // Only this verified CDN is upgraded; custom bypass hosts may be HTTP-only.
+  const httpHost = /^http:\/\/([^/?#]+)/i.exec(src)?.[1];
+  return httpHost?.toLowerCase() === LEGACY_IMAGE_HOST
+    ? src.replace(/^http:/i, "https:")
+    : src;
+}
 
 function getOptimizerBypassHosts() {
   const configured = getPublicEnv().NEXT_PUBLIC_IMAGE_OPTIMIZER_BYPASS_HOSTS
@@ -42,12 +51,13 @@ export function getThumbUrl(
   if (src.startsWith("data:") || src.startsWith("blob:")) return src;
   // 已经是 /_next/image 的不要重复包
   if (src.startsWith("/_next/image")) return src;
+  const imageSrc = normalizeImageUrl(src);
   // 部分自建 CDN 域名会解析到内网或保留地址，Next Image 会拒绝代理。
   // 对这些域名直接使用原图 URL，避免创作台结果图变成破图。
-  if (shouldBypassOptimizer(src)) return src;
+  if (shouldBypassOptimizer(imageSrc)) return imageSrc;
 
   const params = new URLSearchParams({
-    url: src,
+    url: imageSrc,
     w: String(width),
     q: String(quality),
   });
@@ -57,6 +67,7 @@ export function getThumbUrl(
 /**
  * 生成响应式 srcset 字符串，配合 <img sizes> 让浏览器根据视口和 DPR
  * 自己挑合适的档位，避免移动端高 DPR 屏拉糊、桌面大屏拉浪费。
+ * Omit the srcset attribute when the result is empty.
  *
  * @param widths 必须命中 next.config 的 imageSizes/deviceSizes，否则 Next 会拒绝
  */
