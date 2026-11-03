@@ -206,12 +206,11 @@ describe("mounted studio canvas integration", () => {
     expect(screen.queryByRole("complementary", { name: "对话导航" })).not.toBeInTheDocument();
     expect(requests.filter((request) => request.method !== "GET")).toEqual([]);
     await userEvent.click(screen.getByRole("button", { name: "新建空白画布" }));
-    await screen.findByText("把想法连成画面");
+    await screen.findByText("从一个想法开始");
     const first = controller.getSnapshot().activeCanvasId!;
     expect(controller.getSnapshot().active!.scene).toMatchObject({ nodes: [], edges: [], runBindings: [] });
-    fireEvent.click(screen.getByRole("button", { name: "添加第一个提示词" }));
+    fireEvent.click(screen.getByRole("button", { name: "创作第一张图片" }));
     fireEvent.change(await screen.findByRole("textbox", { name: "节点提示词" }), { target: { value: "Canvas draft only" } });
-    fireEvent.click(screen.getByRole("button", { name: "生成节点" }));
     const generation = controller.getSnapshot().active!.scene.nodes.find((node) => node.kind === "generation")!;
     expect(generation.parameters).toMatchObject({ model: "image-account-default", providerMode: "built_in", channelId: "channel-account", size: "auto", count: 1 });
     act(() => controller.selectNode(first, generation.id));

@@ -24,7 +24,7 @@
 | [Homepage Interactions](./homepage-interactions.md) | 首页字体/导航隔离、分页竞争、公开提示词操作及六组动效生命周期 | Active |
 | [Quality Guidelines](./quality-guidelines.md) | lint/tsc/vitest/构建命令、mock 模式、DB 哨兵与验证 wrapper | Active |
 | [Generation Worker Contracts](./generation-worker-contracts.md) | Node/Go/PostgreSQL 生成生命周期与契约验证 | Active |
-| [Canvas Studio](./canvas-studio.md) | 账户/空间隔离、原生草稿/捕获保存运行、手机字段/原子连接/Move、React Flow 尺寸与真机验收边界 | Active |
+| [Canvas Studio](./canvas-studio.md) | 图片优先原子创建/缩略参考、可见位置/捕获导入、上下文 composer/整图拖动、账户草稿运行与真机验收边界 | Active |
 
 ---
 

@@ -50,12 +50,14 @@ pnpm verify:e2e
 - GitHub Actions 验证阶段只调用仓库内 wrapper（`.github/workflows/verify.yml`），不复制场景命令；依赖和明确的测试基础镜像准备在独立前置步骤执行，wrapper 自身仍不自动拉镜像。
 - `git diff --check` 提交前必须通过（无空白错误）。
 - 新增文件也要执行 `git diff --cached --check`。原始 OFL 许可和 `.before` 取证副本必须保留字节；`.gitattributes` 的空白例外仅限这些明确路径，不能扩展到真实源码、任务脚本或自行编写的文档。真实源码末尾多余空行应修正，并以新哈希重新绑定验证，不能把旧回执标作新字节的验证结果。
+- 已绑定 SHA256 的机器回执/上游取证快照可用 task-local `-text` 保留 Git blob 原始字节；CRLF 回执用 `whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol` 识别行尾 CR，仍拒绝真实尾空格和多余末尾空行。普通源码/脚本/作者文档不加豁免；临时 index 的正例、尾空格/空行及脚本/文档负例和 raw blob 哈希必须一起核对，不修改全局 Git 配置。
 - `eslint.config.mjs` 仅将 `.trellis/tasks/**` 的历史测试夹具、第三方参考代码和生成快照排除于常规源码 lint；`src/`、生产 `scripts/` 和非任务工具不能随之被排除。`eslint-scope.test.ts` 用真实 `ESLint.isPathIgnored()` 保留任务路径负例与应用/测试/脚本正例。提交任务记录前需在凭证隔离、包含候选任务工具的 checkout 上执行 `eslint .`，不能只凭不含 metadata 的源代码快照宣称根目录 lint 通过。
 
 ## 5. 已知约束
 
 - 全量 vitest 需 `--testTimeout=30000`（部分组件测试冷启动较慢）；默认和 CI 都排除 `worker-contracts-db.test.ts`、`canvas-contracts-db.test.ts`，分别由独立 wrapper 和显式 runner config 覆盖，不能把排除当成 DB 验证通过。
 - 多个隔离测试/构建同时运行导致 Node worker OOM 时，保留失败回执，先串行调度重任务，再用 `vitest run --testTimeout=30000 --maxWorkers=2` 重跑完整非 DB 清单并记录有限总截止。不得将部分完成的测试数合并成全量通过，也不能删除测试或修改生产内存限制来掩盖检查进程崩溃。
+- Next 16.2.4 的默认构建 CPU 数读取 `CIRCLE_NODE_TOTAL` 后减一。15-worker page-data 阶段因本机 commit capacity OOM 时，可仅在凭证隔离的验证子进程启动前设置 `CIRCLE_NODE_TOTAL=3` 得到 2 workers；先用已安装 `config-shared.js` 验证，再执行完整原始 `next build`、核对真实退出和源/配置哈希。不得改 `next.config`、依赖、生产内存限制或继承到测试/生产环境，也不得跳过类型/页面收集。默认失败和资源有界重试分别留回执；这不是默认并发或生产资源验收。
 - Canvas DB wrapper 使用独立 360 秒截止及 20 秒清理预留，不嵌套到 Worker 的 57 秒父截止。缺少哨兵或 runner 自建 localhost 数据库必须失败；本地镜像缺失返回前置条件失败，不拉取镜像、不回退 `.env`。
 - 验证环境显式隔离构建与测试：仅构建注入非 loopback 的测试 `APP_URL`；要求缺失/默认环境的测试不得继承它。Prisma 使用隔离 config 或精确 `.env` 读取保护，禁止读取开发凭证。
 - Windows wrapper 会通过命令 shell 执行 `pnpm`；含 `=>`、重定向等字符的内联 JavaScript 不得经 `pnpm exec node -e` 传入。改用脚本文件和直接 Node argv，防止意外重定向写入工作区。
@@ -77,6 +79,8 @@ pnpm verify:e2e
 - `canvas-node-editor` 的 regression 必须覆盖外部 canonical 参数更新期间的 focused native composition、accepted auto/空 Custom 区分、outside pointerup/cancel 后再次 Move、实际 checkbox label 的 44px 关联目标与 editable/read-only uncancelled panel touch。jsdom/CSS source 断言不是浏览器 computed/native arbitration。
 - 浏览器 fixture 必须复制/hash 当次 production inputs 和 build/helper inputs，验证 prebuild/postbuild/prebrowser/postbrowser 与包链接；source 改变使旧 browser/build verdict 失效。只复制 installed dependencies 的临时 fixture 直接通过 pinned Node 调 copied Next，不能用可能隐式 install 的 `pnpm exec`。
 - 浏览器动作先 native scroll，求 visible/clipping intersection，再 `elementFromPoint` 确认真实 control。fixed overlay 使用实际 viewport/containing boundary，不与无关祖先误交集。连接后立即断言 edge + 无新 Run；不能用 DOM `.click()` 绕过被覆盖控件。
+- 选择嵌套 scroller 的原生 wheel 起点时，先命中该 scroller 的可见边缘/空白，避开内部可滚动或 `overscroll-behavior:contain/none` 的 textarea；在其中心滚轮可能只滚文本而无法到达父面板控件。这是动作校准问题，不能用程序 `scrollTop` 或改产品 overflow 制造通过。
+- 图片优先 fixture 必须在截图/命中前断言实际 `<img>.complete && naturalWidth>0`，不能让破图的 IMG hit target 冒充视觉通过。fake thumbnail endpoint 可给出隔离 fixture 原图 bytes，但须明确不是生产 Next optimizer/存储认证的验证；仅无 JS exception 不代表媒体已加载。
 - CDP `Runtime.evaluate(returnByValue)` 只返回 scalars/plain projections，DOM-reference setup 用 `void`；selector 用 `JSON.stringify`，避免内外引号损坏或循环 DOM 序列化。gesture 不可靠先用 plain allowed/blocked controls 校准，不把 unsupported command、程序设置 scale 或 screenshot 当 native pass。
 - 分别报告 native IndexedDB、exact original download bytes、fake loopback identity/HTTP、desktop-CDP dimensions/touch/composition、真实手机/native IME/OS chooser/download、真实服务和 actual CI。物理 iOS/Android 缺证据时 MA/device/rollout 保持 pending，不由自动化 mock pass 填充。
 - 保存 red receipts 和独立 exit/deadline/duration/stdout/stderr；使用新标签不覆盖旧失败。task-owned before-image source copies加 `.before` 后缀，保持 exact bytes/hash，避免 `.ts/.mjs` 备份意外进入 lint/type inputs。未提交 baseline 以 byte identities 归属，不能用 `git diff HEAD` 认领已存在 untracked 源码。

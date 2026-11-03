@@ -29,8 +29,11 @@ import {
   copyCanvasScene,
   emptyCanvasScene,
   materializeCanvasTerminal,
+  canvasInsertionPosition,
+  CANVAS_CARD_SPACING,
   type CanvasCapacityReservation,
   type CanvasEditCommand,
+  type CanvasInsertionBounds,
 } from "./commands";
 import { openCanvasDraftStore } from "./draft-store";
 import {
@@ -620,6 +623,39 @@ export function createCanvasController(options: CanvasControllerOptions) {
     validateCanvasOriginal(file);
     return { blobId: uuid(), uploadId: uuid(), blob: file, fileName: file.name, lastModified: file.lastModified, sha256: null, assetId: null };
   }
+  function assertImageSource(entry: Entry, source: string) {
+    const node = entry.envelope.scene.nodes.find((value) => value.id === source);
+    if (node?.kind === "result") {
+      const image = entry.images.get(node.imageId);
+      if (!image || image.id !== node.imageId || image.jobId !== node.jobId || !image.url) throw new CanvasContractError("CANVAS_INPUT_UNAVAILABLE");
+    } else if (node?.kind === "reference") {
+      const captured = captureCanvasReference(node, entry.originals);
+      const assetId = captured.original?.assetId ?? (node.source.kind === "imported" ? node.source.assetId : null);
+      const asset = assetId ? entry.assets.get(assetId) : null;
+      if (!captured.original && (asset?.state !== "READY" || !asset.url)) throw new CanvasContractError("CANVAS_INPUT_UNAVAILABLE");
+    } else throw new CanvasContractError("CANVAS_INVALID_CONNECTION");
+  }
+  function importReferences(id: string, input: { files: readonly File[]; position: CanvasPositionV1; placementBounds?: CanvasInsertionBounds; attachToGenerationNodeId?: string }) {
+    const entry = getEntry(id, true);
+    if (!input.files.length) throw new CanvasContractError("CANVAS_INVALID_INPUT");
+    if (entry.originals.size + input.files.length > CANVAS_LIMITS.ownerAccountedImports) throw new CanvasContractError("CANVAS_LIMIT_EXCEEDED");
+    if (input.attachToGenerationNodeId && !entry.envelope.scene.nodes.some((node) => node.id === input.attachToGenerationNodeId && node.kind === "generation")) throw new CanvasContractError("CANVAS_INVALID_CONNECTION");
+    const originals = input.files.map(originalFile);
+    const occupied = entry.envelope.scene.nodes.map((node) => node.position);
+    const nodes = originals.map((original) => {
+      const position = canvasInsertionPosition(occupied, input.position, input.placementBounds);
+      occupied.push(position);
+      return { id: uuid(), kind: "reference" as const, position, source: { kind: "local" as const, blobId: original.blobId, uploadId: original.uploadId } };
+    });
+    const connections = input.attachToGenerationNodeId ? nodes.map((node) => ({ id: uuid(), source: node.id, target: input.attachToGenerationNodeId! })) : [];
+    const scene = applyCanvasEdit(entry.envelope.scene, { kind: "creation-group", nodes, connections }, reservations(entry));
+    // Only publish originals after the entire candidate has passed graph/byte/capacity validation.
+    for (const original of originals) entry.originals.set(original.blobId, original);
+    if (!input.attachToGenerationNodeId) entry.selectedNodeId = nodes.at(-1)!.id;
+    entry.error = null;
+    changeScene(entry, scene);
+    return { canvasId: id, referenceNodeIds: nodes.map((node) => node.id), imageEdgeIds: connections.map((edge) => edge.id) };
+  }
   async function newCanvas(title = "\u672a\u547d\u540d\u753b\u5e03"): Promise<string> {
     assertMutable();
     const parsed = canvasTitleSchema.safeParse(title);
@@ -877,12 +913,39 @@ export function createCanvasController(options: CanvasControllerOptions) {
       edit(id, { kind: "add", node: { id: nodeId, kind: "generation", position: { ...position }, parameters: canvasGenerationParametersSchema.parse(defaults) } });
       return nodeId;
     },
+    createQuickGeneration(id: string, input: { position: CanvasPositionV1; placementBounds?: CanvasInsertionBounds; promptText?: string; sourceNodeIds?: readonly string[]; parameters?: Partial<CanvasGenerationParametersV1> }) {
+      const entry = getEntry(id, true);
+      const sources = [...(input.sourceNodeIds ?? [])];
+      sources.forEach((source) => assertImageSource(entry, source));
+      const parameters = canvasGenerationParametersSchema.safeParse({ ...defaults, ...input.parameters });
+      if (!parameters.success) throw new CanvasContractError("CANVAS_INVALID_INPUT");
+      const generationNodeId = uuid(), promptNodeId = uuid(), promptEdgeId = uuid();
+      const position = canvasInsertionPosition(entry.envelope.scene.nodes.map((node) => node.position), input.position, input.placementBounds);
+      const promptPosition = canvasInsertionPosition([...entry.envelope.scene.nodes.map((node) => node.position), position], { x: position.x - CANVAS_CARD_SPACING.column, y: position.y });
+      const imageEdges = sources.map((source) => ({ id: uuid(), source, target: generationNodeId }));
+      const scene = applyCanvasEdit(entry.envelope.scene, { kind: "creation-group", nodes: [
+        { id: promptNodeId, kind: "prompt", text: input.promptText ?? "", position: promptPosition },
+        { id: generationNodeId, kind: "generation", parameters: parameters.data, position },
+      ], connections: [{ id: promptEdgeId, source: promptNodeId, target: generationNodeId }, ...imageEdges] }, reservations(entry));
+      entry.selectedNodeId = generationNodeId;
+      entry.error = null;
+      changeScene(entry, scene);
+      return { canvasId: id, promptNodeId, generationNodeId, promptEdgeId, imageEdgeIds: imageEdges.map((edge) => edge.id) };
+    },
+    updateGenerationPrompt(id: string, generationNodeId: string, input: { text: string; expectedPromptNodeId: string | null }) {
+      const entry = getEntry(id, true);
+      const node = entry.envelope.scene.nodes.find((item) => item.id === generationNodeId);
+      const edge = entry.envelope.scene.edges.find((item) => item.kind === "prompt-input" && item.target === generationNodeId);
+      if (node?.kind !== "generation" || (edge?.source ?? null) !== input.expectedPromptNodeId) throw new CanvasContractError("CANVAS_INVALID_CONNECTION");
+      if (edge) { edit(id, { kind: "prompt", nodeId: edge.source, text: input.text }); return { promptNodeId: edge.source }; }
+      const promptNodeId = uuid();
+      const position = canvasInsertionPosition(entry.envelope.scene.nodes.map((item) => item.position), { x: node.position.x - CANVAS_CARD_SPACING.column, y: node.position.y });
+      edit(id, { kind: "creation-group", nodes: [{ id: promptNodeId, kind: "prompt", text: input.text, position }], connections: [{ id: uuid(), source: promptNodeId, target: generationNodeId }] });
+      return { promptNodeId };
+    },
+    importReferences,
     importReference(id: string, file: File, position: CanvasPositionV1) {
-      assertMutable();
-      const original = originalFile(file);
-      const nodeId = uuid();
-      edit(id, { kind: "add", node: { id: nodeId, kind: "reference", position: { ...position }, source: { kind: "local", blobId: original.blobId, uploadId: original.uploadId } } }, original);
-      return nodeId;
+      return importReferences(id, { files: [file], position }).referenceNodeIds[0];
     },
     replaceReference(id: string, nodeId: string, file: File) {
       assertMutable();
@@ -916,20 +979,19 @@ export function createCanvasController(options: CanvasControllerOptions) {
       edit(id, { kind: "connect", id: edgeId, source, target });
       return edgeId;
     },
-    disconnect(id: string, edgeId: string) { edit(id, { kind: "disconnect", edgeId }); },
-    replaceConnection(id: string, edgeId: string, source: string) {
+    connectImage(id: string, source: string, target: string) {
       const entry = getEntry(id, true);
-      const node = entry.envelope.scene.nodes.find((value) => value.id === source);
-      if (node?.kind === "result") {
-        const image = entry.images.get(node.imageId);
-        if (!image || image.id !== node.imageId || image.jobId !== node.jobId || !image.url) throw new CanvasContractError("CANVAS_INPUT_UNAVAILABLE");
-      }
-      if (node?.kind === "reference") {
-        const captured = captureCanvasReference(node, entry.originals);
-        const assetId = captured.original?.assetId ?? (node.source.kind === "imported" ? node.source.assetId : null);
-        const asset = assetId ? entry.assets.get(assetId) : null;
-        if (!captured.original && (asset?.state !== "READY" || !asset.url)) throw new CanvasContractError("CANVAS_INPUT_UNAVAILABLE");
-      }
+      assertImageSource(entry, source);
+      const edgeId = uuid();
+      edit(id, { kind: "connect", id: edgeId, source, target });
+      return edgeId;
+    },
+    disconnect(id: string, edgeId: string) { edit(id, { kind: "disconnect", edgeId }); },
+    replaceConnection(id: string, edgeId: string, source: string, expectedSource?: string) {
+      const entry = getEntry(id, true);
+      const edge = entry.envelope.scene.edges.find((item) => item.id === edgeId);
+      if (expectedSource !== undefined && edge?.source !== expectedSource) throw new CanvasContractError("CANVAS_INVALID_CONNECTION");
+      if (edge?.kind === "image-input") assertImageSource(entry, source);
       edit(id, { kind: "replace-connection", edgeId, source });
     },
     reorderInputs(id: string, nodeId: string, sourceIds: string[]) { edit(id, { kind: "reorder", nodeId, sourceIds: sourceIds.slice() }); },

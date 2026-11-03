@@ -9,9 +9,9 @@ import { isCanvasSaveShortcut } from "../canvas/renderer-adapter";
 import { CANVAS_INPUT_CLASS } from "../canvas/renderer-constants";
 import styles from "./canvas-stage.module.css";
 
-type CanvasPromptFieldProps = { value: string; onChange: (text: string) => boolean };
+type CanvasPromptFieldProps = { value: string; onChange: (text: string) => boolean; label?: string; onFocus?: () => void; onBlur?: () => void };
 
-export function CanvasPromptField({ value, onChange }: CanvasPromptFieldProps) {
+export function CanvasPromptField({ value, onChange, label = "节点提示词", onFocus, onBlur }: CanvasPromptFieldProps) {
   const [composing, setComposing] = useState(false);
   const [focused, setFocused] = useState(false);
   const [input, setInput] = useState({ source: value, text: value, pending: [] as string[] });
@@ -25,10 +25,10 @@ export function CanvasPromptField({ value, onChange }: CanvasPromptFieldProps) {
   const accept = (text: string) => {
     if (onChange(text)) setInput((current) => ({ source: value, text, pending: current.text === text ? current.pending : [...current.pending, text] }));
   };
-  return <textarea aria-label="节点提示词" value={input.text} maxLength={GENERATION_PROMPT_MAX_LENGTH} rows={5}
+  return <textarea aria-label={label} value={input.text} maxLength={GENERATION_PROMPT_MAX_LENGTH} rows={5}
     className={cn(CANVAS_INPUT_CLASS, styles.promptInput)} placeholder="光线、构图、主体与风格……"
-    onFocus={() => setFocused(true)}
-    onBlur={() => setFocused(false)}
+    onFocus={() => { setFocused(true); onFocus?.(); }}
+    onBlur={() => { setFocused(false); onBlur?.(); }}
     onCompositionStart={() => setComposing(true)}
     onCompositionEnd={(event) => { setComposing(false); accept(event.currentTarget.value); }}
     onChange={(event) => accept(event.target.value)}

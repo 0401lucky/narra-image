@@ -23,22 +23,19 @@ export function CanvasResultNode({ data, selected }: NodeProps<CanvasResultFlowN
 type CanvasResultContentProps = { data: CanvasResultFlowNode["data"] };
 export function CanvasResultContent({ data }: CanvasResultContentProps) {
   const { canvasId, node, actions, image, previewOnly = false } = data;
-  const target: CanvasImageTarget | null = image?.jobId === node.jobId && image.id === node.imageId ? {
+  const target: CanvasImageTarget | null = image?.jobId === node.jobId && image.id === node.imageId && image.url ? {
     kind: "result", canvasId, nodeId: node.id, url: image.url, imageId: node.imageId, jobId: node.jobId,
     actualWidth: image.actualWidth, actualHeight: image.actualHeight, actualSize: image.actualSize,
   } : null;
   return (
       <div className={styles.nodeBody}>
-        {target ? previewOnly ? <div className={styles.imageButton}>
+        {target ? <div className={styles.imageButton}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={getThumbUrl(target.url, 640)} alt="画布生成结果" draggable={false} loading="lazy" decoding="async" />
-        </div> : <button type="button" aria-label="查看生成原图" className={cn(CANVAS_INPUT_CLASS, styles.imageButton)} onClick={(event) => { event.stopPropagation(); actions.viewImage(target); }}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={getThumbUrl(target.url, 640)} alt="画布生成结果" draggable={false} loading="lazy" decoding="async" />
-        </button> : <div className={styles.missingImage}><ImageOff aria-hidden className="size-8" /><span>结果图片暂不可用</span></div>}
+        </div> : <div className={styles.missingImage}><ImageOff aria-hidden className="size-8" /><span>结果图片暂不可用</span></div>}
         <div className={styles.nodeFootnote}><span>固定结果，不随重跑替换</span><span>{image?.actualSize ?? (image?.actualWidth && image.actualHeight ? `${image.actualWidth}x${image.actualHeight}` : "")}</span></div>
         {!previewOnly && (target ? <div className={cn(CANVAS_INPUT_CLASS, styles.nodeActions)} onClick={(event) => event.stopPropagation()}>
-          <button type="button" className={styles.smallButton} onClick={() => actions.viewImage(target)}><ScanEye aria-hidden className="size-3.5" />查看原图</button>
+          <button type="button" className={styles.smallButton} aria-label="查看生成原图" onClick={() => actions.viewImage(target)}><ScanEye aria-hidden className="size-3.5" />查看原图</button>
           <button type="button" className={styles.smallButton} onClick={() => actions.downloadImage(target)}><Download aria-hidden className="size-3.5" />下载</button>
         </div> : <div className={cn(CANVAS_INPUT_CLASS, styles.nodeActions)} onClick={(event) => event.stopPropagation()}>
           <button type="button" className={styles.smallButton} onClick={actions.refreshRuntime}><RefreshCw aria-hidden className="size-3.5" />重新读取结果图片</button>

@@ -45,9 +45,9 @@ describe("real controlled canvas stage", () => {
     expect(screen.getByText("选择一张画布开始")).toBeInTheDocument();
     expect(f.api.port.create).not.toHaveBeenCalled();
     await userEvent.click(screen.getByRole("button", { name: "新建空白画布" }));
-    await screen.findByText("把想法连成画面");
+    await screen.findByText("从一个想法开始");
     expect(f.controller.getSnapshot().active?.scene).toMatchObject({ nodes: [], edges: [], runBindings: [] });
-    await userEvent.click(screen.getByRole("button", { name: "添加第一个提示词" }));
+    await userEvent.click(screen.getByRole("button", { name: "创作第一张图片" }));
     await screen.findByRole("textbox", { name: "节点提示词" });
     const first = f.controller.getSnapshot().activeCanvasId!;
     fireEvent.change(screen.getByRole("textbox", { name: "节点提示词" }), { target: { value: "仅属于第一张画布" } });
@@ -309,6 +309,7 @@ describe("real controlled canvas stage", () => {
     const f = fixture();
     const { canvasId } = await f.newGraph();
     const view = render(<CanvasStageHarness controller={f.controller} />);
+    await userEvent.click(screen.getByRole("button", { name: "导入参考图" }));
     fireEvent.change(screen.getByLabelText("导入画布参考图文件"), { target: { files: [file()] } });
     const image = await screen.findByAltText("画布参考图");
     expect(image).toHaveAttribute("src", "blob:canvas-test-1");
@@ -321,6 +322,7 @@ describe("real controlled canvas stage", () => {
     expect(image).toHaveAttribute("src", "blob:canvas-test-1");
     expect(createObjectURL).toHaveBeenCalledTimes(1);
     expect(revokeObjectURL).not.toHaveBeenCalled();
+    await userEvent.click(screen.getByRole("button", { name: "替换原图" }));
     fireEvent.change(screen.getByLabelText("替换参考原图文件"), { target: { files: [file("replacement.png")] } });
     await waitFor(() => expect(screen.getByAltText("画布参考图")).toHaveAttribute("src", "blob:canvas-test-2"));
     expect(revokeObjectURL).toHaveBeenCalledWith("blob:canvas-test-1");
@@ -592,6 +594,7 @@ describe("real controlled canvas stage", () => {
     render(<CanvasStageHarness controller={f.controller} />);
     expect(await screen.findByText("原图不可用，请重新选择文件")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "重新上传" })).toBeEnabled();
+    await userEvent.click(screen.getByRole("button", { name: "重新上传" }));
     fireEvent.change(screen.getByLabelText("替换参考原图文件"), { target: { files: [file()] } });
     expect(await screen.findByAltText("画布参考图")).toHaveAttribute("src", "blob:canvas-test-1");
     expect(f.controller.getSnapshot().active!.scene.nodes[0]).toMatchObject({ id: refId, position: { x: -100, y: 50 }, source: { kind: "local" } });

@@ -29,7 +29,26 @@ type CanvasEditorTarget = Readonly<{
 type CanvasParameterField = "model" | "size" | "outputCompression" | "negativePrompt" | "seed";
 type CanvasFieldDraft = Readonly<{ text: string; base: string; invalid: boolean }>;
 // Existing controller method; local edit only, no HTTP or new scene field.
-controller.replaceConnection(canvasId, edgeId, sourceNodeId); // void; throws on rejection
+controller.replaceConnection(canvasId, edgeId, sourceNodeId, expectedSource); // optional fourth argument; void
+type CanvasInsertionBounds = { minX: number; maxX: number; minY: number; maxY: number };
+type CanvasQuickGenerationInput = {
+  position: CanvasPositionV1;
+  placementBounds?: CanvasInsertionBounds;
+  promptText?: string;
+  sourceNodeIds?: readonly string[];
+  parameters?: Partial<CanvasGenerationParametersV1>;
+};
+controller.createQuickGeneration(canvasId, quickInput); // {canvasId,promptNodeId,generationNodeId,promptEdgeId,imageEdgeIds}
+controller.updateGenerationPrompt(canvasId, generationNodeId, {
+  text, expectedPromptNodeId, // string | null; captured source, not latest selection
+}); // {promptNodeId}
+type CanvasReferenceBatchInput = {
+  files: readonly File[];
+  position: CanvasPositionV1;
+  placementBounds?: CanvasInsertionBounds;
+  attachToGenerationNodeId?: string;
+};
+controller.importReferences(canvasId, importInput); // {canvasId,referenceNodeIds,imageEdgeIds}
 // Mounted editor port; synchronous validation before captured commands.
 editor.applyPending(canvasId, nodeId); // target Run
 editor.applyPending(canvasId); // all pending fields of this canvas before Save
@@ -40,7 +59,7 @@ editor.applyPending(canvasId); // all pending fields of this canvas before Save
 - 管理/编辑命令显式带 canvas/node ID，不能在异步回调中读取“当前选中画布”作为归属。New 在 shell ACK 前发布局部 UUID，UI 错误同样捕获该 UUID。
 - `CanvasDraftStore.commit({key,expected,envelope,putBlobs,deleteBlobIds})` 只在原生事务 complete 后确认；`key=[ownerId,canvasId]`，write stamp CAS 与永久 tombstone 阻止覆盖/复活。
 - `editor-state.ts` 拥有字段/目标类型；`useCanvasEditor(view,controller): CanvasEditorPort` 在懒 renderer 之上按 owner/controller 生命周期挂载，使用 `useSyncExternalStore` 订阅 feature-local registry，不引入应用全局状态库。
-- `replaceConnection(canvasId: string, edgeId: string, sourceNodeId: string): void` 经 `applyCanvasEdit` 的 `replace-connection` 分支在复制场景上校验；只替换 source，保留 edge ID/kind/target/ordinal，成功才发布。
+- `replaceConnection(canvasId: string, edgeId: string, sourceNodeId: string, expectedSource?: string): void` 经 `applyCanvasEdit` 的 `replace-connection` 分支在复制场景上校验；只替换 source，保留 edge ID/kind/target/ordinal，成功才发布。延迟缩略图替换传入旧 source，当前绑定已变则拒绝。
 - `beginCanvasMove` / `previewCanvasMove` / `finishCanvasMove` 只处理捕获目标、pointer/client/world/camera；完成函数返回合法位置或 null，不执行持久化/请求。`useCanvasMobileViewport(scope?,enabled?)` 只返回 visible bounds 和 CSS variables。
 
 ## 3. 状态与持久化契约
@@ -58,12 +77,12 @@ editor.applyPending(canvasId); // all pending fields of this canvas before Save
 - renderer-only `CanvasNodeMeasurements` 按当前 owner/canvas 生命周期和 live IDs 缓存 dimensions，再投影到受控 Flow nodes。忽略尺寸的 domain 持久化不等于丢弃渲染尺寸；否则旧节点在无真实 resize 的刷新后会永久 hidden。
 - 提示词在原生输入事件内同步本地 value，同时立即更新捕获的控制器；Flow 的被动 store 更新不得先恢复旧 textarea value。外部 canonical 文本变更仍需有守卫地接收，不能只等 compositionend 才存草稿。
 - 关闭库的 document-global Delete，删除只来自聚焦 viewport；控件带 `nodrag nopan nowheel nokey`。Ctrl/Cmd+S 在字段验证/commit 后冒泡捕获快照，非法字段阻止 Save；IME keyCode229/isComposing 不触发快捷命令。
-- `commands.ts` 的纯 `canvasInsertionPosition` 同时供手动插入和终态批次使用；默认间距 320x360、列距380。扫描 live 节点和本批新结果，旧布局不自动重排；这不是任意用户拉伸卡片的碰撞保证。
+- `commands.ts` 的纯 `canvasInsertionPosition(occupied,preferred,bounds?)` 同时供创建、导入、手动插入和终态批次使用；默认间距 320x360、列距380。无 bounds 时保留旧单列扫描；有 bounds 时搜索相邻可见列，无空位则在有限可见区域重叠，而非把主要操作推出屏幕。bounds 是捕获的合法 world top-left 范围，不进 scene；旧布局不自动重排，也不承诺任意卡片无碰撞打包。
 
 ### 3.1 手机展示、字段与键盘
 
 - `touchPresentation` 对应 `(max-width:767px), (pointer:coarse), (hover:none)`，只切换样式/手势。不能因横竖屏、visualViewport 或键盘变化重建 controller/jobs/lease，也不能改变已有冻结输入。
-- 点击节点只选择；显式 Edit 打开不随场景缩放的唯一面板，Move 进入移动。节点/来源 chooser 与 Locate 支持缩小或离屏节点；后台终态不抢相机。桌面 header/port/键盘行为保留。
+- 点击图片只选择，查看/下载显式执行；桌面非控件整卡片可拖动，手机保持 Browse 与显式 Move 分离。New image / Continue 直接打开不随场景缩放的唯一生成 composer；普通 Edit 与节点/来源 chooser、Locate 仍可管理旧图谱，后台终态不抢相机。端口和键盘行为保留。
 - 参数 registry 以 `JSON.stringify([ownerId,canvasId,nodeId])` 为 key，仅保存五种非秘密 raw string 与 custom-size 意图。Close/选择/模式/懒卸载/布局改变不清除；删除目标、禁用或 owner 销毁只清除对应失效内容。未应用参数仅内存，不宣称刷新/驱逐可恢复。
 - `CanvasPromptField` 原生事件内同步本地 text 并立即更新捕获控制器，迟到 acknowledgement 不覆盖新输入。它和 `CommitField` 接收外部 canonical 更新时必须保护 focused composition，保留字段 DOM/caret/selection；不能等 compositionend 才保存已接受提示词。
 - canonical size 为 `auto` 且没有现有 size draft 时选择 Custom，先创建空的 pending size，Run/Save 不得静默使用 `auto`。从有效 preset 打开 Custom 保留该 canonical size；已有 raw draft 仍保留。共享 normalizer 接受的 `auto`/旧别名应用后显示 canonical size；preset 选择才明确清除旧 custom draft。
@@ -78,7 +97,21 @@ editor.applyPending(canvasId); // all pending fields of this canvas before Save
 - 面板提供显式来源选择、替换、断开和上下排序；image ordinal 从 1 连续排序。一个来源可连多个 target，但单 target 的 canonical duplicate、错误类型/provenance 和缺失来源都拒绝。
 - replacement 必须一次复制/验证/发布，禁止先 disconnect 后 connect。controller 检查 canonical result image/job/URL 和可用 local original 或 READY asset；拒绝保持旧 edge/顺序/scene，无中间删除、上传、Run 或容量释放。
 - 手机默认 browse 单指 pan/双指 scene pinch，节点不可拖动；Move 捕获 owner/canvas/node/pointer/start camera，whole-card 临时坐标仅 renderer-local。有效单指 drop 经 `moveNode` 接受一次；Done 回 browse，不手动 Save。
-- 取消、第二指、失去目标、起点/相机改变、模式/布局中断不接受未完成 preview。window pointerup/pointercancel 清理离开 viewport 的指针；外部结束只能取消，不能提交位置。监听器与 pointer state 在对应生命周期清理。
+- 取消、第二指、失去目标、起点/相机改变、模式/布局中断不接受未完成 preview。window pointerup/pointercancel 清理离开 viewport 的指针；外部结束只能取消，不能提交位置。pointer capture 会把物理外部 release 重新路由到 viewport，因此接受路径还须检查 clientX/clientY 在真实 viewport rect 内，不能仅看 event target。监听器与 pointer state 在对应生命周期清理。
+- 桌面 whole-card drag 与手机 Move 共用纯手势数学，但来源独立：桌面无需 editor Move intent，手机仍需捕获目标的 Move intent。threshold 一旦跨越便保持 moved，pointerup 用最新坐标；禁用 Flow pointer-position 写入，键盘移动由聚焦节点显式处理（10px，Shift 40px），不重新放开泛化 position callback。
+
+### 3.3 图片优先创建与上下文控件
+
+- 空 New 仍为空；`createQuickGeneration` 在一次 `creation-group` 候选校验/发布中创建私有 prompt、generation、prompt edge 和有序 image edges，返回捕获 ID 后选择新 generation 并打开 composer。创建、选择、导入和打开面板不调用 Run、Save 或上传。Continue 使用同画布可用图片作为 input，原图与旧结果不覆盖。
+- 新参数使用账户 canvas defaults/共享 schema，不借用对话或另一个节点的秘密配置。组合增长计入未处理/未知输出预留，再验证完整 graph/refined local scene/512KiB；失败保持原 scene、selection、original map、outbox 和 reservations，无中间半组节点。
+- generation 没有内嵌提示词。`updateGenerationPrompt` 先比较捕获 `expectedPromptNodeId`；存在则编辑原共享 source，并显示使用数量；expected null 且无 edge 时才在首次明确输入修复私有 prompt+edge。只打开面板不修复。textarea 按 generation target 保持 DOM，接受的修复 ID 在下个 native input 之前同步；focused 期间外部改绑拒绝旧输入，不静默改写新 source。
+- `importReferences` 暂存并验证全部 File（MIME/size）、目标、容量、边和序列化场景，成功后才一起发布 originals 与节点/附加边；已有 edge ID/ordinal 不变，新输入追加。旧 `importReference` 是单文件兼容包装。原图容器/CRC 的服务端校验没有迁到浏览器。
+- 工具栏/粘贴/参考图 chooser 捕获 world position 与 placementBounds；chooser 打开后的 camera 变化不能重新解释它们。显式 spatial drop 不传 bounds，继续保留真实落点/旧插入扫描。共享插入 helper 的 bounds 必须传到 controller 的最终扫描，不能只在 UI 算一个可见 preferred point。
+- chooser 是明确会话：无捕获、cancel、unmount、owner/controller/readOnly 失效后不读取 latest callback。存活会话只操作原 canvas/可选 generation；删除目标拒绝。既有图的重用按 source ID，不重新导入 bytes；替换缩略图带 edge 和 expected source。
+- 生成 composer 复用唯一 editor intent、raw parameter registry、apply-before-Run/Save 和 native prompt writer；primary prompt/thumbnail add/replace/remove/reorder 可见，Advanced 保存旧连接和设置。折叠时非法字段仍阻止 Run/Save，并展开后定位字段。
+- `canvasComposerPlacement` / `useCanvasComposerPlacement` 使用实际节点 screen rect 与 studio/visualViewport 交集，在 Flow 缩放/手势树之外定位 fixed overlay。选择/打开仅改 CSS，不缩小 viewport、不改 camera；短手机布局切换同一 DOM 的 native scroll。所选图片 toolbar 的 View/Download 分别使用已有租约。
+- 新节点可能晚于 placement effect 的首次测量进入 Flow DOM。不能在 effect 开头永久捕获一个 null node 后只观察 viewport resize；child-list mount observer 重新发现当前 target，并切换 ResizeObserver 的节点，cleanup 同时释放两者。无需伪造 resize/改 camera，首次创建的 composer 也应回到可用的相邻位置。
+- 所选图片的 `CanvasImageToolbar` 同样按捕获 node ID 重新发现迟挂载/移除的 Flow card，并转移 ResizeObserver；不能只修 composer 而让新导入图片的工具栏永久停在 fallback。移除 card 后回到有限可达位置，cleanup 同时断开 mount/resize observers；原图 lease、权限和场景相机不随定位变化。
 
 ## 4. 校验与错误矩阵
 
@@ -87,6 +120,9 @@ editor.applyPending(canvasId); // all pending fields of this canvas before Save
 | 断开/错误端口、重复来源、超过16张、原图未就绪 | 中文错误阻止 Run，不忽略输入、不自动运行上游。 |
 | 功能关闭、当前 owner 未挂载、真实 readOnly/loading/deleting | `inactive` / `readOnly` / `loading` 或 `CANVAS_DELETED` 拒绝 mutation；不能以窄屏隐藏按钮代替守卫，也不能把窄屏本身当拒绝条件。 |
 | replacement 错误类型/provenance、重复、不可用原图/结果 | `CANVAS_INVALID_CONNECTION` / `CANVAS_DUPLICATE_INPUT` / `CANVAS_INPUT_UNAVAILABLE`，原 edge ID/source/ordinal 与容量不变。 |
+| quick creation/批量导入超总容量、>16输入、重复 canonical source | `CANVAS_OUTPUT_CAPACITY_EXCEEDED` / `CANVAS_LIMIT_EXCEEDED` / `CANVAS_DUPLICATE_INPUT`，完整候选不发布，不能先创建半组或先添加原图。 |
+| expected prompt/edge source 已变、目标删除或错误类型 | `CANVAS_INVALID_CONNECTION` 或原删除守卫；不改新绑定、不回退最新 selection/chooser callback。 |
+| 非有限/反向 placementBounds 或非法 position | `CANVAS_INVALID_INPUT`，旧 scene/originals/selection 保留；密集可见范围允许有限重叠，不移动旧节点来腾位置。 |
 | raw parameter 非法或显式空 Custom | 不发送 Save/Run，保留 pending/invalid 并定位字段；不能使用上一次 canonical 参数冒充已保存。 |
 | focused composition 期间外部参数更新 | 不调用 native setter 写回外部值；compositionend/blur 后再有守卫同步。 |
 | Move 取消/第二指/由 viewport 接受路径以外的 window handler 处理结束/捕获目标过期 | 丢弃 preview，无 domain move/Save/Run；最近已接受位置仍保留。合法捕获 drop 可有离屏坐标，不能把有限离屏位置一概拒绝。 |
@@ -107,6 +143,9 @@ editor.applyPending(canvasId); // all pending fields of this canvas before Save
 - Good：对话草稿未发送时切换画布，保存未使用原图；另一浏览器只恢复成功 snapshot 并运行该原图，不重新上传。
 - Base：功能关闭仍使用既有对话编辑/重试/取消；启用且就绪的手机编辑同一 scene v1，真实只读状态仅浏览。
 - Good：Close 保留非法 seed，重新打开仍可修正；显式 Save/Run 验证同一捕获目标。拒绝重复来源替换后原 edge/顺序仍可用。
+- Good：空画布一次 New image 打开已连接 composer，Enter 只换行，明确 Run 才发送；从图片 Continue 新建目标，旧图/结果仍可查看下载。
+- Base：旧共享提示词依然共享；远处旧 prompt 与密集旧列不影响可见 primary insertion，旧 node/edge/coordinate 保留，chooser 在相机变化后仍使用捕获 world 范围。
+- Bad：分别发布 prompt/generation/connect，导入最后一张失败却保留前几张；用 latest prompt/selection 替代捕获身份；仅换可见 preferred 点而让 controller 再次无界扫描到屏外。
 - Bad：横屏变窄撤销 lease；移动途中写本地坐标；把空 Custom 当 `auto`；只给面板子元素允许 pinch 而父层仍禁止。
 - Bad：刷新枚举所有 runs 重建画布；保存 metadata 就把 scene 标为 saved；丢 ACK 换 run；删除布局后取消任务；把 measured/URL/token 写进 scene。
 
@@ -125,6 +164,10 @@ editor.applyPending(canvasId); // all pending fields of this canvas before Save
 - `canvas-controller-connections`：prompt/image 原子替换、错误类型/provenance/canonical duplicate/missing source 原 scene 不变；边 ID/ordinal、容量、原结果反馈和多 target 复用保留，无 Run。
 - `use-canvas-editor`、`canvas-node-editor`：实际 root/controller、五种 raw drafts/空 Custom、accepted auto 显示、Close/mode/owner/delete 边界、apply-before-capture 和 newer Save ACK；native setter/selection 覆盖 focused external composition。
 - `canvas-mobile-interaction`、`canvas-mobile-viewport`、`canvas-stage`：whole-card preview 与一次完成、outside pointer completion 后下一次 Move、第二指/cancel/stale camera 零提交、测量清理/finite bounds/稳定 DOM；read-only 和 editable editor 都保留未取消 native touch defaults。
+- `canvas-quick-creation`：完整一次发布、私有/共享/缺失提示词、expected source、原子批次与 invalid-last-file/capacity/bytes/source 拒绝、无自动 Run/Save/upload；非法 placementBounds 也不发布 originals。
+- `canvas-image-first-stage`、`canvas-composer-placement`：真实 stage/composer 的原生输入/修复 ID 立即确认、缩略图原子顺序、整图选择/拖动、捕获 chooser、稳定 textarea/短 overlay；24-node/32-edge 密集旧图加 far-off prompt 和 zoom 必须验证新 generator 可见、旧布局不变、chooser bounds 冻结。只测一个离屏旧 prompt 不足以证明 dense placement。
+- placement hook 先在 target DOM 不存在时得到 bounded fallback，再真实追加 Flow node、保持 camera/region dimensions 不变，必须跟随 actual node rect；浏览器首个 New image 也断言有空间时 panel 与节点相邻，不能只凭面板始终可见当作跟随证明。
+- 图片工具栏也需真实追加/移除 Flow card 的 regression，无额外 viewport resize；card 的 `getBoundingClientRect` fixture 只覆盖该实例，不能用共享 prototype spy 同时改掉 viewport 几何。测试 finally 移除额外 DOM，源码复核两个 observers 均在 cleanup 断开，避免后续 stage 测试被污染；当前行为回归不冒充独立的 observer-disconnect 断言。
 - 真浏览器测量/命中 checkbox 关联 label 与短布局确认按钮；scroll 到实际可见区域并检查 hit target，不能向剪裁外坐标或被面板覆盖的 Save 点击后宣称正确操作。native page pinch 必须改变 browser scale 而保持 scene camera；scene pinch 应改变 scene camera。两者均不得触发 Run/Save。
 - 新 source 冻结后重新复制/hash 真实组件/lib/contracts/CSS、直接使用 pinned Node + copied Next 构建并核对 package links。fixture browser 使用 loopback dummy identity/HTTP、原生 IndexedDB 和原图 bytes，不继承旧 renderer 浏览器通过记录。
 - 手机主要目标是 iOS18+ Safari、Android12+ Chrome 当前/前一稳定主版本、>=360 CSS px；测试 360/390/430 portrait、landscape/short viewport、24-node/32-valid-edge 与 200-node smoke。模拟 dimensions/CDP IME/touch 不是物理机、原生输入法、OS chooser/download、实际 CI 或服务认证。
@@ -167,4 +210,17 @@ const readOnly = !isDesktop;
 
 // Good: capability and presentation have separate owners.
 const { canvasReadOnly, touchPresentation } = useStudioMode(ownerId, canvasEnabled);
+```
+
+```ts
+// Bad: the visible preferred point is lost in the controller's unbounded second scan.
+controller.createQuickGeneration(canvasId, { position: visibleWorldPoint });
+
+// Good: preserve the captured legal world region through final candidate placement.
+const created = controller.createQuickGeneration(canvasId, {
+  position: captured.position, placementBounds: captured.placementBounds,
+  sourceNodeIds: captured.sourceNodeIds,
+});
+editor.open({ ownerId, canvasId, nodeId: created.generationNodeId });
+// Explicit Run remains a separate command after pending-field validation.
 ```

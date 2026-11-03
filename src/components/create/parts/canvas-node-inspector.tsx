@@ -17,6 +17,7 @@ import { CanvasSourceSummary } from "./canvas-node-picker";
 import styles from "./canvas-stage.module.css";
 
 export type CanvasNodeInspectorProps = {
+  contextual?: boolean;
   active: CanvasActiveView;
   node: CanvasGenerationNodeV1;
   channels: readonly ChannelInfo[];
@@ -93,7 +94,7 @@ function ConnectionPicker({ label, candidates, active, actions, onConnect, disab
   </div>{source && <CanvasSourceSummary active={active} node={source} actions={actions} />}</div>;
 }
 
-export function CanvasNodeInspector({ active, node, channels, editor, target, actions, onParameters, onConnect, onReplace, onDisconnect, onReorder, onOpenProviderSettings }: CanvasNodeInspectorProps) {
+export function CanvasNodeInspector({ contextual = false, active, node, channels, editor, target, actions, onParameters, onConnect, onReplace, onDisconnect, onReorder, onOpenProviderSettings }: CanvasNodeInspectorProps) {
   const parameters = node.parameters;
   const draft = editor.readDraft(target);
   const customSize = draft?.customSize ?? getSizeSelectValue(parameters.size) === "custom";
@@ -108,7 +109,8 @@ export function CanvasNodeInspector({ active, node, channels, editor, target, ac
 
   return (
     <div aria-label="生成节点参数与输入">
-        <section className={styles.inspectorSection}>
+        <details className={styles.inspectorSection} open={contextual ? undefined : true}>
+          <summary>高级连接 · 提示词来源与参考顺序</summary>
           <h4>直接输入</h4>
           <p className={styles.helpText}>连接只提供输入。运行按钮只执行当前节点，不运行整张图。</p>
           <label className={styles.field}><span>提示词 · 恰好一个</span></label>
@@ -136,7 +138,7 @@ export function CanvasNodeInspector({ active, node, channels, editor, target, ac
           </ol>
           <ConnectionPicker {...pickerProps} label="选择参考图或结果" candidates={active.scene.nodes.filter((source) => (source.kind === "reference" || source.kind === "result") && !inputs.some((edge) => edge.source === source.id))} onConnect={onConnect} disabled={inputs.length >= CANVAS_LIMITS.referencesPerRun} />
           <p className={styles.helpText}>序号决定输入顺序。旧结果可以连回原生成节点。</p>
-        </section>
+        </details>
         <section className={styles.inspectorSection}>
           <h4>生成参数</h4>
           <div className={styles.providerToggle} role="group" aria-label="节点渠道来源">
@@ -174,9 +176,11 @@ export function CanvasNodeInspector({ active, node, channels, editor, target, ac
             <label className={styles.field}><span>格式</span><select aria-label="节点输出格式" value={parameters.outputFormat} onChange={(event) => { const option = OUTPUT_FORMAT_OPTIONS.find((item) => item.value === event.target.value); if (option) onParameters({ outputFormat: option.value }); }}>{OUTPUT_FORMAT_OPTIONS.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}</select></label>
           </div>
           {(parameters.outputFormat !== "png" || draft?.fields.outputCompression) && <CommitField {...fieldProps} field="outputCompression" value={String(parameters.outputCompression ?? 100)} inputMode="numeric" />}
+          <details open={contextual && !editor.state.focus ? undefined : true} className={styles.advancedSettings}><summary>更多生成设置</summary>
           <label className={styles.field}><span>审核模式</span><select aria-label="节点审核模式" value={parameters.moderation} onChange={(event) => { const option = MODERATION_OPTIONS.find((item) => item.value === event.target.value); if (option) onParameters({ moderation: option.value }); }}>{MODERATION_OPTIONS.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}</select></label>
           {(!imageMode || draft?.fields.negativePrompt) && <CommitField {...fieldProps} field="negativePrompt" value={parameters.negativePrompt ?? ""} multiline />}
           {(!imageMode || draft?.fields.seed) && <CommitField {...fieldProps} field="seed" value={parameters.seed === null ? "" : String(parameters.seed)} inputMode="numeric" placeholder="留空由模型决定" />}
+          </details>
           <p className={styles.helpText}>参数只属于此节点。运行后继续编辑，仅影响下一次手动运行。</p>
         </section>
     </div>

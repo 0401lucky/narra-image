@@ -20,13 +20,15 @@ type CanvasToolbarProps = {
   onSave: () => void;
   onAddPrompt: () => void;
   onAddGeneration: () => void;
+  onCreate?: () => void;
+  onCaptureImport?: () => (files: File[]) => void;
   onImport: (files: File[]) => void;
   onFit: () => void;
   onZoomIn: () => void;
   onZoomOut: () => void;
 };
 
-export function CanvasToolbar({ document, readOnly, pendingFields = 0, zoom, onRename, onDelete, onSave, onAddPrompt, onAddGeneration, onImport, onFit, onZoomIn, onZoomOut }: CanvasToolbarProps) {
+export function CanvasToolbar({ document, readOnly, pendingFields = 0, zoom, onRename, onDelete, onSave, onAddPrompt, onAddGeneration, onCreate, onCaptureImport, onImport, onFit, onZoomIn, onZoomOut }: CanvasToolbarProps) {
   const fileInput = useRef<HTMLInputElement>(null);
   const chooser = useRef<((files: File[]) => void) | null>(null);
   useEffect(() => {
@@ -60,15 +62,18 @@ export function CanvasToolbar({ document, readOnly, pendingFields = 0, zoom, onR
       </div>
       <div className={styles.toolsRow}>
         {readOnly ? <p className={styles.readOnlyNotice}>只读画布 · 可选择、平移与缩放</p> : <div className={styles.creationTools}>
-          <button type="button" className={styles.toolButton} onClick={onAddPrompt} disabled={document.deleting}><Plus aria-hidden className="size-4" />提示词</button>
-          <button type="button" className={styles.toolButton} onClick={() => { chooser.current = onImport; fileInput.current?.click(); }} disabled={document.deleting}><ImagePlus aria-hidden className="size-4" />参考图</button>
-          <button type="button" className={styles.toolButton} onClick={onAddGeneration} disabled={document.deleting}><Sparkles aria-hidden className="size-4" />生成节点</button>
+          <button type="button" className={styles.saveButton} onClick={onCreate ?? onAddGeneration} disabled={document.deleting}><Sparkles aria-hidden className="size-4" />新建图片</button>
+          <button type="button" className={styles.toolButton} onClick={() => { chooser.current = onCaptureImport ? onCaptureImport() : onImport; fileInput.current?.click(); }} disabled={document.deleting}><ImagePlus aria-hidden className="size-4" />导入参考图</button>
+          <details className={styles.graphTools}><summary>图谱工具</summary><div>
+            <button type="button" className={styles.toolButton} onClick={onAddPrompt} disabled={document.deleting}><Plus aria-hidden className="size-4" />提示词</button>
+            <button type="button" className={styles.toolButton} onClick={onAddGeneration} disabled={document.deleting}><Sparkles aria-hidden className="size-4" />生成节点</button>
+          </div></details>
           <input ref={fileInput} type="file" multiple accept={CANVAS_IMPORT_IMAGE_TYPES.join(",")} className="hidden" aria-label="导入画布参考图文件" onChange={(event) => {
             const files = Array.from(event.currentTarget.files ?? []);
             event.currentTarget.value = "";
-            const importFiles = chooser.current ?? onImport;
+            const importFiles = chooser.current;
             chooser.current = null;
-            if (files.length) importFiles(files);
+            if (files.length) importFiles?.(files);
           }} />
         </div>}
         <div className={styles.cameraTools} role="group" aria-label="画布视图控制">

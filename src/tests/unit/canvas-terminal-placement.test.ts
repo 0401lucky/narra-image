@@ -65,6 +65,33 @@ describe("canvas terminal result placement", () => {
     }
   });
 
+  it("searches nearby visible columns without changing legacy unbounded insertion", () => {
+    const occupied = [{ x: 0, y: 0 }, { x: 0, y: 360 }, { x: 0, y: 720 }];
+    const preferred = { x: 0, y: 0 };
+    const bounds = { minX: 0, maxX: 1000, minY: 0, maxY: 200 };
+    expect(canvasInsertionPosition(occupied, preferred)).toEqual({ x: 0, y: 1080 });
+    const visible = canvasInsertionPosition(occupied, preferred, bounds);
+    expect(visible).toEqual({ x: 320, y: 0 });
+    expect(canvasInsertionPosition([...occupied].reverse(), preferred, bounds)).toEqual(visible);
+    occupied.forEach((position) => expectSeparated(visible, position));
+  });
+
+  it("keeps a dense-region fallback visible instead of relocating old cards", () => {
+    const occupied = Array.from({ length: 24 }, (_, index) => ({ x: (index % 4) * 380, y: Math.floor(index / 4) * 360 }));
+    const before = JSON.stringify(occupied);
+    const bounds = { minX: 160, maxX: 850, minY: 40, maxY: 250 };
+    const position = canvasInsertionPosition(occupied, { x: 180, y: 80 }, bounds);
+    expect(position).toEqual({ x: 180, y: 80 });
+    expect(canvasInsertionPosition(occupied, { x: 50000, y: 20000 }, bounds)).toEqual({ x: 850, y: 250 });
+    expect(JSON.stringify(occupied)).toBe(before);
+  });
+
+  it("rejects nonfinite or inverted visible bounds", () => {
+    for (const bounds of [{ minX: NaN, maxX: 10, minY: 0, maxY: 10 }, { minX: 10, maxX: 0, minY: 0, maxY: 10 }, { minX: 0, maxX: 10, minY: 20, maxY: 10 }]) {
+      expect(() => canvasInsertionPosition([], { x: 0, y: 0 }, bounds)).toThrow(expect.objectContaining({ code: "CANVAS_INVALID_INPUT" }));
+    }
+  });
+
   it("places a complete four-image batch with enough default-card clearance", () => {
     const { scene, binding } = fixture();
     const before = JSON.stringify(scene);

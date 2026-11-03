@@ -8,7 +8,7 @@ import type { CanvasFlowEdge, CanvasFlowNode, CanvasNodeActions, CanvasNodeMeasu
 
 export { canvasInsertionPosition } from "./commands";
 
-export type CanvasNodePresentation = { touch: boolean; editorNodeId?: string; preview?: { nodeId: string; position: CanvasPositionV1 } | null };
+export type CanvasNodePresentation = { touch: boolean; capturedDrag?: boolean; editorNodeId?: string; preview?: { nodeId: string; position: CanvasPositionV1 } | null };
 
 export function canvasFlowNodes(active: CanvasActiveView, readOnly: boolean, actions: CanvasNodeActions, measurements?: CanvasNodeMeasurements, presentation?: CanvasNodePresentation): CanvasFlowNode[] {
   const canvasId = active.document.id;
@@ -19,7 +19,7 @@ export function canvasFlowNodes(active: CanvasActiveView, readOnly: boolean, act
       position: { ...(presentation?.preview?.nodeId === node.id ? presentation.preview.position : node.position) },
       ...(measured ? { measured: { ...measured } } : {}),
       selected: node.id === active.selectedNodeId,
-      draggable: !readOnly && !presentation?.touch,
+      draggable: !readOnly && !presentation?.touch && !presentation?.capturedDrag,
       connectable: !readOnly && !presentation?.touch,
       deletable: !readOnly,
       selectable: true,
@@ -55,7 +55,7 @@ export function canvasSourceStatus(active: CanvasActiveView, node: CanvasLocalNo
     const reference = active.references[node.id];
     return reference?.state === "ready" ? "原图已就绪" : reference?.state === "local" ? "本地原图可用" : reference?.state === "uploading" ? "上传中" : "原图不可用";
   }
-  if (node.kind === "result") return active.images[node.imageId]?.jobId === node.jobId ? "结果已就绪" : "结果不可用";
+  if (node.kind === "result") { const image = active.images[node.imageId]; return image?.id === node.imageId && image.jobId === node.jobId && image.url ? "结果已就绪" : "结果不可用"; }
   if (node.kind === "prompt") return node.text.trim().length >= 2 ? "已填写" : "待填写提示词";
   return "生成节点";
 }
@@ -76,7 +76,7 @@ export function updateCanvasNodeMeasurements(current: CanvasNodeMeasurements, li
   return changed ? next : current;
 }
 
-export function canvasFlowEdges(scene: CanvasLocalSceneV1, readOnly: boolean, selectedEdgeId: string | null): CanvasFlowEdge[] {
+export function canvasFlowEdges(scene: CanvasLocalSceneV1, readOnly: boolean, selectedEdgeId: string | null, selectedNodeId?: string | null): CanvasFlowEdge[] {
   return scene.edges.map((edge) => {
     const input = edge.kind !== "output-provenance";
     const handles = edge.kind === "prompt-input"
@@ -88,6 +88,7 @@ export function canvasFlowEdges(scene: CanvasLocalSceneV1, readOnly: boolean, se
       type: "smoothstep", data: { edge }, selected: edge.id === selectedEdgeId,
       deletable: !readOnly && input, selectable: !readOnly && input, focusable: !readOnly && input, reconnectable: false,
       className: `canvas-edge-${edge.kind}`,
+      style: { opacity: edge.id === selectedEdgeId || edge.source === selectedNodeId || edge.target === selectedNodeId ? 1 : 0.28 },
       label: edge.kind === "image-input" ? `参考 ${edge.ordinal}` : edge.kind === "prompt-input" ? "提示词" : "生成结果",
       ariaLabel: edge.kind === "image-input" ? `参考图输入 ${edge.ordinal}` : edge.kind === "prompt-input" ? "提示词输入" : "生成结果来源",
     };

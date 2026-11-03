@@ -23,10 +23,12 @@ import type { CanvasRuntimeRequest } from "./client-api";
 
 // Default card clearance, not persisted DOM measurements or automatic relayout.
 export const CANVAS_CARD_SPACING = { width: 320, height: 360, column: 380 } as const;
+export type CanvasInsertionBounds = { minX: number; maxX: number; minY: number; maxY: number };
 
 export type CanvasCapacityReservation = { runId: string; nodeId: string; count: number | null; outputsHandled: boolean };
 export type CanvasEditCommand =
   | { kind: "add"; node: Exclude<CanvasLocalNodeV1, { kind: "result" }> }
+  | { kind: "creation-group"; nodes: Exclude<CanvasLocalNodeV1, { kind: "result" }>[]; connections: { id: string; source: string; target: string }[] }
   | { kind: "move"; nodeId: string; position: CanvasPositionV1 }
   | { kind: "prompt"; nodeId: string; text: string }
   | { kind: "parameters"; nodeId: string; parameters: CanvasGenerationParametersV1 }
@@ -46,8 +48,23 @@ export function copyCanvasScene<T extends CanvasLocalSceneV1>(scene: T): T {
   return JSON.parse(JSON.stringify(scene)) as T;
 }
 
-export function canvasInsertionPosition(occupied: readonly CanvasPositionV1[], preferred: CanvasPositionV1): CanvasPositionV1 {
+export function canvasInsertionPosition(occupied: readonly CanvasPositionV1[], preferred: CanvasPositionV1, bounds?: CanvasInsertionBounds): CanvasPositionV1 {
   if (!Number.isFinite(preferred.x) || !Number.isFinite(preferred.y)) throw new CanvasContractError("CANVAS_INVALID_INPUT");
+  if (bounds) {
+    if (!Object.values(bounds).every(Number.isFinite) || bounds.minX > bounds.maxX || bounds.minY > bounds.maxY) throw new CanvasContractError("CANVAS_INVALID_INPUT");
+    const clampX = (x: number) => Math.max(bounds.minX, Math.min(x, bounds.maxX));
+    const origin = { x: clampX(preferred.x), y: Math.max(bounds.minY, Math.min(preferred.y, bounds.maxY)) };
+    const columns = [...new Set([origin.x, bounds.minX, bounds.maxX, ...occupied.flatMap((position) => [position.x - CANVAS_CARD_SPACING.width, position.x + CANVAS_CARD_SPACING.width])]
+      .filter(Number.isFinite).map(clampX))].sort((left, right) => Math.abs(left - origin.x) - Math.abs(right - origin.x) || left - right);
+    for (const x of columns) {
+      for (const y of new Set([origin.y, bounds.minY])) {
+        const candidate = canvasInsertionPosition(occupied, { x, y });
+        if (candidate.y >= bounds.minY && candidate.y <= bounds.maxY) return candidate;
+      }
+    }
+    // A full visible region may overlap; do not push primary actions offscreen or relayout old work.
+    return origin;
+  }
   const blockers = occupied.filter((position) => Math.abs(position.x - preferred.x) < CANVAS_CARD_SPACING.width)
     .sort((left, right) => left.y - right.y);
   const place = (startY: number): CanvasPositionV1 | null => {
@@ -77,6 +94,19 @@ export function applyCanvasEdit(scene: CanvasLocalSceneV1, command: CanvasEditCo
       assertCanvasOutputCapacityV1(scene, reservations, { nodes: 1 });
       next.nodes.push(command.node);
       break;
+    case "creation-group": {
+      assertCanvasOutputCapacityV1(scene, reservations, { nodes: command.nodes.length, edges: command.connections.length });
+      next.nodes.push(...command.nodes);
+      for (const connection of command.connections) {
+        const source = next.nodes.find((item) => item.id === connection.source);
+        const target = next.nodes.find((item) => item.id === connection.target);
+        if (!source || target?.kind !== "generation" || source.kind === "generation") throw new CanvasContractError("CANVAS_INVALID_CONNECTION");
+        next.edges.push(source.kind === "prompt" ? { ...connection, kind: "prompt-input" } : {
+          ...connection, kind: "image-input", ordinal: 1 + next.edges.filter((edge) => edge.kind === "image-input" && edge.target === target.id).length,
+        });
+      }
+      break;
+    }
     case "move":
       if (!node) throw new CanvasContractError("CANVAS_INVALID_CONNECTION");
       node.position = { ...command.position };

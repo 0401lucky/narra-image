@@ -321,7 +321,7 @@ describe("actual phone node editor and controller", () => {
     await edit(nodeId);
     const before = f.controller.getSnapshot().active!.scene;
     fireEvent.change(screen.getByLabelText("替换参考图 1 来源"), { target: { value: duplicate } });
-    expect(await screen.findByAltText("所选输入预览")).toBeInTheDocument();
+    expect(within(screen.getByLabelText("替换参考图 1 来源").parentElement!.parentElement!).getByAltText("所选输入预览")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "确认替换参考图 1 来源" }));
     expect(f.controller.getSnapshot().active!.scene).toEqual(before);
     expect(f.controller.getSnapshot().active!.scene.edges.find((edge) => edge.id === firstEdge)).toMatchObject({ source: first, ordinal: 1 });

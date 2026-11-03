@@ -9,6 +9,7 @@ export type CanvasMoveGesture = Readonly<{
   startPosition: CanvasPositionV1;
   viewport: CanvasViewportV1;
   position: CanvasPositionV1;
+  moved: boolean;
 }>;
 
 const finitePoint = (point: CanvasPositionV1) => Number.isFinite(point.x) && Number.isFinite(point.y);
@@ -16,14 +17,15 @@ const samePoint = (left: CanvasPositionV1, right: CanvasPositionV1) => left.x ==
 
 export function beginCanvasMove(target: CanvasEditorTarget, pointerId: number, client: CanvasPositionV1, position: CanvasPositionV1, viewport: CanvasViewportV1): CanvasMoveGesture | null {
   if (!finitePoint(client) || !finitePoint(position) || !finitePoint(viewport) || !Number.isFinite(viewport.zoom) || viewport.zoom <= 0) return null;
-  return { target, pointerId, startClient: { ...client }, startPosition: { ...position }, viewport: { ...viewport }, position: { ...position } };
+  return { target, pointerId, startClient: { ...client }, startPosition: { ...position }, viewport: { ...viewport }, position: { ...position }, moved: false };
 }
 
 export function previewCanvasMove(gesture: CanvasMoveGesture, pointerId: number, client: CanvasPositionV1): CanvasMoveGesture | null {
   if (pointerId !== gesture.pointerId || !finitePoint(client)) return null;
   const position = { x: gesture.startPosition.x + (client.x - gesture.startClient.x) / gesture.viewport.zoom,
     y: gesture.startPosition.y + (client.y - gesture.startClient.y) / gesture.viewport.zoom };
-  return finitePoint(position) ? { ...gesture, position } : null;
+  const moved = gesture.moved || Math.hypot(client.x - gesture.startClient.x, client.y - gesture.startClient.y) >= 3;
+  return finitePoint(position) ? { ...gesture, position, moved } : null;
 }
 
 export function finishCanvasMove(gesture: CanvasMoveGesture, current: { target: CanvasEditorTarget; position: CanvasPositionV1; viewport: CanvasViewportV1; pointerId: number; pointerCount: number }): CanvasPositionV1 | null {

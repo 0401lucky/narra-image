@@ -40,7 +40,7 @@ export function CanvasSourceSummary({ active, node, actions }: CanvasSourceSumma
   }, [acquirePreview, blobId, node.id, reportError]);
   const image = node.kind === "result" ? active.images[node.imageId] : null;
   const url = reference?.url ?? (blobId && preview?.blobId === blobId ? preview.url : null)
-    ?? (node.kind === "result" && image?.jobId === node.jobId ? image.url : null);
+    ?? (node.kind === "result" && image?.id === node.imageId && image.jobId === node.jobId ? image.url : null);
   return <div className={styles.sourceSummary}>
     {/* eslint-disable-next-line @next/next/no-img-element */}
     {url && <img src={getThumbUrl(url, 160)} alt="所选输入预览" draggable={false} loading="lazy" />}
