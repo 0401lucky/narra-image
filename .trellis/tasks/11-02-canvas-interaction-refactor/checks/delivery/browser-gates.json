@@ -1,0 +1,58 @@
+{
+  "at": "2026-11-03T04:38:34.397739+00:00",
+  "coordinatorGates": true,
+  "workspace": "E:\\code\\narra-image\\.trellis\\tasks\\11-02-canvas-interaction-refactor\\checks\\.runtime\\browser-75c50270\\app",
+  "records": [
+    {
+      "purpose": "current production/fixture/helper prebuild identity",
+      "id": "20261103T043755-fixture-prebuild-882465",
+      "exitCode": 0,
+      "timedOut": false,
+      "durationSeconds": 0.677,
+      "evidenceSha256": {
+        "checks\\delivery\\evidence\\20261103T043755-fixture-prebuild-882465.json": "1d8fe462838735061b291b7bfdea8377e66c45b487d84ed86794239582968ac2",
+        "checks\\delivery\\evidence\\20261103T043755-fixture-prebuild-882465.stdout.log": "27abfc56c33017b9df3ce5fd406b2605d1d363d80f23c72ae9abab2c2dbce809",
+        "checks\\delivery\\evidence\\20261103T043755-fixture-prebuild-882465.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "purpose": "fresh exact-input native fixture production build",
+      "id": "20261103T043756-fixture-build-workers-2-93fc74",
+      "exitCode": 0,
+      "timedOut": false,
+      "durationSeconds": 8.589,
+      "evidenceSha256": {
+        "checks\\delivery\\evidence\\20261103T043756-fixture-build-workers-2-93fc74.json": "a370963921b37af1a2382f0806194a406d9f9b98ed26cd277f01e60dc8be3d19",
+        "checks\\delivery\\evidence\\20261103T043756-fixture-build-workers-2-93fc74.stdout.log": "1e0d1daebba24f95caa2ac4530d53c4d9b57705813ce906fe8e162eb66d16e47",
+        "checks\\delivery\\evidence\\20261103T043756-fixture-build-workers-2-93fc74.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "purpose": "postbuild production/fixture/helper/build identity",
+      "id": "20261103T043805-fixture-postbuild-01d233",
+      "exitCode": 0,
+      "timedOut": false,
+      "durationSeconds": 0.286,
+      "evidenceSha256": {
+        "checks\\delivery\\evidence\\20261103T043805-fixture-postbuild-01d233.json": "5ae457aa8ce2b344b75350f664f155ad047fa5c7db24fb0a127043b9253d79e0",
+        "checks\\delivery\\evidence\\20261103T043805-fixture-postbuild-01d233.stdout.log": "379ff4dcd2cc8cf5472a7807a45e8533e040cd6bbf86a66d798b1efad0622598",
+        "checks\\delivery\\evidence\\20261103T043805-fixture-postbuild-01d233.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "purpose": "current-source native Chrome 10-case matrix",
+      "id": "20261103T043805-native-browser-de83bd",
+      "exitCode": 0,
+      "timedOut": false,
+      "durationSeconds": 28.669,
+      "evidenceSha256": {
+        "checks\\delivery\\evidence\\20261103T043805-native-browser-de83bd.json": "6e1071bd34780cb9884900a28f85c595236af63ca111cfc71b0020d8b6678edb",
+        "checks\\delivery\\evidence\\20261103T043805-native-browser-de83bd.stdout.log": "28094913fc3a7223cdb6da156d4ce636ed35d2e6336e3becd68e206135e06d18",
+        "checks\\delivery\\evidence\\20261103T043805-native-browser-de83bd.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ],
+  "physicalDevices": "unperformed",
+  "liveServices": "unperformed",
+  "actualCi": "unperformed"
+}

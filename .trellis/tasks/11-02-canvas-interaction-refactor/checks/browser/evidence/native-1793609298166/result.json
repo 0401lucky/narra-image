@@ -1,0 +1,161 @@
+{
+  "app": "E:\\code\\narra-image\\.trellis\\tasks\\11-02-canvas-interaction-refactor\\checks\\.runtime\\browser-75c50270\\app",
+  "runId": "native-1793609298166",
+  "checks": [
+    {
+      "id": "B0-native-calibration",
+      "passed": true,
+      "durationMs": 1782,
+      "detail": [
+        {
+          "name": "click",
+          "trusted": true,
+          "alt": false,
+          "shift": false
+        },
+        {
+          "name": "keydown",
+          "trusted": true,
+          "key": "Enter",
+          "alt": false,
+          "shift": false
+        },
+        {
+          "name": "keypress",
+          "trusted": true,
+          "key": "Enter",
+          "alt": false,
+          "shift": false
+        },
+        {
+          "name": "click",
+          "trusted": true,
+          "alt": false,
+          "shift": false
+        },
+        {
+          "name": "keydown",
+          "trusted": true,
+          "key": "Enter",
+          "alt": false,
+          "shift": false
+        },
+        {
+          "name": "keypress",
+          "trusted": true,
+          "key": "Enter",
+          "alt": false,
+          "shift": false
+        },
+        {
+          "name": "click",
+          "trusted": true,
+          "alt": false,
+          "shift": false
+        },
+        {
+          "name": "keydown",
+          "trusted": true,
+          "key": "Tab",
+          "alt": false,
+          "shift": false
+        },
+        {
+          "name": "keydown",
+          "trusted": true,
+          "key": "Tab",
+          "alt": false,
+          "shift": true
+        }
+      ]
+    },
+    {
+      "id": "B1-direct-create-run",
+      "passed": true,
+      "durationMs": 3828,
+      "detail": {
+        "canvasId": "e503e6f7-ba2e-43f6-8ea7-4b0d1c767ea6",
+        "nodes": 3,
+        "run": {
+          "canvasId": "e503e6f7-ba2e-43f6-8ea7-4b0d1c767ea6",
+          "nodeId": "e9f7e413-a81c-49ae-921e-20dbe240aebc",
+          "runId": "213b78e9-d139-47bb-a564-eec383607132",
+          "input": {
+            "prompt": {
+              "sourceNodeId": "f6d43ecd-0875-42a9-a004-716f23c5af5f",
+              "text": "A ceramic cup in warm afternoon light"
+            },
+            "references": []
+          },
+          "parameters": {
+            "providerMode": "built_in",
+            "channelId": "channel-account",
+            "model": "image-account-default",
+            "size": "auto",
+            "quality": "auto",
+            "outputFormat": "png",
+            "outputCompression": null,
+            "moderation": "auto",
+            "count": 1,
+            "negativePrompt": null,
+            "seed": null,
+            "generationType": "text_to_image"
+          }
+        },
+        "result": {
+          "id": "result:39d72fca-e83b-435e-aa8f-0c857b011fe0",
+          "kind": "result",
+          "position": {
+            "x": 430,
+            "y": 55
+          },
+          "jobId": "canvas-213b78e9-d139-47bb-a564-eec383607132",
+          "imageId": "39d72fca-e83b-435e-aa8f-0c857b011fe0",
+          "runId": "213b78e9-d139-47bb-a564-eec383607132"
+        }
+      }
+    },
+    {
+      "id": "B2-select-explicit-view-drag",
+      "passed": false,
+      "durationMs": 31136,
+      "error": "Error: Element missing: [role=\"dialog\"]\n    at waitFor (file:///E:/code/narra-image/.trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/cdp.mjs:16:9)\n    at async file:///E:/code/narra-image/.trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/run-browser.mjs:182:7\n    at async check (file:///E:/code/narra-image/.trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/run-browser.mjs:75:24)\n    at async file:///E:/code/narra-image/.trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/run-browser.mjs:176:5"
+    },
+    {
+      "id": "B3-outside-release-cancels",
+      "passed": false,
+      "durationMs": 1838,
+      "error": "Error: Control is occluded/clipped: .react-flow__node[data-id=\"result:39d72fca-e83b-435e-aa8f-0c857b011fe0\"] img  {\"left\":1083.1832275390625,\"top\":525.6619873046875,\"right\":1348.114501953125,\"bottom\":745.1199951171875,\"width\":264.9312744140625,\"height\":219.4580078125,\"x\":1215.6488647460938,\"y\":635.3909912109375,\"clip\":{\"left\":1083.1832275390625,\"top\":525.6619873046875,\"right\":1348.114501953125,\"bottom\":745.1199951171875},\"visible\":true,\"hit\":false,\"hitTag\":\"DIV\",\"hitText\":\"160x1204:3保存高清原图\",\"text\":\"\",\"disabled\":false}\n    at BrowserPage.point (file:///E:/code/narra-image/.trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/cdp.mjs:239:11)\n    at async drag (file:///E:/code/narra-image/.trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/run-browser.mjs:100:17)\n    at async file:///E:/code/narra-image/.trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/run-browser.mjs:194:7\n    at async check (file:///E:/code/narra-image/.trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/run-browser.mjs:75:24)\n    at async file:///E:/code/narra-image/.trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/run-browser.mjs:192:5"
+    },
+    {
+      "id": "B4-original-import-download",
+      "passed": false,
+      "durationMs": 1848,
+      "error": "Error: Control is occluded/clipped: button 导入参考图 {\"left\":367.5625,\"top\":207.984375,\"right\":472.734375,\"bottom\":241.15625,\"width\":105.171875,\"height\":33.171875,\"x\":420.1484375,\"y\":224.5703125,\"clip\":{\"left\":367.5625,\"top\":207.984375,\"right\":472.734375,\"bottom\":241.15625},\"visible\":true,\"hit\":false,\"hitTag\":\"DIV\",\"hitText\":\"160x1204:3保存高清原图\",\"text\":\"导入参考图\",\"disabled\":false}\n    at BrowserPage.point (file:///E:/code/narra-image/.trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/cdp.mjs:239:11)\n    at async BrowserPage.click (file:///E:/code/narra-image/.trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/cdp.mjs:243:20)\n    at async file:///E:/code/narra-image/.trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/run-browser.mjs:204:7\n    at async check (file:///E:/code/narra-image/.trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/run-browser.mjs:75:24)\n    at async file:///E:/code/narra-image/.trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/run-browser.mjs:199:5"
+    },
+    {
+      "id": "B7-save-native-reload",
+      "passed": false,
+      "durationMs": 1832,
+      "error": "Error: Control is occluded/clipped: button 保存到账户 {\"left\":14.390625,\"top\":308.15625,\"right\":224.609375,\"bottom\":374.140625,\"width\":210.21875,\"height\":65.984375,\"x\":119.5,\"y\":341.1484375,\"clip\":{\"left\":14.390625,\"top\":308.15625,\"right\":224.609375,\"bottom\":374.140625},\"visible\":true,\"hit\":false,\"hitTag\":\"DIV\",\"hitText\":\"160x1204:3保存高清原图\",\"text\":\"未命名画布尚未保存到账户\",\"disabled\":false}\n    at BrowserPage.point (file:///E:/code/narra-image/.trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/cdp.mjs:239:11)\n    at async BrowserPage.click (file:///E:/code/narra-image/.trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/cdp.mjs:243:20)\n    at async file:///E:/code/narra-image/.trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/run-browser.mjs:264:7\n    at async check (file:///E:/code/narra-image/.trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/run-browser.mjs:75:24)\n    at async file:///E:/code/narra-image/.trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/run-browser.mjs:260:5"
+    },
+    {
+      "id": "B8-legacy-visible-anchor",
+      "passed": false,
+      "durationMs": 1830,
+      "error": "Error: Control is occluded/clipped: button Legacy 24-node graph {\"left\":14.390625,\"top\":234.984375,\"right\":224.609375,\"bottom\":300.96875,\"width\":210.21875,\"height\":65.984375,\"x\":119.5,\"y\":267.9765625,\"clip\":{\"left\":14.390625,\"top\":234.984375,\"right\":224.609375,\"bottom\":300.96875},\"visible\":true,\"hit\":false,\"hitTag\":\"DIV\",\"hitText\":\"160x1204:3保存高清原图\",\"text\":\"Legacy 24-node graph账户快照已保存\",\"disabled\":false}\n    at BrowserPage.point (file:///E:/code/narra-image/.trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/cdp.mjs:239:11)\n    at async BrowserPage.click (file:///E:/code/narra-image/.trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/cdp.mjs:243:20)\n    at async file:///E:/code/narra-image/.trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/run-browser.mjs:281:26\n    at async check (file:///E:/code/narra-image/.trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/run-browser.mjs:75:24)\n    at async file:///E:/code/narra-image/.trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/run-browser.mjs:279:3"
+    },
+    {
+      "id": "B9-200-node-capacity-smoke",
+      "passed": false,
+      "durationMs": 1832,
+      "error": "Error: Control is occluded/clipped: button 200-node capacity smoke {\"left\":14.390625,\"top\":381.328125,\"right\":224.609375,\"bottom\":447.3125,\"width\":210.21875,\"height\":65.984375,\"x\":119.5,\"y\":414.3203125,\"clip\":{\"left\":14.390625,\"top\":381.328125,\"right\":224.609375,\"bottom\":447.3125},\"visible\":true,\"hit\":false,\"hitTag\":\"DIV\",\"hitText\":\"160x1204:3保存高清原图\",\"text\":\"200-node capacity smoke账户快照已保存\",\"disabled\":false}\n    at BrowserPage.point (file:///E:/code/narra-image/.trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/cdp.mjs:239:11)\n    at async BrowserPage.click (file:///E:/code/narra-image/.trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/cdp.mjs:243:20)\n    at async file:///E:/code/narra-image/.trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/run-browser.mjs:297:26\n    at async check (file:///E:/code/narra-image/.trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/run-browser.mjs:75:24)\n    at async file:///E:/code/narra-image/.trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/run-browser.mjs:295:3"
+    }
+  ],
+  "chrome": "Chrome/156.0.8078.74",
+  "pinnedNode": "v24.22.1",
+  "boundaries": "Exact current production UI/lib/contracts/CSS/assets and installed copied dependencies; minimal SSR/lazy route shell, serialized dummy identity/catalogue, loopback fake API, native IndexedDB. No real auth/DB/provider/billing, physical phone/OS IME/chooser/download or remote CI proof.",
+  "physicalDevice": "unperformed",
+  "liveServices": "unperformed",
+  "actualCi": "unperformed"
+}

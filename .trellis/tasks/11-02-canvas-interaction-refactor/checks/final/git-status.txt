@@ -1,0 +1,169 @@
+ M .trellis/spec/frontend/canvas-studio.md
+ M .trellis/spec/frontend/index.md
+ M .trellis/spec/frontend/quality-guidelines.md
+ M src/components/create/canvas/commands.ts
+ M src/components/create/canvas/controller.ts
+ M src/components/create/canvas/mobile-interaction.ts
+ M src/components/create/canvas/renderer-adapter.ts
+ M src/components/create/parts/canvas-node-editor.tsx
+ M src/components/create/parts/canvas-node-inspector.tsx
+ M src/components/create/parts/canvas-node-picker.tsx
+ M src/components/create/parts/canvas-nodes/reference-node.tsx
+ M src/components/create/parts/canvas-nodes/result-node.tsx
+ M src/components/create/parts/canvas-prompt-field.tsx
+ M src/components/create/parts/canvas-stage.module.css
+ M src/components/create/parts/canvas-stage.tsx
+ M src/components/create/parts/canvas-toolbar.tsx
+ M src/tests/unit/canvas-node-editor.test.tsx
+ M src/tests/unit/canvas-stage.test.tsx
+ M src/tests/unit/canvas-terminal-placement.test.ts
+ M src/tests/unit/generator-studio-canvas.test.tsx
+?? .trellis/tasks/11-02-canvas-interaction-refactor/check.jsonl
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/.gitignore
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/api.mjs
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/cdp.mjs
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/evidence/native-1793607542680/B1-direct-create-run-state.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/evidence/native-1793607542680/B8-legacy-visible-anchor-state.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/evidence/native-1793607542680/B9-200-node-capacity-smoke-state.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/evidence/native-1793607542680/checks.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/evidence/native-1793607542680/network.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/evidence/native-1793607542680/result.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/evidence/native-1793607542680/source.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/evidence/native-1793609298166/B2-select-explicit-view-drag-state.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/evidence/native-1793609298166/B3-outside-release-cancels-state.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/evidence/native-1793609298166/B4-original-import-download-state.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/evidence/native-1793609298166/B7-save-native-reload-state.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/evidence/native-1793609298166/B8-legacy-visible-anchor-state.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/evidence/native-1793609298166/B9-200-node-capacity-smoke-state.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/evidence/native-1793609298166/checks.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/evidence/native-1793609298166/network.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/evidence/native-1793609298166/result.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/evidence/native-1793609298166/source.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/evidence/native-1793610398505/B5-continue-thumbnail-order-state.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/evidence/native-1793610398505/B8-legacy-visible-anchor-state.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/evidence/native-1793610398505/checks.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/evidence/native-1793610398505/network.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/evidence/native-1793610398505/result.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/evidence/native-1793610398505/source.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/evidence/native-1793611765492/B8-legacy-visible-anchor-state.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/evidence/native-1793611765492/checks.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/evidence/native-1793611765492/network.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/evidence/native-1793611765492/result.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/evidence/native-1793611765492/source.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/evidence/native-1793617283579/checks.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/evidence/native-1793617283579/network.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/evidence/native-1793617283579/result.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/evidence/native-1793617283579/source.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/evidence/native-1793619188060/checks.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/evidence/native-1793619188060/network.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/evidence/native-1793619188060/result.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/evidence/native-1793619188060/source.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/evidence/native-1793621920975/checks.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/evidence/native-1793621920975/network.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/evidence/native-1793621920975/result.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/evidence/native-1793621920975/source.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/identity.mjs
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/normalize-fixture.mjs
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/prepare-fixture.mjs
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/run-browser.mjs
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/sync-fixture.mjs
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/deny_env.cjs
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/final/evidence/20261102T102520-test-da3a3c.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/final/evidence/20261102T121151-test-9d4beb.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/final/evidence/20261102T121215-lint-6d889d.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/final/evidence/20261102T121246-types-05d3bb.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/final/evidence/20261102T121305-test-6aa40d.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/final/evidence/20261102T121510-prisma-fdf446.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/final/evidence/20261102T121528-build-063e15.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/final/evidence/20261102T121600-script-9dd79c.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/final/evidence/20261102T121808-script-f9d8de.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/final/evidence/20261102T121809-script-18e30e.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/final/evidence/20261102T121821-build-20d52f.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/final/evidence/20261102T121840-script-c5b467.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/final/evidence/20261102T121840-script-e78dc5.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/final/gates.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/final/source-freeze.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/guard_selftest.cjs
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/implementation-approval-2026-11-02.md
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/implementation/evidence/20261102T054712-test-ded1be.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/implementation/evidence/20261102T055441-lint-507283.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/implementation/evidence/20261102T055540-test-147d2e.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/implementation/evidence/20261102T055948-test-6ae14d.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/implementation/evidence/20261102T060154-lint-651468.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/implementation/evidence/20261102T060222-types-18e353.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/implementation/evidence/20261102T060241-test-8728f2.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/implementation/handoff.md
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/implementation/source-freeze.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/independent/cli-check-brief.md
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/independent/cli-check-receipt.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/independent/cli-check.stdout.jsonl
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/independent/evidence/20261102T061057-test-63e88d.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/independent/evidence/20261102T062248-lint-4d366f.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/independent/evidence/20261102T062321-types-3a77f6.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/independent/evidence/20261102T062340-prisma-b76b7a.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/independent/evidence/20261102T062358-build-b600a2.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/independent/native-placement-fix.md
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/independent/pre-fix-gates.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/isolated_check.py
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/isolated_check_test.py
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/pinned-isolation-selftest.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/pinned-isolation-selftest.log
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/placement-retrospective.md
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/planning-review.md
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/prisma_no_network.cjs
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/syntax_check.cjs
+?? .trellis/tasks/11-02-canvas-interaction-refactor/checks/validation-environment.md
+?? .trellis/tasks/11-02-canvas-interaction-refactor/design.md
+?? .trellis/tasks/11-02-canvas-interaction-refactor/implement.jsonl
+?? .trellis/tasks/11-02-canvas-interaction-refactor/implement.md
+?? .trellis/tasks/11-02-canvas-interaction-refactor/prd.md
+?? .trellis/tasks/11-02-canvas-interaction-refactor/research/canvas-interaction-design-seams.md
+?? .trellis/tasks/11-02-canvas-interaction-refactor/research/current-canvas.md
+?? .trellis/tasks/11-02-canvas-interaction-refactor/research/infinite-canvas-reference.md
+?? .trellis/tasks/11-02-canvas-interaction-refactor/research/infinite-canvas-source/LICENSE
+?? .trellis/tasks/11-02-canvas-interaction-refactor/research/infinite-canvas-source/README.md
+?? .trellis/tasks/11-02-canvas-interaction-refactor/research/infinite-canvas-source/commit.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/research/infinite-canvas-source/docs/content/docs/business/license.zh-CN.mdx
+?? .trellis/tasks/11-02-canvas-interaction-refactor/research/infinite-canvas-source/docs/content/docs/canvas/canvas-node-manual.zh-CN.mdx
+?? .trellis/tasks/11-02-canvas-interaction-refactor/research/infinite-canvas-source/docs/content/docs/canvas/canvas-shortcuts.zh-CN.mdx
+?? .trellis/tasks/11-02-canvas-interaction-refactor/research/infinite-canvas-source/repository.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/research/infinite-canvas-source/tree.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/research/infinite-canvas-source/web/package.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/research/infinite-canvas-source/web/src/components/canvas/canvas-config-composer.tsx
+?? .trellis/tasks/11-02-canvas-interaction-refactor/research/infinite-canvas-source/web/src/components/canvas/canvas-connections.tsx
+?? .trellis/tasks/11-02-canvas-interaction-refactor/research/infinite-canvas-source/web/src/components/canvas/canvas-context-menu.tsx
+?? .trellis/tasks/11-02-canvas-interaction-refactor/research/infinite-canvas-source/web/src/components/canvas/canvas-create-menus.tsx
+?? .trellis/tasks/11-02-canvas-interaction-refactor/research/infinite-canvas-source/web/src/components/canvas/canvas-image-toolbar-tools.tsx
+?? .trellis/tasks/11-02-canvas-interaction-refactor/research/infinite-canvas-source/web/src/components/canvas/canvas-node-generation.ts
+?? .trellis/tasks/11-02-canvas-interaction-refactor/research/infinite-canvas-source/web/src/components/canvas/canvas-node-hover-toolbar.tsx
+?? .trellis/tasks/11-02-canvas-interaction-refactor/research/infinite-canvas-source/web/src/components/canvas/canvas-node-prompt-panel.tsx
+?? .trellis/tasks/11-02-canvas-interaction-refactor/research/infinite-canvas-source/web/src/components/canvas/canvas-node-reference-bar.tsx
+?? .trellis/tasks/11-02-canvas-interaction-refactor/research/infinite-canvas-source/web/src/components/canvas/canvas-node.tsx
+?? .trellis/tasks/11-02-canvas-interaction-refactor/research/infinite-canvas-source/web/src/components/canvas/canvas-prompt-chip-input.tsx
+?? .trellis/tasks/11-02-canvas-interaction-refactor/research/infinite-canvas-source/web/src/components/canvas/canvas-selection-toolbar.tsx
+?? .trellis/tasks/11-02-canvas-interaction-refactor/research/infinite-canvas-source/web/src/components/canvas/canvas-toolbar.tsx
+?? .trellis/tasks/11-02-canvas-interaction-refactor/research/infinite-canvas-source/web/src/components/canvas/canvas-zoom-controls.tsx
+?? .trellis/tasks/11-02-canvas-interaction-refactor/research/infinite-canvas-source/web/src/components/canvas/infinite-canvas.tsx
+?? .trellis/tasks/11-02-canvas-interaction-refactor/research/infinite-canvas-source/web/src/lib/canvas/canvas-generation-helpers.ts
+?? .trellis/tasks/11-02-canvas-interaction-refactor/research/infinite-canvas-source/web/src/lib/canvas/canvas-node-factory.ts
+?? .trellis/tasks/11-02-canvas-interaction-refactor/research/infinite-canvas-source/web/src/lib/canvas/canvas-node-geometry.ts
+?? .trellis/tasks/11-02-canvas-interaction-refactor/research/infinite-canvas-source/web/src/lib/canvas/canvas-resource-references.ts
+?? .trellis/tasks/11-02-canvas-interaction-refactor/research/infinite-canvas-source/web/src/lib/image-thumbnail.ts
+?? .trellis/tasks/11-02-canvas-interaction-refactor/research/infinite-canvas-source/web/src/lib/keyboard-event.ts
+?? .trellis/tasks/11-02-canvas-interaction-refactor/research/infinite-canvas-source/web/src/lib/localforage-storage.ts
+?? .trellis/tasks/11-02-canvas-interaction-refactor/research/infinite-canvas-source/web/src/pages/canvas/project.tsx
+?? .trellis/tasks/11-02-canvas-interaction-refactor/research/infinite-canvas-source/web/src/services/image-storage.ts
+?? .trellis/tasks/11-02-canvas-interaction-refactor/research/infinite-canvas-source/web/src/stores/canvas/use-canvas-store.ts
+?? .trellis/tasks/11-02-canvas-interaction-refactor/research/infinite-canvas-source/web/src/stores/canvas/use-canvas-ui-store.ts
+?? .trellis/tasks/11-02-canvas-interaction-refactor/research/infinite-canvas-source/web/src/stores/use-config-store.ts
+?? .trellis/tasks/11-02-canvas-interaction-refactor/research/infinite-canvas-source/web/src/types/canvas.ts
+?? .trellis/tasks/11-02-canvas-interaction-refactor/session-wrapup.md
+?? .trellis/tasks/11-02-canvas-interaction-refactor/task.json
+?? .trellis/tasks/11-02-canvas-interaction-refactor/verification.md
+?? src/components/create/canvas/composer-placement.ts
+?? src/components/create/hooks/use-canvas-composer-placement.ts
+?? src/components/create/parts/canvas-generation-composer.tsx
+?? src/components/create/parts/canvas-image-toolbar.tsx
+?? src/tests/unit/canvas-composer-placement.test.ts
+?? src/tests/unit/canvas-image-first-stage.test.tsx
+?? src/tests/unit/canvas-quick-creation.test.ts

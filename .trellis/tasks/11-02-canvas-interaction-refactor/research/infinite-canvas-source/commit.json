@@ -1,0 +1,113 @@
+{
+  "sha": "9cd3deacbcc598361807afc16c059a80dd18b6f9",
+  "node_id": "C_kwDOShYuZNoAKDljZDNkZWFjYmNjNTk4MzYxODA3YWZjMTZjMDU5YTgwZGQxOGI2Zjk",
+  "commit": {
+    "author": {
+      "name": "HouYunFei",
+      "email": "1844025705@qq.com",
+      "date": "2026-10-25T11:21:15Z"
+    },
+    "committer": {
+      "name": "HouYunFei",
+      "email": "1844025705@qq.com",
+      "date": "2026-10-25T11:21:15Z"
+    },
+    "message": "feat(README): add KunrouAI logo and description to the README",
+    "tree": {
+      "sha": "35d88db11135d7e3635614bf5fbfe8a193438da2",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/35d88db11135d7e3635614bf5fbfe8a193438da2"
+    },
+    "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/commits/9cd3deacbcc598361807afc16c059a80dd18b6f9",
+    "comment_count": 0,
+    "verification": {
+      "verified": false,
+      "reason": "unsigned",
+      "signature": null,
+      "payload": null,
+      "verified_at": null
+    }
+  },
+  "url": "https://api.github.com/repos/basketikun/infinite-canvas/commits/9cd3deacbcc598361807afc16c059a80dd18b6f9",
+  "html_url": "https://github.com/basketikun/infinite-canvas/commit/9cd3deacbcc598361807afc16c059a80dd18b6f9",
+  "comments_url": "https://api.github.com/repos/basketikun/infinite-canvas/commits/9cd3deacbcc598361807afc16c059a80dd18b6f9/comments",
+  "author": {
+    "login": "basketikun",
+    "id": 114481029,
+    "node_id": "U_kgDOBtLXhQ",
+    "avatar_url": "https://avatars.githubusercontent.com/u/114481029?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/basketikun",
+    "html_url": "https://github.com/basketikun",
+    "followers_url": "https://api.github.com/users/basketikun/followers",
+    "following_url": "https://api.github.com/users/basketikun/following{/other_user}",
+    "gists_url": "https://api.github.com/users/basketikun/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/basketikun/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/basketikun/subscriptions",
+    "organizations_url": "https://api.github.com/users/basketikun/orgs",
+    "repos_url": "https://api.github.com/users/basketikun/repos",
+    "events_url": "https://api.github.com/users/basketikun/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/basketikun/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "committer": {
+    "login": "basketikun",
+    "id": 114481029,
+    "node_id": "U_kgDOBtLXhQ",
+    "avatar_url": "https://avatars.githubusercontent.com/u/114481029?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/basketikun",
+    "html_url": "https://github.com/basketikun",
+    "followers_url": "https://api.github.com/users/basketikun/followers",
+    "following_url": "https://api.github.com/users/basketikun/following{/other_user}",
+    "gists_url": "https://api.github.com/users/basketikun/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/basketikun/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/basketikun/subscriptions",
+    "organizations_url": "https://api.github.com/users/basketikun/orgs",
+    "repos_url": "https://api.github.com/users/basketikun/repos",
+    "events_url": "https://api.github.com/users/basketikun/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/basketikun/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "parents": [
+    {
+      "sha": "9f2bd9f1b27c45fd1b8f5323072b07243f9e0fac",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/commits/9f2bd9f1b27c45fd1b8f5323072b07243f9e0fac",
+      "html_url": "https://github.com/basketikun/infinite-canvas/commit/9f2bd9f1b27c45fd1b8f5323072b07243f9e0fac"
+    }
+  ],
+  "stats": {
+    "total": 58,
+    "additions": 58,
+    "deletions": 0
+  },
+  "files": [
+    {
+      "sha": "cf7bcc685f3aa24c2b2c768742646337999a9f01",
+      "filename": "README.md",
+      "status": "modified",
+      "additions": 8,
+      "deletions": 0,
+      "changes": 8,
+      "blob_url": "https://github.com/basketikun/infinite-canvas/blob/9cd3deacbcc598361807afc16c059a80dd18b6f9/README.md",
+      "raw_url": "https://github.com/basketikun/infinite-canvas/raw/9cd3deacbcc598361807afc16c059a80dd18b6f9/README.md",
+      "contents_url": "https://api.github.com/repos/basketikun/infinite-canvas/contents/README.md?ref=9cd3deacbcc598361807afc16c059a80dd18b6f9",
+      "patch": "@@ -32,6 +32,14 @@\n ## 赞助商\n \n <table>\n+  <tr>\n+    <td width=\"190\" align=\"center\">\n+      <a href=\"https://kunrouai.com/?utm_source=infinite-canvas\" target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"assets/kunrouai.svg\" width=\"163\" alt=\"坤肉AI\"></a>\n+    </td>\n+    <td>\n+      <a href=\"https://kunrouai.com/?utm_source=infinite-canvas\" target=\"_blank\" rel=\"noopener noreferrer\">坤肉AI</a> 是一站式 AI 视觉创作平台，集 AI 生图、视频生成、多人协作画布及 Agent/MCP 连接于一体，适合个人创作与团队协作，同时面向企业提供源码出售及私有化部署服务，欢迎企业咨询合作！另有 <a href=\"https://api.kunrouai.com/?utm_source=infinite-canvas\" target=\"_blank\" rel=\"noopener noreferrer\">API 开放平台</a>，提供丰富的 AI 模型 API 接口，支持快速接入与集成，欢迎开发者及企业对接合作！\n+    </td>\n+  </tr>\n   <tr>\n     <td width=\"190\" align=\"center\">\n       <a href=\"https://go.apimart.ai/gh-infinite-canvas\" target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"assets/apimart.png\" width=\"163\" alt=\"APIMart\"></a>"
+    },
+    {
+      "sha": "ef390f28ab9bfd5c3760b738ee3e0446617ef131",
+      "filename": "assets/kunrouai.svg",
+      "status": "added",
+      "additions": 50,
+      "deletions": 0,
+      "changes": 50,
+      "blob_url": "https://github.com/basketikun/infinite-canvas/blob/9cd3deacbcc598361807afc16c059a80dd18b6f9/assets%2Fkunrouai.svg",
+      "raw_url": "https://github.com/basketikun/infinite-canvas/raw/9cd3deacbcc598361807afc16c059a80dd18b6f9/assets%2Fkunrouai.svg",
+      "contents_url": "https://api.github.com/repos/basketikun/infinite-canvas/contents/assets%2Fkunrouai.svg?ref=9cd3deacbcc598361807afc16c059a80dd18b6f9",
+      "patch": "@@ -0,0 +1,50 @@\n+<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"24 20 378 110\" role=\"img\" aria-labelledby=\"kri-horizontal-title\">\n+    <title id=\"kri-horizontal-title\">坤肉AI 横版标志</title>\n+\n+    <defs>\n+        <linearGradient id=\"kri-horizontal-upper\" gradientUnits=\"userSpaceOnUse\" x1=\"64\" y1=\"29\" x2=\"78\" y2=\"103\">\n+            <stop offset=\"0\" stop-color=\"#CA47F4\"/>\n+            <stop offset=\".44\" stop-color=\"#8650FC\"/>\n+            <stop offset=\".75\" stop-color=\"#5855FF\"/>\n+            <stop offset=\"1\" stop-color=\"#326CFF\"/>\n+        </linearGradient>\n+        <linearGradient id=\"kri-horizontal-shine\" gradientUnits=\"userSpaceOnUse\" x1=\"82\" y1=\"60\" x2=\"139\" y2=\"60\">\n+            <stop offset=\"0\" stop-color=\"#74CEF1\" stop-opacity=\"0\"/>\n+            <stop offset=\"1\" stop-color=\"#74CEF1\"/>\n+        </linearGradient>\n+        <linearGradient id=\"kri-horizontal-lower\" gradientUnits=\"userSpaceOnUse\" x1=\"76\" y1=\"88\" x2=\"119\" y2=\"133\">\n+            <stop offset=\"0\" stop-color=\"#1640C2\"/>\n+            <stop offset=\".5\" stop-color=\"#176BEA\"/>\n+            <stop offset=\"1\" stop-color=\"#269DF5\"/>\n+        </linearGradient>\n+        <linearGradient id=\"kri-horizontal-back\" gradientUnits=\"userSpaceOnUse\" x1=\"86\" y1=\"57\" x2=\"145\" y2=\"59\">\n+            <stop offset=\"0\" stop-color=\"#9854FC\"/>\n+            <stop offset=\".6\" stop-color=\"#6FBCF7\"/>\n+            <stop offset=\"1\" stop-color=\"#2DC9EF\"/>\n+        </linearGradient>\n+        <linearGradient id=\"kri-horizontal-orbit\" gradientUnits=\"userSpaceOnUse\" x1=\"45\" y1=\"73\" x2=\"68\" y2=\"118\">\n+            <stop offset=\"0\" stop-color=\"#6849FF\"/>\n+            <stop offset=\".26\" stop-color=\"#3D7CFF\"/>\n+            <stop offset=\".59\" stop-color=\"#30C5F5\"/>\n+            <stop offset=\".8\" stop-color=\"#B2F0FF\"/>\n+        </linearGradient>\n+        <linearGradient id=\"kri-horizontal-star\" gradientUnits=\"userSpaceOnUse\" x1=\"143\" y1=\"24\" x2=\"156\" y2=\"39\">\n+            <stop offset=\"0\" stop-color=\"#348BF2\"/>\n+            <stop offset=\"1\" stop-color=\"#42C4F6\"/>\n+        </linearGradient>\n+        <linearGradient id=\"kri-horizontal-text\" gradientUnits=\"userSpaceOnUse\" x1=\"184\" y1=\"75\" x2=\"398\" y2=\"75\">\n+            <stop offset=\"0\" stop-color=\"#8650FC\"/>\n+            <stop offset=\".55\" stop-color=\"#326CFF\"/>\n+            <stop offset=\"1\" stop-color=\"#269DF5\"/>\n+        </linearGradient>\n+    </defs>\n+\n+    <path fill=\"url(#kri-horizontal-back)\" d=\"M85.2 55.2C90.6 53 96.2 50.8 101.7 49.4L97.6 53.4C93.6 55.3 89.4 57.4 85.2 59ZM111.8 44.3C127.9 42.4 141.2 42.5 146.1 49.4C153.3 59.7 132.4 73 119.3 77.4C130.8 68.1 143.2 56.8 136.4 51.6C132.4 48.5 124.2 48.5 115.8 50Z\"/>\n+    <path fill=\"url(#kri-horizontal-lower)\" d=\"M56.4 101.4C74.9 97.1 95.3 89.7 111.5 82.6L146.9 121.8H118.3C115.5 121.8 113.7 120.9 111.8 118.7L90.1 94.2L86.4 98.3C83.3 101.2 82.2 103.8 82.2 107.2V110.8C82.2 121.3 74.3 129.3 64.1 129.3H56.4Z\"/>\n+    <path fill=\"url(#kri-horizontal-upper)\" d=\"M56.4 99.4V47.5C56.4 37.2 63.5 29.5 74.1 29.5H82.2V74.8L109.8 46.5C111.7 44.5 113.1 43.7 116 43.7H137.2L108.4 78.9C91.7 87.1 74.1 94.3 56.4 99.4Z\"/>\n+    <path fill=\"url(#kri-horizontal-shine)\" d=\"M56.4 99.4V47.5C56.4 37.2 63.5 29.5 74.1 29.5H82.2V74.8L109.8 46.5C111.7 44.5 113.1 43.7 116 43.7H137.2L108.4 78.9C91.7 87.1 74.1 94.3 56.4 99.4Z\"/>\n+    <path fill=\"url(#kri-horizontal-orbit)\" d=\"M52.4 70.6C39.3 78.8 24.6 91.5 24.7 98C24.9 112.4 67.4 106.5 110.3 80.6L108.4 78.9C76.7 93.5 43.8 102.9 36.6 96.1C31.1 90.9 44.2 79.7 52.4 75Z\"/>\n+    <path fill=\"url(#kri-horizontal-star)\" d=\"M149.4 20.5C150.5 27.7 153.5 30.5 160.5 31.7C153.5 32.9 150.5 36 149.4 43.1C148.2 36 145.3 32.9 138.3 31.7C145.3 30.5 148.2 27.7 149.4 20.5Z\"/>\n+\n+    <text x=\"184\" y=\"100\" fill=\"url(#kri-horizontal-text)\" font-family=\"'PingFang SC', 'Microsoft YaHei', sans-serif\" font-size=\"66\" font-weight=\"700\" letter-spacing=\"1\">坤肉AI</text>\n+</svg>"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "at": "2026-11-02T14:05:09.514807+00:00",
+  "head": "64dad3ca8ce30c16ef1d730c6d5382b192bab9ea",
+  "sourceFreezeDrift": [],
+  "gitDiffCheckExit": 0,
+  "stagedFiles": [],
+  "foreignDirtyPaths": [],
+  "authoredWhitespaceFiles": 58,
+  "authoredWhitespaceProblems": [],
+  "whitespaceScope": "24 current product/test files, three changed specs and authored task markdown/JS/Python/jsonl; retained raw receipts/vendor snapshots untouched",
+  "runtimeLocks": [],
+  "noCommitPushDeployArchive": true,
+  "finalRootLintReceipt": "20261102T140241-lint-ca5ade"
+}

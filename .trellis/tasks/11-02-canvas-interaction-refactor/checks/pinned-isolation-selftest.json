@@ -1,0 +1,10 @@
+{
+  "node": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-history-cleanup-20261029\\node-v24.22.1-win-x64\\node.exe",
+  "nodeVersion": "v24.22.1",
+  "tests": 8,
+  "failures": 0,
+  "errors": 0,
+  "passed": true,
+  "durationSeconds": 1.682,
+  "scratch": "synthetic owner-marked, clean child environment; no real credentials/DB/network fallback"
+}

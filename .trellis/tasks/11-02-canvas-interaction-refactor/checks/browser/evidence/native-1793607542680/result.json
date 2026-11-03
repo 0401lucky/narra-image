@@ -1,0 +1,97 @@
+{
+  "app": "E:\\code\\narra-image\\.trellis\\tasks\\11-02-canvas-interaction-refactor\\checks\\.runtime\\browser-75c50270\\app",
+  "runId": "native-1793607542680",
+  "checks": [
+    {
+      "id": "B0-native-calibration",
+      "passed": true,
+      "durationMs": 1784,
+      "detail": [
+        {
+          "name": "click",
+          "trusted": true,
+          "alt": false,
+          "shift": false
+        },
+        {
+          "name": "keydown",
+          "trusted": true,
+          "key": "Enter",
+          "alt": false,
+          "shift": false
+        },
+        {
+          "name": "keypress",
+          "trusted": true,
+          "key": "Enter",
+          "alt": false,
+          "shift": false
+        },
+        {
+          "name": "click",
+          "trusted": true,
+          "alt": false,
+          "shift": false
+        },
+        {
+          "name": "keydown",
+          "trusted": true,
+          "key": "Enter",
+          "alt": false,
+          "shift": false
+        },
+        {
+          "name": "keypress",
+          "trusted": true,
+          "key": "Enter",
+          "alt": false,
+          "shift": false
+        },
+        {
+          "name": "click",
+          "trusted": true,
+          "alt": false,
+          "shift": false
+        },
+        {
+          "name": "keydown",
+          "trusted": true,
+          "key": "Tab",
+          "alt": false,
+          "shift": false
+        },
+        {
+          "name": "keydown",
+          "trusted": true,
+          "key": "Tab",
+          "alt": false,
+          "shift": true
+        }
+      ]
+    },
+    {
+      "id": "B1-direct-create-run",
+      "passed": false,
+      "durationMs": 451,
+      "error": "AssertionError [ERR_ASSERTION]: No visible-layout element [aria-label=\"画布导航\"] button 新建空白画布\n    at BrowserPage.point (file:///E:/code/narra-image/.trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/cdp.mjs:217:7)\n    at async BrowserPage.click (file:///E:/code/narra-image/.trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/cdp.mjs:243:20)\n    at async file:///E:/code/narra-image/.trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/run-browser.mjs:147:5\n    at async check (file:///E:/code/narra-image/.trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/run-browser.mjs:75:24)\n    at async file:///E:/code/narra-image/.trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/run-browser.mjs:145:3"
+    },
+    {
+      "id": "B8-legacy-visible-anchor",
+      "passed": false,
+      "durationMs": 1331,
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n24 !== 26\n\n    at file:///E:/code/narra-image/.trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/run-browser.mjs:277:49\n    at async check (file:///E:/code/narra-image/.trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/run-browser.mjs:75:24)\n    at async file:///E:/code/narra-image/.trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/run-browser.mjs:270:3"
+    },
+    {
+      "id": "B9-200-node-capacity-smoke",
+      "passed": false,
+      "durationMs": 1806,
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n0 !== 2\n\n    at file:///E:/code/narra-image/.trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/run-browser.mjs:291:12\n    at async check (file:///E:/code/narra-image/.trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/run-browser.mjs:75:24)\n    at async file:///E:/code/narra-image/.trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/run-browser.mjs:285:3"
+    }
+  ],
+  "chrome": "Chrome/156.0.8078.74",
+  "pinnedNode": "v24.22.1",
+  "boundaries": "Exact current production UI/lib/contracts/CSS/assets and installed copied dependencies; minimal SSR/lazy route shell, serialized dummy identity/catalogue, loopback fake API, native IndexedDB. No real auth/DB/provider/billing, physical phone/OS IME/chooser/download or remote CI proof.",
+  "physicalDevice": "unperformed",
+  "liveServices": "unperformed",
+  "actualCi": "unperformed"
+}

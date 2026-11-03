@@ -1,0 +1,62 @@
+{
+  "reviewer": "canvas_delivery_check",
+  "head": "e42ff7a74fb7d1c0e4507c960720bb0dc973f1ab",
+  "startedAt": "2026-11-03T02:30:56.724434+00:00",
+  "node": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-history-cleanup-20261029\\node-v24.22.1-win-x64\\node.exe",
+  "workspace": "E:\\code\\narra-image\\.trellis\\tasks\\11-02-canvas-interaction-refactor\\checks\\.runtime\\implementation-d5b415f0\\app",
+  "refresh": {
+    "workspace": "E:\\code\\narra-image\\.trellis\\tasks\\11-02-canvas-interaction-refactor\\checks\\.runtime\\implementation-d5b415f0\\app",
+    "sourceFiles": 1151,
+    "capturedAt": "2026-11-03T02:30:56.688043+00:00"
+  },
+  "gates": [
+    {
+      "name": "targeted",
+      "id": "20261103T023104-test-397af6",
+      "exitCode": 0,
+      "timedOut": false,
+      "durationSeconds": 6.126,
+      "timeoutSeconds": 600,
+      "finishedAt": "2026-11-03T02:31:10.703120+00:00",
+      "sourceChanges": [],
+      "snapshotModifications": [],
+      "evidenceFiles": {
+        "20261103T023104-test-397af6.json": "f755da823d0a87f39894398a977f952b687ee796c136af9a5c67c3b34b8b1dd4",
+        "20261103T023104-test-397af6.stderr.log": "fb3eec8f4214f940b8eead98d2363b9f501e96623301176156ca2e28dab336e4",
+        "20261103T023104-test-397af6.stdout.log": "719d99959ca25161dc5b943e80de2d07c184c139445cc6c08b38c3dde1c7f423"
+      }
+    },
+    {
+      "name": "lint",
+      "id": "20261103T023126-lint-87cdee",
+      "exitCode": 0,
+      "timedOut": false,
+      "durationSeconds": 14.239,
+      "timeoutSeconds": 180,
+      "finishedAt": "2026-11-03T02:31:40.748727+00:00",
+      "sourceChanges": [],
+      "snapshotModifications": [],
+      "evidenceFiles": {
+        "20261103T023126-lint-87cdee.json": "740f0b4b20995069ce7b2d6ac522dc2603e3615d6512e1589a6961fbb5606fac",
+        "20261103T023126-lint-87cdee.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "20261103T023126-lint-87cdee.stdout.log": "58947c71ed5f8731cbe4fcec6f373141216037ed0574239b9f506f55f9d0dd3f"
+      }
+    },
+    {
+      "name": "types",
+      "id": "20261103T023156-types-9cb6e6",
+      "exitCode": 2,
+      "timedOut": false,
+      "durationSeconds": 7.416,
+      "timeoutSeconds": 180,
+      "finishedAt": "2026-11-03T02:32:03.653439+00:00",
+      "sourceChanges": [],
+      "snapshotModifications": [],
+      "evidenceFiles": {
+        "20261103T023156-types-9cb6e6.json": "761b77ac1d8e99c7810bdc258c1669adacd543163c5716a37d496e6aaea7e97a",
+        "20261103T023156-types-9cb6e6.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "20261103T023156-types-9cb6e6.stdout.log": "baf3ebe69b11418ac85d5407ed9147597911dc8c44a64a8643d24368bdf08528"
+      }
+    }
+  ]
+}

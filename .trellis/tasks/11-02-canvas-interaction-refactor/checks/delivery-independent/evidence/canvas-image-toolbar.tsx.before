@@ -1,0 +1,70 @@
+"use client";
+
+import { Download, ScanEye, Sparkles } from "lucide-react";
+import { useEffect, useState, type CSSProperties, type RefObject } from "react";
+
+import type { CanvasLocalNodeV1 } from "@/lib/canvas/contracts";
+import { cn } from "@/lib/utils";
+
+import type { CanvasActiveView } from "../canvas/controller-types";
+import { CANVAS_INPUT_CLASS } from "../canvas/renderer-constants";
+import type { CanvasImageTarget, CanvasNodeActions } from "../canvas/renderer-types";
+import styles from "./canvas-stage.module.css";
+
+type CanvasImageToolbarProps = {
+  active: CanvasActiveView;
+  node: Extract<CanvasLocalNodeV1, { kind: "reference" | "result" }>;
+  viewport: RefObject<HTMLDivElement | null>;
+  actions: CanvasNodeActions;
+  readOnly: boolean;
+  onCreate: () => void;
+};
+
+export function CanvasImageToolbar({ active, node, viewport, actions, readOnly, onCreate }: CanvasImageToolbarProps) {
+  const [position, setPosition] = useState<CSSProperties>();
+  const [preview, setPreview] = useState<{ blobId: string; url: string } | null>(null);
+  const reference = node.kind === "reference" ? active.references[node.id] : null;
+  const image = node.kind === "result" ? active.images[node.imageId] : null;
+  const blobId = reference?.blobId;
+  const { acquirePreview, reportError } = actions;
+  useEffect(() => {
+    if (!blobId) return;
+    try {
+      const lease = acquirePreview(node.id);
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- Selected-image controls own a separate preview lease.
+      setPreview(lease ? { blobId, url: lease.url } : null);
+      return () => lease?.release();
+    } catch (error) { reportError(error); }
+  }, [acquirePreview, blobId, node.id, reportError]);
+  const url = reference?.url ?? (preview?.blobId === blobId ? preview?.url : null);
+  const target: CanvasImageTarget | null = node.kind === "reference" && url
+    ? { kind: "reference", canvasId: active.document.id, nodeId: node.id, url, ...(reference?.assetId ? { assetId: reference.assetId } : {}) }
+    : node.kind === "result" && image?.id === node.imageId && image.jobId === node.jobId && image.url
+      ? { kind: "result", canvasId: active.document.id, nodeId: node.id, url: image.url, imageId: node.imageId, jobId: node.jobId,
+        actualWidth: image.actualWidth, actualHeight: image.actualHeight, actualSize: image.actualSize }
+      : null;
+  useEffect(() => {
+    const element = viewport.current;
+    if (!element) return;
+    const card = Array.from(element.querySelectorAll<HTMLElement>(".react-flow__node")).find((value) => value.dataset.id === node.id);
+    const update = () => {
+      const bounds = element.getBoundingClientRect(), rect = card?.getBoundingClientRect();
+      const width = Math.min(310, Math.max(0, bounds.width - 16));
+      setPosition({ left: Math.max(bounds.left + 8, Math.min(rect?.left ?? bounds.left + 8, bounds.right - width - 8)),
+        top: Math.max(bounds.top + 8, Math.min((rect?.top ?? bounds.top + 70) - 62, bounds.bottom - 62)), width });
+    };
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(element);
+    if (card) observer.observe(card);
+    window.addEventListener("scroll", update, true);
+    window.addEventListener("resize", update);
+    return () => { observer.disconnect(); window.removeEventListener("scroll", update, true); window.removeEventListener("resize", update); };
+  }, [viewport, node.id, node.position.x, node.position.y, active.viewport.x, active.viewport.y, active.viewport.zoom]);
+
+  return <div style={position} className={cn(styles.contextToolbar, CANVAS_INPUT_CLASS)} role="group" aria-label="所选图片操作">
+    {!readOnly && <button type="button" className={styles.saveButton} disabled={!target} onClick={onCreate}><Sparkles aria-hidden className="size-4" />继续创作</button>}
+    <button type="button" className={styles.smallButton} disabled={!target} aria-label="查看所选原图" onClick={() => { if (target) actions.viewImage(target); }}><ScanEye aria-hidden className="size-4" />查看</button>
+    <button type="button" className={styles.iconButton} disabled={!target} aria-label="下载所选原图" onClick={() => { if (target) actions.downloadImage(target); }}><Download aria-hidden className="size-4" /></button>
+  </div>;
+}

@@ -1,0 +1,37 @@
+{
+  "at": "2026-11-03T04:35:44.340718+00:00",
+  "coordinatorRetry": true,
+  "redReceipt": "20261103T024448-build-883048",
+  "requestedWorkers": 2,
+  "buildOnlyCircleNodeTotal": "3",
+  "productionConfigurationChanged": false,
+  "productionMemoryLimitsChanged": false,
+  "callerEnvironmentInherited": false,
+  "records": [
+    {
+      "id": "20261103T043517-build-worker-probe-346c2d",
+      "exitCode": 0,
+      "timedOut": false,
+      "durationSeconds": 1.266,
+      "evidenceSha256": {
+        "checks\\delivery\\evidence\\20261103T043517-build-worker-probe-346c2d.json": "57d9ec956790b430ca087b6426716bbec7e29114ee608459058152459c4a0ded",
+        "checks\\delivery\\evidence\\20261103T043517-build-worker-probe-346c2d.stdout.log": "f48b97dfc70490575cc21c5b8007f40b2635b81136b8f792025b70485cd5ac3f",
+        "checks\\delivery\\evidence\\20261103T043517-build-worker-probe-346c2d.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "id": "20261103T043518-build-workers-2-5a7261",
+      "exitCode": 0,
+      "timedOut": false,
+      "durationSeconds": 18.314,
+      "evidenceSha256": {
+        "checks\\delivery\\evidence\\20261103T043518-build-workers-2-5a7261.json": "d8995dc01867b576f2252efa7d9fef9724a7e496f3e16fa99c637e9a2798f5e8",
+        "checks\\delivery\\evidence\\20261103T043518-build-workers-2-5a7261.stdout.log": "4c81619eda6a880ef39461a03faeb75b322f0fb176c2dcfb446abfeaf56f0673",
+        "checks\\delivery\\evidence\\20261103T043518-build-workers-2-5a7261.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ],
+  "sourceChanges": [],
+  "snapshotModifications": [],
+  "productionConfigSha256": "10fb86a483e3a7f2fea514aa23ba4463e3cf98d203e674e9f24c9cc3e53df1a6"
+}

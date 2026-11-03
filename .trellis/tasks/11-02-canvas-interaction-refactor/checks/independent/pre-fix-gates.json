@@ -1,0 +1,45 @@
+{
+  "scope": "Independent pre-visible-anchor-fix receipts; superseded after final current-source reruns",
+  "results": [
+    {
+      "id": "20261102T061057-test-63e88d",
+      "exitCode": 0,
+      "durationSeconds": 106.641,
+      "timedOut": false,
+      "sourceChanges": [],
+      "snapshotModifications": []
+    },
+    {
+      "id": "20261102T062248-lint-4d366f",
+      "exitCode": 0,
+      "durationSeconds": 17.457,
+      "timedOut": false,
+      "sourceChanges": [],
+      "snapshotModifications": []
+    },
+    {
+      "id": "20261102T062321-types-3a77f6",
+      "exitCode": 0,
+      "durationSeconds": 3.034,
+      "timedOut": false,
+      "sourceChanges": [],
+      "snapshotModifications": []
+    },
+    {
+      "id": "20261102T062340-prisma-b76b7a",
+      "exitCode": 0,
+      "durationSeconds": 1.926,
+      "timedOut": false,
+      "sourceChanges": [],
+      "snapshotModifications": []
+    },
+    {
+      "id": "20261102T062358-build-b600a2",
+      "exitCode": 0,
+      "durationSeconds": 19.45,
+      "timedOut": false,
+      "sourceChanges": [],
+      "snapshotModifications": []
+    }
+  ]
+}

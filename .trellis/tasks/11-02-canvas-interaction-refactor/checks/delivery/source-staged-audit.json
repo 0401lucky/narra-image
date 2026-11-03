@@ -1,0 +1,203 @@
+{
+  "at": "2026-11-03T04:48:41.624086+00:00",
+  "phase": "source/spec real staged audit before approved commit",
+  "base": "e42ff7a74fb7d1c0e4507c960720bb0dc973f1ab",
+  "paths": [
+    ".trellis/spec/frontend/canvas-studio.md",
+    ".trellis/spec/frontend/index.md",
+    ".trellis/spec/frontend/quality-guidelines.md",
+    "src/components/create/canvas/commands.ts",
+    "src/components/create/canvas/composer-placement.ts",
+    "src/components/create/canvas/controller.ts",
+    "src/components/create/canvas/mobile-interaction.ts",
+    "src/components/create/canvas/renderer-adapter.ts",
+    "src/components/create/hooks/use-canvas-composer-placement.ts",
+    "src/components/create/parts/canvas-generation-composer.tsx",
+    "src/components/create/parts/canvas-image-toolbar.tsx",
+    "src/components/create/parts/canvas-node-editor.tsx",
+    "src/components/create/parts/canvas-node-inspector.tsx",
+    "src/components/create/parts/canvas-node-picker.tsx",
+    "src/components/create/parts/canvas-nodes/reference-node.tsx",
+    "src/components/create/parts/canvas-nodes/result-node.tsx",
+    "src/components/create/parts/canvas-prompt-field.tsx",
+    "src/components/create/parts/canvas-stage.module.css",
+    "src/components/create/parts/canvas-stage.tsx",
+    "src/components/create/parts/canvas-toolbar.tsx",
+    "src/tests/unit/canvas-composer-placement.test.ts",
+    "src/tests/unit/canvas-image-first-stage.test.tsx",
+    "src/tests/unit/canvas-node-editor.test.tsx",
+    "src/tests/unit/canvas-quick-creation.test.ts",
+    "src/tests/unit/canvas-stage.test.tsx",
+    "src/tests/unit/canvas-terminal-placement.test.ts",
+    "src/tests/unit/generator-studio-canvas.test.tsx"
+  ],
+  "cachedWhitespaceExit": 0,
+  "blobs": {
+    ".trellis/spec/frontend/canvas-studio.md": {
+      "verifiedRawSha256": "c4da8bed471945618b4acfe433d62a515e7bfd1c1ffe5e34b0932af1c659280b",
+      "stagedBlobSha256": "c4da8bed471945618b4acfe433d62a515e7bfd1c1ffe5e34b0932af1c659280b",
+      "gitBlob": "dbb2c236961657ddf59b9e4a1e90feceb434c5ad",
+      "canonicalEolEquivalent": true
+    },
+    ".trellis/spec/frontend/index.md": {
+      "verifiedRawSha256": "1cebeff9416df4de29e9e2c391ed10584ab44e0428a5a5e68bd79fd1f17b37aa",
+      "stagedBlobSha256": "912973a09431d683143f2b1f28c9ee2c4416f019779c720f29859318408e4b1a",
+      "gitBlob": "cac3aaa990ca2dabb8ac62477d15e5834c2099f4",
+      "canonicalEolEquivalent": true
+    },
+    ".trellis/spec/frontend/quality-guidelines.md": {
+      "verifiedRawSha256": "fc4baa30f149dcbf5c61c0902e0ffc0ed8fbc6882f49ed9aaa66f550af507040",
+      "stagedBlobSha256": "e0b28b3aa028ddac0efcd8f7bf5da562e4ead1c37599ef0ea70ad7cdeda26058",
+      "gitBlob": "7bb358ccd187a2471bda6804e124344951a0bc27",
+      "canonicalEolEquivalent": true
+    },
+    "src/components/create/canvas/commands.ts": {
+      "verifiedRawSha256": "5b9b7dda91c4cbe5ff9a146505946ebf92c48ee7473f18cbebeed430c68e5262",
+      "stagedBlobSha256": "5b9b7dda91c4cbe5ff9a146505946ebf92c48ee7473f18cbebeed430c68e5262",
+      "gitBlob": "25fa16581ca29b53f69dd4e8ec470790b7cf54cf",
+      "canonicalEolEquivalent": true
+    },
+    "src/components/create/canvas/composer-placement.ts": {
+      "verifiedRawSha256": "df1402340ec8898d1ffd0e33a45f1d274b81cd6f352a3a0a81d0ed5388637db1",
+      "stagedBlobSha256": "df1402340ec8898d1ffd0e33a45f1d274b81cd6f352a3a0a81d0ed5388637db1",
+      "gitBlob": "06de6c330acf307f63716049e44234dc567fcb38",
+      "canonicalEolEquivalent": true
+    },
+    "src/components/create/canvas/controller.ts": {
+      "verifiedRawSha256": "cf63b5b067bae5b501795fe001533ea0d42e687fce5db3ffe1b1c0678a46a9a0",
+      "stagedBlobSha256": "cf63b5b067bae5b501795fe001533ea0d42e687fce5db3ffe1b1c0678a46a9a0",
+      "gitBlob": "a1d89aea2ba8b15d999468a786be6c1a2cd3264b",
+      "canonicalEolEquivalent": true
+    },
+    "src/components/create/canvas/mobile-interaction.ts": {
+      "verifiedRawSha256": "2865f741a299c1064db4b8808329ebf7f213696dd417978a922d3f22eb14f221",
+      "stagedBlobSha256": "2865f741a299c1064db4b8808329ebf7f213696dd417978a922d3f22eb14f221",
+      "gitBlob": "94add13f0fc0d49e387836ca52bf14e976775903",
+      "canonicalEolEquivalent": true
+    },
+    "src/components/create/canvas/renderer-adapter.ts": {
+      "verifiedRawSha256": "373b509e1994e7f855bd6798c63584b1370665e278cbbfdec42e7649ad786862",
+      "stagedBlobSha256": "373b509e1994e7f855bd6798c63584b1370665e278cbbfdec42e7649ad786862",
+      "gitBlob": "f4fe10bb3e18bfa6aaec59c0ed6e0c1801d013a8",
+      "canonicalEolEquivalent": true
+    },
+    "src/components/create/hooks/use-canvas-composer-placement.ts": {
+      "verifiedRawSha256": "0b45c7abe0b388b3e59cccd3e81a57beaf15e685cc278903ad41468a9785ba19",
+      "stagedBlobSha256": "0b45c7abe0b388b3e59cccd3e81a57beaf15e685cc278903ad41468a9785ba19",
+      "gitBlob": "76be81dbc7e012de7222bd280b01e28769fc2968",
+      "canonicalEolEquivalent": true
+    },
+    "src/components/create/parts/canvas-generation-composer.tsx": {
+      "verifiedRawSha256": "5362f157640bab0e1f981bd0a126fc2f812d2846990905e56212559ad026fe7c",
+      "stagedBlobSha256": "5362f157640bab0e1f981bd0a126fc2f812d2846990905e56212559ad026fe7c",
+      "gitBlob": "4d81a638d44a9c404f69d3ec3b96f4b77f319390",
+      "canonicalEolEquivalent": true
+    },
+    "src/components/create/parts/canvas-image-toolbar.tsx": {
+      "verifiedRawSha256": "c4b249104e4bd9179a30280d685eef8b2ed9e0f5f470aff3342acd6b8792b6e0",
+      "stagedBlobSha256": "c4b249104e4bd9179a30280d685eef8b2ed9e0f5f470aff3342acd6b8792b6e0",
+      "gitBlob": "138c10f4796e0c87d38b88014ae528a2f5c1438c",
+      "canonicalEolEquivalent": true
+    },
+    "src/components/create/parts/canvas-node-editor.tsx": {
+      "verifiedRawSha256": "5ce393d86da4be506ceb8b322d25ec5f8b51ccd99d71a47b8f6ad796f491bcba",
+      "stagedBlobSha256": "5ce393d86da4be506ceb8b322d25ec5f8b51ccd99d71a47b8f6ad796f491bcba",
+      "gitBlob": "168677e921fe6fd12f56eaa34c44bb6719806898",
+      "canonicalEolEquivalent": true
+    },
+    "src/components/create/parts/canvas-node-inspector.tsx": {
+      "verifiedRawSha256": "5bb329e48e03c8ed60cbaa7239a6532d3cfbf5e9edbae01c3f6db0f44bd7abb6",
+      "stagedBlobSha256": "5bb329e48e03c8ed60cbaa7239a6532d3cfbf5e9edbae01c3f6db0f44bd7abb6",
+      "gitBlob": "479126d38d002c2c4a9e89514b8ac7145ed0e3e6",
+      "canonicalEolEquivalent": true
+    },
+    "src/components/create/parts/canvas-node-picker.tsx": {
+      "verifiedRawSha256": "778cb69a43c3e5d6467e154654ab3d84d8567b14e7c7be17327d8bb3080d81d2",
+      "stagedBlobSha256": "778cb69a43c3e5d6467e154654ab3d84d8567b14e7c7be17327d8bb3080d81d2",
+      "gitBlob": "ebfd954a1a19d0105743370edae0a955173020ec",
+      "canonicalEolEquivalent": true
+    },
+    "src/components/create/parts/canvas-nodes/reference-node.tsx": {
+      "verifiedRawSha256": "7321f9664c9216fbcbf38a62c9d8a75dd131a05411e16ebb7a4346c6bae6168b",
+      "stagedBlobSha256": "7321f9664c9216fbcbf38a62c9d8a75dd131a05411e16ebb7a4346c6bae6168b",
+      "gitBlob": "581dfd844141a07fc560cd0660ffed89e0dfe7ac",
+      "canonicalEolEquivalent": true
+    },
+    "src/components/create/parts/canvas-nodes/result-node.tsx": {
+      "verifiedRawSha256": "20cc56f28bde846e2c7313fee991ceb5293d7ee60471e3910842da8060c2320c",
+      "stagedBlobSha256": "20cc56f28bde846e2c7313fee991ceb5293d7ee60471e3910842da8060c2320c",
+      "gitBlob": "0b9467248211016458fc715ed463ff186b9c6ba9",
+      "canonicalEolEquivalent": true
+    },
+    "src/components/create/parts/canvas-prompt-field.tsx": {
+      "verifiedRawSha256": "a3ab70b8c8711710bd3d5dfc0a981940dbda05451075e467f52ae32330aa4022",
+      "stagedBlobSha256": "a3ab70b8c8711710bd3d5dfc0a981940dbda05451075e467f52ae32330aa4022",
+      "gitBlob": "1d3a7d56f1fb4e7e86e6b99d191692cfc12c7927",
+      "canonicalEolEquivalent": true
+    },
+    "src/components/create/parts/canvas-stage.module.css": {
+      "verifiedRawSha256": "b28f68fd02e9c5709823dc16defe7e065d2ce8f2854f384a7c0824a0f2eb6195",
+      "stagedBlobSha256": "b28f68fd02e9c5709823dc16defe7e065d2ce8f2854f384a7c0824a0f2eb6195",
+      "gitBlob": "3eeeadbdac58cd492dbd0b4dd1fe9fa5b176378c",
+      "canonicalEolEquivalent": true
+    },
+    "src/components/create/parts/canvas-stage.tsx": {
+      "verifiedRawSha256": "66de1b5094398525586cb1182c0d82119af424fbd91f859e581e7e680e3288d5",
+      "stagedBlobSha256": "66de1b5094398525586cb1182c0d82119af424fbd91f859e581e7e680e3288d5",
+      "gitBlob": "7c174881009d6d6af2651324441040e9c59a7697",
+      "canonicalEolEquivalent": true
+    },
+    "src/components/create/parts/canvas-toolbar.tsx": {
+      "verifiedRawSha256": "ddd016a13e59e81500078a9925ac9592b091c3e73655eb3e7cf1ea008cbd8793",
+      "stagedBlobSha256": "ddd016a13e59e81500078a9925ac9592b091c3e73655eb3e7cf1ea008cbd8793",
+      "gitBlob": "fb74e34af07639ecd6c4f0778845d63e856c4a86",
+      "canonicalEolEquivalent": true
+    },
+    "src/tests/unit/canvas-composer-placement.test.ts": {
+      "verifiedRawSha256": "847d2f6c1b89c25656959b4b1733b0c0d22d80d0c8fe6bfbd4862a7f6ae718d9",
+      "stagedBlobSha256": "847d2f6c1b89c25656959b4b1733b0c0d22d80d0c8fe6bfbd4862a7f6ae718d9",
+      "gitBlob": "0c5741af5b885a9be5c444879e4554c3237897f9",
+      "canonicalEolEquivalent": true
+    },
+    "src/tests/unit/canvas-image-first-stage.test.tsx": {
+      "verifiedRawSha256": "44cd164686f5359e533a62d11b9d4e37e568f81758f18180a20a32179bf22e10",
+      "stagedBlobSha256": "44cd164686f5359e533a62d11b9d4e37e568f81758f18180a20a32179bf22e10",
+      "gitBlob": "fc8795d748335d4130a3509e2197115b4baff9fd",
+      "canonicalEolEquivalent": true
+    },
+    "src/tests/unit/canvas-node-editor.test.tsx": {
+      "verifiedRawSha256": "09f6ffa8414fe858962000fc2a607490a2527b72911a98a2d1ccd3013ec87ad0",
+      "stagedBlobSha256": "09f6ffa8414fe858962000fc2a607490a2527b72911a98a2d1ccd3013ec87ad0",
+      "gitBlob": "8395c585388cf2f571da768a522ba970e6d33d69",
+      "canonicalEolEquivalent": true
+    },
+    "src/tests/unit/canvas-quick-creation.test.ts": {
+      "verifiedRawSha256": "39ad218db517981837fcb94fa84b3fb17147c3f798a0c162f55ecaadeffb92ff",
+      "stagedBlobSha256": "39ad218db517981837fcb94fa84b3fb17147c3f798a0c162f55ecaadeffb92ff",
+      "gitBlob": "263965b78461e3990d54d0323054623df3e53616",
+      "canonicalEolEquivalent": true
+    },
+    "src/tests/unit/canvas-stage.test.tsx": {
+      "verifiedRawSha256": "96713809d27b29b7549aa2aacf191376c99d25ac4e4ab19de6a1b18f267fc1c8",
+      "stagedBlobSha256": "96713809d27b29b7549aa2aacf191376c99d25ac4e4ab19de6a1b18f267fc1c8",
+      "gitBlob": "6aef3ff970678ebfa271791ec43495344d7135e2",
+      "canonicalEolEquivalent": true
+    },
+    "src/tests/unit/canvas-terminal-placement.test.ts": {
+      "verifiedRawSha256": "c17e3098f6fc495ad2bd5bacc535d5625d42ae290fa6255b4df59c237da7dc6a",
+      "stagedBlobSha256": "c17e3098f6fc495ad2bd5bacc535d5625d42ae290fa6255b4df59c237da7dc6a",
+      "gitBlob": "a72124e2c31aaa7dd8fdb6c09954a4a6cf12b211",
+      "canonicalEolEquivalent": true
+    },
+    "src/tests/unit/generator-studio-canvas.test.tsx": {
+      "verifiedRawSha256": "40e698b8dbc9b65423a14ed52ac78d3752bc4a5bd06a9086cb7cb8d054d8fe0a",
+      "stagedBlobSha256": "40e698b8dbc9b65423a14ed52ac78d3752bc4a5bd06a9086cb7cb8d054d8fe0a",
+      "gitBlob": "792de5213febce7b541218afa5299b9bd123239b",
+      "canonicalEolEquivalent": true
+    }
+  },
+  "noForeignPaths": true,
+  "authorIdentity": "Existing protected-base author, command-scoped only",
+  "productionConfigChanged": false,
+  "forceHistoryRewrite": false
+}

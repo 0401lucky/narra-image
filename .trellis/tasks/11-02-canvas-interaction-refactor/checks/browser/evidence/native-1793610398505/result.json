@@ -1,0 +1,629 @@
+{
+  "app": "E:\\code\\narra-image\\.trellis\\tasks\\11-02-canvas-interaction-refactor\\checks\\.runtime\\browser-75c50270\\app",
+  "runId": "native-1793610398505",
+  "checks": [
+    {
+      "id": "B0-native-calibration",
+      "passed": true,
+      "durationMs": 1806,
+      "detail": [
+        {
+          "name": "click",
+          "trusted": true,
+          "alt": false,
+          "shift": false
+        },
+        {
+          "name": "keydown",
+          "trusted": true,
+          "key": "Enter",
+          "alt": false,
+          "shift": false
+        },
+        {
+          "name": "keypress",
+          "trusted": true,
+          "key": "Enter",
+          "alt": false,
+          "shift": false
+        },
+        {
+          "name": "click",
+          "trusted": true,
+          "alt": false,
+          "shift": false
+        },
+        {
+          "name": "keydown",
+          "trusted": true,
+          "key": "Enter",
+          "alt": false,
+          "shift": false
+        },
+        {
+          "name": "keypress",
+          "trusted": true,
+          "key": "Enter",
+          "alt": false,
+          "shift": false
+        },
+        {
+          "name": "click",
+          "trusted": true,
+          "alt": false,
+          "shift": false
+        },
+        {
+          "name": "keydown",
+          "trusted": true,
+          "key": "Tab",
+          "alt": false,
+          "shift": false
+        },
+        {
+          "name": "keydown",
+          "trusted": true,
+          "key": "Tab",
+          "alt": false,
+          "shift": true
+        }
+      ]
+    },
+    {
+      "id": "B1-direct-create-run",
+      "passed": true,
+      "durationMs": 3965,
+      "detail": {
+        "canvasId": "f0d382bc-8815-45f6-baa4-4de065ef5642",
+        "nodes": 3,
+        "run": {
+          "canvasId": "f0d382bc-8815-45f6-baa4-4de065ef5642",
+          "nodeId": "aa4b8ca5-aea2-4f13-8443-2f393bd2f18f",
+          "runId": "7b4645b2-d10c-4f0c-9964-30e1d8d67e77",
+          "input": {
+            "prompt": {
+              "sourceNodeId": "c944d828-5bfe-41ee-ac6d-aeffdbe43053",
+              "text": "A ceramic cup in warm afternoon light"
+            },
+            "references": []
+          },
+          "parameters": {
+            "providerMode": "built_in",
+            "channelId": "channel-account",
+            "model": "image-account-default",
+            "size": "auto",
+            "quality": "auto",
+            "outputFormat": "png",
+            "outputCompression": null,
+            "moderation": "auto",
+            "count": 1,
+            "negativePrompt": null,
+            "seed": null,
+            "generationType": "text_to_image"
+          }
+        },
+        "result": {
+          "id": "result:8216b0f8-895a-4a37-899d-bf62b3c2e41a",
+          "kind": "result",
+          "position": {
+            "x": 430,
+            "y": 55
+          },
+          "jobId": "canvas-7b4645b2-d10c-4f0c-9964-30e1d8d67e77",
+          "imageId": "8216b0f8-895a-4a37-899d-bf62b3c2e41a",
+          "runId": "7b4645b2-d10c-4f0c-9964-30e1d8d67e77"
+        }
+      }
+    },
+    {
+      "id": "B2-select-explicit-view-drag",
+      "passed": true,
+      "durationMs": 2234,
+      "detail": {
+        "before": {
+          "x": 430,
+          "y": 55
+        },
+        "moved": {
+          "x": 500.81081081081084,
+          "y": 93.44015444015443
+        },
+        "native": [
+          {
+            "type": "pointerdown",
+            "at": 1425.800000011921,
+            "x": 157,
+            "y": 87,
+            "trusted": true,
+            "pointerType": "mouse",
+            "detail": 0,
+            "heroCopy": false,
+            "target": "<button type=\"button\" aria-pressed=\"false\" class=\"inline-flex items-center gap-2 rounded-lg px-4 py-1.5 text-sm font-semibold transition-colors text-[var(--ink-soft)] hover:bg-white/60\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColo"
+          },
+          {
+            "type": "pointerup",
+            "at": 1428.5999999642372,
+            "x": 157,
+            "y": 87,
+            "trusted": true,
+            "pointerType": "mouse",
+            "detail": 0,
+            "heroCopy": false,
+            "target": "<button type=\"button\" aria-pressed=\"false\" class=\"inline-flex items-center gap-2 rounded-lg px-4 py-1.5 text-sm font-semibold transition-colors text-[var(--ink-soft)] hover:bg-white/60\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColo"
+          },
+          {
+            "type": "click",
+            "at": 1428.8999999761581,
+            "x": 157,
+            "y": 87,
+            "trusted": true,
+            "pointerType": "mouse",
+            "detail": 1,
+            "heroCopy": false,
+            "target": "<button type=\"button\" aria-pressed=\"false\" class=\"inline-flex items-center gap-2 rounded-lg px-4 py-1.5 text-sm font-semibold transition-colors text-[var(--ink-soft)] hover:bg-white/60\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColo"
+          },
+          {
+            "type": "pointerdown",
+            "at": 2123.5,
+            "x": 119.5,
+            "y": 196.5859375,
+            "trusted": true,
+            "pointerType": "mouse",
+            "detail": 0,
+            "heroCopy": false,
+            "target": "<button type=\"button\" class=\"canvas-stage-module__efzUrq__newButton\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-plus size-4\" aria-hidden=\"tru"
+          },
+          {
+            "type": "pointerup",
+            "at": 2125.699999988079,
+            "x": 119.5,
+            "y": 196.5859375,
+            "trusted": true,
+            "pointerType": "mouse",
+            "detail": 0,
+            "heroCopy": false,
+            "target": "<button type=\"button\" class=\"canvas-stage-module__efzUrq__newButton\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-plus size-4\" aria-hidden=\"tru"
+          },
+          {
+            "type": "click",
+            "at": 2125.899999976158,
+            "x": 119,
+            "y": 196,
+            "trusted": true,
+            "pointerType": "mouse",
+            "detail": 1,
+            "heroCopy": false,
+            "target": "<button type=\"button\" class=\"canvas-stage-module__efzUrq__newButton\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-plus size-4\" aria-hidden=\"tru"
+          },
+          {
+            "type": "pointerdown",
+            "at": 2803.199999988079,
+            "x": 310.5859375,
+            "y": 224.5703125,
+            "trusted": true,
+            "pointerType": "mouse",
+            "detail": 0,
+            "heroCopy": false,
+            "target": "<button type=\"button\" class=\"canvas-stage-module__efzUrq__saveButton\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-sparkles size-4\" aria-hidden"
+          },
+          {
+            "type": "pointerup",
+            "at": 2805,
+            "x": 310.5859375,
+            "y": 224.5703125,
+            "trusted": true,
+            "pointerType": "mouse",
+            "detail": 0,
+            "heroCopy": false,
+            "target": "<button type=\"button\" class=\"canvas-stage-module__efzUrq__saveButton\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-sparkles size-4\" aria-hidden"
+          },
+          {
+            "type": "click",
+            "at": 2805,
+            "x": 310,
+            "y": 224,
+            "trusted": true,
+            "pointerType": "mouse",
+            "detail": 1,
+            "heroCopy": false,
+            "target": "<button type=\"button\" class=\"canvas-stage-module__efzUrq__saveButton\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-sparkles size-4\" aria-hidden"
+          },
+          {
+            "type": "pointerdown",
+            "at": 3378.199999988079,
+            "x": 1232,
+            "y": 562.8671875,
+            "trusted": true,
+            "pointerType": "mouse",
+            "detail": 0,
+            "heroCopy": false,
+            "target": "<textarea aria-label=\"创作提示词\" maxlength=\"8000\" rows=\"5\" class=\"nodrag nopan nowheel nokey canvas-stage-module__efzUrq__promptInput\" placeholder=\"光线、构图、主体与风格……\"></textarea>"
+          },
+          {
+            "type": "pointerup",
+            "at": 3382.199999988079,
+            "x": 1232,
+            "y": 562.8671875,
+            "trusted": true,
+            "pointerType": "mouse",
+            "detail": 0,
+            "heroCopy": false,
+            "target": "<textarea aria-label=\"创作提示词\" maxlength=\"8000\" rows=\"5\" class=\"nodrag nopan nowheel nokey canvas-stage-module__efzUrq__promptInput\" placeholder=\"光线、构图、主体与风格……\"></textarea>"
+          },
+          {
+            "type": "click",
+            "at": 3382.599999964237,
+            "x": 1232,
+            "y": 562,
+            "trusted": true,
+            "pointerType": "mouse",
+            "detail": 1,
+            "heroCopy": false,
+            "target": "<textarea aria-label=\"创作提示词\" maxlength=\"8000\" rows=\"5\" class=\"nodrag nopan nowheel nokey canvas-stage-module__efzUrq__promptInput\" placeholder=\"光线、构图、主体与风格……\"></textarea>"
+          },
+          {
+            "type": "pointerdown",
+            "at": 4023.199999988079,
+            "x": 1236,
+            "y": 901.71875,
+            "trusted": true,
+            "pointerType": "mouse",
+            "detail": 0,
+            "heroCopy": false,
+            "target": "<button type=\"button\" class=\"canvas-stage-module__efzUrq__runButton\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-play size-4\" aria-hidden=\"tru"
+          },
+          {
+            "type": "pointerup",
+            "at": 4025.899999976158,
+            "x": 1236,
+            "y": 901.71875,
+            "trusted": true,
+            "pointerType": "mouse",
+            "detail": 0,
+            "heroCopy": false,
+            "target": "<button type=\"button\" class=\"canvas-stage-module__efzUrq__runButton\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-play size-4\" aria-hidden=\"tru"
+          },
+          {
+            "type": "click",
+            "at": 4026,
+            "x": 1236,
+            "y": 901,
+            "trusted": true,
+            "pointerType": "mouse",
+            "detail": 1,
+            "heroCopy": false,
+            "target": "<button type=\"button\" class=\"canvas-stage-module__efzUrq__runButton\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-play size-4\" aria-hidden=\"tru"
+          },
+          {
+            "type": "pointerdown",
+            "at": 4495.300000011921,
+            "x": 1389,
+            "y": 350.90625,
+            "trusted": true,
+            "pointerType": "mouse",
+            "detail": 0,
+            "heroCopy": false,
+            "target": "<path d=\"m6 6 12 12\"></path>"
+          },
+          {
+            "type": "pointerup",
+            "at": 4497.199999988079,
+            "x": 1389,
+            "y": 350.90625,
+            "trusted": true,
+            "pointerType": "mouse",
+            "detail": 0,
+            "heroCopy": false,
+            "target": "<path d=\"m6 6 12 12\"></path>"
+          },
+          {
+            "type": "click",
+            "at": 4497.300000011921,
+            "x": 1389,
+            "y": 350,
+            "trusted": true,
+            "pointerType": "mouse",
+            "detail": 1,
+            "heroCopy": false,
+            "target": "<path d=\"m6 6 12 12\"></path>"
+          },
+          {
+            "type": "pointerdown",
+            "at": 4940.399999976158,
+            "x": 1404.8046875,
+            "y": 224.5703125,
+            "trusted": true,
+            "pointerType": "mouse",
+            "detail": 0,
+            "heroCopy": false,
+            "target": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-focus size-4\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"3\"></circle><path d=\"M3 7V5a2 2 0 0 1 "
+          },
+          {
+            "type": "pointerup",
+            "at": 4942,
+            "x": 1404.8046875,
+            "y": 224.5703125,
+            "trusted": true,
+            "pointerType": "mouse",
+            "detail": 0,
+            "heroCopy": false,
+            "target": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-focus size-4\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"3\"></circle><path d=\"M3 7V5a2 2 0 0 1 "
+          },
+          {
+            "type": "click",
+            "at": 4942.099999964237,
+            "x": 1404,
+            "y": 224,
+            "trusted": true,
+            "pointerType": "mouse",
+            "detail": 1,
+            "heroCopy": false,
+            "target": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-focus size-4\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"3\"></circle><path d=\"M3 7V5a2 2 0 0 1 "
+          },
+          {
+            "type": "pointerdown",
+            "at": 5383.099999964237,
+            "x": 1215.64892578125,
+            "y": 635.3909912109375,
+            "trusted": true,
+            "pointerType": "mouse",
+            "detail": 0,
+            "heroCopy": false,
+            "target": "<img alt=\"画布生成结果\" draggable=\"false\" loading=\"lazy\" decoding=\"async\" src=\"/_next/image?url=%2Ffixture-media%2F8216b0f8-895a-4a37-899d-bf62b3c2e41a.png&amp;w=640&amp;q=75\">"
+          },
+          {
+            "type": "pointerup",
+            "at": 5384.199999988079,
+            "x": 1215.64892578125,
+            "y": 635.3909912109375,
+            "trusted": true,
+            "pointerType": "mouse",
+            "detail": 0,
+            "heroCopy": false,
+            "target": "<img alt=\"画布生成结果\" draggable=\"false\" loading=\"lazy\" decoding=\"async\" src=\"/_next/image?url=%2Ffixture-media%2F8216b0f8-895a-4a37-899d-bf62b3c2e41a.png&amp;w=640&amp;q=75\">"
+          },
+          {
+            "type": "click",
+            "at": 5388.5,
+            "x": 1215,
+            "y": 635,
+            "trusted": true,
+            "pointerType": "mouse",
+            "detail": 1,
+            "heroCopy": false,
+            "target": "<img alt=\"画布生成结果\" draggable=\"false\" loading=\"lazy\" decoding=\"async\" src=\"/_next/image?url=%2Ffixture-media%2F8216b0f8-895a-4a37-899d-bf62b3c2e41a.png&amp;w=640&amp;q=75\">"
+          },
+          {
+            "type": "pointerdown",
+            "at": 5963.899999976158,
+            "x": 1220.125,
+            "y": 453.90625,
+            "trusted": true,
+            "pointerType": "mouse",
+            "detail": 0,
+            "heroCopy": false,
+            "target": "<button type=\"button\" class=\"canvas-stage-module__efzUrq__smallButton\" aria-label=\"查看所选原图\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-scan-ey"
+          },
+          {
+            "type": "pointerup",
+            "at": 5965.399999976158,
+            "x": 1220.125,
+            "y": 453.90625,
+            "trusted": true,
+            "pointerType": "mouse",
+            "detail": 0,
+            "heroCopy": false,
+            "target": "<button type=\"button\" class=\"canvas-stage-module__efzUrq__smallButton\" aria-label=\"查看所选原图\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-scan-ey"
+          },
+          {
+            "type": "click",
+            "at": 5965.5,
+            "x": 1220,
+            "y": 453,
+            "trusted": true,
+            "pointerType": "mouse",
+            "detail": 1,
+            "heroCopy": false,
+            "target": "<button type=\"button\" class=\"canvas-stage-module__efzUrq__smallButton\" aria-label=\"查看所选原图\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-scan-ey"
+          },
+          {
+            "type": "pointerdown",
+            "at": 6703.699999988079,
+            "x": 1215.64892578125,
+            "y": 635.3909912109375,
+            "trusted": true,
+            "pointerType": "mouse",
+            "detail": 0,
+            "heroCopy": false,
+            "target": "<img alt=\"画布生成结果\" draggable=\"false\" loading=\"lazy\" decoding=\"async\" src=\"/_next/image?url=%2Ffixture-media%2F8216b0f8-895a-4a37-899d-bf62b3c2e41a.png&amp;w=640&amp;q=75\">"
+          },
+          {
+            "type": "pointerup",
+            "at": 6850,
+            "x": 1285.64892578125,
+            "y": 673.3909912109375,
+            "trusted": true,
+            "pointerType": "mouse",
+            "detail": 0,
+            "heroCopy": false,
+            "target": "<div class=\"canvas-stage-module__efzUrq__viewport\" data-testid=\"canvas-viewport\" data-interaction-mode=\"browse\"><div data-testid=\"rf__wrapper\" aria-label=\"节点画布\" class=\"react-flow canvas-stage-module__efzUrq__flow light\" role=\"application\" style=\"width: 100%; height: 100%; overflow: hidden; position:"
+          },
+          {
+            "type": "click",
+            "at": 6855.899999976158,
+            "x": 1285,
+            "y": 673,
+            "trusted": true,
+            "pointerType": "mouse",
+            "detail": 1,
+            "heroCopy": false,
+            "target": "<div class=\"canvas-stage-module__efzUrq__viewport\" data-testid=\"canvas-viewport\" data-interaction-mode=\"browse\"><div data-testid=\"rf__wrapper\" aria-label=\"节点画布\" class=\"react-flow canvas-stage-module__efzUrq__flow light\" role=\"application\" style=\"width: 100%; height: 100%; overflow: hidden; position:"
+          }
+        ]
+      }
+    },
+    {
+      "id": "B3-outside-release-cancels",
+      "passed": true,
+      "durationMs": 647,
+      "detail": {
+        "before": {
+          "x": 500.81081081081084,
+          "y": 93.44015444015443
+        },
+        "after": {
+          "x": 500.81081081081084,
+          "y": 93.44015444015443
+        }
+      }
+    },
+    {
+      "id": "B4-original-import-download",
+      "passed": true,
+      "durationMs": 2107,
+      "detail": {
+        "referenceId": "a70b39af-475a-49aa-b824-681be2274041",
+        "originalSha256": "2d85c90504eb5ea83d0d8ff18ab544fcbd997e088e31686f38162b5bef6326c0",
+        "downloadHashes": [
+          "2d85c90504eb5ea83d0d8ff18ab544fcbd997e088e31686f38162b5bef6326c0"
+        ],
+        "chooser": "native button + CDP file selection, not OS chooser"
+      }
+    },
+    {
+      "id": "B5-continue-thumbnail-order",
+      "passed": false,
+      "durationMs": 2581,
+      "error": "Error: Control is occluded/clipped: [aria-label=\"节点编辑面板\"] button 从画布选择 {\"left\":1061,\"top\":992.21875,\"right\":1136.59375,\"bottom\":1036.21875,\"width\":75.59375,\"height\":44,\"x\":1098.796875,\"y\":930.2734375,\"clip\":{\"left\":1061,\"top\":992.21875,\"right\":1136.59375,\"bottom\":868.328125},\"visible\":false,\"hit\":false,\"text\":\"从画布选择\",\"disabled\":false}\n    at BrowserPage.point (file:///E:/code/narra-image/.trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/cdp.mjs:239:11)\n    at async BrowserPage.click (file:///E:/code/narra-image/.trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/cdp.mjs:243:20)\n    at async file:///E:/code/narra-image/.trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/run-browser.mjs:228:7\n    at async check (file:///E:/code/narra-image/.trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/run-browser.mjs:76:24)\n    at async file:///E:/code/narra-image/.trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/run-browser.mjs:222:22"
+    },
+    {
+      "id": "B6-phone-sheets-focus",
+      "passed": true,
+      "durationMs": 2610,
+      "detail": [
+        {
+          "width": 360,
+          "same": true,
+          "value": "Phone 360: keep a readable independent draft",
+          "focus": true,
+          "font": 16,
+          "panel": {
+            "x": 0,
+            "y": 178.609375,
+            "width": 360,
+            "height": 211.375,
+            "top": 178.609375,
+            "right": 360,
+            "bottom": 389.984375,
+            "left": 0
+          },
+          "buttons": [
+            {
+              "text": "",
+              "height": 44,
+              "width": 44
+            },
+            {
+              "text": "运行此节点",
+              "height": 44,
+              "width": 318
+            }
+          ]
+        },
+        {
+          "width": 390,
+          "same": true,
+          "value": "Phone 390: keep a readable independent draft",
+          "focus": true,
+          "font": 16,
+          "panel": {
+            "x": 0,
+            "y": 178.609375,
+            "width": 390,
+            "height": 211.375,
+            "top": 178.609375,
+            "right": 390,
+            "bottom": 389.984375,
+            "left": 0
+          },
+          "buttons": [
+            {
+              "text": "",
+              "height": 44,
+              "width": 44
+            },
+            {
+              "text": "运行此节点",
+              "height": 44,
+              "width": 348
+            }
+          ]
+        },
+        {
+          "width": 430,
+          "same": true,
+          "value": "Phone 430: keep a readable independent draft",
+          "focus": true,
+          "font": 16,
+          "panel": {
+            "x": 0,
+            "y": 178.609375,
+            "width": 430,
+            "height": 211.375,
+            "top": 178.609375,
+            "right": 430,
+            "bottom": 389.984375,
+            "left": 0
+          },
+          "buttons": [
+            {
+              "text": "",
+              "height": 44,
+              "width": 44
+            },
+            {
+              "text": "运行此节点",
+              "height": 44,
+              "width": 388
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "B7-save-native-reload",
+      "passed": true,
+      "durationMs": 2809,
+      "detail": {
+        "nodeCount": 6,
+        "originalAssetIds": [
+          "asset-e771f223-2632-4d3b-bcbe-aefdae705230"
+        ],
+        "nativeDatabase": "narra-canvas-drafts v1",
+        "noAutomaticRun": true
+      }
+    },
+    {
+      "id": "B8-legacy-visible-anchor",
+      "passed": false,
+      "durationMs": 1325,
+      "error": "AssertionError [ERR_ASSERTION]: Primary creation follows far-off legacy prompt\n    at file:///E:/code/narra-image/.trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/run-browser.mjs:293:56\n    at async check (file:///E:/code/narra-image/.trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/run-browser.mjs:76:24)\n    at async file:///E:/code/narra-image/.trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/run-browser.mjs:282:3"
+    },
+    {
+      "id": "B9-200-node-capacity-smoke",
+      "passed": true,
+      "durationMs": 2005,
+      "detail": {
+        "renderedNodes": 200,
+        "noPartialCreation": true,
+        "noFpsClaim": true
+      }
+    }
+  ],
+  "chrome": "Chrome/156.0.8078.74",
+  "pinnedNode": "v24.22.1",
+  "boundaries": "Exact current production UI/lib/contracts/CSS/assets and installed copied dependencies; minimal SSR/lazy route shell, serialized dummy identity/catalogue, loopback fake API, native IndexedDB. No real auth/DB/provider/billing, physical phone/OS IME/chooser/download or remote CI proof.",
+  "physicalDevice": "unperformed",
+  "liveServices": "unperformed",
+  "actualCi": "unperformed"
+}

@@ -1,0 +1,31 @@
+{
+  "id": "canvas-interaction-refactor",
+  "name": "canvas-interaction-refactor",
+  "title": "Canvas interaction refactor",
+  "description": "Improve the existing canvas interaction model using basketikun/infinite-canvas as an evidence-backed reference; refactoring allowed, planning approval required.",
+  "status": "in_progress",
+  "dev_type": null,
+  "scope": null,
+  "package": null,
+  "priority": "P2",
+  "creator": "0401lucky",
+  "assignee": "0401lucky",
+  "createdAt": "2026-11-02",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": "69f30065700a56081ee7347db01653b0b42d1e6d",
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": null,
+  "relatedFiles": [],
+  "notes": "",
+  "meta": {
+    "deliveryTarget": "origin/main",
+    "deliveryApproval": "2026-11-03 grouped source, evidence and journal commits with ordinary main push",
+    "localVerification": "independent review, lint/types/1812 non-DB tests, bounded production build and 10 native browser cases pass",
+    "archiveBoundary": "active task retained: automatic archive, physical/live/actual-CI acceptance and deployment excluded"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "at": "2026-11-03T04:45:04.646228+00:00",
+  "purpose": "Final current metadata-inclusive root lint after final spec/delivery docs; no product mutation",
+  "id": "20261103T044429-lint-12e211",
+  "exitCode": 0,
+  "timedOut": false,
+  "durationSeconds": 18.27,
+  "sourceChanges": [],
+  "snapshotModifications": [],
+  "refresh": {
+    "workspace": "E:\\code\\narra-image\\.trellis\\tasks\\11-02-canvas-interaction-refactor\\checks\\.runtime\\implementation-d5b415f0\\app",
+    "sourceFiles": 1228,
+    "capturedAt": "2026-11-03T04:44:20.881788+00:00"
+  },
+  "evidenceSha256": {
+    "checks\\delivery\\evidence\\20261103T044429-lint-12e211.json": "45fd33df1ac8d642ba3f7d6f6eddbe4807b441f75c02e818014343211e495d38",
+    "checks\\delivery\\evidence\\20261103T044429-lint-12e211.stdout.log": "58947c71ed5f8731cbe4fcec6f373141216037ed0574239b9f506f55f9d0dd3f",
+    "checks\\delivery\\evidence\\20261103T044429-lint-12e211.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

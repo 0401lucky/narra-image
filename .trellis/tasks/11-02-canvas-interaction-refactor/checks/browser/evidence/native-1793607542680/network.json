@@ -1,0 +1,241 @@
+{
+  "requests": [
+    {
+      "owner": "fixture-owner-a",
+      "method": "GET",
+      "path": "/api/me/canvases",
+      "body": null,
+      "headers": {
+        "x-narra-canvas-run": null
+      }
+    },
+    {
+      "owner": "fixture-owner-a",
+      "method": "GET",
+      "path": "/api/me/canvases/aaa3178c-300e-4186-ac15-887d831064d5",
+      "body": null,
+      "headers": {
+        "x-narra-canvas-run": null
+      }
+    },
+    {
+      "owner": "fixture-owner-a",
+      "method": "POST",
+      "path": "/api/me/canvas-runtime/resolve",
+      "body": {
+        "canvasId": "aaa3178c-300e-4186-ac15-887d831064d5",
+        "runBindings": [],
+        "runIds": [],
+        "jobIds": [],
+        "imageIds": [],
+        "assetIds": [
+          "fd104a0b-41f1-4a7b-a290-4cd5f0447f19",
+          "61ed31e4-d0c2-44fc-bf81-212698af3cb6",
+          "de91b4df-4b3d-4a6f-8f1e-34587182e211",
+          "ef697299-4c86-46a5-9e63-03a39299ca84",
+          "ef6bda8e-8ebe-44af-b25d-864b830582d1",
+          "e5b18e62-4bb7-4c79-b337-fa5aa3ecd9a5",
+          "b7250a22-af59-4995-b693-6890da8fa3da",
+          "578f18f6-1ea6-4a65-a21a-8e40d28caf21"
+        ]
+      },
+      "headers": {
+        "x-narra-canvas-run": null
+      }
+    },
+    {
+      "owner": "fixture-owner-a",
+      "method": "GET",
+      "path": "/api/me/canvases/db725fb9-adc2-45fe-bb37-23ff53af0720",
+      "body": null,
+      "headers": {
+        "x-narra-canvas-run": null
+      }
+    }
+  ],
+  "browserRequests": [
+    {
+      "url": "http://127.0.0.1:58413/create",
+      "method": "GET",
+      "type": "Document",
+      "requestId": "200085C9BEC5CA20093861BFEFD61A24"
+    },
+    {
+      "url": "http://127.0.0.1:58413/_next/static/chunks/0yni3waqur9c7.css",
+      "method": "GET",
+      "type": "Stylesheet",
+      "requestId": "16936.2"
+    },
+    {
+      "url": "http://127.0.0.1:58413/_next/static/chunks/0pxf9tqsxvksq.css",
+      "method": "GET",
+      "type": "Stylesheet",
+      "requestId": "16936.3"
+    },
+    {
+      "url": "http://127.0.0.1:58413/_next/static/chunks/0o-52wz7lc2t..js",
+      "method": "GET",
+      "type": "Script",
+      "requestId": "16936.4"
+    },
+    {
+      "url": "http://127.0.0.1:58413/_next/static/chunks/04msp1tymiwf8.js",
+      "method": "GET",
+      "type": "Script",
+      "requestId": "16936.5"
+    },
+    {
+      "url": "http://127.0.0.1:58413/_next/static/chunks/0qdfpoy9s8edu.js",
+      "method": "GET",
+      "type": "Script",
+      "requestId": "16936.6"
+    },
+    {
+      "url": "http://127.0.0.1:58413/_next/static/chunks/0zn-2xj2m9x0p.js",
+      "method": "GET",
+      "type": "Script",
+      "requestId": "16936.7"
+    },
+    {
+      "url": "http://127.0.0.1:58413/_next/static/chunks/turbopack-0ee5u1bt-xojl.js",
+      "method": "GET",
+      "type": "Script",
+      "requestId": "16936.8"
+    },
+    {
+      "url": "http://127.0.0.1:58413/_next/static/chunks/0wj9epgle3y2~.js",
+      "method": "GET",
+      "type": "Script",
+      "requestId": "16936.9"
+    },
+    {
+      "url": "http://127.0.0.1:58413/_next/static/chunks/0hb2ewvtipfn-.js",
+      "method": "GET",
+      "type": "Script",
+      "requestId": "16936.10"
+    },
+    {
+      "url": "http://127.0.0.1:58413/_next/static/chunks/14_jhcjn2yed-.js",
+      "method": "GET",
+      "type": "Script",
+      "requestId": "16936.11"
+    },
+    {
+      "url": "http://127.0.0.1:58413/_next/static/chunks/0dsphy9hxwnx2.js",
+      "method": "GET",
+      "type": "Script",
+      "requestId": "16936.12"
+    },
+    {
+      "url": "http://127.0.0.1:58413/_next/static/chunks/0e1h_tmc3o_g6.js",
+      "method": "GET",
+      "type": "Script",
+      "requestId": "16936.13"
+    },
+    {
+      "url": "http://127.0.0.1:58413/favicon.ico",
+      "method": "GET",
+      "type": "Other",
+      "requestId": "16936.28"
+    },
+    {
+      "url": "http://127.0.0.1:58413/_next/static/chunks/0bj~ie~wxf8~-.js",
+      "method": "GET",
+      "type": "Script",
+      "requestId": "16936.29"
+    },
+    {
+      "url": "http://127.0.0.1:58413/_next/static/chunks/0hb.z9hx1~hrp.js",
+      "method": "GET",
+      "type": "Script",
+      "requestId": "16936.30"
+    },
+    {
+      "url": "http://127.0.0.1:58413/api/me/canvases",
+      "method": "GET",
+      "type": "Fetch",
+      "requestId": "16936.31"
+    },
+    {
+      "url": "http://127.0.0.1:58413/api/me/canvases/aaa3178c-300e-4186-ac15-887d831064d5",
+      "method": "GET",
+      "type": "Fetch",
+      "requestId": "16936.32"
+    },
+    {
+      "url": "http://127.0.0.1:58413/api/me/canvas-runtime/resolve",
+      "method": "POST",
+      "type": "Fetch",
+      "requestId": "16936.33"
+    },
+    {
+      "url": "http://127.0.0.1:58413/_next/static/chunks/0z.zy5pb-t0na.js",
+      "method": "GET",
+      "type": "Script",
+      "requestId": "16936.34"
+    },
+    {
+      "url": "http://127.0.0.1:58413/_next/static/chunks/0hj819sbkgu77.css",
+      "method": "GET",
+      "type": "Stylesheet",
+      "requestId": "16936.35"
+    },
+    {
+      "url": "http://127.0.0.1:58413/_next/image?url=%2Ffixture-media%2Ffd104a0b-41f1-4a7b-a290-4cd5f0447f19.png&w=640&q=75",
+      "method": "GET",
+      "type": "Image",
+      "requestId": "16936.36"
+    },
+    {
+      "url": "http://127.0.0.1:58413/_next/image?url=%2Ffixture-media%2F61ed31e4-d0c2-44fc-bf81-212698af3cb6.png&w=640&q=75",
+      "method": "GET",
+      "type": "Image",
+      "requestId": "16936.37"
+    },
+    {
+      "url": "http://127.0.0.1:58413/_next/image?url=%2Ffixture-media%2Fde91b4df-4b3d-4a6f-8f1e-34587182e211.png&w=640&q=75",
+      "method": "GET",
+      "type": "Image",
+      "requestId": "16936.38"
+    },
+    {
+      "url": "http://127.0.0.1:58413/_next/image?url=%2Ffixture-media%2Fef697299-4c86-46a5-9e63-03a39299ca84.png&w=640&q=75",
+      "method": "GET",
+      "type": "Image",
+      "requestId": "16936.39"
+    },
+    {
+      "url": "http://127.0.0.1:58413/_next/image?url=%2Ffixture-media%2Fef6bda8e-8ebe-44af-b25d-864b830582d1.png&w=640&q=75",
+      "method": "GET",
+      "type": "Image",
+      "requestId": "16936.40"
+    },
+    {
+      "url": "http://127.0.0.1:58413/_next/image?url=%2Ffixture-media%2Fe5b18e62-4bb7-4c79-b337-fa5aa3ecd9a5.png&w=640&q=75",
+      "method": "GET",
+      "type": "Image",
+      "requestId": "16936.41"
+    },
+    {
+      "url": "http://127.0.0.1:58413/_next/image?url=%2Ffixture-media%2Fb7250a22-af59-4995-b693-6890da8fa3da.png&w=640&q=75",
+      "method": "GET",
+      "type": "Image",
+      "requestId": "16936.42"
+    },
+    {
+      "url": "http://127.0.0.1:58413/_next/image?url=%2Ffixture-media%2F578f18f6-1ea6-4a65-a21a-8e40d28caf21.png&w=640&q=75",
+      "method": "GET",
+      "type": "Image",
+      "requestId": "16936.43"
+    },
+    {
+      "url": "http://127.0.0.1:58413/api/me/canvases/db725fb9-adc2-45fe-bb37-23ff53af0720",
+      "method": "GET",
+      "type": "Fetch",
+      "requestId": "16936.52"
+    }
+  ],
+  "errors": [],
+  "blockedExternal": [],
+  "pointApproaches": []
+}

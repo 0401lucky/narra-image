@@ -1,0 +1,30 @@
+{
+  "reviewer": "canvas_delivery_check",
+  "head": "e42ff7a74fb7d1c0e4507c960720bb0dc973f1ab",
+  "startedAt": "2026-11-03T02:10:34.900287+00:00",
+  "node": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-history-cleanup-20261029\\node-v24.22.1-win-x64\\node.exe",
+  "workspace": "E:\\code\\narra-image\\.trellis\\tasks\\11-02-canvas-interaction-refactor\\checks\\.runtime\\implementation-d5b415f0\\app",
+  "refresh": {
+    "workspace": "E:\\code\\narra-image\\.trellis\\tasks\\11-02-canvas-interaction-refactor\\checks\\.runtime\\implementation-d5b415f0\\app",
+    "sourceFiles": 1141,
+    "capturedAt": "2026-11-03T02:10:34.862053+00:00"
+  },
+  "gates": [
+    {
+      "name": "targeted",
+      "id": "20261103T021042-test-4c6183",
+      "exitCode": 1,
+      "timedOut": false,
+      "durationSeconds": 7.104,
+      "timeoutSeconds": 600,
+      "finishedAt": "2026-11-03T02:10:49.946409+00:00",
+      "sourceChanges": [],
+      "snapshotModifications": [],
+      "evidenceFiles": {
+        "20261103T021042-test-4c6183.json": "bcf4e283e2384f9fa40381784f63db5dd539c55dd870cc15b85b877674cd32bf",
+        "20261103T021042-test-4c6183.stderr.log": "416ec37ac2d7a31174e03ed3ccd41d7c5cd06af2f18476641717280fb17344d7",
+        "20261103T021042-test-4c6183.stdout.log": "d748546ff6100438590560a03b6b23ac6d22cccc85f0b3a866fb142f150c81d6"
+      }
+    }
+  ]
+}

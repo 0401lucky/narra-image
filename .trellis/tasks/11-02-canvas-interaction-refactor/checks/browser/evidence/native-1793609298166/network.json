@@ -1,0 +1,1655 @@
+{
+  "requests": [
+    {
+      "owner": "fixture-owner-a",
+      "method": "GET",
+      "path": "/api/me/canvases",
+      "body": null,
+      "headers": {
+        "x-narra-canvas-run": null
+      }
+    },
+    {
+      "owner": "fixture-owner-a",
+      "method": "GET",
+      "path": "/api/me/canvases/9cb43956-af3f-4e7a-a922-2d4334790ac1",
+      "body": null,
+      "headers": {
+        "x-narra-canvas-run": null
+      }
+    },
+    {
+      "owner": "fixture-owner-a",
+      "method": "POST",
+      "path": "/api/me/canvas-runtime/resolve",
+      "body": {
+        "canvasId": "9cb43956-af3f-4e7a-a922-2d4334790ac1",
+        "runBindings": [],
+        "runIds": [],
+        "jobIds": [],
+        "imageIds": [],
+        "assetIds": [
+          "92805f7d-a44d-4eb4-b644-df7778cca0fd",
+          "7b0d2635-ef79-4b9d-8bd7-8c53ac96debc",
+          "ec418152-cbfb-4c41-b384-45db5cff00cf",
+          "74d9df6d-e47e-4cb0-95ef-0ec4812fd1b5",
+          "cc0c316b-fee9-4a84-b936-feecad41dc5d",
+          "6b8e5a30-316f-4500-b857-0e18b7c2fd53",
+          "beaf00bb-a9e3-4a82-94d7-10fc8e973bae",
+          "8cb91015-2b54-4ee4-8a3e-8dce5b7f58a6"
+        ]
+      },
+      "headers": {
+        "x-narra-canvas-run": null
+      }
+    },
+    {
+      "owner": "fixture-owner-a",
+      "method": "POST",
+      "path": "/api/me/canvases",
+      "body": {
+        "id": "e503e6f7-ba2e-43f6-8ea7-4b0d1c767ea6",
+        "title": "未命名画布"
+      },
+      "headers": {
+        "x-narra-canvas-run": null
+      }
+    },
+    {
+      "owner": "fixture-owner-a",
+      "method": "POST",
+      "path": "/api/generate",
+      "body": {
+        "canvasRun": {
+          "canvasId": "e503e6f7-ba2e-43f6-8ea7-4b0d1c767ea6",
+          "nodeId": "e9f7e413-a81c-49ae-921e-20dbe240aebc",
+          "runId": "213b78e9-d139-47bb-a564-eec383607132",
+          "input": {
+            "prompt": {
+              "sourceNodeId": "f6d43ecd-0875-42a9-a004-716f23c5af5f",
+              "text": "A ceramic cup in warm afternoon light"
+            },
+            "references": []
+          },
+          "parameters": {
+            "providerMode": "built_in",
+            "channelId": "channel-account",
+            "model": "image-account-default",
+            "size": "auto",
+            "quality": "auto",
+            "outputFormat": "png",
+            "outputCompression": null,
+            "moderation": "auto",
+            "count": 1,
+            "negativePrompt": null,
+            "seed": null,
+            "generationType": "text_to_image"
+          }
+        }
+      },
+      "headers": {
+        "x-narra-canvas-run": "1"
+      }
+    }
+  ],
+  "browserRequests": [
+    {
+      "url": "http://127.0.0.1:50473/create",
+      "method": "GET",
+      "type": "Document",
+      "requestId": "A06108EB81E4712881ED8E6B3F430D9A"
+    },
+    {
+      "url": "http://127.0.0.1:50473/_next/static/chunks/0yni3waqur9c7.css",
+      "method": "GET",
+      "type": "Stylesheet",
+      "requestId": "34236.2"
+    },
+    {
+      "url": "http://127.0.0.1:50473/_next/static/chunks/0pxf9tqsxvksq.css",
+      "method": "GET",
+      "type": "Stylesheet",
+      "requestId": "34236.3"
+    },
+    {
+      "url": "http://127.0.0.1:50473/_next/static/chunks/0o-52wz7lc2t..js",
+      "method": "GET",
+      "type": "Script",
+      "requestId": "34236.4"
+    },
+    {
+      "url": "http://127.0.0.1:50473/_next/static/chunks/04msp1tymiwf8.js",
+      "method": "GET",
+      "type": "Script",
+      "requestId": "34236.5"
+    },
+    {
+      "url": "http://127.0.0.1:50473/_next/static/chunks/0qdfpoy9s8edu.js",
+      "method": "GET",
+      "type": "Script",
+      "requestId": "34236.6"
+    },
+    {
+      "url": "http://127.0.0.1:50473/_next/static/chunks/0zn-2xj2m9x0p.js",
+      "method": "GET",
+      "type": "Script",
+      "requestId": "34236.7"
+    },
+    {
+      "url": "http://127.0.0.1:50473/_next/static/chunks/turbopack-0ee5u1bt-xojl.js",
+      "method": "GET",
+      "type": "Script",
+      "requestId": "34236.8"
+    },
+    {
+      "url": "http://127.0.0.1:50473/_next/static/chunks/0wj9epgle3y2~.js",
+      "method": "GET",
+      "type": "Script",
+      "requestId": "34236.9"
+    },
+    {
+      "url": "http://127.0.0.1:50473/_next/static/chunks/0hb2ewvtipfn-.js",
+      "method": "GET",
+      "type": "Script",
+      "requestId": "34236.10"
+    },
+    {
+      "url": "http://127.0.0.1:50473/_next/static/chunks/14_jhcjn2yed-.js",
+      "method": "GET",
+      "type": "Script",
+      "requestId": "34236.11"
+    },
+    {
+      "url": "http://127.0.0.1:50473/_next/static/chunks/0dsphy9hxwnx2.js",
+      "method": "GET",
+      "type": "Script",
+      "requestId": "34236.12"
+    },
+    {
+      "url": "http://127.0.0.1:50473/_next/static/chunks/0e1h_tmc3o_g6.js",
+      "method": "GET",
+      "type": "Script",
+      "requestId": "34236.13"
+    },
+    {
+      "url": "http://127.0.0.1:50473/favicon.ico",
+      "method": "GET",
+      "type": "Other",
+      "requestId": "34236.28"
+    },
+    {
+      "url": "http://127.0.0.1:50473/_next/static/chunks/0bj~ie~wxf8~-.js",
+      "method": "GET",
+      "type": "Script",
+      "requestId": "34236.29"
+    },
+    {
+      "url": "http://127.0.0.1:50473/_next/static/chunks/0hb.z9hx1~hrp.js",
+      "method": "GET",
+      "type": "Script",
+      "requestId": "34236.30"
+    },
+    {
+      "url": "http://127.0.0.1:50473/api/me/canvases",
+      "method": "GET",
+      "type": "Fetch",
+      "requestId": "34236.31"
+    },
+    {
+      "url": "http://127.0.0.1:50473/api/me/canvases/9cb43956-af3f-4e7a-a922-2d4334790ac1",
+      "method": "GET",
+      "type": "Fetch",
+      "requestId": "34236.32"
+    },
+    {
+      "url": "http://127.0.0.1:50473/api/me/canvas-runtime/resolve",
+      "method": "POST",
+      "type": "Fetch",
+      "requestId": "34236.33"
+    },
+    {
+      "url": "http://127.0.0.1:50473/_next/static/chunks/0z.zy5pb-t0na.js",
+      "method": "GET",
+      "type": "Script",
+      "requestId": "34236.34"
+    },
+    {
+      "url": "http://127.0.0.1:50473/_next/static/chunks/0hj819sbkgu77.css",
+      "method": "GET",
+      "type": "Stylesheet",
+      "requestId": "34236.35"
+    },
+    {
+      "url": "http://127.0.0.1:50473/_next/image?url=%2Ffixture-media%2F92805f7d-a44d-4eb4-b644-df7778cca0fd.png&w=640&q=75",
+      "method": "GET",
+      "type": "Image",
+      "requestId": "34236.36"
+    },
+    {
+      "url": "http://127.0.0.1:50473/_next/image?url=%2Ffixture-media%2F7b0d2635-ef79-4b9d-8bd7-8c53ac96debc.png&w=640&q=75",
+      "method": "GET",
+      "type": "Image",
+      "requestId": "34236.37"
+    },
+    {
+      "url": "http://127.0.0.1:50473/_next/image?url=%2Ffixture-media%2Fec418152-cbfb-4c41-b384-45db5cff00cf.png&w=640&q=75",
+      "method": "GET",
+      "type": "Image",
+      "requestId": "34236.38"
+    },
+    {
+      "url": "http://127.0.0.1:50473/_next/image?url=%2Ffixture-media%2F74d9df6d-e47e-4cb0-95ef-0ec4812fd1b5.png&w=640&q=75",
+      "method": "GET",
+      "type": "Image",
+      "requestId": "34236.39"
+    },
+    {
+      "url": "http://127.0.0.1:50473/_next/image?url=%2Ffixture-media%2Fcc0c316b-fee9-4a84-b936-feecad41dc5d.png&w=640&q=75",
+      "method": "GET",
+      "type": "Image",
+      "requestId": "34236.40"
+    },
+    {
+      "url": "http://127.0.0.1:50473/_next/image?url=%2Ffixture-media%2F6b8e5a30-316f-4500-b857-0e18b7c2fd53.png&w=640&q=75",
+      "method": "GET",
+      "type": "Image",
+      "requestId": "34236.41"
+    },
+    {
+      "url": "http://127.0.0.1:50473/_next/image?url=%2Ffixture-media%2Fbeaf00bb-a9e3-4a82-94d7-10fc8e973bae.png&w=640&q=75",
+      "method": "GET",
+      "type": "Image",
+      "requestId": "34236.42"
+    },
+    {
+      "url": "http://127.0.0.1:50473/_next/image?url=%2Ffixture-media%2F8cb91015-2b54-4ee4-8a3e-8dce5b7f58a6.png&w=640&q=75",
+      "method": "GET",
+      "type": "Image",
+      "requestId": "34236.43"
+    },
+    {
+      "url": "http://127.0.0.1:50473/api/me/canvases",
+      "method": "POST",
+      "type": "Fetch",
+      "requestId": "34236.52"
+    },
+    {
+      "url": "http://127.0.0.1:50473/api/generate",
+      "method": "POST",
+      "type": "Fetch",
+      "requestId": "34236.53"
+    },
+    {
+      "url": "http://127.0.0.1:50473/create?_rsc=1hp4v",
+      "method": "GET",
+      "type": "Fetch",
+      "requestId": "34236.54"
+    },
+    {
+      "url": "http://127.0.0.1:50473/_next/image?url=%2Ffixture-media%2F39d72fca-e83b-435e-aa8f-0c857b011fe0.png&w=640&q=75",
+      "method": "GET",
+      "type": "Image",
+      "requestId": "34236.55"
+    },
+    {
+      "url": "http://127.0.0.1:50473/fixture-media/39d72fca-e83b-435e-aa8f-0c857b011fe0.png",
+      "method": "GET",
+      "type": "Image",
+      "requestId": "34236.57"
+    }
+  ],
+  "errors": [],
+  "blockedExternal": [],
+  "pointApproaches": [
+    {
+      "selector": ".react-flow__node[data-id=\"result:39d72fca-e83b-435e-aa8f-0c857b011fe0\"] img",
+      "text": null,
+      "attempt": 0,
+      "before": {
+        "left": 1083.1832275390625,
+        "top": 525.6619873046875,
+        "right": 1348.114501953125,
+        "bottom": 745.1199951171875,
+        "width": 264.9312744140625,
+        "height": 219.4580078125,
+        "x": 1215.6488647460938,
+        "y": 635.3909912109375,
+        "clip": {
+          "left": 1083.1832275390625,
+          "top": 525.6619873046875,
+          "right": 1348.114501953125,
+          "bottom": 745.1199951171875
+        },
+        "visible": true,
+        "hit": false,
+        "hitTag": "DIV",
+        "hitText": "160x1204:3保存高清原图",
+        "text": "",
+        "disabled": false
+      }
+    },
+    {
+      "selector": ".react-flow__node[data-id=\"result:39d72fca-e83b-435e-aa8f-0c857b011fe0\"] img",
+      "text": null,
+      "attempt": 1,
+      "before": {
+        "left": 1083.1832275390625,
+        "top": 525.6619873046875,
+        "right": 1348.114501953125,
+        "bottom": 745.1199951171875,
+        "width": 264.9312744140625,
+        "height": 219.4580078125,
+        "x": 1215.6488647460938,
+        "y": 635.3909912109375,
+        "clip": {
+          "left": 1083.1832275390625,
+          "top": 525.6619873046875,
+          "right": 1348.114501953125,
+          "bottom": 745.1199951171875
+        },
+        "visible": true,
+        "hit": false,
+        "hitTag": "DIV",
+        "hitText": "160x1204:3保存高清原图",
+        "text": "",
+        "disabled": false
+      }
+    },
+    {
+      "selector": ".react-flow__node[data-id=\"result:39d72fca-e83b-435e-aa8f-0c857b011fe0\"] img",
+      "text": null,
+      "attempt": 2,
+      "before": {
+        "left": 1083.1832275390625,
+        "top": 525.6619873046875,
+        "right": 1348.114501953125,
+        "bottom": 745.1199951171875,
+        "width": 264.9312744140625,
+        "height": 219.4580078125,
+        "x": 1215.6488647460938,
+        "y": 635.3909912109375,
+        "clip": {
+          "left": 1083.1832275390625,
+          "top": 525.6619873046875,
+          "right": 1348.114501953125,
+          "bottom": 745.1199951171875
+        },
+        "visible": true,
+        "hit": false,
+        "hitTag": "DIV",
+        "hitText": "160x1204:3保存高清原图",
+        "text": "",
+        "disabled": false
+      }
+    },
+    {
+      "selector": ".react-flow__node[data-id=\"result:39d72fca-e83b-435e-aa8f-0c857b011fe0\"] img",
+      "text": null,
+      "attempt": 3,
+      "before": {
+        "left": 1083.1832275390625,
+        "top": 525.6619873046875,
+        "right": 1348.114501953125,
+        "bottom": 745.1199951171875,
+        "width": 264.9312744140625,
+        "height": 219.4580078125,
+        "x": 1215.6488647460938,
+        "y": 635.3909912109375,
+        "clip": {
+          "left": 1083.1832275390625,
+          "top": 525.6619873046875,
+          "right": 1348.114501953125,
+          "bottom": 745.1199951171875
+        },
+        "visible": true,
+        "hit": false,
+        "hitTag": "DIV",
+        "hitText": "160x1204:3保存高清原图",
+        "text": "",
+        "disabled": false
+      }
+    },
+    {
+      "selector": ".react-flow__node[data-id=\"result:39d72fca-e83b-435e-aa8f-0c857b011fe0\"] img",
+      "text": null,
+      "attempt": 4,
+      "before": {
+        "left": 1083.1832275390625,
+        "top": 525.6619873046875,
+        "right": 1348.114501953125,
+        "bottom": 745.1199951171875,
+        "width": 264.9312744140625,
+        "height": 219.4580078125,
+        "x": 1215.6488647460938,
+        "y": 635.3909912109375,
+        "clip": {
+          "left": 1083.1832275390625,
+          "top": 525.6619873046875,
+          "right": 1348.114501953125,
+          "bottom": 745.1199951171875
+        },
+        "visible": true,
+        "hit": false,
+        "hitTag": "DIV",
+        "hitText": "160x1204:3保存高清原图",
+        "text": "",
+        "disabled": false
+      }
+    },
+    {
+      "selector": ".react-flow__node[data-id=\"result:39d72fca-e83b-435e-aa8f-0c857b011fe0\"] img",
+      "text": null,
+      "attempt": 5,
+      "before": {
+        "left": 1083.1832275390625,
+        "top": 525.6619873046875,
+        "right": 1348.114501953125,
+        "bottom": 745.1199951171875,
+        "width": 264.9312744140625,
+        "height": 219.4580078125,
+        "x": 1215.6488647460938,
+        "y": 635.3909912109375,
+        "clip": {
+          "left": 1083.1832275390625,
+          "top": 525.6619873046875,
+          "right": 1348.114501953125,
+          "bottom": 745.1199951171875
+        },
+        "visible": true,
+        "hit": false,
+        "hitTag": "DIV",
+        "hitText": "160x1204:3保存高清原图",
+        "text": "",
+        "disabled": false
+      }
+    },
+    {
+      "selector": ".react-flow__node[data-id=\"result:39d72fca-e83b-435e-aa8f-0c857b011fe0\"] img",
+      "text": null,
+      "attempt": 6,
+      "before": {
+        "left": 1083.1832275390625,
+        "top": 525.6619873046875,
+        "right": 1348.114501953125,
+        "bottom": 745.1199951171875,
+        "width": 264.9312744140625,
+        "height": 219.4580078125,
+        "x": 1215.6488647460938,
+        "y": 635.3909912109375,
+        "clip": {
+          "left": 1083.1832275390625,
+          "top": 525.6619873046875,
+          "right": 1348.114501953125,
+          "bottom": 745.1199951171875
+        },
+        "visible": true,
+        "hit": false,
+        "hitTag": "DIV",
+        "hitText": "160x1204:3保存高清原图",
+        "text": "",
+        "disabled": false
+      }
+    },
+    {
+      "selector": ".react-flow__node[data-id=\"result:39d72fca-e83b-435e-aa8f-0c857b011fe0\"] img",
+      "text": null,
+      "attempt": 7,
+      "before": {
+        "left": 1083.1832275390625,
+        "top": 525.6619873046875,
+        "right": 1348.114501953125,
+        "bottom": 745.1199951171875,
+        "width": 264.9312744140625,
+        "height": 219.4580078125,
+        "x": 1215.6488647460938,
+        "y": 635.3909912109375,
+        "clip": {
+          "left": 1083.1832275390625,
+          "top": 525.6619873046875,
+          "right": 1348.114501953125,
+          "bottom": 745.1199951171875
+        },
+        "visible": true,
+        "hit": false,
+        "hitTag": "DIV",
+        "hitText": "160x1204:3保存高清原图",
+        "text": "",
+        "disabled": false
+      }
+    },
+    {
+      "selector": ".react-flow__node[data-id=\"result:39d72fca-e83b-435e-aa8f-0c857b011fe0\"] img",
+      "text": null,
+      "attempt": 8,
+      "before": {
+        "left": 1083.1832275390625,
+        "top": 525.6619873046875,
+        "right": 1348.114501953125,
+        "bottom": 745.1199951171875,
+        "width": 264.9312744140625,
+        "height": 219.4580078125,
+        "x": 1215.6488647460938,
+        "y": 635.3909912109375,
+        "clip": {
+          "left": 1083.1832275390625,
+          "top": 525.6619873046875,
+          "right": 1348.114501953125,
+          "bottom": 745.1199951171875
+        },
+        "visible": true,
+        "hit": false,
+        "hitTag": "DIV",
+        "hitText": "160x1204:3保存高清原图",
+        "text": "",
+        "disabled": false
+      }
+    },
+    {
+      "selector": ".react-flow__node[data-id=\"result:39d72fca-e83b-435e-aa8f-0c857b011fe0\"] img",
+      "text": null,
+      "attempt": 9,
+      "before": {
+        "left": 1083.1832275390625,
+        "top": 525.6619873046875,
+        "right": 1348.114501953125,
+        "bottom": 745.1199951171875,
+        "width": 264.9312744140625,
+        "height": 219.4580078125,
+        "x": 1215.6488647460938,
+        "y": 635.3909912109375,
+        "clip": {
+          "left": 1083.1832275390625,
+          "top": 525.6619873046875,
+          "right": 1348.114501953125,
+          "bottom": 745.1199951171875
+        },
+        "visible": true,
+        "hit": false,
+        "hitTag": "DIV",
+        "hitText": "160x1204:3保存高清原图",
+        "text": "",
+        "disabled": false
+      }
+    },
+    {
+      "selector": "button",
+      "text": "导入参考图",
+      "attempt": 0,
+      "before": {
+        "left": 367.5625,
+        "top": 207.984375,
+        "right": 472.734375,
+        "bottom": 241.15625,
+        "width": 105.171875,
+        "height": 33.171875,
+        "x": 420.1484375,
+        "y": 224.5703125,
+        "clip": {
+          "left": 367.5625,
+          "top": 207.984375,
+          "right": 472.734375,
+          "bottom": 241.15625
+        },
+        "visible": true,
+        "hit": false,
+        "hitTag": "DIV",
+        "hitText": "160x1204:3保存高清原图",
+        "text": "导入参考图",
+        "disabled": false
+      }
+    },
+    {
+      "selector": "button",
+      "text": "导入参考图",
+      "attempt": 1,
+      "before": {
+        "left": 367.5625,
+        "top": 207.984375,
+        "right": 472.734375,
+        "bottom": 241.15625,
+        "width": 105.171875,
+        "height": 33.171875,
+        "x": 420.1484375,
+        "y": 224.5703125,
+        "clip": {
+          "left": 367.5625,
+          "top": 207.984375,
+          "right": 472.734375,
+          "bottom": 241.15625
+        },
+        "visible": true,
+        "hit": false,
+        "hitTag": "DIV",
+        "hitText": "160x1204:3保存高清原图",
+        "text": "导入参考图",
+        "disabled": false
+      }
+    },
+    {
+      "selector": "button",
+      "text": "导入参考图",
+      "attempt": 2,
+      "before": {
+        "left": 367.5625,
+        "top": 207.984375,
+        "right": 472.734375,
+        "bottom": 241.15625,
+        "width": 105.171875,
+        "height": 33.171875,
+        "x": 420.1484375,
+        "y": 224.5703125,
+        "clip": {
+          "left": 367.5625,
+          "top": 207.984375,
+          "right": 472.734375,
+          "bottom": 241.15625
+        },
+        "visible": true,
+        "hit": false,
+        "hitTag": "DIV",
+        "hitText": "160x1204:3保存高清原图",
+        "text": "导入参考图",
+        "disabled": false
+      }
+    },
+    {
+      "selector": "button",
+      "text": "导入参考图",
+      "attempt": 3,
+      "before": {
+        "left": 367.5625,
+        "top": 207.984375,
+        "right": 472.734375,
+        "bottom": 241.15625,
+        "width": 105.171875,
+        "height": 33.171875,
+        "x": 420.1484375,
+        "y": 224.5703125,
+        "clip": {
+          "left": 367.5625,
+          "top": 207.984375,
+          "right": 472.734375,
+          "bottom": 241.15625
+        },
+        "visible": true,
+        "hit": false,
+        "hitTag": "DIV",
+        "hitText": "160x1204:3保存高清原图",
+        "text": "导入参考图",
+        "disabled": false
+      }
+    },
+    {
+      "selector": "button",
+      "text": "导入参考图",
+      "attempt": 4,
+      "before": {
+        "left": 367.5625,
+        "top": 207.984375,
+        "right": 472.734375,
+        "bottom": 241.15625,
+        "width": 105.171875,
+        "height": 33.171875,
+        "x": 420.1484375,
+        "y": 224.5703125,
+        "clip": {
+          "left": 367.5625,
+          "top": 207.984375,
+          "right": 472.734375,
+          "bottom": 241.15625
+        },
+        "visible": true,
+        "hit": false,
+        "hitTag": "DIV",
+        "hitText": "160x1204:3保存高清原图",
+        "text": "导入参考图",
+        "disabled": false
+      }
+    },
+    {
+      "selector": "button",
+      "text": "导入参考图",
+      "attempt": 5,
+      "before": {
+        "left": 367.5625,
+        "top": 207.984375,
+        "right": 472.734375,
+        "bottom": 241.15625,
+        "width": 105.171875,
+        "height": 33.171875,
+        "x": 420.1484375,
+        "y": 224.5703125,
+        "clip": {
+          "left": 367.5625,
+          "top": 207.984375,
+          "right": 472.734375,
+          "bottom": 241.15625
+        },
+        "visible": true,
+        "hit": false,
+        "hitTag": "DIV",
+        "hitText": "160x1204:3保存高清原图",
+        "text": "导入参考图",
+        "disabled": false
+      }
+    },
+    {
+      "selector": "button",
+      "text": "导入参考图",
+      "attempt": 6,
+      "before": {
+        "left": 367.5625,
+        "top": 207.984375,
+        "right": 472.734375,
+        "bottom": 241.15625,
+        "width": 105.171875,
+        "height": 33.171875,
+        "x": 420.1484375,
+        "y": 224.5703125,
+        "clip": {
+          "left": 367.5625,
+          "top": 207.984375,
+          "right": 472.734375,
+          "bottom": 241.15625
+        },
+        "visible": true,
+        "hit": false,
+        "hitTag": "DIV",
+        "hitText": "160x1204:3保存高清原图",
+        "text": "导入参考图",
+        "disabled": false
+      }
+    },
+    {
+      "selector": "button",
+      "text": "导入参考图",
+      "attempt": 7,
+      "before": {
+        "left": 367.5625,
+        "top": 207.984375,
+        "right": 472.734375,
+        "bottom": 241.15625,
+        "width": 105.171875,
+        "height": 33.171875,
+        "x": 420.1484375,
+        "y": 224.5703125,
+        "clip": {
+          "left": 367.5625,
+          "top": 207.984375,
+          "right": 472.734375,
+          "bottom": 241.15625
+        },
+        "visible": true,
+        "hit": false,
+        "hitTag": "DIV",
+        "hitText": "160x1204:3保存高清原图",
+        "text": "导入参考图",
+        "disabled": false
+      }
+    },
+    {
+      "selector": "button",
+      "text": "导入参考图",
+      "attempt": 8,
+      "before": {
+        "left": 367.5625,
+        "top": 207.984375,
+        "right": 472.734375,
+        "bottom": 241.15625,
+        "width": 105.171875,
+        "height": 33.171875,
+        "x": 420.1484375,
+        "y": 224.5703125,
+        "clip": {
+          "left": 367.5625,
+          "top": 207.984375,
+          "right": 472.734375,
+          "bottom": 241.15625
+        },
+        "visible": true,
+        "hit": false,
+        "hitTag": "DIV",
+        "hitText": "160x1204:3保存高清原图",
+        "text": "导入参考图",
+        "disabled": false
+      }
+    },
+    {
+      "selector": "button",
+      "text": "导入参考图",
+      "attempt": 9,
+      "before": {
+        "left": 367.5625,
+        "top": 207.984375,
+        "right": 472.734375,
+        "bottom": 241.15625,
+        "width": 105.171875,
+        "height": 33.171875,
+        "x": 420.1484375,
+        "y": 224.5703125,
+        "clip": {
+          "left": 367.5625,
+          "top": 207.984375,
+          "right": 472.734375,
+          "bottom": 241.15625
+        },
+        "visible": true,
+        "hit": false,
+        "hitTag": "DIV",
+        "hitText": "160x1204:3保存高清原图",
+        "text": "导入参考图",
+        "disabled": false
+      }
+    },
+    {
+      "selector": "button",
+      "text": "保存到账户",
+      "attempt": 0,
+      "before": {
+        "left": 14.390625,
+        "top": 308.15625,
+        "right": 224.609375,
+        "bottom": 374.140625,
+        "width": 210.21875,
+        "height": 65.984375,
+        "x": 119.5,
+        "y": 341.1484375,
+        "clip": {
+          "left": 14.390625,
+          "top": 308.15625,
+          "right": 224.609375,
+          "bottom": 374.140625
+        },
+        "visible": true,
+        "hit": false,
+        "hitTag": "DIV",
+        "hitText": "160x1204:3保存高清原图",
+        "text": "未命名画布尚未保存到账户",
+        "disabled": false
+      }
+    },
+    {
+      "selector": "button",
+      "text": "保存到账户",
+      "attempt": 1,
+      "before": {
+        "left": 14.390625,
+        "top": 308.15625,
+        "right": 224.609375,
+        "bottom": 374.140625,
+        "width": 210.21875,
+        "height": 65.984375,
+        "x": 119.5,
+        "y": 341.1484375,
+        "clip": {
+          "left": 14.390625,
+          "top": 308.15625,
+          "right": 224.609375,
+          "bottom": 374.140625
+        },
+        "visible": true,
+        "hit": false,
+        "hitTag": "DIV",
+        "hitText": "160x1204:3保存高清原图",
+        "text": "未命名画布尚未保存到账户",
+        "disabled": false
+      }
+    },
+    {
+      "selector": "button",
+      "text": "保存到账户",
+      "attempt": 2,
+      "before": {
+        "left": 14.390625,
+        "top": 308.15625,
+        "right": 224.609375,
+        "bottom": 374.140625,
+        "width": 210.21875,
+        "height": 65.984375,
+        "x": 119.5,
+        "y": 341.1484375,
+        "clip": {
+          "left": 14.390625,
+          "top": 308.15625,
+          "right": 224.609375,
+          "bottom": 374.140625
+        },
+        "visible": true,
+        "hit": false,
+        "hitTag": "DIV",
+        "hitText": "160x1204:3保存高清原图",
+        "text": "未命名画布尚未保存到账户",
+        "disabled": false
+      }
+    },
+    {
+      "selector": "button",
+      "text": "保存到账户",
+      "attempt": 3,
+      "before": {
+        "left": 14.390625,
+        "top": 308.15625,
+        "right": 224.609375,
+        "bottom": 374.140625,
+        "width": 210.21875,
+        "height": 65.984375,
+        "x": 119.5,
+        "y": 341.1484375,
+        "clip": {
+          "left": 14.390625,
+          "top": 308.15625,
+          "right": 224.609375,
+          "bottom": 374.140625
+        },
+        "visible": true,
+        "hit": false,
+        "hitTag": "DIV",
+        "hitText": "160x1204:3保存高清原图",
+        "text": "未命名画布尚未保存到账户",
+        "disabled": false
+      }
+    },
+    {
+      "selector": "button",
+      "text": "保存到账户",
+      "attempt": 4,
+      "before": {
+        "left": 14.390625,
+        "top": 308.15625,
+        "right": 224.609375,
+        "bottom": 374.140625,
+        "width": 210.21875,
+        "height": 65.984375,
+        "x": 119.5,
+        "y": 341.1484375,
+        "clip": {
+          "left": 14.390625,
+          "top": 308.15625,
+          "right": 224.609375,
+          "bottom": 374.140625
+        },
+        "visible": true,
+        "hit": false,
+        "hitTag": "DIV",
+        "hitText": "160x1204:3保存高清原图",
+        "text": "未命名画布尚未保存到账户",
+        "disabled": false
+      }
+    },
+    {
+      "selector": "button",
+      "text": "保存到账户",
+      "attempt": 5,
+      "before": {
+        "left": 14.390625,
+        "top": 308.15625,
+        "right": 224.609375,
+        "bottom": 374.140625,
+        "width": 210.21875,
+        "height": 65.984375,
+        "x": 119.5,
+        "y": 341.1484375,
+        "clip": {
+          "left": 14.390625,
+          "top": 308.15625,
+          "right": 224.609375,
+          "bottom": 374.140625
+        },
+        "visible": true,
+        "hit": false,
+        "hitTag": "DIV",
+        "hitText": "160x1204:3保存高清原图",
+        "text": "未命名画布尚未保存到账户",
+        "disabled": false
+      }
+    },
+    {
+      "selector": "button",
+      "text": "保存到账户",
+      "attempt": 6,
+      "before": {
+        "left": 14.390625,
+        "top": 308.15625,
+        "right": 224.609375,
+        "bottom": 374.140625,
+        "width": 210.21875,
+        "height": 65.984375,
+        "x": 119.5,
+        "y": 341.1484375,
+        "clip": {
+          "left": 14.390625,
+          "top": 308.15625,
+          "right": 224.609375,
+          "bottom": 374.140625
+        },
+        "visible": true,
+        "hit": false,
+        "hitTag": "DIV",
+        "hitText": "160x1204:3保存高清原图",
+        "text": "未命名画布尚未保存到账户",
+        "disabled": false
+      }
+    },
+    {
+      "selector": "button",
+      "text": "保存到账户",
+      "attempt": 7,
+      "before": {
+        "left": 14.390625,
+        "top": 308.15625,
+        "right": 224.609375,
+        "bottom": 374.140625,
+        "width": 210.21875,
+        "height": 65.984375,
+        "x": 119.5,
+        "y": 341.1484375,
+        "clip": {
+          "left": 14.390625,
+          "top": 308.15625,
+          "right": 224.609375,
+          "bottom": 374.140625
+        },
+        "visible": true,
+        "hit": false,
+        "hitTag": "DIV",
+        "hitText": "160x1204:3保存高清原图",
+        "text": "未命名画布尚未保存到账户",
+        "disabled": false
+      }
+    },
+    {
+      "selector": "button",
+      "text": "保存到账户",
+      "attempt": 8,
+      "before": {
+        "left": 14.390625,
+        "top": 308.15625,
+        "right": 224.609375,
+        "bottom": 374.140625,
+        "width": 210.21875,
+        "height": 65.984375,
+        "x": 119.5,
+        "y": 341.1484375,
+        "clip": {
+          "left": 14.390625,
+          "top": 308.15625,
+          "right": 224.609375,
+          "bottom": 374.140625
+        },
+        "visible": true,
+        "hit": false,
+        "hitTag": "DIV",
+        "hitText": "160x1204:3保存高清原图",
+        "text": "未命名画布尚未保存到账户",
+        "disabled": false
+      }
+    },
+    {
+      "selector": "button",
+      "text": "保存到账户",
+      "attempt": 9,
+      "before": {
+        "left": 14.390625,
+        "top": 308.15625,
+        "right": 224.609375,
+        "bottom": 374.140625,
+        "width": 210.21875,
+        "height": 65.984375,
+        "x": 119.5,
+        "y": 341.1484375,
+        "clip": {
+          "left": 14.390625,
+          "top": 308.15625,
+          "right": 224.609375,
+          "bottom": 374.140625
+        },
+        "visible": true,
+        "hit": false,
+        "hitTag": "DIV",
+        "hitText": "160x1204:3保存高清原图",
+        "text": "未命名画布尚未保存到账户",
+        "disabled": false
+      }
+    },
+    {
+      "selector": "button",
+      "text": "Legacy 24-node graph",
+      "attempt": 0,
+      "before": {
+        "left": 14.390625,
+        "top": 234.984375,
+        "right": 224.609375,
+        "bottom": 300.96875,
+        "width": 210.21875,
+        "height": 65.984375,
+        "x": 119.5,
+        "y": 267.9765625,
+        "clip": {
+          "left": 14.390625,
+          "top": 234.984375,
+          "right": 224.609375,
+          "bottom": 300.96875
+        },
+        "visible": true,
+        "hit": false,
+        "hitTag": "DIV",
+        "hitText": "160x1204:3保存高清原图",
+        "text": "Legacy 24-node graph账户快照已保存",
+        "disabled": false
+      }
+    },
+    {
+      "selector": "button",
+      "text": "Legacy 24-node graph",
+      "attempt": 1,
+      "before": {
+        "left": 14.390625,
+        "top": 234.984375,
+        "right": 224.609375,
+        "bottom": 300.96875,
+        "width": 210.21875,
+        "height": 65.984375,
+        "x": 119.5,
+        "y": 267.9765625,
+        "clip": {
+          "left": 14.390625,
+          "top": 234.984375,
+          "right": 224.609375,
+          "bottom": 300.96875
+        },
+        "visible": true,
+        "hit": false,
+        "hitTag": "DIV",
+        "hitText": "160x1204:3保存高清原图",
+        "text": "Legacy 24-node graph账户快照已保存",
+        "disabled": false
+      }
+    },
+    {
+      "selector": "button",
+      "text": "Legacy 24-node graph",
+      "attempt": 2,
+      "before": {
+        "left": 14.390625,
+        "top": 234.984375,
+        "right": 224.609375,
+        "bottom": 300.96875,
+        "width": 210.21875,
+        "height": 65.984375,
+        "x": 119.5,
+        "y": 267.9765625,
+        "clip": {
+          "left": 14.390625,
+          "top": 234.984375,
+          "right": 224.609375,
+          "bottom": 300.96875
+        },
+        "visible": true,
+        "hit": false,
+        "hitTag": "DIV",
+        "hitText": "160x1204:3保存高清原图",
+        "text": "Legacy 24-node graph账户快照已保存",
+        "disabled": false
+      }
+    },
+    {
+      "selector": "button",
+      "text": "Legacy 24-node graph",
+      "attempt": 3,
+      "before": {
+        "left": 14.390625,
+        "top": 234.984375,
+        "right": 224.609375,
+        "bottom": 300.96875,
+        "width": 210.21875,
+        "height": 65.984375,
+        "x": 119.5,
+        "y": 267.9765625,
+        "clip": {
+          "left": 14.390625,
+          "top": 234.984375,
+          "right": 224.609375,
+          "bottom": 300.96875
+        },
+        "visible": true,
+        "hit": false,
+        "hitTag": "DIV",
+        "hitText": "160x1204:3保存高清原图",
+        "text": "Legacy 24-node graph账户快照已保存",
+        "disabled": false
+      }
+    },
+    {
+      "selector": "button",
+      "text": "Legacy 24-node graph",
+      "attempt": 4,
+      "before": {
+        "left": 14.390625,
+        "top": 234.984375,
+        "right": 224.609375,
+        "bottom": 300.96875,
+        "width": 210.21875,
+        "height": 65.984375,
+        "x": 119.5,
+        "y": 267.9765625,
+        "clip": {
+          "left": 14.390625,
+          "top": 234.984375,
+          "right": 224.609375,
+          "bottom": 300.96875
+        },
+        "visible": true,
+        "hit": false,
+        "hitTag": "DIV",
+        "hitText": "160x1204:3保存高清原图",
+        "text": "Legacy 24-node graph账户快照已保存",
+        "disabled": false
+      }
+    },
+    {
+      "selector": "button",
+      "text": "Legacy 24-node graph",
+      "attempt": 5,
+      "before": {
+        "left": 14.390625,
+        "top": 234.984375,
+        "right": 224.609375,
+        "bottom": 300.96875,
+        "width": 210.21875,
+        "height": 65.984375,
+        "x": 119.5,
+        "y": 267.9765625,
+        "clip": {
+          "left": 14.390625,
+          "top": 234.984375,
+          "right": 224.609375,
+          "bottom": 300.96875
+        },
+        "visible": true,
+        "hit": false,
+        "hitTag": "DIV",
+        "hitText": "160x1204:3保存高清原图",
+        "text": "Legacy 24-node graph账户快照已保存",
+        "disabled": false
+      }
+    },
+    {
+      "selector": "button",
+      "text": "Legacy 24-node graph",
+      "attempt": 6,
+      "before": {
+        "left": 14.390625,
+        "top": 234.984375,
+        "right": 224.609375,
+        "bottom": 300.96875,
+        "width": 210.21875,
+        "height": 65.984375,
+        "x": 119.5,
+        "y": 267.9765625,
+        "clip": {
+          "left": 14.390625,
+          "top": 234.984375,
+          "right": 224.609375,
+          "bottom": 300.96875
+        },
+        "visible": true,
+        "hit": false,
+        "hitTag": "DIV",
+        "hitText": "160x1204:3保存高清原图",
+        "text": "Legacy 24-node graph账户快照已保存",
+        "disabled": false
+      }
+    },
+    {
+      "selector": "button",
+      "text": "Legacy 24-node graph",
+      "attempt": 7,
+      "before": {
+        "left": 14.390625,
+        "top": 234.984375,
+        "right": 224.609375,
+        "bottom": 300.96875,
+        "width": 210.21875,
+        "height": 65.984375,
+        "x": 119.5,
+        "y": 267.9765625,
+        "clip": {
+          "left": 14.390625,
+          "top": 234.984375,
+          "right": 224.609375,
+          "bottom": 300.96875
+        },
+        "visible": true,
+        "hit": false,
+        "hitTag": "DIV",
+        "hitText": "160x1204:3保存高清原图",
+        "text": "Legacy 24-node graph账户快照已保存",
+        "disabled": false
+      }
+    },
+    {
+      "selector": "button",
+      "text": "Legacy 24-node graph",
+      "attempt": 8,
+      "before": {
+        "left": 14.390625,
+        "top": 234.984375,
+        "right": 224.609375,
+        "bottom": 300.96875,
+        "width": 210.21875,
+        "height": 65.984375,
+        "x": 119.5,
+        "y": 267.9765625,
+        "clip": {
+          "left": 14.390625,
+          "top": 234.984375,
+          "right": 224.609375,
+          "bottom": 300.96875
+        },
+        "visible": true,
+        "hit": false,
+        "hitTag": "DIV",
+        "hitText": "160x1204:3保存高清原图",
+        "text": "Legacy 24-node graph账户快照已保存",
+        "disabled": false
+      }
+    },
+    {
+      "selector": "button",
+      "text": "Legacy 24-node graph",
+      "attempt": 9,
+      "before": {
+        "left": 14.390625,
+        "top": 234.984375,
+        "right": 224.609375,
+        "bottom": 300.96875,
+        "width": 210.21875,
+        "height": 65.984375,
+        "x": 119.5,
+        "y": 267.9765625,
+        "clip": {
+          "left": 14.390625,
+          "top": 234.984375,
+          "right": 224.609375,
+          "bottom": 300.96875
+        },
+        "visible": true,
+        "hit": false,
+        "hitTag": "DIV",
+        "hitText": "160x1204:3保存高清原图",
+        "text": "Legacy 24-node graph账户快照已保存",
+        "disabled": false
+      }
+    },
+    {
+      "selector": "button",
+      "text": "200-node capacity smoke",
+      "attempt": 0,
+      "before": {
+        "left": 14.390625,
+        "top": 381.328125,
+        "right": 224.609375,
+        "bottom": 447.3125,
+        "width": 210.21875,
+        "height": 65.984375,
+        "x": 119.5,
+        "y": 414.3203125,
+        "clip": {
+          "left": 14.390625,
+          "top": 381.328125,
+          "right": 224.609375,
+          "bottom": 447.3125
+        },
+        "visible": true,
+        "hit": false,
+        "hitTag": "DIV",
+        "hitText": "160x1204:3保存高清原图",
+        "text": "200-node capacity smoke账户快照已保存",
+        "disabled": false
+      }
+    },
+    {
+      "selector": "button",
+      "text": "200-node capacity smoke",
+      "attempt": 1,
+      "before": {
+        "left": 14.390625,
+        "top": 381.328125,
+        "right": 224.609375,
+        "bottom": 447.3125,
+        "width": 210.21875,
+        "height": 65.984375,
+        "x": 119.5,
+        "y": 414.3203125,
+        "clip": {
+          "left": 14.390625,
+          "top": 381.328125,
+          "right": 224.609375,
+          "bottom": 447.3125
+        },
+        "visible": true,
+        "hit": false,
+        "hitTag": "DIV",
+        "hitText": "160x1204:3保存高清原图",
+        "text": "200-node capacity smoke账户快照已保存",
+        "disabled": false
+      }
+    },
+    {
+      "selector": "button",
+      "text": "200-node capacity smoke",
+      "attempt": 2,
+      "before": {
+        "left": 14.390625,
+        "top": 381.328125,
+        "right": 224.609375,
+        "bottom": 447.3125,
+        "width": 210.21875,
+        "height": 65.984375,
+        "x": 119.5,
+        "y": 414.3203125,
+        "clip": {
+          "left": 14.390625,
+          "top": 381.328125,
+          "right": 224.609375,
+          "bottom": 447.3125
+        },
+        "visible": true,
+        "hit": false,
+        "hitTag": "DIV",
+        "hitText": "160x1204:3保存高清原图",
+        "text": "200-node capacity smoke账户快照已保存",
+        "disabled": false
+      }
+    },
+    {
+      "selector": "button",
+      "text": "200-node capacity smoke",
+      "attempt": 3,
+      "before": {
+        "left": 14.390625,
+        "top": 381.328125,
+        "right": 224.609375,
+        "bottom": 447.3125,
+        "width": 210.21875,
+        "height": 65.984375,
+        "x": 119.5,
+        "y": 414.3203125,
+        "clip": {
+          "left": 14.390625,
+          "top": 381.328125,
+          "right": 224.609375,
+          "bottom": 447.3125
+        },
+        "visible": true,
+        "hit": false,
+        "hitTag": "DIV",
+        "hitText": "160x1204:3保存高清原图",
+        "text": "200-node capacity smoke账户快照已保存",
+        "disabled": false
+      }
+    },
+    {
+      "selector": "button",
+      "text": "200-node capacity smoke",
+      "attempt": 4,
+      "before": {
+        "left": 14.390625,
+        "top": 381.328125,
+        "right": 224.609375,
+        "bottom": 447.3125,
+        "width": 210.21875,
+        "height": 65.984375,
+        "x": 119.5,
+        "y": 414.3203125,
+        "clip": {
+          "left": 14.390625,
+          "top": 381.328125,
+          "right": 224.609375,
+          "bottom": 447.3125
+        },
+        "visible": true,
+        "hit": false,
+        "hitTag": "DIV",
+        "hitText": "160x1204:3保存高清原图",
+        "text": "200-node capacity smoke账户快照已保存",
+        "disabled": false
+      }
+    },
+    {
+      "selector": "button",
+      "text": "200-node capacity smoke",
+      "attempt": 5,
+      "before": {
+        "left": 14.390625,
+        "top": 381.328125,
+        "right": 224.609375,
+        "bottom": 447.3125,
+        "width": 210.21875,
+        "height": 65.984375,
+        "x": 119.5,
+        "y": 414.3203125,
+        "clip": {
+          "left": 14.390625,
+          "top": 381.328125,
+          "right": 224.609375,
+          "bottom": 447.3125
+        },
+        "visible": true,
+        "hit": false,
+        "hitTag": "DIV",
+        "hitText": "160x1204:3保存高清原图",
+        "text": "200-node capacity smoke账户快照已保存",
+        "disabled": false
+      }
+    },
+    {
+      "selector": "button",
+      "text": "200-node capacity smoke",
+      "attempt": 6,
+      "before": {
+        "left": 14.390625,
+        "top": 381.328125,
+        "right": 224.609375,
+        "bottom": 447.3125,
+        "width": 210.21875,
+        "height": 65.984375,
+        "x": 119.5,
+        "y": 414.3203125,
+        "clip": {
+          "left": 14.390625,
+          "top": 381.328125,
+          "right": 224.609375,
+          "bottom": 447.3125
+        },
+        "visible": true,
+        "hit": false,
+        "hitTag": "DIV",
+        "hitText": "160x1204:3保存高清原图",
+        "text": "200-node capacity smoke账户快照已保存",
+        "disabled": false
+      }
+    },
+    {
+      "selector": "button",
+      "text": "200-node capacity smoke",
+      "attempt": 7,
+      "before": {
+        "left": 14.390625,
+        "top": 381.328125,
+        "right": 224.609375,
+        "bottom": 447.3125,
+        "width": 210.21875,
+        "height": 65.984375,
+        "x": 119.5,
+        "y": 414.3203125,
+        "clip": {
+          "left": 14.390625,
+          "top": 381.328125,
+          "right": 224.609375,
+          "bottom": 447.3125
+        },
+        "visible": true,
+        "hit": false,
+        "hitTag": "DIV",
+        "hitText": "160x1204:3保存高清原图",
+        "text": "200-node capacity smoke账户快照已保存",
+        "disabled": false
+      }
+    },
+    {
+      "selector": "button",
+      "text": "200-node capacity smoke",
+      "attempt": 8,
+      "before": {
+        "left": 14.390625,
+        "top": 381.328125,
+        "right": 224.609375,
+        "bottom": 447.3125,
+        "width": 210.21875,
+        "height": 65.984375,
+        "x": 119.5,
+        "y": 414.3203125,
+        "clip": {
+          "left": 14.390625,
+          "top": 381.328125,
+          "right": 224.609375,
+          "bottom": 447.3125
+        },
+        "visible": true,
+        "hit": false,
+        "hitTag": "DIV",
+        "hitText": "160x1204:3保存高清原图",
+        "text": "200-node capacity smoke账户快照已保存",
+        "disabled": false
+      }
+    },
+    {
+      "selector": "button",
+      "text": "200-node capacity smoke",
+      "attempt": 9,
+      "before": {
+        "left": 14.390625,
+        "top": 381.328125,
+        "right": 224.609375,
+        "bottom": 447.3125,
+        "width": 210.21875,
+        "height": 65.984375,
+        "x": 119.5,
+        "y": 414.3203125,
+        "clip": {
+          "left": 14.390625,
+          "top": 381.328125,
+          "right": 224.609375,
+          "bottom": 447.3125
+        },
+        "visible": true,
+        "hit": false,
+        "hitTag": "DIV",
+        "hitText": "160x1204:3保存高清原图",
+        "text": "200-node capacity smoke账户快照已保存",
+        "disabled": false
+      }
+    }
+  ]
+}

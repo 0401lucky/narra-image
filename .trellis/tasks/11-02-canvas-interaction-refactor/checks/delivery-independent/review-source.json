@@ -1,0 +1,72 @@
+{
+  "at": "2026-11-03T02:39:59.989914+00:00",
+  "reviewer": "canvas_delivery_check",
+  "head": "e42ff7a74fb7d1c0e4507c960720bb0dc973f1ab",
+  "sourceFiles": {
+    "src/components/create/canvas/commands.ts": "5b9b7dda91c4cbe5ff9a146505946ebf92c48ee7473f18cbebeed430c68e5262",
+    "src/components/create/canvas/composer-placement.ts": "df1402340ec8898d1ffd0e33a45f1d274b81cd6f352a3a0a81d0ed5388637db1",
+    "src/components/create/canvas/controller.ts": "cf63b5b067bae5b501795fe001533ea0d42e687fce5db3ffe1b1c0678a46a9a0",
+    "src/components/create/canvas/mobile-interaction.ts": "2865f741a299c1064db4b8808329ebf7f213696dd417978a922d3f22eb14f221",
+    "src/components/create/canvas/renderer-adapter.ts": "373b509e1994e7f855bd6798c63584b1370665e278cbbfdec42e7649ad786862",
+    "src/components/create/hooks/use-canvas-composer-placement.ts": "0b45c7abe0b388b3e59cccd3e81a57beaf15e685cc278903ad41468a9785ba19",
+    "src/components/create/parts/canvas-generation-composer.tsx": "5362f157640bab0e1f981bd0a126fc2f812d2846990905e56212559ad026fe7c",
+    "src/components/create/parts/canvas-image-toolbar.tsx": "c4b249104e4bd9179a30280d685eef8b2ed9e0f5f470aff3342acd6b8792b6e0",
+    "src/components/create/parts/canvas-node-editor.tsx": "5ce393d86da4be506ceb8b322d25ec5f8b51ccd99d71a47b8f6ad796f491bcba",
+    "src/components/create/parts/canvas-node-inspector.tsx": "5bb329e48e03c8ed60cbaa7239a6532d3cfbf5e9edbae01c3f6db0f44bd7abb6",
+    "src/components/create/parts/canvas-node-picker.tsx": "778cb69a43c3e5d6467e154654ab3d84d8567b14e7c7be17327d8bb3080d81d2",
+    "src/components/create/parts/canvas-nodes/reference-node.tsx": "7321f9664c9216fbcbf38a62c9d8a75dd131a05411e16ebb7a4346c6bae6168b",
+    "src/components/create/parts/canvas-nodes/result-node.tsx": "20cc56f28bde846e2c7313fee991ceb5293d7ee60471e3910842da8060c2320c",
+    "src/components/create/parts/canvas-prompt-field.tsx": "a3ab70b8c8711710bd3d5dfc0a981940dbda05451075e467f52ae32330aa4022",
+    "src/components/create/parts/canvas-stage.module.css": "b28f68fd02e9c5709823dc16defe7e065d2ce8f2854f384a7c0824a0f2eb6195",
+    "src/components/create/parts/canvas-stage.tsx": "66de1b5094398525586cb1182c0d82119af424fbd91f859e581e7e680e3288d5",
+    "src/components/create/parts/canvas-toolbar.tsx": "ddd016a13e59e81500078a9925ac9592b091c3e73655eb3e7cf1ea008cbd8793",
+    "src/tests/unit/canvas-composer-placement.test.ts": "847d2f6c1b89c25656959b4b1733b0c0d22d80d0c8fe6bfbd4862a7f6ae718d9",
+    "src/tests/unit/canvas-image-first-stage.test.tsx": "44cd164686f5359e533a62d11b9d4e37e568f81758f18180a20a32179bf22e10",
+    "src/tests/unit/canvas-node-editor.test.tsx": "09f6ffa8414fe858962000fc2a607490a2527b72911a98a2d1ccd3013ec87ad0",
+    "src/tests/unit/canvas-quick-creation.test.ts": "39ad218db517981837fcb94fa84b3fb17147c3f798a0c162f55ecaadeffb92ff",
+    "src/tests/unit/canvas-stage.test.tsx": "96713809d27b29b7549aa2aacf191376c99d25ac4e4ab19de6a1b18f267fc1c8",
+    "src/tests/unit/canvas-terminal-placement.test.ts": "c17e3098f6fc495ad2bd5bacc535d5625d42ae290fa6255b4df59c237da7dc6a",
+    "src/tests/unit/generator-studio-canvas.test.tsx": "40e698b8dbc9b65423a14ed52ac78d3752bc4a5bd06a9086cb7cb8d054d8fe0a"
+  },
+  "changedSinceHistoricalFreeze": {
+    "src/components/create/parts/canvas-image-toolbar.tsx": {
+      "before": "3c4ccfa50451cc783d00cbbdb253392b242ff82da3f1e2c81fc6b47eeface4ba",
+      "after": "c4b249104e4bd9179a30280d685eef8b2ed9e0f5f470aff3342acd6b8792b6e0"
+    },
+    "src/tests/unit/canvas-image-first-stage.test.tsx": {
+      "before": "7ec010b2c808954874bf8045b24077a4bbf1e6904e324bba41b0afca5529b625",
+      "after": "44cd164686f5359e533a62d11b9d4e37e568f81758f18180a20a32179bf22e10"
+    }
+  },
+  "scope": [
+    "src/components/create/canvas/commands.ts",
+    "src/components/create/canvas/composer-placement.ts",
+    "src/components/create/canvas/controller.ts",
+    "src/components/create/canvas/mobile-interaction.ts",
+    "src/components/create/canvas/renderer-adapter.ts",
+    "src/components/create/hooks/use-canvas-composer-placement.ts",
+    "src/components/create/parts/canvas-generation-composer.tsx",
+    "src/components/create/parts/canvas-image-toolbar.tsx",
+    "src/components/create/parts/canvas-node-editor.tsx",
+    "src/components/create/parts/canvas-node-inspector.tsx",
+    "src/components/create/parts/canvas-node-picker.tsx",
+    "src/components/create/parts/canvas-nodes/reference-node.tsx",
+    "src/components/create/parts/canvas-nodes/result-node.tsx",
+    "src/components/create/parts/canvas-prompt-field.tsx",
+    "src/components/create/parts/canvas-stage.module.css",
+    "src/components/create/parts/canvas-stage.tsx",
+    "src/components/create/parts/canvas-toolbar.tsx",
+    "src/tests/unit/canvas-composer-placement.test.ts",
+    "src/tests/unit/canvas-image-first-stage.test.tsx",
+    "src/tests/unit/canvas-node-editor.test.tsx",
+    "src/tests/unit/canvas-quick-creation.test.ts",
+    "src/tests/unit/canvas-stage.test.tsx",
+    "src/tests/unit/canvas-terminal-placement.test.ts",
+    "src/tests/unit/generator-studio-canvas.test.tsx"
+  ],
+  "specFiles": {
+    ".trellis/spec/frontend/canvas-studio.md": "76cebcfe6245116a1bebf73c3f60f2fb33960c6d8304efc928800e40c00c4ec9",
+    ".trellis/spec/frontend/index.md": "1cebeff9416df4de29e9e2c391ed10584ab44e0428a5a5e68bd79fd1f17b37aa",
+    ".trellis/spec/frontend/quality-guidelines.md": "85a4a97bf3d92e48f650e03d6ba80252e38000b66c5ee5362bbdf5ae005a1d52"
+  }
+}

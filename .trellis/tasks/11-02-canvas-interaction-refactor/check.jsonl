@@ -1,0 +1,13 @@
+{"file":".trellis/spec/frontend/index.md","reason":"Project guideline map and scope consistency"}
+{"file":".trellis/spec/frontend/component-guidelines.md","reason":"Accessible Chinese component composition and existing visual language"}
+{"file":".trellis/spec/frontend/hook-guidelines.md","reason":"Captured targets, cancellation and listener/RAF lifecycle cleanup"}
+{"file":".trellis/spec/frontend/state-management.md","reason":"No second canonical store, owner/lazy/editor/field lifetime and native input"}
+{"file":".trellis/spec/frontend/type-safety.md","reason":"Strict shared types and refined domain validation"}
+{"file":".trellis/spec/frontend/canvas-studio.md","reason":"Full canvas compatibility and real-browser/physical-device evidence boundaries"}
+{"file":".trellis/spec/frontend/quality-guidelines.md","reason":"Complete isolated lint/types/tests/build and calibrated native browser evidence"}
+{"file":".trellis/spec/operations/canvas-contracts.md","reason":"Owner/CAS/manual-run/idempotency/original/retention and unchanged wire schema"}
+{"file":".trellis/spec/guides/code-reuse-thinking-guide.md","reason":"Avoid duplicated parameter/source/gesture validation"}
+{"file":".trellis/spec/guides/cross-layer-thinking-guide.md","reason":"Audit canonical UI-to-scene-to-run flow and explicit captured ownership"}
+{"file":".trellis/tasks/11-02-canvas-interaction-refactor/research/current-canvas.md","reason":"Baseline behavior, preserved contracts and test coverage inventory"}
+{"file":".trellis/tasks/11-02-canvas-interaction-refactor/research/infinite-canvas-reference.md","reason":"Do not confuse reference source claims with local acceptance or mobile proof"}
+{"file":".trellis/tasks/11-02-canvas-interaction-refactor/research/canvas-interaction-design-seams.md","reason":"Review atomic rejection, shared/missing prompt, chooser and gesture/placement risks"}

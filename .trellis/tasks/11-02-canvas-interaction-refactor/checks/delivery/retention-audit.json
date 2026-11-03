@@ -1,0 +1,32 @@
+{
+  "at": "2026-11-03T01:59:20.696466+00:00",
+  "previewOnly": true,
+  "realIndexUnchanged": true,
+  "candidateFiles": 175,
+  "preservedRawMachineAndUpstreamFiles": 115,
+  "rawDrift": [],
+  "defaultCachedWhitespaceExit": 0,
+  "negativeWhitespaceChecks": [
+    {
+      "path": ".trellis/tasks/11-02-canvas-interaction-refactor/checks/delivery/__retention-receipt-space.json",
+      "exitCode": 2,
+      "expected": "real whitespace still rejected"
+    },
+    {
+      "path": ".trellis/tasks/11-02-canvas-interaction-refactor/checks/delivery/__retention-receipt-blank.json",
+      "exitCode": 2,
+      "expected": "real whitespace still rejected"
+    },
+    {
+      "path": ".trellis/tasks/11-02-canvas-interaction-refactor/checks/delivery/__retention-helper-space.cjs",
+      "exitCode": 2,
+      "expected": "real whitespace still rejected"
+    },
+    {
+      "path": ".trellis/tasks/11-02-canvas-interaction-refactor/checks/delivery/__retention-authored-space.md",
+      "exitCode": 2,
+      "expected": "real whitespace still rejected"
+    }
+  ],
+  "policy": "Task-local -text retains machine/upstream raw bytes. cr-at-eol recognizes CRLF only; normal whitespace checks remain enabled. No product/helper/authored-document exemptions. No source normalized to fake a gate."
+}

@@ -1,0 +1,4798 @@
+{
+  "sha": "9cd3deacbcc598361807afc16c059a80dd18b6f9",
+  "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/9cd3deacbcc598361807afc16c059a80dd18b6f9",
+  "tree": [
+    {
+      "path": ".agents",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "5ffeb5895db6ded6eeb318f68f040f38f1e84b3e",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/5ffeb5895db6ded6eeb318f68f040f38f1e84b3e"
+    },
+    {
+      "path": ".agents/plugins",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "403de0d27c107ea95b7c0f681b4c46c8f5b8f916",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/403de0d27c107ea95b7c0f681b4c46c8f5b8f916"
+    },
+    {
+      "path": ".agents/plugins/marketplace.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "98a0146fa5d504ccc5ef7bd11d8d6f12d08d06de",
+      "size": 396,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/98a0146fa5d504ccc5ef7bd11d8d6f12d08d06de"
+    },
+    {
+      "path": ".agents/skills",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "44379ee47f5f82f6efea73041996acf031307eb4",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/44379ee47f5f82f6efea73041996acf031307eb4"
+    },
+    {
+      "path": ".agents/skills/frontend-design",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "928950704df8a8b885c03de5da626331e6f29cf8",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/928950704df8a8b885c03de5da626331e6f29cf8"
+    },
+    {
+      "path": ".agents/skills/frontend-design/LICENSE.txt",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f433b1a53f5b830a205fd2df78e2b34974656c7b",
+      "size": 10174,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/f433b1a53f5b830a205fd2df78e2b34974656c7b"
+    },
+    {
+      "path": ".agents/skills/frontend-design/SKILL.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5be498e2585843c7137bf9a74e262f57415de5ce",
+      "size": 4440,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/5be498e2585843c7137bf9a74e262f57415de5ce"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "343db72180d05814949fef7d46be96b5c6ee86b3",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/343db72180d05814949fef7d46be96b5c6ee86b3"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/AGENTS.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4e340a50684a8e7811d5bfa4df48bd9989d0fd87",
+      "size": 108261,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/4e340a50684a8e7811d5bfa4df48bd9989d0fd87"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f283e1c0c21c5b13c848452528c3949ff544846c",
+      "size": 3360,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/f283e1c0c21c5b13c848452528c3949ff544846c"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/SKILL.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "237988de4a66dd8a71d30a2c24ebe1a86b58d04e",
+      "size": 7251,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/237988de4a66dd8a71d30a2c24ebe1a86b58d04e"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/metadata.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3bec38b176cc71d105895ec4678bbe79305dcb4c",
+      "size": 921,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/3bec38b176cc71d105895ec4678bbe79305dcb4c"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "0af4bf7cbb25560321d127d270fd787875b8ea89",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/0af4bf7cbb25560321d127d270fd787875b8ea89"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/_sections.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4d20c144bc3b9265fc5976c704a8dd60ed3a806a",
+      "size": 1554,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/4d20c144bc3b9265fc5976c704a8dd60ed3a806a"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/_template.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1e9e70703485021e0b969f5731f38c8b9f8694db",
+      "size": 631,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/1e9e70703485021e0b969f5731f38c8b9f8694db"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/advanced-effect-event-deps.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "24d901b62be66f6088eb1de5b262e67f5c337d57",
+      "size": 1802,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/24d901b62be66f6088eb1de5b262e67f5c337d57"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/advanced-event-handler-refs.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "97e7ade243aa6dae50d6faa5111dea0d04778ead",
+      "size": 1483,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/97e7ade243aa6dae50d6faa5111dea0d04778ead"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/advanced-init-once.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "73ee38e5e74c0afa28cb730afe3275479432092a",
+      "size": 958,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/73ee38e5e74c0afa28cb730afe3275479432092a"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/advanced-use-latest.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9c7cb501693d4a9521697f13dbd5906dd99f0257",
+      "size": 1072,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/9c7cb501693d4a9521697f13dbd5906dd99f0257"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/async-api-routes.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6feda1ef0ac06b57b33c7b5bd6a19ca88d6c8a34",
+      "size": 1125,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/6feda1ef0ac06b57b33c7b5bd6a19ca88d6c8a34"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/async-cheap-condition-before-await.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5799d7f6ee6e9d70422048ab0cae06ca021d22b2",
+      "size": 1220,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/5799d7f6ee6e9d70422048ab0cae06ca021d22b2"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/async-defer-await.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "460b5e16baf9c66f85e4169eb9d43e4d07f2ce94",
+      "size": 2208,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/460b5e16baf9c66f85e4169eb9d43e4d07f2ce94"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/async-dependencies.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0484ebab993f3db78277e8731872473d02475e6d",
+      "size": 1293,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/0484ebab993f3db78277e8731872473d02475e6d"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/async-parallel.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "64133f6c31fec81eaaabd712586337d20122e09f",
+      "size": 654,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/64133f6c31fec81eaaabd712586337d20122e09f"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/async-suspense-boundaries.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1fbc05b04ed2474637b12014a77688750e78f931",
+      "size": 2510,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/1fbc05b04ed2474637b12014a77688750e78f931"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/bundle-analyzable-paths.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8276f156cf1aa8a611bd5bc3cadcb362e16ccd13",
+      "size": 2382,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/8276f156cf1aa8a611bd5bc3cadcb362e16ccd13"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/bundle-barrel-imports.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "22d1050196671b7bc9f9aaf88cc665ba6fa8deb0",
+      "size": 2795,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/22d1050196671b7bc9f9aaf88cc665ba6fa8deb0"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/bundle-conditional.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "99d6fc90e31d683d2b6b71353b92d620b484b644",
+      "size": 949,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/99d6fc90e31d683d2b6b71353b92d620b484b644"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/bundle-defer-third-party.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "db041d1510e51defeade05926ba4e6bbad1068b5",
+      "size": 920,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/db041d1510e51defeade05926ba4e6bbad1068b5"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/bundle-dynamic-imports.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "60b62695e7a080e2020ff2242d8d841c5e3ecbc4",
+      "size": 791,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/60b62695e7a080e2020ff2242d8d841c5e3ecbc4"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/bundle-preload.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7000504065472628ae614786a3faadd23b0435a7",
+      "size": 1149,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/7000504065472628ae614786a3faadd23b0435a7"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/client-event-listeners.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "aad4ae91605d715aad8e92b76bd7fb85c91d7cdf",
+      "size": 1969,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/aad4ae91605d715aad8e92b76bd7fb85c91d7cdf"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/client-localstorage-schema.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d30a1a7d4f85b0d50a0808eaa1b382c6deb595f4",
+      "size": 1950,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/d30a1a7d4f85b0d50a0808eaa1b382c6deb595f4"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/client-passive-event-listeners.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ce39a889efb4452ec4c044555ff818301dcf7ece",
+      "size": 1644,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/ce39a889efb4452ec4c044555ff818301dcf7ece"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/client-swr-dedup.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2a430f27fd6abdc1b1b2f809b7a60114ff506790",
+      "size": 1159,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/2a430f27fd6abdc1b1b2f809b7a60114ff506790"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/js-batch-dom-css.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a62d84ed8149b6d4f173debc7043af03f8f8dd06",
+      "size": 3266,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/a62d84ed8149b6d4f173debc7043af03f8f8dd06"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/js-cache-function-results.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "180f8ac8fffd7e6ee320242d59d06565d40a12f8",
+      "size": 1949,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/180f8ac8fffd7e6ee320242d59d06565d40a12f8"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/js-cache-property-access.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "39eec9061b4ca820150cc8183fb73f9e0c91ce85",
+      "size": 532,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/39eec9061b4ca820150cc8183fb73f9e0c91ce85"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/js-cache-storage.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "aa4a30c08176aabd27b41fa44d5c1981457b675f",
+      "size": 1651,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/aa4a30c08176aabd27b41fa44d5c1981457b675f"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/js-combine-iterations.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "044d017ec3b24b53e46d638acd1d936a22ac6323",
+      "size": 753,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/044d017ec3b24b53e46d638acd1d936a22ac6323"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/js-early-exit.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f46cb89c6cbe06e481aba0136848e3b17263ba96",
+      "size": 1133,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/f46cb89c6cbe06e481aba0136848e3b17263ba96"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/js-flatmap-filter.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ee0edf0da256eb8b62c5a998c768c51eb520e8cd",
+      "size": 1411,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/ee0edf0da256eb8b62c5a998c768c51eb520e8cd"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/js-hoist-regexp.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "dae3fefdc0a1db66badcd4875489715edcdb038b",
+      "size": 1028,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/dae3fefdc0a1db66badcd4875489715edcdb038b"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/js-index-maps.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9d357a00b15ac67cdd638886f5197a13173a637d",
+      "size": 837,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/9d357a00b15ac67cdd638886f5197a13173a637d"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/js-length-check-first.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8b89573630fdc3aa10564273f390ecc7e2b1cd3e",
+      "size": 1747,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/8b89573630fdc3aa10564273f390ecc7e2b1cd3e"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/js-min-max-loop.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4b6656e96aecf3ae6ade52974090ae8b3e3f2bb5",
+      "size": 2290,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/4b6656e96aecf3ae6ade52974090ae8b3e3f2bb5"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/js-request-idle-callback.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d81927e5f0ddb9fa4eece79197728bfc4382cbfe",
+      "size": 2647,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/d81927e5f0ddb9fa4eece79197728bfc4382cbfe"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/js-set-map-lookups.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "680a4892ee291c432bf8e769a44d0f1eb102b74b",
+      "size": 532,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/680a4892ee291c432bf8e769a44d0f1eb102b74b"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/js-tosorted-immutable.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "eae8b3f8aed2c7a893ceaae4cab55fa1c444b309",
+      "size": 1782,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/eae8b3f8aed2c7a893ceaae4cab55fa1c444b309"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/rendering-activity.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c957a490b7c2688542766150741e85e066539251",
+      "size": 564,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/c957a490b7c2688542766150741e85e066539251"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/rendering-animate-svg-wrapper.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "646744cbe53b213c6fa5ead54ef107510e5be89d",
+      "size": 1185,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/646744cbe53b213c6fa5ead54ef107510e5be89d"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/rendering-conditional-render.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7e866f5852dac80e0822e7f7c33476f5c9fc22f1",
+      "size": 980,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/7e866f5852dac80e0822e7f7c33476f5c9fc22f1"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/rendering-content-visibility.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "aa6656362b2c0dad9ffea788b5850843d6c0629e",
+      "size": 815,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/aa6656362b2c0dad9ffea788b5850843d6c0629e"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/rendering-hoist-jsx.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "32d2f3fcea53dadcf847231ee20c60fa2c5c3049",
+      "size": 1039,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/32d2f3fcea53dadcf847231ee20c60fa2c5c3049"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/rendering-hydration-no-flicker.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5cf0e79b69afd7564b965c09435a2c7ee79eb2bd",
+      "size": 2308,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/5cf0e79b69afd7564b965c09435a2c7ee79eb2bd"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/rendering-hydration-suppress-warning.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "24ba2513a29f5259b3184695d2d4da25e03e42ac",
+      "size": 872,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/24ba2513a29f5259b3184695d2d4da25e03e42ac"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/rendering-resource-hints.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1290bef06baf459f85dc5856ffc4486951224a48",
+      "size": 2549,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/1290bef06baf459f85dc5856ffc4486951224a48"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/rendering-script-defer-async.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ee275ed1c06da8f1ae70e744e47965799eaebf02",
+      "size": 1868,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/ee275ed1c06da8f1ae70e744e47965799eaebf02"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/rendering-svg-precision.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6d7712860365294936a1b736d29d3eb970b91da7",
+      "size": 588,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/6d7712860365294936a1b736d29d3eb970b91da7"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/rendering-usetransition-loading.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0c1b0b98e884d2c77bdec66df754693bd48c7777",
+      "size": 2074,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/0c1b0b98e884d2c77bdec66df754693bd48c7777"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/rerender-defer-reads.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e867c95f02fe6ed6ac2f91fdf1c0922304e0423a",
+      "size": 973,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/e867c95f02fe6ed6ac2f91fdf1c0922304e0423a"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/rerender-dependencies.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "47a4d92685702e3a3b07073c62a61800fa0a6d7d",
+      "size": 824,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/47a4d92685702e3a3b07073c62a61800fa0a6d7d"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/rerender-derived-state-no-effect.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3d9fe4050794ea6655add6bee50cfbc104e5dc31",
+      "size": 1201,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/3d9fe4050794ea6655add6bee50cfbc104e5dc31"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/rerender-derived-state.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e5c899f6c073338bbd1b73c0275bc3e5e7d9ae7b",
+      "size": 728,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/e5c899f6c073338bbd1b73c0275bc3e5e7d9ae7b"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/rerender-functional-setstate.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b004ef45e347503947fee397b6c3d163b0a317fb",
+      "size": 2968,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/b004ef45e347503947fee397b6c3d163b0a317fb"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/rerender-lazy-state-init.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4ecb350fbadff3db805b72429276e672d42736dc",
+      "size": 2016,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/4ecb350fbadff3db805b72429276e672d42736dc"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/rerender-memo-with-default-value.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "63570491848cb42c2bc7073bceb754893a6a4cfa",
+      "size": 1173,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/63570491848cb42c2bc7073bceb754893a6a4cfa"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/rerender-memo.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f8982ab612105a3b7faee1292b797338e7fb5271",
+      "size": 1148,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/f8982ab612105a3b7faee1292b797338e7fb5271"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/rerender-move-effect-to-event.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "dd58a1af091b3cf5cb271d25904af4feb836d1aa",
+      "size": 1268,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/dd58a1af091b3cf5cb271d25904af4feb836d1aa"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/rerender-no-inline-components.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d97592acefced05bc4a8538c77d226fa24c08534",
+      "size": 2135,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/d97592acefced05bc4a8538c77d226fa24c08534"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/rerender-simple-expression-in-memo.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "59dfab0f3b048097627e0ca6e4c8da36629a5268",
+      "size": 1018,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/59dfab0f3b048097627e0ca6e4c8da36629a5268"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/rerender-split-combined-hooks.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "89d805644dbffe3877bc1356bdf8ad416a5c715b",
+      "size": 1844,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/89d805644dbffe3877bc1356bdf8ad416a5c715b"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/rerender-transitions.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d99f43f764232e994a49a1df89ec9d624552f439",
+      "size": 1055,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/d99f43f764232e994a49a1df89ec9d624552f439"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/rerender-use-deferred-value.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "619c04b0142bf5a5b7d0f69532a56b797a78f664",
+      "size": 1846,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/619c04b0142bf5a5b7d0f69532a56b797a78f664"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/rerender-use-ref-transient-values.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cf04b81f8a531eacd07a32e8917fb3ed3c1bbecb",
+      "size": 1742,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/cf04b81f8a531eacd07a32e8917fb3ed3c1bbecb"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/server-after-nonblocking.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e8f5b260f5fc6d58141bc61e0a091569adb81e7e",
+      "size": 2012,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/e8f5b260f5fc6d58141bc61e0a091569adb81e7e"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/server-auth-actions.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ee82c0442bc69ffae7bf20c07709d57893da1123",
+      "size": 2649,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/ee82c0442bc69ffae7bf20c07709d57893da1123"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/server-cache-lru.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ef6938aa53c55dc3c0035bd6c66838810d870260",
+      "size": 1353,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/ef6938aa53c55dc3c0035bd6c66838810d870260"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/server-cache-react.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "87c9ca33168a321a59fbaaa84843e2f48c99751a",
+      "size": 2228,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/87c9ca33168a321a59fbaaa84843e2f48c99751a"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/server-dedup-props.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fb24a2562c73fadbb9a11a79897c2cf93ea3c69a",
+      "size": 2060,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/fb24a2562c73fadbb9a11a79897c2cf93ea3c69a"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/server-hoist-static-io.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "25205c2fc42d0dd684d6423acde642774329a8cc",
+      "size": 4423,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/25205c2fc42d0dd684d6423acde642774329a8cc"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/server-no-shared-module-state.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ff7d9f29c6e0e42ec1471acec8a3c7f394c8358d",
+      "size": 1766,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/ff7d9f29c6e0e42ec1471acec8a3c7f394c8358d"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/server-parallel-fetching.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1affc835a601a894fd02de08e6c9cdfd76d34b64",
+      "size": 1554,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/1affc835a601a894fd02de08e6c9cdfd76d34b64"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/server-parallel-nested-fetching.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "be1dc25075e40e6bda46cb24dc5a6f42b916b0e8",
+      "size": 992,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/be1dc25075e40e6bda46cb24dc5a6f42b916b0e8"
+    },
+    {
+      "path": ".agents/skills/vercel-react-best-practices/rules/server-serialization.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "39c5c4164c31be7f171ea2f4b3b32fe47709a651",
+      "size": 996,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/39c5c4164c31be7f171ea2f4b3b32fe47709a651"
+    },
+    {
+      "path": ".dockerignore",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f637398dad25d173737d363b77231e7e8cfe5698",
+      "size": 134,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/f637398dad25d173737d363b77231e7e8cfe5698"
+    },
+    {
+      "path": ".github",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "3b1572cc3ca7959be983806132a8040ef6b9c15f",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/3b1572cc3ca7959be983806132a8040ef6b9c15f"
+    },
+    {
+      "path": ".github/workflows",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "b3aeeb77d4edcca1e69ce7f3ef686c912a332e39",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/b3aeeb77d4edcca1e69ce7f3ef686c912a332e39"
+    },
+    {
+      "path": ".github/workflows/docker-image.yml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c7950a4eaada7c5c00836e527c9248446c93fd7e",
+      "size": 3004,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/c7950a4eaada7c5c00836e527c9248446c93fd7e"
+    },
+    {
+      "path": ".github/workflows/docs-docker-image.yml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0f3050d388794896c5dd5f13c05657895be36aef",
+      "size": 3094,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/0f3050d388794896c5dd5f13c05657895be36aef"
+    },
+    {
+      "path": ".github/workflows/github-pages.yml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c9762d7dea63ea527310286439024ccd5b22ed55",
+      "size": 994,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/c9762d7dea63ea527310286439024ccd5b22ed55"
+    },
+    {
+      "path": ".github/workflows/publish-plugins.yml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "377976961e68a60e91cccfbd2dfed37a92b47980",
+      "size": 1462,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/377976961e68a60e91cccfbd2dfed37a92b47980"
+    },
+    {
+      "path": ".gitignore",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "83a18b45bc5b30008afca4058f24da9f5b719a54",
+      "size": 195,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/83a18b45bc5b30008afca4058f24da9f5b719a54"
+    },
+    {
+      "path": "AGENTS.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "99ab36cb0c1a9f60d34ebd3c2570e0c73160502a",
+      "size": 11324,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/99ab36cb0c1a9f60d34ebd3c2570e0c73160502a"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5e51bffaf98fa488c8d0d445d4e1bc3cc8d9b3bc",
+      "size": 27706,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/5e51bffaf98fa488c8d0d445d4e1bc3cc8d9b3bc"
+    },
+    {
+      "path": "Dockerfile",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "38d7005a30b2337f80f15f3ad939dc1b693a4249",
+      "size": 685,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/38d7005a30b2337f80f15f3ad939dc1b693a4249"
+    },
+    {
+      "path": "LICENSE",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9114d1bd8a9d419b733e61295a005cb2b39d83e7",
+      "size": 1067,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/9114d1bd8a9d419b733e61295a005cb2b39d83e7"
+    },
+    {
+      "path": "README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cf7bcc685f3aa24c2b2c768742646337999a9f01",
+      "size": 14662,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/cf7bcc685f3aa24c2b2c768742646337999a9f01"
+    },
+    {
+      "path": "SECURITY.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d65c8605277189ae0fa1697347e0e0c97d52f8e3",
+      "size": 3375,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/d65c8605277189ae0fa1697347e0e0c97d52f8e3"
+    },
+    {
+      "path": "VERSION",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8c20c5272156f06779f8ed57531acd7114207cee",
+      "size": 7,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/8c20c5272156f06779f8ed57531acd7114207cee"
+    },
+    {
+      "path": "assets",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "0e61fc9ef039ab9e699f16c8f665c6c724915fac",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/0e61fc9ef039ab9e699f16c8f665c6c724915fac"
+    },
+    {
+      "path": "assets/88api.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a875ec12a959438d4edcc4bb34e2f1029eab5b46",
+      "size": 141153,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/a875ec12a959438d4edcc4bb34e2f1029eab5b46"
+    },
+    {
+      "path": "assets/apimart.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "853b9417ab9adf11504a1b23f37d920112cedf32",
+      "size": 1016414,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/853b9417ab9adf11504a1b23f37d920112cedf32"
+    },
+    {
+      "path": "assets/atlascloud.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "da8d7404ca23467bb4861b21bd3dcde29a3d71f1",
+      "size": 8544,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/da8d7404ca23467bb4861b21bd3dcde29a3d71f1"
+    },
+    {
+      "path": "assets/heyroute.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ffb747fbf05e15555cb3796bbd3a43967b7983d6",
+      "size": 72000,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/ffb747fbf05e15555cb3796bbd3a43967b7983d6"
+    },
+    {
+      "path": "assets/infistar.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "27b30f9b0dfcb9b5d4a29188b0789f14945dced3",
+      "size": 1421272,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/27b30f9b0dfcb9b5d4a29188b0789f14945dced3"
+    },
+    {
+      "path": "assets/kunrouai.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ef390f28ab9bfd5c3760b738ee3e0446617ef131",
+      "size": 3798,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/ef390f28ab9bfd5c3760b738ee3e0446617ef131"
+    },
+    {
+      "path": "assets/metaso.jpg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "321f67b3d5e4bc52d391f8917caff0915c3cc6ff",
+      "size": 309738,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/321f67b3d5e4bc52d391f8917caff0915c3cc6ff"
+    },
+    {
+      "path": "assets/packycode.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9be2240a45df527fb995250ba4fa32f8d3edf5cb",
+      "size": 78389,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/9be2240a45df527fb995250ba4fa32f8d3edf5cb"
+    },
+    {
+      "path": "canvas-agent",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "1730f103811173485b7b4ffd37c012f76c5092ea",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/1730f103811173485b7b4ffd37c012f76c5092ea"
+    },
+    {
+      "path": "canvas-agent/.gitignore",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "de4d1f007dd195ea685034cbda7209013105044b",
+      "size": 18,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/de4d1f007dd195ea685034cbda7209013105044b"
+    },
+    {
+      "path": "canvas-agent/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1d91b94ee187751fe86e774a8624e472ce1f53c9",
+      "size": 6428,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/1d91b94ee187751fe86e774a8624e472ce1f53c9"
+    },
+    {
+      "path": "canvas-agent/agent-instructions.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c2f14960eacf17f21a7205b55199bcee41575a51",
+      "size": 2172,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/c2f14960eacf17f21a7205b55199bcee41575a51"
+    },
+    {
+      "path": "canvas-agent/bun.lock",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "65a058adb4b99e846089bb9050e27537570d941e",
+      "size": 46550,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/65a058adb4b99e846089bb9050e27537570d941e"
+    },
+    {
+      "path": "canvas-agent/codex-server.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "caba0ee97272e7525edd38c4ecc9f4142814e9c4",
+      "size": 94020,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/caba0ee97272e7525edd38c4ecc9f4142814e9c4"
+    },
+    {
+      "path": "canvas-agent/package-lock.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "023df712eedae0851bebfd788b786f1d235ad0ea",
+      "size": 41541,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/023df712eedae0851bebfd788b786f1d235ad0ea"
+    },
+    {
+      "path": "canvas-agent/package.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bc5a2f919f107b632ca5cbdf00714a3ab18b5402",
+      "size": 1221,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/bc5a2f919f107b632ca5cbdf00714a3ab18b5402"
+    },
+    {
+      "path": "canvas-agent/src",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "310ed32ff58fc9757b1acca3a6c8fe4688704a38",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/310ed32ff58fc9757b1acca3a6c8fe4688704a38"
+    },
+    {
+      "path": "canvas-agent/src/agent",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "3490454ba0e93d993417182d7930d9fae779be17",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/3490454ba0e93d993417182d7930d9fae779be17"
+    },
+    {
+      "path": "canvas-agent/src/agent/claude.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "720ac81ecec8b73d09f56dcf16f642f3ffd2e39a",
+      "size": 2275,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/720ac81ecec8b73d09f56dcf16f642f3ffd2e39a"
+    },
+    {
+      "path": "canvas-agent/src/agent/codex-client.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "11d2d0376930e8f92a2363a38a60c14d040db614",
+      "size": 53176,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/11d2d0376930e8f92a2363a38a60c14d040db614"
+    },
+    {
+      "path": "canvas-agent/src/agent/codex-client.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "97e8dac817ba312084ac57792b6939b1f0fd142a",
+      "size": 49801,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/97e8dac817ba312084ac57792b6939b1f0fd142a"
+    },
+    {
+      "path": "canvas-agent/src/agent/codex-event-history.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a2650c4f1f6fda43bd3b3bcd042ed488d9958088",
+      "size": 7259,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/a2650c4f1f6fda43bd3b3bcd042ed488d9958088"
+    },
+    {
+      "path": "canvas-agent/src/agent/codex-history.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1fc8dc44cad07cf3f2db08f5a3122149556806e4",
+      "size": 24351,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/1fc8dc44cad07cf3f2db08f5a3122149556806e4"
+    },
+    {
+      "path": "canvas-agent/src/agent/codex-history.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7e5491d4327273418b2148805912f9375af4d922",
+      "size": 41498,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/7e5491d4327273418b2148805912f9375af4d922"
+    },
+    {
+      "path": "canvas-agent/src/agent/codex-protocol.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3cb4055c9f48896cdf3c1e881f317beabfe01cc1",
+      "size": 7157,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/3cb4055c9f48896cdf3c1e881f317beabfe01cc1"
+    },
+    {
+      "path": "canvas-agent/src/agent/codex.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d57c4e423231aa9c6bf353510a8174eeecb07628",
+      "size": 28740,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/d57c4e423231aa9c6bf353510a8174eeecb07628"
+    },
+    {
+      "path": "canvas-agent/src/agent/message-metadata.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8c4efc1957bc6e3e043628527e5b2250d8ce4428",
+      "size": 5520,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/8c4efc1957bc6e3e043628527e5b2250d8ce4428"
+    },
+    {
+      "path": "canvas-agent/src/agent/message-metadata.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ad870fd0ac70e47b5184661c85c086b3c4e79486",
+      "size": 17008,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/ad870fd0ac70e47b5184661c85c086b3c4e79486"
+    },
+    {
+      "path": "canvas-agent/src/agent/types.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2b29c4a7ce52cc21c6323c5e4f7a75595938225e",
+      "size": 1227,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/2b29c4a7ce52cc21c6323c5e4f7a75595938225e"
+    },
+    {
+      "path": "canvas-agent/src/canvas",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "0c9df48d2a538e6a2d4be79fd16032b757a93ee4",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/0c9df48d2a538e6a2d4be79fd16032b757a93ee4"
+    },
+    {
+      "path": "canvas-agent/src/canvas/operations.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "73192738ab117fb977576a8a3267d11ff9fe3606",
+      "size": 1626,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/73192738ab117fb977576a8a3267d11ff9fe3606"
+    },
+    {
+      "path": "canvas-agent/src/canvas/operations.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e0e475c18ee00a7fbddda175295dd0363aaa1266",
+      "size": 10179,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/e0e475c18ee00a7fbddda175295dd0363aaa1266"
+    },
+    {
+      "path": "canvas-agent/src/canvas/schemas.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ca6a5021e3ba07b386cb63c8ebd6ba34c48b0127",
+      "size": 13978,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/ca6a5021e3ba07b386cb63c8ebd6ba34c48b0127"
+    },
+    {
+      "path": "canvas-agent/src/canvas/session.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7c4dd55423fe38255e9fe517e526eb79854c7a06",
+      "size": 28780,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/7c4dd55423fe38255e9fe517e526eb79854c7a06"
+    },
+    {
+      "path": "canvas-agent/src/canvas/session.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e1376a286c3ffa211944747cb2836c255c4f18d1",
+      "size": 28132,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/e1376a286c3ffa211944747cb2836c255c4f18d1"
+    },
+    {
+      "path": "canvas-agent/src/canvas/tools.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "212cc8e4f8801f3890fe8ea83a1a6135d9bd2c93",
+      "size": 1492,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/212cc8e4f8801f3890fe8ea83a1a6135d9bd2c93"
+    },
+    {
+      "path": "canvas-agent/src/canvas/types.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f2521520d452ba81ba63478fdf5de1413afcdedf",
+      "size": 654,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/f2521520d452ba81ba63478fdf5de1413afcdedf"
+    },
+    {
+      "path": "canvas-agent/src/config.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fab5cafd550294b198f1f7d55bb81f4d761ca285",
+      "size": 2005,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/fab5cafd550294b198f1f7d55bb81f4d761ca285"
+    },
+    {
+      "path": "canvas-agent/src/config.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "50f5049e3f7b31eb1a89a2c1898c0b9a8d466228",
+      "size": 4090,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/50f5049e3f7b31eb1a89a2c1898c0b9a8d466228"
+    },
+    {
+      "path": "canvas-agent/src/index.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "291ee654e7f66c5741902f908008b652657507ed",
+      "size": 202,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/291ee654e7f66c5741902f908008b652657507ed"
+    },
+    {
+      "path": "canvas-agent/src/server",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "f5669b7c12a614f3a6434bbc1dfd8e782b96ea59",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/f5669b7c12a614f3a6434bbc1dfd8e782b96ea59"
+    },
+    {
+      "path": "canvas-agent/src/server/http.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8b98c104341fed32d90350c6a23246d60f4ecc80",
+      "size": 35527,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/8b98c104341fed32d90350c6a23246d60f4ecc80"
+    },
+    {
+      "path": "canvas-agent/src/server/mcp.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3aee16fdc0dd9f18ae54f50acee8f07f5afe6f11",
+      "size": 1848,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/3aee16fdc0dd9f18ae54f50acee8f07f5afe6f11"
+    },
+    {
+      "path": "canvas-agent/src/skills",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "108443695696d08bfd2a77c64ce8afcc1d81c07d",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/108443695696d08bfd2a77c64ce8afcc1d81c07d"
+    },
+    {
+      "path": "canvas-agent/src/skills/store.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ce45bbda0e4572c1323d603703858ac34799a6e7",
+      "size": 12271,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/ce45bbda0e4572c1323d603703858ac34799a6e7"
+    },
+    {
+      "path": "canvas-agent/src/skills/store.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2310f67cb0640a16df42414b73382dd52eea3c7f",
+      "size": 21446,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/2310f67cb0640a16df42414b73382dd52eea3c7f"
+    },
+    {
+      "path": "canvas-agent/src/utils",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "06f31106333548cc045100b189a33ebb9c348458",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/06f31106333548cc045100b189a33ebb9c348458"
+    },
+    {
+      "path": "canvas-agent/src/utils/agent-runtime.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9ccd2754bf292b3ea17d1d8c6b8169ef6eccab88",
+      "size": 1931,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/9ccd2754bf292b3ea17d1d8c6b8169ef6eccab88"
+    },
+    {
+      "path": "canvas-agent/src/utils/agent-runtime.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "16bcff223fc56795f30caec954dd93982e338d66",
+      "size": 1351,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/16bcff223fc56795f30caec954dd93982e338d66"
+    },
+    {
+      "path": "canvas-agent/src/utils/date.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c96886de6b1c7042cadfc441271ad72e0bd2441e",
+      "size": 334,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/c96886de6b1c7042cadfc441271ad72e0bd2441e"
+    },
+    {
+      "path": "canvas-agent/src/utils/logger.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "90cb3a82b776ce2c77100b68b31c3ad15c22a663",
+      "size": 3618,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/90cb3a82b776ce2c77100b68b31c3ad15c22a663"
+    },
+    {
+      "path": "canvas-agent/src/utils/value.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "31ab7246600de2664126ef7f893ce0ddede8a017",
+      "size": 423,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/31ab7246600de2664126ef7f893ce0ddede8a017"
+    },
+    {
+      "path": "canvas-agent/src/version-check.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8d2515833e61473a593964bac0966c89a3466819",
+      "size": 3241,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/8d2515833e61473a593964bac0966c89a3466819"
+    },
+    {
+      "path": "canvas-agent/tsconfig.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d312216314d1c8604aa761bc660ce59a88e74f52",
+      "size": 325,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/d312216314d1c8604aa761bc660ce59a88e74f52"
+    },
+    {
+      "path": "canvas-proxy",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "e758539fc4a2ff3aa3e38b443a8a2431202039ee",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/e758539fc4a2ff3aa3e38b443a8a2431202039ee"
+    },
+    {
+      "path": "canvas-proxy/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c837e0fb57ab0f093a1ec8082784754f69dbb916",
+      "size": 2175,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/c837e0fb57ab0f093a1ec8082784754f69dbb916"
+    },
+    {
+      "path": "canvas-proxy/index.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4125ca073129a48ab30a278a4922fbd4fdacb8cf",
+      "size": 5359,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/4125ca073129a48ab30a278a4922fbd4fdacb8cf"
+    },
+    {
+      "path": "canvas-proxy/package.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cbb06a7aa33e64dffe94b5531e57576801bdee8f",
+      "size": 499,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/cbb06a7aa33e64dffe94b5531e57576801bdee8f"
+    },
+    {
+      "path": "docker-compose.local.yml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e4fed62b7336d077ede1cfa6ea206eb5c24b28dd",
+      "size": 166,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/e4fed62b7336d077ede1cfa6ea206eb5c24b28dd"
+    },
+    {
+      "path": "docker-compose.yml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cec8f23eed5cc1bfd07e8d518226728246adb35a",
+      "size": 480,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/cec8f23eed5cc1bfd07e8d518226728246adb35a"
+    },
+    {
+      "path": "docs",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "3baddc496762ead2e3956a594a0931d02dae7b23",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/3baddc496762ead2e3956a594a0931d02dae7b23"
+    },
+    {
+      "path": "docs/.dockerignore",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "31fea94c2666950993189e4b8b2c64740651178c",
+      "size": 76,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/31fea94c2666950993189e4b8b2c64740651178c"
+    },
+    {
+      "path": "docs/.gitignore",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9e429e498546dad2a3d0ea788dc5b3d81e037511",
+      "size": 239,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/9e429e498546dad2a3d0ea788dc5b3d81e037511"
+    },
+    {
+      "path": "docs/Dockerfile",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c93ee3fcdeb43080f3c7460d7f5c11a875de5fa3",
+      "size": 1136,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/c93ee3fcdeb43080f3c7460d7f5c11a875de5fa3"
+    },
+    {
+      "path": "docs/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ed5cf1f07263ca06a95666d7abff11f79f105ff6",
+      "size": 1475,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/ed5cf1f07263ca06a95666d7abff11f79f105ff6"
+    },
+    {
+      "path": "docs/bun.lock",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0c585b9f87df5b3b93c2ea68a3eef47add2e1de4",
+      "size": 124020,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/0c585b9f87df5b3b93c2ea68a3eef47add2e1de4"
+    },
+    {
+      "path": "docs/content",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "c6bb62e6ef11916dbe31c66776c37e775bfe83c6",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/c6bb62e6ef11916dbe31c66776c37e775bfe83c6"
+    },
+    {
+      "path": "docs/content/docs",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "21a53721e193e6515715868ec5692b13ee811665",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/21a53721e193e6515715868ec5692b13ee811665"
+    },
+    {
+      "path": "docs/content/docs/business",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "f911d4d2dee86fb4fbbd165081881407491efa0d",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/f911d4d2dee86fb4fbbd165081881407491efa0d"
+    },
+    {
+      "path": "docs/content/docs/business/business.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7cc8d09cdbcfd094102f69ff2f782b814a047491",
+      "size": 770,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/7cc8d09cdbcfd094102f69ff2f782b814a047491"
+    },
+    {
+      "path": "docs/content/docs/business/business.zh-CN.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0ca995e53ac020e0326ad4703bedcaf277e682d1",
+      "size": 1160,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/0ca995e53ac020e0326ad4703bedcaf277e682d1"
+    },
+    {
+      "path": "docs/content/docs/business/license.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "591bc77bfbee2048dcfa15a343d47ffa9be8992f",
+      "size": 758,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/591bc77bfbee2048dcfa15a343d47ffa9be8992f"
+    },
+    {
+      "path": "docs/content/docs/business/license.zh-CN.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b21dbe4fccdf90e25724a0fc6aeaf9946542a432",
+      "size": 978,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/b21dbe4fccdf90e25724a0fc6aeaf9946542a432"
+    },
+    {
+      "path": "docs/content/docs/business/meta.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a08b98f62c7ddd4c3a4336cfcddb421f2fd87eab",
+      "size": 101,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/a08b98f62c7ddd4c3a4336cfcddb421f2fd87eab"
+    },
+    {
+      "path": "docs/content/docs/business/meta.zh-CN.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e58651fe83b039387fd37946eaa1616f4d4e21da",
+      "size": 117,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/e58651fe83b039387fd37946eaa1616f4d4e21da"
+    },
+    {
+      "path": "docs/content/docs/canvas",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "1ef67502cd7d9afc438d3aa2ba3cab58794e225d",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/1ef67502cd7d9afc438d3aa2ba3cab58794e225d"
+    },
+    {
+      "path": "docs/content/docs/canvas/canvas-node-manual.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "707b3b42a9158365f862cc19bcd6e9e0bfd7e706",
+      "size": 4340,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/707b3b42a9158365f862cc19bcd6e9e0bfd7e706"
+    },
+    {
+      "path": "docs/content/docs/canvas/canvas-node-manual.zh-CN.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "915fe5ef264c97efa1ba5a5072e9ea83a60f2730",
+      "size": 6242,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/915fe5ef264c97efa1ba5a5072e9ea83a60f2730"
+    },
+    {
+      "path": "docs/content/docs/canvas/canvas-shortcuts.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fe15663cffb6e4d67f7d420f176659f45f8d0f99",
+      "size": 1104,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/fe15663cffb6e4d67f7d420f176659f45f8d0f99"
+    },
+    {
+      "path": "docs/content/docs/canvas/canvas-shortcuts.zh-CN.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0e50683c1055fdd967c2c4e1ac541e213f5fb096",
+      "size": 1342,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/0e50683c1055fdd967c2c4e1ac541e213f5fb096"
+    },
+    {
+      "path": "docs/content/docs/canvas/meta.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c7c379235f2671363cf0483b5dbe7b3e69113c3b",
+      "size": 124,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/c7c379235f2671363cf0483b5dbe7b3e69113c3b"
+    },
+    {
+      "path": "docs/content/docs/canvas/meta.zh-CN.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ac089ebc1177beb80f5539519bfc7113b866bccd",
+      "size": 136,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/ac089ebc1177beb80f5539519bfc7113b866bccd"
+    },
+    {
+      "path": "docs/content/docs/development",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "9a6e17e1ac01aeeebd0069951cb7343e18826e1b",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/9a6e17e1ac01aeeebd0069951cb7343e18826e1b"
+    },
+    {
+      "path": "docs/content/docs/development/canvas-data-structure.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5374d32197e3c9383a2e85dae61e7385dcf008ec",
+      "size": 3336,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/5374d32197e3c9383a2e85dae61e7385dcf008ec"
+    },
+    {
+      "path": "docs/content/docs/development/canvas-data-structure.zh-CN.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c27e6977c6ea31078d73ae0c161a3be218f6b9d6",
+      "size": 8199,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/c27e6977c6ea31078d73ae0c161a3be218f6b9d6"
+    },
+    {
+      "path": "docs/content/docs/development/local-codex-canvas.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0caa82c581a30930c5f4b6a82ed13faeafce82c4",
+      "size": 2632,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/0caa82c581a30930c5f4b6a82ed13faeafce82c4"
+    },
+    {
+      "path": "docs/content/docs/development/local-codex-canvas.zh-CN.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "72f59a1b620bc2c7c24262d592da47a57f974900",
+      "size": 5591,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/72f59a1b620bc2c7c24262d592da47a57f974900"
+    },
+    {
+      "path": "docs/content/docs/development/local-development.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ec365c7769f282e6e89b8984a733f89f3a250dff",
+      "size": 681,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/ec365c7769f282e6e89b8984a733f89f3a250dff"
+    },
+    {
+      "path": "docs/content/docs/development/local-development.zh-CN.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "dd4adfb50b53a49f2570cf08827b424329351217",
+      "size": 792,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/dd4adfb50b53a49f2570cf08827b424329351217"
+    },
+    {
+      "path": "docs/content/docs/development/meta.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a90f66da199b3ed1706155cf2c72a7794d2b334d",
+      "size": 149,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/a90f66da199b3ed1706155cf2c72a7794d2b334d"
+    },
+    {
+      "path": "docs/content/docs/development/meta.zh-CN.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c02e7602b58a7ad46330365ecb78948e4c86f609",
+      "size": 166,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/c02e7602b58a7ad46330365ecb78948e4c86f609"
+    },
+    {
+      "path": "docs/content/docs/meta.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "db904afd517b125be42d7bc2cea40f22c17bfa11",
+      "size": 132,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/db904afd517b125be42d7bc2cea40f22c17bfa11"
+    },
+    {
+      "path": "docs/content/docs/meta.zh-CN.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b8afc265c51441ea020922f9468f2e6446aebcc5",
+      "size": 153,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/b8afc265c51441ea020922f9468f2e6446aebcc5"
+    },
+    {
+      "path": "docs/content/docs/overview",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "02951e04fb193d15e8268196296f86f994f263a6",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/02951e04fb193d15e8268196296f86f994f263a6"
+    },
+    {
+      "path": "docs/content/docs/overview/codex-app-plugin.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a0f404c3eff80d20b3f2c6c892dfec6e729912df",
+      "size": 2071,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/a0f404c3eff80d20b3f2c6c892dfec6e729912df"
+    },
+    {
+      "path": "docs/content/docs/overview/codex-app-plugin.zh-CN.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ed6a1d3a21c16811822ee6763684a929bbaef61c",
+      "size": 4158,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/ed6a1d3a21c16811822ee6763684a929bbaef61c"
+    },
+    {
+      "path": "docs/content/docs/overview/docker.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3a5d08643c331ee06f1aa8b81f69f9182396f102",
+      "size": 1607,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/3a5d08643c331ee06f1aa8b81f69f9182396f102"
+    },
+    {
+      "path": "docs/content/docs/overview/docker.zh-CN.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "da3d5cad172361de44fdf69d52a6b63ff69df5e1",
+      "size": 2708,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/da3d5cad172361de44fdf69d52a6b63ff69df5e1"
+    },
+    {
+      "path": "docs/content/docs/overview/features.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "eef7ad2df0034c73e727c1e059ee956082388621",
+      "size": 3322,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/eef7ad2df0034c73e727c1e059ee956082388621"
+    },
+    {
+      "path": "docs/content/docs/overview/features.zh-CN.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4643a0086b60454d51f1cbb369dd37434855356e",
+      "size": 7279,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/4643a0086b60454d51f1cbb369dd37434855356e"
+    },
+    {
+      "path": "docs/content/docs/overview/meta.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "89e0ff726af6d19cb1f2d88e89f2cc16bbce00ae",
+      "size": 249,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/89e0ff726af6d19cb1f2d88e89f2cc16bbce00ae"
+    },
+    {
+      "path": "docs/content/docs/overview/meta.zh-CN.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bbaf606a92990b9cf102503c5e24af367555e04c",
+      "size": 256,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/bbaf606a92990b9cf102503c5e24af367555e04c"
+    },
+    {
+      "path": "docs/content/docs/overview/quick-start.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "acfd3f1b1da69e10363e716def489b0b20798871",
+      "size": 1123,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/acfd3f1b1da69e10363e716def489b0b20798871"
+    },
+    {
+      "path": "docs/content/docs/overview/quick-start.zh-CN.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d82795b8acd3e9d1b9f5649ad987070328d5f870",
+      "size": 1292,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/d82795b8acd3e9d1b9f5649ad987070328d5f870"
+    },
+    {
+      "path": "docs/content/docs/overview/render.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5bc70d726db0607c229e700c3074dbe667d088a9",
+      "size": 709,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/5bc70d726db0607c229e700c3074dbe667d088a9"
+    },
+    {
+      "path": "docs/content/docs/overview/render.zh-CN.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "69f5325ff11c03b3285160b9558c182a863adb25",
+      "size": 839,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/69f5325ff11c03b3285160b9558c182a863adb25"
+    },
+    {
+      "path": "docs/content/docs/overview/third-party-prompt-repositories.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6d4e94bfd16ba173fcfbfdf53c810111994338a4",
+      "size": 1210,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/6d4e94bfd16ba173fcfbfdf53c810111994338a4"
+    },
+    {
+      "path": "docs/content/docs/overview/third-party-prompt-repositories.zh-CN.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f7201f5d295e783063560f2503cc7577e6e3e3df",
+      "size": 1115,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/f7201f5d295e783063560f2503cc7577e6e3e3df"
+    },
+    {
+      "path": "docs/content/docs/progress",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "a3d28fd4637cb2c0fe00f64636adb8aa53345cd9",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/a3d28fd4637cb2c0fe00f64636adb8aa53345cd9"
+    },
+    {
+      "path": "docs/content/docs/progress/local-agent-integration-plan.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "934a8fe2a4469c5e5f719731b6d4ca3d6c232672",
+      "size": 2313,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/934a8fe2a4469c5e5f719731b6d4ca3d6c232672"
+    },
+    {
+      "path": "docs/content/docs/progress/local-agent-integration-plan.zh-CN.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "40973c2c5a6725cb00e7ad5015bf8ce3c62113cd",
+      "size": 9425,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/40973c2c5a6725cb00e7ad5015bf8ce3c62113cd"
+    },
+    {
+      "path": "docs/content/docs/progress/meta.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ab9320fe022b8897fef4a7b3d303eb759ff58577",
+      "size": 233,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/ab9320fe022b8897fef4a7b3d303eb759ff58577"
+    },
+    {
+      "path": "docs/content/docs/progress/meta.zh-CN.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "57b28853472d77dcc510044142b77884a053f79f",
+      "size": 238,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/57b28853472d77dcc510044142b77884a053f79f"
+    },
+    {
+      "path": "docs/content/docs/progress/pending-test.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e54642cefcff18702c9bd9166f9547072f214668",
+      "size": 23760,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/e54642cefcff18702c9bd9166f9547072f214668"
+    },
+    {
+      "path": "docs/content/docs/progress/pending-test.zh-CN.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c43f9977bc8a5870a9c4451d708124e3f088b760",
+      "size": 43942,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/c43f9977bc8a5870a9c4451d708124e3f088b760"
+    },
+    {
+      "path": "docs/content/docs/progress/prompt-chip-input-plan.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1e2f9e1ea6dd977da68b18607c245729374e9279",
+      "size": 1486,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/1e2f9e1ea6dd977da68b18607c245729374e9279"
+    },
+    {
+      "path": "docs/content/docs/progress/prompt-chip-input-plan.zh-CN.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fab61a966cba7adffdaacc0a5f4d9968b4ee9852",
+      "size": 5800,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/fab61a966cba7adffdaacc0a5f4d9968b4ee9852"
+    },
+    {
+      "path": "docs/content/docs/progress/todo.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2c5325c60e509c1f64ee002ea236d98db0a12037",
+      "size": 369,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/2c5325c60e509c1f64ee002ea236d98db0a12037"
+    },
+    {
+      "path": "docs/content/docs/progress/todo.zh-CN.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4af47266f5bb940e54432d590d09f4808b0babac",
+      "size": 468,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/4af47266f5bb940e54432d590d09f4808b0babac"
+    },
+    {
+      "path": "docs/content/docs/support",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "f0a78522b4925c99bf1545422f45ac908cf874a5",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/f0a78522b4925c99bf1545422f45ac908cf874a5"
+    },
+    {
+      "path": "docs/content/docs/support/meta.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4735ec8a5756f7bbba62db6dd6c19acfd953ee71",
+      "size": 113,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/4735ec8a5756f7bbba62db6dd6c19acfd953ee71"
+    },
+    {
+      "path": "docs/content/docs/support/meta.zh-CN.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "308272442fe106d6fa650b4ca36a2c281d19d20a",
+      "size": 120,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/308272442fe106d6fa650b4ca36a2c281d19d20a"
+    },
+    {
+      "path": "docs/content/docs/support/security.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6cff372ec7388b1202872075a3c145d89b0cf92c",
+      "size": 1103,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/6cff372ec7388b1202872075a3c145d89b0cf92c"
+    },
+    {
+      "path": "docs/content/docs/support/security.zh-CN.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c043eaf019a23295330a5900a4e73cf631a2d4ca",
+      "size": 1466,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/c043eaf019a23295330a5900a4e73cf631a2d4ca"
+    },
+    {
+      "path": "docs/content/docs/support/sponsor.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b92c43774cb6a794698ea8f7ab763afa04ce8ceb",
+      "size": 833,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/b92c43774cb6a794698ea8f7ab763afa04ce8ceb"
+    },
+    {
+      "path": "docs/content/docs/support/sponsor.zh-CN.mdx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "51a2a883b8512ed193ffc18e7c5bd0f6985e7b14",
+      "size": 1574,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/51a2a883b8512ed193ffc18e7c5bd0f6985e7b14"
+    },
+    {
+      "path": "docs/docker-compose.local.yml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3715d877cf899ff5a88eab435510b0c1937efc95",
+      "size": 140,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/3715d877cf899ff5a88eab435510b0c1937efc95"
+    },
+    {
+      "path": "docs/docker-compose.yml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7f67c5e9c8477155618857ee04033b263d582dc2",
+      "size": 135,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/7f67c5e9c8477155618857ee04033b263d582dc2"
+    },
+    {
+      "path": "docs/index.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4f2f3201a3371d06dd7f6c706a0c20cef74f5b27",
+      "size": 1277,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/4f2f3201a3371d06dd7f6c706a0c20cef74f5b27"
+    },
+    {
+      "path": "docs/index.zh-CN.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c222e5ad791e420cd33737de13bcc80b2adb1723",
+      "size": 1308,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/c222e5ad791e420cd33737de13bcc80b2adb1723"
+    },
+    {
+      "path": "docs/next.config.mjs",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "56fc2b09b2270608c7a06a86abbaba4f690fec12",
+      "size": 376,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/56fc2b09b2270608c7a06a86abbaba4f690fec12"
+    },
+    {
+      "path": "docs/package.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e9322fd863ed87f1cfb57072e88f4a7f5f3ab354",
+      "size": 841,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/e9322fd863ed87f1cfb57072e88f4a7f5f3ab354"
+    },
+    {
+      "path": "docs/postcss.config.mjs",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "297374d80baa3b6081a566876859cf746a8b3669",
+      "size": 94,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/297374d80baa3b6081a566876859cf746a8b3669"
+    },
+    {
+      "path": "docs/public",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "826bea2e483ad36174af64f9e8ae34488daf1ca6",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/826bea2e483ad36174af64f9e8ae34488daf1ca6"
+    },
+    {
+      "path": "docs/public/github.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7a51b8e0ee1054826a64377e6b75d8090f93e406",
+      "size": 907,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/7a51b8e0ee1054826a64377e6b75d8090f93e406"
+    },
+    {
+      "path": "docs/public/logo.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "027ea5d5dc432e39e583aad04702e2a0ddcd3cbd",
+      "size": 229,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/027ea5d5dc432e39e583aad04702e2a0ddcd3cbd"
+    },
+    {
+      "path": "docs/public/qq.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "09bc018cd540ab90b8d039201c96707f2efd709a",
+      "size": 780,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/09bc018cd540ab90b8d039201c96707f2efd709a"
+    },
+    {
+      "path": "docs/source.config.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a35628abd4e59931d2c2ccf049e53d28a1208ca2",
+      "size": 531,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/a35628abd4e59931d2c2ccf049e53d28a1208ca2"
+    },
+    {
+      "path": "docs/src",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "cecea4eab020e0890130fe64db23ef79e05863b4",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/cecea4eab020e0890130fe64db23ef79e05863b4"
+    },
+    {
+      "path": "docs/src/app",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "891ab062830e18b9ae45b22c630d4e944f69d3c8",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/891ab062830e18b9ae45b22c630d4e944f69d3c8"
+    },
+    {
+      "path": "docs/src/app/[lang]",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "3c5188ec7e8c3c127ddd507f83c3f16d77fc557e",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/3c5188ec7e8c3c127ddd507f83c3f16d77fc557e"
+    },
+    {
+      "path": "docs/src/app/[lang]/(home)",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "56fb4c028e34c527966a3aa9937197f55f9a495a",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/56fb4c028e34c527966a3aa9937197f55f9a495a"
+    },
+    {
+      "path": "docs/src/app/[lang]/(home)/layout.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "792d108bdf167007df97e045f67acfbc1da2e051",
+      "size": 296,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/792d108bdf167007df97e045f67acfbc1da2e051"
+    },
+    {
+      "path": "docs/src/app/[lang]/(home)/page.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a14a1e277703fa3cffa42fa698d8b9c9cee7616e",
+      "size": 8760,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/a14a1e277703fa3cffa42fa698d8b9c9cee7616e"
+    },
+    {
+      "path": "docs/src/app/[lang]/docs",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "cb1c3b0b9e88667f55d80e0d0aec0e2e9291d57b",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/cb1c3b0b9e88667f55d80e0d0aec0e2e9291d57b"
+    },
+    {
+      "path": "docs/src/app/[lang]/docs/[...slug]",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "e1a1be532bc5ec928ecab5dfeb147f940d66e038",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/e1a1be532bc5ec928ecab5dfeb147f940d66e038"
+    },
+    {
+      "path": "docs/src/app/[lang]/docs/[...slug]/page.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8086ac082be4fc916ab1a33c91d9b3215bf42518",
+      "size": 775,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/8086ac082be4fc916ab1a33c91d9b3215bf42518"
+    },
+    {
+      "path": "docs/src/app/[lang]/docs/layout.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2ed0dee6202a3fdefbbd4c998dbc50b2b98e206c",
+      "size": 567,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/2ed0dee6202a3fdefbbd4c998dbc50b2b98e206c"
+    },
+    {
+      "path": "docs/src/app/[lang]/docs/page.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7fa8e779a152fd640870cd23a40dc2a29efb6306",
+      "size": 1865,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/7fa8e779a152fd640870cd23a40dc2a29efb6306"
+    },
+    {
+      "path": "docs/src/app/[lang]/docs/progress",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "a0eabe2e83981cd8a30232bdbba1cff0fd03db9c",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/a0eabe2e83981cd8a30232bdbba1cff0fd03db9c"
+    },
+    {
+      "path": "docs/src/app/[lang]/docs/progress/changelog",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "e5f7e2abfc28bd15768d5d653c527a73c966e388",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/e5f7e2abfc28bd15768d5d653c527a73c966e388"
+    },
+    {
+      "path": "docs/src/app/[lang]/docs/progress/changelog/page.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "dff650655aa872b8a1a79e70a3978d27f9064c7b",
+      "size": 1913,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/dff650655aa872b8a1a79e70a3978d27f9064c7b"
+    },
+    {
+      "path": "docs/src/app/[lang]/layout.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "252b5c9db222b9e1f75b427d139eb666e8087620",
+      "size": 522,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/252b5c9db222b9e1f75b427d139eb666e8087620"
+    },
+    {
+      "path": "docs/src/app/api",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "07a725565e33e9258202c881e30992f9a68fec2b",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/07a725565e33e9258202c881e30992f9a68fec2b"
+    },
+    {
+      "path": "docs/src/app/api/search",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "8f35cc084f3c397982769c4a412cec97beb763b7",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/8f35cc084f3c397982769c4a412cec97beb763b7"
+    },
+    {
+      "path": "docs/src/app/api/search/route.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "be2c69c7b0777bce8f47fbbc6632ce43ccf27dfa",
+      "size": 434,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/be2c69c7b0777bce8f47fbbc6632ce43ccf27dfa"
+    },
+    {
+      "path": "docs/src/app/global.css",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "11a144ae6177fac662c1fb098dc48d101360a8dc",
+      "size": 714,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/11a144ae6177fac662c1fb098dc48d101360a8dc"
+    },
+    {
+      "path": "docs/src/app/icon.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "027ea5d5dc432e39e583aad04702e2a0ddcd3cbd",
+      "size": 229,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/027ea5d5dc432e39e583aad04702e2a0ddcd3cbd"
+    },
+    {
+      "path": "docs/src/app/llms-full.txt",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "7c415bd37dea866547e5fc150450f7b6b0bbe4f7",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/7c415bd37dea866547e5fc150450f7b6b0bbe4f7"
+    },
+    {
+      "path": "docs/src/app/llms-full.txt/route.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cc19ed976a206ecebc534b7a933cdca57cf286d4",
+      "size": 565,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/cc19ed976a206ecebc534b7a933cdca57cf286d4"
+    },
+    {
+      "path": "docs/src/app/llms.mdx",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "17de2e037b09c28f91d5a2dc67259e1d19a3fd40",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/17de2e037b09c28f91d5a2dc67259e1d19a3fd40"
+    },
+    {
+      "path": "docs/src/app/llms.mdx/docs",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "5f7e859b5549effd5a5eb74baf879585019cab10",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/5f7e859b5549effd5a5eb74baf879585019cab10"
+    },
+    {
+      "path": "docs/src/app/llms.mdx/docs/[[...slug]]",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "5787a05c7f360a2744f898dfc7ce0e679a1b150d",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/5787a05c7f360a2744f898dfc7ce0e679a1b150d"
+    },
+    {
+      "path": "docs/src/app/llms.mdx/docs/[[...slug]]/route.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4fa66f730d0c7b9c086c0ad5b8a94a0a77ec03a3",
+      "size": 735,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/4fa66f730d0c7b9c086c0ad5b8a94a0a77ec03a3"
+    },
+    {
+      "path": "docs/src/app/llms.txt",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "deba33be518bc5e176392c98343cf8a0a26cf8af",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/deba33be518bc5e176392c98343cf8a0a26cf8af"
+    },
+    {
+      "path": "docs/src/app/llms.txt/route.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "70dc03bffa9e8be735925f3d846ca5f7cc8cf726",
+      "size": 514,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/70dc03bffa9e8be735925f3d846ca5f7cc8cf726"
+    },
+    {
+      "path": "docs/src/components",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "29cd2399775bb9656b07d1982517cd1e0a84d795",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/29cd2399775bb9656b07d1982517cd1e0a84d795"
+    },
+    {
+      "path": "docs/src/components/docs-top-tabs.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "abe75208fc9e32542e1481c5f34a0802a5f4867e",
+      "size": 4268,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/abe75208fc9e32542e1481c5f34a0802a5f4867e"
+    },
+    {
+      "path": "docs/src/components/mdx.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a640575f008467a1c752d093ab0d2bcbe5b65f97",
+      "size": 393,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/a640575f008467a1c752d093ab0d2bcbe5b65f97"
+    },
+    {
+      "path": "docs/src/components/provider.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8a2c1350cdf37b88d4978b5d78822065c21b38fb",
+      "size": 930,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/8a2c1350cdf37b88d4978b5d78822065c21b38fb"
+    },
+    {
+      "path": "docs/src/components/search.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1cb80495d76b2ef09c391c6b48b551894b4440c6",
+      "size": 1429,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/1cb80495d76b2ef09c391c6b48b551894b4440c6"
+    },
+    {
+      "path": "docs/src/lib",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "b254663c32868047ed9e202be4fab45b90c62ffc",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/b254663c32868047ed9e202be4fab45b90c62ffc"
+    },
+    {
+      "path": "docs/src/lib/cn.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ba66fd250be5045b2de50b38e5b543e45dfe7adf",
+      "size": 48,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/ba66fd250be5045b2de50b38e5b543e45dfe7adf"
+    },
+    {
+      "path": "docs/src/lib/doc-page.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "97b396880328fb0af707948344d6995238580d9d",
+      "size": 1847,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/97b396880328fb0af707948344d6995238580d9d"
+    },
+    {
+      "path": "docs/src/lib/i18n.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f5b84c7ebcaf24025826bfd7eabec58456938258",
+      "size": 390,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/f5b84c7ebcaf24025826bfd7eabec58456938258"
+    },
+    {
+      "path": "docs/src/lib/layout.shared.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7371994a31465de8e9e5fb1bde57a58c170a22fa",
+      "size": 2855,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/7371994a31465de8e9e5fb1bde57a58c170a22fa"
+    },
+    {
+      "path": "docs/src/lib/search-tokenizer.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3d14cbbac864fec33a20d72e793c1129d15d85a4",
+      "size": 1608,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/3d14cbbac864fec33a20d72e793c1129d15d85a4"
+    },
+    {
+      "path": "docs/src/lib/shared.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7f39d52bd87600b2582481ec0794a9d2a0404814",
+      "size": 358,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/7f39d52bd87600b2582481ec0794a9d2a0404814"
+    },
+    {
+      "path": "docs/src/lib/source.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ddd5b567370643996eab8482ed25d711475add07",
+      "size": 863,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/ddd5b567370643996eab8482ed25d711475add07"
+    },
+    {
+      "path": "docs/src/proxy.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a47aa76da5940f5e8ddb0e14aaa44748013af744",
+      "size": 692,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/a47aa76da5940f5e8ddb0e14aaa44748013af744"
+    },
+    {
+      "path": "docs/tsconfig.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "59c41baa92533db2aa4a61de1016049ed3496e70",
+      "size": 803,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/59c41baa92533db2aa4a61de1016049ed3496e70"
+    },
+    {
+      "path": "docs/vercel.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7ef21ac59ff727233008e13bb78e3927094faf5d",
+      "size": 98,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/7ef21ac59ff727233008e13bb78e3927094faf5d"
+    },
+    {
+      "path": "nginx.conf",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "35ddc1f6c78cfe2357a036c45d85c7a1017321db",
+      "size": 350,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/35ddc1f6c78cfe2357a036c45d85c7a1017321db"
+    },
+    {
+      "path": "plugins",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "71a808370bd1a0d591962285e5bbb2e46864ccee",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/71a808370bd1a0d591962285e5bbb2e46864ccee"
+    },
+    {
+      "path": "plugins/canvas",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "8f2cbe59157e9782dd05661b15e8c86533a1c92d",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/8f2cbe59157e9782dd05661b15e8c86533a1c92d"
+    },
+    {
+      "path": "plugins/canvas/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d574e31b2739f1b25f0d317f1b3dbc1210a7ff1f",
+      "size": 8059,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/d574e31b2739f1b25f0d317f1b3dbc1210a7ff1f"
+    },
+    {
+      "path": "plugins/canvas/html",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "efbba3d54ca337e1e3cdcf5ac9da0243fa0d5e3c",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/efbba3d54ca337e1e3cdcf5ac9da0243fa0d5e3c"
+    },
+    {
+      "path": "plugins/canvas/html/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "76e02413078da29f4c90c8a0d5e1d460a52d1eeb",
+      "size": 467,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/76e02413078da29f4c90c8a0d5e1d460a52d1eeb"
+    },
+    {
+      "path": "plugins/canvas/html/build.mjs",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "55edde133f942ec04028ede43929f0bc9765b228",
+      "size": 102,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/55edde133f942ec04028ede43929f0bc9765b228"
+    },
+    {
+      "path": "plugins/canvas/html/package-lock.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "053aa2929fe70f80e59f21def1982cd74adc4f82",
+      "size": 2240,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/053aa2929fe70f80e59f21def1982cd74adc4f82"
+    },
+    {
+      "path": "plugins/canvas/html/package.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ada892918a9dc4e002f130dd99c23c9e13bbc620",
+      "size": 444,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/ada892918a9dc4e002f130dd99c23c9e13bbc620"
+    },
+    {
+      "path": "plugins/canvas/html/src",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "baaa99ab7031e26236ba30348625aeb154099153",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/baaa99ab7031e26236ba30348625aeb154099153"
+    },
+    {
+      "path": "plugins/canvas/html/src/index.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7abd5acfa8ae8010ebc307cf918e2e830a7e3468",
+      "size": 6365,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/7abd5acfa8ae8010ebc307cf918e2e830a7e3468"
+    },
+    {
+      "path": "plugins/canvas/html/tsconfig.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "89b2668fd2a595ac7f4f2d942b4db71e96d46d78",
+      "size": 454,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/89b2668fd2a595ac7f4f2d942b4db71e96d46d78"
+    },
+    {
+      "path": "plugins/canvas/markdown",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "8b31a17cf03914913c12d17c97115d0d03fe2c8d",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/8b31a17cf03914913c12d17c97115d0d03fe2c8d"
+    },
+    {
+      "path": "plugins/canvas/markdown/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cdf2c80f23be499bf1e7cf16683f2470ef5f9001",
+      "size": 776,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/cdf2c80f23be499bf1e7cf16683f2470ef5f9001"
+    },
+    {
+      "path": "plugins/canvas/markdown/build.mjs",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "55edde133f942ec04028ede43929f0bc9765b228",
+      "size": 102,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/55edde133f942ec04028ede43929f0bc9765b228"
+    },
+    {
+      "path": "plugins/canvas/markdown/package-lock.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "eea8556e2362dd5a739f736fccd1e9d65e82adf4",
+      "size": 2248,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/eea8556e2362dd5a739f736fccd1e9d65e82adf4"
+    },
+    {
+      "path": "plugins/canvas/markdown/package.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8684adef43c138b5b04cbaa804dbf11d47bf40fb",
+      "size": 452,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/8684adef43c138b5b04cbaa804dbf11d47bf40fb"
+    },
+    {
+      "path": "plugins/canvas/markdown/src",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "89bdea67f658b8df097f8a1c3d0756e107c1cfbc",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/89bdea67f658b8df097f8a1c3d0756e107c1cfbc"
+    },
+    {
+      "path": "plugins/canvas/markdown/src/env.d.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9fd6d1be7184f95d15e7063ea1f0b3e090838c37",
+      "size": 313,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/9fd6d1be7184f95d15e7063ea1f0b3e090838c37"
+    },
+    {
+      "path": "plugins/canvas/markdown/src/index.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c6dca7acc328e6db98514fd7505c111ec5c25b4f",
+      "size": 5631,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/c6dca7acc328e6db98514fd7505c111ec5c25b4f"
+    },
+    {
+      "path": "plugins/canvas/markdown/src/styles.css",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e3fb944f0a4d41da7f55639690a44190de44dc83",
+      "size": 1014,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/e3fb944f0a4d41da7f55639690a44190de44dc83"
+    },
+    {
+      "path": "plugins/canvas/markdown/tsconfig.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "89b2668fd2a595ac7f4f2d942b4db71e96d46d78",
+      "size": 454,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/89b2668fd2a595ac7f4f2d942b4db71e96d46d78"
+    },
+    {
+      "path": "plugins/canvas/panorama",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "1bfab5143199d4afd09d6a7320ea5a343c160885",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/1bfab5143199d4afd09d6a7320ea5a343c160885"
+    },
+    {
+      "path": "plugins/canvas/panorama/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "173b4e542369605d85d8ad1b8ce3c9e9b33067a1",
+      "size": 614,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/173b4e542369605d85d8ad1b8ce3c9e9b33067a1"
+    },
+    {
+      "path": "plugins/canvas/panorama/build.mjs",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "55edde133f942ec04028ede43929f0bc9765b228",
+      "size": 102,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/55edde133f942ec04028ede43929f0bc9765b228"
+    },
+    {
+      "path": "plugins/canvas/panorama/package-lock.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "62feb0440287c1440fb56a0c0b0f9c5c36efd066",
+      "size": 2248,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/62feb0440287c1440fb56a0c0b0f9c5c36efd066"
+    },
+    {
+      "path": "plugins/canvas/panorama/package.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f6a4a262aa653f552603f7e0b08d895dc9cf10de",
+      "size": 452,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/f6a4a262aa653f552603f7e0b08d895dc9cf10de"
+    },
+    {
+      "path": "plugins/canvas/panorama/src",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "a5cc48b19fa4c3fec82029f8c51083223b9be0f9",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/a5cc48b19fa4c3fec82029f8c51083223b9be0f9"
+    },
+    {
+      "path": "plugins/canvas/panorama/src/env.d.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7dd3cd03d1406fc7f8df8f0543173f000a455dfe",
+      "size": 132,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/7dd3cd03d1406fc7f8df8f0543173f000a455dfe"
+    },
+    {
+      "path": "plugins/canvas/panorama/src/index.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c2ff2deafce223a7987888450f8e0a80a4b8b747",
+      "size": 15293,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/c2ff2deafce223a7987888450f8e0a80a4b8b747"
+    },
+    {
+      "path": "plugins/canvas/panorama/tsconfig.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "89b2668fd2a595ac7f4f2d942b4db71e96d46d78",
+      "size": 454,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/89b2668fd2a595ac7f4f2d942b4db71e96d46d78"
+    },
+    {
+      "path": "plugins/canvas/registry",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "0ebabe928a31dc70b7c459e24a0f90f94b9ebfc8",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/0ebabe928a31dc70b7c459e24a0f90f94b9ebfc8"
+    },
+    {
+      "path": "plugins/canvas/registry/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "09b90307bbc7612170c9589feabd9da8961fa12c",
+      "size": 1906,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/09b90307bbc7612170c9589feabd9da8961fa12c"
+    },
+    {
+      "path": "plugins/canvas/registry/build.mjs",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cb9befde66299914ec6adb25b002f0ce8f26cdaa",
+      "size": 3484,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/cb9befde66299914ec6adb25b002f0ce8f26cdaa"
+    },
+    {
+      "path": "plugins/canvas/registry/package-lock.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d07375a984dce04cf7df330c409b3eadb53fd39c",
+      "size": 18208,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/d07375a984dce04cf7df330c409b3eadb53fd39c"
+    },
+    {
+      "path": "plugins/canvas/registry/package.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a211ffac1d712a2e747d44cf42fd06253446b5a3",
+      "size": 382,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/a211ffac1d712a2e747d44cf42fd06253446b5a3"
+    },
+    {
+      "path": "plugins/canvas/sdk",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "7d55236bc08411d79bd8d19409c987ec9923dc57",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/7d55236bc08411d79bd8d19409c987ec9923dc57"
+    },
+    {
+      "path": "plugins/canvas/sdk/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5595a0e8d6a28fdeabc49809666961644e8c71d8",
+      "size": 2830,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/5595a0e8d6a28fdeabc49809666961644e8c71d8"
+    },
+    {
+      "path": "plugins/canvas/sdk/build.mjs",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "619011718137822dcea8685dd7a7e500f2a72f33",
+      "size": 3418,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/619011718137822dcea8685dd7a7e500f2a72f33"
+    },
+    {
+      "path": "plugins/canvas/sdk/package-lock.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "80ed9a8d71f82e9a77c130d7c287d754523fa601",
+      "size": 19114,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/80ed9a8d71f82e9a77c130d7c287d754523fa601"
+    },
+    {
+      "path": "plugins/canvas/sdk/package.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e6a209eab3962062ce91fdfe328dfffd89741fd1",
+      "size": 664,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/e6a209eab3962062ce91fdfe328dfffd89741fd1"
+    },
+    {
+      "path": "plugins/canvas/sdk/src",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "3d7b74d9324d84b1b4a79b5e041267434d31dc6a",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/3d7b74d9324d84b1b4a79b5e041267434d31dc6a"
+    },
+    {
+      "path": "plugins/canvas/sdk/src/define-plugin.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5b53c84657b432f523d6757ca0b31aa4f27e3f8c",
+      "size": 775,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/5b53c84657b432f523d6757ca0b31aa4f27e3f8c"
+    },
+    {
+      "path": "plugins/canvas/sdk/src/index.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "963f251c756fb31cb7907e744b162f480f7adb71",
+      "size": 480,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/963f251c756fb31cb7907e744b162f480f7adb71"
+    },
+    {
+      "path": "plugins/canvas/sdk/src/jsx-dev-runtime.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "45dbcc00489046a723536e91e3f295b31aa8a007",
+      "size": 655,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/45dbcc00489046a723536e91e3f295b31aa8a007"
+    },
+    {
+      "path": "plugins/canvas/sdk/src/jsx-runtime.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ad3c24818bf3af730a755279fbb495b4c69ec2e0",
+      "size": 2098,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/ad3c24818bf3af730a755279fbb495b4c69ec2e0"
+    },
+    {
+      "path": "plugins/canvas/sdk/src/runtime.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "71414c016d81ebd94b97a58ff355786261ca99e0",
+      "size": 2707,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/71414c016d81ebd94b97a58ff355786261ca99e0"
+    },
+    {
+      "path": "plugins/canvas/sdk/src/types.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ab605bcbc3c44f253f5f46144e74588fcf0a4d15",
+      "size": 14017,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/ab605bcbc3c44f253f5f46144e74588fcf0a4d15"
+    },
+    {
+      "path": "plugins/canvas/sdk/tsconfig.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bd0284e2deb85850177b1dca2f6da62949a81398",
+      "size": 471,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/bd0284e2deb85850177b1dca2f6da62949a81398"
+    },
+    {
+      "path": "plugins/canvas/sticky-note",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "1871d932589cba74ce5355f702234645354c2424",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/1871d932589cba74ce5355f702234645354c2424"
+    },
+    {
+      "path": "plugins/canvas/sticky-note/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "09298356d72ec4f1e4ba4697b7a80175e21e0c4d",
+      "size": 522,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/09298356d72ec4f1e4ba4697b7a80175e21e0c4d"
+    },
+    {
+      "path": "plugins/canvas/sticky-note/build.mjs",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "55edde133f942ec04028ede43929f0bc9765b228",
+      "size": 102,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/55edde133f942ec04028ede43929f0bc9765b228"
+    },
+    {
+      "path": "plugins/canvas/sticky-note/package-lock.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1e828d9e9b910cddc1959820e611e53eb05e81a3",
+      "size": 2254,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/1e828d9e9b910cddc1959820e611e53eb05e81a3"
+    },
+    {
+      "path": "plugins/canvas/sticky-note/package.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8c84ac59c88d39847943958a0cbd2ab42c4dee73",
+      "size": 455,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/8c84ac59c88d39847943958a0cbd2ab42c4dee73"
+    },
+    {
+      "path": "plugins/canvas/sticky-note/src",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "59be5ac1073904b0e8c401420a09abe1e5c21986",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/59be5ac1073904b0e8c401420a09abe1e5c21986"
+    },
+    {
+      "path": "plugins/canvas/sticky-note/src/index.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b3d049b2a858815d77a59a4a17c37513e6ab6067",
+      "size": 8652,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/b3d049b2a858815d77a59a4a17c37513e6ab6067"
+    },
+    {
+      "path": "plugins/canvas/sticky-note/tsconfig.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "89b2668fd2a595ac7f4f2d942b4db71e96d46d78",
+      "size": 454,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/89b2668fd2a595ac7f4f2d942b4db71e96d46d78"
+    },
+    {
+      "path": "plugins/canvas/svg",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "687ffe448a1bbb0bd27ffac5aca83548474c13e1",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/687ffe448a1bbb0bd27ffac5aca83548474c13e1"
+    },
+    {
+      "path": "plugins/canvas/svg/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ea54ccfad0cba5075b767de8f16dc8331aa176b2",
+      "size": 450,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/ea54ccfad0cba5075b767de8f16dc8331aa176b2"
+    },
+    {
+      "path": "plugins/canvas/svg/build.mjs",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "55edde133f942ec04028ede43929f0bc9765b228",
+      "size": 102,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/55edde133f942ec04028ede43929f0bc9765b228"
+    },
+    {
+      "path": "plugins/canvas/svg/package-lock.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "30e19ff03bb8eae0d3a2e4dfe680d3912c8eb926",
+      "size": 2238,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/30e19ff03bb8eae0d3a2e4dfe680d3912c8eb926"
+    },
+    {
+      "path": "plugins/canvas/svg/package.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5a432f5b853e3d78968a57b237894e62bd4e292b",
+      "size": 442,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/5a432f5b853e3d78968a57b237894e62bd4e292b"
+    },
+    {
+      "path": "plugins/canvas/svg/src",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "3cf8b451565b9c1d9f590d615c05d084b8d5a528",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/3cf8b451565b9c1d9f590d615c05d084b8d5a528"
+    },
+    {
+      "path": "plugins/canvas/svg/src/index.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b2c5ead65bc37e7796964dc66c1bfb444477a17a",
+      "size": 4918,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/b2c5ead65bc37e7796964dc66c1bfb444477a17a"
+    },
+    {
+      "path": "plugins/canvas/svg/tsconfig.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "89b2668fd2a595ac7f4f2d942b4db71e96d46d78",
+      "size": 454,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/89b2668fd2a595ac7f4f2d942b4db71e96d46d78"
+    },
+    {
+      "path": "plugins/canvas/template",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "11e6100f4234f0bdfa9fc3bb7a48a0e8b0e05236",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/11e6100f4234f0bdfa9fc3bb7a48a0e8b0e05236"
+    },
+    {
+      "path": "plugins/canvas/template/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6c75f71a9c7ece3b02c6088e6cd36d2388a03149",
+      "size": 1050,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/6c75f71a9c7ece3b02c6088e6cd36d2388a03149"
+    },
+    {
+      "path": "plugins/canvas/template/build.mjs",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "55edde133f942ec04028ede43929f0bc9765b228",
+      "size": 102,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/55edde133f942ec04028ede43929f0bc9765b228"
+    },
+    {
+      "path": "plugins/canvas/template/package-lock.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6dc104688c3edb67c7f32e532351a07fc554b021",
+      "size": 2248,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/6dc104688c3edb67c7f32e532351a07fc554b021"
+    },
+    {
+      "path": "plugins/canvas/template/package.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0902f9a4a1ecfdc86efe74af15adc56dfe5dff30",
+      "size": 467,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/0902f9a4a1ecfdc86efe74af15adc56dfe5dff30"
+    },
+    {
+      "path": "plugins/canvas/template/src",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "e5155440f6c0da1b7edc75b5731c72a708212803",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/e5155440f6c0da1b7edc75b5731c72a708212803"
+    },
+    {
+      "path": "plugins/canvas/template/src/index.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c24347c4b6b7f236f205bd1c14b5eb56db53f695",
+      "size": 3674,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/c24347c4b6b7f236f205bd1c14b5eb56db53f695"
+    },
+    {
+      "path": "plugins/canvas/template/tsconfig.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "89b2668fd2a595ac7f4f2d942b4db71e96d46d78",
+      "size": 454,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/89b2668fd2a595ac7f4f2d942b4db71e96d46d78"
+    },
+    {
+      "path": "plugins/infinite-canvas",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "f083b7c21f270f5b7aeda11afab4f6d238e3958c",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/f083b7c21f270f5b7aeda11afab4f6d238e3958c"
+    },
+    {
+      "path": "plugins/infinite-canvas/.codex-plugin",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "865bf60c507461f43b073bb073cad9e5ea63447f",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/865bf60c507461f43b073bb073cad9e5ea63447f"
+    },
+    {
+      "path": "plugins/infinite-canvas/.codex-plugin/plugin.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "43d80d9f0d998224749db916b858e49f94310c92",
+      "size": 1289,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/43d80d9f0d998224749db916b858e49f94310c92"
+    },
+    {
+      "path": "plugins/infinite-canvas/.mcp.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2f2c66cf8a451fee54533b86d8c95cd47d7206c1",
+      "size": 207,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/2f2c66cf8a451fee54533b86d8c95cd47d7206c1"
+    },
+    {
+      "path": "plugins/infinite-canvas/.zcode-plugin",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "bd80cd1b8193c1fe60dd794dd8087ca97403fd03",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/bd80cd1b8193c1fe60dd794dd8087ca97403fd03"
+    },
+    {
+      "path": "plugins/infinite-canvas/.zcode-plugin/plugin.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ba07737bd8e176e7b0042fb847e5f55d0b833378",
+      "size": 589,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/ba07737bd8e176e7b0042fb847e5f55d0b833378"
+    },
+    {
+      "path": "plugins/infinite-canvas/README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4e3c6bb6216cb2e89dc8e780225edf8288265d51",
+      "size": 990,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/4e3c6bb6216cb2e89dc8e780225edf8288265d51"
+    },
+    {
+      "path": "plugins/infinite-canvas/assets",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "86446192983b9835633bcb104e2cf76cef9f1bc7",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/86446192983b9835633bcb104e2cf76cef9f1bc7"
+    },
+    {
+      "path": "plugins/infinite-canvas/assets/icon.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b1aa70d8ee2f3a0eec7e416ab83f5777a0f258ee",
+      "size": 1049,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/b1aa70d8ee2f3a0eec7e416ab83f5777a0f258ee"
+    },
+    {
+      "path": "plugins/infinite-canvas/marketplace.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ea3ad97856b7eb8bde6f50a40b1ca259fc6ba32f",
+      "size": 354,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/ea3ad97856b7eb8bde6f50a40b1ca259fc6ba32f"
+    },
+    {
+      "path": "plugins/infinite-canvas/skills",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "fe723e8e45b79dcf06cb1c01422c42c08c19f708",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/fe723e8e45b79dcf06cb1c01422c42c08c19f708"
+    },
+    {
+      "path": "plugins/infinite-canvas/skills/canvas",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "45acde7ea140fb13f285caaab34db56adc2efeef",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/45acde7ea140fb13f285caaab34db56adc2efeef"
+    },
+    {
+      "path": "plugins/infinite-canvas/skills/canvas/SKILL.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a254d553cdf190ad3ef144638898241e81e3e6e1",
+      "size": 1789,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/a254d553cdf190ad3ef144638898241e81e3e6e1"
+    },
+    {
+      "path": "plugins/infinite-canvas/skills/open-canvas",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "1dde8875bbc3c63a8ea0566ee3c4e18689a0a362",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/1dde8875bbc3c63a8ea0566ee3c4e18689a0a362"
+    },
+    {
+      "path": "plugins/infinite-canvas/skills/open-canvas/SKILL.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c5a4acc6093faab3fa0c4a974be65546c2570073",
+      "size": 1648,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/c5a4acc6093faab3fa0c4a974be65546c2570073"
+    },
+    {
+      "path": "render.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "61cc27f3ede775e19d076141d503dada6c0c1afe",
+      "size": 186,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/61cc27f3ede775e19d076141d503dada6c0c1afe"
+    },
+    {
+      "path": "skills-lock.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3fa42cf098176e13ae1ad7122329010cf661bc99",
+      "size": 545,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/3fa42cf098176e13ae1ad7122329010cf661bc99"
+    },
+    {
+      "path": "vercel.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e15eb2b2a49ea583c492929269c8878b2c4c6ddf",
+      "size": 218,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/e15eb2b2a49ea583c492929269c8878b2c4c6ddf"
+    },
+    {
+      "path": "web",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "f29602789f7337da7306c44e449d0bd877c1564c",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/f29602789f7337da7306c44e449d0bd877c1564c"
+    },
+    {
+      "path": "web/.editorconfig",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ef8973c01cfc3f3391382d0141ec633edc39ba21",
+      "size": 169,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/ef8973c01cfc3f3391382d0141ec633edc39ba21"
+    },
+    {
+      "path": "web/.prettierignore",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fa9e40a2fd27a281c4ba8711203d8362870e67be",
+      "size": 98,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/fa9e40a2fd27a281c4ba8711203d8362870e67be"
+    },
+    {
+      "path": "web/.prettierrc.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2780973ce51382b050d5f170c8643f7c98d118ac",
+      "size": 351,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/2780973ce51382b050d5f170c8643f7c98d118ac"
+    },
+    {
+      "path": "web/bun.lock",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2f59aa14e080e8247ed8a762cf2c1d82267293db",
+      "size": 331876,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/2f59aa14e080e8247ed8a762cf2c1d82267293db"
+    },
+    {
+      "path": "web/components.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bf6a4b55f59368717842167c6a92a1582054e5a4",
+      "size": 646,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/bf6a4b55f59368717842167c6a92a1582054e5a4"
+    },
+    {
+      "path": "web/docker-entrypoint.sh",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "112feaa7db56992ff2fd5a07510566df0d22801f",
+      "size": 883,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/112feaa7db56992ff2fd5a07510566df0d22801f"
+    },
+    {
+      "path": "web/index.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a8372ea2458e3e71eade252e6fa6d66ba4b5cae4",
+      "size": 966,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/a8372ea2458e3e71eade252e6fa6d66ba4b5cae4"
+    },
+    {
+      "path": "web/package-lock.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d1346ef4b951f2debba81ebdd1c3acb35be346d9",
+      "size": 711688,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/d1346ef4b951f2debba81ebdd1c3acb35be346d9"
+    },
+    {
+      "path": "web/package.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "243af16be9b05c9ca44b842393990c558568ce92",
+      "size": 1857,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/243af16be9b05c9ca44b842393990c558568ce92"
+    },
+    {
+      "path": "web/pnpm-lock.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c53ab9502e8144e610e0a2130fdff4cdfcdc5702",
+      "size": 340224,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/c53ab9502e8144e610e0a2130fdff4cdfcdc5702"
+    },
+    {
+      "path": "web/pnpm-workspace.yaml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "00f6fc47030edf977a2e8d0f76a9ff3c4db780f2",
+      "size": 50,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/00f6fc47030edf977a2e8d0f76a9ff3c4db780f2"
+    },
+    {
+      "path": "web/postcss.config.mjs",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "148a80b338b5624b0f1d13157ac09e34489da96d",
+      "size": 102,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/148a80b338b5624b0f1d13157ac09e34489da96d"
+    },
+    {
+      "path": "web/public",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "360ae04d670ceedd30d0c14e5b491e25bfd8e822",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/360ae04d670ceedd30d0c14e5b491e25bfd8e822"
+    },
+    {
+      "path": "web/public/config.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "26fe6f59674ecc3fcd01a9da9dc34abe4f5fb243",
+      "size": 285,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/26fe6f59674ecc3fcd01a9da9dc34abe4f5fb243"
+    },
+    {
+      "path": "web/public/icons",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "ec02a3a5228a829697618db0fbbdf6b36e501367",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/ec02a3a5228a829697618db0fbbdf6b36e501367"
+    },
+    {
+      "path": "web/public/icons/claude.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "62dc0db12dafd49c6232d9275c671237dea6a10a",
+      "size": 1696,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/62dc0db12dafd49c6232d9275c671237dea6a10a"
+    },
+    {
+      "path": "web/public/icons/deepseek.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3fc2302406e22f064f3efda71d8a7bcf0fc1dd41",
+      "size": 2164,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/3fc2302406e22f064f3efda71d8a7bcf0fc1dd41"
+    },
+    {
+      "path": "web/public/icons/gemini.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "62681dfa7cf3db2940b527ed3cbcee7bacbb1b9b",
+      "size": 2836,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/62681dfa7cf3db2940b527ed3cbcee7bacbb1b9b"
+    },
+    {
+      "path": "web/public/icons/glm.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0c6e61cea8afc110c0bfcb63894b584a9e1e4df1",
+      "size": 3597,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/0c6e61cea8afc110c0bfcb63894b584a9e1e4df1"
+    },
+    {
+      "path": "web/public/icons/grok.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "efb1a6183cbd9d1b68471805dc6c663e2a6fd7ff",
+      "size": 756,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/efb1a6183cbd9d1b68471805dc6c663e2a6fd7ff"
+    },
+    {
+      "path": "web/public/icons/linuxdo.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e79667bc98d2001425c7ff8f9844f18c83998c42",
+      "size": 1483,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/e79667bc98d2001425c7ff8f9844f18c83998c42"
+    },
+    {
+      "path": "web/public/icons/openai.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "78caf4fa20ffb0ae8ebefd74408871c11c1c7fd2",
+      "size": 1687,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/78caf4fa20ffb0ae8ebefd74408871c11c1c7fd2"
+    },
+    {
+      "path": "web/public/logo.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "027ea5d5dc432e39e583aad04702e2a0ddcd3cbd",
+      "size": 229,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/027ea5d5dc432e39e583aad04702e2a0ddcd3cbd"
+    },
+    {
+      "path": "web/src",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "eef51de276ee224222539c9c0cfe644fb31b8a8f",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/eef51de276ee224222539c9c0cfe644fb31b8a8f"
+    },
+    {
+      "path": "web/src/components",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "7d1da4d057a30ac570fe56bc0c6f3129632c55ff",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/7d1da4d057a30ac570fe56bc0c6f3129632c55ff"
+    },
+    {
+      "path": "web/src/components/agent",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "a901850c855b0df72b414433fe826362326b3f94",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/a901850c855b0df72b414433fe826362326b3f94"
+    },
+    {
+      "path": "web/src/components/agent/agent-canvas-reference-preview.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ceebd80de0889a4b8c27feb9c03de612e93d1d65",
+      "size": 2292,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/ceebd80de0889a4b8c27feb9c03de612e93d1d65"
+    },
+    {
+      "path": "web/src/components/agent/agent-chat-composer.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "66f1037a9722e5cd5d98775448eb4749a0959a04",
+      "size": 16622,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/66f1037a9722e5cd5d98775448eb4749a0959a04"
+    },
+    {
+      "path": "web/src/components/agent/agent-chat-inline-tokens.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d66d1a3631918e003706d57e0be858d6603131c7",
+      "size": 2269,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/d66d1a3631918e003706d57e0be858d6603131c7"
+    },
+    {
+      "path": "web/src/components/agent/agent-chat-message.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a02414550ebb6f1624b78c0662c2960ed66b83ab",
+      "size": 37822,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/a02414550ebb6f1624b78c0662c2960ed66b83ab"
+    },
+    {
+      "path": "web/src/components/agent/agent-chat-prompt-input.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9c9f5135d2befd31ac38d78ee227b59dc78dd66c",
+      "size": 23298,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/9c9f5135d2befd31ac38d78ee227b59dc78dd66c"
+    },
+    {
+      "path": "web/src/components/agent/agent-chat.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4e22864d1ebae5fabacc56302cfe69040d2aedf7",
+      "size": 9847,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/4e22864d1ebae5fabacc56302cfe69040d2aedf7"
+    },
+    {
+      "path": "web/src/components/agent/agent-connect-view.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8449e727bd77c3332e9a5b40e999b74cfba2c446",
+      "size": 9127,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/8449e727bd77c3332e9a5b40e999b74cfba2c446"
+    },
+    {
+      "path": "web/src/components/agent/agent-event-formatters.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e7f80de6704a3e47fbf090b15390747ad8b798e0",
+      "size": 32844,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/e7f80de6704a3e47fbf090b15390747ad8b798e0"
+    },
+    {
+      "path": "web/src/components/agent/agent-history-view.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "eb5ffe7ca9cc1f0ae4d7844464087c292415ecd8",
+      "size": 7796,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/eb5ffe7ca9cc1f0ae4d7844464087c292415ecd8"
+    },
+    {
+      "path": "web/src/components/agent/agent-log-view.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a9ab314d3e098436d0ba921b450a63f67c22d85d",
+      "size": 23147,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/a9ab314d3e098436d0ba921b450a63f67c22d85d"
+    },
+    {
+      "path": "web/src/components/agent/agent-panel-tabs.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7fee741bfff1af5541c5834294c850b441624b67",
+      "size": 2366,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/7fee741bfff1af5541c5834294c850b441624b67"
+    },
+    {
+      "path": "web/src/components/agent/agent-panel.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c2c288cf9cf4e2bc4b55044a5a9c336953c47a80",
+      "size": 3102,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/c2c288cf9cf4e2bc4b55044a5a9c336953c47a80"
+    },
+    {
+      "path": "web/src/components/agent/agent-scroll-to-bottom.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0434d2f024b126a42c69a5cc7092df6cf893d3b9",
+      "size": 1016,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/0434d2f024b126a42c69a5cc7092df6cf893d3b9"
+    },
+    {
+      "path": "web/src/components/agent/agent-skills-view.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e31877eddea50e3babff81206b5cd1bfdec945d0",
+      "size": 30972,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/e31877eddea50e3babff81206b5cd1bfdec945d0"
+    },
+    {
+      "path": "web/src/components/agent/local-agent-panel.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "02132906479f4546906cc9c0ffda548e240ffb2e",
+      "size": 92382,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/02132906479f4546906cc9c0ffda548e240ffb2e"
+    },
+    {
+      "path": "web/src/components/audio-settings-panel.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "407513f6d4cea94d69e8453b46ecd2337e733615",
+      "size": 5703,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/407513f6d4cea94d69e8453b46ecd2337e733615"
+    },
+    {
+      "path": "web/src/components/canvas",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "9b6285b40ba558659671e8e064d34960347d88ea",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/9b6285b40ba558659671e8e064d34960347d88ea"
+    },
+    {
+      "path": "web/src/components/canvas/asset-picker-modal.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "076ba4296a95ecf8cf9ec5955df6e6f1ac660768",
+      "size": 6556,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/076ba4296a95ecf8cf9ec5955df6e6f1ac660768"
+    },
+    {
+      "path": "web/src/components/canvas/canvas-audio-settings-popover.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2f204345a9637741e58e7de0ebf9cb39b93be1c6",
+      "size": 5126,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/2f204345a9637741e58e7de0ebf9cb39b93be1c6"
+    },
+    {
+      "path": "web/src/components/canvas/canvas-config-composer.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1bfd87b1fc95f96fd84731996fbbf252845470b2",
+      "size": 17918,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/1bfd87b1fc95f96fd84731996fbbf252845470b2"
+    },
+    {
+      "path": "web/src/components/canvas/canvas-config-node-panel.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2ee9533c5091b59eea7c9ea81329411b67d83af9",
+      "size": 11818,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/2ee9533c5091b59eea7c9ea81329411b67d83af9"
+    },
+    {
+      "path": "web/src/components/canvas/canvas-connections.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "95cbb7a914bee2a79ba92a4adf4526baee2adb6b",
+      "size": 3565,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/95cbb7a914bee2a79ba92a4adf4526baee2adb6b"
+    },
+    {
+      "path": "web/src/components/canvas/canvas-context-menu.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "464ee3e6e0b325225a50fe20b994b4462b101720",
+      "size": 3618,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/464ee3e6e0b325225a50fe20b994b4462b101720"
+    },
+    {
+      "path": "web/src/components/canvas/canvas-create-menus.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c7edd556f37a447a9c9f3ad603173c22ee227d3f",
+      "size": 6743,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/c7edd556f37a447a9c9f3ad603173c22ee227d3f"
+    },
+    {
+      "path": "web/src/components/canvas/canvas-delete-projects-dialog.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d7017ee9e8bec273d9fddd377700bd1493873195",
+      "size": 1549,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/d7017ee9e8bec273d9fddd377700bd1493873195"
+    },
+    {
+      "path": "web/src/components/canvas/canvas-image-settings-popover.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1b2a88f676f8273c1db749582c3aa42c80ad354e",
+      "size": 5699,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/1b2a88f676f8273c1db749582c3aa42c80ad354e"
+    },
+    {
+      "path": "web/src/components/canvas/canvas-image-toolbar-settings-modal.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7464dbb9fc0c6b80f5ab91ef11e67e3adb8b30c5",
+      "size": 10452,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/7464dbb9fc0c6b80f5ab91ef11e67e3adb8b30c5"
+    },
+    {
+      "path": "web/src/components/canvas/canvas-image-toolbar-tools.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b2dd2c45521c2f8974393f34ea4587a67cca8bfd",
+      "size": 6882,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/b2dd2c45521c2f8974393f34ea4587a67cca8bfd"
+    },
+    {
+      "path": "web/src/components/canvas/canvas-mini-map.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "32f91ab1090364913926d59e3a286661aee585df",
+      "size": 5726,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/32f91ab1090364913926d59e3a286661aee585df"
+    },
+    {
+      "path": "web/src/components/canvas/canvas-node-angle-dialog.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "17d07e332f5d2db956fcd003e372b73aa1d8a863",
+      "size": 5226,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/17d07e332f5d2db956fcd003e372b73aa1d8a863"
+    },
+    {
+      "path": "web/src/components/canvas/canvas-node-crop-dialog.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "341a1b3d2574f8b9a7a5a38b55c8e7c375763090",
+      "size": 14431,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/341a1b3d2574f8b9a7a5a38b55c8e7c375763090"
+    },
+    {
+      "path": "web/src/components/canvas/canvas-node-generation.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "850fb4df9ad0cddc1fd8f11c8cfb338a2ed906f9",
+      "size": 10704,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/850fb4df9ad0cddc1fd8f11c8cfb338a2ed906f9"
+    },
+    {
+      "path": "web/src/components/canvas/canvas-node-hover-toolbar.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2fc5a8490bae36008f045cefbe2238e8650c5322",
+      "size": 17999,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/2fc5a8490bae36008f045cefbe2238e8650c5322"
+    },
+    {
+      "path": "web/src/components/canvas/canvas-node-mask-edit-dialog.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b539667842bb96736a52ccfa06bc96122e34a3dc",
+      "size": 22109,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/b539667842bb96736a52ccfa06bc96122e34a3dc"
+    },
+    {
+      "path": "web/src/components/canvas/canvas-node-prompt-panel.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9348463592c98ae8155bbafb51e732e4f8eb6459",
+      "size": 13361,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/9348463592c98ae8155bbafb51e732e4f8eb6459"
+    },
+    {
+      "path": "web/src/components/canvas/canvas-node-reference-bar.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d90ae9c15cc0fc6359a86d519efa8f948b52bf38",
+      "size": 5240,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/d90ae9c15cc0fc6359a86d519efa8f948b52bf38"
+    },
+    {
+      "path": "web/src/components/canvas/canvas-node-split-dialog.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "891c5b00e22d46286869f60241c8d296cd663b87",
+      "size": 17508,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/891c5b00e22d46286869f60241c8d296cd663b87"
+    },
+    {
+      "path": "web/src/components/canvas/canvas-node-upscale-dialog.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0d0f40ce9c835c8e91d4748a8626c8da3d9e104f",
+      "size": 6306,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/0d0f40ce9c835c8e91d4748a8626c8da3d9e104f"
+    },
+    {
+      "path": "web/src/components/canvas/canvas-node.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0c03fc9823e4c0dc1ed5cb15017ee475fbdb3d88",
+      "size": 54509,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/0c03fc9823e4c0dc1ed5cb15017ee475fbdb3d88"
+    },
+    {
+      "path": "web/src/components/canvas/canvas-plugin-manager-modal.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7418886c9150e1d59be4077c7d70b5f6c99c50e0",
+      "size": 12121,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/7418886c9150e1d59be4077c7d70b5f6c99c50e0"
+    },
+    {
+      "path": "web/src/components/canvas/canvas-project-card.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e5c8e77d3b32066fad2c418eb52c78c79cf41110",
+      "size": 5386,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/e5c8e77d3b32066fad2c418eb52c78c79cf41110"
+    },
+    {
+      "path": "web/src/components/canvas/canvas-prompt-chip-input.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ee66ef35fdae818fbe168a58d3afdb12155ef3de",
+      "size": 19314,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/ee66ef35fdae818fbe168a58d3afdb12155ef3de"
+    },
+    {
+      "path": "web/src/components/canvas/canvas-prompt-library.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f07647d9de2953cc546982278ef93bbcf532b997",
+      "size": 1204,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/f07647d9de2953cc546982278ef93bbcf532b997"
+    },
+    {
+      "path": "web/src/components/canvas/canvas-refresh-shell.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "62b4c93dadffe9f65791583c36be3883665e58c6",
+      "size": 2177,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/62b4c93dadffe9f65791583c36be3883665e58c6"
+    },
+    {
+      "path": "web/src/components/canvas/canvas-resource-mention-textarea.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0216b07e70453784c466310c5e86569cc748f00d",
+      "size": 17532,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/0216b07e70453784c466310c5e86569cc748f00d"
+    },
+    {
+      "path": "web/src/components/canvas/canvas-selection-toolbar.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "376b5fb60477890589bfa6bb946af6cb77d531c4",
+      "size": 3760,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/376b5fb60477890589bfa6bb946af6cb77d531c4"
+    },
+    {
+      "path": "web/src/components/canvas/canvas-side-panel.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a23fc284ae50ef180e19479b85445160054b0cb9",
+      "size": 42896,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/a23fc284ae50ef180e19479b85445160054b0cb9"
+    },
+    {
+      "path": "web/src/components/canvas/canvas-size-picker.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0abd4824eb5000eef32cb34b1db62a8d867a4dc7",
+      "size": 2578,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/0abd4824eb5000eef32cb34b1db62a8d867a4dc7"
+    },
+    {
+      "path": "web/src/components/canvas/canvas-text-settings-popover.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fa115716b82930100bee159cdaf9a7283770612a",
+      "size": 5330,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/fa115716b82930100bee159cdaf9a7283770612a"
+    },
+    {
+      "path": "web/src/components/canvas/canvas-toolbar.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "75b7de5445ad1dd1f84e48b52c945b9ce9eb8ab2",
+      "size": 20494,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/75b7de5445ad1dd1f84e48b52c945b9ce9eb8ab2"
+    },
+    {
+      "path": "web/src/components/canvas/canvas-top-bar.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "25d4192fe32feb032184296ffbfcd5baf2ed22a1",
+      "size": 12459,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/25d4192fe32feb032184296ffbfcd5baf2ed22a1"
+    },
+    {
+      "path": "web/src/components/canvas/canvas-video-settings-popover.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6e84f5a00eea1518a4d93a5ffeca5ccfa0fc3172",
+      "size": 5024,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/6e84f5a00eea1518a4d93a5ffeca5ccfa0fc3172"
+    },
+    {
+      "path": "web/src/components/canvas/canvas-zoom-controls.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "64a6d096d846d5813af7deacade86dfb7191c3f6",
+      "size": 4939,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/64a6d096d846d5813af7deacade86dfb7191c3f6"
+    },
+    {
+      "path": "web/src/components/canvas/infinite-canvas.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "aeae59d82841825783267ba1ce27c14a479c1f67",
+      "size": 10881,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/aeae59d82841825783267ba1ce27c14a479c1f67"
+    },
+    {
+      "path": "web/src/components/canvas/nodes",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "e98dea40e580b19511b4b1ec4ee56c4f01b8a577",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/e98dea40e580b19511b4b1ec4ee56c4f01b8a577"
+    },
+    {
+      "path": "web/src/components/canvas/nodes/builtin-nodes.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "80dd78e7d74c4e44b85bb84b978c6afd604193a7",
+      "size": 2751,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/80dd78e7d74c4e44b85bb84b978c6afd604193a7"
+    },
+    {
+      "path": "web/src/components/canvas/use-image-editor-viewport.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "51583ab473c075a6c253dfcc919b822cb3f3e7f7",
+      "size": 10192,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/51583ab473c075a6c253dfcc919b822cb3f3e7f7"
+    },
+    {
+      "path": "web/src/components/image-generation-pending.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a3845893820cc872c8046431228d928005bc1077",
+      "size": 2275,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/a3845893820cc872c8046431228d928005bc1077"
+    },
+    {
+      "path": "web/src/components/image-settings-panel.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b28c37969d8692683fb47cda5999a4fd0a2402ed",
+      "size": 14536,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/b28c37969d8692683fb47cda5999a4fd0a2402ed"
+    },
+    {
+      "path": "web/src/components/layout",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "1349f5e2dcdbce6de8bc87b191b3c3ad348c2a73",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/1349f5e2dcdbce6de8bc87b191b3c3ad348c2a73"
+    },
+    {
+      "path": "web/src/components/layout/analytics-tracker.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0ff05cc1ea222a1b1d646e71d26cd9c02917ef46",
+      "size": 472,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/0ff05cc1ea222a1b1d646e71d26cd9c02917ef46"
+    },
+    {
+      "path": "web/src/components/layout/app-config-modal.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4f2e08bc356f052bee4144fff1c8555b6cdd8ff3",
+      "size": 30250,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/4f2e08bc356f052bee4144fff1c8555b6cdd8ff3"
+    },
+    {
+      "path": "web/src/components/layout/app-providers.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3d47c9eddf9b4ed520428ac1a4ef79f6b0baae07",
+      "size": 2043,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/3d47c9eddf9b4ed520428ac1a4ef79f6b0baae07"
+    },
+    {
+      "path": "web/src/components/layout/app-top-nav.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "28a85e74e6f25caa15c6d220895ce50946497ab7",
+      "size": 5990,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/28a85e74e6f25caa15c6d220895ce50946497ab7"
+    },
+    {
+      "path": "web/src/components/layout/channel-editor-drawer.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "919dfd458dd6d1db471859c559656a057ccb844d",
+      "size": 7595,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/919dfd458dd6d1db471859c559656a057ccb844d"
+    },
+    {
+      "path": "web/src/components/layout/client-root-init.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d8fe07856744549a2c85e4cacfa4cd51c8999fb3",
+      "size": 2054,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/d8fe07856744549a2c85e4cacfa4cd51c8999fb3"
+    },
+    {
+      "path": "web/src/components/layout/config-local-proxy.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "af3fed3aa4d76221462d1fcd31faea60be08182e",
+      "size": 4139,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/af3fed3aa4d76221462d1fcd31faea60be08182e"
+    },
+    {
+      "path": "web/src/components/layout/config-local-storage.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "40ccc3e36f6681431011264698598d03a1a08c87",
+      "size": 7117,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/40ccc3e36f6681431011264698598d03a1a08c87"
+    },
+    {
+      "path": "web/src/components/layout/config-prompt-sources.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1d231dec76233e776bb03a62007374e3af359385",
+      "size": 10071,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/1d231dec76233e776bb03a62007374e3af359385"
+    },
+    {
+      "path": "web/src/components/layout/github-link.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ca695b26bf7529cb30d15192e8c055d971df7bc6",
+      "size": 800,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/ca695b26bf7529cb30d15192e8c055d971df7bc6"
+    },
+    {
+      "path": "web/src/components/layout/mobile-nav-drawer.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "18a5d44c226a78a6543e519c75cb291f8db53cce",
+      "size": 1729,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/18a5d44c226a78a6543e519c75cb291f8db53cce"
+    },
+    {
+      "path": "web/src/components/layout/model-script-editor.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "92e03779b98782ffa93b126b5b6ee086671e9f0c",
+      "size": 12261,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/92e03779b98782ffa93b126b5b6ee086671e9f0c"
+    },
+    {
+      "path": "web/src/components/layout/model-select-modal.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "82545b61c5784e2aca1fca4f91dbe2299234b21c",
+      "size": 7216,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/82545b61c5784e2aca1fca4f91dbe2299234b21c"
+    },
+    {
+      "path": "web/src/components/layout/prompt-source-content-modal.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "09c290a30177857f1ce9765306ff9dac8f78c7cb",
+      "size": 6659,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/09c290a30177857f1ce9765306ff9dac8f78c7cb"
+    },
+    {
+      "path": "web/src/components/layout/prompt-source-editor-drawer.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fcb0ce3cc92d601efd8aa47296768af952133eed",
+      "size": 4121,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/fcb0ce3cc92d601efd8aa47296768af952133eed"
+    },
+    {
+      "path": "web/src/components/layout/user-status-actions.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "509bbf970d836df85fc957e3b8a53d0ea59a8094",
+      "size": 4183,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/509bbf970d836df85fc957e3b8a53d0ea59a8094"
+    },
+    {
+      "path": "web/src/components/layout/version-release-modal.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e68bd08614682254a2f63a8f8e78a037ee272d0a",
+      "size": 5586,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/e68bd08614682254a2f63a8f8e78a037ee272d0a"
+    },
+    {
+      "path": "web/src/components/model-picker.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d262156bd6ccab1e7f17616a212104d8a9f05286",
+      "size": 5706,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/d262156bd6ccab1e7f17616a212104d8a9f05286"
+    },
+    {
+      "path": "web/src/components/prompts",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "bfa87c9a78a36f530d5c213a53c52e1fe7e8dcd6",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/bfa87c9a78a36f530d5c213a53c52e1fe7e8dcd6"
+    },
+    {
+      "path": "web/src/components/prompts/prompt-card.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a5220faa9c695b9d2043849d7fec615212fabd5c",
+      "size": 3039,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/a5220faa9c695b9d2043849d7fec615212fabd5c"
+    },
+    {
+      "path": "web/src/components/prompts/prompt-select-dialog.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7559233c2586973a623d60be289053c15f24740c",
+      "size": 5389,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/7559233c2586973a623d60be289053c15f24740c"
+    },
+    {
+      "path": "web/src/components/prompts/use-prompt-list.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "24af0ce8eddd6bc34e6d3aceb1b108ee8c55b111",
+      "size": 1506,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/24af0ce8eddd6bc34e6d3aceb1b108ee8c55b111"
+    },
+    {
+      "path": "web/src/components/text-settings-panel.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "82d65989eb1355d1110fc49e14a03b9c3071bfd0",
+      "size": 2560,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/82d65989eb1355d1110fc49e14a03b9c3071bfd0"
+    },
+    {
+      "path": "web/src/components/ui",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "71f06ef6e98aa078e877ce4d2be6101072de20d3",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/71f06ef6e98aa078e877ce4d2be6101072de20d3"
+    },
+    {
+      "path": "web/src/components/ui/animated-theme-toggler.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "275417eb9768b2c1d96978711d3fb4e78b36a469",
+      "size": 8641,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/275417eb9768b2c1d96978711d3fb4e78b36a469"
+    },
+    {
+      "path": "web/src/components/ui/dia-text-reveal.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "373cf02ca67fe0cbc667829359d07a3d606fc532",
+      "size": 7537,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/373cf02ca67fe0cbc667829359d07a3d606fc532"
+    },
+    {
+      "path": "web/src/components/ui/select.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c9bb24906c0996373b8e1c52a15abdc1091cdca6",
+      "size": 6796,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/c9bb24906c0996373b8e1c52a15abdc1091cdca6"
+    },
+    {
+      "path": "web/src/components/video-settings-panel.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "36563dab5dd7d34dab723419ef44bb420fd463ef",
+      "size": 12548,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/36563dab5dd7d34dab723419ef44bb420fd463ef"
+    },
+    {
+      "path": "web/src/constant",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "d07a8e79a84673cd966f8d77209b6a22f82d1331",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/d07a8e79a84673cd966f8d77209b6a22f82d1331"
+    },
+    {
+      "path": "web/src/constant/canvas.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9b7ae325a72c7425cf115f59124d79c8ddb9be6e",
+      "size": 2786,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/9b7ae325a72c7425cf115f59124d79c8ddb9be6e"
+    },
+    {
+      "path": "web/src/constant/env.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "84a4f242559eece3b87db366b9f53af9a4aef33c",
+      "size": 454,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/84a4f242559eece3b87db366b9f53af9a4aef33c"
+    },
+    {
+      "path": "web/src/constant/navigation-tools.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c71f227c925bef461c95aa73659edefadfabc1fc",
+      "size": 574,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/c71f227c925bef461c95aa73659edefadfabc1fc"
+    },
+    {
+      "path": "web/src/constant/runtime-config.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6728a7a3bf6f3875e6dcf92d73ec0a93a3e9ffb4",
+      "size": 1397,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/6728a7a3bf6f3875e6dcf92d73ec0a93a3e9ffb4"
+    },
+    {
+      "path": "web/src/hooks",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "163698ddd37f0116fd00065636df6d17269b1c02",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/163698ddd37f0116fd00065636df6d17269b1c02"
+    },
+    {
+      "path": "web/src/hooks/use-copy-text.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bf6a92d900ed796b0d3484df7caeb2ae40eafa8c",
+      "size": 356,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/bf6a92d900ed796b0d3484df7caeb2ae40eafa8c"
+    },
+    {
+      "path": "web/src/hooks/use-prompt-source-scheduler.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "54ccb1d5699004602c2b8f459aab917264545cd7",
+      "size": 1726,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/54ccb1d5699004602c2b8f459aab917264545cd7"
+    },
+    {
+      "path": "web/src/hooks/use-version-check.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3e85bc6e1fbc47935a44882f169482bdeda59116",
+      "size": 3597,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/3e85bc6e1fbc47935a44882f169482bdeda59116"
+    },
+    {
+      "path": "web/src/i18n",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "57112b2cf25bbb2cb0ffdf6f091d87063f90dd9b",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/57112b2cf25bbb2cb0ffdf6f091d87063f90dd9b"
+    },
+    {
+      "path": "web/src/i18n/index.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6e67644e0b96fcd8038791a3ae83d09320204296",
+      "size": 816,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/6e67644e0b96fcd8038791a3ae83d09320204296"
+    },
+    {
+      "path": "web/src/i18n/locales",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "574771c393cb813075279832a891096c80350717",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/574771c393cb813075279832a891096c80350717"
+    },
+    {
+      "path": "web/src/i18n/locales/en-US.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cea8286fe028dd27ad42b0e5777faa673523bf33",
+      "size": 78682,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/cea8286fe028dd27ad42b0e5777faa673523bf33"
+    },
+    {
+      "path": "web/src/i18n/locales/zh-CN.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d046b4068e173ce7a529d4a77e427b6c75af1357",
+      "size": 75744,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/d046b4068e173ce7a529d4a77e427b6c75af1357"
+    },
+    {
+      "path": "web/src/layouts",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "3c52e9db6cc3d25fa3bf9dd2091906f5993abb34",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/3c52e9db6cc3d25fa3bf9dd2091906f5993abb34"
+    },
+    {
+      "path": "web/src/layouts/user-layout.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "45c748697c9b5c35de99c9f88dd1740263bd764b",
+      "size": 592,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/45c748697c9b5c35de99c9f88dd1740263bd764b"
+    },
+    {
+      "path": "web/src/lib",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "a413b17f8e4b6fa619dac8bed2eb93490b819a1b",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/a413b17f8e4b6fa619dac8bed2eb93490b819a1b"
+    },
+    {
+      "path": "web/src/lib/agent",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "147b1897c563d80097aab0aea284c4af6279a646",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/147b1897c563d80097aab0aea284c4af6279a646"
+    },
+    {
+      "path": "web/src/lib/agent/agent-site-tools.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0788f7d400209daa40274ee0e85e501cf1510b4d",
+      "size": 16682,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/0788f7d400209daa40274ee0e85e501cf1510b4d"
+    },
+    {
+      "path": "web/src/lib/agent/agent-url-bootstrap.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cf4a4e37d35b4245b3d9d8e1d8e044b0ec4b94c4",
+      "size": 671,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/cf4a4e37d35b4245b3d9d8e1d8e044b0ec4b94c4"
+    },
+    {
+      "path": "web/src/lib/analytics.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c769cfbf74cf3d6b346c8b97481b46726a84c6a6",
+      "size": 2959,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/c769cfbf74cf3d6b346c8b97481b46726a84c6a6"
+    },
+    {
+      "path": "web/src/lib/app-theme.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "19ca914129f62cfa0d664f9ffa80cda138873a42",
+      "size": 3094,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/19ca914129f62cfa0d664f9ffa80cda138873a42"
+    },
+    {
+      "path": "web/src/lib/audio-generation.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "76a2475d8b437ee6ec1a99e4a8930aadc4b04a26",
+      "size": 2107,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/76a2475d8b437ee6ec1a99e4a8930aadc4b04a26"
+    },
+    {
+      "path": "web/src/lib/canvas-theme.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b6cb0efc695defe63e809363527d78f557b3ac91",
+      "size": 1822,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/b6cb0efc695defe63e809363527d78f557b3ac91"
+    },
+    {
+      "path": "web/src/lib/canvas",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "678ade433d91c26b42a9c518f2ae14cb84e7d53a",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/678ade433d91c26b42a9c518f2ae14cb84e7d53a"
+    },
+    {
+      "path": "web/src/lib/canvas/canvas-agent-ops.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a76f4d4f248abac693e1eb0e42e3343679318510",
+      "size": 4651,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/a76f4d4f248abac693e1eb0e42e3343679318510"
+    },
+    {
+      "path": "web/src/lib/canvas/canvas-event-bus.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "563883f0f69812fddfaa45ed753d5141c4e851d6",
+      "size": 1429,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/563883f0f69812fddfaa45ed753d5141c4e851d6"
+    },
+    {
+      "path": "web/src/lib/canvas/canvas-export.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2759f4ee4e82721f33a86d8e0ca5941df9677c59",
+      "size": 4592,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/2759f4ee4e82721f33a86d8e0ca5941df9677c59"
+    },
+    {
+      "path": "web/src/lib/canvas/canvas-generation-helpers.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "adfe56f815f2bedb00f25849c5d37a2f58f383aa",
+      "size": 10739,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/adfe56f815f2bedb00f25849c5d37a2f58f383aa"
+    },
+    {
+      "path": "web/src/lib/canvas/canvas-image-data.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c807499254f8942f9121e3f6a2f9cf63e65c00e7",
+      "size": 7187,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/c807499254f8942f9121e3f6a2f9cf63e65c00e7"
+    },
+    {
+      "path": "web/src/lib/canvas/canvas-node-factory.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1693cc92073bde5b6d6d0588e4ea9a3ac2c8854e",
+      "size": 3625,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/1693cc92073bde5b6d6d0588e4ea9a3ac2c8854e"
+    },
+    {
+      "path": "web/src/lib/canvas/canvas-node-geometry.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "50924d911abdeb64f3bb2c366cdc45af51a85e9e",
+      "size": 10245,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/50924d911abdeb64f3bb2c366cdc45af51a85e9e"
+    },
+    {
+      "path": "web/src/lib/canvas/canvas-node-size.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b43bb8e7e919a423082ee04c23f418146ea58733",
+      "size": 801,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/b43bb8e7e919a423082ee04c23f418146ea58733"
+    },
+    {
+      "path": "web/src/lib/canvas/canvas-resource-references.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0facefdba7ce9098338e9da37237271d0aa0c3db",
+      "size": 7221,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/0facefdba7ce9098338e9da37237271d0aa0c3db"
+    },
+    {
+      "path": "web/src/lib/canvas/canvas-video-frame.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "177755a80a3fa504dc8bfda5d83ddecbf9841ccc",
+      "size": 2078,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/177755a80a3fa504dc8bfda5d83ddecbf9841ccc"
+    },
+    {
+      "path": "web/src/lib/canvas/node-registry.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2ac4e8c61456c81090583c166a10278da03b28d1",
+      "size": 2080,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/2ac4e8c61456c81090583c166a10278da03b28d1"
+    },
+    {
+      "path": "web/src/lib/canvas/plugin-loader.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "764b6c4f65066b315b4952bbb303e889c2261057",
+      "size": 7774,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/764b6c4f65066b315b4952bbb303e889c2261057"
+    },
+    {
+      "path": "web/src/lib/canvas/plugin-node-context.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2bb7df745d69a2d32b6e8b0e893ee6d2f944d03e",
+      "size": 1464,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/2bb7df745d69a2d32b6e8b0e893ee6d2f944d03e"
+    },
+    {
+      "path": "web/src/lib/canvas/plugin-registry.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a86fb94310fcb6ba0ad97c3e98f4a6b1f1d383b9",
+      "size": 2282,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/a86fb94310fcb6ba0ad97c3e98f4a6b1f1d383b9"
+    },
+    {
+      "path": "web/src/lib/canvas/plugin-runtime.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a7322f9d32f8c8949e85c542eb0de03d2f5ecd67",
+      "size": 1523,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/a7322f9d32f8c8949e85c542eb0de03d2f5ecd67"
+    },
+    {
+      "path": "web/src/lib/image-reference-prompt.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1aa2c482d3bf56a1fd8281411ca891d260d7955b",
+      "size": 577,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/1aa2c482d3bf56a1fd8281411ca891d260d7955b"
+    },
+    {
+      "path": "web/src/lib/image-thumbnail.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f16f29fbf14960abc1fe549a7873712c43a07865",
+      "size": 2244,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/f16f29fbf14960abc1fe549a7873712c43a07865"
+    },
+    {
+      "path": "web/src/lib/image-utils.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "39c5d094680d9ec2c5c9bcf75456a7684b413773",
+      "size": 2456,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/39c5d094680d9ec2c5c9bcf75456a7684b413773"
+    },
+    {
+      "path": "web/src/lib/keyboard-event.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fe296f088f647f9499f1b51e1d01c362f48fec68",
+      "size": 753,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/fe296f088f647f9499f1b51e1d01c362f48fec68"
+    },
+    {
+      "path": "web/src/lib/localforage-storage.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5b37f39506bc135414eaa822ae759468cd7978a5",
+      "size": 968,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/5b37f39506bc135414eaa822ae759468cd7978a5"
+    },
+    {
+      "path": "web/src/lib/media-size.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1986fc25ff9bf281336a963509a9b8236b3723ed",
+      "size": 6908,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/1986fc25ff9bf281336a963509a9b8236b3723ed"
+    },
+    {
+      "path": "web/src/lib/release.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "10a1b2a782414c65ea30fe64ea256413805846f3",
+      "size": 891,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/10a1b2a782414c65ea30fe64ea256413805846f3"
+    },
+    {
+      "path": "web/src/lib/utils.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cd589fb4b0214639cddf4c4930f7f49d37134407",
+      "size": 478,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/cd589fb4b0214639cddf4c4930f7f49d37134407"
+    },
+    {
+      "path": "web/src/lib/zip.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2633e3d7cd89987823e9dc6d9ee57973f3fe43af",
+      "size": 701,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/2633e3d7cd89987823e9dc6d9ee57973f3fe43af"
+    },
+    {
+      "path": "web/src/main.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ca044f42fe1dd067501de16fdeaee401ad9ac2e8",
+      "size": 731,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/ca044f42fe1dd067501de16fdeaee401ad9ac2e8"
+    },
+    {
+      "path": "web/src/pages",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "54cf8abfe9b0264a19b6bca475516aed5f3070a0",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/54cf8abfe9b0264a19b6bca475516aed5f3070a0"
+    },
+    {
+      "path": "web/src/pages/assets",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "80e4aa711a59d89210edfe7c9532c46bdb0858f1",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/80e4aa711a59d89210edfe7c9532c46bdb0858f1"
+    },
+    {
+      "path": "web/src/pages/assets/asset-transfer.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c4d632d7a30385947d75500d515be5ee7d2d992d",
+      "size": 2824,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/c4d632d7a30385947d75500d515be5ee7d2d992d"
+    },
+    {
+      "path": "web/src/pages/assets/index.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a236e479b87a9ff9c197cf5bd7704f3a5b473e7f",
+      "size": 30141,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/a236e479b87a9ff9c197cf5bd7704f3a5b473e7f"
+    },
+    {
+      "path": "web/src/pages/canvas",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "76fb88ff1650ab5f0aa43c20a883c79c6b571109",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/76fb88ff1650ab5f0aa43c20a883c79c6b571109"
+    },
+    {
+      "path": "web/src/pages/canvas/hooks",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "6e6e89fc4624bdadb9ea765b7bfd27a69b987507",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/6e6e89fc4624bdadb9ea765b7bfd27a69b987507"
+    },
+    {
+      "path": "web/src/pages/canvas/hooks/use-agent-bridge.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c9aaeb6da570bef54d38f0ab54badc1cb9288671",
+      "size": 5600,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/c9aaeb6da570bef54d38f0ab54badc1cb9288671"
+    },
+    {
+      "path": "web/src/pages/canvas/hooks/use-plugin-host.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0c9025c3abe6936993ff9cd4f1cb2f5f3326b7cb",
+      "size": 9513,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/0c9025c3abe6936993ff9cd4f1cb2f5f3326b7cb"
+    },
+    {
+      "path": "web/src/pages/canvas/index.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "376f29dc90b7a5a0f98bbe084df3c33dab9ddca0",
+      "size": 7566,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/376f29dc90b7a5a0f98bbe084df3c33dab9ddca0"
+    },
+    {
+      "path": "web/src/pages/canvas/project.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d1fedd9d5aba5dc6a7a6218b676d699bc06ca931",
+      "size": 194903,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/d1fedd9d5aba5dc6a7a6218b676d699bc06ca931"
+    },
+    {
+      "path": "web/src/pages/config",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "2d828c300d801e4ecc450d0783b0c000c103a467",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/2d828c300d801e4ecc450d0783b0c000c103a467"
+    },
+    {
+      "path": "web/src/pages/config/index.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ee1294bf8848d98c4916df9d0135bd7284f5bd31",
+      "size": 684,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/ee1294bf8848d98c4916df9d0135bd7284f5bd31"
+    },
+    {
+      "path": "web/src/pages/home",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "d59dcd88518dd2ff6cb885e05d9df047a498c333",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/d59dcd88518dd2ff6cb885e05d9df047a498c333"
+    },
+    {
+      "path": "web/src/pages/home/index.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "975f4f2cad1b4710047dceacde796c02d1109244",
+      "size": 7226,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/975f4f2cad1b4710047dceacde796c02d1109244"
+    },
+    {
+      "path": "web/src/pages/image",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "6d35b4011a7a646eae255c994c7e6c7c1e1a29d2",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/6d35b4011a7a646eae255c994c7e6c7c1e1a29d2"
+    },
+    {
+      "path": "web/src/pages/image/index.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e01121636c84e251023a502b6c64dca1616b24e2",
+      "size": 47126,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/e01121636c84e251023a502b6c64dca1616b24e2"
+    },
+    {
+      "path": "web/src/pages/not-found",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "088d80e14691f1edbef3cdbfddc017737a21109c",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/088d80e14691f1edbef3cdbfddc017737a21109c"
+    },
+    {
+      "path": "web/src/pages/not-found/index.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b89102bd883fd43673e8f2f45dfe9954cc29e8af",
+      "size": 1670,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/b89102bd883fd43673e8f2f45dfe9954cc29e8af"
+    },
+    {
+      "path": "web/src/pages/prompts",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "3205ce564446ea47538c96c523052b49d17e0c3e",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/3205ce564446ea47538c96c523052b49d17e0c3e"
+    },
+    {
+      "path": "web/src/pages/prompts/components",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "d3c38e1e29aa9f91191bb822cbfde3c8d440930c",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/d3c38e1e29aa9f91191bb822cbfde3c8d440930c"
+    },
+    {
+      "path": "web/src/pages/prompts/components/prompt-detail-dialog.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "dbdb955a7732b453aa31564882a39e7a84c1502d",
+      "size": 3666,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/dbdb955a7732b453aa31564882a39e7a84c1502d"
+    },
+    {
+      "path": "web/src/pages/prompts/index.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5e0b8f5cbe0537a7b9e7ad7778dbcd7c95907f9f",
+      "size": 7261,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/5e0b8f5cbe0537a7b9e7ad7778dbcd7c95907f9f"
+    },
+    {
+      "path": "web/src/pages/video",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "19aa1e6aa4f6c89e809309cca7f467c59c30b978",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/19aa1e6aa4f6c89e809309cca7f467c59c30b978"
+    },
+    {
+      "path": "web/src/pages/video/index.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "39c87dc3c6a68f0b7ff8db309220ea707517be41",
+      "size": 43705,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/39c87dc3c6a68f0b7ff8db309220ea707517be41"
+    },
+    {
+      "path": "web/src/router.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "69e19db32e5f40489947740cc6c97662d28e6415",
+      "size": 1311,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/69e19db32e5f40489947740cc6c97662d28e6415"
+    },
+    {
+      "path": "web/src/services",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "81dedd2c75e04006cfa4d15c6d127466f5a8cc12",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/81dedd2c75e04006cfa4d15c6d127466f5a8cc12"
+    },
+    {
+      "path": "web/src/services/api",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "84a280c7a84c5b189d00a81581d4936143b47f83",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/84a280c7a84c5b189d00a81581d4936143b47f83"
+    },
+    {
+      "path": "web/src/services/api/audio.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7b6eaad0e9790585b338a21b74a452380519d09b",
+      "size": 7483,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/7b6eaad0e9790585b338a21b74a452380519d09b"
+    },
+    {
+      "path": "web/src/services/api/canvas-agent.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b70722e05a2173e0f85204e5b892ccbe6e72da32",
+      "size": 7350,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/b70722e05a2173e0f85204e5b892ccbe6e72da32"
+    },
+    {
+      "path": "web/src/services/api/image.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "421666a38490ef58f4a0c9266293852dfc10fb08",
+      "size": 39959,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/421666a38490ef58f4a0c9266293852dfc10fb08"
+    },
+    {
+      "path": "web/src/services/api/local-proxy.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1dbd2aef271e5629a90de17abf19d1ee9da27877",
+      "size": 708,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/1dbd2aef271e5629a90de17abf19d1ee9da27877"
+    },
+    {
+      "path": "web/src/services/api/model-plugin.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f8998c8899911e01e4e16ee9b5a19c268ecb0944",
+      "size": 29714,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/f8998c8899911e01e4e16ee9b5a19c268ecb0944"
+    },
+    {
+      "path": "web/src/services/api/prompt-source-presets.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8b55248fed7c6a0c79f498f39e1c20adad7c239d",
+      "size": 1907,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/8b55248fed7c6a0c79f498f39e1c20adad7c239d"
+    },
+    {
+      "path": "web/src/services/api/prompt-source-runtime.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cd198f24d51ac35adc3b55437aa7e47d23eb2588",
+      "size": 4349,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/cd198f24d51ac35adc3b55437aa7e47d23eb2588"
+    },
+    {
+      "path": "web/src/services/api/prompts.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4cb8611fbd78d4f7f40e198dedd30d9a3ae04c7a",
+      "size": 9242,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/4cb8611fbd78d4f7f40e198dedd30d9a3ae04c7a"
+    },
+    {
+      "path": "web/src/services/api/request.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9375bfe1816f4ffbcd389e34ff532cd75ba233a3",
+      "size": 713,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/9375bfe1816f4ffbcd389e34ff532cd75ba233a3"
+    },
+    {
+      "path": "web/src/services/api/video.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5408972e1c5ff32726373d7785fbd1b2ea0855fd",
+      "size": 23088,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/5408972e1c5ff32726373d7785fbd1b2ea0855fd"
+    },
+    {
+      "path": "web/src/services/app-sync.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a5b152b38525d1878ab0be5f0649bb45a8dc0ade",
+      "size": 19454,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/a5b152b38525d1878ab0be5f0649bb45a8dc0ade"
+    },
+    {
+      "path": "web/src/services/config-file.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b551012fc878c11dffa2826094a1e01b73d8bc5c",
+      "size": 1569,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/b551012fc878c11dffa2826094a1e01b73d8bc5c"
+    },
+    {
+      "path": "web/src/services/file-storage.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a6ddf9b729254142a34953989bda46d5cc68bbd6",
+      "size": 3761,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/a6ddf9b729254142a34953989bda46d5cc68bbd6"
+    },
+    {
+      "path": "web/src/services/image-storage.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f9c62d76fcf946de7ba129f860122fb3f48b373b",
+      "size": 11128,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/f9c62d76fcf946de7ba129f860122fb3f48b373b"
+    },
+    {
+      "path": "web/src/services/local-storage-usage.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "93eb4ac880c7a7b6e6729108c63c8906d2ca04dc",
+      "size": 2839,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/93eb4ac880c7a7b6e6729108c63c8906d2ca04dc"
+    },
+    {
+      "path": "web/src/services/webdav-sync.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2887ba703ad4e0fdd270bac835adce0244d8ae0e",
+      "size": 5921,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/2887ba703ad4e0fdd270bac835adce0244d8ae0e"
+    },
+    {
+      "path": "web/src/stores",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "e2cc8d974f772d1040a5309ec5313b6a071bda55",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/e2cc8d974f772d1040a5309ec5313b6a071bda55"
+    },
+    {
+      "path": "web/src/stores/canvas",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "0cfce72f87ecbd0e4d6728701519f9ebbe7bc37b",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/0cfce72f87ecbd0e4d6728701519f9ebbe7bc37b"
+    },
+    {
+      "path": "web/src/stores/canvas/use-canvas-store.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9389f333eb90ccd1a8a8bcb725b79c86f0bc4e31",
+      "size": 6394,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/9389f333eb90ccd1a8a8bcb725b79c86f0bc4e31"
+    },
+    {
+      "path": "web/src/stores/canvas/use-canvas-ui-store.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6e266f52f516765cfe90347879563cfa8ffd1262",
+      "size": 1389,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/6e266f52f516765cfe90347879563cfa8ffd1262"
+    },
+    {
+      "path": "web/src/stores/canvas/use-plugin-store.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c0fcead7377e7adb06dec58986713b163d54c6fb",
+      "size": 1938,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/c0fcead7377e7adb06dec58986713b163d54c6fb"
+    },
+    {
+      "path": "web/src/stores/use-agent-skill-store.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "264fd32f7a7bea32551d58f97f82cc7cd86eb4c8",
+      "size": 6091,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/264fd32f7a7bea32551d58f97f82cc7cd86eb4c8"
+    },
+    {
+      "path": "web/src/stores/use-agent-store.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7390b514395d11fc2aa45c9631f8b00071aaefd6",
+      "size": 9352,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/7390b514395d11fc2aa45c9631f8b00071aaefd6"
+    },
+    {
+      "path": "web/src/stores/use-asset-store.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "859a796af53f888edf9a84bf41a3a30ae9693ae0",
+      "size": 5476,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/859a796af53f888edf9a84bf41a3a30ae9693ae0"
+    },
+    {
+      "path": "web/src/stores/use-canvas-side-panel-store.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "40f0ad0b35a3ae4601c1271763a55a05aa68e1ba",
+      "size": 2508,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/40f0ad0b35a3ae4601c1271763a55a05aa68e1ba"
+    },
+    {
+      "path": "web/src/stores/use-config-store.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6c989d744809bb3e8f985cace551eae31da29e4e",
+      "size": 21625,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/6c989d744809bb3e8f985cace551eae31da29e4e"
+    },
+    {
+      "path": "web/src/stores/use-prompt-source-store.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ea5c5b4a5249fa75deeea8affdd0fd714302d58b",
+      "size": 2872,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/ea5c5b4a5249fa75deeea8affdd0fd714302d58b"
+    },
+    {
+      "path": "web/src/stores/use-theme-store.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b6073cee574cddd452f56c4094a87828cdf5f7ed",
+      "size": 443,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/b6073cee574cddd452f56c4094a87828cdf5f7ed"
+    },
+    {
+      "path": "web/src/stores/use-user-store.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "46f19af0dd8aa4f52877030c9eb94589af5ac25b",
+      "size": 358,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/46f19af0dd8aa4f52877030c9eb94589af5ac25b"
+    },
+    {
+      "path": "web/src/stores/use-workbench-agent-store.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "10b3a9b3601f52bdcf29d981c34dc2f320d642d6",
+      "size": 2836,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/10b3a9b3601f52bdcf29d981c34dc2f320d642d6"
+    },
+    {
+      "path": "web/src/styles",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "bcea2ac3d300e61116de92a5acec7a0f0111c202",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/bcea2ac3d300e61116de92a5acec7a0f0111c202"
+    },
+    {
+      "path": "web/src/styles/globals.css",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7dd92989690f4eca51f7146124b4a996b666d51a",
+      "size": 17069,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/7dd92989690f4eca51f7146124b4a996b666d51a"
+    },
+    {
+      "path": "web/src/types",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "183c5b7cd6e03e878f4476d0481e50b74690ba71",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/183c5b7cd6e03e878f4476d0481e50b74690ba71"
+    },
+    {
+      "path": "web/src/types/canvas-export.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1df7d5525b70bfec6760d6c751bf36788db06464",
+      "size": 442,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/1df7d5525b70bfec6760d6c751bf36788db06464"
+    },
+    {
+      "path": "web/src/types/canvas-plugin.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e190b20167c87ddab53f15001aac9e663663afcf",
+      "size": 7369,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/e190b20167c87ddab53f15001aac9e663663afcf"
+    },
+    {
+      "path": "web/src/types/canvas.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "54d0b7d1b3c1e1f85bc4baf3cdfcf81f82fa5cdc",
+      "size": 3837,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/54d0b7d1b3c1e1f85bc4baf3cdfcf81f82fa5cdc"
+    },
+    {
+      "path": "web/src/types/image.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fd7cb5dc2dc28234607a2643f27b9f22f635807a",
+      "size": 150,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/fd7cb5dc2dc28234607a2643f27b9f22f635807a"
+    },
+    {
+      "path": "web/src/types/media.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "dd1454ce05f7ad6450630f184c13f412e631a6e0",
+      "size": 368,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/dd1454ce05f7ad6450630f184c13f412e631a6e0"
+    },
+    {
+      "path": "web/src/vite-env.d.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f7685b5eaba5986330d46e9b5a21d4b379bcb8c0",
+      "size": 585,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/f7685b5eaba5986330d46e9b5a21d4b379bcb8c0"
+    },
+    {
+      "path": "web/tests",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "1d62e2d25c8fc5cfce944370bc8cbcf616d2cca4",
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/trees/1d62e2d25c8fc5cfce944370bc8cbcf616d2cca4"
+    },
+    {
+      "path": "web/tests/canvas-focus-viewport.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "aad4021f3d9e2d4fa6e5ebae7bdacac101af10d7",
+      "size": 3127,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/aad4021f3d9e2d4fa6e5ebae7bdacac101af10d7"
+    },
+    {
+      "path": "web/tests/image-thumbnail.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "138926c1cc06b16e89316ec7d06a8aef420ce5f0",
+      "size": 873,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/138926c1cc06b16e89316ec7d06a8aef420ce5f0"
+    },
+    {
+      "path": "web/tests/model-selection.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d3cbdc925efd3bf1fc2cdccafff8d9d9694d6551",
+      "size": 4549,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/d3cbdc925efd3bf1fc2cdccafff8d9d9694d6551"
+    },
+    {
+      "path": "web/tsconfig.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d49a8d5a5460d92da5b6f5b0d723d3c2db5fb002",
+      "size": 600,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/d49a8d5a5460d92da5b6f5b0d723d3c2db5fb002"
+    },
+    {
+      "path": "web/vercel.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0ff36344ad55213289f2671d5efa85f20b2310ee",
+      "size": 194,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/0ff36344ad55213289f2671d5efa85f20b2310ee"
+    },
+    {
+      "path": "web/vite.config.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "263c1301618e42dc93eda43a399f934aedf9df58",
+      "size": 1956,
+      "url": "https://api.github.com/repos/basketikun/infinite-canvas/git/blobs/263c1301618e42dc93eda43a399f934aedf9df58"
+    }
+  ],
+  "truncated": false
+}

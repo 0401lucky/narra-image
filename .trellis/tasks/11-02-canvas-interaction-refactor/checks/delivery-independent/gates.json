@@ -1,0 +1,110 @@
+{
+  "reviewer": "canvas_delivery_check",
+  "head": "e42ff7a74fb7d1c0e4507c960720bb0dc973f1ab",
+  "startedAt": "2026-11-03T02:40:01.518857+00:00",
+  "node": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-history-cleanup-20261029\\node-v24.22.1-win-x64\\node.exe",
+  "workspace": "E:\\code\\narra-image\\.trellis\\tasks\\11-02-canvas-interaction-refactor\\checks\\.runtime\\implementation-d5b415f0\\app",
+  "refresh": {
+    "workspace": "E:\\code\\narra-image\\.trellis\\tasks\\11-02-canvas-interaction-refactor\\checks\\.runtime\\implementation-d5b415f0\\app",
+    "sourceFiles": 1161,
+    "capturedAt": "2026-11-03T02:40:01.482605+00:00"
+  },
+  "gates": [
+    {
+      "name": "targeted",
+      "id": "20261103T024011-test-18ed81",
+      "exitCode": 0,
+      "timedOut": false,
+      "durationSeconds": 6.443,
+      "timeoutSeconds": 600,
+      "finishedAt": "2026-11-03T02:40:17.638954+00:00",
+      "sourceChanges": [],
+      "snapshotModifications": [],
+      "evidenceFiles": {
+        "20261103T024011-test-18ed81.json": "4cab28cd307dfb91dba1c2b6360876460dd34f62d654f867ca0d808a44848744",
+        "20261103T024011-test-18ed81.stderr.log": "fb3eec8f4214f940b8eead98d2363b9f501e96623301176156ca2e28dab336e4",
+        "20261103T024011-test-18ed81.stdout.log": "91ee2aed0c9ac0ad00d6b838f84f880a6cb1cfe6ea761900b0ac8b5b1a6a14f2"
+      }
+    },
+    {
+      "name": "lint",
+      "id": "20261103T024053-lint-cca071",
+      "exitCode": 0,
+      "timedOut": false,
+      "durationSeconds": 15.671,
+      "timeoutSeconds": 180,
+      "finishedAt": "2026-11-03T02:41:09.207978+00:00",
+      "sourceChanges": [],
+      "snapshotModifications": [],
+      "evidenceFiles": {
+        "20261103T024053-lint-cca071.json": "db0a402244eddbd18bcda29b7a34fe5d2d86749c235ef2374e11ee1eac01c811",
+        "20261103T024053-lint-cca071.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "20261103T024053-lint-cca071.stdout.log": "58947c71ed5f8731cbe4fcec6f373141216037ed0574239b9f506f55f9d0dd3f"
+      }
+    },
+    {
+      "name": "types",
+      "id": "20261103T024145-types-65e9ed",
+      "exitCode": 0,
+      "timedOut": false,
+      "durationSeconds": 2.901,
+      "timeoutSeconds": 180,
+      "finishedAt": "2026-11-03T02:41:48.054585+00:00",
+      "sourceChanges": [],
+      "snapshotModifications": [],
+      "evidenceFiles": {
+        "20261103T024145-types-65e9ed.json": "5a7bcc9b91a6d8418ae1aae44512b7d5ef5e0df35a371e15b340dec32af6785f",
+        "20261103T024145-types-65e9ed.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "20261103T024145-types-65e9ed.stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "full-test",
+      "id": "20261103T024223-test-0326aa",
+      "exitCode": 0,
+      "timedOut": false,
+      "durationSeconds": 110.886,
+      "timeoutSeconds": 600,
+      "finishedAt": "2026-11-03T02:44:14.833205+00:00",
+      "sourceChanges": [],
+      "snapshotModifications": [],
+      "evidenceFiles": {
+        "20261103T024223-test-0326aa.json": "5ed2a81330384e780538dc3f3def80ed95ae11d3393ec87b9c7424d6083ad787",
+        "20261103T024223-test-0326aa.stderr.log": "16c1a2fd11c0a87df212a3b628aad9c4d33f0b248586c104a8114492ca5abeeb",
+        "20261103T024223-test-0326aa.stdout.log": "733e9908a73a6024cdea492f2efdc96efa1f0c7f89c05fa71da2aea6418f07ba"
+      }
+    },
+    {
+      "name": "prisma",
+      "id": "20261103T024431-prisma-a08489",
+      "exitCode": 0,
+      "timedOut": false,
+      "durationSeconds": 1.755,
+      "timeoutSeconds": 120,
+      "finishedAt": "2026-11-03T02:44:32.755840+00:00",
+      "sourceChanges": [],
+      "snapshotModifications": [],
+      "evidenceFiles": {
+        "20261103T024431-prisma-a08489.json": "0326436c7cd83a360bc97fa79746ccb4b47c3a274f64c43b9afe0f1007e843cd",
+        "20261103T024431-prisma-a08489.stderr.log": "75066079154e16278b8bbb61e3a8fed567403e1667eda92ad7c8eeab0cda5879",
+        "20261103T024431-prisma-a08489.stdout.log": "1d7b591eca36614cc4e30148e2d15f1006562ea5659fe624c73f456029c502cf"
+      }
+    },
+    {
+      "name": "build",
+      "id": "20261103T024448-build-883048",
+      "exitCode": 134,
+      "timedOut": false,
+      "durationSeconds": 22.032,
+      "timeoutSeconds": 600,
+      "finishedAt": "2026-11-03T02:45:10.301597+00:00",
+      "sourceChanges": [],
+      "snapshotModifications": [],
+      "evidenceFiles": {
+        "20261103T024448-build-883048.json": "8bff22efdf602e9de818e7121e632dd85c5eaa169639fdb5a20ec4e27ba31a1a",
+        "20261103T024448-build-883048.stderr.log": "bfd3a51edf9892962d675c8a588d64f88b05f23b934ca7403fd5fec8b0021958",
+        "20261103T024448-build-883048.stdout.log": "59ca352b74c7f9d743319bb28ec9a8805629639e846206c7b58568583d967710"
+      }
+    }
+  ]
+}

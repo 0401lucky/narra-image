@@ -1,0 +1,14 @@
+{"file":".trellis/spec/frontend/index.md","reason":"Frontend guideline map and established project visual/layer conventions"}
+{"file":".trellis/spec/frontend/directory-structure.md","reason":"Feature-local component, helper, hook and test boundaries"}
+{"file":".trellis/spec/frontend/component-guidelines.md","reason":"Named components, Chinese accessible UI, shared composition and styling"}
+{"file":".trellis/spec/frontend/hook-guidelines.md","reason":"Captured lifecycle, listener cleanup and small feature hooks"}
+{"file":".trellis/spec/frontend/state-management.md","reason":"Owner/controller/editor lifetime, native prompt and raw-field state boundaries"}
+{"file":".trellis/spec/frontend/type-safety.md","reason":"Shared domain types, strict validation and no renderer state persistence"}
+{"file":".trellis/spec/frontend/canvas-studio.md","reason":"Canvas scene, Run/Save/IME/gesture/lease/measurement compatibility invariants"}
+{"file":".trellis/spec/frontend/quality-guidelines.md","reason":"Regression conventions and credential-isolated source-bound verification"}
+{"file":".trellis/spec/operations/canvas-contracts.md","reason":"Preserve owner/CAS/run/original retention and Node-Go-SQL shared contracts"}
+{"file":".trellis/spec/guides/code-reuse-thinking-guide.md","reason":"Reuse existing commands, field validation and gesture primitives"}
+{"file":".trellis/spec/guides/cross-layer-thinking-guide.md","reason":"Map UI command to canonical scene/run boundaries without hidden data flow"}
+{"file":".trellis/tasks/11-02-canvas-interaction-refactor/research/current-canvas.md","reason":"Current workflow, affected files, exact compatibility and test seams"}
+{"file":".trellis/tasks/11-02-canvas-interaction-refactor/research/infinite-canvas-reference.md","reason":"Pinned source-backed reference UX, licensing and mobile/storage caveats"}
+{"file":".trellis/tasks/11-02-canvas-interaction-refactor/research/canvas-interaction-design-seams.md","reason":"Atomic creation/import/prompt, captured gestures and contextual editor implementation seams"}

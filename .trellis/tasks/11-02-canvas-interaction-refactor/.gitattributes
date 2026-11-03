@@ -1,0 +1,7 @@
+# Preserve recorded machine receipts and upstream snapshot hashes across checkouts.
+# CRLF is intentional; spaces, excess blank lines and space-before-tab still fail.
+checks/**/*.json -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+checks/**/*.jsonl -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+checks/**/*.log -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+checks/final/git-status.txt -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+research/infinite-canvas-source/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

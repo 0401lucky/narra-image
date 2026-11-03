@@ -1,0 +1,239 @@
+{
+  "at": "2026-11-03T01:55:08.865849+00:00",
+  "previewOnly": true,
+  "realIndexUnchanged": true,
+  "previewIndex": "E:\\code\\narra-image\\.trellis\\tasks\\11-02-canvas-interaction-refactor\\checks\\.runtime\\delivery-index-323052d0",
+  "candidateFiles": 173,
+  "candidateTaskFiles": 146,
+  "taskBytes": 8021815,
+  "secretPatternHits": [],
+  "whitespaceExit": 2,
+  "whitespaceIssues": [
+    {
+      "path": ".trellis/spec/frontend/index.md",
+      "kind": "trailing whitespace.",
+      "count": 43
+    },
+    {
+      "path": ".trellis/spec/frontend/quality-guidelines.md",
+      "kind": "trailing whitespace.",
+      "count": 121
+    },
+    {
+      "path": ".trellis/tasks/11-02-canvas-interaction-refactor/check.jsonl",
+      "kind": "trailing whitespace.",
+      "count": 13
+    },
+    {
+      "path": ".trellis/tasks/11-02-canvas-interaction-refactor/checks/.gitignore",
+      "kind": "trailing whitespace.",
+      "count": 2
+    },
+    {
+      "path": ".trellis/tasks/11-02-canvas-interaction-refactor/checks/final/evidence/20261102T102520-test-da3a3c.json",
+      "kind": "trailing whitespace.",
+      "count": 2058
+    },
+    {
+      "path": ".trellis/tasks/11-02-canvas-interaction-refactor/checks/final/evidence/20261102T121151-test-9d4beb.json",
+      "kind": "trailing whitespace.",
+      "count": 2172
+    },
+    {
+      "path": ".trellis/tasks/11-02-canvas-interaction-refactor/checks/final/evidence/20261102T121215-lint-6d889d.json",
+      "kind": "trailing whitespace.",
+      "count": 2168
+    },
+    {
+      "path": ".trellis/tasks/11-02-canvas-interaction-refactor/checks/final/evidence/20261102T121246-types-05d3bb.json",
+      "kind": "trailing whitespace.",
+      "count": 2168
+    },
+    {
+      "path": ".trellis/tasks/11-02-canvas-interaction-refactor/checks/final/evidence/20261102T121305-test-6aa40d.json",
+      "kind": "trailing whitespace.",
+      "count": 2170
+    },
+    {
+      "path": ".trellis/tasks/11-02-canvas-interaction-refactor/checks/final/evidence/20261102T121510-prisma-fdf446.json",
+      "kind": "trailing whitespace.",
+      "count": 2169
+    },
+    {
+      "path": ".trellis/tasks/11-02-canvas-interaction-refactor/checks/final/evidence/20261102T121528-build-063e15.json",
+      "kind": "trailing whitespace.",
+      "count": 2169
+    },
+    {
+      "path": ".trellis/tasks/11-02-canvas-interaction-refactor/checks/final/evidence/20261102T121600-script-9dd79c.json",
+      "kind": "trailing whitespace.",
+      "count": 54
+    },
+    {
+      "path": ".trellis/tasks/11-02-canvas-interaction-refactor/checks/final/evidence/20261102T121808-script-f9d8de.json",
+      "kind": "trailing whitespace.",
+      "count": 55
+    },
+    {
+      "path": ".trellis/tasks/11-02-canvas-interaction-refactor/checks/final/evidence/20261102T121809-script-18e30e.json",
+      "kind": "trailing whitespace.",
+      "count": 56
+    },
+    {
+      "path": ".trellis/tasks/11-02-canvas-interaction-refactor/checks/final/evidence/20261102T121821-build-20d52f.json",
+      "kind": "trailing whitespace.",
+      "count": 2010
+    },
+    {
+      "path": ".trellis/tasks/11-02-canvas-interaction-refactor/checks/final/evidence/20261102T121840-script-c5b467.json",
+      "kind": "trailing whitespace.",
+      "count": 55
+    },
+    {
+      "path": ".trellis/tasks/11-02-canvas-interaction-refactor/checks/final/evidence/20261102T121840-script-e78dc5.json",
+      "kind": "trailing whitespace.",
+      "count": 57
+    },
+    {
+      "path": ".trellis/tasks/11-02-canvas-interaction-refactor/checks/final/evidence/20261102T140241-lint-ca5ade.json",
+      "kind": "trailing whitespace.",
+      "count": 2306
+    },
+    {
+      "path": ".trellis/tasks/11-02-canvas-interaction-refactor/checks/final/final-audit.json",
+      "kind": "trailing whitespace.",
+      "count": 14
+    },
+    {
+      "path": ".trellis/tasks/11-02-canvas-interaction-refactor/checks/final/gates.json",
+      "kind": "trailing whitespace.",
+      "count": 340
+    },
+    {
+      "path": ".trellis/tasks/11-02-canvas-interaction-refactor/checks/final/git-status.txt",
+      "kind": "trailing whitespace.",
+      "count": 169
+    },
+    {
+      "path": ".trellis/tasks/11-02-canvas-interaction-refactor/checks/final/source-freeze.json",
+      "kind": "trailing whitespace.",
+      "count": 40
+    },
+    {
+      "path": ".trellis/tasks/11-02-canvas-interaction-refactor/checks/implementation/evidence/20261102T054712-test-ded1be.json",
+      "kind": "trailing whitespace.",
+      "count": 1814
+    },
+    {
+      "path": ".trellis/tasks/11-02-canvas-interaction-refactor/checks/implementation/evidence/20261102T055441-lint-507283.json",
+      "kind": "trailing whitespace.",
+      "count": 1804
+    },
+    {
+      "path": ".trellis/tasks/11-02-canvas-interaction-refactor/checks/implementation/evidence/20261102T055540-test-147d2e.json",
+      "kind": "trailing whitespace.",
+      "count": 1814
+    },
+    {
+      "path": ".trellis/tasks/11-02-canvas-interaction-refactor/checks/implementation/evidence/20261102T055948-test-6ae14d.json",
+      "kind": "trailing whitespace.",
+      "count": 1820
+    },
+    {
+      "path": ".trellis/tasks/11-02-canvas-interaction-refactor/checks/implementation/evidence/20261102T060154-lint-651468.json",
+      "kind": "trailing whitespace.",
+      "count": 1804
+    },
+    {
+      "path": ".trellis/tasks/11-02-canvas-interaction-refactor/checks/implementation/evidence/20261102T060222-types-18e353.json",
+      "kind": "trailing whitespace.",
+      "count": 1804
+    },
+    {
+      "path": ".trellis/tasks/11-02-canvas-interaction-refactor/checks/implementation/evidence/20261102T060241-test-8728f2.json",
+      "kind": "trailing whitespace.",
+      "count": 1820
+    },
+    {
+      "path": ".trellis/tasks/11-02-canvas-interaction-refactor/checks/implementation/source-freeze.json",
+      "kind": "trailing whitespace.",
+      "count": 104
+    },
+    {
+      "path": ".trellis/tasks/11-02-canvas-interaction-refactor/checks/independent/cli-check-receipt.json",
+      "kind": "trailing whitespace.",
+      "count": 25
+    },
+    {
+      "path": ".trellis/tasks/11-02-canvas-interaction-refactor/checks/independent/evidence/20261102T061057-test-63e88d.json",
+      "kind": "trailing whitespace.",
+      "count": 1852
+    },
+    {
+      "path": ".trellis/tasks/11-02-canvas-interaction-refactor/checks/independent/evidence/20261102T062248-lint-4d366f.json",
+      "kind": "trailing whitespace.",
+      "count": 1850
+    },
+    {
+      "path": ".trellis/tasks/11-02-canvas-interaction-refactor/checks/independent/evidence/20261102T062321-types-3a77f6.json",
+      "kind": "trailing whitespace.",
+      "count": 1850
+    },
+    {
+      "path": ".trellis/tasks/11-02-canvas-interaction-refactor/checks/independent/evidence/20261102T062340-prisma-b76b7a.json",
+      "kind": "trailing whitespace.",
+      "count": 1851
+    },
+    {
+      "path": ".trellis/tasks/11-02-canvas-interaction-refactor/checks/independent/evidence/20261102T062358-build-b600a2.json",
+      "kind": "trailing whitespace.",
+      "count": 1851
+    },
+    {
+      "path": ".trellis/tasks/11-02-canvas-interaction-refactor/checks/independent/pre-fix-gates.json",
+      "kind": "trailing whitespace.",
+      "count": 45
+    },
+    {
+      "path": ".trellis/tasks/11-02-canvas-interaction-refactor/checks/pinned-isolation-selftest.json",
+      "kind": "trailing whitespace.",
+      "count": 10
+    },
+    {
+      "path": ".trellis/tasks/11-02-canvas-interaction-refactor/checks/pinned-isolation-selftest.log",
+      "kind": "trailing whitespace.",
+      "count": 13
+    },
+    {
+      "path": ".trellis/tasks/11-02-canvas-interaction-refactor/implement.jsonl",
+      "kind": "trailing whitespace.",
+      "count": 14
+    },
+    {
+      "path": ".trellis/tasks/11-02-canvas-interaction-refactor/prd.md",
+      "kind": "trailing whitespace.",
+      "count": 178
+    },
+    {
+      "path": ".trellis/tasks/11-02-canvas-interaction-refactor/research/infinite-canvas-source/commit.json",
+      "kind": "trailing whitespace.",
+      "count": 113
+    },
+    {
+      "path": ".trellis/tasks/11-02-canvas-interaction-refactor/research/infinite-canvas-source/repository.json",
+      "kind": "trailing whitespace.",
+      "count": 112
+    },
+    {
+      "path": ".trellis/tasks/11-02-canvas-interaction-refactor/research/infinite-canvas-source/tree.json",
+      "kind": "trailing whitespace.",
+      "count": 4798
+    },
+    {
+      "path": ".trellis/tasks/11-02-canvas-interaction-refactor/task.json",
+      "kind": "trailing whitespace.",
+      "count": 25
+    }
+  ],
+  "rawStageDriftUnderNoAutocrlf": []
+}

@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"01a19bb2-a16e-7222-8b84-f3e1d6de9f35"}
+{"type":"turn.started"}
+{"type":"error","message":"{\"error\":{\"code\":\"invalid_responses_request\",\"message\":\"anyrouter-codex-lucky: prompt_cache_key is required (request id: 20261102175910293219072KNRtXWG8)\",\"param\":null,\"type\":\"invalid_request_error\"}}\n"}
+{"type":"turn.failed","error":{"message":"{\"error\":{\"code\":\"invalid_responses_request\",\"message\":\"anyrouter-codex-lucky: prompt_cache_key is required (request id: 20261102175910293219072KNRtXWG8)\",\"param\":null,\"type\":\"invalid_request_error\"}}\n"}}

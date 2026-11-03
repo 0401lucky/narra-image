@@ -1,0 +1,680 @@
+[
+  {
+    "id": "B0-native-calibration",
+    "passed": true,
+    "durationMs": 1778,
+    "detail": [
+      {
+        "name": "click",
+        "trusted": true,
+        "alt": false,
+        "shift": false
+      },
+      {
+        "name": "keydown",
+        "trusted": true,
+        "key": "Enter",
+        "alt": false,
+        "shift": false
+      },
+      {
+        "name": "keypress",
+        "trusted": true,
+        "key": "Enter",
+        "alt": false,
+        "shift": false
+      },
+      {
+        "name": "click",
+        "trusted": true,
+        "alt": false,
+        "shift": false
+      },
+      {
+        "name": "keydown",
+        "trusted": true,
+        "key": "Enter",
+        "alt": false,
+        "shift": false
+      },
+      {
+        "name": "keypress",
+        "trusted": true,
+        "key": "Enter",
+        "alt": false,
+        "shift": false
+      },
+      {
+        "name": "click",
+        "trusted": true,
+        "alt": false,
+        "shift": false
+      },
+      {
+        "name": "keydown",
+        "trusted": true,
+        "key": "Tab",
+        "alt": false,
+        "shift": false
+      },
+      {
+        "name": "keydown",
+        "trusted": true,
+        "key": "Tab",
+        "alt": false,
+        "shift": true
+      }
+    ]
+  },
+  {
+    "id": "B1-direct-create-run",
+    "passed": true,
+    "durationMs": 3837,
+    "detail": {
+      "canvasId": "5bed0d0d-fe14-44f1-9c1a-ff75adc3e504",
+      "nodes": 3,
+      "run": {
+        "canvasId": "5bed0d0d-fe14-44f1-9c1a-ff75adc3e504",
+        "nodeId": "08b6fc9c-600a-4382-af0f-69d365ee8115",
+        "runId": "66248bd8-53a7-4631-be6e-94cc9a24e4b2",
+        "input": {
+          "prompt": {
+            "sourceNodeId": "8b945c7c-cf7e-4c7c-9e38-714e3a17bfd8",
+            "text": "A ceramic cup in warm afternoon light"
+          },
+          "references": []
+        },
+        "parameters": {
+          "providerMode": "built_in",
+          "channelId": "channel-account",
+          "model": "image-account-default",
+          "size": "auto",
+          "quality": "auto",
+          "outputFormat": "png",
+          "outputCompression": null,
+          "moderation": "auto",
+          "count": 1,
+          "negativePrompt": null,
+          "seed": null,
+          "generationType": "text_to_image"
+        }
+      },
+      "result": {
+        "id": "result:f4a92197-5dfe-48fd-8cab-513aaa6ac523",
+        "kind": "result",
+        "position": {
+          "x": 430,
+          "y": 55
+        },
+        "jobId": "canvas-66248bd8-53a7-4631-be6e-94cc9a24e4b2",
+        "imageId": "f4a92197-5dfe-48fd-8cab-513aaa6ac523",
+        "runId": "66248bd8-53a7-4631-be6e-94cc9a24e4b2"
+      }
+    }
+  },
+  {
+    "id": "B2-select-explicit-view-drag",
+    "passed": true,
+    "durationMs": 2146,
+    "detail": {
+      "before": {
+        "x": 430,
+        "y": 55
+      },
+      "moved": {
+        "x": 500.81081081081084,
+        "y": 93.44015444015443
+      },
+      "native": [
+        {
+          "type": "pointerdown",
+          "at": 1271.0999999642372,
+          "x": 157,
+          "y": 87,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "heroCopy": false,
+          "target": "<button type=\"button\" aria-pressed=\"false\" class=\"inline-flex items-center gap-2 rounded-lg px-4 py-1.5 text-sm font-semibold transition-colors text-[var(--ink-soft)] hover:bg-white/60\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColo"
+        },
+        {
+          "type": "pointerup",
+          "at": 1272.0999999642372,
+          "x": 157,
+          "y": 87,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "heroCopy": false,
+          "target": "<button type=\"button\" aria-pressed=\"false\" class=\"inline-flex items-center gap-2 rounded-lg px-4 py-1.5 text-sm font-semibold transition-colors text-[var(--ink-soft)] hover:bg-white/60\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColo"
+        },
+        {
+          "type": "click",
+          "at": 1272.199999988079,
+          "x": 157,
+          "y": 87,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 1,
+          "heroCopy": false,
+          "target": "<button type=\"button\" aria-pressed=\"false\" class=\"inline-flex items-center gap-2 rounded-lg px-4 py-1.5 text-sm font-semibold transition-colors text-[var(--ink-soft)] hover:bg-white/60\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColo"
+        },
+        {
+          "type": "pointerdown",
+          "at": 1919.0999999642372,
+          "x": 119.5,
+          "y": 196.5859375,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "heroCopy": false,
+          "target": "<button type=\"button\" class=\"canvas-stage-module__efzUrq__newButton\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-plus size-4\" aria-hidden=\"tru"
+        },
+        {
+          "type": "pointerup",
+          "at": 1920.300000011921,
+          "x": 119.5,
+          "y": 196.5859375,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "heroCopy": false,
+          "target": "<button type=\"button\" class=\"canvas-stage-module__efzUrq__newButton\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-plus size-4\" aria-hidden=\"tru"
+        },
+        {
+          "type": "click",
+          "at": 1920.3999999761581,
+          "x": 119,
+          "y": 196,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 1,
+          "heroCopy": false,
+          "target": "<button type=\"button\" class=\"canvas-stage-module__efzUrq__newButton\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-plus size-4\" aria-hidden=\"tru"
+        },
+        {
+          "type": "pointerdown",
+          "at": 2585.199999988079,
+          "x": 310.5859375,
+          "y": 224.5703125,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "heroCopy": false,
+          "target": "<button type=\"button\" class=\"canvas-stage-module__efzUrq__saveButton\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-sparkles size-4\" aria-hidden"
+        },
+        {
+          "type": "pointerup",
+          "at": 2586.300000011921,
+          "x": 310.5859375,
+          "y": 224.5703125,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "heroCopy": false,
+          "target": "<button type=\"button\" class=\"canvas-stage-module__efzUrq__saveButton\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-sparkles size-4\" aria-hidden"
+        },
+        {
+          "type": "click",
+          "at": 2586.300000011921,
+          "x": 310,
+          "y": 224,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 1,
+          "heroCopy": false,
+          "target": "<button type=\"button\" class=\"canvas-stage-module__efzUrq__saveButton\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-sparkles size-4\" aria-hidden"
+        },
+        {
+          "type": "pointerdown",
+          "at": 3149.099999964237,
+          "x": 1232,
+          "y": 562.8671875,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "heroCopy": false,
+          "target": "<textarea aria-label=\"创作提示词\" maxlength=\"8000\" rows=\"5\" class=\"nodrag nopan nowheel nokey canvas-stage-module__efzUrq__promptInput\" placeholder=\"光线、构图、主体与风格……\"></textarea>"
+        },
+        {
+          "type": "pointerup",
+          "at": 3151.099999964237,
+          "x": 1232,
+          "y": 562.8671875,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "heroCopy": false,
+          "target": "<textarea aria-label=\"创作提示词\" maxlength=\"8000\" rows=\"5\" class=\"nodrag nopan nowheel nokey canvas-stage-module__efzUrq__promptInput\" placeholder=\"光线、构图、主体与风格……\"></textarea>"
+        },
+        {
+          "type": "click",
+          "at": 3151.300000011921,
+          "x": 1232,
+          "y": 562,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 1,
+          "heroCopy": false,
+          "target": "<textarea aria-label=\"创作提示词\" maxlength=\"8000\" rows=\"5\" class=\"nodrag nopan nowheel nokey canvas-stage-module__efzUrq__promptInput\" placeholder=\"光线、构图、主体与风格……\"></textarea>"
+        },
+        {
+          "type": "pointerdown",
+          "at": 3782.399999976158,
+          "x": 1236,
+          "y": 901.71875,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "heroCopy": false,
+          "target": "<button type=\"button\" class=\"canvas-stage-module__efzUrq__runButton\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-play size-4\" aria-hidden=\"tru"
+        },
+        {
+          "type": "pointerup",
+          "at": 3783.899999976158,
+          "x": 1236,
+          "y": 901.71875,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "heroCopy": false,
+          "target": "<button type=\"button\" class=\"canvas-stage-module__efzUrq__runButton\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-play size-4\" aria-hidden=\"tru"
+        },
+        {
+          "type": "click",
+          "at": 3784.099999964237,
+          "x": 1236,
+          "y": 901,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 1,
+          "heroCopy": false,
+          "target": "<button type=\"button\" class=\"canvas-stage-module__efzUrq__runButton\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-play size-4\" aria-hidden=\"tru"
+        },
+        {
+          "type": "pointerdown",
+          "at": 4231.699999988079,
+          "x": 1389,
+          "y": 350.90625,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "heroCopy": false,
+          "target": "<path d=\"m6 6 12 12\"></path>"
+        },
+        {
+          "type": "pointerup",
+          "at": 4232.800000011921,
+          "x": 1389,
+          "y": 350.90625,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "heroCopy": false,
+          "target": "<path d=\"m6 6 12 12\"></path>"
+        },
+        {
+          "type": "click",
+          "at": 4232.899999976158,
+          "x": 1389,
+          "y": 350,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 1,
+          "heroCopy": false,
+          "target": "<path d=\"m6 6 12 12\"></path>"
+        },
+        {
+          "type": "pointerdown",
+          "at": 4672,
+          "x": 1404.8046875,
+          "y": 224.5703125,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "heroCopy": false,
+          "target": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-focus size-4\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"3\"></circle><path d=\"M3 7V5a2 2 0 0 1 "
+        },
+        {
+          "type": "pointerup",
+          "at": 4672.699999988079,
+          "x": 1404.8046875,
+          "y": 224.5703125,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "heroCopy": false,
+          "target": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-focus size-4\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"3\"></circle><path d=\"M3 7V5a2 2 0 0 1 "
+        },
+        {
+          "type": "click",
+          "at": 4672.800000011921,
+          "x": 1404,
+          "y": 224,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 1,
+          "heroCopy": false,
+          "target": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-focus size-4\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"3\"></circle><path d=\"M3 7V5a2 2 0 0 1 "
+        },
+        {
+          "type": "pointerdown",
+          "at": 5115.599999964237,
+          "x": 1215.64892578125,
+          "y": 635.3909912109375,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "heroCopy": false,
+          "target": "<img alt=\"画布生成结果\" draggable=\"false\" loading=\"lazy\" decoding=\"async\" src=\"/_next/image?url=%2Ffixture-media%2Ff4a92197-5dfe-48fd-8cab-513aaa6ac523.png&amp;w=640&amp;q=75\">"
+        },
+        {
+          "type": "pointerup",
+          "at": 5117,
+          "x": 1215.64892578125,
+          "y": 635.3909912109375,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "heroCopy": false,
+          "target": "<img alt=\"画布生成结果\" draggable=\"false\" loading=\"lazy\" decoding=\"async\" src=\"/_next/image?url=%2Ffixture-media%2Ff4a92197-5dfe-48fd-8cab-513aaa6ac523.png&amp;w=640&amp;q=75\">"
+        },
+        {
+          "type": "click",
+          "at": 5121.199999988079,
+          "x": 1215,
+          "y": 635,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 1,
+          "heroCopy": false,
+          "target": "<img alt=\"画布生成结果\" draggable=\"false\" loading=\"lazy\" decoding=\"async\" src=\"/_next/image?url=%2Ffixture-media%2Ff4a92197-5dfe-48fd-8cab-513aaa6ac523.png&amp;w=640&amp;q=75\">"
+        },
+        {
+          "type": "pointerdown",
+          "at": 5699.300000011921,
+          "x": 1220.125,
+          "y": 453.90625,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "heroCopy": false,
+          "target": "<button type=\"button\" class=\"canvas-stage-module__efzUrq__smallButton\" aria-label=\"查看所选原图\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-scan-ey"
+        },
+        {
+          "type": "pointerup",
+          "at": 5700.199999988079,
+          "x": 1220.125,
+          "y": 453.90625,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "heroCopy": false,
+          "target": "<button type=\"button\" class=\"canvas-stage-module__efzUrq__smallButton\" aria-label=\"查看所选原图\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-scan-ey"
+        },
+        {
+          "type": "click",
+          "at": 5700.300000011921,
+          "x": 1220,
+          "y": 453,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 1,
+          "heroCopy": false,
+          "target": "<button type=\"button\" class=\"canvas-stage-module__efzUrq__smallButton\" aria-label=\"查看所选原图\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-scan-ey"
+        },
+        {
+          "type": "pointerdown",
+          "at": 6347.099999964237,
+          "x": 1215.64892578125,
+          "y": 635.3909912109375,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "heroCopy": false,
+          "target": "<img alt=\"画布生成结果\" draggable=\"false\" loading=\"lazy\" decoding=\"async\" src=\"/_next/image?url=%2Ffixture-media%2Ff4a92197-5dfe-48fd-8cab-513aaa6ac523.png&amp;w=640&amp;q=75\">"
+        },
+        {
+          "type": "pointerup",
+          "at": 6492.5,
+          "x": 1285.64892578125,
+          "y": 673.3909912109375,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "heroCopy": false,
+          "target": "<div class=\"canvas-stage-module__efzUrq__viewport\" data-testid=\"canvas-viewport\" data-interaction-mode=\"browse\"><div data-testid=\"rf__wrapper\" aria-label=\"节点画布\" class=\"react-flow canvas-stage-module__efzUrq__flow light\" role=\"application\" style=\"width: 100%; height: 100%; overflow: hidden; position:"
+        },
+        {
+          "type": "click",
+          "at": 6496.099999964237,
+          "x": 1285,
+          "y": 673,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 1,
+          "heroCopy": false,
+          "target": "<div class=\"canvas-stage-module__efzUrq__viewport\" data-testid=\"canvas-viewport\" data-interaction-mode=\"browse\"><div data-testid=\"rf__wrapper\" aria-label=\"节点画布\" class=\"react-flow canvas-stage-module__efzUrq__flow light\" role=\"application\" style=\"width: 100%; height: 100%; overflow: hidden; position:"
+        }
+      ]
+    }
+  },
+  {
+    "id": "B3-outside-release-cancels",
+    "passed": true,
+    "durationMs": 648,
+    "detail": {
+      "before": {
+        "x": 500.81081081081084,
+        "y": 93.44015444015443
+      },
+      "after": {
+        "x": 500.81081081081084,
+        "y": 93.44015444015443
+      }
+    }
+  },
+  {
+    "id": "B4-original-import-download",
+    "passed": true,
+    "durationMs": 2070,
+    "detail": {
+      "referenceId": "8fb9cccf-f021-462f-acd3-de4016ec4612",
+      "originalSha256": "2d85c90504eb5ea83d0d8ff18ab544fcbd997e088e31686f38162b5bef6326c0",
+      "downloadHashes": [
+        "2d85c90504eb5ea83d0d8ff18ab544fcbd997e088e31686f38162b5bef6326c0"
+      ],
+      "chooser": "native button + CDP file selection, not OS chooser"
+    }
+  },
+  {
+    "id": "B5-continue-thumbnail-order",
+    "passed": true,
+    "durationMs": 3785,
+    "detail": {
+      "inputs": [
+        {
+          "id": "bee0b4ec-7271-4bbb-86a6-6054e6dcbdfc",
+          "source": "result:f4a92197-5dfe-48fd-8cab-513aaa6ac523",
+          "target": "00c0a2c2-2f1b-4a3d-a048-8df9ba86179f",
+          "kind": "image-input",
+          "ordinal": 1
+        },
+        {
+          "id": "27d000ff-e923-4af2-b347-2d6fbd1bce6f",
+          "source": "8fb9cccf-f021-462f-acd3-de4016ec4612",
+          "target": "00c0a2c2-2f1b-4a3d-a048-8df9ba86179f",
+          "kind": "image-input",
+          "ordinal": 2
+        }
+      ],
+      "wire": {
+        "canvasId": "5bed0d0d-fe14-44f1-9c1a-ff75adc3e504",
+        "nodeId": "00c0a2c2-2f1b-4a3d-a048-8df9ba86179f",
+        "runId": "69516538-ee6f-4fb1-92cc-cdbe3e83f917",
+        "input": {
+          "prompt": {
+            "sourceNodeId": "2c8d840e-ee45-4c6b-a8d6-42ff40e87fb1",
+            "text": "Keep the shape and change the lighting"
+          },
+          "references": [
+            {
+              "sourceNodeId": "result:f4a92197-5dfe-48fd-8cab-513aaa6ac523",
+              "ordinal": 1,
+              "kind": "result",
+              "jobId": "canvas-66248bd8-53a7-4631-be6e-94cc9a24e4b2",
+              "imageId": "f4a92197-5dfe-48fd-8cab-513aaa6ac523"
+            },
+            {
+              "sourceNodeId": "8fb9cccf-f021-462f-acd3-de4016ec4612",
+              "ordinal": 2,
+              "kind": "imported",
+              "assetId": "asset-7544f930-e0ab-45b8-b0f2-7b6dcaa8e137"
+            }
+          ]
+        },
+        "parameters": {
+          "providerMode": "built_in",
+          "channelId": "channel-account",
+          "model": "image-account-default",
+          "size": "auto",
+          "quality": "auto",
+          "outputFormat": "png",
+          "outputCompression": null,
+          "moderation": "auto",
+          "count": 1,
+          "negativePrompt": null,
+          "seed": null,
+          "generationType": "image_to_image"
+        }
+      },
+      "resultIds": [
+        "result:f4a92197-5dfe-48fd-8cab-513aaa6ac523",
+        "result:3d9e5cca-5063-4d07-9e68-43a26486f1e9"
+      ]
+    }
+  },
+  {
+    "id": "B6-phone-sheets-focus",
+    "passed": true,
+    "durationMs": 2650,
+    "detail": [
+      {
+        "width": 360,
+        "same": true,
+        "value": "Phone 360: keep a readable independent draft",
+        "focus": true,
+        "font": 16,
+        "panel": {
+          "x": 0,
+          "y": 178.609375,
+          "width": 360,
+          "height": 211.375,
+          "top": 178.609375,
+          "right": 360,
+          "bottom": 389.984375,
+          "left": 0
+        },
+        "buttons": [
+          {
+            "text": "",
+            "height": 44,
+            "width": 44
+          },
+          {
+            "text": "运行此节点",
+            "height": 44,
+            "width": 318
+          }
+        ]
+      },
+      {
+        "width": 390,
+        "same": true,
+        "value": "Phone 390: keep a readable independent draft",
+        "focus": true,
+        "font": 16,
+        "panel": {
+          "x": 0,
+          "y": 178.609375,
+          "width": 390,
+          "height": 211.375,
+          "top": 178.609375,
+          "right": 390,
+          "bottom": 389.984375,
+          "left": 0
+        },
+        "buttons": [
+          {
+            "text": "",
+            "height": 44,
+            "width": 44
+          },
+          {
+            "text": "运行此节点",
+            "height": 44,
+            "width": 348
+          }
+        ]
+      },
+      {
+        "width": 430,
+        "same": true,
+        "value": "Phone 430: keep a readable independent draft",
+        "focus": true,
+        "font": 16,
+        "panel": {
+          "x": 0,
+          "y": 178.609375,
+          "width": 430,
+          "height": 211.375,
+          "top": 178.609375,
+          "right": 430,
+          "bottom": 389.984375,
+          "left": 0
+        },
+        "buttons": [
+          {
+            "text": "",
+            "height": 44,
+            "width": 44
+          },
+          {
+            "text": "运行此节点",
+            "height": 44,
+            "width": 388
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "B7-save-native-reload",
+    "passed": true,
+    "durationMs": 2609,
+    "detail": {
+      "nodeCount": 7,
+      "originalAssetIds": [
+        "asset-7544f930-e0ab-45b8-b0f2-7b6dcaa8e137"
+      ],
+      "nativeDatabase": "narra-canvas-drafts v1",
+      "noAutomaticRun": true
+    }
+  },
+  {
+    "id": "B8-legacy-visible-anchor",
+    "passed": false,
+    "durationMs": 1263,
+    "error": "AssertionError [ERR_ASSERTION]: Primary creation follows far-off legacy prompt\n    at file:///E:/code/narra-image/.trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/run-browser.mjs:293:56\n    at async check (file:///E:/code/narra-image/.trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/run-browser.mjs:76:24)\n    at async file:///E:/code/narra-image/.trellis/tasks/11-02-canvas-interaction-refactor/checks/browser/run-browser.mjs:282:3"
+  },
+  {
+    "id": "B9-200-node-capacity-smoke",
+    "passed": true,
+    "durationMs": 1895,
+    "detail": {
+      "renderedNodes": 200,
+      "noPartialCreation": true,
+      "noFpsClaim": true
+    }
+  }
+]

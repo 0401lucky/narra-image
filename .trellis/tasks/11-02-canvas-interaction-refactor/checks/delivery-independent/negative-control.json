@@ -1,0 +1,17 @@
+{
+  "purpose": "Regression negative control against pre-fix toolbar in isolated copy only; not a current-source gate",
+  "id": "20261103T022116-test-8d201c",
+  "exitCode": 1,
+  "expectedFailure": true,
+  "intentionalSnapshotOverride": "src/components/create/parts/canvas-image-toolbar.tsx",
+  "oldSha256": "3c4ccfa50451cc783d00cbbdb253392b242ff82da3f1e2c81fc6b47eeface4ba",
+  "fixedSha256": "c4b249104e4bd9179a30280d685eef8b2ed9e0f5f470aff3342acd6b8792b6e0",
+  "testSha256": "ef2ef79b4e04d2211c0afc7319f616c78ff6874bb2880964934c726d5ad1d273",
+  "restoredExactBytes": true,
+  "sourceChanges": [],
+  "snapshotModifications": [
+    "src/components/create/parts/canvas-image-toolbar.tsx"
+  ],
+  "subsequentTestOnlyCorrection": "Explicit reference-kind guard for strict TypeScript; geometry/assertions unchanged",
+  "currentTestSha256": "44cd164686f5359e533a62d11b9d4e37e568f81758f18180a20a32179bf22e10"
+}
