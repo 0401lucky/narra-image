@@ -400,3 +400,39 @@ Completed the approved long-prompt fallback and final homepage/privacy verificat
 
 - Completed the user-authorized normal push to origin main; remote head verified as `34d4297d0d57b56353378e4b9d2d19befcfc8338`; no force push or deployment.
 - Physical mobile/nativeIME/OSdownloads, live-service E2E and actual GitHub CI remain unverified; CANVAS_ENABLED=false rollout default.
+
+
+## Session 8: Image-first canvas delivery to GitHub main
+
+**Date**: 2026-11-03
+**Task**: Image-first canvas delivery to GitHub main
+**Branch**: `main`
+
+### Summary
+
+Deliver the independently reviewed image-first canvas refactor while preserving three newer remote main commits; ordinary work push verified before recording journal.
+
+### Main Changes
+
+- Atomic direct creation/continuation, contextual composer and ordered thumbnail references; legacy scene, Run/Save/CAS/media contracts preserved.
+- Independent late-mount image-toolbar fix and real regression; retained exact verification/red evidence and source/spec contracts.
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `69f30065700a56081ee7347db01653b0b42d1e6d` | (see git log) |
+| `5f233b3e9d75df08cfb2bccf8cfcac48bbe68cc3` | (see git log) |
+
+### Testing
+
+- [OK] PASS: strict types, root lint (0 errors/9 existing warnings), 143 files/1812 non-DB tests and 33 targeted tests.
+- [OK] PASS: exact-source resource-bounded app/fixture builds and 10 native browser cases; default OOM receipt retained.
+
+### Status
+
+[OK] **Completed**
+
+### Next Steps
+
+- Physical/live/actual CI and rollout gates remain unperformed; keep active task, no automatic archive or deployment.

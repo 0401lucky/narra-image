@@ -8,8 +8,8 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-1.md`
-- **Total Sessions**: 7
-- **Last Active**: 2026-11-01
+- **Total Sessions**: 8
+- **Last Active**: 2026-11-03
 <!-- @@@/auto:current-status -->
 
 ---
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-1.md` | ~402 | Active |
+| `journal-1.md` | ~438 | Active |
 <!-- @@@/auto:active-documents -->
 
 ---
@@ -29,6 +29,7 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 8 | 2026-11-03 | Image-first canvas delivery to GitHub main | `69f30065700a56081ee7347db01653b0b42d1e6d`, `5f233b3e9d75df08cfb2bccf8cfcac48bbe68cc3` | `main` |
 | 7 | 2026-11-01 | Deliver homepage and accumulated studio tasks | `d1960ecc53ceadcda70e3bf9616cc8020c70b570`, `f689ff7d78eecba5864b334b50fe8b230c22aa5f` | `main` |
 | 6 | 2026-10-30 | Studio 双模式：恢复验收证据并完成无提交归档 | - | `main` |
 | 5 | 2026-10-30 | Canvas v1：补齐真实数据库与运行时验证并归档 | - | `main` |
