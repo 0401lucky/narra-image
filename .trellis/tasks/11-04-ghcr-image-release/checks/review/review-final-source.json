@@ -1,0 +1,232 @@
+{
+  "capturedAt": "2026-11-04T09:44:44.664020+00:00",
+  "head": "66a4d0273f9fd3229336945ed06d87d1995943dd",
+  "files": {
+    ".github/workflows/verify.yml": "852839e3fcb412703cddaff557ba42ed2f43fde09fc9e4a2015dd548bcd99599",
+    "Dockerfile": "e4139cd7af87d1dcc7139746d294210adafffeb7381f12d32d88f7a4d28e3b72",
+    "README.md": "8d33ebf75082e4ff3022f41c0c73b6e84ab70178486bf8d18049687a04730c1d",
+    "docker-compose.images.yml": "39af4b3cf4d331bb01abce5a520aeb3dbf050a0704a00b7b96940501f770d890",
+    "docs/production-operations.md": "a6fe953a5d10ac3d34deecf4d557af75f6c53684cd21d283b368337bf87c53f9",
+    "scripts/lib/disposable-postgres.mjs": "7648fa2ed10e373ffc92226a1ce8f9ba7b3a9ed6ec4d624fc32a7525cd3db674",
+    "scripts/lib/image-release.mjs": "9ce29caa9f78701e84d4cd579cd7e733f3fc29859b339a16eb1034f65647c863",
+    "scripts/publish-images.mjs": "a019c61f0e9a3ea6ae40a86c3beb033fd2cd463ad49f24fa5e68b5400fc5d37d",
+    "scripts/tests/ci-prerequisites.test.mjs": "8ca371538e434264bc6126380a98ec98bd319323808c3ba88b27a9116a3a9ae3",
+    "scripts/tests/image-release.test.mjs": "03833155835e730bf4748f4c7390c421be79bc563c3e4fd233d369bc86121e54",
+    "scripts/verify-ci.mjs": "70c749bbcdc0d38fd2fa0ac50d1172cca0f4bd6051192a3aee1cce3b587dbfd7",
+    "worker/Dockerfile": "45c05ce5b76feff39447be15bd53835f74f1606681990ffd0fbba5cdea40c993"
+  },
+  "reviewerChangedFiles": [
+    "scripts/tests/image-release.test.mjs"
+  ],
+  "specFiles": {
+    ".trellis/spec/operations/image-publishing.md": "28fbdfadee266ad95f0299e68b222dd0d28cc43e470d4115bba18ce8720f49ff",
+    ".trellis/spec/operations/index.md": "9f36119a085c605baac8ee53384f6285fd2e3483aee6f6286478f85def69692a",
+    ".trellis/spec/operations/release-hardening.md": "901d5b66a9efd5e4daa3bacf45035e8b5061ad52be37d8c717615d9fdb6c74e2"
+  },
+  "gates": {
+    "baselineNode": {
+      "id": "20261104T093339-node-tests-bb76b7",
+      "exitCode": 0,
+      "timedOut": false,
+      "timeoutSeconds": 180,
+      "durationSeconds": 0.93,
+      "command": [
+        "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-history-cleanup-20261029\\node-v24.22.1-win-x64\\node.exe",
+        "--test",
+        "scripts/tests/ci-prerequisites.test.mjs",
+        "scripts/tests/image-release.test.mjs",
+        "scripts/tests/migration-safety.test.mjs",
+        "scripts/tests/release-startup.test.mjs"
+      ],
+      "nodeEnv": "test",
+      "buildOnlyAppUrl": null,
+      "inheritedCallerConfiguration": false,
+      "sourceChanges": [],
+      "snapshotModifications": [],
+      "receipt": "evidence/20261104T093339-node-tests-bb76b7.json"
+    },
+    "node": {
+      "id": "20261104T093640-node-tests-53e790",
+      "exitCode": 0,
+      "timedOut": false,
+      "timeoutSeconds": 180,
+      "durationSeconds": 0.822,
+      "command": [
+        "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-history-cleanup-20261029\\node-v24.22.1-win-x64\\node.exe",
+        "--test",
+        "scripts/tests/ci-prerequisites.test.mjs",
+        "scripts/tests/image-release.test.mjs",
+        "scripts/tests/migration-safety.test.mjs",
+        "scripts/tests/release-startup.test.mjs"
+      ],
+      "nodeEnv": "test",
+      "buildOnlyAppUrl": null,
+      "inheritedCallerConfiguration": false,
+      "sourceChanges": [],
+      "snapshotModifications": [],
+      "receipt": "evidence/20261104T093640-node-tests-53e790.json"
+    },
+    "test": {
+      "id": "20261104T093709-test-dae8ee",
+      "exitCode": 0,
+      "timedOut": false,
+      "timeoutSeconds": 600,
+      "durationSeconds": 123.868,
+      "command": [
+        "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-history-cleanup-20261029\\node-v24.22.1-win-x64\\node.exe",
+        "E:\\code\\narra-image\\.trellis\\tasks\\11-04-ghcr-image-release\\checks\\.runtime\\release-check-238dde99\\app\\node_modules\\vitest\\vitest.mjs",
+        "run",
+        "--testTimeout=30000",
+        "--maxWorkers=2"
+      ],
+      "nodeEnv": "test",
+      "buildOnlyAppUrl": null,
+      "inheritedCallerConfiguration": false,
+      "sourceChanges": [],
+      "snapshotModifications": [],
+      "receipt": "evidence/20261104T093709-test-dae8ee.json"
+    },
+    "lint": {
+      "id": "20261104T094106-lint-ab81ce",
+      "exitCode": 0,
+      "timedOut": false,
+      "timeoutSeconds": 180,
+      "durationSeconds": 17.073,
+      "command": [
+        "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-history-cleanup-20261029\\node-v24.22.1-win-x64\\node.exe",
+        "E:\\code\\narra-image\\.trellis\\tasks\\11-04-ghcr-image-release\\checks\\.runtime\\release-check-238dde99\\app\\node_modules\\eslint\\bin\\eslint.js",
+        "."
+      ],
+      "nodeEnv": "test",
+      "buildOnlyAppUrl": null,
+      "inheritedCallerConfiguration": false,
+      "sourceChanges": [],
+      "snapshotModifications": [],
+      "receipt": "evidence/20261104T094106-lint-ab81ce.json"
+    },
+    "types": {
+      "id": "20261104T094150-types-d4b5ff",
+      "exitCode": 0,
+      "timedOut": false,
+      "timeoutSeconds": 180,
+      "durationSeconds": 2.769,
+      "command": [
+        "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-history-cleanup-20261029\\node-v24.22.1-win-x64\\node.exe",
+        "E:\\code\\narra-image\\.trellis\\tasks\\11-04-ghcr-image-release\\checks\\.runtime\\release-check-238dde99\\app\\node_modules\\typescript\\bin\\tsc",
+        "--noEmit"
+      ],
+      "nodeEnv": "test",
+      "buildOnlyAppUrl": null,
+      "inheritedCallerConfiguration": false,
+      "sourceChanges": [],
+      "snapshotModifications": [],
+      "receipt": "evidence/20261104T094150-types-d4b5ff.json"
+    }
+  },
+  "whitespace": [
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": "warning: in the working copy of 'scripts/verify-ci.mjs', LF will be replaced by CRLF the next time Git touches it\n",
+      "passed": true
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--no-index",
+        "--check",
+        "--",
+        "/dev/null",
+        "docker-compose.images.yml"
+      ],
+      "exitCode": 1,
+      "stdout": "",
+      "stderr": "warning: in the working copy of 'docker-compose.images.yml', LF will be replaced by CRLF the next time Git touches it\n",
+      "passed": true
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--no-index",
+        "--check",
+        "--",
+        "/dev/null",
+        "scripts/lib/image-release.mjs"
+      ],
+      "exitCode": 1,
+      "stdout": "",
+      "stderr": "warning: in the working copy of 'scripts/lib/image-release.mjs', LF will be replaced by CRLF the next time Git touches it\n",
+      "passed": true
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--no-index",
+        "--check",
+        "--",
+        "/dev/null",
+        "scripts/publish-images.mjs"
+      ],
+      "exitCode": 1,
+      "stdout": "",
+      "stderr": "warning: in the working copy of 'scripts/publish-images.mjs', LF will be replaced by CRLF the next time Git touches it\n",
+      "passed": true
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--no-index",
+        "--check",
+        "--",
+        "/dev/null",
+        "scripts/tests/ci-prerequisites.test.mjs"
+      ],
+      "exitCode": 1,
+      "stdout": "",
+      "stderr": "warning: in the working copy of 'scripts/tests/ci-prerequisites.test.mjs', LF will be replaced by CRLF the next time Git touches it\n",
+      "passed": true
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--no-index",
+        "--check",
+        "--",
+        "/dev/null",
+        "scripts/tests/image-release.test.mjs"
+      ],
+      "exitCode": 1,
+      "stdout": "",
+      "stderr": "warning: in the working copy of 'scripts/tests/image-release.test.mjs', LF will be replaced by CRLF the next time Git touches it\n",
+      "passed": true
+    }
+  ],
+  "whitespaceNote": "First review audit expected exit 0 for all git --no-index --check comparisons and stopped on an expected addition exit 1 with no diagnostics. Raw exit 1 is retained here: --no-index implies --exit-code for differences; whitespace diagnostics would be printed and fail this check. No cached/staging check was performed.",
+  "artifactSha256": {
+    "evidence/20261104T093339-node-tests-bb76b7.json": "fc04b2fc08317bd308a2327a5f083955fb41f570da2dbe027a6442998d767b95",
+    "evidence/20261104T093339-node-tests-bb76b7.stdout.log": "a5416bc3bf367cc5e1c69c9581b38e1f717098db720f44d7294af0c2a7c682e9",
+    "evidence/20261104T093339-node-tests-bb76b7.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "evidence/20261104T093640-node-tests-53e790.json": "f7693385d8da803a1ac73523d80bd8b23752d92a4f1bc08f83cc0b5f5865907f",
+    "evidence/20261104T093640-node-tests-53e790.stdout.log": "ffc5355dbd57b64c6a5b413925d6c0958bd0ce728a6bf816dc97be3b2cdbb763",
+    "evidence/20261104T093640-node-tests-53e790.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "evidence/20261104T093709-test-dae8ee.json": "6174656ffb2d9b6e70d4e2566465a44662b752ecd2158ece2830cbe961e038ae",
+    "evidence/20261104T093709-test-dae8ee.stdout.log": "894f5f16730c4d1f54be93055710543a88b165773e1aa348fa3b0cb6b14acd7b",
+    "evidence/20261104T093709-test-dae8ee.stderr.log": "c806f1a0d5fde328c042c76ef91176017db907b756e36a90892f45499868801f",
+    "evidence/20261104T094106-lint-ab81ce.json": "f2d35b3145518f39f1f37724c45fcd07dbfff420eeb54cd2b4d25c2ced540100",
+    "evidence/20261104T094106-lint-ab81ce.stdout.log": "c032cf717e2ec4f2dc8a3b612d95833795ea37848b35fad43d57616cb5c8afde",
+    "evidence/20261104T094106-lint-ab81ce.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "evidence/20261104T094150-types-d4b5ff.json": "30c7ea60934abccedc904df3e721c4380c745aad673f98bffb109127447c9089",
+    "evidence/20261104T094150-types-d4b5ff.stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "evidence/20261104T094150-types-d4b5ff.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

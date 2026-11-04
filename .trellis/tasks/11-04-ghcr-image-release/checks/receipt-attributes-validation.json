@@ -1,0 +1,54 @@
+{
+  "passed": true,
+  "temporaryRepository": "E:\\code\\narra-image\\.trellis\\tasks\\11-04-ghcr-image-release\\checks\\.runtime\\receipt-git-eww654z4",
+  "realWorktreeIndexUnchanged": true,
+  "attributeSha256": "1bdd72b4b7a71364ac29366633e7b30a28f7945e94f97739873f91db0b6a6f5d",
+  "positiveReceipt": ".trellis\\tasks\\11-04-ghcr-image-release\\checks\\review\\evidence\\20261104T093640-node-tests-53e790.json",
+  "cases": [
+    {
+      "case": "crlf_receipt",
+      "path": "checks/evidence/positive.json",
+      "expectedPass": true,
+      "exitCode": 0,
+      "diagnostics": "",
+      "rawBlobPreserved": true,
+      "sha256": "f7693385d8da803a1ac73523d80bd8b23752d92a4f1bc08f83cc0b5f5865907f"
+    },
+    {
+      "case": "trailing_space",
+      "path": "checks/evidence/trailing.json",
+      "expectedPass": false,
+      "exitCode": 2,
+      "diagnostics": "checks/evidence/trailing.json:1: trailing whitespace.\n+{}"
+    },
+    {
+      "case": "extra_blank_line",
+      "path": "checks/evidence/blank.json",
+      "expectedPass": false,
+      "exitCode": 2,
+      "diagnostics": "checks/evidence/blank.json:2: new blank line at EOF."
+    },
+    {
+      "case": "authored_helper",
+      "path": "checks/probe.py",
+      "expectedPass": false,
+      "exitCode": 2,
+      "diagnostics": "checks/probe.py:1: trailing whitespace.\n+print(\"fixture\")"
+    },
+    {
+      "case": "authored_doc",
+      "path": "checks/note.md",
+      "expectedPass": false,
+      "exitCode": 2,
+      "diagnostics": "checks/note.md:1: trailing whitespace.\n+Fixture text"
+    },
+    {
+      "case": "app_source",
+      "path": "src/probe.mjs",
+      "expectedPass": false,
+      "exitCode": 2,
+      "diagnostics": "src/probe.mjs:1: trailing whitespace.\n+export const fixture = true;"
+    }
+  ],
+  "gitGlobalConfigRead": false
+}

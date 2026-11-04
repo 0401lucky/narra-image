@@ -1,0 +1,32 @@
+{
+  "id": "ghcr-image-release",
+  "name": "ghcr-image-release",
+  "title": "Publish verified App and Worker images to GHCR",
+  "description": "Public GHCR App/Worker publishing after main verification, latest plus immutable source tags, CI prerequisite fixes and image-only update/rollback docs. Implementation, independent review and local builds/checks passed; approved commit/push/first publication resumes after session recovery.",
+  "status": "in_progress",
+  "dev_type": null,
+  "scope": null,
+  "package": null,
+  "priority": "P2",
+  "creator": "0401lucky",
+  "assignee": "0401lucky",
+  "createdAt": "2026-11-04",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [],
+  "parent": null,
+  "relatedFiles": [],
+  "notes": "Local AC2/AC3/AC5 complete. AC1/AC4/AC6 retain actual hosted Actions/GHCR/public-access evidence. See verification.md. Prior canvas task remains untouched.",
+  "meta": {
+    "scopeApproval": "2026-11-04: public GHCR, main verification gate, App/Worker amd64 images, latest/SHA, CI prerequisites and image-only update docs",
+    "implementationApproval": "2026-11-04: explicit subsequent approval of final artifact summary; implementation and scoped local checks",
+    "localValidation": "Independent 32 Node tests, 144 suites/1824 non-DB tests, lint/types, clean-client/TCP/Compose checks, exact CI production build and two Linux amd64 Dockerfile builds passed",
+    "deliveryApproval": "2026-11-04 13:06:01 UTC: explicit approval of the two-commit batch, ordinary main push and first Actions/GHCR publication tracking; recovered from original session 01a1a50d-1fc8-7063-a102-a0f0d7727522",
+    "productionBoundary": "no automated deployment, real database/volume changes or runtime flag changes"
+  }
+}

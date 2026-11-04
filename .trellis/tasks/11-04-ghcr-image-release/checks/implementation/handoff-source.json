@@ -1,0 +1,26 @@
+{
+  "at": "2026-11-04T09:27:11.749048+00:00",
+  "baseline": "66a4d0273f9fd3229336945ed06d87d1995943dd",
+  "files": {
+    ".github/workflows/verify.yml": "852839e3fcb412703cddaff557ba42ed2f43fde09fc9e4a2015dd548bcd99599",
+    "Dockerfile": "e4139cd7af87d1dcc7139746d294210adafffeb7381f12d32d88f7a4d28e3b72",
+    "worker/Dockerfile": "45c05ce5b76feff39447be15bd53835f74f1606681990ffd0fbba5cdea40c993",
+    "README.md": "8d33ebf75082e4ff3022f41c0c73b6e84ab70178486bf8d18049687a04730c1d",
+    "docs/production-operations.md": "a6fe953a5d10ac3d34deecf4d557af75f6c53684cd21d283b368337bf87c53f9",
+    "docker-compose.images.yml": "39af4b3cf4d331bb01abce5a520aeb3dbf050a0704a00b7b96940501f770d890",
+    "scripts/verify-ci.mjs": "70c749bbcdc0d38fd2fa0ac50d1172cca0f4bd6051192a3aee1cce3b587dbfd7",
+    "scripts/lib/disposable-postgres.mjs": "7648fa2ed10e373ffc92226a1ce8f9ba7b3a9ed6ec4d624fc32a7525cd3db674",
+    "scripts/lib/image-release.mjs": "9ce29caa9f78701e84d4cd579cd7e733f3fc29859b339a16eb1034f65647c863",
+    "scripts/publish-images.mjs": "a019c61f0e9a3ea6ae40a86c3beb033fd2cd463ad49f24fa5e68b5400fc5d37d",
+    "scripts/tests/ci-prerequisites.test.mjs": "8ca371538e434264bc6126380a98ec98bd319323808c3ba88b27a9116a3a9ae3",
+    "scripts/tests/image-release.test.mjs": "49ce68307f8809d3870fb130ba9c8e1c2a792f8f4aeb64a5e120b032d1eab449"
+  },
+  "finalReceipts": [
+    "20261104T092428-node-tests-1fd53e",
+    "20261104T092447-test-895bf4",
+    "20261104T092507-lint-833241",
+    "20261104T092540-types-f94325"
+  ],
+  "productEditsStopped": true,
+  "noRemotePublication": true
+}

@@ -1,0 +1,7 @@
+{"file":".trellis/spec/operations/index.md","reason":"Operations guideline map and release boundaries"}
+{"file":".trellis/spec/operations/release-hardening.md","reason":"CI wrappers, image builds, local-only disposable DB, startup and rollback invariants"}
+{"file":".trellis/spec/frontend/quality-guidelines.md","reason":"Strict types/lint/tests/build and fresh credential-isolated validation"}
+{"file":".trellis/spec/frontend/generation-worker-contracts.md","reason":"Shared Node/Go contract regression and disposable database requirements"}
+{"file":".trellis/spec/guides/code-reuse-thinking-guide.md","reason":"Reuse command runner, existing Compose selectors and operational entry points"}
+{"file":".trellis/spec/guides/cross-layer-thinking-guide.md","reason":"Bind workflow source, registry identities and deployment references without contract drift"}
+{"file":".trellis/tasks/11-04-ghcr-image-release/research/ci-and-release.md","reason":"Actual red CI evidence, precise fix seams and official GHCR/Compose contracts"}

@@ -1,0 +1,4 @@
+# Preserve machine receipt hashes; CRLF is a line ending, not trailing whitespace.
+# Authored scripts/docs retain the normal whitespace checks.
+checks/**/*.json -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+checks/**/*.log -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

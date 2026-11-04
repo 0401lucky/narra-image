@@ -1,0 +1,45 @@
+import assert from "node:assert/strict";
+import { readFile, writeFile } from "node:fs/promises";
+import { createRequire } from "node:module";
+import path from "node:path";
+
+const root = process.cwd();
+assert.equal(root, process.env.NARRA_CHECK_ROOT);
+const require = createRequire(path.join(root, "package.json"));
+const eslintRequire = createRequire(require.resolve("eslint/package.json"));
+const { load } = eslintRequire("js-yaml");
+const workflow = load(await readFile(path.join(root, ".github/workflows/verify.yml"), "utf8"));
+assert.deepEqual(workflow.on.push.branches, ["main"]);
+assert("pull_request" in workflow.on && !("pull_request_target" in workflow.on));
+assert.deepEqual(workflow.permissions, { contents: "read" });
+const jobs = workflow.jobs;
+const publish = jobs["publish-images"];
+assert.deepEqual(publish.needs, ["verify-ci", "verify-migrations", "verify-e2e"]);
+for (const condition of ["github.event_name == 'push'", "github.ref == 'refs/heads/main'", "github.repository == '0401lucky/narra-image'"]) assert(publish.if.includes(condition));
+assert(!/always\(|failure\(|cancelled\(/.test(publish.if));
+assert.deepEqual(publish.permissions, { contents: "read", packages: "write" });
+assert.equal(publish.concurrency["cancel-in-progress"], false);
+assert(publish.concurrency.group.includes("github.repository"));
+assert.equal(publish["timeout-minutes"], 30);
+for (const name of publish.needs) assert(!jobs[name].permissions?.packages || jobs[name].permissions.packages === "read");
+const actions = publish.steps.filter((step) => step.uses);
+assert(actions.length >= 6);
+assert(actions.every((step) => /^[a-zA-Z0-9_./-]+@[a-f0-9]{40}$/.test(step.uses)));
+const checkout = actions.find((step) => step.uses.startsWith("actions/checkout@"));
+assert.equal(checkout.with.ref, "${{ github.sha }}");
+assert.equal(checkout.with["persist-credentials"], false);
+const builds = actions.filter((step) => step.uses.startsWith("docker/build-push-action@"));
+assert.equal(builds.length, 2);
+assert.deepEqual(builds.map((step) => step.with.file), ["Dockerfile", "worker/Dockerfile"]);
+for (const step of builds) {
+  assert.equal(step.with.platforms, "linux/amd64");
+  assert.equal(step.with.push, true);
+  assert(step.if.includes("_build == 'true'"));
+  assert(step.with.tags.includes("source_tag"));
+  assert(!step.with.tags.includes(":latest"));
+  assert(step.with.labels.includes("org.opencontainers.image.revision=${{ github.sha }}"));
+}
+const finish = publish.steps.findIndex((step) => step.run === "node scripts/publish-images.mjs finish");
+assert(finish > publish.steps.indexOf(builds[1]));
+await writeFile(path.join(process.env.NARRA_CHECK_OWNER_ROOT, "workflow-structure.json"), JSON.stringify({ parsedYaml: true, actionlint: "not installed; not claimed", jobs: Object.keys(jobs), allGatesRequired: true, actions: actions.map((step) => step.uses), publicationOnlyOnTrustedMainPush: true, noRegistryExecution: true }, null, 2) + "\n");
+console.log("PASS parsed YAML workflow guards, permissions, exact checkout, action pins, build/source tags and publication order");

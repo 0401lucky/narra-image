@@ -1,0 +1,7 @@
+{"file":".trellis/spec/operations/index.md","reason":"Full operations scope and preserved deployment boundaries"}
+{"file":".trellis/spec/operations/release-hardening.md","reason":"No red-gate bypass, trusted token scope, disposable DB safety and forward migration"}
+{"file":".trellis/spec/frontend/quality-guidelines.md","reason":"Independent full-source lint/types/tests/build and honest evidence boundaries"}
+{"file":".trellis/spec/frontend/generation-worker-contracts.md","reason":"Runtime/Node-Go compatibility and real disposable database acceptance"}
+{"file":".trellis/spec/guides/code-reuse-thinking-guide.md","reason":"Avoid duplicate process/config policy and copied base Compose drift"}
+{"file":".trellis/spec/guides/cross-layer-thinking-guide.md","reason":"Source SHA to immutable image digest to matching deployment pair review"}
+{"file":".trellis/tasks/11-04-ghcr-image-release/research/ci-and-release.md","reason":"Actual baseline failures, anonymous/public GHCR prerequisite and source-backed integration seams"}

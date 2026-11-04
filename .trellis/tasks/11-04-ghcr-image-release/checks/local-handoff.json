@@ -1,0 +1,362 @@
+{
+  "checkedAt": "2026-11-04T10:00:12.192028+00:00",
+  "head": "66a4d0273f9fd3229336945ed06d87d1995943dd",
+  "branch": "main",
+  "status": "local-ready-awaiting-delivery-approval",
+  "reviewedProductAndSpecSha256": {
+    ".github/workflows/verify.yml": "852839e3fcb412703cddaff557ba42ed2f43fde09fc9e4a2015dd548bcd99599",
+    "Dockerfile": "e4139cd7af87d1dcc7139746d294210adafffeb7381f12d32d88f7a4d28e3b72",
+    "README.md": "8d33ebf75082e4ff3022f41c0c73b6e84ab70178486bf8d18049687a04730c1d",
+    "docker-compose.images.yml": "39af4b3cf4d331bb01abce5a520aeb3dbf050a0704a00b7b96940501f770d890",
+    "docs/production-operations.md": "a6fe953a5d10ac3d34deecf4d557af75f6c53684cd21d283b368337bf87c53f9",
+    "scripts/lib/disposable-postgres.mjs": "7648fa2ed10e373ffc92226a1ce8f9ba7b3a9ed6ec4d624fc32a7525cd3db674",
+    "scripts/lib/image-release.mjs": "9ce29caa9f78701e84d4cd579cd7e733f3fc29859b339a16eb1034f65647c863",
+    "scripts/publish-images.mjs": "a019c61f0e9a3ea6ae40a86c3beb033fd2cd463ad49f24fa5e68b5400fc5d37d",
+    "scripts/tests/ci-prerequisites.test.mjs": "8ca371538e434264bc6126380a98ec98bd319323808c3ba88b27a9116a3a9ae3",
+    "scripts/tests/image-release.test.mjs": "03833155835e730bf4748f4c7390c421be79bc563c3e4fd233d369bc86121e54",
+    "scripts/verify-ci.mjs": "70c749bbcdc0d38fd2fa0ac50d1172cca0f4bd6051192a3aee1cce3b587dbfd7",
+    "worker/Dockerfile": "45c05ce5b76feff39447be15bd53835f74f1606681990ffd0fbba5cdea40c993",
+    ".trellis/spec/operations/image-publishing.md": "28fbdfadee266ad95f0299e68b222dd0d28cc43e470d4115bba18ce8720f49ff",
+    ".trellis/spec/operations/index.md": "9f36119a085c605baac8ee53384f6285fd2e3483aee6f6286478f85def69692a",
+    ".trellis/spec/operations/release-hardening.md": "901d5b66a9efd5e4daa3bacf45035e8b5061ad52be37d8c717615d9fdb6c74e2"
+  },
+  "reviewArtifactHashesMatched": 15,
+  "buildAndFinalRecheckBindings": [
+    {
+      "receipt": "production-build-validation.json",
+      "id": "20261104T094548-exact-ci-build-14bdd5",
+      "sha256": "93fed2408df32e9228f9c4ffa59a142837a356eb6f6fee2f2922b90a4fb1ac8c",
+      "reviewedProductFilesMatched": 12
+    },
+    {
+      "receipt": "image-build-retry-validation.json",
+      "id": "20261104T094916-docker-image-builds-retry-ecf69f",
+      "sha256": "a2dd62bb9b4400bc6c39dac3fb6f74490ea065138b935993787b4f824232beb6",
+      "reviewedProductFilesMatched": 12
+    },
+    {
+      "receipt": "checks\\.runtime\\release-integration-5781d68e\\receipts\\20261104T095649-node-tests-711a65.json",
+      "id": "20261104T095649-node-tests-711a65",
+      "sha256": "53f7c76e411ef689c0ae7e60f25387aaec10e68c70f39c127f8b9e4b29b89847",
+      "reviewedProductFilesMatched": 12
+    },
+    {
+      "receipt": "checks\\.runtime\\release-integration-5781d68e\\receipts\\20261104T095706-lint-d89c61.json",
+      "id": "20261104T095706-lint-d89c61",
+      "sha256": "f8d2251f5d1f28e779edcb36c6a590315b105f4f697dfc7414f1801b5bdada48",
+      "reviewedProductFilesMatched": 12
+    }
+  ],
+  "composeSourceHashesMatch": true,
+  "finalWorkflowAndTcpSourceHashesMatch": true,
+  "receiptAttributesVerified": true,
+  "trackedWhitespacePassed": true,
+  "newFilesWhitespaceChecked": 64,
+  "credentialPatternMatches": [],
+  "realProjectIndexUnchanged": true,
+  "unrecognizedDirtyPaths": [],
+  "candidateFilesExcludingThisRecord": {
+    ".github/workflows/verify.yml": {
+      "sha256": "852839e3fcb412703cddaff557ba42ed2f43fde09fc9e4a2015dd548bcd99599",
+      "bytes": 6259
+    },
+    ".trellis/spec/operations/index.md": {
+      "sha256": "9f36119a085c605baac8ee53384f6285fd2e3483aee6f6286478f85def69692a",
+      "bytes": 1819
+    },
+    ".trellis/spec/operations/release-hardening.md": {
+      "sha256": "901d5b66a9efd5e4daa3bacf45035e8b5061ad52be37d8c717615d9fdb6c74e2",
+      "bytes": 9709
+    },
+    "Dockerfile": {
+      "sha256": "e4139cd7af87d1dcc7139746d294210adafffeb7381f12d32d88f7a4d28e3b72",
+      "bytes": 2324
+    },
+    "README.md": {
+      "sha256": "8d33ebf75082e4ff3022f41c0c73b6e84ab70178486bf8d18049687a04730c1d",
+      "bytes": 12918
+    },
+    "docs/production-operations.md": {
+      "sha256": "a6fe953a5d10ac3d34deecf4d557af75f6c53684cd21d283b368337bf87c53f9",
+      "bytes": 12181
+    },
+    "scripts/lib/disposable-postgres.mjs": {
+      "sha256": "7648fa2ed10e373ffc92226a1ce8f9ba7b3a9ed6ec4d624fc32a7525cd3db674",
+      "bytes": 12425
+    },
+    "scripts/verify-ci.mjs": {
+      "sha256": "70c749bbcdc0d38fd2fa0ac50d1172cca0f4bd6051192a3aee1cce3b587dbfd7",
+      "bytes": 4200
+    },
+    "worker/Dockerfile": {
+      "sha256": "45c05ce5b76feff39447be15bd53835f74f1606681990ffd0fbba5cdea40c993",
+      "bytes": 897
+    },
+    ".trellis/spec/operations/image-publishing.md": {
+      "sha256": "28fbdfadee266ad95f0299e68b222dd0d28cc43e470d4115bba18ce8720f49ff",
+      "bytes": 9114
+    },
+    ".trellis/tasks/11-04-ghcr-image-release/.gitattributes": {
+      "sha256": "1bdd72b4b7a71364ac29366633e7b30a28f7945e94f97739873f91db0b6a6f5d",
+      "bytes": 317
+    },
+    ".trellis/tasks/11-04-ghcr-image-release/check.jsonl": {
+      "sha256": "e66654330dfdd3ff8d89e93f8ad46899adc9a3435315d6b4835ac17654b2c9ba",
+      "bytes": 1035
+    },
+    ".trellis/tasks/11-04-ghcr-image-release/checks/action-pins.json": {
+      "sha256": "2c6ad04acf74ed1645dca73db91f1a1405d69a5799bbeafdb4af092bd9cfcf2e",
+      "bytes": 1346
+    },
+    ".trellis/tasks/11-04-ghcr-image-release/checks/ci-build-check.mjs": {
+      "sha256": "2b16e96c74d997dfca9cad45e23ec8d449dcde173d4ac14d4ab993f59713bbf4",
+      "bytes": 915
+    },
+    ".trellis/tasks/11-04-ghcr-image-release/checks/clean-ci-no-db-generation.json": {
+      "sha256": "c265941156a5e7945939b785b44c878b7e9aadeb680e8757a9c89e2df1570dc1",
+      "bytes": 1864
+    },
+    ".trellis/tasks/11-04-ghcr-image-release/checks/clean-client-validation.json": {
+      "sha256": "fee0cd3d1b7b1502cfdff71bfd2a021b7e3f66236444604883b5f27ab698749d",
+      "bytes": 10873
+    },
+    ".trellis/tasks/11-04-ghcr-image-release/checks/compose-check.py": {
+      "sha256": "4b434d0d058c1cba401c61edc1fdc6b562578759cf117dcd946998b33107e46e",
+      "bytes": 3576
+    },
+    ".trellis/tasks/11-04-ghcr-image-release/checks/compose-validation.json": {
+      "sha256": "6e7a21ac1037c185bb4fea66b213ceccaff0043a79a00270f63e8206e25aa7b8",
+      "bytes": 11171
+    },
+    ".trellis/tasks/11-04-ghcr-image-release/checks/deny_env.cjs": {
+      "sha256": "bd9ec3da5da5787ffc8378f8ed97835428d4b5a9c80a21a099ccca2c4d077e55",
+      "bytes": 3082
+    },
+    ".trellis/tasks/11-04-ghcr-image-release/checks/docker-daemon-recheck.json": {
+      "sha256": "8b569c3a0a094f7f57315bdb206b799c4da61e4651f41bdb84e26056ffa635a0",
+      "bytes": 1802
+    },
+    ".trellis/tasks/11-04-ghcr-image-release/checks/docker-prerequisites.json": {
+      "sha256": "dc98b35174594dc0bc817bf767991358bfc24b7e6a8bde1c2d849a0cee6e9e8b",
+      "bytes": 5477
+    },
+    ".trellis/tasks/11-04-ghcr-image-release/checks/final-source-rechecks.json": {
+      "sha256": "55e6caff9bd6f82bc381de71ad4304c07f830f690f2d723a6cf5c3f68a5562b4",
+      "bytes": 4667
+    },
+    ".trellis/tasks/11-04-ghcr-image-release/checks/final-workflow-tcp-validation.json": {
+      "sha256": "d393c6d8a75569c7bc6c25c98c1804f825cae6139da423813c9467d2c2e9dd3c",
+      "bytes": 11286
+    },
+    ".trellis/tasks/11-04-ghcr-image-release/checks/generated-client-probe.cjs": {
+      "sha256": "ce99e6646e09d524879a808091ee1a9cedcd52eeb7b336df4794e3dc88767adf",
+      "bytes": 911
+    },
+    ".trellis/tasks/11-04-ghcr-image-release/checks/guard_selftest.cjs": {
+      "sha256": "5887c6ce750196e5faf476803bb31864b06aa413207ac4fa6d4d8c9446855489",
+      "bytes": 3640
+    },
+    ".trellis/tasks/11-04-ghcr-image-release/checks/image-build-check.mjs": {
+      "sha256": "6766283413888903024472aa49c9f54b22fed6f3bdcddcfd08f33aa44e8742d5",
+      "bytes": 1916
+    },
+    ".trellis/tasks/11-04-ghcr-image-release/checks/image-build-retry-validation.json": {
+      "sha256": "a2dd62bb9b4400bc6c39dac3fb6f74490ea065138b935993787b4f824232beb6",
+      "bytes": 218004
+    },
+    ".trellis/tasks/11-04-ghcr-image-release/checks/image-build-validation.json": {
+      "sha256": "55fbf30d65f4fc35fdc6c75873138ef35aff4d376e456335fb4d7367ef610cee",
+      "bytes": 216596
+    },
+    ".trellis/tasks/11-04-ghcr-image-release/checks/implementation-approval.md": {
+      "sha256": "86392d7247c45fc9f0bea8a47bc26550afa4488d070c3b35e8a570b6fce48bbd",
+      "bytes": 902
+    },
+    ".trellis/tasks/11-04-ghcr-image-release/checks/implementation/20261104T092428-node-tests-1fd53e.json": {
+      "sha256": "24e86ab3e87ec389c0dd1e6106cfe8ed9e7622dca19454cd11d6777d212bf0fd",
+      "bytes": 209889
+    },
+    ".trellis/tasks/11-04-ghcr-image-release/checks/implementation/20261104T092447-test-895bf4.json": {
+      "sha256": "c1684417bf556d110ecc8192144992cff335c7d52248a7dcfaffcf38aa9d4374",
+      "bytes": 210050
+    },
+    ".trellis/tasks/11-04-ghcr-image-release/checks/implementation/20261104T092507-lint-833241.json": {
+      "sha256": "9b921589d120db29dcc78f34242eae02c5ac6fef43ec9e8a2335dd06d2e6289c",
+      "bytes": 209838
+    },
+    ".trellis/tasks/11-04-ghcr-image-release/checks/implementation/20261104T092540-types-f94325.json": {
+      "sha256": "baa02f75ac01076e744bdf77e8f73aca488ff0a7607ebd7ea2c445491bc614d9",
+      "bytes": 209845
+    },
+    ".trellis/tasks/11-04-ghcr-image-release/checks/implementation/handoff-source.json": {
+      "sha256": "5b13de392d48bd31e36f602a7c855dc13c549f7fc5b5e14910265bd1422009eb",
+      "bytes": 1598
+    },
+    ".trellis/tasks/11-04-ghcr-image-release/checks/implementation/report.md": {
+      "sha256": "8221f7bd416249a35e702c9b411fdb01c4da411c0b907fd7bf5081ddd4ff1e24",
+      "bytes": 5696
+    },
+    ".trellis/tasks/11-04-ghcr-image-release/checks/installed-images.json": {
+      "sha256": "5468492cc2c4924f6d34cb530ba914261692228f5f4a423813f14f67cfc77e31",
+      "bytes": 895
+    },
+    ".trellis/tasks/11-04-ghcr-image-release/checks/integration-refresh.json": {
+      "sha256": "cadc5c4b6470479ef52fe0ff4b89a7e41358d8ce17e3e3e044f07960f9053928",
+      "bytes": 218
+    },
+    ".trellis/tasks/11-04-ghcr-image-release/checks/isolated.py": {
+      "sha256": "f0d9065d6ad00471cbfa0fc68dbbed00325929ae45ea0fc611dc41b964794ebb",
+      "bytes": 1341
+    },
+    ".trellis/tasks/11-04-ghcr-image-release/checks/isolation-selftest.log": {
+      "sha256": "26a3840922143d70c5f1d5a115593ebff31445c8e24bdba9699fcdd5e9325b6c",
+      "bytes": 1283
+    },
+    ".trellis/tasks/11-04-ghcr-image-release/checks/isolation-selftest.py": {
+      "sha256": "fffaaf84f117476bd64a334f5aa76a414122d5805120bf41e569c1250c9a028b",
+      "bytes": 705
+    },
+    ".trellis/tasks/11-04-ghcr-image-release/checks/isolation_base.py": {
+      "sha256": "9db017d78e9a7a985b38f3e9f1906fef305519186f57b83ffd77b03f9d67627e",
+      "bytes": 24996
+    },
+    ".trellis/tasks/11-04-ghcr-image-release/checks/isolation_base_test.py": {
+      "sha256": "85a882fcaefdaeaa99880271d175fea972da4a6e83370847e428cb4c5a9ba96b",
+      "bytes": 7663
+    },
+    ".trellis/tasks/11-04-ghcr-image-release/checks/pnpm-tools.json": {
+      "sha256": "8f131fa29c754641043d7277fbd45fc5673d1bec7ec0e99ba7fcb23b9dfbd39c",
+      "bytes": 335
+    },
+    ".trellis/tasks/11-04-ghcr-image-release/checks/prisma_no_network.cjs": {
+      "sha256": "2445a292a89413835d8a756c7646df3a6984ff66d465378f49775c354c3a6697",
+      "bytes": 594
+    },
+    ".trellis/tasks/11-04-ghcr-image-release/checks/production-build-validation.json": {
+      "sha256": "93fed2408df32e9228f9c4ffa59a142837a356eb6f6fee2f2922b90a4fb1ac8c",
+      "bytes": 216765
+    },
+    ".trellis/tasks/11-04-ghcr-image-release/checks/receipt-attributes-validation.json": {
+      "sha256": "dbcb0bc84baac334e5fb6908953e5a07c23c861557c0dd43824078515c9f1436",
+      "bytes": 1865
+    },
+    ".trellis/tasks/11-04-ghcr-image-release/checks/retrospective.md": {
+      "sha256": "fc29fa4acc871f6141668b9457cc2594c3a99e96a3e9d8a59a06e68274bd6507",
+      "bytes": 2570
+    },
+    ".trellis/tasks/11-04-ghcr-image-release/checks/review/evidence/20261104T093339-node-tests-bb76b7.json": {
+      "sha256": "fc04b2fc08317bd308a2327a5f083955fb41f570da2dbe027a6442998d767b95",
+      "bytes": 215627
+    },
+    ".trellis/tasks/11-04-ghcr-image-release/checks/review/evidence/20261104T093640-node-tests-53e790.json": {
+      "sha256": "f7693385d8da803a1ac73523d80bd8b23752d92a4f1bc08f83cc0b5f5865907f",
+      "bytes": 215628
+    },
+    ".trellis/tasks/11-04-ghcr-image-release/checks/review/evidence/20261104T093709-test-dae8ee.json": {
+      "sha256": "6174656ffb2d9b6e70d4e2566465a44662b752ecd2158ece2830cbe961e038ae",
+      "bytes": 215626
+    },
+    ".trellis/tasks/11-04-ghcr-image-release/checks/review/evidence/20261104T094106-lint-ab81ce.json": {
+      "sha256": "f2d35b3145518f39f1f37724c45fcd07dbfff420eeb54cd2b4d25c2ced540100",
+      "bytes": 215576
+    },
+    ".trellis/tasks/11-04-ghcr-image-release/checks/review/evidence/20261104T094150-types-d4b5ff.json": {
+      "sha256": "30c7ea60934abccedc904df3e721c4380c745aad673f98bffb109127447c9089",
+      "bytes": 215583
+    },
+    ".trellis/tasks/11-04-ghcr-image-release/checks/review/review-final-source.json": {
+      "sha256": "1cd813b9f8639fcf6a6a048e4d2fd6b2361a24af5c6a5302602b12d3ef16b55f",
+      "bytes": 10102
+    },
+    ".trellis/tasks/11-04-ghcr-image-release/checks/review/review-initial-source.json": {
+      "sha256": "e85c97c591c645396521736ff4d5d91b12de246c32d25d6e0293667d6548426b",
+      "bytes": 1767
+    },
+    ".trellis/tasks/11-04-ghcr-image-release/checks/review/review.md": {
+      "sha256": "47bb69f580831396f807bd2058146a57f00fc21f94e03ffb98fd2bb8c8fa8a8f",
+      "bytes": 5340
+    },
+    ".trellis/tasks/11-04-ghcr-image-release/checks/tcp-db-ready.json": {
+      "sha256": "66fb75f2725805b5ec5d3b57078f12e63f42ed46bb7ec8965aff8edb67150eec",
+      "bytes": 1799
+    },
+    ".trellis/tasks/11-04-ghcr-image-release/checks/tcp-postgres-check.mjs": {
+      "sha256": "7b3358116b02f4291be3a43f0f1eef58f82ca15130883bf64285c7e0a84f21ac",
+      "bytes": 2226
+    },
+    ".trellis/tasks/11-04-ghcr-image-release/checks/validation-environment.md": {
+      "sha256": "09564f2a404f24da6a5156d95e16d88a9cb00562f12d88d131535015384d5ad7",
+      "bytes": 1991
+    },
+    ".trellis/tasks/11-04-ghcr-image-release/checks/workflow-check.mjs": {
+      "sha256": "75c0a9f49db87a59d7b912d17e91c39b484335c24e9f1bccbd573fc14f255efc",
+      "bytes": 3076
+    },
+    ".trellis/tasks/11-04-ghcr-image-release/checks/workflow-validation.json": {
+      "sha256": "98878f4cc7137f9658f5a849ed6e4c726517c1cd8f181e2c51dc77f8b6961fce",
+      "bytes": 1775
+    },
+    ".trellis/tasks/11-04-ghcr-image-release/commit-plan.md": {
+      "sha256": "f6e3e1d06152620acf6d95b8b557bdc21cff75e870d35195178c8edfcc2f7be2",
+      "bytes": 2355
+    },
+    ".trellis/tasks/11-04-ghcr-image-release/design.md": {
+      "sha256": "ef98f82e6902216949ae5bd5cea30a8fb64d0bc9d07a2d1f857289294c744802",
+      "bytes": 9669
+    },
+    ".trellis/tasks/11-04-ghcr-image-release/implement.jsonl": {
+      "sha256": "fd066530b1842579337f05094b045b2690f7bbce6529b4529523f21070a2793a",
+      "bytes": 1031
+    },
+    ".trellis/tasks/11-04-ghcr-image-release/implement.md": {
+      "sha256": "a7aa0ce9b4744b05b439d4e1c9babc896c6064f96d26631b78beeaf52dbd20a4",
+      "bytes": 7802
+    },
+    ".trellis/tasks/11-04-ghcr-image-release/prd.md": {
+      "sha256": "eba29145e0d7f1eee12b0698bfb9702d296c05ad1f9cc37bff5da123cee2f0a5",
+      "bytes": 9029
+    },
+    ".trellis/tasks/11-04-ghcr-image-release/research/ci-and-release.md": {
+      "sha256": "b5146730015c955a2dc1b235e1e8ec3ca0ca6db06497226c73b05e2243c9fd15",
+      "bytes": 7152
+    },
+    ".trellis/tasks/11-04-ghcr-image-release/task.json": {
+      "sha256": "a8218a839e69bf9d381d69d29f410e80f24ef74a4da31540e5006972d01e66e9",
+      "bytes": 1719
+    },
+    ".trellis/tasks/11-04-ghcr-image-release/verification.md": {
+      "sha256": "75b5d853bea3e5683bf67e7c1e7a02e2ccf0b3581ed9cd521cc9de5cc20a38b9",
+      "bytes": 6585
+    },
+    "docker-compose.images.yml": {
+      "sha256": "39af4b3cf4d331bb01abce5a520aeb3dbf050a0704a00b7b96940501f770d890",
+      "bytes": 405
+    },
+    "scripts/lib/image-release.mjs": {
+      "sha256": "9ce29caa9f78701e84d4cd579cd7e733f3fc29859b339a16eb1034f65647c863",
+      "bytes": 12812
+    },
+    "scripts/publish-images.mjs": {
+      "sha256": "a019c61f0e9a3ea6ae40a86c3beb033fd2cd463ad49f24fa5e68b5400fc5d37d",
+      "bytes": 3140
+    },
+    "scripts/tests/ci-prerequisites.test.mjs": {
+      "sha256": "8ca371538e434264bc6126380a98ec98bd319323808c3ba88b27a9116a3a9ae3",
+      "bytes": 3480
+    },
+    "scripts/tests/image-release.test.mjs": {
+      "sha256": "03833155835e730bf4748f4c7390c421be79bc563c3e4fd233d369bc86121e54",
+      "bytes": 20349
+    }
+  },
+  "commitPerformed": false,
+  "pushPerformed": false,
+  "registryPublished": false,
+  "productionOperations": false,
+  "pending": [
+    "grouped delivery approval",
+    "exact pushed SHA hosted CI/migrations/E2E",
+    "first GHCR publication and package Public setup if needed",
+    "anonymous digest/platform availability"
+  ]
+}

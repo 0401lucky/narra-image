@@ -1,0 +1,26 @@
+[
+  {
+    "image": "postgres:17-alpine",
+    "exitCode": 0,
+    "identity": "sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b linux/amd64",
+    "receipt": "20261104T090352-local-image-6dfbb8"
+  },
+  {
+    "image": "node:24.22.1-alpine",
+    "exitCode": 0,
+    "identity": "sha256:06d7adf3e0ef61a13f1d28682726366f97a15aa1888c934d3ecec86c33918b53 linux/amd64",
+    "receipt": "20261104T090353-local-image-83c761"
+  },
+  {
+    "image": "golang:1.25-alpine",
+    "exitCode": 0,
+    "identity": "sha256:1ae0735f00daffa3aaf1363a5184c0d2dc55c78e3db4ec70241cdac97bf84b59 linux/amd64",
+    "receipt": "20261104T090353-local-image-87968c"
+  },
+  {
+    "image": "alpine:3.22",
+    "exitCode": 0,
+    "identity": "sha256:2e0b81d60597f449baa56dc25d355367869d2dca4cd57e866f1e2b52af3eb55f linux/amd64",
+    "receipt": "20261104T090353-local-image-c94b1e"
+  }
+]
