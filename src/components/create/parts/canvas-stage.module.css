@@ -3,6 +3,8 @@
   --canvas-panel: #fffaf3;
   --canvas-muted: #8b7869;
   --canvas-green: #70815b;
+  --canvas-dock: rgb(255 250 243 / 96%);
+  --canvas-dock-line: #e1d2c0;
   display: flex;
   position: relative;
   flex: 1;
@@ -109,27 +111,24 @@
 }
 
 .editor { min-height: 20rem; }
-.toolbar { position: relative; z-index: 5; flex-shrink: 0; border-bottom: 1px solid var(--line); background: rgb(255 250 243 / 96%); }
-.titleRow { display: flex; align-items: center; gap: 0.8rem; min-height: 4.7rem; padding: 0.85rem 1.25rem; }
+.toolbar { position: relative; z-index: 5; flex-shrink: 0; border-bottom: 1px solid rgb(143 110 78 / 12%); background: var(--canvas-paper); }
+.titleRow { display: flex; align-items: center; gap: 0.8rem; min-height: 3.7rem; padding: 0.55rem 1.25rem; }
 .canvasTitle { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 1rem; font-weight: 650; letter-spacing: -0.025em; }
 .saveStates { display: flex; flex-wrap: wrap; align-items: center; gap: 0.35rem; margin-top: 0.3rem; color: var(--canvas-muted); font-size: 0.65rem; }
 .cloudState { display: inline-flex; align-items: center; gap: 0.25rem; }
 .metadataActions { display: flex; flex-shrink: 0; align-items: center; gap: 0.35rem; }
 .saveButton { padding: 0.65rem 0.9rem; color: #fffaf3; border-color: #b94c28; background: var(--accent); }
 .saveButton:hover, .runButton:hover, .newButton:hover { background: #b94e2b; }
-.toolsRow { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.6rem; padding: 0.6rem 1.25rem; border-top: 1px solid rgb(47 30 16 / 5%); }
-.creationTools, .cameraTools { display: flex; align-items: center; gap: 0.4rem; }
 .toolButton { padding: 0.45rem 0.65rem; background: #fffdf8; color: #6a4932; }
 .toolButton:hover, .smallButton:hover { border-color: #d19b72; background: #fbefdE; }
-.cameraTools { margin-left: auto; }
 .zoomLabel { min-width: 2.8rem; color: var(--ink-soft); text-align: center; font-size: 0.68rem; font-family: var(--font-mono); }
 .iconButton { display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; width: 1.9rem; height: 1.9rem; border-radius: 0.45rem; color: var(--ink-soft); cursor: pointer; }
 .iconButton:hover { background: rgb(124 82 47 / 8%); color: var(--accent); }
 .stage button:disabled { cursor: not-allowed; opacity: 0.45; }
 .stage button:focus-visible, .stage select:focus-visible, .stage input:focus-visible, .stage textarea:focus-visible, .promptText:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
-.readOnlyNotice { color: var(--ink-soft); font-size: 0.67rem; }
+.readOnlyNotice { padding: 0 1.25rem 0.5rem; color: var(--ink-soft); font-size: 0.67rem; }
 
-.workspace { display: flex; position: relative; flex: 1; min-height: 0; min-width: 0; overflow: hidden; }
+.workspace { display: flex; position: relative; flex: 1; min-height: 0; min-width: 0; overflow: hidden; container-type: inline-size; }
 .viewport { position: relative; flex: 1; min-width: 0; min-height: 16rem; overflow: hidden; overscroll-behavior: none; touch-action: none; background: radial-gradient(ellipse at 65% 30%, #fffdf8, transparent 68%), linear-gradient(125deg, #f9f4ed, #f2e9dc); }
 .flow { position: absolute; inset: 0; width: 100%; height: 100%; }
 .flow :global(.react-flow__node) { border-radius: 1rem; }
@@ -141,7 +140,7 @@
 .flow :global(.react-flow__edge-text) { fill: #765b45; font-size: 10px; }
 .flow :global(.react-flow__edge-textbg) { fill: #fff9ef; }
 .flow :global(.react-flow__attribution) { background: rgb(250 245 237 / 85%); font-size: 8px; }
-.viewportHint { position: absolute; bottom: 0.9rem; left: 1rem; max-width: calc(100% - 6rem); color: #998573; font-size: 0.62rem; pointer-events: none; }
+.viewportHint { position: absolute; top: 1.15rem; right: 1rem; max-width: calc(100% - 20rem); color: #998573; font-size: 0.62rem; pointer-events: none; }
 .hydrating { position: absolute; top: 0.6rem; left: 0.8rem; display: flex; align-items: center; gap: 0.3rem; padding: 0.35rem 0.6rem; border: 1px solid var(--line); border-radius: 0.6rem; color: var(--ink-soft); background: #fffaf3; font-size: 0.64rem; pointer-events: none; }
 
 .node { position: relative; width: 18rem; border: 1px solid #ddcbb8; border-radius: 1rem; background: var(--canvas-panel); box-shadow: 0 9px 28px rgb(87 51 24 / 8%), 0 1px 3px rgb(87 51 24 / 5%); cursor: grab; }
@@ -166,9 +165,17 @@
 .node[data-node-kind="reference"] .nodeHeader, .node[data-node-kind="result"] .nodeHeader { height: 2rem; background: #fffaf2; border-bottom: 0; }
 .node[data-node-kind="reference"] .nodeBody, .node[data-node-kind="result"] .nodeBody { padding: 0.35rem 0.5rem 0.5rem; }
 .node[data-node-kind="reference"] .nodeActions, .node[data-node-kind="result"] .nodeActions { margin-top: 0.35rem; }
-.node[data-node-kind="generation"] .nodeEyebrow, .node[data-node-kind="generation"] .nodeFootnote { display: none; }
-.node[data-node-kind="generation"] .modelName { font-size: 0.85rem; }
-.node[data-node-kind="generation"] .inputSummary { margin-top: 0.55rem; padding: 0.5rem; }
+.node[data-node-kind="generation"] { width: 20rem; }
+.node[data-node-kind="generation"] .nodeHeader { border: 0; background: transparent; }
+.replacedCard { opacity: 0; pointer-events: none; }
+.creationPromptPreview { display: -webkit-box; min-height: 6rem; max-height: 9rem; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 5; white-space: pre-wrap; overflow-wrap: anywhere; color: var(--ink); font-size: 0.84rem; line-height: 1.8; }
+.emptyPromptPreview { color: #aa9380; }
+.sharedPromptLabel { margin: 0.5rem 0; color: #a4773d; font-size: 0.65rem; }
+.creationMeta, .creationSettingsPreview { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; font-size: 0.65rem; color: var(--canvas-muted); }
+.creationMeta { margin: 0.65rem 0 0.9rem; }
+.creationMeta > span:first-child { display: flex; align-items: center; gap: 0.3rem; }
+.creationSettingsPreview { padding-top: 0.7rem; border-top: 1px solid var(--line); color: #795b45; }
+.creationSettingsPreview > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .missingImage { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.7rem; height: 10.5rem; border: 1px dashed #d8c3a8; border-radius: 0.65rem; color: #a4917c; background: #f6ede1; font-size: 0.7rem; }
 .referenceState { margin-top: 0.6rem; color: var(--canvas-muted); font-size: 0.61rem; line-height: 1.6; }
 .nodeActions, .generationActions { display: flex; align-items: center; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.65rem; }
@@ -229,11 +236,27 @@
 .dialogActions { display: flex; justify-content: flex-end; gap: 0.6rem; margin-top: 1.3rem; }
 .deleteButton { border-color: #9d3929; background: #ad4934; }
 
-.selectionTools { display: flex; flex-shrink: 0; align-items: center; flex-wrap: wrap; gap: 0.5rem; padding: 0.4rem 0.8rem; border-bottom: 1px solid var(--line); background: #fbf3e7; }
+.canvasLookup { position: absolute; top: 0.7rem; left: 0.8rem; z-index: 6; width: min(17rem, calc(100% - 1.6rem)); }
+.canvasLookup .nodePicker { padding: 0.2rem 0.3rem; border-radius: 0.6rem; background: rgb(250 245 237 / 92%); }
+.canvasLookup .nodePicker select { border-color: transparent; background: transparent; font-size: 0.7rem; }
 .nodePicker { display: flex; flex: 1; align-items: center; gap: 0.5rem; min-width: 10rem; color: #81614a; }
 .nodePicker select { flex: 1; width: 100%; min-width: 0; padding: 0.45rem; border: 1px solid #decfbb; border-radius: 0.55rem; background: #fffaf3; color: var(--ink); font-size: 0.75rem; }
-.selectedActions, .editorNavigation { display: flex; align-items: center; flex-wrap: wrap; gap: 0.4rem; }
-.selectedActions > span { color: #8b5837; font-size: 0.75rem; }
+.dockPosition { position: absolute; z-index: 22; right: 0.8rem; bottom: max(1rem, env(safe-area-inset-bottom)); left: 0.8rem; display: flex; justify-content: center; pointer-events: none; }
+.dock, .cameraDock { display: flex; align-items: center; gap: 0.25rem; border: 1px solid var(--canvas-dock-line); border-radius: 0.95rem; padding: 0.35rem; background: var(--canvas-dock); box-shadow: 0 10px 32px rgb(80 47 23 / 12%); backdrop-filter: blur(16px); }
+.dock { max-width: 100%; overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: thin; pointer-events: auto; }
+.dockButton { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; gap: 0.45rem; min-width: 40px; min-height: 40px; padding: 0.5rem; border-radius: 0.65rem; color: #84664e; cursor: pointer; }
+.dockButton:hover { color: #593a25; background: #f1e6d6; }
+.dockButton[aria-pressed="true"] { color: #9b4828; background: #f2dfcb; }
+.dockPrimary { padding-inline: 0.8rem; color: #fffaf3; background: var(--accent); }
+.dockPrimary:hover { color: #fffaf3; background: #b94e2b; }
+.dockText { font-size: 0.75rem; font-weight: 600; white-space: nowrap; }
+.dockDivider { height: 1.25rem; width: 1px; flex-shrink: 0; margin: 0 0.25rem; background: var(--canvas-dock-line); }
+.cameraDock { position: absolute; z-index: 21; bottom: max(1rem, env(safe-area-inset-bottom)); left: 0.8rem; }
+.cameraDock .dockButton { min-width: 30px; }
+.cameraDock .zoomLabel { min-width: 2.5rem; }
+.viewport[data-canvas-tool="pan"] :global(.react-flow__node), .viewport[data-canvas-tool="pan"] .node, .viewport[data-canvas-tool="pan"] .nodeHeader { cursor: grab; }
+@container (max-width: 1050px) { .cameraDock { bottom: calc(max(1rem, env(safe-area-inset-bottom)) + 4rem); } }
+@container (max-width: 700px) { .viewportHint { display: none; } }
 .previewText { overflow: hidden; pointer-events: none; resize: none; touch-action: none; }
 .nodeEditor { position: fixed; z-index: 20; right: 1rem; bottom: 1rem; display: flex; flex-direction: column; width: 24rem; height: min(38.75rem, calc(100dvh - 2rem)); min-width: 0; min-height: 0; border: 1px solid #dfc5a5; border-radius: 1rem; background: #fffaf2; box-shadow: 0 14px 42px rgb(71 43 23 / 16%); touch-action: pan-y pinch-zoom; }
 .nodeEditor .inspectorScroll, .nodeEditor .promptInput, .nodeEditor .promptText { touch-action: pan-y pinch-zoom; }
@@ -242,31 +265,52 @@
 .nodeEditor .iconButton, .nodeEditor .orderedInputs .iconButton { width: 44px; height: 44px; }
 .nodeEditor .field input { min-height: 44px; }
 .nodeEditor .nodeBody { padding: 0.75rem 0; }
-.nodeEditor .promptInput { min-height: 9rem; max-height: 18rem; }
+.nodeEditor .promptInput { min-height: 7rem; max-height: 16rem; }
 .nodeEditor .orderedInputs li { flex-wrap: wrap; }
 .nodeEditor .inputName { font-size: 0.75rem; }
-.editorNavigation { padding-top: 0.8rem; }
 .inputReplacement { flex-basis: 100%; min-width: 0; }
 .inputReplacement .connectionPicker { margin: 0.25rem; }
 .sourceSummary { display: flex; gap: 0.6rem; align-items: center; margin: 0.35rem 0; padding: 0.5rem; border-radius: 0.5rem; color: #73523b; background: #f4e9d9; font-size: 0.75rem; overflow-wrap: anywhere; }
 .sourceSummary img { width: 3rem; height: 3rem; flex-shrink: 0; border-radius: 0.4rem; object-fit: contain; }
 .sourceSummary small { display: block; margin-top: 0.2rem; color: var(--canvas-muted); }
-.composerPrimary { padding: 1rem 0; border-bottom: 1px solid var(--line); }
+.composerPrimary { padding: 0.25rem 0 0.5rem; }
 .composerPrimary h4 { color: #735039; font-size: 0.8rem; font-weight: 650; }
-.sharedPrompt { margin: 0.65rem 0; padding: 0.6rem; border: 1px solid #e5caa0; border-radius: 0.6rem; color: #8b6739; background: #fcf0da; font-size: 0.72rem; line-height: 1.7; }
-.referenceThumbnails { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.6rem; margin: 0.5rem 0; padding: 0; list-style: none; }
-.referenceThumbnails li { position: relative; min-width: 0; padding: 0.45rem; border: 1px solid #e5d5bf; border-radius: 0.7rem; background: #faf2e5; }
+.sharedPrompt { margin: 0.4rem 0; padding: 0.4rem 0; color: #8b6739; font-size: 0.72rem; line-height: 1.7; }
+.referenceHeading { display: flex; justify-content: space-between; margin: 0.6rem 0 0.2rem; color: var(--canvas-muted); font-size: 0.68rem; }
+.referenceThumbnails { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.5rem; margin: 0.3rem 0; padding: 0; list-style: none; }
+.referenceThumbnails:empty { display: none; }
+.referenceThumbnails li { position: relative; min-width: 0; padding: 0.15rem; border: 1px solid #e5d5bf; border-radius: 0.6rem; background: transparent; }
+.referenceThumbnails li > .ordinal { position: absolute; z-index: 1; top: 0.35rem; left: 0.35rem; }
 .referenceThumbnails .sourceSummary { display: block; margin: 0; padding: 0.3rem 0; background: transparent; font-size: 0.68rem; }
-.referenceThumbnails .sourceSummary img { width: 100%; height: 5.5rem; margin-bottom: 0.4rem; background: #eee4d5; }
-.referenceThumbnails .nodeActions { gap: 0.15rem; }
-.nodeEditor .referenceThumbnails .iconButton { min-width: 44px; width: 44px; flex: 1; }
+.referenceThumbnails .sourceSummary img { width: 100%; height: 3.4rem; margin-bottom: 0.2rem; background: #eee4d5; }
+.referenceThumbnails .sourceSummary > span { display: block; padding: 0 0.2rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.referenceThumbnails .sourceSummary small { display: none; }
+.referenceThumbnails .nodeActions { flex-wrap: nowrap; gap: 0; margin-top: 0; }
+.nodeEditor .referenceThumbnails .iconButton { min-width: 0; width: 25%; flex: 1; }
+.touchStage .referenceThumbnails { grid-template-columns: 1fr; }
+.touchStage .referenceThumbnails .sourceSummary { display: flex; gap: 0.5rem; padding: 0.2rem; }
+.touchStage .referenceThumbnails .sourceSummary img { width: 3.4rem; flex-shrink: 0; }
+.touchStage .referenceThumbnails .sourceSummary > span { min-width: 0; }
+.touchStage .referenceThumbnails .iconButton { min-width: 44px; }
 .thumbnailPicker { margin-top: 0.8rem; padding: 0.6rem; border: 1px solid #dfc5a5; border-radius: 0.7rem; background: #f7ead9; }
 .thumbnailChoice { display: block; width: 100%; margin: 0.4rem 0; padding: 0.4rem; border: 1px solid #e4d4bf; border-radius: 0.6rem; text-align: left; background: #fffbf4; cursor: pointer; }
 .thumbnailChoice .sourceSummary { margin: 0; background: transparent; }
 .advancedSettings summary, .inspectorSection > summary { padding: 0.7rem 0; color: #876449; font-size: 0.75rem; cursor: pointer; }
-.graphTools { position: relative; }
-.graphTools summary { min-height: 2rem; padding: 0.5rem 0.65rem; border: 1px solid var(--line); border-radius: 0.55rem; color: #876449; font-size: 0.7rem; cursor: pointer; }
-.graphTools > div { position: absolute; z-index: 25; top: calc(100% + 0.4rem); left: 0; display: flex; flex-direction: column; gap: 0.4rem; width: 9rem; padding: 0.5rem; border: 1px solid var(--line); border-radius: 0.6rem; background: #fffaf2; box-shadow: 0 8px 22px rgb(71 43 23 / 12%); }
+.creationEditor { border-color: #dcb18c; border-radius: 1rem; background: var(--canvas-panel); box-shadow: 0 16px 48px rgb(79 46 20 / 14%), 0 0 0 1px rgb(210 119 66 / 8%); }
+.creationEditor .inspectorHeading { border-bottom: 0; padding: 0.45rem 0.75rem 0.15rem; }
+.creationEditor .inspectorHeading h3 { color: #725036; font-size: 0.78rem; font-weight: 650; }
+.creationEditor .inspectorScroll { flex: 0 1 auto; padding: 0 1rem 0.5rem; }
+.creationEditor .promptInput { padding: 0.4rem 0; border: 0; border-radius: 0; background: transparent; }
+.creationEditor .composerPrimary > .nodeActions { gap: 0.4rem; margin-top: 0.4rem; }
+.creationEditor .composerPrimary > .nodeActions > .smallButton { border-color: transparent; padding-inline: 0; background: transparent; color: #987052; font-weight: 500; }
+.generationSettings { padding-top: 0.4rem; border-top: 1px solid var(--line); }
+.compactParameters { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); align-items: start; gap: 0.6rem; }
+.compactParameters .field { margin: 0.3rem 0; gap: 0.2rem; }
+.compactParameters .field > span:first-child { color: var(--canvas-muted); font-size: 0.62rem; }
+.compactParameters .field select, .compactParameters .field input { background: #faf2e8; border-color: transparent; }
+.generationSettings > .advancedSettings > summary { padding: 0.65rem 0 0.35rem; }
+.creationEditor .editorFooter { border-top: 0; padding-top: 0.3rem; background: transparent; }
+.creationEditor .runButton { min-height: 44px; border-radius: 0.65rem; }
 .contextToolbar { position: fixed; z-index: 15; display: flex; align-items: center; gap: 0.35rem; max-width: calc(100vw - 1.5rem); padding: 0.4rem; border: 1px solid #ddc4a5; border-radius: 0.75rem; background: #fffaf2; box-shadow: 0 8px 24px rgb(71 43 23 / 14%); }
 .contextToolbar button { min-width: 44px; min-height: 44px; }
 .editorFooter { display: flex; flex-shrink: 0; flex-direction: column; gap: 0.5rem; max-height: 42%; overflow-y: auto; overscroll-behavior: contain; padding: 0.65rem 1rem max(0.65rem, env(safe-area-inset-bottom)); border-top: 1px solid var(--line); background: #fffaf2; }
@@ -289,20 +333,23 @@
 .touchStage .editor { min-height: 0; }
 .touchStage .viewport { min-height: 3rem; }
 .touchStage .toolbar { max-height: 42%; overflow-y: auto; overscroll-behavior: contain; }
-.touchStage .selectionTools { max-height: 30%; overflow-y: auto; overscroll-behavior: contain; }
-.touchStage .titleRow { min-height: 0; flex-wrap: wrap; gap: 0.4rem; padding: 0.5rem 0.6rem; }
-.touchStage .titleRow > div:first-child { flex-basis: 100%; }
-.touchStage .metadataActions { width: 100%; justify-content: flex-end; gap: 0.3rem; }
+.touchStage .titleRow { min-height: 0; gap: 0.4rem; padding: 0.35rem 0.6rem; }
+.touchStage .metadataActions { justify-content: flex-end; gap: 0.1rem; }
+.touchStage .metadataActions .saveButton { min-width: 44px; padding: 0.5rem; }
+.touchStage .metadataActions .saveButton span { display: none; }
 .touchStage .canvasTitle { font-size: 0.85rem; }
 .touchStage .saveStates { font-size: 0.68rem; }
-.touchStage .toolsRow { padding: 0.4rem 0.6rem; }
-.touchStage .creationTools { flex-wrap: wrap; }
-.touchStage .nodePicker { flex-basis: 100%; }
-.touchStage .selectedActions { width: 100%; justify-content: flex-end; }
-.touchStage .selectedActions > span { flex: 1; }
+.touchStage .canvasLookup { top: 0.4rem; left: 0.4rem; width: min(17rem, calc(100% - 0.8rem)); }
+.touchStage .canvasLookup .nodePicker select { font-size: 16px; }
 .touchStage button, .touchStage select { min-width: 44px; min-height: 44px; }
 .touchStage select, .touchStage input, .touchStage textarea { font-size: 16px; }
-.touchStage .iconButton, .touchStage .cameraTools .iconButton { width: 44px; height: 44px; }
+.touchStage .iconButton { width: 44px; height: 44px; }
+.touchStage .dockPosition { left: 0.4rem; right: 0.4rem; bottom: max(0.5rem, env(safe-area-inset-bottom)); }
+.touchStage .dock { gap: 0.1rem; padding: 0.25rem; }
+.touchStage .dockDivider { margin-inline: 0.1rem; }
+.touchStage .dockPrimary { padding-inline: 0.5rem; }
+.touchStage .dockText { display: none; }
+.touchStage .cameraDock { bottom: calc(max(0.5rem, env(safe-area-inset-bottom)) + 3.8rem); left: 0.4rem; padding: 0.2rem; }
 .touchStage .newButton { padding: 0.5rem 0.7rem; font-size: 0.75rem; }
 .touchStage .loadMoreButton { font-size: 0.68rem; }
 .touchStage .nodeEditor { position: fixed; z-index: 20; top: calc(var(--canvas-visible-top, 0px) + var(--canvas-visible-height, 100dvh) - var(--canvas-panel-height, 72dvh)); left: var(--canvas-visible-left, 0px); width: var(--canvas-visible-width, 100vw); height: var(--canvas-panel-height, 72dvh); max-height: var(--canvas-visible-height, 100dvh); border: 1px solid #dfc5a5; border-radius: 1.1rem 1.1rem 0 0; box-shadow: 0 -12px 36px rgb(71 43 23 / 16%); }
@@ -315,11 +362,11 @@
 .touchStage .emptyCanvasIcon, .touchStage .emptyEyebrow { display: none; }
 .touchStage .emptyCanvas h3 { margin-bottom: 0.3rem; }
 .touchStage .emptyCanvas button { margin-top: 0.6rem; }
-.touchStage .viewportHint { bottom: max(0.5rem, env(safe-area-inset-bottom)); max-width: calc(100% - 2rem); }
+.touchStage .viewportHint { display: none; }
 
 @media (max-width: 1199px) and (min-width: 768px) {
   .sidebar { flex-basis: 12.5rem; padding-right: 0.65rem; padding-left: 0.65rem; }
-  .titleRow, .toolsRow { padding-right: 0.8rem; padding-left: 0.8rem; }
+  .titleRow { padding-right: 0.8rem; padding-left: 0.8rem; }
 }
 
 @media (max-width: 767px) {
@@ -334,20 +381,16 @@
   .titleRow { min-height: 4rem; padding: 0.65rem 0.85rem; }
   .canvasTitle { font-size: 0.92rem; }
   .saveStates { font-size: 0.59rem; }
-  .toolsRow { gap: 0.35rem; padding: 0.4rem 0.65rem; }
-  .cameraTools { gap: 0.2rem; }
-  .cameraTools .iconButton { width: 2rem; height: 2.25rem; }
   .zoomLabel { min-width: 2.3rem; font-size: 0.61rem; }
   .readOnlyNotice { max-width: 10rem; font-size: 0.59rem; }
   .editor { min-height: 18rem; }
-  .viewportHint { bottom: max(1rem, env(safe-area-inset-bottom)); font-size: 0.57rem; }
+  .viewportHint { display: none; }
   .inspector { position: absolute; inset: 0 0 0 auto; width: min(19rem, 90%); }
   .emptyCanvas h3 { font-size: 1.7rem; }
   .emptyCanvas p { font-size: 0.7rem; }
   .alerts { padding: 0.4rem 0.6rem; }
   .metadataActions { gap: 0.1rem; }
   .metadataActions .saveButton { padding: 0.5rem; font-size: 0.65rem; }
-  .creationTools { flex-wrap: wrap; }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -6,7 +6,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { CANVAS_IMPORT_IMAGE_TYPES, CANVAS_LIMITS, type CanvasGenerationNodeV1 } from "@/lib/canvas/contracts";
 
 import type { CanvasController } from "../canvas/controller";
-import { canvasSourceStatus } from "../canvas/renderer-adapter";
+import { canvasGenerationPrompt, canvasSourceStatus } from "../canvas/renderer-adapter";
 import { CanvasSourceSummary } from "./canvas-node-picker";
 import { CanvasPromptField } from "./canvas-prompt-field";
 import type { CanvasNodeInspectorProps } from "./canvas-node-inspector";
@@ -22,12 +22,10 @@ type CanvasGenerationComposerProps = Pick<CanvasNodeInspectorProps, "active" | "
 type PickerIntent = { edgeId: string; expectedSource: string } | { edgeId?: never; expectedSource?: never };
 
 export function CanvasGenerationComposer({ active, node, target, actions, controller, readOnly, onConnect, onDisconnect, onReorder, onCaptureImport, onReplaceSource }: CanvasGenerationComposerProps) {
-  const edge = active.scene.edges.find((item) => item.kind === "prompt-input" && item.target === node.id);
-  const prompt = active.scene.nodes.find((item) => item.id === edge?.source && item.kind === "prompt");
-  const shared = edge ? active.scene.edges.filter((item) => item.kind === "prompt-input" && item.source === edge.source).length : 0;
-  const binding = useRef<string | null>(edge?.source ?? null);
+  const { sourceId, prompt, sharedPromptCount: shared } = canvasGenerationPrompt(active.scene, node.id);
+  const binding = useRef<string | null>(sourceId);
   const promptFocused = useRef(false);
-  useLayoutEffect(() => { if (!promptFocused.current) binding.current = edge?.source ?? null; }, [edge?.source]);
+  useLayoutEffect(() => { if (!promptFocused.current) binding.current = sourceId; }, [sourceId]);
   const fileInput = useRef<HTMLInputElement>(null);
   const chooser = useRef<((files: File[]) => void) | null>(null);
   const [picker, setPicker] = useState<PickerIntent | null>(null);
@@ -40,10 +38,9 @@ export function CanvasGenerationComposer({ active, node, target, actions, contro
   const inputs = active.scene.edges.filter((item) => item.kind === "image-input" && item.target === node.id).sort((a, b) => (a.kind === "image-input" ? a.ordinal : 0) - (b.kind === "image-input" ? b.ordinal : 0));
   const sources = active.scene.nodes.filter((item) => item.kind === "reference" || item.kind === "result");
   return <section className={styles.composerPrimary} aria-label="图片创作">
-    <h4>描述你想创作的画面</h4>
     {shared > 1 && <p className={styles.sharedPrompt} role="status">共享提示词 · {shared} 个生成节点使用此来源。编辑会同步影响它们的下一次运行。</p>}
     {readOnly ? <p className={styles.promptText}>{prompt?.kind === "prompt" ? prompt.text : "尚未填写提示词"}</p> : <CanvasPromptField label="创作提示词" value={prompt?.kind === "prompt" ? prompt.text : ""}
-      onFocus={() => { promptFocused.current = true; }} onBlur={() => { promptFocused.current = false; binding.current = edge?.source ?? null; }} onChange={(text) => {
+      onFocus={() => { promptFocused.current = true; }} onBlur={() => { promptFocused.current = false; binding.current = sourceId; }} onChange={(text) => {
       try {
         const accepted = controller.updateGenerationPrompt(target.canvasId, target.nodeId, { text, expectedPromptNodeId: binding.current });
         // A repaired source is acknowledged before a second native input event.
@@ -51,8 +48,7 @@ export function CanvasGenerationComposer({ active, node, target, actions, contro
         return true;
       } catch (error) { actions.reportError(error); return false; }
     }} />}
-    <p className={styles.helpText}>文字即时存入本地草稿。Enter 换行，只有点击运行才会生成。</p>
-    <div className={styles.inputListHeading}><h4>参考图</h4><span>{inputs.length} / {CANVAS_LIMITS.referencesPerRun}</span></div>
+    <div className={styles.referenceHeading}><span>参考图 {inputs.length ? `${inputs.length} / ${CANVAS_LIMITS.referencesPerRun}` : "· 可选"}</span><span>Enter 换行</span></div>
     <ol className={styles.referenceThumbnails} aria-label="参考图缩略图与顺序">
       {inputs.map((input, index) => {
         const source = sources.find((item) => item.id === input.source);

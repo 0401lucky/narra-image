@@ -1,7 +1,7 @@
 "use client";
 
 import { Background, BackgroundVariant, ReactFlow, ReactFlowProvider, useReactFlow, type NodeTypes } from "@xyflow/react";
-import { ArrowLeft, Check, Layers3, LoaderCircle, Move, Pencil, Plus, RefreshCw, Trash2 } from "lucide-react";
+import { ArrowLeft, Layers3, LoaderCircle, Plus, RefreshCw } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { Alert } from "@/components/ui/alert";
@@ -12,15 +12,15 @@ import type { CanvasController } from "../canvas/controller";
 import { canvasControllerErrorMessage, type CanvasActiveView } from "../canvas/controller-types";
 import type { CanvasEditorPort, CanvasEditorTarget } from "../canvas/editor-state";
 import { beginCanvasMove, finishCanvasMove, previewCanvasMove, type CanvasMoveGesture } from "../canvas/mobile-interaction";
-import { canvasFlowEdges, canvasFlowNodes, canvasInsertionPosition, canvasNodeViewChanges, isCanvasPortConnection, isCanvasSaveShortcut, isCanvasTextControl, updateCanvasNodeMeasurements } from "../canvas/renderer-adapter";
+import { canvasFlowEdges, canvasFlowNodes, canvasInsertionPosition, canvasNodeViewChanges, canvasVisibleNodeId, isCanvasPortConnection, isCanvasSaveShortcut, isCanvasTextControl, updateCanvasNodeMeasurements } from "../canvas/renderer-adapter";
 import { CANVAS_ARIA_LABELS, CANVAS_CAMERA, CANVAS_CARD_SPACING } from "../canvas/renderer-constants";
-import type { CanvasFlowEdge, CanvasFlowNode, CanvasNodeActions, CanvasNodeMeasurements, CanvasStageProps } from "../canvas/renderer-types";
+import type { CanvasFlowEdge, CanvasFlowNode, CanvasNodeActions, CanvasNodeMeasurements, CanvasStageProps, CanvasTool, CanvasViewMode } from "../canvas/renderer-types";
 import { useCanvasEditor } from "../hooks/use-canvas-editor";
 import { useCanvasMobileViewport } from "../hooks/use-canvas-mobile-viewport";
 import { useCanvasComposerPlacement } from "../hooks/use-canvas-composer-placement";
 import { CanvasDialog, type CanvasDialogIntent } from "./canvas-dialog";
 import { CanvasNodeEditor } from "./canvas-node-editor";
-import { CanvasNodePicker } from "./canvas-node-picker";
+import { CanvasDock } from "./canvas-dock";
 import { CanvasGenerationNode } from "./canvas-nodes/generation-node";
 import { CanvasImageToolbar } from "./canvas-image-toolbar";
 import { CanvasPromptNode } from "./canvas-nodes/prompt-node";
@@ -56,6 +56,9 @@ function CanvasEditor({ snapshot, active, controller, editor, touchPresentation 
   const clickConnectionAttempted = useRef(false);
   const flow = useReactFlow<CanvasFlowNode, CanvasFlowEdge>();
   const [selectedEdgeId, setSelectedEdgeId] = useState<string | null>(null);
+  const [viewMode, setViewMode] = useState<CanvasViewMode>(() => active.scene.nodes.some((node) => node.id === active.selectedNodeId && node.kind === "prompt") ? "graph" : "creation");
+  const [tool, setTool] = useState<CanvasTool>("select");
+  const pendingLocate = useRef<string | null>(null);
   const observedSelection = useRef<string | null | undefined>(undefined);
   const gesture = useRef<CanvasMoveGesture | null>(null);
   const gestureOrigin = useRef<"desktop" | "move">("move");
@@ -73,7 +76,7 @@ function CanvasEditor({ snapshot, active, controller, editor, touchPresentation 
   const moveMode = editable && editorIntent?.mode === "move";
   const previewOnly = touchPresentation || moveMode;
   const editorNode = snapshot.ready && editorIntent?.mode === "edit" ? active.scene.nodes.find((node) => node.id === editorIntent.target.nodeId) : null;
-  const placement = useCanvasComposerPlacement(viewportElement, editorNode?.id, touchPresentation, layoutIdentity, JSON.stringify({ camera: active.viewport, position: editorNode?.position }));
+  const placement = useCanvasComposerPlacement(viewportElement, editorNode?.id, touchPresentation, layoutIdentity, JSON.stringify({ camera: active.viewport, position: editorNode?.position, viewMode }), editorNode?.kind === "generation");
   const targetFor = useCallback((nodeId: string): CanvasEditorTarget => ({ ownerId: snapshot.ownerId, canvasId, nodeId }), [snapshot.ownerId, canvasId]);
   const applyFields = useCallback((nodeId?: string) => {
     const result = applyPending(canvasId, nodeId);
@@ -93,7 +96,7 @@ function CanvasEditor({ snapshot, active, controller, editor, touchPresentation 
     // Only an unfinished preview is cancelled. Completed drops already belong to the controller.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     cancelMove();
-  }, [cancelMove, layoutIdentity, touchPresentation, moveMode, editorIntent?.target.nodeId, active.viewport.x, active.viewport.y, active.viewport.zoom, editable]);
+  }, [cancelMove, layoutIdentity, touchPresentation, moveMode, editorIntent?.target.nodeId, active.viewport.x, active.viewport.y, active.viewport.zoom, editable, tool, viewMode]);
   useEffect(() => {
     const element = viewportElement.current;
     const interrupt = () => { pointers.current.clear(); cancelMove(); };
@@ -120,11 +123,20 @@ function CanvasEditor({ snapshot, active, controller, editor, touchPresentation 
       if (pointerId !== undefined && element?.hasPointerCapture?.(pointerId)) element.releasePointerCapture(pointerId);
     };
   }, [cancelMove]);
-  const selectNode = (nodeId: string | null) => {
+  const selectNode = (nodeId: string | null, openCreation = false) => {
+    if (active.scene.nodes.some((node) => node.id === nodeId && node.kind === "prompt")) setViewMode("graph");
     if (nodeId !== active.selectedNodeId) { cancelMove(); closeEditor(); }
     execute(canvasId, () => controller.selectNode(canvasId, nodeId));
     setSelectedEdgeId(null);
+    if (openCreation && !touchPresentation && editable && nodeId && active.scene.nodes.some((node) => node.id === nodeId && node.kind === "generation")) openEditor(targetFor(nodeId));
   };
+  useEffect(() => {
+    if (editorNode?.kind === "prompt") {
+      // A retained editor intent (e.g. returning from chat) must never target a folded card.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setViewMode("graph");
+    }
+  }, [editorNode?.kind]);
   useEffect(() => {
     if (observedSelection.current === active.selectedNodeId) return;
     observedSelection.current = active.selectedNodeId;
@@ -148,12 +160,41 @@ function CanvasEditor({ snapshot, active, controller, editor, touchPresentation 
     downloadImage: onDownloadImage,
     reportError,
   }), [acquirePreview, applyFields, canvasId, controller, editable, execute, invoke, onDialog, onDownloadImage, onViewImage, openEditor, reportError, targetFor, touchPresentation]);
-  const nodes = useMemo(() => canvasFlowNodes(active, !editable, actions, liveMeasurements, { touch: previewOnly, capturedDrag: true, editorNodeId: editorNode?.id,
-    preview: movePreview ? { nodeId: movePreview.target.nodeId, position: movePreview.position } : null }), [active, editable, actions, liveMeasurements, previewOnly, editorNode?.id, movePreview]);
-  const edges = useMemo(() => canvasFlowEdges(active.scene, !editable || previewOnly, selectedEdgeId, active.selectedNodeId), [active.scene, editable, previewOnly, selectedEdgeId, active.selectedNodeId]);
+  const nodes = useMemo(() => canvasFlowNodes(active, !editable, actions, liveMeasurements, { touch: previewOnly, capturedDrag: true, editorNodeId: editorNode?.id, view: viewMode, tool: touchPresentation ? "select" : tool,
+    preview: movePreview ? { nodeId: movePreview.target.nodeId, position: movePreview.position } : null }), [active, editable, actions, liveMeasurements, previewOnly, editorNode?.id, movePreview, viewMode, tool, touchPresentation]);
+  const graphInteractive = editable && !previewOnly && viewMode === "graph" && tool !== "pan";
+  const edges = useMemo(() => canvasFlowEdges(active.scene, !graphInteractive, selectedEdgeId, active.selectedNodeId, viewMode), [active.scene, graphInteractive, selectedEdgeId, active.selectedNodeId, viewMode]);
   const selectedNode = active.scene.nodes.find((node) => node.id === active.selectedNodeId);
-  const locate = (nodeId: string) => { void invoke(canvasId, () => flow.fitView({ nodes: [{ id: nodeId }], padding: 0.3, minZoom: 0.6, maxZoom: 1 })); };
-  const enterMove = (nodeId: string) => { cancelMove(); openEditor(targetFor(nodeId), "move"); locate(nodeId); };
+  const locate = (nodeId: string) => {
+    if (viewMode === "creation" && active.scene.nodes.some((node) => node.id === nodeId && node.kind === "prompt")) {
+      pendingLocate.current = nodeId; setViewMode("graph"); return;
+    }
+    void invoke(canvasId, () => flow.fitView({ nodes: [{ id: nodeId }], padding: 0.3, minZoom: 0.6, maxZoom: 1 }));
+  };
+  useEffect(() => {
+    const element = viewportElement.current;
+    if (!element || !pendingLocate.current) return;
+    const locateMounted = () => {
+      const id = pendingLocate.current;
+      if (!id || !Array.from(element.querySelectorAll<HTMLElement>(".react-flow__node")).some((node) => node.dataset.id === id)) return;
+      pendingLocate.current = null;
+      void invoke(canvasId, () => flow.fitView({ nodes: [{ id }], padding: 0.3, minZoom: 0.6, maxZoom: 1 }));
+    };
+    const mounts = new MutationObserver(locateMounted);
+    mounts.observe(element, { childList: true, subtree: true }); locateMounted();
+    return () => mounts.disconnect();
+  }, [viewMode, canvasId, flow, invoke]);
+  const enterMove = (nodeId: string) => { cancelMove(); setTool("select"); openEditor(targetFor(nodeId), "move"); locate(nodeId); };
+  const changeView = (view: CanvasViewMode) => {
+    cancelMove(); setSelectedEdgeId(null);
+    const visibleId = canvasVisibleNodeId(active.scene, active.selectedNodeId, view);
+    if (view === "creation" && editorNode?.kind === "prompt") closeEditor();
+    if (visibleId !== active.selectedNodeId) {
+      closeEditor(); execute(canvasId, () => controller.selectNode(canvasId, visibleId));
+    }
+    setViewMode(view);
+  };
+  const changeTool = (next: CanvasTool) => { cancelMove(); if (moveMode) closeEditor(); setTool(next); };
 
   const visiblePosition = (): CanvasPositionV1 => {
     const bounds = viewportElement.current?.getBoundingClientRect();
@@ -196,11 +237,12 @@ function CanvasEditor({ snapshot, active, controller, editor, touchPresentation 
       const insertion = visibleInsertion();
       const position = source ? { x: source.position.x + CANVAS_CARD_SPACING.column, y: source.position.y } : insertion.position;
       const created = controller.createQuickGeneration(canvasId, { ...insertion, position, sourceNodeIds: sourceNodeId ? [sourceNodeId] : [] });
+      setTool("select");
       openEditor(targetFor(created.generationNodeId));
     });
   };
   const save = () => { if (editable && applyFields()) void invoke(canvasId, () => controller.saveCanvas(canvasId)); };
-  const addPrompt = () => { if (editable) execute(canvasId, () => { const nodeId = controller.addPrompt(canvasId, newPosition("prompt")); controller.selectNode(canvasId, nodeId); }); };
+  const addPrompt = () => { if (editable) execute(canvasId, () => { const nodeId = controller.addPrompt(canvasId, newPosition("prompt")); setViewMode("graph"); controller.selectNode(canvasId, nodeId); }); };
   const connect = (sourceId: string, targetId: string) => editable && execute(canvasId, () => {
     const source = active.scene.nodes.find((node) => node.id === sourceId);
     return source?.kind === "reference" || source?.kind === "result" ? controller.connectImage(canvasId, sourceId, targetId) : controller.connect(canvasId, sourceId, targetId);
@@ -217,34 +259,21 @@ function CanvasEditor({ snapshot, active, controller, editor, touchPresentation 
       // Bubble after a focused inspector field has committed or rejected its draft.
       event.preventDefault(); event.stopPropagation(); save();
     }}>
-      <CanvasToolbar document={active.document} readOnly={readOnly} zoom={active.viewport.zoom}
+      <CanvasToolbar document={active.document} readOnly={readOnly}
         pendingFields={editor.pendingCount(canvasId)}
         onRename={() => onDialog({ kind: "rename", canvasId, title: active.document.title })}
         onDelete={() => onDialog({ kind: "delete", canvasId, title: active.document.title })}
-        onSave={save} onAddPrompt={addPrompt}
-        onCreate={() => createImage()} onCaptureImport={() => captureImport()}
-        onAddGeneration={() => { if (editable) execute(canvasId, () => { const nodeId = controller.addGeneration(canvasId, newPosition("generation")); controller.selectNode(canvasId, nodeId); }); }}
-        onImport={importFiles}
-        onFit={() => { void invoke(canvasId, () => flow.fitView({ padding: CANVAS_CAMERA.fitPadding, minZoom: CANVAS_CAMERA.minZoom, maxZoom: 1 })); }}
-        onZoomIn={() => { void invoke(canvasId, () => flow.zoomIn()); }} onZoomOut={() => { void invoke(canvasId, () => flow.zoomOut()); }} />
-      <div className={styles.selectionTools}>
-        <CanvasNodePicker active={active} onSelect={selectNode} onLocate={locate} />
-        {editable && selectedNode && <div className={styles.selectedActions}>
-          {moveMode ? <><span role="status">移动模式 · 拖动整张卡片</span><button type="button" className={styles.smallButton} aria-label="完成移动" onClick={() => { cancelMove(); closeEditor(); }}><Check aria-hidden className="size-4" />完成移动</button></>
-            : <><button type="button" className={styles.smallButton} aria-label="编辑所选节点" onClick={() => openEditor(targetFor(selectedNode.id))}><Pencil aria-hidden className="size-4" />编辑</button>
-              <button type="button" className={styles.smallButton} aria-label="移动所选节点" onClick={() => enterMove(selectedNode.id)}><Move aria-hidden className="size-4" />移动</button>
-              {touchPresentation && <button type="button" className={styles.iconButton} aria-label="移除所选节点" onClick={() => actions.removeNode(selectedNode.id)}><Trash2 aria-hidden className="size-4" /></button>}</>}
-        </div>}
-        {!editable && snapshot.ready && selectedNode && <button type="button" className={styles.smallButton} onClick={() => openEditor(targetFor(selectedNode.id))}>查看所选节点</button>}
-      </div>
-      <div className={styles.workspace}>
+        onSave={save} />
+      <div className={styles.workspace} data-canvas-view={viewMode}>
         <div ref={viewportElement} className={styles.viewport} data-testid="canvas-viewport"
           data-interaction-mode={moveMode ? "move" : "browse"}
+          data-canvas-tool={touchPresentation ? "browse" : tool}
           onPointerDownCapture={(event) => {
             pointers.current.add(event.pointerId);
             suppressClick.current = false;
             if (pointers.current.size > 1) { suppressClick.current = true; cancelMove(); return; }
             const nodeId = event.target instanceof Element ? event.target.closest(".react-flow__node")?.getAttribute("data-id") : null;
+            if (!touchPresentation && tool === "pan") return;
             const desktop = !touchPresentation && event.pointerType !== "touch" && !moveMode;
             if (!editable || event.button !== 0 || (!desktop && (!moveMode || nodeId !== editorIntent?.target.nodeId))
               || (event.target instanceof Element && event.target.closest("button, input, textarea, select, a, [contenteditable=true], .react-flow__handle, .nodrag, .nokey"))) return;
@@ -285,7 +314,7 @@ function CanvasEditor({ snapshot, active, controller, editor, touchPresentation 
               if (position) {
                 if (execute(canvasId, () => controller.moveNode(canvasId, preview.target.nodeId, position)) && desktop) selectNode(preview.target.nodeId);
               } else if (!dragged && desktop && inside) {
-                selectNode(preview.target.nodeId);
+                selectNode(preview.target.nodeId, true);
                 Array.from(viewportElement.current?.querySelectorAll<HTMLElement>(".react-flow__node") ?? []).find((card) => card.dataset.id === preview.target.nodeId)?.focus({ preventScroll: true });
               }
               event.preventDefault(); event.stopPropagation();
@@ -298,7 +327,7 @@ function CanvasEditor({ snapshot, active, controller, editor, touchPresentation 
           onTouchStartCapture={(event) => { if (event.touches.length > 1) { cancelMove(); } else if (gesture.current) event.stopPropagation(); }}
           onClickCapture={(event) => { if (suppressClick.current) { suppressClick.current = false; event.preventDefault(); event.stopPropagation(); } }}
           onKeyDownCapture={(event) => {
-            if (editable && !event.nativeEvent.isComposing && event.keyCode !== 229 && !event.ctrlKey && !event.metaKey && !event.altKey && !isCanvasTextControl(event.target)
+            if (editable && (touchPresentation || tool !== "pan") && !event.nativeEvent.isComposing && event.keyCode !== 229 && !event.ctrlKey && !event.metaKey && !event.altKey && !isCanvasTextControl(event.target)
               && event.target instanceof Element && !event.target.closest("button, a, .nokey, .react-flow__handle") && ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(event.key)) {
               const id = event.target.closest(".react-flow__node")?.getAttribute("data-id");
               const node = active.scene.nodes.find((item) => item.id === id);
@@ -346,38 +375,47 @@ function CanvasEditor({ snapshot, active, controller, editor, touchPresentation 
                 else if (change.type === "remove" && active.scene.edges.some((edge) => edge.id === change.id && edge.kind !== "output-provenance")) execute(canvasId, () => controller.disconnect(canvasId, change.id));
               }
             }}
-            onNodeClick={(_, node) => selectNode(node.id)}
-            onPaneClick={() => selectNode(null)}
+            onNodeClick={(_, node) => { if (touchPresentation || tool !== "pan") selectNode(node.id, true); }}
+            onPaneClick={() => { if (touchPresentation || tool !== "pan") selectNode(null); }}
             onConnect={(connection) => {
               clickConnectionAttempted.current = true;
-              if (!editable) return;
+              if (!graphInteractive) return;
               if (!isCanvasPortConnection(active.scene, connection)) { reportError(new CanvasContractError("CANVAS_INVALID_CONNECTION")); return; }
               connect(connection.source, connection.target);
             }}
-            isValidConnection={(connection) => editable && isCanvasPortConnection(active.scene, { source: connection.source, target: connection.target, sourceHandle: connection.sourceHandle ?? null, targetHandle: connection.targetHandle ?? null })}
-            onConnectEnd={(_, state) => { if (editable && !state.isValid && state.toNode) reportError(new CanvasContractError("CANVAS_INVALID_CONNECTION")); }}
+            isValidConnection={(connection) => graphInteractive && isCanvasPortConnection(active.scene, { source: connection.source, target: connection.target, sourceHandle: connection.sourceHandle ?? null, targetHandle: connection.targetHandle ?? null })}
+            onConnectEnd={(_, state) => { if (graphInteractive && !state.isValid && state.toNode) reportError(new CanvasContractError("CANVAS_INVALID_CONNECTION")); }}
             onClickConnectStart={() => { clickConnectionAttempted.current = false; }}
             onClickConnectEnd={(event) => {
-              if (editable && !clickConnectionAttempted.current && event.target instanceof Element && event.target.closest(".react-flow__handle")) reportError(new CanvasContractError("CANVAS_INVALID_CONNECTION"));
+              if (graphInteractive && !clickConnectionAttempted.current && event.target instanceof Element && event.target.closest(".react-flow__handle")) reportError(new CanvasContractError("CANVAS_INVALID_CONNECTION"));
             }}
-            nodesDraggable={false} nodesConnectable={editable && !previewOnly} nodesFocusable elementsSelectable edgesFocusable={editable && !previewOnly} edgesReconnectable={false}
+            nodesDraggable={false} nodesConnectable={graphInteractive} nodesFocusable elementsSelectable={touchPresentation || tool !== "pan"} edgesFocusable={graphInteractive} edgesReconnectable={false}
             deleteKeyCode={null} selectionKeyCode={null} multiSelectionKeyCode={null}
-            connectOnClick={editable && !previewOnly} panOnDrag zoomOnPinch zoomOnScroll preventScrolling selectNodesOnDrag={!previewOnly}
+            connectOnClick={graphInteractive} panOnDrag zoomOnPinch zoomOnScroll preventScrolling selectNodesOnDrag={!previewOnly && tool !== "pan"} autoPanOnNodeFocus={false}
             minZoom={CANVAS_CAMERA.minZoom} maxZoom={CANVAS_CAMERA.maxZoom} nodeDragThreshold={3}
             autoPanOnNodeDrag={editable && !previewOnly} autoPanOnConnect={editable && !previewOnly}
             ariaLabelConfig={readOnly || previewOnly ? { ...CANVAS_ARIA_LABELS, "node.a11yDescription.default": CANVAS_ARIA_LABELS["node.a11yDescription.keyboardDisabled"] } : CANVAS_ARIA_LABELS}>
             <Background variant={BackgroundVariant.Dots} gap={24} size={1} color="rgba(113, 82, 58, 0.22)" />
           </ReactFlow>
-          {active.scene.nodes.length === 0 && <div className={styles.emptyCanvas}>
+          {nodes.length === 0 && <div className={styles.emptyCanvas}>
             <div className={styles.emptyCanvasIcon}><Layers3 aria-hidden className="size-8" /></div>
             <p className={styles.emptyEyebrow}>一张空白，独立的灵感空间</p>
-            <h3>从一个想法开始</h3>
+            <h3>{active.scene.nodes.length ? "让想法变成画面" : "从一个想法开始"}</h3>
             <p>{readOnly ? "此画布还没有节点。当前可浏览已有画布，暂时无法编辑。" : "新建图片，写下想法，再手动生成。也可以导入参考图继续创作，原图与旧结果始终保留。"}</p>
             {!readOnly && <button type="button" className={styles.saveButton} onClick={() => createImage()} disabled={!editable}><Plus aria-hidden className="size-4" />创作第一张图片</button>}
+            {active.scene.nodes.length > 0 && <button type="button" className={styles.smallButton} onClick={() => changeView("graph")}>查看已有提示词</button>}
           </div>}
-          <div className={styles.viewportHint}>{moveMode ? "拖动所选整张卡片 · 双指或中断会取消未完成移动" : touchPresentation || readOnly ? "单指平移 · 双指缩放 · 选择节点后编辑或移动" : "拖动空白处平移 · 滚轮缩放 · 拖动整张卡片移动"}</div>
+          <div className={styles.viewportHint}>{moveMode ? "拖动所选卡片，完成后退出移动" : touchPresentation || readOnly ? "平移与缩放 · 选中后编辑" : tool === "pan" ? "拖动画面平移 · 滚轮缩放" : "拖动卡片移动 · 拖动空白平移 · 滚轮缩放"}</div>
           {active.hydrating && <p className={styles.hydrating} role="status"><LoaderCircle aria-hidden className="size-3 animate-spin" />正在读取图片与任务</p>}
         </div>
+        <CanvasDock active={active} editable={editable} touch={touchPresentation} tool={tool} view={viewMode} moving={moveMode}
+          onTool={changeTool} onView={changeView} onCreate={() => createImage()} onAddPrompt={addPrompt}
+          onAddGeneration={() => { if (editable) execute(canvasId, () => { const nodeId = controller.addGeneration(canvasId, newPosition("generation")); controller.selectNode(canvasId, nodeId); }); }}
+          onCaptureImport={() => captureImport()} onSelect={selectNode} onLocate={locate}
+          onEdit={() => { if (selectedNode) openEditor(targetFor(selectedNode.id)); }} onMove={() => { if (selectedNode) enterMove(selectedNode.id); }}
+          onRemove={() => { if (selectedNode) actions.removeNode(selectedNode.id); }} onFinishMove={() => { cancelMove(); closeEditor(); }}
+          onFit={() => { void invoke(canvasId, () => flow.fitView({ nodes: nodes.map((node) => ({ id: node.id })), padding: CANVAS_CAMERA.fitPadding, minZoom: CANVAS_CAMERA.minZoom, maxZoom: 1 })); }}
+          onZoomIn={() => { void invoke(canvasId, () => flow.zoomIn()); }} onZoomOut={() => { void invoke(canvasId, () => flow.zoomOut()); }} />
         {selectedNode && (selectedNode.kind === "reference" || selectedNode.kind === "result") && !editorNode && !moveMode && !movePreview && <CanvasImageToolbar
           key={selectedNode.id} active={active} node={selectedNode} viewport={viewportElement} actions={actions} readOnly={!editable} onCreate={() => createImage(selectedNode.id)} />}
         {editorNode && editorIntent && <CanvasNodeEditor key={editorNode.id} active={active} node={editorNode} readOnly={!editable} channels={channels} editor={editor} target={editorIntent.target} actions={actions} controller={controller} placement={placement}

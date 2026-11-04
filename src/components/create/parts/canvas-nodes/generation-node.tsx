@@ -1,7 +1,7 @@
 "use client";
 
 import type { NodeProps } from "@xyflow/react";
-import { CircleHelp, LoaderCircle, Play, RotateCcw, SlidersHorizontal, Sparkles } from "lucide-react";
+import { CircleHelp, ImagePlus, LoaderCircle, Play, RotateCcw, SlidersHorizontal } from "lucide-react";
 
 import { normalizeCanvasRunParametersV1 } from "@/lib/canvas/contracts";
 import { cn } from "@/lib/utils";
@@ -13,8 +13,8 @@ import styles from "../canvas-stage.module.css";
 import { CanvasNodeShell, CanvasPort } from "./node-shell";
 
 export function CanvasGenerationNode({ data, selected }: NodeProps<CanvasGenerationFlowNode>) {
-  const portsReadOnly = data.readOnly || Boolean(data.previewOnly);
-  return <CanvasNodeShell kind="generation" selected={selected} readOnly={data.readOnly} previewOnly={data.previewOnly} onRemove={() => data.actions.removeNode(data.node.id)}>
+  const portsReadOnly = data.readOnly || Boolean(data.previewOnly) || data.graphView === false;
+  return <CanvasNodeShell kind="generation" selected={selected} readOnly={data.readOnly} previewOnly={data.previewOnly} replaced={data.editorReplacesCard} onRemove={() => data.actions.removeNode(data.node.id)}>
     <CanvasGenerationContent data={data} />
     <CanvasPort id={CANVAS_PORTS.promptInput} type="target" label="生成节点提示词输入" variant="prompt" readOnly={portsReadOnly} />
     <CanvasPort id={CANVAS_PORTS.imageInput} type="target" label="生成节点参考图输入" readOnly={portsReadOnly} />
@@ -24,26 +24,27 @@ export function CanvasGenerationNode({ data, selected }: NodeProps<CanvasGenerat
 
 type CanvasGenerationContentProps = { data: CanvasGenerationFlowNode["data"]; hideActions?: boolean };
 export function CanvasGenerationContent({ data, hideActions = false }: CanvasGenerationContentProps) {
-  const { node, readOnly, referenceCount, hasPrompt, run, previewOnly = false } = data;
+  const { node, referenceCount, prompt, sharedPromptCount, previewOnly = false } = data;
   const parameters = normalizeCanvasRunParametersV1(node.parameters, referenceCount);
-  const progressing = run !== null && ["preparing", "submitting", "pending"].includes(run.phase);
   return (
       <div className={styles.nodeBody}>
-        <p className={styles.nodeEyebrow}><Sparkles aria-hidden className="size-3.5" /> 只运行当前节点</p>
-        <h3 className={styles.modelName}>{parameters.model}</h3>
-        <p className={styles.nodeDescription}>{getSizeLabel(parameters.size)} · {parameters.outputFormat.toUpperCase()}</p>
-        <div className={styles.inputSummary}>
-          <span className={cn(!hasPrompt && styles.problemText)}>{hasPrompt ? "提示词已连接" : "待连接一个提示词"}</span>
-          <span>{referenceCount ? `${referenceCount} 张参考图 · 固定 1 张输出` : `文生图 · ${parameters.count} 张输出`}</span>
-        </div>
-        {run && <p role="status" className={cn(styles.runState, ["failed", "rejected", "uncertain", "unavailable"].includes(run.phase) && styles.problemText)}>
-          {progressing && <LoaderCircle aria-hidden className="size-3.5 animate-spin" />}{CANVAS_RUN_LABELS[run.phase]}
-        </p>}
-        {run?.error && <p className={styles.nodeError} role="alert">{run.error}</p>}
+        <p className={cn(styles.creationPromptPreview, !prompt?.text && styles.emptyPromptPreview)}>{prompt?.text || "描述你的想法，让画面在这里发生。"}</p>
+        {sharedPromptCount > 1 && <p className={styles.sharedPromptLabel}>共享提示词 · {sharedPromptCount} 个创作</p>}
+        <div className={styles.creationMeta}><span><ImagePlus aria-hidden className="size-3.5" />{referenceCount ? `${referenceCount} 张参考图` : "添加参考图"}</span><span>{parameters.count} 张输出</span></div>
+        <div className={styles.creationSettingsPreview}><span>{parameters.model}</span><span>{getSizeLabel(parameters.size)}</span></div>
+        <CanvasGenerationStatus data={data} />
         {!previewOnly && !hideActions && <CanvasGenerationActions data={data} hideRun={data.editorOpen} />}
-        <p className={styles.nodeFootnote}>{readOnly ? "当前仅查看" : previewOnly ? "选择后打开编辑面板，手动运行" : "编辑与连接不会自动生成"}</p>
       </div>
   );
+}
+
+export function CanvasGenerationStatus({ data }: { data: CanvasGenerationFlowNode["data"] }) {
+  const { run } = data;
+  if (!run) return null;
+  const progressing = ["preparing", "submitting", "pending"].includes(run.phase);
+  return <><p role="status" className={cn(styles.runState, ["failed", "rejected", "uncertain", "unavailable"].includes(run.phase) && styles.problemText)}>
+    {progressing && <LoaderCircle aria-hidden className="size-3.5 animate-spin" />}{CANVAS_RUN_LABELS[run.phase]}
+  </p>{run.error && <p className={styles.nodeError} role="alert">{run.error}</p>}</>;
 }
 
 type CanvasGenerationActionsProps = { data: CanvasGenerationFlowNode["data"]; hideSettings?: boolean; hideRun?: boolean };
@@ -54,9 +55,9 @@ export function CanvasGenerationActions({ data, hideSettings = false, hideRun = 
   if (readOnly) return null;
   return <>
           <div className={cn(CANVAS_INPUT_CLASS, styles.generationActions)} onClick={(event) => event.stopPropagation()}>
-            {!hideRun && <button type="button" className={styles.runButton} disabled={busy} onClick={() => actions.runNode(node.id)}>
+            {!hideRun && <button type="button" className={styles.runButton} aria-label={progressing ? "生成中" : "运行此节点"} disabled={busy} onClick={() => actions.runNode(node.id)}>
               {progressing ? <LoaderCircle aria-hidden className="size-4 animate-spin" /> : <Play aria-hidden className="size-4" />}
-              {progressing ? "生成中" : "运行此节点"}
+              {progressing ? "生成中" : "生成图片"}
             </button>}
             {!hideSettings && <button type="button" className={styles.smallButton} aria-label="设置生成节点参数" onClick={() => actions.inspectNode(node.id)}><SlidersHorizontal aria-hidden className="size-4" /></button>}
           </div>

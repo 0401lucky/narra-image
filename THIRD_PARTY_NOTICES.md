@@ -8,6 +8,41 @@ The application's `AGPL-3.0-only` declaration does not replace these licenses.
 React Flow core is MIT-licensed. No React Flow Pro examples, templates, or other
 separately licensed Pro content are included by this dependency addition.
 
+## basketikun/infinite-canvas
+
+The floating canvas dock grouping, tool-button affordances and compact
+prompt/settings layout are adapted from `basketikun/infinite-canvas`, commit
+`0d2676b268d3872a9d380489291d0f0a13f476e1`, notably
+`web/src/components/canvas/canvas-toolbar.tsx`, `canvas-zoom-controls.tsx` and
+`canvas-node-prompt-panel.tsx`. Narra's corresponding implementation lives in
+`src/components/create/parts/canvas-dock.tsx`, `canvas-generation-settings.tsx`
+and `canvas-stage.module.css`; provider, persistence and generation execution
+remain Narra-owned. Source: https://github.com/basketikun/infinite-canvas.
+
+```text
+MIT License
+
+Copyright (c) 2026 basketikun
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
+
 ## @xyflow/react 12.12.0, @xyflow/system 0.0.83
 
 License: MIT. Notice reproduced from the installed packages (identical text).

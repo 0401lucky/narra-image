@@ -58,6 +58,8 @@ describe("image-first creation loop on the real canvas", () => {
     const mounted = render(<CanvasImageToolbar active={active} node={node} viewport={{ current: viewport }} actions={canvasNodeActions()} readOnly={false} onCreate={vi.fn()} />);
     try {
       const toolbar = screen.getByRole("group", { name: "所选图片操作" });
+      toolbar.getBoundingClientRect = () => ({ x: 0, y: 0, left: 0, top: 0, right: 310, bottom: 54, width: 310, height: 54, toJSON: () => ({}) });
+      act(() => restore.deliverResizes());
       await waitFor(() => expect(toolbar).toHaveStyle({ left: "8px", top: "8px" }));
       const card = document.createElement("div");
       card.className = "react-flow__node";
@@ -71,6 +73,40 @@ describe("image-first creation loop on the real canvas", () => {
       mounted.unmount();
       viewport.remove();
     }
+  });
+
+  it("keeps low-image controls above the measured camera/dock and follows their resize without scene edits", async () => {
+    const f = fixture();
+    const { canvasId } = await f.newGraph();
+    const reference = f.controller.importReference(canvasId, image(), { x: 400, y: 560 });
+    const active = f.controller.getSnapshot().active!;
+    const node = active.scene.nodes.find((item) => item.id === reference);
+    if (node?.kind !== "reference") throw new Error("Expected the imported reference node");
+    const before = structuredClone(active.scene);
+    const workspace = document.createElement("div"), viewport = document.createElement("div"), dock = document.createElement("nav"), camera = document.createElement("div"), card = document.createElement("div");
+    const rect = (left: number, top: number, width: number, height: number): DOMRect => ({ x: left, y: top, left, top, right: left + width, bottom: top + height, width, height, toJSON: () => ({}) });
+    dock.dataset.canvasDock = ""; camera.dataset.canvasCamera = "";
+    dock.getBoundingClientRect = () => rect(350, 544, 500, 56);
+    let cameraTop = 470, toolbarHeight = 56;
+    camera.getBoundingClientRect = () => rect(8, cameraTop, 200, 600 - cameraTop);
+    card.className = "react-flow__node"; card.dataset.id = reference;
+    card.getBoundingClientRect = () => rect(400, 560, 288, 280);
+    viewport.append(card); workspace.append(viewport, dock, camera); document.body.append(workspace);
+    const mounted = render(<CanvasImageToolbar active={active} node={node} viewport={{ current: viewport }} actions={canvasNodeActions()} readOnly={false} onCreate={vi.fn()} />);
+    try {
+      const toolbar = screen.getByRole("group", { name: "所选图片操作" });
+      toolbar.getBoundingClientRect = () => rect(400, Number.parseFloat(toolbar.style.top) || 0, 310, toolbarHeight);
+      act(() => restore.deliverResizes());
+      await waitFor(() => expect(Number.parseFloat(toolbar.style.top) + toolbarHeight).toBeLessThanOrEqual(cameraTop - 8));
+      cameraTop = 410;
+      act(() => restore.deliverResizes());
+      await waitFor(() => expect(Number.parseFloat(toolbar.style.top) + toolbarHeight).toBeLessThanOrEqual(cameraTop - 8));
+      toolbarHeight = 88;
+      act(() => restore.deliverResizes());
+      await waitFor(() => expect(Number.parseFloat(toolbar.style.top) + toolbarHeight).toBeLessThanOrEqual(cameraTop - 8));
+      expect(f.controller.getSnapshot().active!.scene).toEqual(before);
+      expect(f.api.port.submit).not.toHaveBeenCalled();
+    } finally { mounted.unmount(); workspace.remove(); }
   });
 
   it("anchors primary creation and captured imports to the visible canvas rather than an offscreen legacy prompt", async () => {
@@ -197,7 +233,7 @@ describe("image-first creation loop on the real canvas", () => {
     f.controller.selectNode(canvasId, nodeId);
     const before = f.controller.getSnapshot().active!.scene;
     render(<CanvasStageHarness controller={f.controller} />);
-    expect(await screen.findByText(/共享提示词 · 2/)).toBeInTheDocument();
+    expect(await screen.findByText(/共享提示词 · 2 个生成节点使用此来源/)).toBeInTheDocument();
     fireEvent.input(screen.getByRole("textbox", { name: "创作提示词" }), { target: { value: "共同的新画面" } });
     const after = f.controller.getSnapshot().active!.scene;
     expect(after.edges).toEqual(before.edges);

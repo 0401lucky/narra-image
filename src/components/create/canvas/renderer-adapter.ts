@@ -4,38 +4,56 @@ import type { CanvasLocalNodeV1, CanvasLocalSceneV1, CanvasPositionV1 } from "@/
 
 import type { CanvasActiveView } from "./controller-types";
 import { CANVAS_DRAG_HANDLE, CANVAS_NODE_LABELS, CANVAS_PORTS } from "./renderer-constants";
-import type { CanvasFlowEdge, CanvasFlowNode, CanvasNodeActions, CanvasNodeMeasurements } from "./renderer-types";
+import type { CanvasFlowEdge, CanvasFlowNode, CanvasNodeActions, CanvasNodeMeasurements, CanvasTool, CanvasViewMode } from "./renderer-types";
 
 export { canvasInsertionPosition } from "./commands";
 
-export type CanvasNodePresentation = { touch: boolean; capturedDrag?: boolean; editorNodeId?: string; preview?: { nodeId: string; position: CanvasPositionV1 } | null };
+export type CanvasNodePresentation = { touch: boolean; capturedDrag?: boolean; editorNodeId?: string; view?: CanvasViewMode; tool?: CanvasTool; preview?: { nodeId: string; position: CanvasPositionV1 } | null };
+
+export function canvasGenerationPrompt(scene: CanvasLocalSceneV1, nodeId: string) {
+  const edge = scene.edges.find((item) => item.kind === "prompt-input" && item.target === nodeId);
+  const source = scene.nodes.find((item) => item.id === edge?.source);
+  const prompt = source?.kind === "prompt" ? source : null;
+  return { prompt, sourceId: edge?.source ?? null, sharedPromptCount: edge ? scene.edges.filter((item) => item.kind === "prompt-input" && item.source === edge.source).length : 0 };
+}
+
+export function canvasVisibleNodeId(scene: CanvasLocalSceneV1, nodeId: string | null, view: CanvasViewMode): string | null {
+  const node = scene.nodes.find((item) => item.id === nodeId);
+  if (!node) return null;
+  if (view === "graph" || node.kind !== "prompt") return node.id;
+  const targets = scene.edges.filter((edge) => edge.kind === "prompt-input" && edge.source === node.id);
+  return targets.length === 1 && scene.nodes.some((item) => item.id === targets[0].target && item.kind === "generation") ? targets[0].target : null;
+}
 
 export function canvasFlowNodes(active: CanvasActiveView, readOnly: boolean, actions: CanvasNodeActions, measurements?: CanvasNodeMeasurements, presentation?: CanvasNodePresentation): CanvasFlowNode[] {
   const canvasId = active.document.id;
-  return active.scene.nodes.map((node): CanvasFlowNode => {
+  const graphView = presentation?.view !== "creation";
+  return active.scene.nodes.filter((node) => graphView || node.kind !== "prompt").map((node): CanvasFlowNode => {
     const measured = measurements?.get(node.id);
+    const editorReplacesCard = !presentation?.touch && presentation?.editorNodeId === node.id && node.kind === "generation";
     const base = {
       id: node.id,
       position: { ...(presentation?.preview?.nodeId === node.id ? presentation.preview.position : node.position) },
       ...(measured ? { measured: { ...measured } } : {}),
       selected: node.id === active.selectedNodeId,
-      draggable: !readOnly && !presentation?.touch && !presentation?.capturedDrag,
-      connectable: !readOnly && !presentation?.touch,
+      draggable: !readOnly && !presentation?.touch && !presentation?.capturedDrag && !editorReplacesCard,
+      connectable: !readOnly && !presentation?.touch && graphView && presentation?.tool !== "pan" && !editorReplacesCard,
       deletable: !readOnly,
-      selectable: true,
-      focusable: true,
+      selectable: presentation?.tool !== "pan" && !editorReplacesCard,
+      focusable: !editorReplacesCard,
+      ...(editorReplacesCard ? { domAttributes: { inert: true, "aria-hidden": true }, style: { pointerEvents: "none" as const } } : {}),
       dragHandle: `.${CANVAS_DRAG_HANDLE}`,
       ariaLabel: `${CANVAS_NODE_LABELS[node.kind]}节点`,
     };
-    const data = { canvasId, readOnly, actions, previewOnly: presentation?.touch ?? false, editorOpen: presentation?.editorNodeId === node.id };
+    const data = { canvasId, readOnly, actions, graphView, previewOnly: presentation?.touch ?? false, editorOpen: presentation?.editorNodeId === node.id, editorReplacesCard };
     switch (node.kind) {
       case "prompt": return { ...base, type: "prompt", data: { ...data, node } };
       case "reference": return { ...base, type: "reference", data: { ...data, node, reference: active.references[node.id] ?? null } };
-      case "generation": return { ...base, type: "generation", data: { ...data, node,
+      case "generation": { const context = canvasGenerationPrompt(active.scene, node.id); return { ...base, type: "generation", data: { ...data, node,
         referenceCount: active.scene.edges.filter((edge) => edge.kind === "image-input" && edge.target === node.id).length,
-        hasPrompt: active.scene.edges.some((edge) => edge.kind === "prompt-input" && edge.target === node.id),
+        hasPrompt: context.sourceId !== null, prompt: context.prompt, sharedPromptCount: context.sharedPromptCount,
         run: active.runs.filter((run) => run.nodeId === node.id).at(-1) ?? null,
-      } };
+      } }; }
       case "result": return { ...base, type: "result", data: { ...data, node, image: active.images[node.imageId] ?? null } };
     }
   });
@@ -76,8 +94,8 @@ export function updateCanvasNodeMeasurements(current: CanvasNodeMeasurements, li
   return changed ? next : current;
 }
 
-export function canvasFlowEdges(scene: CanvasLocalSceneV1, readOnly: boolean, selectedEdgeId: string | null, selectedNodeId?: string | null): CanvasFlowEdge[] {
-  return scene.edges.map((edge) => {
+export function canvasFlowEdges(scene: CanvasLocalSceneV1, readOnly: boolean, selectedEdgeId: string | null, selectedNodeId?: string | null, view: CanvasViewMode = "graph"): CanvasFlowEdge[] {
+  return scene.edges.filter((edge) => view === "graph" || edge.kind !== "prompt-input").map((edge) => {
     const input = edge.kind !== "output-provenance";
     const handles = edge.kind === "prompt-input"
       ? { sourceHandle: CANVAS_PORTS.promptOutput, targetHandle: CANVAS_PORTS.promptInput }

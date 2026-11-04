@@ -15,15 +15,16 @@ type CanvasNodeShellProps = {
   selected: boolean;
   readOnly: boolean;
   previewOnly?: boolean;
+  replaced?: boolean;
   onRemove: () => void;
   children: ReactNode;
 };
 
-export function CanvasNodeShell({ kind, selected, readOnly, previewOnly = false, onRemove, children }: CanvasNodeShellProps) {
+export function CanvasNodeShell({ kind, selected, readOnly, previewOnly = false, replaced = false, onRemove, children }: CanvasNodeShellProps) {
   return (
-    <article className={cn(styles.node, selected && styles.selectedNode, readOnly && styles.readOnlyNode)} data-node-kind={kind}>
+    <article className={cn(styles.node, selected && styles.selectedNode, readOnly && styles.readOnlyNode, replaced && styles.replacedCard)} data-node-kind={kind} inert={replaced || undefined}>
       <header className={cn(styles.nodeHeader, !readOnly && !previewOnly && CANVAS_DRAG_HANDLE)}>
-        <span className={styles.nodeKind}>{CANVAS_NODE_LABELS[kind]}</span>
+        <span className={styles.nodeKind}>{kind === "generation" ? "图片创作" : CANVAS_NODE_LABELS[kind]}</span>
         {!readOnly && !previewOnly && <GripHorizontal aria-hidden className="size-4 text-[var(--ink-soft)]/50" />}
         {!readOnly && !previewOnly && (
           <button type="button" className={cn(CANVAS_INPUT_CLASS, styles.iconButton)} aria-label={`删除${CANVAS_NODE_LABELS[kind]}节点`} title="只移除节点，不删除作品或取消任务" onClick={(event) => { event.stopPropagation(); onRemove(); }}>

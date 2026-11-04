@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { Connection } from "@xyflow/react";
 
-import { canvasFlowEdges, canvasFlowNodes, canvasInsertionPosition, canvasNodeViewChanges, isCanvasPortConnection, isCanvasSaveShortcut, updateCanvasNodeMeasurements } from "@/components/create/canvas/renderer-adapter";
+import { canvasFlowEdges, canvasFlowNodes, canvasGenerationPrompt, canvasInsertionPosition, canvasNodeViewChanges, canvasVisibleNodeId, isCanvasPortConnection, isCanvasSaveShortcut, updateCanvasNodeMeasurements } from "@/components/create/canvas/renderer-adapter";
 import { CANVAS_PORTS } from "@/components/create/canvas/renderer-constants";
 import type { CanvasActiveView } from "@/components/create/canvas/controller-types";
 import type { CanvasLocalSceneV1 } from "@/lib/canvas/contracts";
@@ -75,6 +75,57 @@ describe("controlled canvas renderer adapter", () => {
     projected[0].measured!.height = 500;
     expect(measurements.get(promptId)).toEqual({ width: 288, height: 260 });
     expect(JSON.stringify(view)).toBe(original);
+  });
+
+  it("folds only presentation and derives prompt/shared context without changing old graph identities", () => {
+    const view = active();
+    const second = canvasUuid(20), note = canvasUuid(21);
+    view.scene.nodes.push({ id: second, kind: "generation", parameters: canvasDefaults, position: { x: 1300, y: -700 } }, { id: note, kind: "prompt", text: "standalone", position: { x: -900, y: 1400 } });
+    view.scene.edges.push({ id: canvasUuid(22), kind: "prompt-input", source: promptId, target: second });
+    const before = JSON.stringify(view);
+    const measurements = new Map([[promptId, { width: 288, height: 260 }]]);
+    const folded = canvasFlowNodes(view, false, canvasNodeActions(), measurements, { touch: false, view: "creation" });
+    expect(folded.map((node) => node.id)).toEqual([referenceId, generationId, resultId, second]);
+    expect(folded.find((node) => node.id === generationId)?.data).toMatchObject({ prompt: { id: promptId, text: "原始提示词" }, sharedPromptCount: 2 });
+    expect(folded.every((node) => !node.connectable)).toBe(true);
+    expect(canvasFlowEdges(view.scene, true, null, null, "creation").map((edge) => edge.id)).toEqual(view.scene.edges.filter((edge) => edge.kind !== "prompt-input").map((edge) => edge.id));
+    const full = canvasFlowNodes(view, false, canvasNodeActions(), measurements, { touch: false, view: "graph" });
+    expect(full.map((node) => node.id)).toEqual(view.scene.nodes.map((node) => node.id));
+    expect(full[0].measured).toEqual({ width: 288, height: 260 });
+    expect(canvasGenerationPrompt(view.scene, second).prompt?.id).toBe(promptId);
+    expect(canvasVisibleNodeId(view.scene, promptId, "creation")).toBeNull();
+    expect(canvasVisibleNodeId(view.scene, note, "creation")).toBeNull();
+    expect(canvasVisibleNodeId(view.scene, note, "graph")).toBe(note);
+    expect(JSON.stringify(view)).toBe(before);
+  });
+
+  it("resolves a private folded source to its generator and leaves absent prompts empty", () => {
+    const view = active();
+    expect(canvasVisibleNodeId(view.scene, promptId, "creation")).toBe(generationId);
+    view.scene.edges = view.scene.edges.filter((edge) => edge.kind !== "prompt-input");
+    expect(canvasGenerationPrompt(view.scene, generationId)).toEqual({ sourceId: null, prompt: null, sharedPromptCount: 0 });
+    expect(canvasVisibleNodeId(view.scene, promptId, "creation")).toBeNull();
+    expect(canvasVisibleNodeId(view.scene, "missing", "graph")).toBeNull();
+    const pan = canvasFlowNodes(view, false, canvasNodeActions(), undefined, { touch: false, capturedDrag: true, view: "graph", tool: "pan" });
+    expect(pan.every((node) => !node.draggable && !node.selectable && !node.connectable && node.focusable)).toBe(true);
+  });
+
+  it("makes the replaced generation wrapper noninteractive without losing measurements or graph identity", () => {
+    const view = active();
+    const measurements = new Map([[generationId, { width: 320, height: 310 }]]);
+    const before = JSON.stringify(view);
+    const replaced = canvasFlowNodes(view, false, canvasNodeActions(), measurements, { touch: false, editorNodeId: generationId, view: "creation" }).find((node) => node.id === generationId)!;
+    expect(replaced).toMatchObject({
+      id: generationId, measured: { width: 320, height: 310 }, focusable: false, selectable: false, draggable: false, connectable: false,
+      domAttributes: { inert: true, "aria-hidden": true }, style: { pointerEvents: "none" }, data: { editorReplacesCard: true },
+    });
+    const closed = canvasFlowNodes(view, false, canvasNodeActions(), measurements, { touch: false, view: "creation" }).find((node) => node.id === generationId)!;
+    expect(closed).toMatchObject({ focusable: true, selectable: true, measured: { width: 320, height: 310 } });
+    expect(closed.domAttributes?.inert).not.toBe(true);
+    expect(closed.style?.pointerEvents).not.toBe("none");
+    const touch = canvasFlowNodes(view, false, canvasNodeActions(), measurements, { touch: true, editorNodeId: generationId, view: "creation" }).find((node) => node.id === generationId)!;
+    expect(touch).toMatchObject({ focusable: true, selectable: true, data: { editorReplacesCard: false } });
+    expect(JSON.stringify(view)).toBe(before);
   });
 
   it("prunes removed measurements and ignores stale-node, malformed and nonmeasurement changes", () => {

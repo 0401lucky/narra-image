@@ -12,7 +12,7 @@ import styles from "../canvas-stage.module.css";
 import { CanvasNodeShell, CanvasPort } from "./node-shell";
 
 export function CanvasResultNode({ data, selected }: NodeProps<CanvasResultFlowNode>) {
-  const portsReadOnly = data.readOnly || Boolean(data.previewOnly);
+  const portsReadOnly = data.readOnly || Boolean(data.previewOnly) || data.graphView === false;
   return <CanvasNodeShell kind="result" selected={selected} readOnly={data.readOnly} previewOnly={data.previewOnly} onRemove={() => data.actions.removeNode(data.node.id)}>
     <CanvasResultContent data={data} />
     <CanvasPort id={CANVAS_PORTS.provenanceInput} type="target" label="原始生成来源" variant="provenance" readOnly={portsReadOnly} />

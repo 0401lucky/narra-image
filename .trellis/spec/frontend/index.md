@@ -24,7 +24,8 @@
 | [Homepage Interactions](./homepage-interactions.md) | 首页字体/导航隔离、分页竞争、公开提示词操作及六组动效生命周期 | Active |
 | [Quality Guidelines](./quality-guidelines.md) | lint/tsc/vitest/构建命令、mock 模式、DB 哨兵与验证 wrapper | Active |
 | [Generation Worker Contracts](./generation-worker-contracts.md) | Node/Go/PostgreSQL 生成生命周期与契约验证 | Active |
-| [Canvas Studio](./canvas-studio.md) | 图片优先原子创建/缩略参考、可见位置/捕获导入、上下文 composer/整图拖动、账户草稿运行与真机验收边界 | Active |
+| [Canvas Studio](./canvas-studio.md) | 合一创作卡/高级图谱、底部工具与原子参考、稳定编辑/整图拖动、账户草稿运行与真机验收边界 | Active |
+| [Canvas Presentation](./canvas-presentation.md) | 创作/图谱投影、外层节点命中、工具切换、同卡编辑与底部浮层避让 | Active |
 
 ---
 
@@ -36,7 +37,7 @@
 - 修改精选、公开图片详情或提示词复用时读 [Public Work Data](./public-work-data.md)，不能把组件隐藏当作数据脱敏。
 - 修改首页视觉、画廊交互或首页导航变体时读 [Homepage Interactions](./homepage-interactions.md)，保留默认路由与草稿契约。
 - 提交前按 [Quality Guidelines](./quality-guidelines.md) 的验证命令执行。
-- 修改双模式创作台、画布控制器或 renderer 时读 [Canvas Studio](./canvas-studio.md)，并与 operations 的 Canvas Contracts 对照检查。
+- 修改双模式创作台、画布控制器或 renderer 时读 [Canvas Studio](./canvas-studio.md)，并与 operations 的 Canvas Contracts 对照检查；改画布节点、工具、编辑和定位同时读 [Canvas Presentation](./canvas-presentation.md)。
 
 ---
 

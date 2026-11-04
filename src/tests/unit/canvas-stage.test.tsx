@@ -1,5 +1,6 @@
 import { act, cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import type { ReactElement } from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { CanvasStage } from "@/components/create/parts/canvas-stage";
@@ -23,6 +24,23 @@ function fixture(options: Partial<CanvasControllerOptions> = {}) {
 function file(name = "original.png") { return new File(["png"], name, { type: "image/png", lastModified: 1 }); }
 function nodeElement(id: string) { return document.querySelector<HTMLElement>(`.react-flow__node[data-id="${id}"]`)!; }
 async function settle() { await act(async () => { await new Promise((resolve) => setTimeout(resolve, 35)); }); }
+
+function openGraph() {
+  const toggle = screen.queryByRole("button", { name: "高级图谱" });
+  if (toggle?.getAttribute("aria-pressed") === "false") fireEvent.click(toggle);
+}
+function openAdvanced() {
+  for (const label of ["更多设置与连接", "高级连接 · 提示词来源与参考顺序"]) {
+    const summary = screen.queryByText(label);
+    if (summary && !summary.closest("details")?.open) fireEvent.click(summary);
+  }
+}
+// These retained compatibility regressions intentionally exercise the full graph.
+function renderGraph(element: ReactElement) {
+  const mounted = render(element);
+  openGraph(); openAdvanced();
+  return mounted;
+}
 
 beforeEach(() => {
   restoreGeometry = installCanvasDom();
@@ -48,15 +66,15 @@ describe("real controlled canvas stage", () => {
     await screen.findByText("从一个想法开始");
     expect(f.controller.getSnapshot().active?.scene).toMatchObject({ nodes: [], edges: [], runBindings: [] });
     await userEvent.click(screen.getByRole("button", { name: "创作第一张图片" }));
-    await screen.findByRole("textbox", { name: "节点提示词" });
+    await screen.findByRole("textbox", { name: "创作提示词" });
     const first = f.controller.getSnapshot().activeCanvasId!;
-    fireEvent.change(screen.getByRole("textbox", { name: "节点提示词" }), { target: { value: "仅属于第一张画布" } });
+    fireEvent.change(screen.getByRole("textbox", { name: "创作提示词" }), { target: { value: "仅属于第一张画布" } });
     await userEvent.click(screen.getByRole("button", { name: "新建空白画布" }));
     await waitFor(() => expect(f.controller.getSnapshot().activeCanvasId).not.toBe(first));
-    expect(screen.queryByRole("textbox", { name: "节点提示词" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("textbox", { name: "创作提示词" })).not.toBeInTheDocument();
     expect(f.controller.getSnapshot().active?.scene.nodes).toHaveLength(0);
     await act(() => f.controller.selectCanvas(first));
-    expect(await screen.findByRole("textbox", { name: "节点提示词" })).toHaveValue("仅属于第一张画布");
+    expect(await screen.findByRole("textbox", { name: "创作提示词" })).toHaveValue("仅属于第一张画布");
     expect(f.api.port.submit).not.toHaveBeenCalled();
     expect(screen.queryByText(/复制画布|最近图片|导入对话/)).not.toBeInTheDocument();
   });
@@ -64,7 +82,7 @@ describe("real controlled canvas stage", () => {
   it("keeps prompt composition, text selection, Enter/Delete and wheel local instead of running or moving nodes", async () => {
     const f = fixture();
     const graph = await f.newGraph();
-    render(<CanvasStageHarness controller={f.controller} />);
+    renderGraph(<CanvasStageHarness controller={f.controller} />);
     const textarea = await screen.findByRole("textbox", { name: "节点提示词" });
     await settle();
     const position = f.controller.getSnapshot().active!.scene.nodes[0].position;
@@ -90,7 +108,7 @@ describe("real controlled canvas stage", () => {
     const f = fixture();
     const { canvasId, promptId } = await f.newGraph();
     f.controller.updatePrompt(canvasId, promptId, "");
-    render(<CanvasStageHarness controller={f.controller} />);
+    renderGraph(<CanvasStageHarness controller={f.controller} />);
     const textarea = await screen.findByRole("textbox", { name: "节点提示词" }) as HTMLTextAreaElement;
     await settle();
     act(() => textarea.focus());
@@ -116,7 +134,7 @@ describe("real controlled canvas stage", () => {
   it("adopts later controller text without replaying the prompt's earlier synchronous local draft", async () => {
     const f = fixture();
     const { canvasId, promptId } = await f.newGraph();
-    const view = render(<CanvasStageHarness controller={f.controller} />);
+    const view = renderGraph(<CanvasStageHarness controller={f.controller} />);
     const textarea = await screen.findByRole("textbox", { name: "节点提示词" });
     await settle();
     act(() => textarea.focus());
@@ -132,11 +150,11 @@ describe("real controlled canvas stage", () => {
       expect(() => f.controller.updatePrompt(canvasId, promptId, "不允许的只读编辑")).toThrow(/当前画布仅支持查看/);
     });
     expect(screen.queryByRole("textbox", { name: "节点提示词" })).not.toBeInTheDocument();
-    expect(screen.getByText("新的本地输入")).toBeInTheDocument();
+    expect(within(nodeElement(promptId)).getByText("新的本地输入")).toBeInTheDocument();
     await act(async () => { f.controller.setReadOnly(false); f.controller.updatePrompt(canvasId, promptId, "控制器恢复的文本"); });
     expect(screen.getByRole("textbox", { name: "节点提示词" })).toHaveValue("控制器恢复的文本");
     view.unmount();
-    render(<CanvasStageHarness controller={f.controller} />);
+    renderGraph(<CanvasStageHarness controller={f.controller} />);
     expect(await screen.findByRole("textbox", { name: "节点提示词" })).toHaveValue("控制器恢复的文本");
     expect(f.api.port.submit).not.toHaveBeenCalled();
   });
@@ -155,7 +173,7 @@ describe("real controlled canvas stage", () => {
     const prompt = before.nodes.find((node) => node.id === promptId);
     expect(prompt?.kind).toBe("prompt");
     expect(canvasJsonByteLength({ ...before, nodes: before.nodes.map((node) => node.id === promptId ? { ...node, text } : node) })).toBeGreaterThan(CANVAS_LIMITS.sceneBytes);
-    render(<CanvasStageHarness controller={f.controller} />);
+    renderGraph(<CanvasStageHarness controller={f.controller} />);
     await settle();
     const textarea = within(nodeElement(promptId)).getByRole("textbox", { name: "节点提示词" });
     fireEvent.input(textarea, { target: { value: text }, inputType: "insertFromPaste" });
@@ -172,7 +190,7 @@ describe("real controlled canvas stage", () => {
     const f = fixture();
     const { canvasId, promptId, nodeId } = await f.newGraph();
     f.controller.selectNode(canvasId, promptId);
-    render(<><CanvasStageHarness controller={f.controller} /><button type="button">工作台图片查看操作</button></>);
+    renderGraph(<><CanvasStageHarness controller={f.controller} /><button type="button">工作台图片查看操作</button></>);
     await settle();
     const before = f.controller.getSnapshot().active!.scene;
     for (const target of [screen.getByRole("button", { name: "重命名画布" }), screen.getByRole("button", { name: "新建空白画布" }), screen.getByRole("button", { name: "工作台图片查看操作" })]) {
@@ -195,10 +213,10 @@ describe("real controlled canvas stage", () => {
     const f = fixture();
     const { canvasId, nodeId } = await f.newGraph();
     f.controller.selectNode(canvasId, nodeId);
-    render(<CanvasStageHarness controller={f.controller} />);
+    renderGraph(<CanvasStageHarness controller={f.controller} />);
     await settle();
     const before = f.controller.getSnapshot().active!.scene;
-    const settings = screen.getByRole("button", { name: "设置生成节点参数" });
+    const settings = screen.getByRole("button", { name: "编辑所选节点" });
     act(() => settings.focus());
     for (const key of ["ArrowRight", "Delete", "Backspace"]) {
       fireEvent.keyDown(settings, { key, code: key });
@@ -215,7 +233,7 @@ describe("real controlled canvas stage", () => {
   it("keeps keyboard selection and deletion of input edges without removing their endpoint cards", async () => {
     const f = fixture();
     await f.newGraph();
-    render(<CanvasStageHarness controller={f.controller} />);
+    renderGraph(<CanvasStageHarness controller={f.controller} />);
     await settle();
     const edge = screen.getByRole("group", { name: "提示词输入" });
     fireEvent.keyDown(edge, { key: "Enter", code: "Enter" });
@@ -233,11 +251,12 @@ describe("real controlled canvas stage", () => {
     const first = await f.newGraph();
     const delayed = deferred<never>();
     vi.mocked(f.api.port.create).mockImplementationOnce(() => delayed.promise);
-    render(<CanvasStageHarness controller={f.controller} />);
+    renderGraph(<CanvasStageHarness controller={f.controller} />);
     await userEvent.click(screen.getByRole("button", { name: "新建空白画布" }));
     const createdId = f.controller.getSnapshot().activeCanvasId!;
     expect(createdId).not.toBe(first.canvasId);
     await act(() => f.controller.selectCanvas(first.canvasId));
+    openGraph();
     await act(async () => { delayed.reject(new CanvasTransportError()); });
     expect(screen.queryByRole("alert")).not.toBeInTheDocument();
     expect(screen.getByRole("textbox", { name: "节点提示词" })).toHaveValue("frozen prompt");
@@ -255,7 +274,7 @@ describe("real controlled canvas stage", () => {
     const { canvasId } = await f.newGraph();
     f.controller.setViewport(canvasId, { x: -130, y: -85, zoom: 0.25 });
     const before = f.controller.getSnapshot().active!;
-    render(<CanvasStageHarness controller={f.controller} />);
+    renderGraph(<CanvasStageHarness controller={f.controller} />);
     await settle();
     expect(f.controller.getSnapshot().active!.document.editRevision).toBe(before.document.editRevision);
     expect(document.querySelector(".react-flow__viewport")).toHaveStyle({ transform: "translate(-130px,-85px) scale(0.25)" });
@@ -272,7 +291,7 @@ describe("real controlled canvas stage", () => {
     const f = fixture();
     const { canvasId, promptId, nodeId } = await f.newGraph();
     const referenceId = f.controller.importReference(canvasId, file(), { x: -300, y: 400 });
-    render(<CanvasStageHarness controller={f.controller} />);
+    renderGraph(<CanvasStageHarness controller={f.controller} />);
     await settle();
     const originals = [promptId, nodeId, referenceId].map(nodeElement);
     for (const node of originals) expect(node).toHaveStyle({ visibility: "visible" });
@@ -308,7 +327,7 @@ describe("real controlled canvas stage", () => {
   it("imports and replaces originals locally, releases card preview leases on unmount, and retains originals", async () => {
     const f = fixture();
     const { canvasId } = await f.newGraph();
-    const view = render(<CanvasStageHarness controller={f.controller} />);
+    const view = renderGraph(<CanvasStageHarness controller={f.controller} />);
     await userEvent.click(screen.getByRole("button", { name: "导入参考图" }));
     fireEvent.change(screen.getByLabelText("导入画布参考图文件"), { target: { files: [file()] } });
     const image = await screen.findByAltText("画布参考图");
@@ -331,7 +350,7 @@ describe("real controlled canvas stage", () => {
     view.unmount();
     expect(revokeObjectURL).toHaveBeenCalledWith("blob:canvas-test-2");
     expect(f.store.row("owner-one", canvasId)!.blobs).toHaveLength(originals.length);
-    render(<CanvasStageHarness controller={f.controller} />);
+    renderGraph(<CanvasStageHarness controller={f.controller} />);
     expect(await screen.findByAltText("画布参考图")).toHaveAttribute("src", "blob:canvas-test-3");
     expect(f.api.port.upload).not.toHaveBeenCalled();
     expect(f.api.port.submit).not.toHaveBeenCalled();
@@ -345,7 +364,7 @@ describe("real controlled canvas stage", () => {
     f.controller.connect(canvasId, first, nodeId);
     f.controller.connect(canvasId, second, nodeId);
     f.controller.selectNode(canvasId, nodeId);
-    render(<CanvasStageHarness controller={f.controller} />);
+    renderGraph(<CanvasStageHarness controller={f.controller} />);
     const inputs = screen.getByRole("list", { name: "有序参考图输入" });
     expect(within(inputs).getAllByRole("listitem")[0]).toHaveTextContent(first.slice(-6));
     expect(within(inputs).getAllByRole("listitem")[1]).toHaveTextContent(second.slice(-6));
@@ -356,7 +375,7 @@ describe("real controlled canvas stage", () => {
     fireEvent.change(screen.getByLabelText("选择参考图或结果"), { target: { value: second } });
     await userEvent.click(screen.getByRole("button", { name: "连接选择参考图或结果" }));
     expect(f.controller.getSnapshot().active!.scene.edges.filter((edge) => edge.kind === "image-input")).toMatchObject([{ source: first, ordinal: 1 }, { source: second, ordinal: 2 }]);
-    expect(within(screen.getByRole("complementary", { name: "节点编辑面板" })).getByText(/固定 1 张输出/)).toBeInTheDocument();
+    expect(within(screen.getByRole("complementary", { name: "节点编辑面板" })).getByText(/图生图每次固定输出 1 张/)).toBeInTheDocument();
     expect(screen.queryByLabelText("节点生成张数")).not.toBeInTheDocument();
     expect(f.api.port.submit).not.toHaveBeenCalled();
   });
@@ -368,7 +387,7 @@ describe("real controlled canvas stage", () => {
     const duplicate = f.controller.reuseReference(canvasId, original, { x: 100, y: 250 });
     f.controller.connect(canvasId, original, nodeId);
     f.controller.selectNode(canvasId, nodeId);
-    render(<CanvasStageHarness controller={f.controller} />);
+    renderGraph(<CanvasStageHarness controller={f.controller} />);
     fireEvent.change(screen.getByLabelText("选择参考图或结果"), { target: { value: duplicate } });
     await userEvent.click(screen.getByRole("button", { name: "连接选择参考图或结果" }));
     expect(screen.getByRole("alert")).toHaveTextContent(new CanvasContractError("CANVAS_DUPLICATE_INPUT").message);
@@ -380,7 +399,7 @@ describe("real controlled canvas stage", () => {
     const f = fixture();
     const { canvasId } = await f.newGraph();
     f.controller.disconnect(canvasId, f.controller.getSnapshot().active!.scene.edges[0].id);
-    render(<CanvasStageHarness controller={f.controller} />);
+    renderGraph(<CanvasStageHarness controller={f.controller} />);
     await settle();
     fireEvent.click(screen.getByLabelText("提示词输出"));
     fireEvent.click(screen.getByLabelText("生成节点参考图输入"));
@@ -396,7 +415,7 @@ describe("real controlled canvas stage", () => {
   it("removes a node without a bubbled stale selection, extra run or surviving incident input", async () => {
     const f = fixture();
     const { promptId, nodeId } = await f.newGraph();
-    render(<CanvasStageHarness controller={f.controller} />);
+    renderGraph(<CanvasStageHarness controller={f.controller} />);
     await userEvent.click(await screen.findByRole("button", { name: "删除提示词节点" }));
     await settle();
     expect(f.controller.getSnapshot().active!.scene.nodes.map((node) => node.id)).toEqual([nodeId]);
@@ -411,7 +430,7 @@ describe("real controlled canvas stage", () => {
     const { canvasId, nodeId } = await f.newGraph();
     f.controller.updateParameters(canvasId, nodeId, { count: 2 });
     const callbacks = canvasStageCallbacks();
-    render(<CanvasStageHarness controller={f.controller} {...callbacks} />);
+    renderGraph(<CanvasStageHarness controller={f.controller} {...callbacks} />);
     await userEvent.click(await screen.findByRole("button", { name: "运行此节点" }));
     await waitFor(() => expect(f.api.port.submit).toHaveBeenCalledTimes(1));
     const binding = f.controller.getSnapshot().active!.scene.runBindings[0];
@@ -437,13 +456,13 @@ describe("real controlled canvas stage", () => {
     const f = fixture();
     const { canvasId, nodeId } = await f.newGraph();
     vi.mocked(f.api.port.submit).mockRejectedValueOnce(new CanvasTransportError());
-    const view = render(<CanvasStageHarness controller={f.controller} />);
+    const view = renderGraph(<CanvasStageHarness controller={f.controller} />);
     await userEvent.click(await screen.findByRole("button", { name: "运行此节点" }));
     await screen.findByRole("button", { name: "重试原请求" });
     const first = vi.mocked(f.api.port.submit).mock.calls[0][0];
     expect(screen.getByRole("button", { name: "运行此节点" })).toBeDisabled();
     view.unmount();
-    render(<CanvasStageHarness controller={f.controller} />);
+    renderGraph(<CanvasStageHarness controller={f.controller} />);
     await settle();
     expect(f.api.port.submit).toHaveBeenCalledTimes(1);
     await userEvent.click(screen.getByRole("button", { name: "重试原请求" }));
@@ -457,7 +476,7 @@ describe("real controlled canvas stage", () => {
     const { canvasId, nodeId } = await f.newGraph();
     f.controller.selectNode(canvasId, nodeId);
     const callbacks = canvasStageCallbacks();
-    render(<CanvasStageHarness controller={f.controller} {...callbacks} />);
+    renderGraph(<CanvasStageHarness controller={f.controller} {...callbacks} />);
     fireEvent.change(screen.getByLabelText("节点平台渠道"), { target: { value: "another-channel" } });
     expect(screen.getByLabelText("节点模型")).toHaveValue("another-default");
     await userEvent.click(screen.getByRole("button", { name: "自填 API" }));
@@ -491,7 +510,7 @@ describe("real controlled canvas stage", () => {
     const f = fixture();
     const { canvasId, nodeId } = await f.newGraph();
     f.controller.selectNode(canvasId, nodeId);
-    render(<CanvasStageHarness controller={f.controller} />);
+    renderGraph(<CanvasStageHarness controller={f.controller} />);
     await userEvent.click(screen.getByRole("button", { name: "自填 API" }));
     const model = screen.getByLabelText("节点第三方模型");
     act(() => model.focus());
@@ -516,7 +535,7 @@ describe("real controlled canvas stage", () => {
     const delayed = deferred<void>();
     const save = vi.mocked(f.api.port.save).getMockImplementation()!;
     vi.mocked(f.api.port.save).mockImplementationOnce(async (...args) => { await delayed.promise; return save(...args); });
-    render(<CanvasStageHarness controller={f.controller} />);
+    renderGraph(<CanvasStageHarness controller={f.controller} />);
     await userEvent.click(screen.getByRole("button", { name: "保存到账户" }));
     await waitFor(() => expect(f.api.port.save).toHaveBeenCalledTimes(1));
     expect(screen.getAllByText("正在保存账户快照").length).toBeGreaterThan(0);
@@ -526,6 +545,7 @@ describe("real controlled canvas stage", () => {
     expect(f.controller.getSnapshot().activeCanvasId).toBe(second);
     await act(async () => { delayed.resolve(); });
     await act(() => f.controller.selectCanvas(first.canvasId));
+    openGraph();
     expect(await screen.findByRole("textbox", { name: "节点提示词" })).toHaveValue("保存途中更新的内容");
     expect(screen.getAllByText("有未同步修改").length).toBeGreaterThan(0);
     expect(f.api.documents.get(first.canvasId)?.scene?.nodes.find((node) => node.id === first.promptId)).toMatchObject({ text: "frozen prompt" });
@@ -535,7 +555,7 @@ describe("real controlled canvas stage", () => {
   it("requires explicit deletion confirmation and keeps metadata rename from marking edits saved", async () => {
     const f = fixture();
     const { canvasId } = await f.newGraph();
-    render(<CanvasStageHarness controller={f.controller} />);
+    renderGraph(<CanvasStageHarness controller={f.controller} />);
     await userEvent.click(screen.getByRole("button", { name: "重命名画布" }));
     fireEvent.change(screen.getByLabelText("画布名称"), { target: { value: "改名但未保存" } });
     await userEvent.click(screen.getByRole("button", { name: "确认重命名" }));
@@ -559,7 +579,7 @@ describe("real controlled canvas stage", () => {
     await f.controller.saveCanvas(canvasId);
     f.controller.updatePrompt(canvasId, promptId, "保留本地修改");
     vi.mocked(f.api.port.save).mockRejectedValueOnce(new CanvasContractError("CANVAS_REVISION_CONFLICT"));
-    render(<CanvasStageHarness controller={f.controller} />);
+    renderGraph(<CanvasStageHarness controller={f.controller} />);
     await userEvent.click(screen.getByRole("button", { name: "保存到账户" }));
     const reload = await screen.findByRole("button", { name: "重新载入账户快照" });
     expect(screen.getByRole("textbox", { name: "节点提示词" })).toHaveValue("保留本地修改");
@@ -578,7 +598,7 @@ describe("real controlled canvas stage", () => {
     const { canvasId } = await f.newGraph();
     f.store.setFailure(new CanvasDraftStoreError("quota"));
     await f.controller.flushLocal(canvasId);
-    render(<CanvasStageHarness controller={f.controller} />);
+    renderGraph(<CanvasStageHarness controller={f.controller} />);
     expect(screen.getByText("本地保存失败")).toBeInTheDocument();
     expect(await screen.findByRole("textbox", { name: "节点提示词" })).toHaveValue("frozen prompt");
     expect(screen.getByRole("button", { name: "保存到账户" })).toBeEnabled();
@@ -591,7 +611,7 @@ describe("real controlled canvas stage", () => {
     const refId = canvasUuid(301);
     f.api.documents.set(id, { canvas: metadata(id, { hasSavedSnapshot: true, lastSavedAt: "2026-10-29T00:00:00.000Z" }), scene: { schemaVersion: 1, nodes: [{ id: refId, kind: "reference", position: { x: -100, y: 50 }, source: { kind: "imported", assetId: "expired-original" } }], edges: [], runBindings: [], viewport: { x: 0, y: 0, zoom: 1 } } });
     await f.controller.start();
-    render(<CanvasStageHarness controller={f.controller} />);
+    renderGraph(<CanvasStageHarness controller={f.controller} />);
     expect(await screen.findByText("原图不可用，请重新选择文件")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "重新上传" })).toBeEnabled();
     await userEvent.click(screen.getByRole("button", { name: "重新上传" }));
@@ -611,7 +631,7 @@ describe("real controlled canvas stage", () => {
       scene: { schemaVersion: 1, nodes: [{ id: resultId, kind: "result", position: { x: -100, y: -50 }, imageId: image.id, jobId: job.id }], edges: [], runBindings: [], viewport: { x: -50, y: 20, zoom: 0.25 } },
     });
     await f.controller.start();
-    render(<CanvasStageHarness controller={f.controller} />);
+    renderGraph(<CanvasStageHarness controller={f.controller} />);
     await settle();
     const before = f.controller.getSnapshot().active!;
     expect(screen.getByText("结果图片暂不可用")).toBeInTheDocument();
@@ -643,7 +663,7 @@ describe("real controlled canvas stage", () => {
     const other = await f.controller.newCanvas("手机查看的另一张画布");
     await f.controller.selectCanvas(canvasId);
     const callbacks = canvasStageCallbacks();
-    render(<CanvasStageHarness controller={f.controller} {...callbacks} />);
+    renderGraph(<CanvasStageHarness controller={f.controller} {...callbacks} />);
     await settle();
     await act(async () => { f.controller.setReadOnly(true); });
     const before = f.controller.getSnapshot().active!;
@@ -685,7 +705,7 @@ describe("real controlled canvas stage", () => {
     const f = fixture({ enabled: false });
     await f.controller.start();
     const callbacks = canvasStageCallbacks();
-    render(<CanvasStage {...callbacks} snapshot={f.controller.getSnapshot()} controller={f.controller} channels={canvasStageChannels} />);
+    renderGraph(<CanvasStage {...callbacks} snapshot={f.controller.getSnapshot()} controller={f.controller} channels={canvasStageChannels} />);
     expect(screen.getByText("画布暂未开放")).toBeInTheDocument();
     await userEvent.click(screen.getByRole("button", { name: "返回对话" }));
     expect(callbacks.onReturnToChat).toHaveBeenCalledOnce();

@@ -84,6 +84,7 @@ pnpm verify:e2e
 - CDP `Runtime.evaluate(returnByValue)` 只返回 scalars/plain projections，DOM-reference setup 用 `void`；selector 用 `JSON.stringify`，避免内外引号损坏或循环 DOM 序列化。gesture 不可靠先用 plain allowed/blocked controls 校准，不把 unsupported command、程序设置 scale 或 screenshot 当 native pass。
 - 分别报告 native IndexedDB、exact original download bytes、fake loopback identity/HTTP、desktop-CDP dimensions/touch/composition、真实手机/native IME/OS chooser/download、真实服务和 actual CI。物理 iOS/Android 缺证据时 MA/device/rollout 保持 pending，不由自动化 mock pass 填充。
 - 保存 red receipts 和独立 exit/deadline/duration/stdout/stderr；使用新标签不覆盖旧失败。task-owned before-image source copies加 `.before` 后缀，保持 exact bytes/hash，避免 `.ts/.mjs` 备份意外进入 lint/type inputs。未提交 baseline 以 byte identities 归属，不能用 `git diff HEAD` 认领已存在 untracked 源码。
+- 合一创作卡的浏览器验证须区分 canonical 两节点与默认一张可见卡。覆盖完整/共享/独立 graph 切换、同卡关闭再点、低/高 zoom 下外层 Flow wrapper 的 inert/焦点/命中、原生 hand-pan 后底部图片 toolbar 与 dock/camera 无遮挡。无单测失败不等于这些组合交互已经正确；新增 component 后 fixture 的生产文件集合也须重新枚举，不能只同步旧 manifest 已知路径。
 
 ## 8. 隔离检查与 Node API 包装
 

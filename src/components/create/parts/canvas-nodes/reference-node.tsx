@@ -16,7 +16,7 @@ import { CanvasNodeShell, CanvasPort } from "./node-shell";
 export function CanvasReferenceNode({ data, selected }: NodeProps<CanvasReferenceFlowNode>) {
   return <CanvasNodeShell kind="reference" selected={selected} readOnly={data.readOnly} previewOnly={data.previewOnly} onRemove={() => data.actions.removeNode(data.node.id)}>
     <CanvasReferenceContent data={data} />
-    <CanvasPort id={CANVAS_PORTS.imageOutput} type="source" label="参考图输出" readOnly={data.readOnly || Boolean(data.previewOnly)} />
+    <CanvasPort id={CANVAS_PORTS.imageOutput} type="source" label="参考图输出" readOnly={data.readOnly || Boolean(data.previewOnly) || data.graphView === false} />
   </CanvasNodeShell>;
 }
 

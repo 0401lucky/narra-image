@@ -4,6 +4,11 @@ import { canvasComposerPlacement } from "@/components/create/canvas/composer-pla
 import { beginCanvasMove, previewCanvasMove } from "@/components/create/canvas/mobile-interaction";
 
 describe("screen-sized composer placement", () => {
+  it("anchors the unified editor over the selected card while bounding its screen-sized controls", () => {
+    const bounds = { left: 200, top: 100, width: 1200, height: 700 };
+    expect(canvasComposerPlacement(bounds, { left: 300, top: 180, width: 80, height: 90 }, { width: 420, height: 460 }, false, 12, true)).toEqual({ left: 300, top: 180, width: 420, height: 460 });
+    expect(canvasComposerPlacement(bounds, { left: 1350, top: 750, width: 80, height: 90 }, { width: 420, height: 460 }, false, 12, true)).toEqual({ left: 968, top: 328, width: 420, height: 460 });
+  });
   it("prefers an available side without scaling controls with the world card", () => {
     const bounds = { left: 200, top: 100, width: 1200, height: 800 };
     const placed = canvasComposerPlacement(bounds, { left: 300, top: 200, width: 100, height: 80 }, { width: 384, height: 620 }, false);

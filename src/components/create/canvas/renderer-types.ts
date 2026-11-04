@@ -17,6 +17,8 @@ import type { CanvasEditorPort } from "./editor-state";
 
 export type CanvasNodeTarget = { canvasId: string; nodeId: string };
 export type CanvasNodeMeasurements = ReadonlyMap<string, { width: number; height: number }>;
+export type CanvasViewMode = "creation" | "graph";
+export type CanvasTool = "select" | "pan";
 
 // Display URLs and preview leases are runtime values, never scene fields.
 export type CanvasImageTarget = CanvasNodeTarget & { url: string } & (
@@ -57,11 +59,13 @@ type CanvasNodeData<T> = {
   readOnly: boolean;
   previewOnly?: boolean;
   editorOpen?: boolean;
+  graphView?: boolean;
+  editorReplacesCard?: boolean;
   actions: CanvasNodeActions;
 };
 export type CanvasPromptFlowNode = Node<CanvasNodeData<CanvasPromptNodeV1>, "prompt">;
 export type CanvasReferenceFlowNode = Node<CanvasNodeData<CanvasLocalReferenceNodeV1> & { reference: CanvasReferenceView | null }, "reference">;
-export type CanvasGenerationFlowNode = Node<CanvasNodeData<CanvasGenerationNodeV1> & { referenceCount: number; hasPrompt: boolean; run: CanvasRunView | null }, "generation">;
+export type CanvasGenerationFlowNode = Node<CanvasNodeData<CanvasGenerationNodeV1> & { referenceCount: number; hasPrompt: boolean; prompt: CanvasPromptNodeV1 | null; sharedPromptCount: number; run: CanvasRunView | null }, "generation">;
 export type CanvasResultFlowNode = Node<CanvasNodeData<CanvasResultNodeV1> & { image: CanvasRuntimeImageDtoV1 | null }, "result">;
 export type CanvasFlowNode = CanvasPromptFlowNode | CanvasReferenceFlowNode | CanvasGenerationFlowNode | CanvasResultFlowNode;
 export type CanvasFlowEdge = Edge<{ edge: CanvasEdgeV1 }>;

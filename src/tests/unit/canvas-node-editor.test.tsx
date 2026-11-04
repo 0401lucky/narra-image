@@ -30,6 +30,10 @@ async function edit(nodeId: string) {
   fireEvent.change(screen.getByRole("combobox", { name: "选择画布节点" }), { target: { value: nodeId } });
   fireEvent.click(screen.getByRole("button", { name: "编辑所选节点" }));
   await screen.findByRole("complementary", { name: "节点编辑面板" });
+  for (const label of ["更多设置与连接", "高级连接 · 提示词来源与参考顺序"]) {
+    const summary = screen.queryByText(label);
+    if (summary && !summary.closest("details")?.open) fireEvent.click(summary);
+  }
 }
 
 function PersistentEditor({ controller, visible = true, touch = true }: { controller: CanvasController; visible?: boolean; touch?: boolean }) {
@@ -109,6 +113,7 @@ describe("actual phone node editor and controller", () => {
     const f = fixture();
     const { canvasId, promptId } = await f.newGraph();
     render(<PersistentEditor controller={f.controller} />);
+    await userEvent.click(screen.getByRole("button", { name: "高级图谱" }));
     await settle();
     fireEvent.click(nodeElement(promptId));
     expect(screen.queryByRole("complementary", { name: "节点编辑面板" })).not.toBeInTheDocument();

@@ -210,7 +210,7 @@ describe("mounted studio canvas integration", () => {
     const first = controller.getSnapshot().activeCanvasId!;
     expect(controller.getSnapshot().active!.scene).toMatchObject({ nodes: [], edges: [], runBindings: [] });
     fireEvent.click(screen.getByRole("button", { name: "创作第一张图片" }));
-    fireEvent.change(await screen.findByRole("textbox", { name: "节点提示词" }), { target: { value: "Canvas draft only" } });
+    fireEvent.change(await screen.findByRole("textbox", { name: "创作提示词" }), { target: { value: "Canvas draft only" } });
     const generation = controller.getSnapshot().active!.scene.nodes.find((node) => node.kind === "generation")!;
     expect(generation.parameters).toMatchObject({ model: "image-account-default", providerMode: "built_in", channelId: "channel-account", size: "auto", count: 1 });
     act(() => controller.selectNode(first, generation.id));
@@ -221,12 +221,12 @@ describe("mounted studio canvas integration", () => {
     await openCanvas();
     expect(controls.stage!.controller).toBe(controller);
     expect(controller.getSnapshot().active!.selectedNodeId).toBe(generation.id);
-    expect(screen.getByRole("textbox", { name: "节点提示词" })).toHaveValue("Canvas draft only");
+    expect(screen.getByRole("textbox", { name: "创作提示词" })).toHaveValue("Canvas draft only");
     await userEvent.click(screen.getByRole("button", { name: "新建空白画布" }));
     await waitFor(() => expect(controller.getSnapshot().activeCanvasId).not.toBe(first));
     expect(controller.getSnapshot().active!.scene.nodes).toEqual([]);
     await act(() => controller.selectCanvas(first));
-    expect(screen.getByRole("textbox", { name: "节点提示词" })).toHaveValue("Canvas draft only");
+    expect(screen.getByRole("textbox", { name: "创作提示词" })).toHaveValue("Canvas draft only");
     expect(sends()).toEqual([]);
     expect(requests.some((request) => request.path === "/api/me/conversations")).toBe(false);
   });
@@ -253,6 +253,7 @@ describe("mounted studio canvas integration", () => {
     const controller = await openCanvas();
     await waitFor(() => expect(controller.getSnapshot().active).not.toBeNull());
     expect(controller.getSnapshot().readOnly).toBe(false);
+    await userEvent.click(screen.getByRole("button", { name: "高级图谱" }));
     for (const name of ["新建空白画布", "保存到账户", "提示词", "生成节点"]) expect(screen.getByRole("button", { name })).toBeEnabled();
     fireEvent.click(screen.getByRole("button", { name: "提示词" }));
     fireEvent.click(await screen.findByRole("button", { name: "编辑所选节点" }));
@@ -292,6 +293,7 @@ describe("mounted studio canvas integration", () => {
     serverOwner = "owner-a";
     view.rerender(<GeneratorStudio {...baseProps} />);
     await screen.findByRole("region", { name: "画布工作区" });
+    await userEvent.click(await screen.findByRole("button", { name: "高级图谱" }));
     await screen.findByRole("textbox", { name: "节点提示词" });
     expect(controls.stage!.controller!.getSnapshot().activeCanvasId).toBe(first.canvasId);
     expect(preferences.get("narra_studio_mode_v1:owner-a")).toBe("canvas");
@@ -306,6 +308,7 @@ describe("mounted studio canvas integration", () => {
     const first = await graph(controller);
     fireEvent.change(screen.getByLabelText("选择画布节点"), { target: { value: first.nodeId } });
     fireEvent.click(screen.getByRole("button", { name: "编辑所选节点" }));
+    await userEvent.click(screen.getByText("更多设置与连接"));
     const seed = await screen.findByLabelText("节点随机种子（可选）");
     act(() => seed.focus());
     fireEvent.input(seed, { target: { value: "-" } });
@@ -529,6 +532,7 @@ describe("mounted studio canvas integration", () => {
     await waitFor(() => expect(router.refresh).toHaveBeenCalledTimes(1));
     view.rerender(<GeneratorStudio {...baseProps} currentUser={{ ...baseProps.currentUser!, credits: 499 }} initialPrompt="Refreshed server prompt" channels={[...canvasStageChannels]} />);
     expect(controller.getSnapshot().activeCanvasId).toBe(target.canvasId);
+    await userEvent.click(screen.getByRole("button", { name: "高级图谱" }));
     expect(await screen.findByRole("textbox", { name: "节点提示词" })).toHaveValue("Canvas original prompt");
     switchMode("对话");
     expect(composer()).toHaveValue("Chat balance draft");
@@ -658,6 +662,7 @@ describe("mounted studio canvas integration", () => {
     expect(await screen.findByText("画布暂时无法显示")).toBeInTheDocument();
     controls.failStage = false;
     fireEvent.click(screen.getByRole("button", { name: "重试加载画布" }));
+    await userEvent.click(await screen.findByRole("button", { name: "高级图谱" }));
     expect(await screen.findByRole("textbox", { name: "节点提示词" })).toHaveValue("Canvas original prompt");
     expect(controls.stage!.controller).toBe(controller);
     expect(controller.getSnapshot().activeCanvasId).toBe(target.canvasId);
@@ -700,6 +705,7 @@ describe("mounted studio canvas integration", () => {
     expect(store.row("owner-a", target.canvasId)!.envelope.outbox[0]).toMatchObject({ runId: original.runId, phase: "uncertain" });
     first.unmount();
     render(<GeneratorStudio {...baseProps} />);
+    await userEvent.click(await screen.findByRole("button", { name: "高级图谱" }));
     await screen.findByRole("textbox", { name: "节点提示词" });
     await waitFor(() => expect(requests.some((request) => request.path === `/api/me/canvas-runs/${original.runId}` && request.method === "GET")).toBe(true));
     expect(sends()).toHaveLength(1);
