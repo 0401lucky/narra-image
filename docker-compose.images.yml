@@ -1,0 +1,10 @@
+# Explicit prebuilt-image overlay; Docker Compose v2.24.4+.
+services:
+  migrate:
+    image: ${APP_IMAGE:?Set APP_IMAGE to the published App source tag or digest}
+    build: !reset null
+  worker:
+    image: ${WORKER_IMAGE:?Set WORKER_IMAGE to the matching published Worker source tag or digest}
+    build: !reset null
+  app:
+    image: ${APP_IMAGE:?Set APP_IMAGE to the published App source tag or digest}

@@ -50,7 +50,7 @@
 ## 7. 验证入口
 
 ```powershell
-pnpm verify:ci            # tsc + lint + vitest + worker 契约 + go + next build
+pnpm verify:ci            # Prisma generate + tsc + lint + vitest + worker 契约 + go + next build
 pnpm verify:migrations    # 空库/baseline/prehistory/failed/pgx 场景
 pnpm verify:e2e           # embedded/dedicated/冲突/schema/DB 断连/失败传播
 pnpm verify:worker-contracts:db
@@ -60,6 +60,9 @@ docker compose -f docker-compose.e2e.yml config --quiet
 
 - 每个单元测试进程约 57s 独立截止；全量 vitest 进程独立 300s（单用例 30s）；migration/DB runner 与 E2E 使用各自更长独立截止，禁止嵌套进 60s 父截止。
 - GitHub Actions 的验证阶段只调用仓库内 wrapper（`.github/workflows/verify.yml`），不复制场景命令；安装依赖及明确的基础镜像准备仍在独立 prerequisite 步骤完成。
+- `verify:ci` 显式生成 Prisma Client 后才做 tsc；只有最后生产 build stage 注入合成 APP_URL/DB/auth/provider 环境，不能污染默认环境测试。安装依赖或后续 `pnpm build` 不能代替 typecheck 前的生成前置。
+- shared disposable PostgreSQL 的 ready probe 显式连接容器内 TCP 127.0.0.1:5432；默认 Unix socket 可能命中 init 临时服务，并在第一次 CREATE DATABASE 时遇到 shutting down。保留原20s ready/1s probe、owner与清理约束，不用盲目sleep增加时限。
+- `verify` 的 GHCR publisher 只在原仓库 main push 且三项验证成功后运行；固定SHA/内容digest、最小token权限、Public校验和镜像版Compose更新契约见 [Image Publishing](./image-publishing.md)。发布不代表生产部署。
 - E2E 资源随机命名、带 `com.narra.e2e.owner` label、PostgreSQL tmpfs。`scripts/lib/e2e-safety.mjs` 先验证本地 unix/npipe Docker endpoint 并固定连接，再检查所有本地基础镜像；缺失返回 2，不能拉取或回退其他数据库。
 - E2E 与 DB runner 复用 `local-docker-safety.mjs` 的 endpoint、OS-only env 和 owner-marked scratch 校验。`LocalDockerSession.pin(probe)` 前仅允许 context 读取；`prepare()` 后才允许容器命令；scratch/config 的 resolved path、owner 和空配置必须在使用及清理时核对。验证缺镜像的安全退出不等于验证成功创建/清理容器。
 - CI 在 wrapper 外显式准备 PostgreSQL17、Node24.22.1、Go1.25、Alpine3.22 四个 E2E 基础镜像；本地显式准备需用户授权。wrapper 只使用已核验的本地镜像/ID，保留 `--pull=false`/`--pull=never`，不能因缓存缺失自动联网拉镜像。

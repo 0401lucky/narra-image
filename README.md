@@ -183,6 +183,25 @@ pnpm build
 生产发布、历史库接管、探针和回滚步骤见
 [`docs/production-operations.md`](docs/production-operations.md)。
 
+### 使用预构建镜像更新（推荐）
+
+`main` 的 CI、migration 与 E2E 三项验证全部通过后，发布以下 Linux amd64 镜像：
+
+- `ghcr.io/0401lucky/narra-image-app`：Next.js 与内置 Worker，兼容 Embedded/Zeabur。
+- `ghcr.io/0401lucky/narra-image-worker`：独立 Go Worker，供 Dedicated Compose 使用。
+
+Actions 的 `Publish verified images` 摘要提供同一提交的两份 digest 与
+`sha-<完整提交号>` 标签。部署时设置配套的 `APP_IMAGE`、`WORKER_IMAGE`，使用
+`docker-compose.yml` 加 `docker-compose.images.yml`（Compose v2.24.4+）；不需要在
+服务器上编译。`latest` 只便于发现版本，两次拉取不是原子更新，部署应固定同一 SHA
+或摘要中的 digest。首次发布可能需要仓库维护者将两个 GHCR 包设为 Public。
+
+具体配置、备份、拉取、停服迁移、启动和回滚命令见
+[预构建镜像更新](docs/production-operations.md#预构建镜像与后续更新)。发布镜像不会自动
+更新任何生产服务器。
+
+### 从源码构建
+
 ```bash
 docker compose up --build -d
 ```

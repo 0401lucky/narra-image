@@ -35,6 +35,98 @@ Node.js 公告更换运行时。
 
 ## 2. 两种运行拓扑
 
+### 预构建镜像与后续更新
+
+镜像发布附加在现有 `verify` 工作流中，仅 `0401lucky/narra-image` 的 main push 且
+三个验证 job 全部成功时运行。PR、fork、失败或跳过验证都不能发布。构建目标是
+`linux/amd64`，沿用当前 Dockerfile/runtime；GitHub job token 仅在发布 job 具有
+packages write 权限，不需要维护 Docker Hub/PAT secret。
+
+| 镜像 | 用途 |
+| --- | --- |
+| `ghcr.io/0401lucky/narra-image-app` | Next.js、Embedded Worker、迁移和运维二进制 |
+| `ghcr.io/0401lucky/narra-image-worker` | Dedicated Go Worker 和运维二进制 |
+
+每次成功发布给出 `sha-<40位完整提交号>` 与两份 `@sha256:...` 内容地址。已存在且身份
+正确的 SHA 镜像会在重跑时复用，不覆盖其 digest。`latest` 只在两个固定镜像及匿名
+访问都验证后更新，并在更新前检查 main 仍指向本次提交。两个仓库的 alias 更新不是
+事务：中途网络故障会标红并留下部分状态，修复后重跑即可；部署不要单独拉两个 latest。
+选择同一成功摘要中的固定 SHA 配对，或直接使用两份 digest。
+
+#### 首次公开发布
+
+GHCR 首次创建的 package 默认可能是 Private，即使源码仓库公开。两个 SHA 镜像上传
+后，工作流会以不带 GitHub 凭据的 registry token 检查匿名访问；私有/不可访问时停止
+latest promotion，不能把登录后的 push 成功当作公开发布成功。
+
+维护者打开以下包的 Package settings，检查仓库访问授权并执行
+`Change visibility > Public`，然后在对应 Actions run 选择 `Re-run failed jobs`。
+已有 SHA 镜像保留，重跑不重写其 digest。不需要把 PAT 放进仓库。
+
+- https://github.com/users/0401lucky/packages/container/narra-image-app/settings
+- https://github.com/users/0401lucky/packages/container/narra-image-worker/settings
+
+首次 registry 权限/网络错误应按日志明确处理；不能把 401/403 或超时当成镜像不存在，
+也不能为通过发布而绕过验证或删除旧镜像。公开包允许无登录拉取。
+
+#### Dedicated 镜像部署
+
+使用 Docker Compose v2.24.4+。保留原部署目录、Compose project name 与 `.env` 的
+真实运行配置，不要复制一个新的 project name 导致另建数据库卷；首次部署先按第1节
+配置秘密及完整 DATABASE_URL。只需配套的两个 Compose 文件，不需要源码构建上下文。
+从成功发布的 Actions 摘要复制两份镜像身份，加入现有环境配置，例如：
+
+```dotenv
+APP_IMAGE=ghcr.io/0401lucky/narra-image-app:sha-<同一40位提交号>
+WORKER_IMAGE=ghcr.io/0401lucky/narra-image-worker:sha-<同一40位提交号>
+```
+
+也可分别填写摘要中的 `ghcr.io/...@sha256:...`。以下 Bash 函数始终使用镜像 overlay；
+它要求两个 selector，缺失时失败，并移除 base 的 build 配置。`config --quiet` 不输出
+含密钥的完整配置。
+
+```bash
+set -e
+dc() { docker compose -f docker-compose.yml -f docker-compose.images.yml "$@"; }
+dc config --quiet
+dc pull migrate worker app
+```
+
+首次安装还需显式 `dc pull db`，随后 `dc up -d --no-build --pull never --wait db`。
+后续更新不要顺带升级数据库镜像。开始更新前完成数据库及原图存储备份，记录当前
+App/Worker digest 和当前环境/Compose 版本，确认备份可恢复，然后按顺序执行：
+
+```bash
+# stop honors the existing graceful shutdown periods; no volume is removed.
+dc stop app worker
+dc up --no-build --pull never --no-deps --force-recreate \
+  --exit-code-from migrate --abort-on-container-exit migrate
+# Only continue after the migration command exits successfully.
+dc up -d --no-build --pull never --no-deps --wait worker
+dc up -d --no-build --pull never --no-deps --wait app
+dc ps
+```
+
+迁移失败必须停下，不启动新旧混合版本，不自动 baseline/repair/seed，不删除数据库卷。
+启动后检查 `/api/healthz`、`/api/readyz`、实际登录与生成流程；仅镜像构建成功不等于
+生产验收。不要把 `latest` 的变化交给后台 watcher 自动更新运行容器。
+
+#### 镜像回滚
+
+保留上一份配套 digest。回滚前先停止接收新流量，在当前版本容器仍可运行时执行：
+
+```bash
+dc exec -T worker /app/narra-rollback-preflight
+```
+
+只有退出0且完成第7节的安全核对才可以将两个 selector 一起切到旧版本并重建服务；
+新旧 schema 必须兼容。固定镜像版本不会回退数据库 schema，迁移造成的不可逆变更不能
+靠拉旧镜像修复。保留 database volume 和 additive schema，不使用 `down --volumes`。
+若预检失败或当前容器不可用，先人工排查，不用旧二进制强行绕过预检。
+
+Embedded/Zeabur 只需选用固定版本的完整 App 镜像，并保持下一节的运行配置；平台仍由
+维护者显式更新，不增加 SSH、自动部署或生产数据库操作。
+
 ### Embedded
 
 - `ENABLE_EMBEDDED_WORKER=true`

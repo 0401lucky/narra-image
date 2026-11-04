@@ -20,6 +20,9 @@ const FIXED_TARGETS = [
   "package.json",
   "scripts/tests/migration-safety.test.mjs",
   "scripts/tests/release-startup.test.mjs",
+  "scripts/tests/image-release.test.mjs",
+  "scripts/tests/ci-prerequisites.test.mjs",
+  "prisma/schema.prisma",
   "scripts/verify-worker-contracts.mjs",
   "scripts/verify-gateway.mjs",
   "src/tests/contracts/generation-contract.test.ts",
@@ -27,80 +30,102 @@ const FIXED_TARGETS = [
   "worker/cmd/rollback-preflight/main_test.go",
 ];
 
-const STAGES = [
-  {
-    label: "发布脚本 Node 单测",
-    executable: process.execPath,
-    args: [
-      "--test",
-      "scripts/tests/migration-safety.test.mjs",
-      "scripts/tests/release-startup.test.mjs",
-    ],
-    timeoutMs: UNIT_PROCESS_TIMEOUT_MS,
-  },
-  {
-    label: "TypeScript 类型检查",
-    executable: "pnpm",
-    args: ["exec", "tsc", "--noEmit"],
-    timeoutMs: 120_000,
-  },
-  {
-    label: "ESLint",
-    executable: "pnpm",
-    args: ["lint"],
-    timeoutMs: 180_000,
-  },
-  {
-    label: "Vitest 全量单测",
-    executable: "pnpm",
-    args: [
-      "exec",
-      "vitest",
-      "run",
-      "--reporter=dot",
-      "--testTimeout=30000",
-      "--exclude",
-      "src/tests/integration/worker-contracts/worker-contracts-db.test.ts",
-      "--exclude",
-      "src/tests/integration/canvas-contracts/canvas-contracts-db.test.ts",
-    ],
-    // 全量组件/单测进程独立截止；单个用例由 --testTimeout=30000 兜底。
-    // Sentinelled DB suites have independent worker/canvas wrappers and deadlines.
-    timeoutMs: 300_000,
-  },
-  {
-    label: "Worker TypeScript 契约",
-    executable: "pnpm",
-    args: ["verify:worker-contracts:ts"],
-    timeoutMs: 65_000,
-  },
-  {
-    label: "Worker Go 契约",
-    executable: "pnpm",
-    args: ["verify:worker-contracts:go"],
-    timeoutMs: 65_000,
-  },
-  {
-    label: "Go 全量测试",
-    executable: "go",
-    args: ["-C", "worker", "test", "-count=1", "-timeout=50s", "./..."],
-    timeoutMs: UNIT_PROCESS_TIMEOUT_MS,
-  },
-  {
-    label: "Go 全量构建",
-    executable: "go",
-    args: ["-C", "worker", "build", "./..."],
-    timeoutMs: 180_000,
-  },
-  {
-    label: "Next.js 生产构建",
-    executable: "pnpm",
-    args: ["build"],
-    timeoutMs: 600_000,
-  },
-];
+export function createCiStages(environment = process.env) {
+  return [
+    {
+      label: "发布脚本 Node 单测",
+      executable: process.execPath,
+      args: [
+        "--test",
+        "scripts/tests/migration-safety.test.mjs",
+        "scripts/tests/release-startup.test.mjs",
+        "scripts/tests/image-release.test.mjs",
+        "scripts/tests/ci-prerequisites.test.mjs",
+      ],
+      timeoutMs: UNIT_PROCESS_TIMEOUT_MS,
+    },
+    {
+      label: "生成 Prisma Client",
+      executable: "pnpm",
+      args: ["exec", "prisma", "generate"],
+      timeoutMs: 120_000,
+    },
+    {
+      label: "TypeScript 类型检查",
+      executable: "pnpm",
+      args: ["exec", "tsc", "--noEmit"],
+      timeoutMs: 120_000,
+    },
+    {
+      label: "ESLint",
+      executable: "pnpm",
+      args: ["lint"],
+      timeoutMs: 180_000,
+    },
+    {
+      label: "Vitest 全量单测",
+      executable: "pnpm",
+      args: [
+        "exec",
+        "vitest",
+        "run",
+        "--reporter=dot",
+        "--testTimeout=30000",
+        "--exclude",
+        "src/tests/integration/worker-contracts/worker-contracts-db.test.ts",
+        "--exclude",
+        "src/tests/integration/canvas-contracts/canvas-contracts-db.test.ts",
+      ],
+      // 全量组件/单测进程独立截止；单个用例由 --testTimeout=30000 兜底。
+      // Sentinelled DB suites have independent worker/canvas wrappers and deadlines.
+      timeoutMs: 300_000,
+    },
+    {
+      label: "Worker TypeScript 契约",
+      executable: "pnpm",
+      args: ["verify:worker-contracts:ts"],
+      timeoutMs: 65_000,
+    },
+    {
+      label: "Worker Go 契约",
+      executable: "pnpm",
+      args: ["verify:worker-contracts:go"],
+      timeoutMs: 65_000,
+    },
+    {
+      label: "Go 全量测试",
+      executable: "go",
+      args: ["-C", "worker", "test", "-count=1", "-timeout=50s", "./..."],
+      timeoutMs: UNIT_PROCESS_TIMEOUT_MS,
+    },
+    {
+      label: "Go 全量构建",
+      executable: "go",
+      args: ["-C", "worker", "build", "./..."],
+      timeoutMs: 180_000,
+    },
+    {
+      label: "Next.js 生产构建",
+      executable: "pnpm",
+      args: ["build"],
+      timeoutMs: 600_000,
+      // Synthetic build inputs must not change preceding test defaults.
+      env: {
+        ...environment,
+        CI: "1",
+        NODE_ENV: "production",
+        DATABASE_URL: "postgresql://build:build@127.0.0.1:1/narra_build",
+        AUTH_SECRET: "narra-ci-build-only-not-a-runtime-secret",
+        APP_URL: "https://narra-build.invalid",
+        BUILTIN_PROVIDER_BASE_URL: "https://example.com/v1",
+        BUILTIN_PROVIDER_API_KEY: "ci-build-demo-key",
+        NEXT_TELEMETRY_DISABLED: "1",
+      },
+    },
+  ];
+}
 
-export async function main() {
+export async function main({ run = runStages, environment = process.env } = {}) {
   try {
     assertFixedTargets(PROJECT_ROOT, FIXED_TARGETS, "verify:ci");
   } catch (error) {
@@ -108,10 +133,10 @@ export async function main() {
     return 1;
   }
 
-  const exitCode = await runStages(STAGES, {
+  const exitCode = await run(createCiStages(environment), {
     cwd: PROJECT_ROOT,
     deadlineMs: GLOBAL_DEADLINE_MS,
-    env: { ...process.env, CI: "1" },
+    env: { ...environment, CI: "1" },
     scope: "verify:ci",
   });
   return exitCode === TIMEOUT_EXIT_CODE ? TIMEOUT_EXIT_CODE : exitCode;

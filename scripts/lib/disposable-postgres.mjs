@@ -270,18 +270,23 @@ function delay(milliseconds) {
   return new Promise((resolve) => setTimeout(resolve, milliseconds));
 }
 
-export async function waitForPostgres(resource, options) {
+export async function waitForPostgres(resource, options, { probe = runDocker, now = Date.now, sleep = delay } = {}) {
   const readyDeadlineAt = Math.min(
     options.deadlineAt,
-    Date.now() + POSTGRES_READY_TIMEOUT_MS,
+    now() + POSTGRES_READY_TIMEOUT_MS,
   );
-  while (Date.now() < readyDeadlineAt) {
-    const result = await runDocker(resource,
+  while (now() < readyDeadlineAt) {
+    const result = await probe(resource,
       [
         "exec",
         resource.containerName,
         "pg_isready",
         "--quiet",
+        // The image's initialization-only server accepts Unix sockets, not TCP.
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "5432",
         "--username",
         resource.databaseUser,
         "--dbname",
@@ -295,7 +300,7 @@ export async function waitForPostgres(resource, options) {
       },
     );
     if (result.code === 0) return;
-    await delay(250);
+    await sleep(250);
   }
   throw failure(2, "disposable PostgreSQL 未在期限内 ready");
 }

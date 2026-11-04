@@ -18,6 +18,7 @@ FROM ${ALPINE_BASE_IMAGE}
 
 WORKDIR /app
 
+COPY LICENSE THIRD_PARTY_NOTICES.md ./
 COPY --from=builder /out/narra-worker /app/narra-worker
 COPY --from=builder /out/narra-prompt-sync /app/narra-prompt-sync
 COPY --from=builder /out/narra-rollback-preflight /app/narra-rollback-preflight
