@@ -1,0 +1,128 @@
+[
+  {
+    "label": "baseline-full-test.json",
+    "id": "20261104T071046-test-ba590e",
+    "exitCode": 1,
+    "durationSeconds": 124.46,
+    "timedOut": false,
+    "evidence": [
+      {
+        "path": "evidence/20261104T071046-test-ba590e.json",
+        "sha256": "3de03798a238d7238d7930431bbcb43dd56d4001fbcf50abaa343f845a88d0ab"
+      },
+      {
+        "path": "evidence/20261104T071046-test-ba590e.stdout.log",
+        "sha256": "e37df9281389e80b69eaeafa8fe60fe1d1232d006399e7b1c55a973c60082c93"
+      },
+      {
+        "path": "evidence/20261104T071046-test-ba590e.stderr.log",
+        "sha256": "4da5326eb4d3e20e5d2fbfb7ebee195a5e06f3ba826759ea2c230add4c44728a"
+      }
+    ]
+  },
+  {
+    "label": "interaction-regressions-red.json",
+    "id": "20261104T071537-test-1aec98",
+    "exitCode": 1,
+    "durationSeconds": 7.291,
+    "timedOut": false,
+    "evidence": [
+      {
+        "path": "evidence/20261104T071537-test-1aec98.json",
+        "sha256": "34b692ff01dcd6f6b76eb4274632b42a3c0a29e0dc171cc045c4894e3992cf98"
+      },
+      {
+        "path": "evidence/20261104T071537-test-1aec98.stdout.log",
+        "sha256": "31c37d0af5264bec175cda78200f6b1cd37982b0f113e9187819f2fb0e7572db"
+      },
+      {
+        "path": "evidence/20261104T071537-test-1aec98.stderr.log",
+        "sha256": "112bffcdaf56c2f9081c4dd9dc09dcd18885f4ec991d6c767c0fbbec5510f8bd"
+      }
+    ]
+  },
+  {
+    "label": "interaction-and-integration.json",
+    "id": "20261104T071801-test-8b682d",
+    "exitCode": 0,
+    "durationSeconds": 11.062,
+    "timedOut": false,
+    "evidence": [
+      {
+        "path": "evidence/20261104T071801-test-8b682d.json",
+        "sha256": "9beceb4d6fa0b28bd84b76cca69404fea526273177954ec53980d85b23d1c5f7"
+      },
+      {
+        "path": "evidence/20261104T071801-test-8b682d.stdout.log",
+        "sha256": "c5da067e130abf033088c62557dbc33ccbfe2cb572ca975aa0ec30313f23d7ad"
+      },
+      {
+        "path": "evidence/20261104T071801-test-8b682d.stderr.log",
+        "sha256": "d8aa7f74148ea9a1d3b812704512d8777c7802e6d723ce6d9fffd1cbb132cb0a"
+      }
+    ]
+  },
+  {
+    "label": "final-lint.json",
+    "id": "20261104T071912-lint-0ed200",
+    "exitCode": 0,
+    "durationSeconds": 16.804,
+    "timedOut": false,
+    "evidence": [
+      {
+        "path": "evidence/20261104T071912-lint-0ed200.json",
+        "sha256": "ccb6be79bf4d1cd2f7cadc5253cb7542fa9585173e1cb7be5ce572d1c9c432e5"
+      },
+      {
+        "path": "evidence/20261104T071912-lint-0ed200.stdout.log",
+        "sha256": "329576ceaa8021519cd5d549fdc88cf325eaca24fe7c4e9cdc1aeedd21ce6657"
+      },
+      {
+        "path": "evidence/20261104T071912-lint-0ed200.stderr.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ]
+  },
+  {
+    "label": "final-types.json",
+    "id": "20261104T071956-types-52fdee",
+    "exitCode": 0,
+    "durationSeconds": 5.118,
+    "timedOut": false,
+    "evidence": [
+      {
+        "path": "evidence/20261104T071956-types-52fdee.json",
+        "sha256": "2d68067f4b0c4717ae74a2b144ddccb6f93c86c5bd44aa8d164ab7fc657c5197"
+      },
+      {
+        "path": "evidence/20261104T071956-types-52fdee.stdout.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "evidence/20261104T071956-types-52fdee.stderr.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ]
+  },
+  {
+    "label": "final-full-test.json",
+    "id": "20261104T072030-test-d8958d",
+    "exitCode": 0,
+    "durationSeconds": 117.035,
+    "timedOut": false,
+    "evidence": [
+      {
+        "path": "evidence/20261104T072030-test-d8958d.json",
+        "sha256": "4b0207a109635f832c48f44cc97be560318520c640b6268885c07b5e6aa79b9b"
+      },
+      {
+        "path": "evidence/20261104T072030-test-d8958d.stdout.log",
+        "sha256": "9ba652b72c9029f9c317fee4bc4d085f5e966ccf4084c304b844c7ff3491b81c"
+      },
+      {
+        "path": "evidence/20261104T072030-test-d8958d.stderr.log",
+        "sha256": "c806f1a0d5fde328c042c76ef91176017db907b756e36a90892f45499868801f"
+      }
+    ]
+  }
+]

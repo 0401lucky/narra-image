@@ -4,6 +4,7 @@
 {"file":".trellis/spec/frontend/state-management.md","reason":"No second canonical store, owner/lazy/editor/field lifetime and native input"}
 {"file":".trellis/spec/frontend/type-safety.md","reason":"Strict shared types and refined domain validation"}
 {"file":".trellis/spec/frontend/canvas-studio.md","reason":"Full canvas compatibility and real-browser/physical-device evidence boundaries"}
+{"file":".trellis/spec/frontend/canvas-presentation.md","reason":"Full folded-view, wrapper hit/focus, same-card editing and dock/overlay interaction contracts"}
 {"file":".trellis/spec/frontend/quality-guidelines.md","reason":"Complete isolated lint/types/tests/build and calibrated native browser evidence"}
 {"file":".trellis/spec/operations/canvas-contracts.md","reason":"Owner/CAS/manual-run/idempotency/original/retention and unchanged wire schema"}
 {"file":".trellis/spec/guides/code-reuse-thinking-guide.md","reason":"Avoid duplicated parameter/source/gesture validation"}
@@ -11,3 +12,4 @@
 {"file":".trellis/tasks/11-02-canvas-interaction-refactor/research/current-canvas.md","reason":"Baseline behavior, preserved contracts and test coverage inventory"}
 {"file":".trellis/tasks/11-02-canvas-interaction-refactor/research/infinite-canvas-reference.md","reason":"Do not confuse reference source claims with local acceptance or mobile proof"}
 {"file":".trellis/tasks/11-02-canvas-interaction-refactor/research/canvas-interaction-design-seams.md","reason":"Review atomic rejection, shared/missing prompt, chooser and gesture/placement risks"}
+{"file":".trellis/tasks/11-02-canvas-interaction-refactor/research/unified-cards-and-dock.md","reason":"Revision 2 folded-view/old-graph compatibility, real dock behavior, attached editor, MIT and fresh evidence boundaries"}

@@ -1,0 +1,59 @@
+{
+  "at": "2026-11-04T07:23:46.585777+00:00",
+  "files": {
+    "THIRD_PARTY_NOTICES.md": "7b594cd0b70bb28826bfa4bb46541daad79e826ddb3ce6907290f745e7d569ed",
+    "src/components/create/canvas/composer-placement.ts": "8808dd6a52c125eb23e8e728c001f5ce7d80580635e4b6a5bf88b1ca8912027d",
+    "src/components/create/canvas/renderer-adapter.ts": "62ad088e21df23996dcf4a8890e45e71abd865d3f6210e7c02cef64cd3bd724b",
+    "src/components/create/canvas/renderer-types.ts": "2d219cea517b48601266ca916c292584dccbe3769a6da77b92dc9f319ad52c86",
+    "src/components/create/hooks/use-canvas-composer-placement.ts": "2851500039a5d50d8446cc2d336a70532f7fa9cf840b517972fd4e67f0990a05",
+    "src/components/create/parts/canvas-dock.tsx": "7152a570c4a7df02999b1e7305fbbce2fb4b714c3b18fb0dd0a2bbd015704fb0",
+    "src/components/create/parts/canvas-generation-composer.tsx": "11062aaf3ffb449df5fd5f2b4f6de61f275e303e06ae1b600366b1f428a5d8a0",
+    "src/components/create/parts/canvas-generation-settings.tsx": "2f065d438f92ae97d9ee5362a900da451896cbc20c2252624a3a53a6da5e9ef7",
+    "src/components/create/parts/canvas-image-toolbar.tsx": "ea953d4838847353d07a6d8a6374fa01090b8edf0ef6c97c3a42a14f855f59fd",
+    "src/components/create/parts/canvas-node-editor.tsx": "46d12e2dc3dd558e314a83b7e846ff1904b9951ceaf7f5602caeb49c212c6f62",
+    "src/components/create/parts/canvas-node-inspector.tsx": "16573aed1adb5fc6adf7e687aa21bcac42cefd32452c305d08878a32ec157415",
+    "src/components/create/parts/canvas-nodes/generation-node.tsx": "8d5edbbdeb959b0876348d6cf5b18014a26004ee12afdb6f62c713ef35951060",
+    "src/components/create/parts/canvas-nodes/node-shell.tsx": "b7c1491290eedbbfdd53e458407e0d4f27b8de1a3d6d86a0aa43a7f8d9d0e0c3",
+    "src/components/create/parts/canvas-nodes/reference-node.tsx": "c14c63b3955566065c534dedb3c1869263a5def75e41bfe85aa3a2d146a6d163",
+    "src/components/create/parts/canvas-nodes/result-node.tsx": "0fd42bc47ee9900a8b149a9b9afa45fad9b8542e3b9c15a72fa1b7f8b4065c85",
+    "src/components/create/parts/canvas-stage.module.css": "d1fee27a07714978e03aae746446f7375057652bd0dc761b04089abf4f072861",
+    "src/components/create/parts/canvas-stage.tsx": "5990e247f11c516dc03438e853b91becaabbc5cd9b84e4fbaabe3ac815211933",
+    "src/components/create/parts/canvas-toolbar.tsx": "f96f24feacd2ea0d3308b32cb6a3e1afb5c6c7db3b57588aff07bb3896fb3ef3",
+    "src/tests/unit/canvas-composer-placement.test.ts": "d855de9254112acd96dc141bcf36491ad48762dacbe2edbc57a77d250fd2a21e",
+    "src/tests/unit/canvas-image-first-stage.test.tsx": "8d803dcf068ddb03d03072baa6d636ad8833f5c5ee27127fd0a31cfa21185a06",
+    "src/tests/unit/canvas-node-editor.test.tsx": "52bd853996140d7631cbba1154af2d5f2c630883feddaab12f4a3aad7760aaef",
+    "src/tests/unit/canvas-renderer-adapter.test.ts": "73d9a4083cae3340db1ef45de85dc7fba4095985c7371de31ac8f7e1c0d0c602",
+    "src/tests/unit/canvas-stage.test.tsx": "03969db927cf9f46e1d4b76e5b78c19c5f4449155d51275fd31963b16fd8255a",
+    "src/tests/unit/canvas-unified-view.test.tsx": "3b7c6cd06dc0b965bda30fa08d1e35298b9b7e621a0e37187e5fbbdeb93d4eed",
+    "src/tests/unit/generator-studio-canvas.test.tsx": "fb02e9d3cee907803a095ccba762605d118b81ba796e18221d9917758debfa07"
+  },
+  "reviewerChanges": {
+    "src/components/create/canvas/renderer-adapter.ts": {
+      "before": "3bf7ec07e62ba74974a25b1eabcf571391de7bd9d856854e599ae924c99943db",
+      "after": "62ad088e21df23996dcf4a8890e45e71abd865d3f6210e7c02cef64cd3bd724b"
+    },
+    "src/components/create/parts/canvas-image-toolbar.tsx": {
+      "before": "c4b249104e4bd9179a30280d685eef8b2ed9e0f5f470aff3342acd6b8792b6e0",
+      "after": "ea953d4838847353d07a6d8a6374fa01090b8edf0ef6c97c3a42a14f855f59fd",
+      "beforeSource": "HEAD: unchanged in implementer handoff"
+    },
+    "src/tests/unit/canvas-image-first-stage.test.tsx": {
+      "before": "2cc362625910c6d2500bb32266ec378d8c4bee1560e7819fc465d2bf06960a00",
+      "after": "8d803dcf068ddb03d03072baa6d636ad8833f5c5ee27127fd0a31cfa21185a06"
+    },
+    "src/tests/unit/canvas-renderer-adapter.test.ts": {
+      "before": "07a86b933be4be2f347601df595b3c4186887b30ff8fcf10ffccf6c9946bd4f2",
+      "after": "73d9a4083cae3340db1ef45de85dc7fba4095985c7371de31ac8f7e1c0d0c602"
+    },
+    "src/tests/unit/generator-studio-canvas.test.tsx": {
+      "before": "40e698b8dbc9b65423a14ed52ac78d3752bc4a5bd06a9086cb7cb8d054d8fe0a",
+      "after": "fb02e9d3cee907803a095ccba762605d118b81ba796e18221d9917758debfa07",
+      "beforeSource": "HEAD: unchanged in implementer handoff"
+    }
+  },
+  "reviewedMainSpecs": {
+    ".trellis/spec/frontend/canvas-studio.md": "60eecb12a3bbf2ddfa21de2e32954b91102d51bd4d9cbeade0ef8ccfe68568e3",
+    ".trellis/spec/frontend/index.md": "07940b82142cb2116e4138233e86efcc1d8453f09daed2f7dad4bc54dc0e855f",
+    ".trellis/spec/frontend/quality-guidelines.md": "d5a9e597f65f9c0f6b72a471e92493e01db60987ebb8f0662234afe58485f214"
+  }
+}

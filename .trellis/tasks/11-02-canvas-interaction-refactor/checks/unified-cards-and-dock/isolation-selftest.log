@@ -1,0 +1,13 @@
+test_build_environment_is_separate (revision2_isolation_tests.IsolationTests.test_build_environment_is_separate) ... ok
+test_cleanup_refuses_outside_junction (revision2_isolation_tests.IsolationTests.test_cleanup_refuses_outside_junction) ... ok
+test_dependency_links_are_retargeted_and_files_are_not_shared (revision2_isolation_tests.IsolationTests.test_dependency_links_are_retargeted_and_files_are_not_shared) ... ok
+test_environment_is_filtered_before_node_launch (revision2_isolation_tests.IsolationTests.test_environment_is_filtered_before_node_launch) ... ok
+test_exit_code_output_and_deadline_are_preserved (revision2_isolation_tests.IsolationTests.test_exit_code_output_and_deadline_are_preserved) ... ok
+test_owner_checks_refuse_wrong_roots_and_modified_markers (revision2_isolation_tests.IsolationTests.test_owner_checks_refuse_wrong_roots_and_modified_markers) ... ok
+test_prisma_diagnostic_refuses_network_before_any_connection (revision2_isolation_tests.IsolationTests.test_prisma_diagnostic_refuses_network_before_any_connection) ... ok
+test_source_capture_has_exact_public_example_exception (revision2_isolation_tests.IsolationTests.test_source_capture_has_exact_public_example_exception) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 1.791s
+
+OK

@@ -1,6 +1,111 @@
 # Canvas Interaction Refactor Verification
 
-## Current Delivery Verification: 2026-11-03
+## Active Revision 2: 2026-11-04
+
+The user approved the unified creation-card/bottom-dock final summary. Revision
+2 code and local validation are complete; revision 1 receipts below remain
+historical. On 2026-11-04 the user separately approved both planned commits,
+ordinary main push and observation of the resulting GitHub Actions run.
+Source/spec commit `dfc09306c8a5593a9b1cacc9f240088e002c7181` is complete; the
+task/evidence commit and ordinary push follow. Delivery approval and exact staged
+source receipts are under `checks/unified-cards-and-dock/delivery/`.
+This record does not prematurely claim a successful remote push/CI result.
+Production deployment, paid/live testing and physical-device acceptance remain
+unperformed. All paths in this section are under `checks/unified-cards-and-dock/`.
+
+### Implemented And Independently Reviewed
+
+- Creation view presents one generation card/editor, with private/shared prompt
+  sources folded visually; Advanced graph exposes all canonical nodes/edges.
+  Old IDs, positions, shared edits, source order, scene v1 and Run/Save are kept.
+- Screen-space attached editing replaces duplicate node/side-panel controls;
+  the bottom dock provides real select/pan/create/import/graph/selected actions.
+  Camera controls and node lookup remain reachable. Existing cream/orange visual
+  language and Chinese labels remain; MIT adaptation notices are retained.
+- First native run reproduced closed-editor/same-selected-node reopen failure;
+  implementer fixed both normal click and subthreshold release paths. Independent
+  review then fixed an invisible Flow outer-wrapper hit/focus area and low-image
+  toolbar overlap with higher-z docks. Fresh component/native regressions prove
+  these corrections rather than replacing failed actions with DOM clicks.
+- Independent full-suite baseline found six stale mounted-studio assumptions;
+  tests now explicitly open Advanced graph or use the unified prompt. Existing
+  owner, retained controller, lost-ACK, balance refresh and no-extra-Run assertions
+  remain. `review/review.md` reports no remaining in-scope findings.
+
+### Fresh Gates
+
+| Gate | Receipt / Evidence | Result |
+| --- | --- | --- |
+| Pinned isolation self-tests | `isolation-selftest.log` | PASS, 8/8; harness evidence only |
+| Implementer targeted suite | `20261104T070331-test-450d96` | PASS, 6 files / 109 tests |
+| Reviewer regression/integration | `20261104T071801-test-8b682d` | PASS, 4 files / 71 tests |
+| Independent root ESLint | `20261104T071912-lint-0ed200` | PASS, 0 errors / 9 existing warnings |
+| Final metadata-inclusive root ESLint | `20261104T073400-lint-f42d9b` | PASS, current authored task tools, no product drift |
+| Independent strict TypeScript | `20261104T071956-types-52fdee` | PASS |
+| Independent full non-DB Vitest | `20261104T072030-test-d8958d` | PASS, 144 files / 1824 tests in one run |
+| Isolated Prisma generation | `20261104T072402-prisma-a4ba92` | PASS, copied dependency output only |
+| Actual application production build | `20261104T072420-build-70d24c` | PASS, complete Next build with 2 workers |
+| Reviewed-source fixture build | `reviewed-fixture-build.json` | PASS, exact UI with explicit test route shell |
+| Reviewed-source native browser | `20261104T072634-script-11ef10` | PASS, 15/15, no browser exceptions |
+
+Prisma and actual build are the installed equivalents of `pnpm build`; pnpm is
+absent in the shell, so the runner calls pinned installed CLIs directly. A clean
+environment is constructed before Node starts, dependencies are copied and
+audited, and actual dotenv/credentials are unavailable. Only build children
+receive `CIRCLE_NODE_TOTAL=3` for the audited Next two-worker setting; test
+environment and production settings are unchanged. Gates run serially with
+finite deadlines and actual exit codes; no installs/live infrastructure occur.
+
+### Native Browser And Acceptance Mapping
+
+Final evidence: `browser/evidence/native-1793777195364/`, Chrome 156.0.8078.74,
+Node v24.22.1. All 414 production UI/lib/contracts/style/asset files and fixture
+shell/helper/package identities match before/after. The built artifact hash is
+unchanged while serving. Dedicated browser profile, fake loopback identity/HTTP/
+catalogue/media and native IndexedDB are used; generated gradient images are
+fixture media, not live provider results.
+
+`final-audit.json` verifies all 25 reviewed code/test/notice files still match,
+all current browser source/helpers match, 43 authored source/spec/tool files have
+clean whitespace, and no staged or unrecognized changes exist. Context validation
+passes with 16 implement / 15 check entries. The presentation spec is linked as
+a separate file so neither it nor the canvas core spec exceeds the 32KiB injection
+cap. `commit-plan.md` now records the separately approved two-commit delivery;
+it does not authorize automatic finish-work/archive/journal commits. Existing
+task ignores keep screenshots and raw stdout/stderr local, with reports and
+JSON/hash receipts committed. The repository's single `verify` workflow builds
+disposable E2E images but has no GHCR/Docker Hub publication step; observation
+will distinguish build/verification from registry publication.
+
+- UAC1: B1 proves an empty New, exactly one visible creation card/no prompt edge,
+  a single readable editor, native Enter newline and one explicit target Run.
+- UAC2: U2/B8/B9 prove shared/standalone lookup and complete graph toggling with
+  unchanged canonical data, preserved shared edits, old 24-node/32-edge layout
+  plus visible creation, and atomic capacity rejection in a 200-node graph.
+- UAC3: B2/B3/U3/U6/B4/B5 cover select/view/whole-image drag, outside cancel,
+  hand-panning from an image without moving it, native Tab/Enter dock controls,
+  bottom-edge contextual toolbar reachability, exact original import/download
+  bytes and continuation with explicit reordered reference input.
+- UAC4: U4/B6 check screen-sized fields at low/high zoom, inert nonfocusable
+  outer replacement wrapper, one DOM textarea, trusted CDP composition across
+  360/390/430px portrait/short and landscape layouts, reachable actions and
+  primary 44px phone targets. Main opens and visually inspects final desktop
+  composer/continuation, edge toolbar, portrait and landscape screenshots.
+- UAC5: U5/B7 plus all full-suite gates cover invalid empty Custom blocking
+  Run/Save, raw draft retention, explicit Auto recovery, account Save and native
+  IndexedDB reload with original IDs/positions and zero implicit generation.
+  Upstream notice, full code/spec review and final source audit complete local
+  acceptance; no schema/provider/billing/dependency change is required.
+
+The first native 13/14 red receipt and earlier targeted/full/regression red
+receipts remain. The intermediate 14/14 browser run predates the review fixes
+and is not relabeled. OS chooser is CDP-selected, IME is Chromium CDP composition,
+and dimensions/touch emulation are not physical iOS/Android or OS keyboard proof.
+Real authentication/database/Worker/storage/provider, paid generation, production
+optimizer/deployment, physical accessibility gestures and actual remote CI are
+explicitly unperformed. No FPS or rollout readiness claim is made.
+
+## Revision 1 Delivery Verification: 2026-11-03
 
 - User-approved continuation preserves the three newer remote commits and
   fast-forwards to `e42ff7a74fb7d1c0e4507c960720bb0dc973f1ab` before restoring

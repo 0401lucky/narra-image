@@ -1,5 +1,105 @@
 # Canvas Interaction Refactor Implementation Plan
 
+## Active Revision 2 Plan And Approval Gate
+
+Revision 2 implements the unified creation-card/bottom-dock proposal at the top
+of `prd.md` and `design.md`. The user approved this revision on 2026-11-04 in a
+subsequent reply to its final summary. The checked items and prior delivery
+approval in the historical record below apply only to revision 1.
+
+- [x] Inspect current source and the user's local MIT reference without editing
+  either product codebase; record exact source anchors and upstream commit.
+- [x] Write revision 2 requirements, design, execution order and real context.
+- [x] Present the revision 2 final summary and obtain a subsequent explicit
+  approval; record it before restoring task status to in_progress via task.py.
+
+### Completion Status
+
+- [x] Implement folded/complete views and coherent captured-target selection.
+- [x] Compose one attached editor with native prompt, references and settings.
+- [x] Deliver responsive floating dock and genuine desktop select/pan.
+- [x] Retain MIT source notices and preserve all canonical/runtime contracts.
+- [x] Independent full-scope review fixes outer ghost-wrapper interaction,
+  low-image toolbar/dock overlap and stale mounted-studio test assumptions.
+- [x] Fresh lint/types, 144 files / 1824 non-DB tests, copied Prisma generation
+  and actual application production build pass. Final native matrix passes
+  15/15 against the reviewed source with desktop/mobile screenshots inspected.
+- [x] Update executable canvas/quality specs and interaction retrospective.
+- [x] Obtain separate commit approval; the user also explicitly requests an
+  ordinary push to GitHub main and tracking the resulting Actions run.
+
+Exact receipts and boundaries are in `verification.md` and
+`checks/unified-cards-and-dock/`. Historical failed runs remain preserved;
+physical/live and automatic archive stay unperformed. Actual Actions monitoring
+is authorized for delivery, distinct from the earlier local-only evidence.
+
+### Dispatch And Ownership
+
+After approval, main dispatches one `trellis-implement`, then an independent
+`trellis-check`, each prompt beginning:
+`Active task: .trellis/tasks/11-02-canvas-interaction-refactor`.
+Read JSONL context, current PRD, design and this plan in that order, following
+native injection when available and explicit child-side loading otherwise.
+Clearly state that revision 2, not revision 1's completed checklist, is active.
+
+Implementer owns the scoped renderer/component/hook/CSS/tests named by the
+revision 2 design, plus an upstream notice if substantial code is adapted.
+Checker may self-fix scoped issues and record new evidence under
+`checks/unified-cards-and-dock/`. Main owns task/spec changes and communication.
+Agents are not alone: preserve others' edits, report conflicts and never revert
+foreign work. Do not edit `E:/code/infinite-canvas`, stage/commit/push, deploy,
+read actual secrets/dotenv, run paid/live services or alter unrelated tasks.
+
+### Ordered Execution
+
+1. Record clean/dirty baseline and current hashes. Read canvas/component/hook/
+   state/type/quality specs and guides before writing code. Add projection
+   tests for private/shared/standalone/missing-prompt scenes and both views.
+2. Implement folded creation-view projection and unified target resolution;
+   retain canonical IDs, independent source positions and all full-graph tools.
+   Test view switching, selecting a folded source, measured remounts, fit,
+   explicit removal semantics and no mutation from presentation changes.
+3. Recompose generation card/editor into one attached creation surface. Reuse
+   captured prompt/chooser logic and raw-field validation; remove redundant
+   generation summary sections. Test shared-source/repair, pending invalid
+   fields, IME, explicit Run and retained drafts.
+4. Move creation/selection/camera controls into responsive screen-space docks
+   with a quiet document header; preserve navigation, save and all supported
+   actions. Add real desktop hand/select behavior without changing phone
+   Browse/Move. Test cancellation, focus, readOnly and keyboard behavior.
+5. Integrate projection/editor/dock geometry, native reference flows, image
+   continuation and safe-area/mobile/short viewport presentation. Record which
+   upstream sections were reused and retain MIT notice when required.
+6. Stop implementer edits and hand off complete revision 2 scope to independent
+   `trellis-check`. Main reconciles UAC1-UAC5, updates specs only for verified
+   behavior and reports remaining evidence boundaries. No new commit/push is
+   authorized by the earlier revision's delivery approval.
+
+### Fresh Validation
+
+Use the existing credential-isolated current-source test/build/browser harness
+patterns with refreshed source manifests and new revision-specific receipts.
+Do not reuse historical passing receipts as proof. Serialize heavy commands:
+
+```text
+pnpm lint
+pnpm exec tsc --noEmit
+pnpm exec vitest run --testTimeout=30000 --maxWorkers=2
+pnpm build
+git diff --check
+```
+
+Cover real controller/component flows and native browser pointer/keyboard
+interactions: first create is one card, shared/standalone old graph preservation,
+graph toggling, one editor, low/high zoom, dock hand/select and creation/import,
+zero accidental Run, explicit Generate, Save/reload, original/result retention,
+deletion, pending fields and IME. Inspect desktop and 360/390/430px plus short/
+landscape screenshots with reachable controls. Keep OS/physical devices,
+live services, paid generation and actual CI explicitly unperformed unless
+separately authorized. No baseline limits, schema or production flags change.
+
+## Revision 1 Implementation Record (Historical Below)
+
 ## Status And Transition Gate
 
 The user approved the latest complete final planning summary on 2026-11-02;

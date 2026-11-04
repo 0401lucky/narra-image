@@ -1,5 +1,94 @@
 # Canvas Interaction Refactor Design
 
+## Active Revision 2 Approved Design
+
+Status: revision 2 approved on 2026-11-04; see
+`checks/unified-cards-and-dock/approval.md` and the active section of `prd.md`.
+The remaining sections record revision 1. This proposal replaces only the
+default projection, primary editor presentation and toolbar layout; it does not
+authorize changing durable scene or execution contracts.
+
+### Presentation And Identity
+
+Keep React Flow, canonical scene v1, the existing controller and the owner-scoped
+editor registry. Add a renderer-local creation/graph view choice. In creation
+view, omit prompt-source cards and prompt-input edges from the rendered set;
+derive each generator's prompt text/source/shared count from the canonical graph.
+In graph view, render the full original graph. Reference/result IDs and output
+provenance stay intact in both views. Do not persist view flags or copied prompt
+text in nodes, rewrite source IDs or remove canonical nodes to simplify the UI.
+
+Centralize the projection and visible-target resolution so node lookup, selection,
+Locate, fit, measurement caching, deletion and editor placement agree. Selecting
+a standalone prompt via lookup opens graph view before locating/editing it.
+Returning to creation view maps an actively selected prompt to an attached
+generation when unambiguous; otherwise close only its visible editor/selection,
+retaining text and raw registry drafts. Do not create a synthetic domain node.
+Keep measurements for live canonical IDs even when a node is temporarily folded;
+reconcile genuine remeasurement without dirtying the scene.
+
+Creation-card movement/removal continues targeting the generation ID. A folded
+prompt keeps its own stored coordinate and survives generator removal; graph
+view remains the explicit place to organize/remove source notes. Do not turn a
+visual merge into implicit grouped movement, cascading cleanup or job cancellation.
+
+### One Creation Surface
+
+Refactor the current generation card/composer/editor so prompt, thumbnail inputs,
+compact model/size and Generate form one primary surface, not a summary card
+plus a duplicate settings form. The inactive card previews its content; selecting
+or creating opens an attached editor at the same card, not the old side-inspector
+layout. Suppress duplicate primary controls while that editor is active.
+
+Reuse `CanvasPromptField` and `controller.updateGenerationPrompt` with captured
+expected source and immediate repaired-binding acknowledgement. Reuse the current
+parameter CommitField/registry and applyPending pipeline; extract shared UI only
+as needed, never create parallel validation or save/run state. Show shared-source
+effects before editing. Provider controls and advanced connections remain behind
+explicit secondary affordances and retain current captured targets.
+
+Keep one editor target/DOM subtree and adapt its placement with existing
+screen-space measurement hooks. Editing controls remain readable across scene
+zoom; the dock, graph-view toggle and short mobile layout must not remount a
+focused textarea. Mobile uses the existing native-scroll sheet behavior, with
+safe-area/keyboard bounds and explicit Move separate from Browse. Do not replace
+native textarea with upstream contentEditable/reference-token machinery.
+
+### Dock And Camera
+
+Separate document header, creation dock and camera controls. Dock lives in
+screen-space within the canvas workspace and does not consume another permanent
+row. Keep existing document navigation. Node lookup and graph-only creation
+actions move into a reachable compact control/popover rather than disappearing.
+Panels open away from the dock with pointer and keyboard-safe dismissal.
+
+Use transient select/pan state on desktop: select retains click selection and
+whole-card drag; hand mode pans the scene instead of moving cards. Preserve
+native field/control exclusions and existing phone Browse/Move behavior. Tool
+switch cancels uncommitted movement, never applies an unfinished gesture. All
+buttons have Chinese accessible names, visible focus and meaningful pressed/
+disabled states; do not imply unsupported marquee selection or canvas undo.
+
+Fit considers visible cards. Keep existing zoom bounds and controlled viewport
+writer; merely opening editor/dock or changing view/tool does not change camera.
+Small screens may consolidate camera controls into the dock's secondary panel
+to avoid overlap without removing reachable controls.
+
+### Reuse, Validation And Boundaries
+
+Reference source is pinned in `research/unified-cards-and-dock.md`. Adapt its dock
+grouping, tool affordances and prompt/settings hierarchy into existing Narra
+components/CSS. Substantial source reuse requires an upstream MIT notice and a
+clear source-file/commit record; no dependency/provider/store transplant.
+
+Affected seams are `renderer-adapter.ts`, `renderer-types.ts`, generation node,
+composer/editor/inspector, toolbar/stage/picker, placement hooks/styles and their
+tests. Runtime, schema, SQL, Worker, billing and media storage remain untouched.
+No new limits/timeouts or graph history are required. The old full graph view is
+a compatibility/diagnostic surface, not a second persistence implementation.
+
+## Revision 1 Design Record (Historical Below)
+
 ## Status
 
 The user approved the complete final design/execution plan on 2026-11-02;

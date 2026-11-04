@@ -1,5 +1,117 @@
 # Canvas interaction refactor
 
+## Active Revision 2: Unified Creation Cards And Bottom Dock
+
+### Status And Goal
+
+Planning reopened on 2026-11-04 after the user's screenshot feedback and
+continuation. The user subsequently approved the revision 2 final summary with
+"没问题，你改吧". See `checks/unified-cards-and-dock/approval.md`. This authorizes
+revision 2 implementation and scoped checks, not a new commit/push/deployment.
+The delivered implementation below remains the historical revision 1 record.
+
+On 2026-11-04 the user separately approved the presented two-commit delivery
+plan, ordinary push to GitHub `main`, and monitoring the resulting GitHub
+Actions run. See `checks/unified-cards-and-dock/delivery/approval.md`.
+Production deployment and workflow redesign remain outside that approval.
+
+Make the canvas itself feel like an image-creation workspace: one visible
+creation card rather than a prompt card plus a generation card, with a compact
+bottom tool dock instead of stacked permanent action rows.
+
+### Confirmed Evidence
+
+- The user explicitly requests combining the two cards in screenshot 1 and
+  points to the bottom toolbar in screenshot 2. They permit adapting/copying
+  MIT code from `E:/code/infinite-canvas`.
+- The local reference is at `0d2676b268d3872a9d380489291d0f0a13f476e1`;
+  its root LICENSE is MIT, copyright 2026 basketikun. Current source evidence
+  and Narra integration seams are in `research/unified-cards-and-dock.md`.
+- Revision 1 integrates editing but still projects every prompt as a separate
+  card (`src/components/create/canvas/renderer-adapter.ts:15`) and keeps
+  creation/camera controls above the canvas
+  (`src/components/create/parts/canvas-toolbar.tsx:63`). This explains the
+  screenshot without claiming a new browser reproduction.
+
+### Approved Requirements And Decisions
+
+- U1: The default creation view displays one creation card per generator,
+  containing prompt content, ordered reference access, compact model/size
+  controls and an explicit Generate action. Primary editing must not require
+  a separate prompt node or an unrelated inspector. Advanced parameters are
+  secondary; remove repeated model/input-summary/navigation sections.
+- U2: Treat the merge as presentation, not a storage migration. Default view
+  folds prompt-source cards and prompt-input edges into creation cards; an
+  explicit Advanced graph view exposes every original node and connection.
+  Standalone prompt notes remain accessible there. Existing shared prompts
+  remain shared, with a visible warning/count before editing their next-run
+  content. View switching never edits or rearranges the saved scene.
+- U3: Use a bottom-center floating dock for selection/pan, New image, Import,
+  Advanced graph and relevant selected-node actions. Keep zoom/fit in a compact
+  lower-corner control and document name/save in a quiet top bar. Remove
+  permanently stacked creation/selection strips, while preserving reachable
+  document navigation and node lookup. Only ship controls with working actions.
+- U4: Keep the established cream/orange Chinese visual language, but reduce
+  nested boxes, heavy headers, redundant status text and permanent controls.
+  The active creation editor is visually attached to its card, readable at
+  different scene zoom levels and does not shrink or recenter the viewport.
+  Phones use a bounded native-scroll editor and reachable, safe-area-aware dock;
+  only one primary editor is active, without duplicate editable fields.
+- U5: Retain revision 1's controller/editor/Run/Save/reference/owner protections,
+  captured chooser targets, native text/IME behavior and original/result
+  retention. Explicit node removal keeps current non-cascading semantics:
+  removing a generator does not delete its source prompt, shared data, completed
+  results or jobs; retained prompt notes remain available in Advanced graph.
+- U6: Reuse adaptable upstream layout/interaction code rather than avoiding
+  reuse for its own sake. Substantial copied/adapted code retains the upstream
+  MIT notice. Do not transplant Ant Design/Zustand, provider execution,
+  persistence, branding, media samples or unrelated tool suites.
+
+U1-U4 intentionally supersede revision 1 D4's prohibition on folded/merged
+presentation, its one-to-one default-view requirement and permanent toolbar
+layout. All other revision 1 compatibility boundaries remain in force.
+
+### Acceptance Criteria
+
+- [x] UAC1 / U1,U2: Empty canvas -> New image shows exactly one creation card,
+  not a separate prompt card/link. Enter prompt, choose references/settings and
+  explicitly generate from that card. Creating/selecting/editing sends no Run.
+- [x] UAC2 / U2,U5: Load an old graph with standalone, private and shared
+  prompts. Toggle default/Advanced graph and reload without altering IDs,
+  stored coordinates, edges, input order, run bindings or accepted prompt text.
+  Every original prompt is discoverable; shared edits remain shared.
+- [x] UAC3 / U3,U5: Dock actions, node lookup, zoom/fit, document Save and
+  selected-image actions work with pointer and keyboard. Tool switching causes
+  no scene mutation/run; desktop pan/select and phone Browse/Move are distinct.
+  Controls cannot accidentally drag the canvas or delete an editing target.
+- [x] UAC4 / U1,U4: The active editor forms one coherent creation surface,
+  retains caret/IME/raw drafts through selection/layout changes, and stays
+  reachable at desktop zoom plus 360/390/430px and short mobile layouts. The
+  dock never hides the primary action; no permanent selection row remains.
+- [x] UAC5 / U5,U6: Existing safety regressions and new projection/dock/editor
+  regressions pass. Fresh source-bound lint/types/non-DB tests/build and native
+  browser screenshots document the delivered UI; copied-code notices are
+  present when applicable. Physical/live-service/actual-CI limits are explicit.
+
+### Out Of Scope And Risks
+
+No video/audio/agent/plugin suite, groups/multi-select, canvas undo/redo,
+crop/mask/upscale, renderer replacement, shared schema/API/Worker/storage change,
+account autosave, deployment or paid/live testing. Do not add decorative disabled
+copies of unsupported reference toolbar tools. Conversation UI is unchanged.
+
+The principal risks are folded-node selection/lookup/measurement, shared-prompt
+editing, overlay/dock overlap and input focus during responsive changes. Keep
+revision 1 test evidence historical; it does not verify the new UI. Planning
+artifacts and context are approved. Revision 2 implementation and local checks
+are complete: independent review, lint/types, 1824 non-DB tests, actual app
+production build and 15 source-bound native browser cases pass. See the active
+section of `verification.md`. Physical/live/actual-CI acceptance is unperformed;
+Commit/push and actual Actions observation now have separate delivery approval;
+production deployment and automatic archive remain excluded.
+
+## Revision 1 Record (Delivered; Historical Below)
+
 ## Status And Authorization
 
 - On 2026-11-02 the user permitted refactoring and task creation, then approved

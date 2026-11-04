@@ -1,0 +1,32 @@
+[
+  {
+    "file": "api.mjs",
+    "sha256": "9f05397329b5cd9765af5cab168d49ff69b0b18dc26b3ba1cb65f9a57a5a01e9",
+    "id": "20261104T064241-browser-syntax-791322",
+    "exitCode": 0
+  },
+  {
+    "file": "cdp.mjs",
+    "sha256": "5828a99a4ca4f2815274a532988e3b351cc09d09446e20267ce0e5d89ab4c6da",
+    "id": "20261104T064241-browser-syntax-d52adc",
+    "exitCode": 0
+  },
+  {
+    "file": "identity.mjs",
+    "sha256": "eca6c91c34c70bf7e0c0839817155bdd2d06ce86d89014baac3c1fba09eb4518",
+    "id": "20261104T064241-browser-syntax-987d68",
+    "exitCode": 0
+  },
+  {
+    "file": "prepare-fixture.mjs",
+    "sha256": "793eb3009c5a40c6376eb682d274d68d80cefa3624c008b4abe2d99b9c75b5d5",
+    "id": "20261104T064241-browser-syntax-242084",
+    "exitCode": 0
+  },
+  {
+    "file": "run-browser.mjs",
+    "sha256": "0ec7561a078d5c25bc84e811b69693cf347c875d3a1486d750b8f0a12aec3544",
+    "id": "20261104T064241-browser-syntax-356d8a",
+    "exitCode": 0
+  }
+]

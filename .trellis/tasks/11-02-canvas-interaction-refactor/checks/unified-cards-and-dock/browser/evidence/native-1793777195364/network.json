@@ -1,0 +1,1200 @@
+{
+  "requests": [
+    {
+      "owner": "fixture-owner-a",
+      "method": "GET",
+      "path": "/api/me/canvases",
+      "body": null,
+      "headers": {
+        "x-narra-canvas-run": null
+      }
+    },
+    {
+      "owner": "fixture-owner-a",
+      "method": "GET",
+      "path": "/api/me/canvases/7dc12542-b427-48a0-b25f-c67209d9ae93",
+      "body": null,
+      "headers": {
+        "x-narra-canvas-run": null
+      }
+    },
+    {
+      "owner": "fixture-owner-a",
+      "method": "POST",
+      "path": "/api/me/canvas-runtime/resolve",
+      "body": {
+        "canvasId": "7dc12542-b427-48a0-b25f-c67209d9ae93",
+        "runBindings": [],
+        "runIds": [],
+        "jobIds": [],
+        "imageIds": [],
+        "assetIds": [
+          "889d3598-6e56-408f-b0e8-8fc965f94f77",
+          "82391971-e86b-4e34-876b-7dbf36d0c97b",
+          "44c8e879-ec2e-4c2a-bedb-e73fb1ef91ad",
+          "ddb1a822-b6e1-4229-ac0c-f907d7f74c28",
+          "ee9ac123-498f-45ff-93f4-04b8256e87cc",
+          "bf12f531-06f1-4ff9-a760-99369edeac29",
+          "b91c2673-eae2-4b60-bcd4-81ca173eb4ae",
+          "a1a60971-30b5-439a-81f5-80c1448305a0"
+        ]
+      },
+      "headers": {
+        "x-narra-canvas-run": null
+      }
+    },
+    {
+      "owner": "fixture-owner-a",
+      "method": "POST",
+      "path": "/api/me/canvases",
+      "body": {
+        "id": "b807bf0f-a0b8-4c18-95ab-ce5541cc141d",
+        "title": "未命名画布"
+      },
+      "headers": {
+        "x-narra-canvas-run": null
+      }
+    },
+    {
+      "owner": "fixture-owner-a",
+      "method": "POST",
+      "path": "/api/generate",
+      "body": {
+        "canvasRun": {
+          "canvasId": "b807bf0f-a0b8-4c18-95ab-ce5541cc141d",
+          "nodeId": "b914b367-6a7e-431c-9828-d9c508033b99",
+          "runId": "2a4859e8-3529-443f-a29f-063ca5d8ebd4",
+          "input": {
+            "prompt": {
+              "sourceNodeId": "6c9dd613-2742-4c00-afd4-c09f6994203a",
+              "text": "A ceramic cup in warm afternoon light"
+            },
+            "references": []
+          },
+          "parameters": {
+            "providerMode": "built_in",
+            "channelId": "channel-account",
+            "model": "image-account-default",
+            "size": "auto",
+            "quality": "auto",
+            "outputFormat": "png",
+            "outputCompression": null,
+            "moderation": "auto",
+            "count": 1,
+            "negativePrompt": null,
+            "seed": null,
+            "generationType": "text_to_image"
+          }
+        }
+      },
+      "headers": {
+        "x-narra-canvas-run": "1"
+      }
+    },
+    {
+      "owner": "fixture-owner-a",
+      "method": "POST",
+      "path": "/api/me/canvas-assets",
+      "body": {
+        "uploadId": "924817bf-601d-480d-9a15-c19b43ea1b40",
+        "byteLength": 39666,
+        "sha256": "2d85c90504eb5ea83d0d8ff18ab544fcbd997e088e31686f38162b5bef6326c0",
+        "fileName": "reference-original.png"
+      },
+      "headers": {
+        "x-narra-canvas-run": null
+      }
+    },
+    {
+      "owner": "fixture-owner-a",
+      "method": "POST",
+      "path": "/api/generate",
+      "body": {
+        "canvasRun": {
+          "canvasId": "b807bf0f-a0b8-4c18-95ab-ce5541cc141d",
+          "nodeId": "392c7619-999c-4a85-8a98-fae7c249d6d9",
+          "runId": "a31159d5-0a30-4164-97b7-b2e3909009bb",
+          "input": {
+            "prompt": {
+              "sourceNodeId": "0caa8d9a-8611-4110-8164-fdbae756c50f",
+              "text": "Keep the shape and change the lighting"
+            },
+            "references": [
+              {
+                "sourceNodeId": "result:2683d1d1-37e8-40b5-a39e-20e7c070b37f",
+                "ordinal": 1,
+                "kind": "result",
+                "jobId": "canvas-2a4859e8-3529-443f-a29f-063ca5d8ebd4",
+                "imageId": "2683d1d1-37e8-40b5-a39e-20e7c070b37f"
+              },
+              {
+                "sourceNodeId": "1dfc96a7-1341-4e5f-8bdd-fa9559c70a23",
+                "ordinal": 2,
+                "kind": "imported",
+                "assetId": "asset-924817bf-601d-480d-9a15-c19b43ea1b40"
+              }
+            ]
+          },
+          "parameters": {
+            "providerMode": "built_in",
+            "channelId": "channel-account",
+            "model": "image-account-default",
+            "size": "auto",
+            "quality": "auto",
+            "outputFormat": "png",
+            "outputCompression": null,
+            "moderation": "auto",
+            "count": 1,
+            "negativePrompt": null,
+            "seed": null,
+            "generationType": "image_to_image"
+          }
+        }
+      },
+      "headers": {
+        "x-narra-canvas-run": "1"
+      }
+    },
+    {
+      "owner": "fixture-owner-a",
+      "method": "GET",
+      "path": "/api/me/canvas-assets/asset-924817bf-601d-480d-9a15-c19b43ea1b40",
+      "body": null,
+      "headers": {
+        "x-narra-canvas-run": null
+      }
+    },
+    {
+      "owner": "fixture-owner-a",
+      "method": "PUT",
+      "path": "/api/me/canvases/b807bf0f-a0b8-4c18-95ab-ce5541cc141d/snapshot",
+      "body": {
+        "saveId": "c5e8c3f0-8a9b-432f-afb1-642cda3d38a3",
+        "expectedRevision": 0,
+        "scene": {
+          "schemaVersion": 1,
+          "edges": [
+            {
+              "id": "b092743a-4566-492b-bd59-9d9e2b59ee7f",
+              "source": "6c9dd613-2742-4c00-afd4-c09f6994203a",
+              "target": "b914b367-6a7e-431c-9828-d9c508033b99",
+              "kind": "prompt-input"
+            },
+            {
+              "id": "89f8fe6a-56ae-488b-bb51-c481c2aed66a",
+              "source": "b914b367-6a7e-431c-9828-d9c508033b99",
+              "target": "result:2683d1d1-37e8-40b5-a39e-20e7c070b37f",
+              "kind": "output-provenance"
+            },
+            {
+              "id": "3dc14797-e251-47e8-aff8-13e0ab628942",
+              "source": "0caa8d9a-8611-4110-8164-fdbae756c50f",
+              "target": "392c7619-999c-4a85-8a98-fae7c249d6d9",
+              "kind": "prompt-input"
+            },
+            {
+              "id": "dd2d70b7-12c1-4e83-b928-ef74fbae2b81",
+              "source": "1dfc96a7-1341-4e5f-8bdd-fa9559c70a23",
+              "target": "392c7619-999c-4a85-8a98-fae7c249d6d9",
+              "kind": "image-input",
+              "ordinal": 2
+            },
+            {
+              "id": "468ded31-1cc9-4bfd-96b0-4f9c5e3b63a7",
+              "source": "result:2683d1d1-37e8-40b5-a39e-20e7c070b37f",
+              "target": "392c7619-999c-4a85-8a98-fae7c249d6d9",
+              "kind": "image-input",
+              "ordinal": 1
+            },
+            {
+              "id": "9b136df3-a5c5-4c12-aa28-9434dce2800a",
+              "source": "392c7619-999c-4a85-8a98-fae7c249d6d9",
+              "target": "result:5ffc3b89-9967-4cce-9454-7eebbb9bdb68",
+              "kind": "output-provenance"
+            }
+          ],
+          "viewport": {
+            "x": 21.293124999999804,
+            "y": 137.70399999999995,
+            "zoom": 1.728
+          },
+          "runBindings": [
+            {
+              "runId": "2a4859e8-3529-443f-a29f-063ca5d8ebd4",
+              "nodeId": "b914b367-6a7e-431c-9828-d9c508033b99",
+              "jobId": "canvas-2a4859e8-3529-443f-a29f-063ca5d8ebd4",
+              "outputsHandled": true
+            },
+            {
+              "runId": "a31159d5-0a30-4164-97b7-b2e3909009bb",
+              "nodeId": "392c7619-999c-4a85-8a98-fae7c249d6d9",
+              "jobId": "canvas-a31159d5-0a30-4164-97b7-b2e3909009bb",
+              "outputsHandled": true
+            }
+          ],
+          "nodes": [
+            {
+              "id": "6c9dd613-2742-4c00-afd4-c09f6994203a",
+              "kind": "prompt",
+              "position": {
+                "x": -330,
+                "y": 55
+              },
+              "text": "A ceramic cup in warm afternoon light\n"
+            },
+            {
+              "id": "b914b367-6a7e-431c-9828-d9c508033b99",
+              "kind": "generation",
+              "position": {
+                "x": 50,
+                "y": 55
+              },
+              "parameters": {
+                "providerMode": "built_in",
+                "channelId": "channel-account",
+                "model": "image-account-default",
+                "size": "auto",
+                "quality": "auto",
+                "outputFormat": "png",
+                "outputCompression": null,
+                "moderation": "auto",
+                "count": 1,
+                "negativePrompt": null,
+                "seed": null
+              }
+            },
+            {
+              "id": "result:2683d1d1-37e8-40b5-a39e-20e7c070b37f",
+              "kind": "result",
+              "position": {
+                "x": 500,
+                "y": 93
+              },
+              "jobId": "canvas-2a4859e8-3529-443f-a29f-063ca5d8ebd4",
+              "imageId": "2683d1d1-37e8-40b5-a39e-20e7c070b37f",
+              "runId": "2a4859e8-3529-443f-a29f-063ca5d8ebd4"
+            },
+            {
+              "id": "1dfc96a7-1341-4e5f-8bdd-fa9559c70a23",
+              "kind": "reference",
+              "position": {
+                "x": -125,
+                "y": -113
+              },
+              "source": {
+                "kind": "imported",
+                "assetId": "asset-924817bf-601d-480d-9a15-c19b43ea1b40"
+              }
+            },
+            {
+              "id": "0caa8d9a-8611-4110-8164-fdbae756c50f",
+              "kind": "prompt",
+              "position": {
+                "x": -125,
+                "y": 415
+              },
+              "text": "Phone 430: keep a readable independent draft暖色光线"
+            },
+            {
+              "id": "392c7619-999c-4a85-8a98-fae7c249d6d9",
+              "kind": "generation",
+              "position": {
+                "x": 255,
+                "y": -113
+              },
+              "parameters": {
+                "providerMode": "built_in",
+                "channelId": "channel-account",
+                "model": "image-account-default",
+                "size": "auto",
+                "quality": "auto",
+                "outputFormat": "png",
+                "outputCompression": null,
+                "moderation": "auto",
+                "count": 1,
+                "negativePrompt": null,
+                "seed": null
+              }
+            },
+            {
+              "id": "result:5ffc3b89-9967-4cce-9454-7eebbb9bdb68",
+              "kind": "result",
+              "position": {
+                "x": 635,
+                "y": 453
+              },
+              "jobId": "canvas-a31159d5-0a30-4164-97b7-b2e3909009bb",
+              "imageId": "5ffc3b89-9967-4cce-9454-7eebbb9bdb68",
+              "runId": "a31159d5-0a30-4164-97b7-b2e3909009bb"
+            }
+          ]
+        }
+      },
+      "headers": {
+        "x-narra-canvas-run": null
+      }
+    },
+    {
+      "owner": "fixture-owner-a",
+      "method": "GET",
+      "path": "/api/me/canvases",
+      "body": null,
+      "headers": {
+        "x-narra-canvas-run": null
+      }
+    },
+    {
+      "owner": "fixture-owner-a",
+      "method": "GET",
+      "path": "/api/me/canvases/b807bf0f-a0b8-4c18-95ab-ce5541cc141d",
+      "body": null,
+      "headers": {
+        "x-narra-canvas-run": null
+      }
+    },
+    {
+      "owner": "fixture-owner-a",
+      "method": "POST",
+      "path": "/api/me/canvas-runtime/resolve",
+      "body": {
+        "canvasId": "b807bf0f-a0b8-4c18-95ab-ce5541cc141d",
+        "runBindings": [
+          {
+            "runId": "2a4859e8-3529-443f-a29f-063ca5d8ebd4",
+            "nodeId": "b914b367-6a7e-431c-9828-d9c508033b99",
+            "jobId": "canvas-2a4859e8-3529-443f-a29f-063ca5d8ebd4",
+            "outputsHandled": true
+          },
+          {
+            "runId": "a31159d5-0a30-4164-97b7-b2e3909009bb",
+            "nodeId": "392c7619-999c-4a85-8a98-fae7c249d6d9",
+            "jobId": "canvas-a31159d5-0a30-4164-97b7-b2e3909009bb",
+            "outputsHandled": true
+          }
+        ],
+        "runIds": [],
+        "jobIds": [
+          "canvas-2a4859e8-3529-443f-a29f-063ca5d8ebd4",
+          "canvas-a31159d5-0a30-4164-97b7-b2e3909009bb"
+        ],
+        "imageIds": [
+          "2683d1d1-37e8-40b5-a39e-20e7c070b37f",
+          "5ffc3b89-9967-4cce-9454-7eebbb9bdb68"
+        ],
+        "assetIds": [
+          "asset-924817bf-601d-480d-9a15-c19b43ea1b40"
+        ]
+      },
+      "headers": {
+        "x-narra-canvas-run": null
+      }
+    },
+    {
+      "owner": "fixture-owner-a",
+      "method": "GET",
+      "path": "/api/me/canvas-runs/2a4859e8-3529-443f-a29f-063ca5d8ebd4",
+      "body": null,
+      "headers": {
+        "x-narra-canvas-run": null
+      }
+    },
+    {
+      "owner": "fixture-owner-a",
+      "method": "GET",
+      "path": "/api/me/canvases/316d9f6b-7746-48ac-98bc-a1bc5bad7231",
+      "body": null,
+      "headers": {
+        "x-narra-canvas-run": null
+      }
+    },
+    {
+      "owner": "fixture-owner-a",
+      "method": "GET",
+      "path": "/api/me/canvases/7dc12542-b427-48a0-b25f-c67209d9ae93",
+      "body": null,
+      "headers": {
+        "x-narra-canvas-run": null
+      }
+    },
+    {
+      "owner": "fixture-owner-a",
+      "method": "POST",
+      "path": "/api/me/canvas-runtime/resolve",
+      "body": {
+        "canvasId": "7dc12542-b427-48a0-b25f-c67209d9ae93",
+        "runBindings": [],
+        "runIds": [],
+        "jobIds": [],
+        "imageIds": [],
+        "assetIds": [
+          "889d3598-6e56-408f-b0e8-8fc965f94f77",
+          "82391971-e86b-4e34-876b-7dbf36d0c97b",
+          "44c8e879-ec2e-4c2a-bedb-e73fb1ef91ad",
+          "ddb1a822-b6e1-4229-ac0c-f907d7f74c28",
+          "ee9ac123-498f-45ff-93f4-04b8256e87cc",
+          "bf12f531-06f1-4ff9-a760-99369edeac29",
+          "b91c2673-eae2-4b60-bcd4-81ca173eb4ae",
+          "a1a60971-30b5-439a-81f5-80c1448305a0"
+        ]
+      },
+      "headers": {
+        "x-narra-canvas-run": null
+      }
+    },
+    {
+      "owner": "fixture-owner-a",
+      "method": "GET",
+      "path": "/api/me/canvases/1a11fc48-dcc0-46e3-906f-5e5a014c725f",
+      "body": null,
+      "headers": {
+        "x-narra-canvas-run": null
+      }
+    }
+  ],
+  "browserRequests": [
+    {
+      "url": "http://127.0.0.1:51784/create",
+      "method": "GET",
+      "type": "Document",
+      "requestId": "098F876A13FD7199341BAFF6EF803BF8"
+    },
+    {
+      "url": "http://127.0.0.1:51784/_next/static/chunks/17vurgie.u_z_.css",
+      "method": "GET",
+      "type": "Stylesheet",
+      "requestId": "38384.2"
+    },
+    {
+      "url": "http://127.0.0.1:51784/_next/static/chunks/0c5mjg0b96z4t.css",
+      "method": "GET",
+      "type": "Stylesheet",
+      "requestId": "38384.3"
+    },
+    {
+      "url": "http://127.0.0.1:51784/_next/static/chunks/0o-52wz7lc2t..js",
+      "method": "GET",
+      "type": "Script",
+      "requestId": "38384.4"
+    },
+    {
+      "url": "http://127.0.0.1:51784/_next/static/chunks/04msp1tymiwf8.js",
+      "method": "GET",
+      "type": "Script",
+      "requestId": "38384.5"
+    },
+    {
+      "url": "http://127.0.0.1:51784/_next/static/chunks/0qdfpoy9s8edu.js",
+      "method": "GET",
+      "type": "Script",
+      "requestId": "38384.6"
+    },
+    {
+      "url": "http://127.0.0.1:51784/_next/static/chunks/0zn-2xj2m9x0p.js",
+      "method": "GET",
+      "type": "Script",
+      "requestId": "38384.7"
+    },
+    {
+      "url": "http://127.0.0.1:51784/_next/static/chunks/turbopack-0ee5u1bt-xojl.js",
+      "method": "GET",
+      "type": "Script",
+      "requestId": "38384.8"
+    },
+    {
+      "url": "http://127.0.0.1:51784/_next/static/chunks/0wj9epgle3y2~.js",
+      "method": "GET",
+      "type": "Script",
+      "requestId": "38384.9"
+    },
+    {
+      "url": "http://127.0.0.1:51784/_next/static/chunks/0psrj~bga1df3.js",
+      "method": "GET",
+      "type": "Script",
+      "requestId": "38384.10"
+    },
+    {
+      "url": "http://127.0.0.1:51784/_next/static/chunks/0wuz_wrqzvgzj.js",
+      "method": "GET",
+      "type": "Script",
+      "requestId": "38384.11"
+    },
+    {
+      "url": "http://127.0.0.1:51784/_next/static/chunks/0ym4ajvy2_osp.js",
+      "method": "GET",
+      "type": "Script",
+      "requestId": "38384.12"
+    },
+    {
+      "url": "http://127.0.0.1:51784/_next/static/chunks/0kiouynsw~2tn.js",
+      "method": "GET",
+      "type": "Script",
+      "requestId": "38384.13"
+    },
+    {
+      "url": "http://127.0.0.1:51784/_next/static/chunks/14_jhcjn2yed-.js",
+      "method": "GET",
+      "type": "Script",
+      "requestId": "38384.14"
+    },
+    {
+      "url": "http://127.0.0.1:51784/_next/static/chunks/0bj~ie~wxf8~-.js",
+      "method": "GET",
+      "type": "Script",
+      "requestId": "38384.30"
+    },
+    {
+      "url": "http://127.0.0.1:51784/_next/static/chunks/0hb.z9hx1~hrp.js",
+      "method": "GET",
+      "type": "Script",
+      "requestId": "38384.31"
+    },
+    {
+      "url": "http://127.0.0.1:51784/favicon.ico",
+      "method": "GET",
+      "type": "Other",
+      "requestId": "38384.32"
+    },
+    {
+      "url": "http://127.0.0.1:51784/api/me/canvases",
+      "method": "GET",
+      "type": "Fetch",
+      "requestId": "38384.33"
+    },
+    {
+      "url": "http://127.0.0.1:51784/api/me/canvases/7dc12542-b427-48a0-b25f-c67209d9ae93",
+      "method": "GET",
+      "type": "Fetch",
+      "requestId": "38384.34"
+    },
+    {
+      "url": "http://127.0.0.1:51784/api/me/canvas-runtime/resolve",
+      "method": "POST",
+      "type": "Fetch",
+      "requestId": "38384.35"
+    },
+    {
+      "url": "http://127.0.0.1:51784/_next/static/chunks/01ce.fl~427km.js",
+      "method": "GET",
+      "type": "Script",
+      "requestId": "38384.36"
+    },
+    {
+      "url": "http://127.0.0.1:51784/_next/static/chunks/0hj819sbkgu77.css",
+      "method": "GET",
+      "type": "Stylesheet",
+      "requestId": "38384.37"
+    },
+    {
+      "url": "http://127.0.0.1:51784/_next/image?url=%2Ffixture-media%2F889d3598-6e56-408f-b0e8-8fc965f94f77.png&w=640&q=75",
+      "method": "GET",
+      "type": "Image",
+      "requestId": "38384.38"
+    },
+    {
+      "url": "http://127.0.0.1:51784/_next/image?url=%2Ffixture-media%2F82391971-e86b-4e34-876b-7dbf36d0c97b.png&w=640&q=75",
+      "method": "GET",
+      "type": "Image",
+      "requestId": "38384.39"
+    },
+    {
+      "url": "http://127.0.0.1:51784/_next/image?url=%2Ffixture-media%2F44c8e879-ec2e-4c2a-bedb-e73fb1ef91ad.png&w=640&q=75",
+      "method": "GET",
+      "type": "Image",
+      "requestId": "38384.40"
+    },
+    {
+      "url": "http://127.0.0.1:51784/_next/image?url=%2Ffixture-media%2Fddb1a822-b6e1-4229-ac0c-f907d7f74c28.png&w=640&q=75",
+      "method": "GET",
+      "type": "Image",
+      "requestId": "38384.41"
+    },
+    {
+      "url": "http://127.0.0.1:51784/_next/image?url=%2Ffixture-media%2Fee9ac123-498f-45ff-93f4-04b8256e87cc.png&w=640&q=75",
+      "method": "GET",
+      "type": "Image",
+      "requestId": "38384.42"
+    },
+    {
+      "url": "http://127.0.0.1:51784/_next/image?url=%2Ffixture-media%2Fbf12f531-06f1-4ff9-a760-99369edeac29.png&w=640&q=75",
+      "method": "GET",
+      "type": "Image",
+      "requestId": "38384.43"
+    },
+    {
+      "url": "http://127.0.0.1:51784/_next/image?url=%2Ffixture-media%2Fb91c2673-eae2-4b60-bcd4-81ca173eb4ae.png&w=640&q=75",
+      "method": "GET",
+      "type": "Image",
+      "requestId": "38384.44"
+    },
+    {
+      "url": "http://127.0.0.1:51784/_next/image?url=%2Ffixture-media%2Fa1a60971-30b5-439a-81f5-80c1448305a0.png&w=640&q=75",
+      "method": "GET",
+      "type": "Image",
+      "requestId": "38384.45"
+    },
+    {
+      "url": "http://127.0.0.1:51784/api/me/canvases",
+      "method": "POST",
+      "type": "Fetch",
+      "requestId": "38384.54"
+    },
+    {
+      "url": "http://127.0.0.1:51784/api/generate",
+      "method": "POST",
+      "type": "Fetch",
+      "requestId": "38384.55"
+    },
+    {
+      "url": "http://127.0.0.1:51784/create?_rsc=1hp4v",
+      "method": "GET",
+      "type": "Fetch",
+      "requestId": "38384.56"
+    },
+    {
+      "url": "http://127.0.0.1:51784/_next/image?url=%2Ffixture-media%2F2683d1d1-37e8-40b5-a39e-20e7c070b37f.png&w=640&q=75",
+      "method": "GET",
+      "type": "Image",
+      "requestId": "38384.57"
+    },
+    {
+      "url": "http://127.0.0.1:51784/fixture-media/2683d1d1-37e8-40b5-a39e-20e7c070b37f.png",
+      "method": "GET",
+      "type": "Image",
+      "requestId": "38384.59"
+    },
+    {
+      "url": "blob:http://127.0.0.1:51784/7349ae4a-ee73-4e27-84d0-fa21db06e500",
+      "method": "GET",
+      "type": "Image",
+      "requestId": "38384.62"
+    },
+    {
+      "url": "blob:http://127.0.0.1:51784/7349ae4a-ee73-4e27-84d0-fa21db06e500",
+      "method": "GET",
+      "type": "Fetch",
+      "requestId": "38384.64"
+    },
+    {
+      "url": "blob:http://127.0.0.1:51784/7349ae4a-ee73-4e27-84d0-fa21db06e500",
+      "method": "GET",
+      "type": "Image",
+      "requestId": "38384.65"
+    },
+    {
+      "url": "http://127.0.0.1:51784/_next/image?url=%2Ffixture-media%2F2683d1d1-37e8-40b5-a39e-20e7c070b37f.png&w=160&q=75",
+      "method": "GET",
+      "type": "Image",
+      "requestId": "38384.67"
+    },
+    {
+      "url": "http://127.0.0.1:51784/api/me/canvas-assets",
+      "method": "POST",
+      "type": "Fetch",
+      "requestId": "38384.73"
+    },
+    {
+      "url": "http://127.0.0.1:51784/_next/image?url=%2Ffixture-media%2Fasset-924817bf-601d-480d-9a15-c19b43ea1b40.png&w=160&q=75",
+      "method": "GET",
+      "type": "Image",
+      "requestId": "38384.74"
+    },
+    {
+      "url": "http://127.0.0.1:51784/_next/image?url=%2Ffixture-media%2Fasset-924817bf-601d-480d-9a15-c19b43ea1b40.png&w=640&q=75",
+      "method": "GET",
+      "type": "Image",
+      "requestId": "38384.75"
+    },
+    {
+      "url": "http://127.0.0.1:51784/api/generate",
+      "method": "POST",
+      "type": "Fetch",
+      "requestId": "38384.76"
+    },
+    {
+      "url": "http://127.0.0.1:51784/create?_rsc=1hp4v",
+      "method": "GET",
+      "type": "Fetch",
+      "requestId": "38384.77"
+    },
+    {
+      "url": "http://127.0.0.1:51784/_next/image?url=%2Ffixture-media%2F5ffc3b89-9967-4cce-9454-7eebbb9bdb68.png&w=640&q=75",
+      "method": "GET",
+      "type": "Image",
+      "requestId": "38384.78"
+    },
+    {
+      "url": "http://127.0.0.1:51784/api/me/canvas-assets/asset-924817bf-601d-480d-9a15-c19b43ea1b40",
+      "method": "GET",
+      "type": "Fetch",
+      "requestId": "38384.80"
+    },
+    {
+      "url": "http://127.0.0.1:51784/api/me/canvases/b807bf0f-a0b8-4c18-95ab-ce5541cc141d/snapshot",
+      "method": "PUT",
+      "type": "Fetch",
+      "requestId": "38384.81"
+    },
+    {
+      "url": "http://127.0.0.1:51784/create",
+      "method": "GET",
+      "type": "Document",
+      "requestId": "24308D20C00C84150071652CE8436FB0"
+    },
+    {
+      "url": "http://127.0.0.1:51784/_next/static/chunks/17vurgie.u_z_.css",
+      "method": "GET",
+      "type": "Stylesheet",
+      "requestId": "38384.83"
+    },
+    {
+      "url": "http://127.0.0.1:51784/_next/static/chunks/0c5mjg0b96z4t.css",
+      "method": "GET",
+      "type": "Stylesheet",
+      "requestId": "38384.84"
+    },
+    {
+      "url": "http://127.0.0.1:51784/_next/static/chunks/0o-52wz7lc2t..js",
+      "method": "GET",
+      "type": "Script",
+      "requestId": "38384.85"
+    },
+    {
+      "url": "http://127.0.0.1:51784/_next/static/chunks/04msp1tymiwf8.js",
+      "method": "GET",
+      "type": "Script",
+      "requestId": "38384.86"
+    },
+    {
+      "url": "http://127.0.0.1:51784/_next/static/chunks/0qdfpoy9s8edu.js",
+      "method": "GET",
+      "type": "Script",
+      "requestId": "38384.87"
+    },
+    {
+      "url": "http://127.0.0.1:51784/_next/static/chunks/0zn-2xj2m9x0p.js",
+      "method": "GET",
+      "type": "Script",
+      "requestId": "38384.88"
+    },
+    {
+      "url": "http://127.0.0.1:51784/_next/static/chunks/turbopack-0ee5u1bt-xojl.js",
+      "method": "GET",
+      "type": "Script",
+      "requestId": "38384.89"
+    },
+    {
+      "url": "http://127.0.0.1:51784/_next/static/chunks/0wj9epgle3y2~.js",
+      "method": "GET",
+      "type": "Script",
+      "requestId": "38384.90"
+    },
+    {
+      "url": "http://127.0.0.1:51784/_next/static/chunks/0psrj~bga1df3.js",
+      "method": "GET",
+      "type": "Script",
+      "requestId": "38384.91"
+    },
+    {
+      "url": "http://127.0.0.1:51784/_next/static/chunks/0wuz_wrqzvgzj.js",
+      "method": "GET",
+      "type": "Script",
+      "requestId": "38384.92"
+    },
+    {
+      "url": "http://127.0.0.1:51784/_next/static/chunks/0ym4ajvy2_osp.js",
+      "method": "GET",
+      "type": "Script",
+      "requestId": "38384.93"
+    },
+    {
+      "url": "http://127.0.0.1:51784/_next/static/chunks/0kiouynsw~2tn.js",
+      "method": "GET",
+      "type": "Script",
+      "requestId": "38384.94"
+    },
+    {
+      "url": "http://127.0.0.1:51784/_next/static/chunks/14_jhcjn2yed-.js",
+      "method": "GET",
+      "type": "Script",
+      "requestId": "38384.95"
+    },
+    {
+      "url": "http://127.0.0.1:51784/_next/static/chunks/01ce.fl~427km.js",
+      "method": "GET",
+      "type": "Script",
+      "requestId": "38384.111"
+    },
+    {
+      "url": "http://127.0.0.1:51784/_next/static/chunks/0hj819sbkgu77.css",
+      "method": "GET",
+      "type": "Stylesheet",
+      "requestId": "38384.112"
+    },
+    {
+      "url": "http://127.0.0.1:51784/_next/static/chunks/0hb.z9hx1~hrp.js",
+      "method": "GET",
+      "type": "Script",
+      "requestId": "38384.113"
+    },
+    {
+      "url": "http://127.0.0.1:51784/favicon.ico",
+      "method": "GET",
+      "type": "Other",
+      "requestId": "38384.114"
+    },
+    {
+      "url": "http://127.0.0.1:51784/api/me/canvases",
+      "method": "GET",
+      "type": "Fetch",
+      "requestId": "38384.115"
+    },
+    {
+      "url": "http://127.0.0.1:51784/api/me/canvases/b807bf0f-a0b8-4c18-95ab-ce5541cc141d",
+      "method": "GET",
+      "type": "Fetch",
+      "requestId": "38384.116"
+    },
+    {
+      "url": "blob:http://127.0.0.1:51784/2fdf0020-f694-42da-abf7-24b59a19e8de",
+      "method": "GET",
+      "type": "Image",
+      "requestId": "38384.117"
+    },
+    {
+      "url": "http://127.0.0.1:51784/api/me/canvas-runtime/resolve",
+      "method": "POST",
+      "type": "Fetch",
+      "requestId": "38384.119"
+    },
+    {
+      "url": "http://127.0.0.1:51784/api/me/canvas-runs/2a4859e8-3529-443f-a29f-063ca5d8ebd4",
+      "method": "GET",
+      "type": "Fetch",
+      "requestId": "38384.120"
+    },
+    {
+      "url": "http://127.0.0.1:51784/create?_rsc=1hp4v",
+      "method": "GET",
+      "type": "Fetch",
+      "requestId": "38384.121"
+    },
+    {
+      "url": "http://127.0.0.1:51784/_next/image?url=%2Ffixture-media%2Fasset-924817bf-601d-480d-9a15-c19b43ea1b40.png&w=640&q=75",
+      "method": "GET",
+      "type": "Image",
+      "requestId": "38384.124"
+    },
+    {
+      "url": "http://127.0.0.1:51784/_next/image?url=%2Ffixture-media%2F2683d1d1-37e8-40b5-a39e-20e7c070b37f.png&w=640&q=75",
+      "method": "GET",
+      "type": "Image",
+      "requestId": "38384.122"
+    },
+    {
+      "url": "http://127.0.0.1:51784/_next/image?url=%2Ffixture-media%2F5ffc3b89-9967-4cce-9454-7eebbb9bdb68.png&w=640&q=75",
+      "method": "GET",
+      "type": "Image",
+      "requestId": "38384.123"
+    },
+    {
+      "url": "http://127.0.0.1:51784/api/me/canvases/316d9f6b-7746-48ac-98bc-a1bc5bad7231",
+      "method": "GET",
+      "type": "Fetch",
+      "requestId": "38384.129"
+    },
+    {
+      "url": "http://127.0.0.1:51784/api/me/canvases/7dc12542-b427-48a0-b25f-c67209d9ae93",
+      "method": "GET",
+      "type": "Fetch",
+      "requestId": "38384.130"
+    },
+    {
+      "url": "http://127.0.0.1:51784/api/me/canvas-runtime/resolve",
+      "method": "POST",
+      "type": "Fetch",
+      "requestId": "38384.131"
+    },
+    {
+      "url": "http://127.0.0.1:51784/_next/image?url=%2Ffixture-media%2F889d3598-6e56-408f-b0e8-8fc965f94f77.png&w=640&q=75",
+      "method": "GET",
+      "type": "Image",
+      "requestId": "38384.132"
+    },
+    {
+      "url": "http://127.0.0.1:51784/_next/image?url=%2Ffixture-media%2F82391971-e86b-4e34-876b-7dbf36d0c97b.png&w=640&q=75",
+      "method": "GET",
+      "type": "Image",
+      "requestId": "38384.133"
+    },
+    {
+      "url": "http://127.0.0.1:51784/_next/image?url=%2Ffixture-media%2F44c8e879-ec2e-4c2a-bedb-e73fb1ef91ad.png&w=640&q=75",
+      "method": "GET",
+      "type": "Image",
+      "requestId": "38384.134"
+    },
+    {
+      "url": "http://127.0.0.1:51784/_next/image?url=%2Ffixture-media%2Fddb1a822-b6e1-4229-ac0c-f907d7f74c28.png&w=640&q=75",
+      "method": "GET",
+      "type": "Image",
+      "requestId": "38384.135"
+    },
+    {
+      "url": "http://127.0.0.1:51784/_next/image?url=%2Ffixture-media%2Fee9ac123-498f-45ff-93f4-04b8256e87cc.png&w=640&q=75",
+      "method": "GET",
+      "type": "Image",
+      "requestId": "38384.136"
+    },
+    {
+      "url": "http://127.0.0.1:51784/_next/image?url=%2Ffixture-media%2Fbf12f531-06f1-4ff9-a760-99369edeac29.png&w=640&q=75",
+      "method": "GET",
+      "type": "Image",
+      "requestId": "38384.137"
+    },
+    {
+      "url": "http://127.0.0.1:51784/_next/image?url=%2Ffixture-media%2Fb91c2673-eae2-4b60-bcd4-81ca173eb4ae.png&w=640&q=75",
+      "method": "GET",
+      "type": "Image",
+      "requestId": "38384.138"
+    },
+    {
+      "url": "http://127.0.0.1:51784/_next/image?url=%2Ffixture-media%2Fa1a60971-30b5-439a-81f5-80c1448305a0.png&w=640&q=75",
+      "method": "GET",
+      "type": "Image",
+      "requestId": "38384.139"
+    },
+    {
+      "url": "http://127.0.0.1:51784/api/me/canvases/1a11fc48-dcc0-46e3-906f-5e5a014c725f",
+      "method": "GET",
+      "type": "Fetch",
+      "requestId": "38384.148"
+    }
+  ],
+  "thumbnails": [
+    {
+      "source": "/fixture-media/889d3598-6e56-408f-b0e8-8fc965f94f77.png",
+      "width": 640,
+      "quality": 75,
+      "sha256": "2d85c90504eb5ea83d0d8ff18ab544fcbd997e088e31686f38162b5bef6326c0",
+      "boundary": "Fake thumbnail endpoint serves fixture original bytes, not real Next optimizer/backend proof"
+    },
+    {
+      "source": "/fixture-media/82391971-e86b-4e34-876b-7dbf36d0c97b.png",
+      "width": 640,
+      "quality": 75,
+      "sha256": "2d85c90504eb5ea83d0d8ff18ab544fcbd997e088e31686f38162b5bef6326c0",
+      "boundary": "Fake thumbnail endpoint serves fixture original bytes, not real Next optimizer/backend proof"
+    },
+    {
+      "source": "/fixture-media/44c8e879-ec2e-4c2a-bedb-e73fb1ef91ad.png",
+      "width": 640,
+      "quality": 75,
+      "sha256": "2d85c90504eb5ea83d0d8ff18ab544fcbd997e088e31686f38162b5bef6326c0",
+      "boundary": "Fake thumbnail endpoint serves fixture original bytes, not real Next optimizer/backend proof"
+    },
+    {
+      "source": "/fixture-media/ddb1a822-b6e1-4229-ac0c-f907d7f74c28.png",
+      "width": 640,
+      "quality": 75,
+      "sha256": "2d85c90504eb5ea83d0d8ff18ab544fcbd997e088e31686f38162b5bef6326c0",
+      "boundary": "Fake thumbnail endpoint serves fixture original bytes, not real Next optimizer/backend proof"
+    },
+    {
+      "source": "/fixture-media/ee9ac123-498f-45ff-93f4-04b8256e87cc.png",
+      "width": 640,
+      "quality": 75,
+      "sha256": "2d85c90504eb5ea83d0d8ff18ab544fcbd997e088e31686f38162b5bef6326c0",
+      "boundary": "Fake thumbnail endpoint serves fixture original bytes, not real Next optimizer/backend proof"
+    },
+    {
+      "source": "/fixture-media/bf12f531-06f1-4ff9-a760-99369edeac29.png",
+      "width": 640,
+      "quality": 75,
+      "sha256": "2d85c90504eb5ea83d0d8ff18ab544fcbd997e088e31686f38162b5bef6326c0",
+      "boundary": "Fake thumbnail endpoint serves fixture original bytes, not real Next optimizer/backend proof"
+    },
+    {
+      "source": "/fixture-media/b91c2673-eae2-4b60-bcd4-81ca173eb4ae.png",
+      "width": 640,
+      "quality": 75,
+      "sha256": "2d85c90504eb5ea83d0d8ff18ab544fcbd997e088e31686f38162b5bef6326c0",
+      "boundary": "Fake thumbnail endpoint serves fixture original bytes, not real Next optimizer/backend proof"
+    },
+    {
+      "source": "/fixture-media/a1a60971-30b5-439a-81f5-80c1448305a0.png",
+      "width": 640,
+      "quality": 75,
+      "sha256": "2d85c90504eb5ea83d0d8ff18ab544fcbd997e088e31686f38162b5bef6326c0",
+      "boundary": "Fake thumbnail endpoint serves fixture original bytes, not real Next optimizer/backend proof"
+    },
+    {
+      "source": "/fixture-media/2683d1d1-37e8-40b5-a39e-20e7c070b37f.png",
+      "width": 640,
+      "quality": 75,
+      "sha256": "0884609103a467153a8fa8623bb8dbcf6425c5222744f8626ecb7cbf823d0359",
+      "boundary": "Fake thumbnail endpoint serves fixture original bytes, not real Next optimizer/backend proof"
+    },
+    {
+      "source": "/fixture-media/2683d1d1-37e8-40b5-a39e-20e7c070b37f.png",
+      "width": 160,
+      "quality": 75,
+      "sha256": "0884609103a467153a8fa8623bb8dbcf6425c5222744f8626ecb7cbf823d0359",
+      "boundary": "Fake thumbnail endpoint serves fixture original bytes, not real Next optimizer/backend proof"
+    },
+    {
+      "source": "/fixture-media/asset-924817bf-601d-480d-9a15-c19b43ea1b40.png",
+      "width": 160,
+      "quality": 75,
+      "sha256": "2d85c90504eb5ea83d0d8ff18ab544fcbd997e088e31686f38162b5bef6326c0",
+      "boundary": "Fake thumbnail endpoint serves fixture original bytes, not real Next optimizer/backend proof"
+    },
+    {
+      "source": "/fixture-media/asset-924817bf-601d-480d-9a15-c19b43ea1b40.png",
+      "width": 640,
+      "quality": 75,
+      "sha256": "2d85c90504eb5ea83d0d8ff18ab544fcbd997e088e31686f38162b5bef6326c0",
+      "boundary": "Fake thumbnail endpoint serves fixture original bytes, not real Next optimizer/backend proof"
+    },
+    {
+      "source": "/fixture-media/5ffc3b89-9967-4cce-9454-7eebbb9bdb68.png",
+      "width": 640,
+      "quality": 75,
+      "sha256": "0884609103a467153a8fa8623bb8dbcf6425c5222744f8626ecb7cbf823d0359",
+      "boundary": "Fake thumbnail endpoint serves fixture original bytes, not real Next optimizer/backend proof"
+    },
+    {
+      "source": "/fixture-media/asset-924817bf-601d-480d-9a15-c19b43ea1b40.png",
+      "width": 640,
+      "quality": 75,
+      "sha256": "2d85c90504eb5ea83d0d8ff18ab544fcbd997e088e31686f38162b5bef6326c0",
+      "boundary": "Fake thumbnail endpoint serves fixture original bytes, not real Next optimizer/backend proof"
+    },
+    {
+      "source": "/fixture-media/2683d1d1-37e8-40b5-a39e-20e7c070b37f.png",
+      "width": 640,
+      "quality": 75,
+      "sha256": "0884609103a467153a8fa8623bb8dbcf6425c5222744f8626ecb7cbf823d0359",
+      "boundary": "Fake thumbnail endpoint serves fixture original bytes, not real Next optimizer/backend proof"
+    },
+    {
+      "source": "/fixture-media/5ffc3b89-9967-4cce-9454-7eebbb9bdb68.png",
+      "width": 640,
+      "quality": 75,
+      "sha256": "0884609103a467153a8fa8623bb8dbcf6425c5222744f8626ecb7cbf823d0359",
+      "boundary": "Fake thumbnail endpoint serves fixture original bytes, not real Next optimizer/backend proof"
+    },
+    {
+      "source": "/fixture-media/889d3598-6e56-408f-b0e8-8fc965f94f77.png",
+      "width": 640,
+      "quality": 75,
+      "sha256": "2d85c90504eb5ea83d0d8ff18ab544fcbd997e088e31686f38162b5bef6326c0",
+      "boundary": "Fake thumbnail endpoint serves fixture original bytes, not real Next optimizer/backend proof"
+    },
+    {
+      "source": "/fixture-media/82391971-e86b-4e34-876b-7dbf36d0c97b.png",
+      "width": 640,
+      "quality": 75,
+      "sha256": "2d85c90504eb5ea83d0d8ff18ab544fcbd997e088e31686f38162b5bef6326c0",
+      "boundary": "Fake thumbnail endpoint serves fixture original bytes, not real Next optimizer/backend proof"
+    },
+    {
+      "source": "/fixture-media/44c8e879-ec2e-4c2a-bedb-e73fb1ef91ad.png",
+      "width": 640,
+      "quality": 75,
+      "sha256": "2d85c90504eb5ea83d0d8ff18ab544fcbd997e088e31686f38162b5bef6326c0",
+      "boundary": "Fake thumbnail endpoint serves fixture original bytes, not real Next optimizer/backend proof"
+    },
+    {
+      "source": "/fixture-media/ddb1a822-b6e1-4229-ac0c-f907d7f74c28.png",
+      "width": 640,
+      "quality": 75,
+      "sha256": "2d85c90504eb5ea83d0d8ff18ab544fcbd997e088e31686f38162b5bef6326c0",
+      "boundary": "Fake thumbnail endpoint serves fixture original bytes, not real Next optimizer/backend proof"
+    },
+    {
+      "source": "/fixture-media/ee9ac123-498f-45ff-93f4-04b8256e87cc.png",
+      "width": 640,
+      "quality": 75,
+      "sha256": "2d85c90504eb5ea83d0d8ff18ab544fcbd997e088e31686f38162b5bef6326c0",
+      "boundary": "Fake thumbnail endpoint serves fixture original bytes, not real Next optimizer/backend proof"
+    },
+    {
+      "source": "/fixture-media/bf12f531-06f1-4ff9-a760-99369edeac29.png",
+      "width": 640,
+      "quality": 75,
+      "sha256": "2d85c90504eb5ea83d0d8ff18ab544fcbd997e088e31686f38162b5bef6326c0",
+      "boundary": "Fake thumbnail endpoint serves fixture original bytes, not real Next optimizer/backend proof"
+    },
+    {
+      "source": "/fixture-media/b91c2673-eae2-4b60-bcd4-81ca173eb4ae.png",
+      "width": 640,
+      "quality": 75,
+      "sha256": "2d85c90504eb5ea83d0d8ff18ab544fcbd997e088e31686f38162b5bef6326c0",
+      "boundary": "Fake thumbnail endpoint serves fixture original bytes, not real Next optimizer/backend proof"
+    },
+    {
+      "source": "/fixture-media/a1a60971-30b5-439a-81f5-80c1448305a0.png",
+      "width": 640,
+      "quality": 75,
+      "sha256": "2d85c90504eb5ea83d0d8ff18ab544fcbd997e088e31686f38162b5bef6326c0",
+      "boundary": "Fake thumbnail endpoint serves fixture original bytes, not real Next optimizer/backend proof"
+    }
+  ],
+  "errors": [],
+  "blockedExternal": [],
+  "pointApproaches": [
+    {
+      "selector": "button[aria-label=\"选择工具\"]",
+      "text": null,
+      "attempt": 0,
+      "before": {
+        "left": 624.28125,
+        "top": 937.40625,
+        "right": 664.28125,
+        "bottom": 977.40625,
+        "width": 40,
+        "height": 40,
+        "x": 644.28125,
+        "y": 957.40625,
+        "clip": {
+          "left": 624.28125,
+          "top": 937.40625,
+          "right": 664.28125,
+          "bottom": 977.40625
+        },
+        "visible": true,
+        "hit": false,
+        "hitTag": "BUTTON",
+        "hitText": "保存高清原图",
+        "text": "",
+        "disabled": false
+      }
+    },
+    {
+      "selector": "button[aria-label=\"选择工具\"]",
+      "text": null,
+      "attempt": 1,
+      "before": {
+        "left": 624.28125,
+        "top": 937.40625,
+        "right": 664.28125,
+        "bottom": 977.40625,
+        "width": 40,
+        "height": 40,
+        "x": 644.28125,
+        "y": 957.40625,
+        "clip": {
+          "left": 624.28125,
+          "top": 937.40625,
+          "right": 664.28125,
+          "bottom": 977.40625
+        },
+        "visible": true,
+        "hit": false,
+        "hitTag": "BUTTON",
+        "hitText": "保存高清原图",
+        "text": "",
+        "disabled": false
+      }
+    }
+  ]
+}

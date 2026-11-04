@@ -1,0 +1,1445 @@
+[
+  {
+    "id": "B0-native-calibration",
+    "passed": true,
+    "durationMs": 1769,
+    "detail": [
+      {
+        "name": "click",
+        "trusted": true,
+        "alt": false,
+        "shift": false
+      },
+      {
+        "name": "keydown",
+        "trusted": true,
+        "key": "Enter",
+        "alt": false,
+        "shift": false
+      },
+      {
+        "name": "keypress",
+        "trusted": true,
+        "key": "Enter",
+        "alt": false,
+        "shift": false
+      },
+      {
+        "name": "click",
+        "trusted": true,
+        "alt": false,
+        "shift": false
+      },
+      {
+        "name": "keydown",
+        "trusted": true,
+        "key": "Enter",
+        "alt": false,
+        "shift": false
+      },
+      {
+        "name": "keypress",
+        "trusted": true,
+        "key": "Enter",
+        "alt": false,
+        "shift": false
+      },
+      {
+        "name": "click",
+        "trusted": true,
+        "alt": false,
+        "shift": false
+      },
+      {
+        "name": "keydown",
+        "trusted": true,
+        "key": "Tab",
+        "alt": false,
+        "shift": false
+      },
+      {
+        "name": "keydown",
+        "trusted": true,
+        "key": "Tab",
+        "alt": false,
+        "shift": true
+      }
+    ]
+  },
+  {
+    "id": "B1-direct-create-run",
+    "passed": true,
+    "durationMs": 3844,
+    "detail": {
+      "canvasId": "b807bf0f-a0b8-4c18-95ab-ce5541cc141d",
+      "canonicalNodes": 3,
+      "defaultVisibleCardsBeforeRun": 1,
+      "surface": {
+        "rect": {
+          "x": 302.34375,
+          "y": 237,
+          "width": 420,
+          "height": 480.859375,
+          "top": 237,
+          "right": 722.34375,
+          "bottom": 717.859375,
+          "left": 302.34375
+        },
+        "promptCount": 1,
+        "font": 16,
+        "controls": 13
+      },
+      "run": {
+        "canvasId": "b807bf0f-a0b8-4c18-95ab-ce5541cc141d",
+        "nodeId": "b914b367-6a7e-431c-9828-d9c508033b99",
+        "runId": "2a4859e8-3529-443f-a29f-063ca5d8ebd4",
+        "input": {
+          "prompt": {
+            "sourceNodeId": "6c9dd613-2742-4c00-afd4-c09f6994203a",
+            "text": "A ceramic cup in warm afternoon light"
+          },
+          "references": []
+        },
+        "parameters": {
+          "providerMode": "built_in",
+          "channelId": "channel-account",
+          "model": "image-account-default",
+          "size": "auto",
+          "quality": "auto",
+          "outputFormat": "png",
+          "outputCompression": null,
+          "moderation": "auto",
+          "count": 1,
+          "negativePrompt": null,
+          "seed": null,
+          "generationType": "text_to_image"
+        }
+      },
+      "result": {
+        "id": "result:2683d1d1-37e8-40b5-a39e-20e7c070b37f",
+        "kind": "result",
+        "position": {
+          "x": 430,
+          "y": 55
+        },
+        "jobId": "canvas-2a4859e8-3529-443f-a29f-063ca5d8ebd4",
+        "imageId": "2683d1d1-37e8-40b5-a39e-20e7c070b37f",
+        "runId": "2a4859e8-3529-443f-a29f-063ca5d8ebd4"
+      }
+    }
+  },
+  {
+    "id": "U5-invalid-size-blocks-run-and-save",
+    "passed": true,
+    "durationMs": 4235,
+    "detail": {
+      "runCount": 1,
+      "saveCount": 0,
+      "invalidDraftSurvivesClose": true,
+      "explicitAutoClearsDraft": true
+    }
+  },
+  {
+    "id": "B2-select-explicit-view-drag",
+    "passed": true,
+    "durationMs": 2139,
+    "detail": {
+      "before": {
+        "x": 430,
+        "y": 55
+      },
+      "moved": {
+        "x": 500,
+        "y": 93
+      },
+      "native": [
+        {
+          "type": "pointerdown",
+          "at": 1273.8999999910593,
+          "x": 157,
+          "y": 87,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "target": "<button type=\"button\" aria-pressed=\"false\" class=\"inline-flex items-center gap-2 rounded-lg px-4 py-1.5 text-sm font-semibold transition-colors text-[var(--ink-soft)] hover:bg-white/60\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColo",
+          "action": null
+        },
+        {
+          "type": "pointerup",
+          "at": 1277.8999999910593,
+          "x": 157,
+          "y": 87,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "target": "<button type=\"button\" aria-pressed=\"false\" class=\"inline-flex items-center gap-2 rounded-lg px-4 py-1.5 text-sm font-semibold transition-colors text-[var(--ink-soft)] hover:bg-white/60\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColo",
+          "action": null
+        },
+        {
+          "type": "click",
+          "at": 1278.2000000029802,
+          "x": 157,
+          "y": 87,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 1,
+          "target": "<button type=\"button\" aria-pressed=\"false\" class=\"inline-flex items-center gap-2 rounded-lg px-4 py-1.5 text-sm font-semibold transition-colors text-[var(--ink-soft)] hover:bg-white/60\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColo",
+          "action": null
+        },
+        {
+          "type": "pointerdown",
+          "at": 1938.5999999940395,
+          "x": 125.671875,
+          "y": 196.5859375,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "target": "<button type=\"button\" class=\"canvas-stage-module__efzUrq__newButton\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-plus size-4\" aria-hidden=\"tru",
+          "action": null
+        },
+        {
+          "type": "pointerup",
+          "at": 1939.3999999910593,
+          "x": 125.671875,
+          "y": 196.5859375,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "target": "<button type=\"button\" class=\"canvas-stage-module__efzUrq__newButton\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-plus size-4\" aria-hidden=\"tru",
+          "action": null
+        },
+        {
+          "type": "click",
+          "at": 1939.5,
+          "x": 125,
+          "y": 196,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 1,
+          "target": "<button type=\"button\" class=\"canvas-stage-module__efzUrq__newButton\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-plus size-4\" aria-hidden=\"tru",
+          "action": null
+        },
+        {
+          "type": "pointerdown",
+          "at": 2598.5,
+          "x": 846.171875,
+          "y": 957.40625,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "target": "<span class=\"canvas-stage-module__efzUrq__dockText\">新建图片</span>",
+          "action": "新建图片"
+        },
+        {
+          "type": "pointerup",
+          "at": 2599.5,
+          "x": 846.171875,
+          "y": 957.40625,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "target": "<span class=\"canvas-stage-module__efzUrq__dockText\">新建图片</span>",
+          "action": "新建图片"
+        },
+        {
+          "type": "click",
+          "at": 2599.7000000029802,
+          "x": 846,
+          "y": 957,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 1,
+          "target": "<span class=\"canvas-stage-module__efzUrq__dockText\">新建图片</span>",
+          "action": "新建图片"
+        },
+        {
+          "type": "pointerdown",
+          "at": 3170.3999999910593,
+          "x": 512.34375,
+          "y": 373.9609375,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "target": "<textarea aria-label=\"创作提示词\" maxlength=\"8000\" rows=\"5\" class=\"nodrag nopan nowheel nokey canvas-stage-module__efzUrq__promptInput\" placeholder=\"光线、构图、主体与风格……\"></textarea>"
+        },
+        {
+          "type": "pointerup",
+          "at": 3173.0999999940395,
+          "x": 512.34375,
+          "y": 373.9609375,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "target": "<textarea aria-label=\"创作提示词\" maxlength=\"8000\" rows=\"5\" class=\"nodrag nopan nowheel nokey canvas-stage-module__efzUrq__promptInput\" placeholder=\"光线、构图、主体与风格……\"></textarea>"
+        },
+        {
+          "type": "click",
+          "at": 3173.2000000029802,
+          "x": 512,
+          "y": 373,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 1,
+          "target": "<textarea aria-label=\"创作提示词\" maxlength=\"8000\" rows=\"5\" class=\"nodrag nopan nowheel nokey canvas-stage-module__efzUrq__promptInput\" placeholder=\"光线、构图、主体与风格……\"></textarea>"
+        },
+        {
+          "type": "pointerdown",
+          "at": 3785.8999999910593,
+          "x": 512.34375,
+          "y": 684.46875,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "target": "<button type=\"button\" class=\"canvas-stage-module__efzUrq__runButton\" aria-label=\"运行此节点\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-play size-",
+          "action": "运行此节点"
+        },
+        {
+          "type": "pointerup",
+          "at": 3787.7000000029802,
+          "x": 512.34375,
+          "y": 684.46875,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "target": "<button type=\"button\" class=\"canvas-stage-module__efzUrq__runButton\" aria-label=\"运行此节点\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-play size-",
+          "action": "运行此节点"
+        },
+        {
+          "type": "click",
+          "at": 3787.8999999910593,
+          "x": 512,
+          "y": 684,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 1,
+          "target": "<button type=\"button\" class=\"canvas-stage-module__efzUrq__runButton\" aria-label=\"运行此节点\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-play size-",
+          "action": "运行此节点"
+        },
+        {
+          "type": "pointerdown",
+          "at": 4237.79999999702,
+          "x": 687.34375,
+          "y": 267.1875,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "target": "<path d=\"m6 6 12 12\"></path>",
+          "action": "关闭节点设置"
+        },
+        {
+          "type": "pointerup",
+          "at": 4238.79999999702,
+          "x": 687.34375,
+          "y": 267.1875,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "target": "<path d=\"m6 6 12 12\"></path>",
+          "action": "关闭节点设置"
+        },
+        {
+          "type": "click",
+          "at": 4238.899999991059,
+          "x": 687,
+          "y": 267,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 1,
+          "target": "<path d=\"m6 6 12 12\"></path>",
+          "action": "关闭节点设置"
+        },
+        {
+          "type": "pointerdown",
+          "at": 4679.70000000298,
+          "x": 403.734375,
+          "y": 957.40625,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "target": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-focus size-4\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"3\"></circle><path d=\"M3 7V5a2 2 0 0 1 ",
+          "action": "适应全部节点"
+        },
+        {
+          "type": "pointerup",
+          "at": 4680.70000000298,
+          "x": 403.734375,
+          "y": 957.40625,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "target": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-focus size-4\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"3\"></circle><path d=\"M3 7V5a2 2 0 0 1 ",
+          "action": "适应全部节点"
+        },
+        {
+          "type": "click",
+          "at": 4680.70000000298,
+          "x": 403,
+          "y": 957,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 1,
+          "target": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-focus size-4\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"3\"></circle><path d=\"M3 7V5a2 2 0 0 1 ",
+          "action": "适应全部节点"
+        },
+        {
+          "type": "pointerdown",
+          "at": 5116.70000000298,
+          "x": 672.34375,
+          "y": 577.6328125,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "target": "<div class=\"canvas-stage-module__efzUrq__nodeBody\"><p class=\"canvas-stage-module__efzUrq__creationPromptPreview\">A ceramic cup in warm afternoon light\n</p><div class=\"canvas-stage-module__efzUrq__creationMeta\"><span><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" f",
+          "nodeId": "b914b367-6a7e-431c-9828-d9c508033b99"
+        },
+        {
+          "type": "pointerup",
+          "at": 5117.899999991059,
+          "x": 672.34375,
+          "y": 577.6328125,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "target": "<div class=\"canvas-stage-module__efzUrq__nodeBody\"><p class=\"canvas-stage-module__efzUrq__creationPromptPreview\">A ceramic cup in warm afternoon light\n</p><div class=\"canvas-stage-module__efzUrq__creationMeta\"><span><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" f",
+          "nodeId": "b914b367-6a7e-431c-9828-d9c508033b99"
+        },
+        {
+          "type": "click",
+          "at": 5127.899999991059,
+          "x": 672,
+          "y": 577,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 1,
+          "target": "<div class=\"canvas-stage-module__efzUrq__nodeBody\"><p class=\"canvas-stage-module__efzUrq__creationPromptPreview\">A ceramic cup in warm afternoon light\n</p><div class=\"canvas-stage-module__efzUrq__creationMeta\"><span><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" f",
+          "nodeId": "b914b367-6a7e-431c-9828-d9c508033b99"
+        },
+        {
+          "type": "pointerdown",
+          "at": 5566.20000000298,
+          "x": 827.25,
+          "y": 775.890625,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "target": "<select aria-label=\"节点输出尺寸\"><option value=\"auto\">自动 · 模型决定</option><option value=\"1024x1024\">1K 方图 · 1:1</option><option value=\"1536x1024\">1.5K 横图 · 3:2</option><option value=\"1024x1536\">1.5K 竖图 · 2:3</option><option value=\"2048x2048\">2K 方图 · 1:1</option><option value=\"2048x1152\">2K 横屏 · 16:9</optio"
+        },
+        {
+          "type": "pointerup",
+          "at": 5581.5999999940395,
+          "x": 827.25,
+          "y": 775.890625,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "target": "<select aria-label=\"节点输出尺寸\"><option value=\"auto\">自动 · 模型决定</option><option value=\"1024x1024\">1K 方图 · 1:1</option><option value=\"1536x1024\">1.5K 横图 · 3:2</option><option value=\"1024x1536\">1.5K 竖图 · 2:3</option><option value=\"2048x2048\">2K 方图 · 1:1</option><option value=\"2048x1152\">2K 横屏 · 16:9</optio"
+        },
+        {
+          "type": "click",
+          "at": 5581.899999991059,
+          "x": 827,
+          "y": 775,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 1,
+          "target": "<select aria-label=\"节点输出尺寸\"><option value=\"auto\">自动 · 模型决定</option><option value=\"1024x1024\">1K 方图 · 1:1</option><option value=\"1536x1024\">1.5K 横图 · 3:2</option><option value=\"1024x1536\">1.5K 竖图 · 2:3</option><option value=\"2048x2048\">2K 方图 · 1:1</option><option value=\"2048x1152\">2K 横屏 · 16:9</optio"
+        },
+        {
+          "type": "click",
+          "at": 5783.0999999940395,
+          "x": 747,
+          "y": 753,
+          "trusted": true,
+          "pointerType": "",
+          "detail": 0,
+          "target": "<select aria-label=\"节点输出尺寸\"><option value=\"auto\">自动 · 模型决定</option><option value=\"1024x1024\">1K 方图 · 1:1</option><option value=\"1536x1024\">1.5K 横图 · 3:2</option><option value=\"1024x1536\">1.5K 竖图 · 2:3</option><option value=\"2048x2048\">2K 方图 · 1:1</option><option value=\"2048x1152\">2K 横屏 · 16:9</optio"
+        },
+        {
+          "type": "pointerdown",
+          "at": 6239,
+          "x": 722.34375,
+          "y": 821.421875,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "target": "<button type=\"button\" class=\"canvas-stage-module__efzUrq__runButton\" aria-label=\"运行此节点\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-play size-",
+          "action": "运行此节点"
+        },
+        {
+          "type": "pointerup",
+          "at": 6240.0999999940395,
+          "x": 722.34375,
+          "y": 821.421875,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "target": "<button type=\"button\" class=\"canvas-stage-module__efzUrq__runButton\" aria-label=\"运行此节点\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-play size-",
+          "action": "运行此节点"
+        },
+        {
+          "type": "click",
+          "at": 6240.29999999702,
+          "x": 722,
+          "y": 821,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 1,
+          "target": "<button type=\"button\" class=\"canvas-stage-module__efzUrq__runButton\" aria-label=\"运行此节点\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-play size-",
+          "action": "运行此节点"
+        },
+        {
+          "type": "pointerdown",
+          "at": 6928.5999999940395,
+          "x": 897.34375,
+          "y": 454.1875,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "target": "<path d=\"m6 6 12 12\"></path>",
+          "action": "关闭节点设置"
+        },
+        {
+          "type": "pointerup",
+          "at": 6931.399999991059,
+          "x": 897.34375,
+          "y": 454.1875,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "target": "<path d=\"m6 6 12 12\"></path>",
+          "action": "关闭节点设置"
+        },
+        {
+          "type": "click",
+          "at": 6931.5,
+          "x": 897,
+          "y": 454,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 1,
+          "target": "<path d=\"m6 6 12 12\"></path>",
+          "action": "关闭节点设置"
+        },
+        {
+          "type": "pointerdown",
+          "at": 7370.79999999702,
+          "x": 1363.4140625,
+          "y": 149.9921875,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "target": "<span>保存到账户</span>",
+          "action": "保存到账户"
+        },
+        {
+          "type": "pointerup",
+          "at": 7372.20000000298,
+          "x": 1363.4140625,
+          "y": 149.9921875,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "target": "<span>保存到账户</span>",
+          "action": "保存到账户"
+        },
+        {
+          "type": "click",
+          "at": 7372.20000000298,
+          "x": 1363,
+          "y": 149,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 1,
+          "target": "<span>保存到账户</span>",
+          "action": "保存到账户"
+        },
+        {
+          "type": "pointerdown",
+          "at": 7820.70000000298,
+          "x": 827.25,
+          "y": 688.890625,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "target": "<select aria-label=\"节点输出尺寸\"><option value=\"auto\">自动 · 模型决定</option><option value=\"1024x1024\">1K 方图 · 1:1</option><option value=\"1536x1024\">1.5K 横图 · 3:2</option><option value=\"1024x1536\">1.5K 竖图 · 2:3</option><option value=\"2048x2048\">2K 方图 · 1:1</option><option value=\"2048x1152\">2K 横屏 · 16:9</optio"
+        },
+        {
+          "type": "pointerup",
+          "at": 7835.0999999940395,
+          "x": 827.25,
+          "y": 688.890625,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "target": "<select aria-label=\"节点输出尺寸\"><option value=\"auto\">自动 · 模型决定</option><option value=\"1024x1024\">1K 方图 · 1:1</option><option value=\"1536x1024\">1.5K 横图 · 3:2</option><option value=\"1024x1536\">1.5K 竖图 · 2:3</option><option value=\"2048x2048\">2K 方图 · 1:1</option><option value=\"2048x1152\">2K 横屏 · 16:9</optio"
+        },
+        {
+          "type": "click",
+          "at": 7835.5,
+          "x": 827,
+          "y": 688,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 1,
+          "target": "<select aria-label=\"节点输出尺寸\"><option value=\"auto\">自动 · 模型决定</option><option value=\"1024x1024\">1K 方图 · 1:1</option><option value=\"1536x1024\">1.5K 横图 · 3:2</option><option value=\"1024x1536\">1.5K 竖图 · 2:3</option><option value=\"2048x2048\">2K 方图 · 1:1</option><option value=\"2048x1152\">2K 横屏 · 16:9</optio"
+        },
+        {
+          "type": "click",
+          "at": 8022.0999999940395,
+          "x": 747,
+          "y": 727,
+          "trusted": true,
+          "pointerType": "",
+          "detail": 0,
+          "target": "<select aria-label=\"节点输出尺寸\"><option value=\"auto\">自动 · 模型决定</option><option value=\"1024x1024\">1K 方图 · 1:1</option><option value=\"1536x1024\">1.5K 横图 · 3:2</option><option value=\"1024x1536\">1.5K 竖图 · 2:3</option><option value=\"2048x2048\">2K 方图 · 1:1</option><option value=\"2048x1152\">2K 横屏 · 16:9</optio"
+        },
+        {
+          "type": "pointerdown",
+          "at": 8479.09999999404,
+          "x": 897.34375,
+          "y": 454.1875,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "target": "<path d=\"m6 6 12 12\"></path>",
+          "action": "关闭节点设置"
+        },
+        {
+          "type": "pointerup",
+          "at": 8480.29999999702,
+          "x": 897.34375,
+          "y": 454.1875,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "target": "<path d=\"m6 6 12 12\"></path>",
+          "action": "关闭节点设置"
+        },
+        {
+          "type": "click",
+          "at": 8480.39999999106,
+          "x": 897,
+          "y": 454,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 1,
+          "target": "<path d=\"m6 6 12 12\"></path>",
+          "action": "关闭节点设置"
+        },
+        {
+          "type": "pointerdown",
+          "at": 8917,
+          "x": 403.734375,
+          "y": 957.40625,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "target": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-focus size-4\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"3\"></circle><path d=\"M3 7V5a2 2 0 0 1 ",
+          "action": "适应全部节点"
+        },
+        {
+          "type": "pointerup",
+          "at": 8917.70000000298,
+          "x": 403.734375,
+          "y": 957.40625,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "target": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-focus size-4\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"3\"></circle><path d=\"M3 7V5a2 2 0 0 1 ",
+          "action": "适应全部节点"
+        },
+        {
+          "type": "click",
+          "at": 8917.70000000298,
+          "x": 403,
+          "y": 957,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 1,
+          "target": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-focus size-4\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"3\"></circle><path d=\"M3 7V5a2 2 0 0 1 ",
+          "action": "适应全部节点"
+        },
+        {
+          "type": "pointerdown",
+          "at": 9354.29999999702,
+          "x": 1036.34375,
+          "y": 574.59375,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "target": "<img alt=\"画布生成结果\" draggable=\"false\" loading=\"lazy\" decoding=\"async\" src=\"/_next/image?url=%2Ffixture-media%2F2683d1d1-37e8-40b5-a39e-20e7c070b37f.png&amp;w=640&amp;q=75\">",
+          "nodeId": "result:2683d1d1-37e8-40b5-a39e-20e7c070b37f"
+        },
+        {
+          "type": "pointerup",
+          "at": 9355.70000000298,
+          "x": 1036.34375,
+          "y": 574.59375,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "target": "<img alt=\"画布生成结果\" draggable=\"false\" loading=\"lazy\" decoding=\"async\" src=\"/_next/image?url=%2Ffixture-media%2F2683d1d1-37e8-40b5-a39e-20e7c070b37f.png&amp;w=640&amp;q=75\">",
+          "nodeId": "result:2683d1d1-37e8-40b5-a39e-20e7c070b37f"
+        },
+        {
+          "type": "click",
+          "at": 9359.59999999404,
+          "x": 1036,
+          "y": 574,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 1,
+          "target": "<img alt=\"画布生成结果\" draggable=\"false\" loading=\"lazy\" decoding=\"async\" src=\"/_next/image?url=%2Ffixture-media%2F2683d1d1-37e8-40b5-a39e-20e7c070b37f.png&amp;w=640&amp;q=75\">",
+          "nodeId": "result:2683d1d1-37e8-40b5-a39e-20e7c070b37f"
+        },
+        {
+          "type": "pointerdown",
+          "at": 9967.89999999106,
+          "x": 1039.171875,
+          "y": 386.609375,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "target": "<button type=\"button\" class=\"canvas-stage-module__efzUrq__smallButton\" aria-label=\"查看所选原图\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-scan-ey",
+          "action": "查看所选原图"
+        },
+        {
+          "type": "pointerup",
+          "at": 9969,
+          "x": 1039.171875,
+          "y": 386.609375,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "target": "<button type=\"button\" class=\"canvas-stage-module__efzUrq__smallButton\" aria-label=\"查看所选原图\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-scan-ey",
+          "action": "查看所选原图"
+        },
+        {
+          "type": "click",
+          "at": 9969.09999999404,
+          "x": 1039,
+          "y": 386,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 1,
+          "target": "<button type=\"button\" class=\"canvas-stage-module__efzUrq__smallButton\" aria-label=\"查看所选原图\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-scan-ey",
+          "action": "查看所选原图"
+        },
+        {
+          "type": "pointerdown",
+          "at": 10586.59999999404,
+          "x": 1036.34375,
+          "y": 574.59375,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "target": "<img alt=\"画布生成结果\" draggable=\"false\" loading=\"lazy\" decoding=\"async\" src=\"/_next/image?url=%2Ffixture-media%2F2683d1d1-37e8-40b5-a39e-20e7c070b37f.png&amp;w=640&amp;q=75\">",
+          "nodeId": "result:2683d1d1-37e8-40b5-a39e-20e7c070b37f"
+        },
+        {
+          "type": "pointerup",
+          "at": 10731.89999999106,
+          "x": 1106.34375,
+          "y": 612.59375,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 0,
+          "target": "<div class=\"canvas-stage-module__efzUrq__viewport\" data-testid=\"canvas-viewport\" data-interaction-mode=\"browse\" data-canvas-tool=\"select\"><div data-testid=\"rf__wrapper\" aria-label=\"节点画布\" class=\"react-flow canvas-stage-module__efzUrq__flow light\" role=\"application\" style=\"width: 100%; height: 100%; o"
+        },
+        {
+          "type": "click",
+          "at": 10735.29999999702,
+          "x": 1106,
+          "y": 612,
+          "trusted": true,
+          "pointerType": "mouse",
+          "detail": 1,
+          "target": "<div class=\"canvas-stage-module__efzUrq__viewport\" data-testid=\"canvas-viewport\" data-interaction-mode=\"browse\" data-canvas-tool=\"select\"><div data-testid=\"rf__wrapper\" aria-label=\"节点画布\" class=\"react-flow canvas-stage-module__efzUrq__flow light\" role=\"application\" style=\"width: 100%; height: 100%; o"
+        }
+      ]
+    }
+  },
+  {
+    "id": "B3-outside-release-cancels",
+    "passed": true,
+    "durationMs": 652,
+    "detail": {
+      "before": {
+        "x": 500,
+        "y": 93
+      },
+      "after": {
+        "x": 500,
+        "y": 93
+      }
+    }
+  },
+  {
+    "id": "U3-hand-tool-and-keyboard",
+    "passed": true,
+    "durationMs": 1996,
+    "detail": {
+      "cameraBefore": {
+        "x": 210,
+        "y": 187,
+        "zoom": 1
+      },
+      "cameraAfter": {
+        "x": 140,
+        "y": 157,
+        "zoom": 1
+      },
+      "domainPositionsUnchanged": true,
+      "nativeEnterOnDock": true
+    }
+  },
+  {
+    "id": "U6-low-image-toolbar-clears-docks",
+    "passed": true,
+    "durationMs": 3587,
+    "detail": {
+      "toolbar": {
+        "x": 927.34375,
+        "y": 856.03125,
+        "width": 310,
+        "height": 58.78125,
+        "top": 856.03125,
+        "right": 1237.34375,
+        "bottom": 914.8125,
+        "left": 927.34375
+      },
+      "docks": [
+        {
+          "x": 265.140625,
+          "y": 930.8125,
+          "width": 161.1875,
+          "height": 53.1875,
+          "top": 930.8125,
+          "right": 426.328125,
+          "bottom": 984,
+          "left": 265.140625
+        },
+        {
+          "x": 617.6875,
+          "y": 930.8125,
+          "width": 456.96875,
+          "height": 53.1875,
+          "top": 930.8125,
+          "right": 1074.65625,
+          "bottom": 984,
+          "left": 617.6875
+        }
+      ],
+      "overlap": false,
+      "originalPositionsUnchanged": true
+    }
+  },
+  {
+    "id": "B4-original-import-download",
+    "passed": true,
+    "durationMs": 2105,
+    "detail": {
+      "referenceId": "1dfc96a7-1341-4e5f-8bdd-fa9559c70a23",
+      "originalSha256": "2d85c90504eb5ea83d0d8ff18ab544fcbd997e088e31686f38162b5bef6326c0",
+      "downloadHashes": [
+        "2d85c90504eb5ea83d0d8ff18ab544fcbd997e088e31686f38162b5bef6326c0"
+      ],
+      "chooser": "native button + CDP file selection, not OS chooser"
+    }
+  },
+  {
+    "id": "B5-continue-thumbnail-order",
+    "passed": true,
+    "durationMs": 3230,
+    "detail": {
+      "inputs": [
+        {
+          "id": "468ded31-1cc9-4bfd-96b0-4f9c5e3b63a7",
+          "source": "result:2683d1d1-37e8-40b5-a39e-20e7c070b37f",
+          "target": "392c7619-999c-4a85-8a98-fae7c249d6d9",
+          "kind": "image-input",
+          "ordinal": 1
+        },
+        {
+          "id": "dd2d70b7-12c1-4e83-b928-ef74fbae2b81",
+          "source": "1dfc96a7-1341-4e5f-8bdd-fa9559c70a23",
+          "target": "392c7619-999c-4a85-8a98-fae7c249d6d9",
+          "kind": "image-input",
+          "ordinal": 2
+        }
+      ],
+      "wire": {
+        "canvasId": "b807bf0f-a0b8-4c18-95ab-ce5541cc141d",
+        "nodeId": "392c7619-999c-4a85-8a98-fae7c249d6d9",
+        "runId": "a31159d5-0a30-4164-97b7-b2e3909009bb",
+        "input": {
+          "prompt": {
+            "sourceNodeId": "0caa8d9a-8611-4110-8164-fdbae756c50f",
+            "text": "Keep the shape and change the lighting"
+          },
+          "references": [
+            {
+              "sourceNodeId": "result:2683d1d1-37e8-40b5-a39e-20e7c070b37f",
+              "ordinal": 1,
+              "kind": "result",
+              "jobId": "canvas-2a4859e8-3529-443f-a29f-063ca5d8ebd4",
+              "imageId": "2683d1d1-37e8-40b5-a39e-20e7c070b37f"
+            },
+            {
+              "sourceNodeId": "1dfc96a7-1341-4e5f-8bdd-fa9559c70a23",
+              "ordinal": 2,
+              "kind": "imported",
+              "assetId": "asset-924817bf-601d-480d-9a15-c19b43ea1b40"
+            }
+          ]
+        },
+        "parameters": {
+          "providerMode": "built_in",
+          "channelId": "channel-account",
+          "model": "image-account-default",
+          "size": "auto",
+          "quality": "auto",
+          "outputFormat": "png",
+          "outputCompression": null,
+          "moderation": "auto",
+          "count": 1,
+          "negativePrompt": null,
+          "seed": null,
+          "generationType": "image_to_image"
+        }
+      },
+      "resultIds": [
+        "result:2683d1d1-37e8-40b5-a39e-20e7c070b37f",
+        "result:5ffc3b89-9967-4cce-9454-7eebbb9bdb68"
+      ]
+    }
+  },
+  {
+    "id": "U4-screen-sized-editor-at-zoom",
+    "passed": true,
+    "durationMs": 4426,
+    "detail": {
+      "measures": [
+        {
+          "cameraBefore": {
+            "x": 262.5,
+            "y": 252,
+            "zoom": 1
+          },
+          "cameraAfter": {
+            "x": 363.7391493055555,
+            "y": 299.9722222222222,
+            "zoom": 0.6944444444444445
+          },
+          "same": true,
+          "value": "Keep the shape and change the lighting",
+          "font": 16,
+          "panel": {
+            "x": 802,
+            "y": 434.75,
+            "width": 420,
+            "height": 472.0625,
+            "top": 434.75,
+            "right": 1222,
+            "bottom": 906.8125,
+            "left": 802
+          },
+          "dock": {
+            "x": 265.140625,
+            "y": 930.8125,
+            "width": 1162.0625,
+            "height": 53.1875,
+            "top": 930.8125,
+            "right": 1427.203125,
+            "bottom": 984,
+            "left": 265.140625
+          }
+        },
+        {
+          "cameraBefore": {
+            "x": 402.0873119212962,
+            "y": 318.1435185185185,
+            "zoom": 0.5787037037037038
+          },
+          "cameraAfter": {
+            "x": 116.71562499999987,
+            "y": 182.91999999999996,
+            "zoom": 1.44
+          },
+          "same": true,
+          "value": "Keep the shape and change the lighting",
+          "font": 16,
+          "panel": {
+            "x": 714.265625,
+            "y": 194,
+            "width": 420,
+            "height": 647.421875,
+            "top": 194,
+            "right": 1134.265625,
+            "bottom": 841.421875,
+            "left": 714.265625
+          },
+          "dock": {
+            "x": 265.140625,
+            "y": 930.8125,
+            "width": 1162.0625,
+            "height": 53.1875,
+            "top": 930.8125,
+            "right": 1427.203125,
+            "bottom": 984,
+            "left": 265.140625
+          }
+        }
+      ],
+      "ghost": {
+        "tabIndex": -1,
+        "inert": true,
+        "samples": [
+          {
+            "x": 1211.9409301757812,
+            "y": 384.71998596191406,
+            "hitsGhost": false
+          },
+          {
+            "x": 1211.9409301757812,
+            "y": 592.9439849853516,
+            "hitsGhost": false
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "B6-phone-sheets-focus",
+    "passed": true,
+    "durationMs": 4270,
+    "detail": {
+      "measurements": [
+        {
+          "width": 360,
+          "same": true,
+          "value": "Phone 360: keep a readable independent draft暖色光线",
+          "focus": true,
+          "font": 16,
+          "panel": {
+            "x": 0,
+            "y": 143.796875,
+            "width": 360,
+            "height": 113.015625,
+            "top": 143.796875,
+            "right": 360,
+            "bottom": 256.8125,
+            "left": 0
+          },
+          "buttons": [
+            {
+              "text": "",
+              "height": 44,
+              "width": 44
+            },
+            {
+              "text": "",
+              "height": 44,
+              "width": 44
+            },
+            {
+              "text": "",
+              "height": 44,
+              "width": 44
+            },
+            {
+              "text": "",
+              "height": 44,
+              "width": 44
+            },
+            {
+              "text": "生成图片",
+              "height": 44,
+              "width": 318
+            }
+          ]
+        },
+        {
+          "width": 390,
+          "same": true,
+          "value": "Phone 390: keep a readable independent draft暖色光线",
+          "focus": true,
+          "font": 16,
+          "panel": {
+            "x": 0,
+            "y": 143.796875,
+            "width": 390,
+            "height": 113.015625,
+            "top": 143.796875,
+            "right": 390,
+            "bottom": 256.8125,
+            "left": 0
+          },
+          "buttons": [
+            {
+              "text": "",
+              "height": 44,
+              "width": 44
+            },
+            {
+              "text": "",
+              "height": 44,
+              "width": 44
+            },
+            {
+              "text": "",
+              "height": 44,
+              "width": 44
+            },
+            {
+              "text": "",
+              "height": 44,
+              "width": 44
+            },
+            {
+              "text": "生成图片",
+              "height": 44,
+              "width": 348
+            }
+          ]
+        },
+        {
+          "width": 430,
+          "same": true,
+          "value": "Phone 430: keep a readable independent draft暖色光线",
+          "focus": true,
+          "font": 16,
+          "panel": {
+            "x": 0,
+            "y": 143.796875,
+            "width": 430,
+            "height": 113.015625,
+            "top": 143.796875,
+            "right": 430,
+            "bottom": 256.8125,
+            "left": 0
+          },
+          "buttons": [
+            {
+              "text": "",
+              "height": 44,
+              "width": 44
+            },
+            {
+              "text": "",
+              "height": 44,
+              "width": 44
+            },
+            {
+              "text": "",
+              "height": 44,
+              "width": 44
+            },
+            {
+              "text": "",
+              "height": 44,
+              "width": 44
+            },
+            {
+              "text": "生成图片",
+              "height": 44,
+              "width": 388
+            }
+          ]
+        }
+      ],
+      "compositionTrace": [
+        {
+          "type": "input",
+          "trusted": true,
+          "composing": false,
+          "value": "Phone 360: keep a readable independent draft",
+          "start": 44,
+          "end": 44
+        },
+        {
+          "type": "compositionstart",
+          "trusted": true,
+          "value": "Phone 360: keep a readable independent draft",
+          "start": 44,
+          "end": 44
+        },
+        {
+          "type": "compositionupdate",
+          "trusted": true,
+          "value": "Phone 360: keep a readable independent draft",
+          "start": 44,
+          "end": 44
+        },
+        {
+          "type": "input",
+          "trusted": true,
+          "composing": true,
+          "value": "Phone 360: keep a readable independent draft暖",
+          "start": 45,
+          "end": 45
+        },
+        {
+          "type": "compositionupdate",
+          "trusted": true,
+          "value": "Phone 360: keep a readable independent draft暖",
+          "start": 44,
+          "end": 45
+        },
+        {
+          "type": "input",
+          "trusted": true,
+          "composing": true,
+          "value": "Phone 360: keep a readable independent draft暖色光线",
+          "start": 48,
+          "end": 48
+        },
+        {
+          "type": "compositionupdate",
+          "trusted": true,
+          "value": "Phone 360: keep a readable independent draft暖色光线",
+          "start": 44,
+          "end": 48
+        },
+        {
+          "type": "input",
+          "trusted": true,
+          "composing": true,
+          "value": "Phone 360: keep a readable independent draft暖色光线",
+          "start": 48,
+          "end": 48
+        },
+        {
+          "type": "compositionend",
+          "trusted": false,
+          "value": "Phone 360: keep a readable independent draft暖色光线",
+          "start": 48,
+          "end": 48
+        },
+        {
+          "type": "input",
+          "trusted": true,
+          "composing": false,
+          "value": "Phone 390: keep a readable independent draft",
+          "start": 44,
+          "end": 44
+        },
+        {
+          "type": "compositionstart",
+          "trusted": true,
+          "value": "Phone 390: keep a readable independent draft",
+          "start": 44,
+          "end": 44
+        },
+        {
+          "type": "compositionupdate",
+          "trusted": true,
+          "value": "Phone 390: keep a readable independent draft",
+          "start": 44,
+          "end": 44
+        },
+        {
+          "type": "input",
+          "trusted": true,
+          "composing": true,
+          "value": "Phone 390: keep a readable independent draft暖",
+          "start": 45,
+          "end": 45
+        },
+        {
+          "type": "compositionupdate",
+          "trusted": true,
+          "value": "Phone 390: keep a readable independent draft暖",
+          "start": 44,
+          "end": 45
+        },
+        {
+          "type": "input",
+          "trusted": true,
+          "composing": true,
+          "value": "Phone 390: keep a readable independent draft暖色光线",
+          "start": 48,
+          "end": 48
+        },
+        {
+          "type": "compositionupdate",
+          "trusted": true,
+          "value": "Phone 390: keep a readable independent draft暖色光线",
+          "start": 44,
+          "end": 48
+        },
+        {
+          "type": "input",
+          "trusted": true,
+          "composing": true,
+          "value": "Phone 390: keep a readable independent draft暖色光线",
+          "start": 48,
+          "end": 48
+        },
+        {
+          "type": "compositionend",
+          "trusted": false,
+          "value": "Phone 390: keep a readable independent draft暖色光线",
+          "start": 48,
+          "end": 48
+        },
+        {
+          "type": "input",
+          "trusted": true,
+          "composing": false,
+          "value": "Phone 430: keep a readable independent draft",
+          "start": 44,
+          "end": 44
+        },
+        {
+          "type": "compositionstart",
+          "trusted": true,
+          "value": "Phone 430: keep a readable independent draft",
+          "start": 44,
+          "end": 44
+        },
+        {
+          "type": "compositionupdate",
+          "trusted": true,
+          "value": "Phone 430: keep a readable independent draft",
+          "start": 44,
+          "end": 44
+        },
+        {
+          "type": "input",
+          "trusted": true,
+          "composing": true,
+          "value": "Phone 430: keep a readable independent draft暖",
+          "start": 45,
+          "end": 45
+        },
+        {
+          "type": "compositionupdate",
+          "trusted": true,
+          "value": "Phone 430: keep a readable independent draft暖",
+          "start": 44,
+          "end": 45
+        },
+        {
+          "type": "input",
+          "trusted": true,
+          "composing": true,
+          "value": "Phone 430: keep a readable independent draft暖色光线",
+          "start": 48,
+          "end": 48
+        },
+        {
+          "type": "compositionupdate",
+          "trusted": true,
+          "value": "Phone 430: keep a readable independent draft暖色光线",
+          "start": 44,
+          "end": 48
+        },
+        {
+          "type": "input",
+          "trusted": true,
+          "composing": true,
+          "value": "Phone 430: keep a readable independent draft暖色光线",
+          "start": 48,
+          "end": 48
+        },
+        {
+          "type": "compositionend",
+          "trusted": false,
+          "value": "Phone 430: keep a readable independent draft暖色光线",
+          "start": 48,
+          "end": 48
+        }
+      ],
+      "boundary": "Trusted Chromium CDP composition across resize; not physical OS IME or on-screen keyboard"
+    }
+  },
+  {
+    "id": "B7-save-native-reload",
+    "passed": true,
+    "durationMs": 2719,
+    "detail": {
+      "nodeCount": 7,
+      "originalAssetIds": [
+        "asset-924817bf-601d-480d-9a15-c19b43ea1b40"
+      ],
+      "nativeDatabase": "narra-canvas-drafts v1",
+      "noAutomaticRun": true
+    }
+  },
+  {
+    "id": "U2-shared-standalone-and-folded-view",
+    "passed": true,
+    "durationMs": 5251,
+    "detail": {
+      "sourceId": "5ad19266-a69a-4b3f-bfe5-279501d6cd35",
+      "generators": [
+        "1b15a387-ecd5-47fb-9b4c-7dcf1f596d2f",
+        "456c7250-ac52-4ea1-9fda-9324b46f2935"
+      ],
+      "standalonePromptId": "304951b4-4d9b-4ffc-a40e-f1642dda8844",
+      "noMigration": true,
+      "noAutomaticRun": true
+    }
+  },
+  {
+    "id": "B8-legacy-visible-anchor",
+    "passed": true,
+    "durationMs": 1971,
+    "detail": {
+      "oldNodes": 24,
+      "oldEdges": 32,
+      "cameraBefore": {
+        "x": 0,
+        "y": 0,
+        "zoom": 1
+      },
+      "pannedCamera": {
+        "x": -35,
+        "y": -25,
+        "zoom": 1
+      },
+      "camera": {
+        "x": -245.43224901517738,
+        "y": -155.31471622926176,
+        "zoom": 1.1809926614295303
+      },
+      "newPosition": {
+        "x": 250.1558719743203,
+        "y": 178.08300008798253
+      },
+      "rect": {
+        "left": 302.3437194824219,
+        "top": 236.99998474121094,
+        "right": 680.2613525390625,
+        "bottom": 560.2967376708984,
+        "width": 377.9176330566406,
+        "height": 323.2967529296875,
+        "x": 491.3025360107422,
+        "y": 398.6483612060547,
+        "clip": {
+          "left": 302.3437194824219,
+          "top": 236.99998474121094,
+          "right": 680.2613525390625,
+          "bottom": 560.2967376708984
+        },
+        "visible": true,
+        "hit": false,
+        "hitTag": "TEXTAREA",
+        "hitText": "",
+        "text": "图片创作描述你的想法，让画面在这里发生。添加参考图1 张输出image-account-default自动 模型决定",
+        "disabled": false
+      }
+    }
+  },
+  {
+    "id": "B9-200-node-capacity-smoke",
+    "passed": true,
+    "durationMs": 2530,
+    "detail": {
+      "renderedNodes": 200,
+      "noPartialCreation": true,
+      "noFpsClaim": true
+    }
+  }
+]
