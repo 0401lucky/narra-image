@@ -1,0 +1,146 @@
+{
+  "recordedAt": "2026-11-04T13:52:52.609625+00:00",
+  "head": "651f12af560db529ceb3f23c58ad230c2efdd044",
+  "fixtureSha256": "c76bb69cd11c903ff73c0e7c9bd32dae245d0c9bca369d2f4ae1c09ee3e22ac1",
+  "baselineBeforeSha256": "2d7b585870c2ab7a9f953138c8b6d1b182736690d5cd0f81a0354c0e5b4f1748",
+  "baselineGitBlobSha256": "2d7b585870c2ab7a9f953138c8b6d1b182736690d5cd0f81a0354c0e5b4f1748",
+  "baselineMatchesCommittedContentAfterGitLineEndingNormalization": true,
+  "onlyFixtureImportsAndSetupCleanupChanged": true,
+  "allOriginalTestBodiesUnchanged": true,
+  "implementationReceipts": [
+    {
+      "label": "baseline-red",
+      "exitCode": 1,
+      "durationSeconds": 2.922,
+      "rawReceiptSha256": "000afa68aadf9c82614800a1174d74f4079b1528dc82d7b666b6209b945f4b2f",
+      "sourceIdentitySha256": "8e698da895b48b33c1f86ead5a3af736aea9e8072ce15e67ba416cf0e9966172",
+      "rawAndLogHashesVerified": true
+    },
+    {
+      "label": "green",
+      "exitCode": 0,
+      "durationSeconds": 1.525,
+      "rawReceiptSha256": "34d3bf8dd2b526a517cc646cfbf4b4af1caf77dd9209512547bb05d8614754c3",
+      "sourceIdentitySha256": "e9dd8bb6c4bee6ba4571f451f4fe3b0026c7786b3ff256814ace3c4c767cdc63",
+      "rawAndLogHashesVerified": true
+    },
+    {
+      "label": "reverted-red",
+      "exitCode": 1,
+      "durationSeconds": 1.462,
+      "rawReceiptSha256": "931a3355df9a44b06ce02724ed01fef3b0d56aad1051dd27e601532e0fc033a2",
+      "sourceIdentitySha256": "1c2e27073b56eae5951c651b38a2cfe0e376f62d4834b032a9a91193fc8dcf42",
+      "rawAndLogHashesVerified": true
+    },
+    {
+      "label": "restored-related",
+      "exitCode": 0,
+      "durationSeconds": 3.595,
+      "rawReceiptSha256": "93c89a3653a574781e9f53683e1365f9954eb0722d4883e9e04b4f712ccef234",
+      "sourceIdentitySha256": "e9dd8bb6c4bee6ba4571f451f4fe3b0026c7786b3ff256814ace3c4c767cdc63",
+      "rawAndLogHashesVerified": true
+    },
+    {
+      "label": "lint",
+      "exitCode": 0,
+      "durationSeconds": 14.735,
+      "rawReceiptSha256": "63fd0a252d4d4c96942af3042721160f6cfc096005cfd1249ca277c98b6cc7ca",
+      "sourceIdentitySha256": "e9dd8bb6c4bee6ba4571f451f4fe3b0026c7786b3ff256814ace3c4c767cdc63",
+      "rawAndLogHashesVerified": true
+    },
+    {
+      "label": "types",
+      "exitCode": 0,
+      "durationSeconds": 11.922,
+      "rawReceiptSha256": "13244f427f146a03e6e65579ee4ef6adad6344d8de41a2351e1f565cce8a0bbd",
+      "sourceIdentitySha256": "e9dd8bb6c4bee6ba4571f451f4fe3b0026c7786b3ff256814ace3c4c767cdc63",
+      "rawAndLogHashesVerified": true
+    }
+  ],
+  "originalReleaseProductAndSpecHashesMatched": {
+    ".github/workflows/verify.yml": "852839e3fcb412703cddaff557ba42ed2f43fde09fc9e4a2015dd548bcd99599",
+    "Dockerfile": "e4139cd7af87d1dcc7139746d294210adafffeb7381f12d32d88f7a4d28e3b72",
+    "README.md": "8d33ebf75082e4ff3022f41c0c73b6e84ab70178486bf8d18049687a04730c1d",
+    "docker-compose.images.yml": "39af4b3cf4d331bb01abce5a520aeb3dbf050a0704a00b7b96940501f770d890",
+    "docs/production-operations.md": "a6fe953a5d10ac3d34deecf4d557af75f6c53684cd21d283b368337bf87c53f9",
+    "scripts/lib/disposable-postgres.mjs": "7648fa2ed10e373ffc92226a1ce8f9ba7b3a9ed6ec4d624fc32a7525cd3db674",
+    "scripts/lib/image-release.mjs": "9ce29caa9f78701e84d4cd579cd7e733f3fc29859b339a16eb1034f65647c863",
+    "scripts/publish-images.mjs": "a019c61f0e9a3ea6ae40a86c3beb033fd2cd463ad49f24fa5e68b5400fc5d37d",
+    "scripts/tests/ci-prerequisites.test.mjs": "8ca371538e434264bc6126380a98ec98bd319323808c3ba88b27a9116a3a9ae3",
+    "scripts/tests/image-release.test.mjs": "03833155835e730bf4748f4c7390c421be79bc563c3e4fd233d369bc86121e54",
+    "scripts/verify-ci.mjs": "70c749bbcdc0d38fd2fa0ac50d1172cca0f4bd6051192a3aee1cce3b587dbfd7",
+    "worker/Dockerfile": "45c05ce5b76feff39447be15bd53835f74f1606681990ffd0fbba5cdea40c993",
+    ".trellis/spec/operations/image-publishing.md": "28fbdfadee266ad95f0299e68b222dd0d28cc43e470d4115bba18ce8720f49ff",
+    ".trellis/spec/operations/index.md": "9f36119a085c605baac8ee53384f6285fd2e3483aee6f6286478f85def69692a",
+    ".trellis/spec/operations/release-hardening.md": "901d5b66a9efd5e4daa3bacf45035e8b5061ad52be37d8c717615d9fdb6c74e2"
+  },
+  "auditedSharedHelpersUnchanged": {
+    "isolated.py": "f0d9065d6ad00471cbfa0fc68dbbed00325929ae45ea0fc611dc41b964794ebb",
+    "isolation_base.py": "9db017d78e9a7a985b38f3e9f1906fef305519186f57b83ffd77b03f9d67627e",
+    "deny_env.cjs": "bd9ec3da5da5787ffc8378f8ed97835428d4b5a9c80a21a099ccca2c4d077e55"
+  },
+  "priorBuildInputComparison": [
+    {
+      "receipt": "production-build-validation.json",
+      "sha256": "93fed2408df32e9228f9c4ffa59a142837a356eb6f6fee2f2922b90a4fb1ac8c",
+      "priorExitCode": 0,
+      "nonTaskInputsCompared": 834,
+      "differences": [
+        {
+          "path": "src/tests/unit/canvas-e2e-runtime-fixture.test.ts",
+          "beforeSha256": "2d7b585870c2ab7a9f953138c8b6d1b182736690d5cd0f81a0354c0e5b4f1748",
+          "currentSha256": "c76bb69cd11c903ff73c0e7c9bd32dae245d0c9bca369d2f4ae1c09ee3e22ac1"
+        }
+      ],
+      "freshBuildPerformed": false
+    },
+    {
+      "receipt": "image-build-retry-validation.json",
+      "sha256": "a2dd62bb9b4400bc6c39dac3fb6f74490ea065138b935993787b4f824232beb6",
+      "priorExitCode": 0,
+      "nonTaskInputsCompared": 834,
+      "differences": [
+        {
+          "path": "src/tests/unit/canvas-e2e-runtime-fixture.test.ts",
+          "beforeSha256": "2d7b585870c2ab7a9f953138c8b6d1b182736690d5cd0f81a0354c0e5b4f1748",
+          "currentSha256": "c76bb69cd11c903ff73c0e7c9bd32dae245d0c9bca369d2f4ae1c09ee3e22ac1"
+        }
+      ],
+      "freshBuildPerformed": false
+    }
+  ],
+  "productionEnvironmentWorkflowAndDependencyChanges": false,
+  "changedTrackedPaths": [
+    ".trellis/spec/frontend/quality-guidelines.md",
+    ".trellis/tasks/11-04-ghcr-image-release/implement.md",
+    ".trellis/tasks/11-04-ghcr-image-release/task.json",
+    ".trellis/tasks/11-04-ghcr-image-release/verification.md",
+    "src/tests/unit/canvas-e2e-runtime-fixture.test.ts"
+  ],
+  "currentQualitySpecSha256": "b3a6a5a1f3dd064a75b3a6a2c34f88de89f0545fbaa12d1f6600b410254858e6",
+  "indexSha256": "6227175364e42a0f0753c848fda46579097bfba9e6f41301d04fc559c0eda413",
+  "gitWhitespaceChecks": [
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": "warning: in the working copy of '.trellis/tasks/11-04-ghcr-image-release/implement.md', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of '.trellis/tasks/11-04-ghcr-image-release/verification.md', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'src/tests/unit/canvas-e2e-runtime-fixture.test.ts', LF will be replaced by CRLF the next time Git touches it\n"
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--cached",
+        "--check"
+      ],
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "unrecognizedDirtyPaths": []
+}

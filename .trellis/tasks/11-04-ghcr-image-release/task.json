@@ -2,7 +2,7 @@
   "id": "ghcr-image-release",
   "name": "ghcr-image-release",
   "title": "Publish verified App and Worker images to GHCR",
-  "description": "Public GHCR App/Worker publishing after main verification, latest plus immutable source tags, CI prerequisite fixes and image-only update/rollback docs. Implementation, independent review and local builds/checks passed; approved commit/push/first publication resumes after session recovery.",
+  "description": "Public GHCR App/Worker publishing after main verification. Original release batch is pushed; first hosted run passes migrations/E2E but exposes one fixture environment prerequisite. The narrow correction passes independent absent-env/full checks and its follow-up commit/push is approved; hosted delivery remains pending.",
   "status": "in_progress",
   "dev_type": null,
   "scope": null,
@@ -15,18 +15,21 @@
   "branch": null,
   "base_branch": "main",
   "worktree_path": null,
-  "commit": null,
+  "commit": "651f12af560db529ceb3f23c58ad230c2efdd044",
   "pr_url": null,
   "subtasks": [],
   "children": [],
   "parent": null,
   "relatedFiles": [],
-  "notes": "Local AC2/AC3/AC5 complete. AC1/AC4/AC6 retain actual hosted Actions/GHCR/public-access evidence. See verification.md. Prior canvas task remains untouched.",
+  "notes": "Local AC2/AC3/AC5 complete. Original batch d530132 + 651f12a is pushed. Run 41838299471: migrations/E2E pass, CI 1823/1824 tests pass, publisher skipped. Fixture correction is not yet committed/pushed. AC1/AC4/AC6 and public images remain pending; prior canvas task metadata remains untouched.",
   "meta": {
     "scopeApproval": "2026-11-04: public GHCR, main verification gate, App/Worker amd64 images, latest/SHA, CI prerequisites and image-only update docs",
     "implementationApproval": "2026-11-04: explicit subsequent approval of final artifact summary; implementation and scoped local checks",
     "localValidation": "Independent 32 Node tests, 144 suites/1824 non-DB tests, lint/types, clean-client/TCP/Compose checks, exact CI production build and two Linux amd64 Dockerfile builds passed",
     "deliveryApproval": "2026-11-04 13:06:01 UTC: explicit approval of the two-commit batch, ordinary main push and first Actions/GHCR publication tracking; recovered from original session 01a1a50d-1fc8-7063-a102-a0f0d7727522",
+    "firstHostedRun": "https://github.com/0401lucky/narra-image/actions/runs/41838299471: migrations and E2E passed; CI fixture environment failure; publisher skipped",
+    "followupValidation": "Independent absent-env red/green/reversion and restoration controls passed; 144 files/1824 non-DB tests, 32 Node tests, lint/types pass. Reviewed source hashes are rechecked before the approved follow-up delivery.",
+    "followupDeliveryApproval": "2026-11-04: user explicitly approved fix(test): isolate canvas runtime fixture environment, ordinary main push and continued verification/publication tracking; no production or permission changes",
     "productionBoundary": "no automated deployment, real database/volume changes or runtime flag changes"
   }
 }

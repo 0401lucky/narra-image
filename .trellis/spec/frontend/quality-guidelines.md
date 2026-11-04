@@ -28,7 +28,7 @@ const { mockRequireApiUser, mockRunExternalGeneration } = vi.hoisted(() => ({
 vi.mock("@/lib/generation/external-api", () => ({ runExternalGeneration: mockRunExternalGeneration }));
 ```
 
-- 测试环境变量：需要 `getEnv()` 的测试在 `beforeEach` 显式设置 `process.env.AUTH_SECRET` / `DATABASE_URL` 等（不依赖 `.env`）。
+- 测试环境变量：直接或间接需要 `getEnv()` 的测试在 `beforeEach` 用 `vi.stubEnv` 显式设置合成 `AUTH_SECRET` / `DATABASE_URL` 等，并在 `afterEach` 用 `vi.unstubAllEnvs()` 恢复原值或缺失状态；不依赖 `.env`、外层 runner 默认值或其他 suite。
 - `server-only` 在测试中由 `vitest.config.ts` alias 到 `src/tests/setup/server-only.ts`。
 - DB 集成测试必须带哨兵（`WORKER_CONTRACTS_REQUIRE_DB=1` + `TEST_DATABASE_URL`），禁止回退开发库（见 `generation-worker-contracts.md`）。
 
@@ -92,11 +92,22 @@ pnpm verify:e2e
 - 防御性 filesystem preload 不是操作系统 sandbox。包装 API 时保留返回值、回调签名、异步错误与 `util.promisify.custom`；`fs.exists` 的 callback 只有 boolean，不是 error-first。丢失其 custom promisifier 会让 `promisify(fs.exists)(existingFile)` 拒绝 `true`，Prisma CLI 因而只显示 `Error: undefined`。
 - 安全回归必须覆盖同步、callback、Promise、promisified、ESM named import 和 child Node 的调用。精确公开例外为 true、隐藏 dotenv 为 false、普通存在/缺失文件保持原义；不能为工具通过而放宽 dotenv 或真实凭证边界。
 - 修复检查器本身后重新执行受影响的产品门禁，保存修复前失败和修复后通过的独立回执。生成 Prisma Client 不等于数据库迁移；验证必须证明输出位于独立依赖副本，不写回正在使用的客户端。
+- 合成环境保证凭证隔离，但不等于干净 CI 的前置条件。验证缺失环境问题时，必须在子进程启动前移除对应 runner 合成值，并保留 deny-env preload；不能把带全局 `AUTH_SECRET` / `DATABASE_URL` 的本地通过当作测试已自行声明依赖的证明。
 - 浏览器字体证据应区分 CSS 声明、成功网络加载和实际自定义字体参与字形绘制，并记录实际请求字节数。整包字体大小不能当作首屏传输大小。
 - 倾斜/过渡中的控件先用原生指针接近，再重新测量裁切交集和 `elementFromPoint`，命中后才按下。已复现的 3D/blur 合成场景中，`elementsFromPoint` 的首项可能与实际点击目标不同，不能用它放宽失败；保留原生 pointerdown/up/click 目标与真实操作结果，区分测试动作竞争和产品遮挡。
 - `hover(selector, ..., [xFraction, yFraction])` 必须校验实际分数坐标，而不只是目标存在一小块可见区域；先原生滚动，再检查视口/嵌套裁切及真实命中，变换后重新测量。普通视口、嵌套滚动正例和被遮盖控件负例分别校准，不能把视口外 mouseMoved 当作成功悬停。
 - 带阶梯入场的截图先等最大延迟加动画时长，必要时检查最后追加卡片及祖先的 opacity/transform；静态截图既不能证明动画经过，也不能单独证明暂时不可见是永久故障。
 - 动画 cleanup 的回归要检查下一帧及后续帧，不只检查同步最终样式。真实 Motion 调度测试在帧间让出微任务，并在两个帧时间之间中断，避免库的事件循环时间缓存掩盖 stop 的迟到 render；正常完成、延迟中断和未重播是独立对照。`homepage-reveal.test.tsx` 保留真实 animate/stop，仅控制时钟、RAF 和浏览器可见性输入；真实浏览器的 MutationObserver 时间线补充验证最终 DOM 行为。
+
+### 测试夹具的环境所有权
+
+1. **适用范围**：单测调用真实服务/解析器，动态 import 链可能经过 auth、`db.ts` 或 `getEnv()` 时。
+2. **入口**：`parseGenerateRequest(request)` 的 opt-in 路径会加载 `canvas/http -> current-user -> db -> getEnv()`；fixture 使用 `vi.stubEnv(name, value)` / `vi.unstubAllEnvs()`，不替换真实解析器。
+3. **契约**：fixture 自行提供满足 schema 的公开合成 AUTH_SECRET，以及指向 `127.0.0.1:1` 的不可用测试数据库 URL。此路径只构造客户端、不查询数据库；测试结束恢复环境，不向 CI workflow 或全局 test setup 添加凭据默认值。
+4. **错误矩阵**：缺少 fixture 设置且无外层变量时应能复现环境 ZodError；设置后，重复 JSON media type 仍必须拒绝为 `CANVAS_INVALID_INPUT`，单一 JSON media type 必须返回原始 `canvasRun`。
+5. **Good / Base / Bad**：Good 是 fixture 自给配置、清理后恢复原状态；Base 是完整保留真实 parser 和原有正反断言；Bad 是全局补变量、mock 掉 getEnv、跳过用例或放宽媒体类型检查。
+6. **必测**：`canvas-e2e-runtime-fixture.test.ts` 的真实 parser 正反例；在无 ambient AUTH_SECRET/DATABASE_URL 的独立进程执行旧文件失败、新文件通过、仅隔离副本回退旧文件再次失败，并执行完整非 DB 清单。
+7. **错误与正确示例**：不要用外层 `env={AUTH_SECRET: dummy, DATABASE_URL: dummy}` 的通过证明干净 CI；应先从子进程环境移除两项，再由 suite 的 beforeEach 设置并由 afterEach 恢复，保留 dotenv 读取保护。
 
 ### 原生键盘输入与校准
 

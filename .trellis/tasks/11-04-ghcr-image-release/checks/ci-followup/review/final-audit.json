@@ -1,0 +1,327 @@
+{
+  "recordedAt": "2026-11-04T13:57:19.981222+00:00",
+  "head": "651f12af560db529ceb3f23c58ad230c2efdd044",
+  "fixtureSha256": "c76bb69cd11c903ff73c0e7c9bd32dae245d0c9bca369d2f4ae1c09ee3e22ac1",
+  "qualitySpecSha256": "b3a6a5a1f3dd064a75b3a6a2c34f88de89f0545fbaa12d1f6600b410254858e6",
+  "reviewReceipts": [
+    {
+      "receipt": "preflight.json",
+      "sha256": "8c65b020bcd23e05546b7eba76e1d304552633335b10d794889b733f00509f10",
+      "exitCode": 0,
+      "durationSeconds": 0.199,
+      "timeoutSeconds": 57,
+      "rawAndLogHashesVerified": true
+    },
+    {
+      "receipt": "fixed.json",
+      "sha256": "9ae46a8c601cc464454c6000e53b2de99345ad165994e70ef502e79678480a04",
+      "exitCode": 0,
+      "durationSeconds": 1.498,
+      "timeoutSeconds": 57,
+      "rawAndLogHashesVerified": true
+    },
+    {
+      "receipt": "reverted-negative.json",
+      "sha256": "311ec995b9966a5fa5fa45c56cabd8d3ff5321a0b0efdc827637de9980f73821",
+      "exitCode": 1,
+      "durationSeconds": 1.439,
+      "timeoutSeconds": 57,
+      "rawAndLogHashesVerified": true
+    },
+    {
+      "receipt": "restore-absent.json",
+      "sha256": "4e4279239626a8a5cb37feb7bdd0dd84331eede2958b1f9dcdd13ec2d72ef633",
+      "exitCode": 0,
+      "durationSeconds": 1.439,
+      "timeoutSeconds": 57,
+      "rawAndLogHashesVerified": true
+    },
+    {
+      "receipt": "restore-present.json",
+      "sha256": "cfe594c43d6fb345f436279222cc7dc087b8bfb0153005a0ea841a1c833ad7e3",
+      "exitCode": 0,
+      "durationSeconds": 1.439,
+      "timeoutSeconds": 57,
+      "rawAndLogHashesVerified": true
+    },
+    {
+      "receipt": "cleanup-negative.json",
+      "sha256": "7e9c1297b6f632bfe94c3de25634b70c3a796edc869f31b59d0e9f3b416e1eb6",
+      "exitCode": 1,
+      "durationSeconds": 1.554,
+      "timeoutSeconds": 57,
+      "rawAndLogHashesVerified": true
+    },
+    {
+      "receipt": "restored-fixed.json",
+      "sha256": "873d8fdae18654861d9c89b5b044e452f27f48542b51d49684176dc02c256ec6",
+      "exitCode": 0,
+      "durationSeconds": 1.442,
+      "timeoutSeconds": 57,
+      "rawAndLogHashesVerified": true
+    },
+    {
+      "receipt": "full-vitest.json",
+      "sha256": "dabe4ce0dae40ec288503d249a3b272409aebee2c62457b0de2280ed99faf631",
+      "exitCode": 0,
+      "durationSeconds": 110.997,
+      "timeoutSeconds": 300,
+      "rawAndLogHashesVerified": true
+    },
+    {
+      "receipt": "node-tests.json",
+      "sha256": "1553cc52cf5a5d07c842a84d436b4c9d35a8cc6f7da30e83ab526ae8a6f5ffd6",
+      "exitCode": 0,
+      "durationSeconds": 0.813,
+      "timeoutSeconds": 57,
+      "rawAndLogHashesVerified": true
+    },
+    {
+      "receipt": "lint.json",
+      "sha256": "6c6bc6e528449baffa958532bd4bfbcb48d502190774e38189735e901997b8d4",
+      "exitCode": 0,
+      "durationSeconds": 12.53,
+      "timeoutSeconds": 180,
+      "rawAndLogHashesVerified": true
+    },
+    {
+      "receipt": "types.json",
+      "sha256": "643945f41abbd48c39e28cf7b50cd90eb9609cb67e6474cb4dbc6c208f5f8416",
+      "exitCode": 0,
+      "durationSeconds": 2.558,
+      "timeoutSeconds": 180,
+      "rawAndLogHashesVerified": true
+    }
+  ],
+  "fullNonDb": {
+    "files": 144,
+    "passed": 1824,
+    "failed": 0
+  },
+  "nodeTests": {
+    "passed": 32,
+    "failed": 0,
+    "skipped": 0
+  },
+  "lint": {
+    "errors": 0,
+    "warnings": 9
+  },
+  "typecheckExitCode": 0,
+  "stablePassingSourceIdentitySha256": "a5b46c0b4d364e120e76350c06b63fd894bea429a154bd9ee2dea3560e47d736",
+  "originalReleaseProductAndSpecHashesMatched": 15,
+  "originalSharedIsolationHelpersUnchanged": true,
+  "whitespaceChecks": [
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": "warning: in the working copy of '.trellis/tasks/11-04-ghcr-image-release/commit-plan.md', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of '.trellis/tasks/11-04-ghcr-image-release/implement.md', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of '.trellis/tasks/11-04-ghcr-image-release/verification.md', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'src/tests/unit/canvas-e2e-runtime-fixture.test.ts', LF will be replaced by CRLF the next time Git touches it\n"
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--cached",
+        "--check"
+      ],
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "file": ".trellis/tasks/11-04-ghcr-image-release/checks/ci-followup/implementation/.gitignore",
+      "exitCode": 1,
+      "whitespaceDiagnostics": ""
+    },
+    {
+      "file": ".trellis/tasks/11-04-ghcr-image-release/checks/ci-followup/implementation/baseline-red.json",
+      "exitCode": 1,
+      "whitespaceDiagnostics": ""
+    },
+    {
+      "file": ".trellis/tasks/11-04-ghcr-image-release/checks/ci-followup/implementation/canvas-e2e-runtime-fixture.test.ts.before",
+      "exitCode": 1,
+      "whitespaceDiagnostics": ""
+    },
+    {
+      "file": ".trellis/tasks/11-04-ghcr-image-release/checks/ci-followup/implementation/final-audit-initial.json",
+      "exitCode": 1,
+      "whitespaceDiagnostics": ""
+    },
+    {
+      "file": ".trellis/tasks/11-04-ghcr-image-release/checks/ci-followup/implementation/final-audit.json",
+      "exitCode": 1,
+      "whitespaceDiagnostics": ""
+    },
+    {
+      "file": ".trellis/tasks/11-04-ghcr-image-release/checks/ci-followup/implementation/green.json",
+      "exitCode": 1,
+      "whitespaceDiagnostics": ""
+    },
+    {
+      "file": ".trellis/tasks/11-04-ghcr-image-release/checks/ci-followup/implementation/lint.json",
+      "exitCode": 1,
+      "whitespaceDiagnostics": ""
+    },
+    {
+      "file": ".trellis/tasks/11-04-ghcr-image-release/checks/ci-followup/implementation/restored-related.json",
+      "exitCode": 1,
+      "whitespaceDiagnostics": ""
+    },
+    {
+      "file": ".trellis/tasks/11-04-ghcr-image-release/checks/ci-followup/implementation/reverted-red.json",
+      "exitCode": 1,
+      "whitespaceDiagnostics": ""
+    },
+    {
+      "file": ".trellis/tasks/11-04-ghcr-image-release/checks/ci-followup/implementation/run-isolated-check.py",
+      "exitCode": 1,
+      "whitespaceDiagnostics": ""
+    },
+    {
+      "file": ".trellis/tasks/11-04-ghcr-image-release/checks/ci-followup/implementation/types.json",
+      "exitCode": 1,
+      "whitespaceDiagnostics": ""
+    },
+    {
+      "file": ".trellis/tasks/11-04-ghcr-image-release/checks/ci-followup/implementation/verification.md",
+      "exitCode": 1,
+      "whitespaceDiagnostics": ""
+    },
+    {
+      "file": ".trellis/tasks/11-04-ghcr-image-release/checks/ci-followup/retrospective.md",
+      "exitCode": 1,
+      "whitespaceDiagnostics": ""
+    },
+    {
+      "file": ".trellis/tasks/11-04-ghcr-image-release/checks/ci-followup/review/.gitignore",
+      "exitCode": 1,
+      "whitespaceDiagnostics": ""
+    },
+    {
+      "file": ".trellis/tasks/11-04-ghcr-image-release/checks/ci-followup/review/cleanup-negative.json",
+      "exitCode": 1,
+      "whitespaceDiagnostics": ""
+    },
+    {
+      "file": ".trellis/tasks/11-04-ghcr-image-release/checks/ci-followup/review/environment-probe.cjs",
+      "exitCode": 1,
+      "whitespaceDiagnostics": ""
+    },
+    {
+      "file": ".trellis/tasks/11-04-ghcr-image-release/checks/ci-followup/review/fixed.json",
+      "exitCode": 1,
+      "whitespaceDiagnostics": ""
+    },
+    {
+      "file": ".trellis/tasks/11-04-ghcr-image-release/checks/ci-followup/review/full-vitest.json",
+      "exitCode": 1,
+      "whitespaceDiagnostics": ""
+    },
+    {
+      "file": ".trellis/tasks/11-04-ghcr-image-release/checks/ci-followup/review/lint.json",
+      "exitCode": 1,
+      "whitespaceDiagnostics": ""
+    },
+    {
+      "file": ".trellis/tasks/11-04-ghcr-image-release/checks/ci-followup/review/node-tests.json",
+      "exitCode": 1,
+      "whitespaceDiagnostics": ""
+    },
+    {
+      "file": ".trellis/tasks/11-04-ghcr-image-release/checks/ci-followup/review/preflight.json",
+      "exitCode": 1,
+      "whitespaceDiagnostics": ""
+    },
+    {
+      "file": ".trellis/tasks/11-04-ghcr-image-release/checks/ci-followup/review/restore-absent.json",
+      "exitCode": 1,
+      "whitespaceDiagnostics": ""
+    },
+    {
+      "file": ".trellis/tasks/11-04-ghcr-image-release/checks/ci-followup/review/restore-present.json",
+      "exitCode": 1,
+      "whitespaceDiagnostics": ""
+    },
+    {
+      "file": ".trellis/tasks/11-04-ghcr-image-release/checks/ci-followup/review/restore-probe.ts.before",
+      "exitCode": 1,
+      "whitespaceDiagnostics": ""
+    },
+    {
+      "file": ".trellis/tasks/11-04-ghcr-image-release/checks/ci-followup/review/restored-fixed.json",
+      "exitCode": 1,
+      "whitespaceDiagnostics": ""
+    },
+    {
+      "file": ".trellis/tasks/11-04-ghcr-image-release/checks/ci-followup/review/reverted-negative.json",
+      "exitCode": 1,
+      "whitespaceDiagnostics": ""
+    },
+    {
+      "file": ".trellis/tasks/11-04-ghcr-image-release/checks/ci-followup/review/review.md",
+      "exitCode": 1,
+      "whitespaceDiagnostics": ""
+    },
+    {
+      "file": ".trellis/tasks/11-04-ghcr-image-release/checks/ci-followup/review/run-checks.py",
+      "exitCode": 1,
+      "whitespaceDiagnostics": ""
+    },
+    {
+      "file": ".trellis/tasks/11-04-ghcr-image-release/checks/ci-followup/review/source-audit.json",
+      "exitCode": 1,
+      "whitespaceDiagnostics": ""
+    },
+    {
+      "file": ".trellis/tasks/11-04-ghcr-image-release/checks/ci-followup/review/source-inputs.json",
+      "exitCode": 1,
+      "whitespaceDiagnostics": ""
+    },
+    {
+      "file": ".trellis/tasks/11-04-ghcr-image-release/checks/ci-followup/review/types.json",
+      "exitCode": 1,
+      "whitespaceDiagnostics": ""
+    },
+    {
+      "file": ".trellis/tasks/11-04-ghcr-image-release/checks/first-hosted-run.json",
+      "exitCode": 1,
+      "whitespaceDiagnostics": ""
+    },
+    {
+      "file": ".trellis/tasks/11-04-ghcr-image-release/checks/hosted-ci-followup.md",
+      "exitCode": 1,
+      "whitespaceDiagnostics": ""
+    }
+  ],
+  "authoredProbeCheckedWithoutWhitespaceExemption": true,
+  "indexUnchanged": true,
+  "sourceFreeze": true,
+  "heavyIdle": true,
+  "reviewerProductEdits": [],
+  "reviewArtifactHashes": {
+    ".gitignore": "51cca92b16c7b9a5b18d026e3c5da47e72910ddc272c5a954e97cc88bd34d623",
+    "cleanup-negative.json": "7e9c1297b6f632bfe94c3de25634b70c3a796edc869f31b59d0e9f3b416e1eb6",
+    "environment-probe.cjs": "fb910d3d7bf291e44323a8acc2d975a6ad565ef9545e4d434693bd215f3b1500",
+    "fixed.json": "9ae46a8c601cc464454c6000e53b2de99345ad165994e70ef502e79678480a04",
+    "full-vitest.json": "dabe4ce0dae40ec288503d249a3b272409aebee2c62457b0de2280ed99faf631",
+    "lint.json": "6c6bc6e528449baffa958532bd4bfbcb48d502190774e38189735e901997b8d4",
+    "node-tests.json": "1553cc52cf5a5d07c842a84d436b4c9d35a8cc6f7da30e83ab526ae8a6f5ffd6",
+    "preflight.json": "8c65b020bcd23e05546b7eba76e1d304552633335b10d794889b733f00509f10",
+    "restore-absent.json": "4e4279239626a8a5cb37feb7bdd0dd84331eede2958b1f9dcdd13ec2d72ef633",
+    "restore-present.json": "cfe594c43d6fb345f436279222cc7dc087b8bfb0153005a0ea841a1c833ad7e3",
+    "restore-probe.ts.before": "be7fe474bd780c7e3c28bf40788c779a29d43fa16fce17e87848b1bbb79abde9",
+    "restored-fixed.json": "873d8fdae18654861d9c89b5b044e452f27f48542b51d49684176dc02c256ec6",
+    "reverted-negative.json": "311ec995b9966a5fa5fa45c56cabd8d3ff5321a0b0efdc827637de9980f73821",
+    "review.md": "d65955e4164b8f4554ce8e5b09547463197c319253085361cc13fcdb55666caa",
+    "run-checks.py": "e9eead8897c1818eecd4cec0f11503c0a9dd40de234ec736aba0a444a1582755",
+    "source-audit.json": "d84bfb9175b5f3926b0bb39f503370a8c1fdbdfe9fa37e7f71a03a2c14b65b10",
+    "source-inputs.json": "9e87fa8b20071b9d2e35d51109d4653a17fe553ffbd4a8d3e8dcb88a49dee3f6",
+    "types.json": "643945f41abbd48c39e28cf7b50cd90eb9609cb67e6474cb4dbc6c208f5f8416"
+  }
+}

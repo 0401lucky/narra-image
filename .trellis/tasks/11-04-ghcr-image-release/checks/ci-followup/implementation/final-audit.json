@@ -1,0 +1,225 @@
+{
+  "fixtureSha256": "c76bb69cd11c903ff73c0e7c9bd32dae245d0c9bca369d2f4ae1c09ee3e22ac1",
+  "denyEnvGuardSha256": "bd9ec3da5da5787ffc8378f8ed97835428d4b5a9c80a21a099ccca2c4d077e55",
+  "ownedGuardMatchesAuditedSource": true,
+  "rawReceiptAndLogHashesVerified": [
+    "baseline-red",
+    "green",
+    "reverted-red",
+    "restored-related",
+    "lint",
+    "types"
+  ],
+  "gitChecks": [
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": "warning: in the working copy of '.trellis/tasks/11-04-ghcr-image-release/implement.md', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'src/tests/unit/canvas-e2e-runtime-fixture.test.ts', LF will be replaced by CRLF the next time Git touches it\n"
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--cached",
+        "--check"
+      ],
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--no-index",
+        "--check",
+        "--",
+        "NUL",
+        ".trellis/tasks/11-04-ghcr-image-release/checks/ci-followup/implementation/.gitignore"
+      ],
+      "exitCode": 1,
+      "stdout": "",
+      "stderr": "warning: in the working copy of '.trellis/tasks/11-04-ghcr-image-release/checks/ci-followup/implementation/.gitignore', LF will be replaced by CRLF the next time Git touches it\n"
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--no-index",
+        "--check",
+        "--",
+        "NUL",
+        ".trellis/tasks/11-04-ghcr-image-release/checks/ci-followup/implementation/baseline-red.json"
+      ],
+      "exitCode": 1,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--no-index",
+        "--check",
+        "--",
+        "NUL",
+        ".trellis/tasks/11-04-ghcr-image-release/checks/ci-followup/implementation/canvas-e2e-runtime-fixture.test.ts.before"
+      ],
+      "exitCode": 1,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--no-index",
+        "--check",
+        "--",
+        "NUL",
+        ".trellis/tasks/11-04-ghcr-image-release/checks/ci-followup/implementation/green.json"
+      ],
+      "exitCode": 1,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--no-index",
+        "--check",
+        "--",
+        "NUL",
+        ".trellis/tasks/11-04-ghcr-image-release/checks/ci-followup/implementation/lint.json"
+      ],
+      "exitCode": 1,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--no-index",
+        "--check",
+        "--",
+        "NUL",
+        ".trellis/tasks/11-04-ghcr-image-release/checks/ci-followup/implementation/restored-related.json"
+      ],
+      "exitCode": 1,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--no-index",
+        "--check",
+        "--",
+        "NUL",
+        ".trellis/tasks/11-04-ghcr-image-release/checks/ci-followup/implementation/reverted-red.json"
+      ],
+      "exitCode": 1,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--no-index",
+        "--check",
+        "--",
+        "NUL",
+        ".trellis/tasks/11-04-ghcr-image-release/checks/ci-followup/implementation/run-isolated-check.py"
+      ],
+      "exitCode": 1,
+      "stdout": "",
+      "stderr": "warning: in the working copy of '.trellis/tasks/11-04-ghcr-image-release/checks/ci-followup/implementation/run-isolated-check.py', LF will be replaced by CRLF the next time Git touches it\n"
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--no-index",
+        "--check",
+        "--",
+        "NUL",
+        ".trellis/tasks/11-04-ghcr-image-release/checks/ci-followup/implementation/types.json"
+      ],
+      "exitCode": 1,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--no-index",
+        "--check",
+        "--",
+        "NUL",
+        ".trellis/tasks/11-04-ghcr-image-release/checks/ci-followup/implementation/verification.md"
+      ],
+      "exitCode": 1,
+      "stdout": "",
+      "stderr": "warning: in the working copy of '.trellis/tasks/11-04-ghcr-image-release/checks/ci-followup/implementation/verification.md', LF will be replaced by CRLF the next time Git touches it\n"
+    }
+  ],
+  "cachedCheckDoesNotStageFiles": true,
+  "initialEvaluatorError": "Expected no-index added-file exit 0; actual normal difference exit is 1, whitespace failure is 3.",
+  "initialAuditReceipt": "final-audit-initial.json",
+  "initialAuditSha256": "d107ef29143c2f24510bf7cc1ce3f44e0b7ccef9228e5ae2600fc11f9cecabc1",
+  "noIndexCalibration": [
+    {
+      "command": [
+        "git",
+        "diff",
+        "--no-index",
+        "--check",
+        "--",
+        "NUL",
+        ".trellis\\tasks\\11-04-ghcr-image-release\\checks\\ci-followup\\implementation\\.runtime\\whitespace-probe\\good.txt"
+      ],
+      "exitCode": 1,
+      "stdout": "",
+      "stderr": "warning: in the working copy of '.trellis\\tasks\\11-04-ghcr-image-release\\checks\\ci-followup\\implementation\\.runtime\\whitespace-probe\\good.txt', LF will be replaced by CRLF the next time Git touches it\n"
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--no-index",
+        "--check",
+        "--",
+        "NUL",
+        ".trellis\\tasks\\11-04-ghcr-image-release\\checks\\ci-followup\\implementation\\.runtime\\whitespace-probe\\trailing-space.txt"
+      ],
+      "exitCode": 3,
+      "stdout": ".trellis\\tasks\\11-04-ghcr-image-release\\checks\\ci-followup\\implementation\\.runtime\\whitespace-probe\\trailing-space.txt:1: trailing whitespace.\n+invalid \n",
+      "stderr": "warning: in the working copy of '.trellis\\tasks\\11-04-ghcr-image-release\\checks\\ci-followup\\implementation\\.runtime\\whitespace-probe\\trailing-space.txt', LF will be replaced by CRLF the next time Git touches it\n"
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--no-index",
+        "--check",
+        "--",
+        "NUL",
+        ".trellis\\tasks\\11-04-ghcr-image-release\\checks\\ci-followup\\implementation\\.runtime\\whitespace-probe\\blank-eof.txt"
+      ],
+      "exitCode": 3,
+      "stdout": ".trellis\\tasks\\11-04-ghcr-image-release\\checks\\ci-followup\\implementation\\.runtime\\whitespace-probe\\blank-eof.txt:2: new blank line at EOF.\n",
+      "stderr": "warning: in the working copy of '.trellis\\tasks\\11-04-ghcr-image-release\\checks\\ci-followup\\implementation\\.runtime\\whitespace-probe\\blank-eof.txt', LF will be replaced by CRLF the next time Git touches it\n"
+    }
+  ],
+  "whitespacePassed": true
+}

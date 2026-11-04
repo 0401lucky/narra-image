@@ -1,0 +1,3 @@
+# Keep verbatim output in local receipts; JSON binds its exact bytes and location.
+*.stdout.log
+*.stderr.log

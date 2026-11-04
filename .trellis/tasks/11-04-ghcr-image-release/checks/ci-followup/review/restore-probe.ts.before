@@ -1,0 +1,55 @@
+// @vitest-environment node
+
+import { afterAll, afterEach, beforeAll, beforeEach, expect } from "vitest";
+import "./canvas-e2e-runtime-fixture.test";
+
+const names = ["AUTH_SECRET", "DATABASE_URL"] as const;
+const mode = process.env.NARRA_REVIEW_RESTORE_MODE;
+const supplied = {
+  AUTH_SECRET: "review-existing-synthetic-auth-secret",
+  DATABASE_URL: "postgresql://127.0.0.1:1/review_existing_never_connect",
+};
+let completed = 0;
+
+function expectAbsent() {
+  for (const name of names) {
+    expect(Object.hasOwn(process.env, name), name).toBe(false);
+    expect(process.env[name], name).toBeUndefined();
+  }
+}
+
+beforeAll(() => {
+  expect(["absent", "present"]).toContain(mode);
+  expectAbsent();
+  expect(process.env.APP_URL).toBeUndefined();
+  expect(process.env.NODE_OPTIONS).toContain("deny_env.cjs");
+});
+
+// Parent hooks surround the actual fixture's nested suite hooks and tests.
+beforeEach(() => {
+  expectAbsent();
+  if (mode === "present") {
+    for (const name of names) process.env[name] = supplied[name];
+  }
+});
+
+afterEach(() => {
+  try {
+    if (mode === "present") {
+      for (const name of names) {
+        expect(Object.hasOwn(process.env, name), name).toBe(true);
+        expect(process.env[name], name).toBe(supplied[name]);
+      }
+    } else {
+      expectAbsent();
+    }
+    completed += 1;
+  } finally {
+    for (const name of names) delete process.env[name];
+  }
+});
+
+afterAll(() => {
+  expectAbsent();
+  expect(completed).toBe(20);
+});

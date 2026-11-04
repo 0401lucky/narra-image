@@ -1,0 +1,87 @@
+{
+  "id": "20261104T134954-cleanup-negative-ee420d",
+  "command": [
+    "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-history-cleanup-20261029\\node-v24.22.1-win-x64\\node.exe",
+    "E:\\code\\narra-image\\.trellis\\tasks\\11-04-ghcr-image-release\\checks\\.runtime\\release-integration-5781d68e\\app\\node_modules\\vitest\\vitest.mjs",
+    "run",
+    "--testTimeout=30000",
+    "--maxWorkers=2",
+    "src/tests/unit/ci-fixture-review-restoration.test.ts"
+  ],
+  "cwd": "E:\\code\\narra-image\\.trellis\\tasks\\11-04-ghcr-image-release\\checks\\.runtime\\release-integration-5781d68e\\app",
+  "finishedAt": "2026-11-04T13:49:56.091179+00:00",
+  "exitCode": 1,
+  "timedOut": false,
+  "timeoutSeconds": 57,
+  "durationSeconds": 1.554,
+  "stdout": "E:\\code\\narra-image\\.trellis\\tasks\\11-04-ghcr-image-release\\checks\\.runtime\\release-integration-5781d68e\\receipts\\20261104T134954-cleanup-negative-ee420d.stdout.log",
+  "stderr": "E:\\code\\narra-image\\.trellis\\tasks\\11-04-ghcr-image-release\\checks\\.runtime\\release-integration-5781d68e\\receipts\\20261104T134954-cleanup-negative-ee420d.stderr.log",
+  "environmentKeys": [
+    "APPDATA",
+    "COMSPEC",
+    "COREPACK_HOME",
+    "HOME",
+    "HOMEDRIVE",
+    "HOMEPATH",
+    "LOCALAPPDATA",
+    "NARRA_CHECK_OWNER_ROOT",
+    "NARRA_CHECK_PUBLIC_ENV_SHA256",
+    "NARRA_CHECK_ROOT",
+    "NARRA_REVIEW_RESTORE_MODE",
+    "NEXT_TELEMETRY_DISABLED",
+    "NODE_ENV",
+    "NODE_OPTIONS",
+    "NO_COLOR",
+    "NUMBER_OF_PROCESSORS",
+    "OS",
+    "PATH",
+    "PATHEXT",
+    "PRISMA_HIDE_UPDATE_MESSAGE",
+    "PROCESSOR_ARCHITECTURE",
+    "PROCESSOR_IDENTIFIER",
+    "SYSTEMDRIVE",
+    "SYSTEMROOT",
+    "TEMP",
+    "TMP",
+    "TMPDIR",
+    "USERPROFILE",
+    "WINDIR",
+    "XDG_CACHE_HOME",
+    "XDG_CONFIG_HOME",
+    "npm_config_cache",
+    "npm_config_userconfig"
+  ],
+  "nodeEnv": "test",
+  "buildOnlyAppUrl": null,
+  "inheritedCallerConfiguration": false,
+  "sourceChanges": [],
+  "snapshotModifications": [
+    "src/tests/unit/canvas-e2e-runtime-fixture.test.ts"
+  ],
+  "sourceManifest": "E:\\code\\narra-image\\.trellis\\tasks\\11-04-ghcr-image-release\\checks\\.runtime\\release-integration-5781d68e\\source-manifest.json",
+  "rawReceiptSha256": "8aedf400daf67d45397b36f2cad9d566e6e121ca5bc4e19844afb3841c8dbece",
+  "sourceIdentitySha256": "8ca92099c70e91e3e5eeac2b281072605b2743cc7f8808dda36810eb7740b489",
+  "sourceManifestSha256": "9e87fa8b20071b9d2e35d51109d4653a17fe553ffbd4a8d3e8dcb88a49dee3f6",
+  "testedFixtureSha256": "9e0d6812f4678ffc6721232659e925d548c7ba68c2f217026ae9056436bda688",
+  "restoredSnapshotFixtureSha256": "c76bb69cd11c903ff73c0e7c9bd32dae245d0c9bca369d2f4ae1c09ee3e22ac1",
+  "worktreeFixtureSha256": "c76bb69cd11c903ff73c0e7c9bd32dae245d0c9bca369d2f4ae1c09ee3e22ac1",
+  "probeSha256": "be7fe474bd780c7e3c28bf40788c779a29d43fa16fce17e87848b1bbb79abde9",
+  "temporaryProbeRemoved": true,
+  "launcherSha256": "e9eead8897c1818eecd4cec0f11503c0a9dd40de234ec736aba0a444a1582755",
+  "preloadSha256": "bd9ec3da5da5787ffc8378f8ed97835428d4b5a9c80a21a099ccca2c4d077e55",
+  "absentBeforeNodeStartup": [
+    "AUTH_SECRET",
+    "DATABASE_URL",
+    "APP_URL"
+  ],
+  "logs": {
+    "stdout": {
+      "path": "cleanup-negative.stdout.log",
+      "sha256": "67c80c790907e77cbbad33ab4b007f7637dbbdf0c4d9e3fa1d1b9e5bdeeeff63"
+    },
+    "stderr": {
+      "path": "cleanup-negative.stderr.log",
+      "sha256": "c865301d275f4a6a6c5bca7e4e628d4047a421e5e853c3a5d264a3f5489a0cb2"
+    }
+  }
+}

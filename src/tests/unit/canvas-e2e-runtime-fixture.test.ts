@@ -1,7 +1,7 @@
 // @vitest-environment node
 
 import { randomUUID } from "node:crypto";
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { verifyCanvasImage } from "@/lib/canvas/image-container";
 import { parseGenerateRequest } from "@/lib/generation/parse-generate-request";
@@ -30,6 +30,16 @@ function setup(phase: "failed" | "deleted" = "failed") {
 }
 
 describe("enabled E2E runtime fixture assertions", () => {
+  beforeEach(() => {
+    // The real opt-in parser loads auth/database configuration before reading JSON.
+    vi.stubEnv("AUTH_SECRET", "canvas-runtime-fixture-only-auth-secret");
+    vi.stubEnv("DATABASE_URL", "postgresql://127.0.0.1:1/canvas_fixture_never_connect");
+  });
+
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
   it("uses an actual image accepted by production verification, not arbitrary fixture bytes", () => {
     expect(verifyCanvasImage(canvasFixtureBytes(), "image/png")).toEqual({ width: 1, height: 1 });
     const first = canvasFixtureBytes();

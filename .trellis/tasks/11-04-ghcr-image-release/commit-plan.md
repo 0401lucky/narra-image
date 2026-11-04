@@ -1,8 +1,9 @@
-# Proposed Delivery Batch
+# Release Delivery Batches
 
-Approval status: approved in the original session on 2026-11-04 at 13:06:01 UTC,
-with a subsequent request to continue. Delivery resumes after a connection
-failure; see `checks/delivery-approval.md`. No additional scope is inferred.
+Original batch: approved in the original session on 2026-11-04 at 13:06:01 UTC
+and delivered after session recovery as `d530132` then `651f12a`, with ordinary
+main push verified. See `checks/delivery-approval.md`. The fixture correction
+batch at the end of this document was separately approved on 2026-11-04.
 
 ## 1. feat(release): publish verified GHCR images
 
@@ -50,3 +51,31 @@ staging, retain any new foreign changes, and ask if ownership is uncertain.
 No production server/database/volume operation, automatic deployment, branch
 protection change, PAT creation, force push, task archive or journal auto-commit
 is included in this delivery batch.
+
+## Approved Follow-up: fix(test): isolate canvas runtime fixture environment
+
+Approval status: explicitly approved by the user on 2026-11-04; see
+`checks/ci-followup/delivery-approval.md`. The original delivery is already
+complete; this corrects the newly exposed CI fixture prerequisite.
+
+- `src/tests/unit/canvas-e2e-runtime-fixture.test.ts`
+- `.trellis/spec/frontend/quality-guidelines.md`
+- `.trellis/tasks/11-04-ghcr-image-release/commit-plan.md`
+- `.trellis/tasks/11-04-ghcr-image-release/implement.md`
+- `.trellis/tasks/11-04-ghcr-image-release/task.json`
+- `.trellis/tasks/11-04-ghcr-image-release/verification.md`
+- `.trellis/tasks/11-04-ghcr-image-release/checks/first-hosted-run.json`
+- `.trellis/tasks/11-04-ghcr-image-release/checks/hosted-ci-followup.md`
+- `.trellis/tasks/11-04-ghcr-image-release/checks/ci-followup/` nonignored
+  reproduction/review helpers, exact before-image, receipts and retrospective.
+
+Scope: the fixture owns and restores synthetic auth/database inputs. No business
+logic, production environment, workflow gate, timeout or test assertion changes.
+Independent full non-DB (1,824), Node (32), lint and types pass without ambient
+AUTH_SECRET/DATABASE_URL/APP_URL. No unrecognized dirty paths are included.
+
+After approval, recheck ownership/HEAD/remote main, stage only this explicit
+group, verify whitespace and raw evidence blobs, commit once and push main
+normally, then track the new exact SHA's three gates and publisher. Exclude all
+ignored stdout/stderr, runtime snapshots, credentials and the older canvas task.
+The original production/permission/archive boundaries remain unchanged.

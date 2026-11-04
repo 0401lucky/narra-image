@@ -136,3 +136,19 @@ authenticated pulls as anonymous, or two latest aliases as a transactional pair.
   main; see `checks/delivery-approval.md`. Real hosted gate results, GHCR Public
   setup and anonymous image evidence remain pending. The task remains
   in_progress; neither this task nor the prior canvas task is archived.
+
+## First Hosted Gate Follow-up
+
+The approved two commits were pushed normally to main at
+`651f12af560db529ceb3f23c58ad230c2efdd044`. Run `41838299471` passed migrations
+and the corrected CI prerequisites, then exposed one test fixture relying on
+ambient AUTH_SECRET/DATABASE_URL. Follow `checks/hosted-ci-followup.md`: reproduce
+without those ambient inputs, add fixture-scoped synthetic setup/cleanup, and
+repeat independent checks without modifying production configuration or gates.
+
+The fixture correction and independent absent-variable/control tests now pass,
+as do full non-DB Vitest (144 files/1,824 tests), 32 Node tests, lint and types.
+See `checks/ci-followup/review/`. Original migration/E2E jobs passed; publisher
+was skipped. The user has now approved the separate correction delivery batch
+in `commit-plan.md`; staged checks, commit/push and the new hosted run follow.
+No new image is available from the first failed run.

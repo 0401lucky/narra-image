@@ -1,0 +1,78 @@
+{
+  "id": "20261104T134046-types-fb68d7",
+  "command": [
+    "C:\\Users\\Administrator\\AppData\\Local\\Temp\\narra-history-cleanup-20261029\\node-v24.22.1-win-x64\\node.exe",
+    "E:\\code\\narra-image\\.trellis\\tasks\\11-04-ghcr-image-release\\checks\\.runtime\\release-integration-5781d68e\\app\\node_modules\\typescript\\bin\\tsc",
+    "--noEmit"
+  ],
+  "cwd": "E:\\code\\narra-image\\.trellis\\tasks\\11-04-ghcr-image-release\\checks\\.runtime\\release-integration-5781d68e\\app",
+  "finishedAt": "2026-11-04T13:40:58.059066+00:00",
+  "exitCode": 0,
+  "timedOut": false,
+  "timeoutSeconds": 180,
+  "durationSeconds": 11.922,
+  "stdout": "E:\\code\\narra-image\\.trellis\\tasks\\11-04-ghcr-image-release\\checks\\.runtime\\release-integration-5781d68e\\receipts\\20261104T134046-types-fb68d7.stdout.log",
+  "stderr": "E:\\code\\narra-image\\.trellis\\tasks\\11-04-ghcr-image-release\\checks\\.runtime\\release-integration-5781d68e\\receipts\\20261104T134046-types-fb68d7.stderr.log",
+  "environmentKeys": [
+    "APPDATA",
+    "COMSPEC",
+    "COREPACK_HOME",
+    "HOME",
+    "HOMEDRIVE",
+    "HOMEPATH",
+    "LOCALAPPDATA",
+    "NARRA_CHECK_OWNER_ROOT",
+    "NARRA_CHECK_PUBLIC_ENV_SHA256",
+    "NARRA_CHECK_ROOT",
+    "NEXT_TELEMETRY_DISABLED",
+    "NODE_ENV",
+    "NODE_OPTIONS",
+    "NO_COLOR",
+    "NUMBER_OF_PROCESSORS",
+    "OS",
+    "PATH",
+    "PATHEXT",
+    "PRISMA_HIDE_UPDATE_MESSAGE",
+    "PROCESSOR_ARCHITECTURE",
+    "PROCESSOR_IDENTIFIER",
+    "SYSTEMDRIVE",
+    "SYSTEMROOT",
+    "TEMP",
+    "TMP",
+    "TMPDIR",
+    "USERPROFILE",
+    "WINDIR",
+    "XDG_CACHE_HOME",
+    "XDG_CONFIG_HOME",
+    "npm_config_cache",
+    "npm_config_userconfig"
+  ],
+  "nodeEnv": "test",
+  "buildOnlyAppUrl": null,
+  "inheritedCallerConfiguration": false,
+  "sourceChanges": [],
+  "snapshotModifications": [],
+  "sourceManifest": "E:\\code\\narra-image\\.trellis\\tasks\\11-04-ghcr-image-release\\checks\\.runtime\\release-integration-5781d68e\\source-manifest.json",
+  "rawReceiptSha256": "13244f427f146a03e6e65579ee4ef6adad6344d8de41a2351e1f565cce8a0bbd",
+  "sourceIdentitySha256": "e9dd8bb6c4bee6ba4571f451f4fe3b0026c7786b3ff256814ace3c4c767cdc63",
+  "testedFixtureSha256": "c76bb69cd11c903ff73c0e7c9bd32dae245d0c9bca369d2f4ae1c09ee3e22ac1",
+  "worktreeFixtureSha256": "c76bb69cd11c903ff73c0e7c9bd32dae245d0c9bca369d2f4ae1c09ee3e22ac1",
+  "restoredSnapshotFixtureSha256": "c76bb69cd11c903ff73c0e7c9bd32dae245d0c9bca369d2f4ae1c09ee3e22ac1",
+  "revertedFixtureOnly": false,
+  "absentBeforeNodeStartup": [
+    "AUTH_SECRET",
+    "DATABASE_URL"
+  ],
+  "sourceManifestSha256": "d62ca1485e57be6d3f0ece409a1ea1941567fc89fcaa92b2159dccb0accaab3b",
+  "launcherSha256": "14c95b8fc1ba84da80eab3d6c9b08eaba8e6e287a3aebddd53927d3f99cb162c",
+  "logs": {
+    "stdout": {
+      "path": "types.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "stderr": {
+      "path": "types.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  }
+}

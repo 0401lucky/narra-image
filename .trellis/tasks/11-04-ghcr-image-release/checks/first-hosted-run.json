@@ -1,0 +1,78 @@
+{
+  "recordedAt": "2026-11-04T13:43:28.395477+00:00",
+  "repository": "0401lucky/narra-image",
+  "sourceSha": "651f12af560db529ceb3f23c58ad230c2efdd044",
+  "productCommit": "d530132",
+  "runId": 41838299471,
+  "url": "https://github.com/0401lucky/narra-image/actions/runs/41838299471",
+  "status": "completed",
+  "conclusion": "failure",
+  "jobs": [
+    {
+      "name": "verify:ci",
+      "databaseId": 126602878746,
+      "url": "https://github.com/0401lucky/narra-image/actions/runs/41838299471/job/126602878746",
+      "status": "completed",
+      "conclusion": "failure",
+      "startedAt": "2026-11-04T13:27:48Z",
+      "completedAt": "2026-11-04T13:30:27Z"
+    },
+    {
+      "name": "verify:migrations",
+      "databaseId": 126602879233,
+      "url": "https://github.com/0401lucky/narra-image/actions/runs/41838299471/job/126602879233",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-11-04T13:27:48Z",
+      "completedAt": "2026-11-04T13:29:21Z"
+    },
+    {
+      "name": "verify:e2e",
+      "databaseId": 126602879325,
+      "url": "https://github.com/0401lucky/narra-image/actions/runs/41838299471/job/126602879325",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-11-04T13:27:48Z",
+      "completedAt": "2026-11-04T13:41:30Z"
+    },
+    {
+      "name": "Publish verified images",
+      "databaseId": 126610183083,
+      "url": "https://github.com/0401lucky/narra-image/actions/runs/41838299471/job/126610183083",
+      "status": "completed",
+      "conclusion": "skipped",
+      "startedAt": "2026-11-04T13:41:31Z",
+      "completedAt": "2026-11-04T13:41:30Z"
+    }
+  ],
+  "ciFailure": {
+    "file": "src/tests/unit/canvas-e2e-runtime-fixture.test.ts",
+    "lineInPushedSource": 59,
+    "expected": "CANVAS_INVALID_INPUT",
+    "actual": "ZodError for missing AUTH_SECRET and DATABASE_URL",
+    "passedTestFiles": 143,
+    "failedTestFiles": 1,
+    "passedTests": 1823,
+    "failedTests": 1,
+    "priorStagesPassed": [
+      "Node release tests",
+      "Prisma Client generation",
+      "TypeScript",
+      "ESLint"
+    ]
+  },
+  "localEvidence": {
+    "status.json": {
+      "path": "checks/.runtime/delivery-41838299471/status.json",
+      "sha256": "2ce8b9fe59945d989d75d6b481347b87eba84133995243be4707a4cfd0268618"
+    },
+    "verify-ci.log": {
+      "path": "checks/.runtime/delivery-41838299471/verify-ci.log",
+      "sha256": "b5398617607933ed9533bd2bd37ca7a95950aab9f065bee6469c30614e6f35bc"
+    }
+  },
+  "registryPublicationPerformed": false,
+  "publicImagesVerified": false,
+  "productionOperationsPerformed": false,
+  "nextAction": "Independently verify fixture-scoped synthetic environment correction; obtain follow-up commit/push approval."
+}

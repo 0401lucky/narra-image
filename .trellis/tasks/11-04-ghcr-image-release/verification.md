@@ -2,16 +2,18 @@
 
 ## Status
 
-Implementation and independent review are complete. The working source is based
+Original release implementation and independent review are complete. Its source is based
 on main `66a4d0273f9fd3229336945ed06d87d1995943dd`; the reviewed 12 product/docs/test
 files are bound by `checks/review/review-final-source.json`, not by an invented
 commit identity. Main's integration snapshot uses those same bytes.
 
 Local production build and both Linux amd64 Dockerfile builds passed.
-Commit/push, first real Actions/GHCR publication, package visibility changes and
-anonymous pulls have not been performed at this pre-push snapshot. The user
-approved the delivery batch at 13:06:01 UTC; execution resumes after the original
-session's connection failure. See `checks/delivery-approval.md`.
+The approved two-commit batch was pushed normally to main at
+`651f12af560db529ceb3f23c58ad230c2efdd044` after recovering the original session's
+connection failure. First hosted run `41838299471` passed migrations/E2E, but
+failed one CI fixture test, so the publisher was skipped. No registry
+publication, package visibility change or anonymous image pull occurred.
+See `checks/delivery-approval.md` and `checks/first-hosted-run.json`.
 No production deployment is part of this task, and the earlier canvas task is
 not modified or archived here.
 
@@ -57,6 +59,30 @@ warnings. Actionlint is not installed and was not run. Host Go/full verify:ci,
 the full migration matrix and deployment E2E are not claimed from these checks;
 the authorized hosted workflow must still execute all three real gates.
 
+## First Hosted Run And Correction
+
+- Product commit `d530132` and task/evidence commit `651f12a` were pushed in the
+  approved order. Remote main was verified against the exact local HEAD.
+- Actual GitHub migrations and E2E passed. CI passed Node tests, generated
+  Prisma, TypeScript and lint, then passed 1,823/1,824 Vitest tests.
+- The remaining fixture dynamically imports auth/db environment validation
+  before parsing JSON. It omitted synthetic AUTH_SECRET/DATABASE_URL; the
+  credential-safe local runner had masked this dependency by providing them.
+- The narrow fixture correction retains the real parser and media-type
+  assertions, owns synthetic values locally and restores environment afterward.
+  Its red/green/reversion evidence is under `checks/ci-followup/implementation/`.
+- Independent checks in `checks/ci-followup/review/` pass: fixed and reverted
+  source controls, originally absent/present environment restoration and a
+  missing-cleanup negative control; 144 files/1,824 non-DB tests, 32 Node tests,
+  lint (zero errors/nine existing warnings) and TypeScript. All test processes
+  start without ambient AUTH_SECRET, DATABASE_URL or APP_URL. The original
+  release's 15 product/spec hashes are unchanged; only the fixture source differs
+  from prior build inputs, so those prior builds are not relabeled fresh builds.
+- At this pre-push snapshot the correction is not committed or pushed. The user
+  has now explicitly approved its delivery; a new hosted run remains pending.
+  No public image availability is claimed.
+- Run: https://github.com/0401lucky/narra-image/actions/runs/41838299471
+
 ## Acceptance Reconciliation
 
 - AC1: Local Dockerfile/policy coverage is separate from the still-pending exact
@@ -69,8 +95,9 @@ the authorized hosted workflow must still execute all three real gates.
   behavior pass mocks. Real package permissions/public availability are pending.
 - AC5: Actual Compose merge, runtime parity and required selectors pass; update,
   backup, forward migration, readiness and rollback steps are documented.
-- AC6: Independent review and local gates pass as listed; actual hosted workflow
-  and public registry results remain pending. The task stays in_progress.
+- AC6: Independent review and local gates pass as listed. The first real hosted
+  run is recorded as failed/skipped; a successful corrected workflow and public
+  registry results remain pending. The task stays in_progress.
 
 ## Review And Deferred Risk
 
@@ -85,8 +112,9 @@ deferred, not described as fixed by the shared helper. See
 
 ## Delivery Gate
 
-After the grouped commit/push/first-publication approval, push main normally and
-track all three verification jobs plus publisher to their real outcomes. If
+The original approved batch is delivered. The separate fixture correction batch
+in `commit-plan.md` is now approved; commit/push normally and track all three
+verification jobs plus publisher to their real outcomes. If
 GHCR creates private packages, report the exact Public settings and retain SHA
 tags; after owner setup rerun the failed publication job and confirm anonymous
 digest/platform identity. Never infer a public release from authenticated push
@@ -97,8 +125,9 @@ existing task policy. Versioned receipts/review reports retain their IDs, hashes
 exits, deadlines and local paths. No real dotenv, Docker credentials or runtime
 database state is included in the candidate commits.
 
-The approved two-commit delivery batch is in `commit-plan.md`. Final source,
-receipt and candidate-path checks are recorded in `checks/local-handoff.json`.
-The real Git index was unchanged at recovery; staged whitespace/blob
-verification now precedes the approved commits. The isolated attributes test uses
-its own temporary Git repository, not this project's index.
+The original recovery/source checks are recorded in `checks/local-handoff.json`.
+All 15 first-commit blobs were compared to reviewed working bytes (allowing only
+Git line-ending normalization); all 31 machine receipt blobs in the second
+commit retained exact bytes. The correction index remains empty. Its staged
+whitespace/blob verification must run after follow-up approval. No force push,
+production operation, archive or journal commit is included.

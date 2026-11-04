@@ -1,0 +1,4 @@
+# Verbatim local output is duplicated in the owner-marked runtime receipts.
+# Tracked JSON records retain its location, source identity, exit and hashes.
+*.stdout.log
+*.stderr.log
