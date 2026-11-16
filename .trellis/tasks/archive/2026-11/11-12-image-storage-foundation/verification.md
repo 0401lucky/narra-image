@@ -74,3 +74,7 @@ HTTP 夹具未配置 S3，共调用模拟 provider 两次，登记 4 个真实 L
 前文保留C1原输入及原失败边界。提交前C1未发布Canvas SQL只移除最后一个多余LF，13份函数定义不变，两份共享manifest同步原字节SHA；全部五份shared migration精确固定LF，Git实际checkout filter和负对照通过。新当前快照由C3/父最终门禁覆盖，不用原C1回执冒充新checksum。
 
 当前 `20261116T023915-ci-bounded-c5b0f5` 同次完整十阶段CI通过（168套/2150项），真实catalogue、Canvas完整/增量各4套87项、Worker/Gateway DB、全部迁移/Prisma零漂移，以及 `20261116T025107-history-integrated-e2e-f78bd8` 同次默认11场景全部通过。950项产品输入与新完整CI/E2E完全一致，独立资源清理通过；详见 `checks/gates.json` 的 `finalParentIntegration` 和C3 `checks/gates.json`。用户已于2026-11-16一次确认父提交及归档/journal计划，功能提交1368518的272个路径与获批清单一致；任务记录随后提交，再归档，不推送。
+
+## 已完成的工作提交与归档（2026-11-16）
+
+两笔工作提交依次为 `1368518dfe0e2b3d9a78789f022b4e0859240ff6`（272个功能/spec路径）和 `67b0edfd777629bd1dcd37117a1d0e892a115c9e`（79个任务记录路径），实际范围均与用户一次批准的清单一致。本任务已通过native `task.py archive`移动到 `.trellis/tasks/archive/2026-11/11-12-image-storage-foundation`，status为completed，quality gate保持passed；归档Git提交只暂存本任务原路径删除及新路径文件。journal由父任务统一记录，两笔工作提交先于全部归档/journal提交，未push，六份既有GHCR文件字节保留。

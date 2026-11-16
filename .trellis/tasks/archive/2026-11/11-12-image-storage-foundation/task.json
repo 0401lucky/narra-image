@@ -3,7 +3,7 @@
   "name": "image-storage-foundation",
   "title": "Image storage foundation and local persistence",
   "description": "统一图片物理清单、引用与容量预留；实现本地持久化读写并兼容现有 S3 与画布。",
-  "status": "in_progress",
+  "status": "completed",
   "dev_type": "fullstack",
   "scope": "image-storage",
   "package": null,
@@ -11,7 +11,7 @@
   "creator": "0401lucky",
   "assignee": "0401lucky",
   "createdAt": "2026-11-12",
-  "completedAt": null,
+  "completedAt": "2026-11-16",
   "branch": null,
   "base_branch": "main",
   "worktree_path": null,
@@ -43,11 +43,11 @@
       "date": "2026-11-15",
       "record": "verification.md",
       "next_task": "11-12-image-retention-management",
-      "commit_status": "code_committed_records_pending",
+      "commit_status": "committed",
       "final_parent_integration": {
         "status": "passed",
         "date": "2026-11-16",
-        "record": ".trellis/tasks/11-12-image-history-migration/checks/gates.json",
+        "record": ".trellis/tasks/archive/2026-11/11-12-image-history-migration/checks/gates.json",
         "current_full_ci": "20261116T023915-ci-bounded-c5b0f5",
         "current_full_e2e": "20261116T025107-history-integrated-e2e-f78bd8",
         "current_product_inputs_sha256": "da14302ceb1264c4baa15caeb0e802568456fc038ab4308e6c325d23e61efac2",
@@ -56,8 +56,8 @@
       }
     },
     "commit_plan": {
-      "status": "approved",
-      "record": ".trellis/tasks/11-12-local-media-retention/commit-plan.md",
+      "status": "work_commits_completed",
+      "record": ".trellis/tasks/archive/2026-11/11-12-local-media-retention/commit-plan.md",
       "work_commits": 2,
       "archive_and_journal_after_work_commits": true,
       "push": false,
@@ -70,7 +70,9 @@
       }
     },
     "work_commits": [
-      "1368518dfe0e2b3d9a78789f022b4e0859240ff6"
-    ]
+      "1368518dfe0e2b3d9a78789f022b4e0859240ff6",
+      "67b0edfd777629bd1dcd37117a1d0e892a115c9e"
+    ],
+    "archive_path": ".trellis/tasks/archive/2026-11/11-12-image-storage-foundation"
   }
 }
