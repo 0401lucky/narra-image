@@ -1,0 +1,20 @@
+{
+  "mode": "apply",
+  "sha": "bc4dbaa17ceedd1e05483cb62e56236404885bd4",
+  "image": "ghcr.io/0401lucky/narra-image-app@sha256:fc922190d8f2c7c2fb9924c4ded0a6dab76ceb2dd72142fae72b025cc29762ac",
+  "scratch": "/tmp/narra-image-release-w25w_d_2",
+  "production_modified": true,
+  "rollback": "not_needed",
+  "old_image": "ghcr.io/0401lucky/narra-image-app@sha256:53417173c98e66c2f8d0033a6501f305e8807b39c063f3efcd3f122eabf17be1",
+  "new_image_id": "sha256:fc922190d8f2c7c2fb9924c4ded0a6dab76ceb2dd72142fae72b025cc29762ac",
+  "semantic_difference": [
+    "services.narra.image",
+    "services.narra.environment.ENABLE_DATABASE_IMAGE_STORAGE"
+  ],
+  "backup": "/home/ubuntu/apps/narra/compose.yml.bak-20261116T033755576584Z-database-images",
+  "status": "applied",
+  "code": "RELEASE_READY",
+  "container_id": "4d455aaaf62525e12f6ad136483988fee36f397ed2ba2e95d87ee08b1cadaa62",
+  "app_healthz": "passed",
+  "app_readyz": "passed"
+}

@@ -15,12 +15,12 @@
   "branch": null,
   "base_branch": "main",
   "worktree_path": null,
-  "commit": null,
+  "commit": "bc4dbaa17ceedd1e05483cb62e56236404885bd4",
   "pr_url": null,
   "subtasks": [],
   "children": [],
   "parent": null,
   "relatedFiles": [],
-  "notes": "",
+  "notes": "GitHub CI/public GHCR image pair succeeded; app digest fc922190d8f2c7c2fb9924c4ded0a6dab76ceb2dd72142fae72b025cc29762ac deployed on yunyou .22, app/worker/public readiness passed, database opt-in true. Real generation verification belongs to user.",
   "meta": {}
 }

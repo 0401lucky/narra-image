@@ -1,0 +1,36 @@
+{
+  "source_sha": "bc4dbaa17ceedd1e05483cb62e56236404885bd4",
+  "anonymous_verified": true,
+  "images": [
+    {
+      "image": "ghcr.io/0401lucky/narra-image-app",
+      "digest": "sha256:fc922190d8f2c7c2fb9924c4ded0a6dab76ceb2dd72142fae72b025cc29762ac",
+      "sha": "bc4dbaa17ceedd1e05483cb62e56236404885bd4",
+      "tag": "sha-bc4dbaa17ceedd1e05483cb62e56236404885bd4",
+      "platform": "linux/amd64",
+      "reference": "ghcr.io/0401lucky/narra-image-app@sha256:fc922190d8f2c7c2fb9924c4ded0a6dab76ceb2dd72142fae72b025cc29762ac"
+    },
+    {
+      "image": "ghcr.io/0401lucky/narra-image-worker",
+      "digest": "sha256:7059992b49ac3b18022dd34694232f29bc449a894afcca79c7883979e6bd6d98",
+      "sha": "bc4dbaa17ceedd1e05483cb62e56236404885bd4",
+      "tag": "sha-bc4dbaa17ceedd1e05483cb62e56236404885bd4",
+      "platform": "linux/amd64",
+      "reference": "ghcr.io/0401lucky/narra-image-worker@sha256:7059992b49ac3b18022dd34694232f29bc449a894afcca79c7883979e6bd6d98"
+    }
+  ],
+  "workflow": {
+    "id": 43794518410,
+    "url": "https://github.com/0401lucky/narra-image/actions/runs/43794518410",
+    "head_sha": "bc4dbaa17ceedd1e05483cb62e56236404885bd4",
+    "result": "success",
+    "gates": [
+      "verify:ci",
+      "verify:migrations",
+      "verify:e2e"
+    ],
+    "publish": "success"
+  },
+  "production_deploy": "completed",
+  "real_generation_verification": "user_owned"
+}
