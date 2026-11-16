@@ -1,0 +1,32 @@
+{
+  "mimeType": "image/png",
+  "byteLength": 70,
+  "sha256": "abc58d5127d7cdf313beb9ec8ee839860a9c6bfbc48c8b8eb6a3f7d8bb63de6f",
+  "base64": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGNgYGD4DwABBAEAX+XDSwAAAABJRU5ErkJggg==",
+  "uploadId": "a7777777-7777-4777-8777-777777777777",
+  "volumeId": "00112233-4455-4677-8899-aabbccddeeff",
+  "plainGeneration": {
+    "prompt": "storage proof",
+    "providerMode": "built_in",
+    "model": "gpt-image-2",
+    "generationType": "text_to_image",
+    "size": "auto",
+    "quality": "auto",
+    "outputFormat": "png",
+    "count": 1
+  },
+  "canvasParameters": {
+    "providerMode": "built_in",
+    "channelId": null,
+    "model": "gpt-image-2",
+    "size": "auto",
+    "quality": "auto",
+    "outputFormat": "png",
+    "outputCompression": null,
+    "moderation": "auto",
+    "count": 1,
+    "negativePrompt": null,
+    "seed": null,
+    "generationType": "image_to_image"
+  }
+}

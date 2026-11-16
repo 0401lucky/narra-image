@@ -1,0 +1,7 @@
+{
+  "helper": "cdp.mjs",
+  "source": ".trellis/tasks/11-02-canvas-interaction-refactor/checks/unified-cards-and-dock/browser/cdp.mjs",
+  "sha256": "5828a99a4ca4f2815274a532988e3b351cc09d09446e20267ce0e5d89ab4c6da",
+  "copiedWithoutChanges": true,
+  "boundary": "Only the native CDP transport/input helper is reused. Administrator tests use the actual Next.js, PostgreSQL and Go Worker, without mocked product HTTP routes."
+}

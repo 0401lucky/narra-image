@@ -1,0 +1,17 @@
+{"file": ".trellis/spec/operations/media-storage.md", "reason": "现有媒体持久化、失败和历史兼容契约"}
+{"file": ".trellis/spec/operations/canvas-contracts.md", "reason": "原图 roots、七天宽限、能力修订与 SQL/Node/Go 一致性"}
+{"file": ".trellis/spec/operations/release-hardening.md", "reason": "追加迁移、环境配置、两种拓扑、隔离验证与回滚"}
+{"file": ".trellis/spec/frontend/generation-worker-contracts.md", "reason": "生成准入、handoff 和 v0/v1 计费失败边界"}
+{"file": ".trellis/spec/guides/cross-layer-thinking-guide.md", "reason": "统一跨 Node/Go/数据库/网页的状态和字节表示"}
+{"file": ".trellis/spec/frontend/directory-structure.md", "reason": "新路由、组件和服务的归属"}
+{"file": ".trellis/spec/frontend/type-safety.md", "reason": "集中校验、DTO 和 server-only 边界"}
+{"file": ".trellis/spec/frontend/component-guidelines.md", "reason": "管理表单、确认和结果组件约定"}
+{"file": ".trellis/spec/frontend/state-management.md", "reason": "服务端初值、本地状态与任务轮询同步"}
+{"file": ".trellis/tasks/11-12-local-media-retention/research/retention-contracts.md", "reason": "全站计量、永久引用、清理回执与恢复"}
+{"file": ".trellis/tasks/11-12-local-media-retention/research/admin-management.md", "reason": "管理员设置/API/预览/进度与调度接入"}
+{"file": ".trellis/tasks/11-12-local-media-retention/research/quota-admission.md", "reason": "真实输出上界、预留时序与 pre/post-handoff 失败"}
+{"file": ".trellis/tasks/11-12-local-media-retention/research/canvas-local-evolution.md", "reason": "真实 LOCAL provider、副本映射与旧 GC 隔离"}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "类型/lint/测试与凭证隔离、真实证据要求"}
+{"file": ".trellis/spec/frontend/public-work-data.md", "reason": "媒体可用性投影不能泄露私有提示词"}
+{"file": ".trellis/spec/operations/image-storage.md", "reason": "清理不得绕过C1额度/未知写入/引用与卷契约"}
+{"file": ".trellis/tasks/11-12-image-storage-foundation/research/retention-data-handoff.md", "reason": "验证完整保护条件、预览范围、真实减量及源退休不混淆逻辑删除"}

@@ -1,0 +1,1252 @@
+{
+  "scope": "C3 and final parent integration",
+  "date": "2026-11-16",
+  "status": "passed",
+  "productInputsDefinition": "All sourceBefore entries outside .trellis/, including product test fixtures and deploy scripts. SHA256 over sorted compact JSON path->SHA256.",
+  "browserEvidence": "../../11-12-image-storage-foundation/checks/.runtime/storage-4e37900e/receipts/retention-browser-cfe24370-eece-4fa4-ac1f-3a8c6471fabe",
+  "screenshotsReviewed": 5,
+  "runs": [
+    {
+      "gate": "ci",
+      "receipt": "../../11-12-image-storage-foundation/checks/.runtime/storage-4e37900e/receipts/20261115T162157-ci-bounded-88eb1c.json",
+      "receiptSha256": "0d3dcc8f919b055ceaeb1d3c92ef2825c5cdd2afc4c856f74882b64bb55fe65c",
+      "exitCode": 0,
+      "finishedAt": "2026-11-15T16:25:22.841402+00:00",
+      "durationSeconds": 205.274,
+      "sourceChanges": [],
+      "snapshotModifications": [],
+      "productInputsSha256": "8abbe6d0c8d4434b80c4db427c1c666881231da99d7e5bb9d000458a18e56371",
+      "differencesFromFinalBrowserInputs": [
+        "src/tests/integration/worker-contracts/legacy-schema.sql",
+        "worker/internal/worker/gateway_image_inputs_db_test.go"
+      ],
+      "differencesFromPreviousFinalE2EInputs": [
+        "docs/image-storage.md",
+        "scripts/fixtures/image-history-runtime.mjs",
+        "scripts/verify-e2e.mjs",
+        "src/tests/integration/worker-contracts/legacy-schema.sql",
+        "src/tests/unit/image-history-e2e-safety.test.ts",
+        "worker/internal/worker/gateway_image_inputs_db_test.go"
+      ],
+      "differencesFromFinalE2EInputs": [
+        ".gitattributes",
+        "contracts/canvas/v1/schema.json",
+        "contracts/media/v1/schema.json",
+        "docs/image-storage.md",
+        "prisma/migrations/20261112100000_canvas_image_storage/migration.sql",
+        "scripts/fixtures/image-history-runtime.mjs",
+        "scripts/verify-e2e.mjs",
+        "src/tests/integration/worker-contracts/legacy-schema.sql",
+        "src/tests/unit/featured-gallery.test.tsx",
+        "src/tests/unit/image-history-e2e-safety.test.ts",
+        "worker/internal/worker/gateway_image_inputs_db_test.go"
+      ]
+    },
+    {
+      "gate": "canvas-db",
+      "receipt": "../../11-12-image-storage-foundation/checks/.runtime/storage-4e37900e/receipts/20261115T160229-canvas-db-be1df8.json",
+      "receiptSha256": "63c10e2d31f21754924f311d312bc810747d033f4c22948fe0dfc9c5ac4f6369",
+      "exitCode": 0,
+      "finishedAt": "2026-11-15T16:03:31.907893+00:00",
+      "durationSeconds": 62.733,
+      "sourceChanges": [],
+      "snapshotModifications": [],
+      "productInputsSha256": "c6012dc5a2b80e96a52c0cac28d1de5bb650baf425bcaef0be5b5bf51849f7ff",
+      "differencesFromFinalBrowserInputs": [
+        "src/tests/integration/canvas-contracts/image-history-db.test.ts",
+        "src/tests/integration/worker-contracts/legacy-schema.sql",
+        "src/tests/unit/canvas-generate-route.test.ts",
+        "src/tests/unit/canvas-run-lookup.test.ts",
+        "src/tests/unit/persist-generated-image.test.ts",
+        "worker/internal/worker/gateway_image_inputs_db_test.go"
+      ],
+      "differencesFromPreviousFinalE2EInputs": [
+        "docs/image-storage.md",
+        "scripts/fixtures/image-history-runtime.mjs",
+        "scripts/verify-e2e.mjs",
+        "src/tests/integration/canvas-contracts/image-history-db.test.ts",
+        "src/tests/integration/worker-contracts/legacy-schema.sql",
+        "src/tests/unit/canvas-generate-route.test.ts",
+        "src/tests/unit/canvas-run-lookup.test.ts",
+        "src/tests/unit/image-history-e2e-safety.test.ts",
+        "src/tests/unit/persist-generated-image.test.ts",
+        "worker/internal/worker/gateway_image_inputs_db_test.go"
+      ],
+      "differencesFromFinalE2EInputs": [
+        ".gitattributes",
+        "contracts/canvas/v1/schema.json",
+        "contracts/media/v1/schema.json",
+        "docs/image-storage.md",
+        "prisma/migrations/20261112100000_canvas_image_storage/migration.sql",
+        "scripts/fixtures/image-history-runtime.mjs",
+        "scripts/verify-e2e.mjs",
+        "src/tests/integration/canvas-contracts/image-history-db.test.ts",
+        "src/tests/integration/worker-contracts/legacy-schema.sql",
+        "src/tests/unit/canvas-generate-route.test.ts",
+        "src/tests/unit/canvas-run-lookup.test.ts",
+        "src/tests/unit/featured-gallery.test.tsx",
+        "src/tests/unit/image-history-e2e-safety.test.ts",
+        "src/tests/unit/persist-generated-image.test.ts",
+        "worker/internal/worker/gateway_image_inputs_db_test.go"
+      ]
+    },
+    {
+      "gate": "worker-db",
+      "receipt": "../../11-12-image-storage-foundation/checks/.runtime/storage-4e37900e/receipts/20261115T162720-worker-db-6747d6.json",
+      "receiptSha256": "7e800a58c7e6ea6a141a369608f448b37cfe48c57e7bf391aaeb345add5b07f2",
+      "exitCode": 0,
+      "finishedAt": "2026-11-15T16:27:32.787790+00:00",
+      "durationSeconds": 12.234,
+      "sourceChanges": [],
+      "snapshotModifications": [],
+      "productInputsSha256": "e59c9e66b4675acf56869566fff8a0af307f7ea6eeef1049fe463e4a7b766ff1",
+      "differencesFromFinalBrowserInputs": [],
+      "differencesFromPreviousFinalE2EInputs": [
+        "docs/image-storage.md",
+        "scripts/fixtures/image-history-runtime.mjs",
+        "scripts/verify-e2e.mjs",
+        "src/tests/unit/image-history-e2e-safety.test.ts"
+      ],
+      "differencesFromFinalE2EInputs": [
+        ".gitattributes",
+        "contracts/canvas/v1/schema.json",
+        "contracts/media/v1/schema.json",
+        "docs/image-storage.md",
+        "prisma/migrations/20261112100000_canvas_image_storage/migration.sql",
+        "scripts/fixtures/image-history-runtime.mjs",
+        "scripts/verify-e2e.mjs",
+        "src/tests/unit/featured-gallery.test.tsx",
+        "src/tests/unit/image-history-e2e-safety.test.ts"
+      ]
+    },
+    {
+      "gate": "gateway-db",
+      "receipt": "../../11-12-image-storage-foundation/checks/.runtime/storage-4e37900e/receipts/20261115T162835-gateway-db-629223.json",
+      "receiptSha256": "924c79d9cf74198b3d9e8109ea175fa91d797224497703b04f7ef5c92ca797b4",
+      "exitCode": 0,
+      "finishedAt": "2026-11-15T16:28:46.349135+00:00",
+      "durationSeconds": 10.644,
+      "sourceChanges": [],
+      "snapshotModifications": [],
+      "productInputsSha256": "e59c9e66b4675acf56869566fff8a0af307f7ea6eeef1049fe463e4a7b766ff1",
+      "differencesFromFinalBrowserInputs": [],
+      "differencesFromPreviousFinalE2EInputs": [
+        "docs/image-storage.md",
+        "scripts/fixtures/image-history-runtime.mjs",
+        "scripts/verify-e2e.mjs",
+        "src/tests/unit/image-history-e2e-safety.test.ts"
+      ],
+      "differencesFromFinalE2EInputs": [
+        ".gitattributes",
+        "contracts/canvas/v1/schema.json",
+        "contracts/media/v1/schema.json",
+        "docs/image-storage.md",
+        "prisma/migrations/20261112100000_canvas_image_storage/migration.sql",
+        "scripts/fixtures/image-history-runtime.mjs",
+        "scripts/verify-e2e.mjs",
+        "src/tests/unit/featured-gallery.test.tsx",
+        "src/tests/unit/image-history-e2e-safety.test.ts"
+      ]
+    },
+    {
+      "gate": "migrations",
+      "receipt": "../../11-12-image-storage-foundation/checks/.runtime/storage-4e37900e/receipts/20261115T163001-migrations-e83e1d.json",
+      "receiptSha256": "20bf241eaa6f17fa8fc25a79ce6a20f3f6ac02dd6b3ced6090f56193ae10cc40",
+      "exitCode": 0,
+      "finishedAt": "2026-11-15T16:30:48.111500+00:00",
+      "durationSeconds": 46.237,
+      "sourceChanges": [],
+      "snapshotModifications": [],
+      "productInputsSha256": "e59c9e66b4675acf56869566fff8a0af307f7ea6eeef1049fe463e4a7b766ff1",
+      "differencesFromFinalBrowserInputs": [],
+      "differencesFromPreviousFinalE2EInputs": [
+        "docs/image-storage.md",
+        "scripts/fixtures/image-history-runtime.mjs",
+        "scripts/verify-e2e.mjs",
+        "src/tests/unit/image-history-e2e-safety.test.ts"
+      ],
+      "differencesFromFinalE2EInputs": [
+        ".gitattributes",
+        "contracts/canvas/v1/schema.json",
+        "contracts/media/v1/schema.json",
+        "docs/image-storage.md",
+        "prisma/migrations/20261112100000_canvas_image_storage/migration.sql",
+        "scripts/fixtures/image-history-runtime.mjs",
+        "scripts/verify-e2e.mjs",
+        "src/tests/unit/featured-gallery.test.tsx",
+        "src/tests/unit/image-history-e2e-safety.test.ts"
+      ]
+    },
+    {
+      "gate": "history-linux-tests",
+      "receipt": "../../11-12-image-storage-foundation/checks/.runtime/storage-4e37900e/receipts/20261115T152911-history-linux-tests-d0ed0c.json",
+      "receiptSha256": "447fdf07f635a88a6291e4a6556f58ec767c0c3966eee3b79f6a8df44729b49a",
+      "exitCode": 0,
+      "finishedAt": "2026-11-15T15:29:17.900847+00:00",
+      "durationSeconds": 6.475,
+      "sourceChanges": [],
+      "snapshotModifications": [],
+      "productInputsSha256": "32bebf2ec0685b5941859c2ee28463df91378d628b07947c1dcfebdb043ab185",
+      "differencesFromFinalBrowserInputs": [
+        "contracts/canvas/v1/schema.json",
+        "contracts/media/v1/schema.json",
+        "docs/image-storage.md",
+        "prisma/migrations/20261115180000_image_history/migration.sql",
+        "src/components/admin/admin-works-board.tsx",
+        "src/components/marketing/homepage/hooks/use-featured-gallery.ts",
+        "src/components/works/my-works-board.tsx",
+        "src/lib/storage/image-schema.ts",
+        "src/tests/integration/canvas-contracts/image-history-db.test.ts",
+        "src/tests/integration/worker-contracts/legacy-schema.sql",
+        "src/tests/unit/admin-work-image-refresh.test.tsx",
+        "src/tests/unit/canvas-generate-route.test.ts",
+        "src/tests/unit/canvas-run-lookup.test.ts",
+        "src/tests/unit/generate-route-security.test.ts",
+        "src/tests/unit/image-input-aliases.test.ts",
+        "src/tests/unit/image-schema.test.ts",
+        "src/tests/unit/my-works-board.test.tsx",
+        "src/tests/unit/persist-generated-image.test.ts",
+        "src/tests/unit/use-featured-gallery.test.tsx",
+        "worker/cmd/image-history/main_test.go",
+        "worker/internal/worker/backfill.go",
+        "worker/internal/worker/backfill_db_test.go",
+        "worker/internal/worker/canvas_contract_test.go",
+        "worker/internal/worker/canvas_runtime_test.go",
+        "worker/internal/worker/gateway_db_test.go",
+        "worker/internal/worker/gateway_enqueue.go",
+        "worker/internal/worker/gateway_image_inputs.go",
+        "worker/internal/worker/gateway_image_inputs_db_test.go",
+        "worker/internal/worker/gateway_image_inputs_test.go",
+        "worker/internal/worker/gateway_test.go",
+        "worker/internal/worker/image_history_contract_test.go",
+        "worker/internal/worker/image_maintenance_test.go",
+        "worker/internal/worker/image_managed_storage.go",
+        "worker/internal/worker/image_schema.go",
+        "worker/internal/worker/image_schema_test.go",
+        "worker/internal/worker/worker_contracts_integration_test.go"
+      ],
+      "differencesFromPreviousFinalE2EInputs": [
+        "contracts/canvas/v1/schema.json",
+        "contracts/media/v1/schema.json",
+        "docs/image-storage.md",
+        "prisma/migrations/20261115180000_image_history/migration.sql",
+        "scripts/fixtures/image-history-runtime.mjs",
+        "scripts/verify-e2e.mjs",
+        "src/components/admin/admin-works-board.tsx",
+        "src/components/marketing/homepage/hooks/use-featured-gallery.ts",
+        "src/components/works/my-works-board.tsx",
+        "src/lib/storage/image-schema.ts",
+        "src/tests/integration/canvas-contracts/image-history-db.test.ts",
+        "src/tests/integration/worker-contracts/legacy-schema.sql",
+        "src/tests/unit/admin-work-image-refresh.test.tsx",
+        "src/tests/unit/canvas-generate-route.test.ts",
+        "src/tests/unit/canvas-run-lookup.test.ts",
+        "src/tests/unit/generate-route-security.test.ts",
+        "src/tests/unit/image-history-e2e-safety.test.ts",
+        "src/tests/unit/image-input-aliases.test.ts",
+        "src/tests/unit/image-schema.test.ts",
+        "src/tests/unit/my-works-board.test.tsx",
+        "src/tests/unit/persist-generated-image.test.ts",
+        "src/tests/unit/use-featured-gallery.test.tsx",
+        "worker/cmd/image-history/main_test.go",
+        "worker/internal/worker/backfill.go",
+        "worker/internal/worker/backfill_db_test.go",
+        "worker/internal/worker/canvas_contract_test.go",
+        "worker/internal/worker/canvas_runtime_test.go",
+        "worker/internal/worker/gateway_db_test.go",
+        "worker/internal/worker/gateway_enqueue.go",
+        "worker/internal/worker/gateway_image_inputs.go",
+        "worker/internal/worker/gateway_image_inputs_db_test.go",
+        "worker/internal/worker/gateway_image_inputs_test.go",
+        "worker/internal/worker/gateway_test.go",
+        "worker/internal/worker/image_history_contract_test.go",
+        "worker/internal/worker/image_maintenance_test.go",
+        "worker/internal/worker/image_managed_storage.go",
+        "worker/internal/worker/image_schema.go",
+        "worker/internal/worker/image_schema_test.go",
+        "worker/internal/worker/worker_contracts_integration_test.go"
+      ],
+      "differencesFromFinalE2EInputs": [
+        ".gitattributes",
+        "contracts/canvas/v1/schema.json",
+        "contracts/media/v1/schema.json",
+        "docs/image-storage.md",
+        "prisma/migrations/20261112100000_canvas_image_storage/migration.sql",
+        "prisma/migrations/20261115180000_image_history/migration.sql",
+        "scripts/fixtures/image-history-runtime.mjs",
+        "scripts/verify-e2e.mjs",
+        "src/components/admin/admin-works-board.tsx",
+        "src/components/marketing/homepage/hooks/use-featured-gallery.ts",
+        "src/components/works/my-works-board.tsx",
+        "src/lib/storage/image-schema.ts",
+        "src/tests/integration/canvas-contracts/image-history-db.test.ts",
+        "src/tests/integration/worker-contracts/legacy-schema.sql",
+        "src/tests/unit/admin-work-image-refresh.test.tsx",
+        "src/tests/unit/canvas-generate-route.test.ts",
+        "src/tests/unit/canvas-run-lookup.test.ts",
+        "src/tests/unit/featured-gallery.test.tsx",
+        "src/tests/unit/generate-route-security.test.ts",
+        "src/tests/unit/image-history-e2e-safety.test.ts",
+        "src/tests/unit/image-input-aliases.test.ts",
+        "src/tests/unit/image-schema.test.ts",
+        "src/tests/unit/my-works-board.test.tsx",
+        "src/tests/unit/persist-generated-image.test.ts",
+        "src/tests/unit/use-featured-gallery.test.tsx",
+        "worker/cmd/image-history/main_test.go",
+        "worker/internal/worker/backfill.go",
+        "worker/internal/worker/backfill_db_test.go",
+        "worker/internal/worker/canvas_contract_test.go",
+        "worker/internal/worker/canvas_runtime_test.go",
+        "worker/internal/worker/gateway_db_test.go",
+        "worker/internal/worker/gateway_enqueue.go",
+        "worker/internal/worker/gateway_image_inputs.go",
+        "worker/internal/worker/gateway_image_inputs_db_test.go",
+        "worker/internal/worker/gateway_image_inputs_test.go",
+        "worker/internal/worker/gateway_test.go",
+        "worker/internal/worker/image_history_contract_test.go",
+        "worker/internal/worker/image_maintenance_test.go",
+        "worker/internal/worker/image_managed_storage.go",
+        "worker/internal/worker/image_schema.go",
+        "worker/internal/worker/image_schema_test.go",
+        "worker/internal/worker/worker_contracts_integration_test.go"
+      ]
+    },
+    {
+      "gate": "go-vet",
+      "receipt": "../../11-12-image-storage-foundation/checks/.runtime/storage-4e37900e/receipts/20261115T170859-go-vet-c34f6b.json",
+      "receiptSha256": "a890c145a7060b40513645db35beeb103c0cd39da1fdce165c21006394dd3576",
+      "exitCode": 0,
+      "finishedAt": "2026-11-15T17:09:01.559321+00:00",
+      "durationSeconds": 1.589,
+      "sourceChanges": [],
+      "snapshotModifications": [],
+      "productInputsSha256": "e59c9e66b4675acf56869566fff8a0af307f7ea6eeef1049fe463e4a7b766ff1",
+      "differencesFromFinalBrowserInputs": [],
+      "differencesFromPreviousFinalE2EInputs": [
+        "docs/image-storage.md",
+        "scripts/fixtures/image-history-runtime.mjs",
+        "scripts/verify-e2e.mjs",
+        "src/tests/unit/image-history-e2e-safety.test.ts"
+      ],
+      "differencesFromFinalE2EInputs": [
+        ".gitattributes",
+        "contracts/canvas/v1/schema.json",
+        "contracts/media/v1/schema.json",
+        "docs/image-storage.md",
+        "prisma/migrations/20261112100000_canvas_image_storage/migration.sql",
+        "scripts/fixtures/image-history-runtime.mjs",
+        "scripts/verify-e2e.mjs",
+        "src/tests/unit/featured-gallery.test.tsx",
+        "src/tests/unit/image-history-e2e-safety.test.ts"
+      ]
+    },
+    {
+      "gate": "native-build",
+      "receipt": "../../11-12-image-storage-foundation/checks/.runtime/storage-4e37900e/receipts/20261115T170916-build-56192a.json",
+      "receiptSha256": "26115dbae423f6098d576e7a71b7ffc744082357d2b085d8c8e726431eae4790",
+      "exitCode": 0,
+      "finishedAt": "2026-11-15T17:09:42.787465+00:00",
+      "durationSeconds": 26.109,
+      "sourceChanges": [],
+      "snapshotModifications": [],
+      "productInputsSha256": "e59c9e66b4675acf56869566fff8a0af307f7ea6eeef1049fe463e4a7b766ff1",
+      "differencesFromFinalBrowserInputs": [],
+      "differencesFromPreviousFinalE2EInputs": [
+        "docs/image-storage.md",
+        "scripts/fixtures/image-history-runtime.mjs",
+        "scripts/verify-e2e.mjs",
+        "src/tests/unit/image-history-e2e-safety.test.ts"
+      ],
+      "differencesFromFinalE2EInputs": [
+        ".gitattributes",
+        "contracts/canvas/v1/schema.json",
+        "contracts/media/v1/schema.json",
+        "docs/image-storage.md",
+        "prisma/migrations/20261112100000_canvas_image_storage/migration.sql",
+        "scripts/fixtures/image-history-runtime.mjs",
+        "scripts/verify-e2e.mjs",
+        "src/tests/unit/featured-gallery.test.tsx",
+        "src/tests/unit/image-history-e2e-safety.test.ts"
+      ]
+    },
+    {
+      "gate": "retention-http-browser",
+      "receipt": "../../11-12-image-storage-foundation/checks/.runtime/storage-4e37900e/receipts/20261115T171857-retention-http-4b17cb.json",
+      "receiptSha256": "fe2b73172d364c1a389f55fb60700fcd9c44b966eb9559cae5af7805ba339282",
+      "exitCode": 0,
+      "finishedAt": "2026-11-15T17:21:02.283096+00:00",
+      "durationSeconds": 124.632,
+      "sourceChanges": [],
+      "snapshotModifications": [],
+      "productInputsSha256": "e59c9e66b4675acf56869566fff8a0af307f7ea6eeef1049fe463e4a7b766ff1",
+      "differencesFromFinalBrowserInputs": [],
+      "differencesFromPreviousFinalE2EInputs": [
+        "docs/image-storage.md",
+        "scripts/fixtures/image-history-runtime.mjs",
+        "scripts/verify-e2e.mjs",
+        "src/tests/unit/image-history-e2e-safety.test.ts"
+      ],
+      "differencesFromFinalE2EInputs": [
+        ".gitattributes",
+        "contracts/canvas/v1/schema.json",
+        "contracts/media/v1/schema.json",
+        "docs/image-storage.md",
+        "prisma/migrations/20261112100000_canvas_image_storage/migration.sql",
+        "scripts/fixtures/image-history-runtime.mjs",
+        "scripts/verify-e2e.mjs",
+        "src/tests/unit/featured-gallery.test.tsx",
+        "src/tests/unit/image-history-e2e-safety.test.ts"
+      ]
+    },
+    {
+      "gate": "history-linux-tests-final",
+      "receipt": "../../11-12-image-storage-foundation/checks/.runtime/storage-4e37900e/receipts/20261115T180101-history-linux-tests-24717a.json",
+      "receiptSha256": "d450c7656b0a6c3bcd39c4a1b93cf266cc3b6fef2b430eb43d539c1403e7a5e2",
+      "exitCode": 0,
+      "finishedAt": "2026-11-15T18:01:06.789537+00:00",
+      "durationSeconds": 5.107,
+      "sourceChanges": [],
+      "snapshotModifications": [],
+      "productInputsSha256": "e59c9e66b4675acf56869566fff8a0af307f7ea6eeef1049fe463e4a7b766ff1",
+      "differencesFromFinalBrowserInputs": [],
+      "binarySha256": "2f5d2f0e77356a64929ec29a31ee93007e011bc6c4b4d5ae6b8ac1f0b48b374b",
+      "differencesFromPreviousFinalE2EInputs": [
+        "docs/image-storage.md",
+        "scripts/fixtures/image-history-runtime.mjs",
+        "scripts/verify-e2e.mjs",
+        "src/tests/unit/image-history-e2e-safety.test.ts"
+      ],
+      "differencesFromFinalE2EInputs": [
+        ".gitattributes",
+        "contracts/canvas/v1/schema.json",
+        "contracts/media/v1/schema.json",
+        "docs/image-storage.md",
+        "prisma/migrations/20261112100000_canvas_image_storage/migration.sql",
+        "scripts/fixtures/image-history-runtime.mjs",
+        "scripts/verify-e2e.mjs",
+        "src/tests/unit/featured-gallery.test.tsx",
+        "src/tests/unit/image-history-e2e-safety.test.ts"
+      ]
+    },
+    {
+      "gate": "ci-final",
+      "receipt": "../../11-12-image-storage-foundation/checks/.runtime/storage-4e37900e/receipts/20261115T180804-ci-bounded-12d932.json",
+      "receiptSha256": "e5269cfcd304b01f932abed5c2869e17cee0b9ddeca55a3799e16cf239680887",
+      "exitCode": 0,
+      "finishedAt": "2026-11-15T18:11:25.059699+00:00",
+      "durationSeconds": 200.452,
+      "sourceChanges": [],
+      "snapshotModifications": [],
+      "productInputsSha256": "7e5360ad785e4286aecb0a1998e46bedbef5a25f88ab7fb48e5d4b95b1f42083",
+      "differencesFromFinalBrowserInputs": [
+        "scripts/fixtures/image-history-runtime.mjs",
+        "scripts/verify-e2e.mjs",
+        "src/tests/unit/image-history-e2e-safety.test.ts"
+      ],
+      "nodeSuites": 168,
+      "nodeTests": 2150,
+      "stages": 10,
+      "differencesFromPreviousFinalE2EInputs": [
+        "docs/image-storage.md",
+        "scripts/fixtures/image-history-runtime.mjs",
+        "scripts/verify-e2e.mjs",
+        "src/tests/unit/image-history-e2e-safety.test.ts"
+      ],
+      "differencesFromFinalE2EInputs": [
+        ".gitattributes",
+        "contracts/canvas/v1/schema.json",
+        "contracts/media/v1/schema.json",
+        "docs/image-storage.md",
+        "prisma/migrations/20261112100000_canvas_image_storage/migration.sql",
+        "scripts/fixtures/image-history-runtime.mjs",
+        "scripts/verify-e2e.mjs",
+        "src/tests/unit/featured-gallery.test.tsx",
+        "src/tests/unit/image-history-e2e-safety.test.ts"
+      ]
+    },
+    {
+      "gate": "e2e-envelope-regression",
+      "receipt": "../../11-12-image-storage-foundation/checks/.runtime/storage-4e37900e/receipts/20261115T183728-test-d0c4e5.json",
+      "receiptSha256": "8e02861e5d802a79c0aea6bf2f4532fa3ed9ba7f09ef52f8451cfcdf1844688e",
+      "exitCode": 0,
+      "finishedAt": "2026-11-15T18:37:29.440131+00:00",
+      "durationSeconds": 0.963,
+      "sourceChanges": [],
+      "snapshotModifications": [],
+      "productInputsSha256": "765f4633d66a7607bef9faa023b759cb4978e68e83fbee5b4bc0d12c27cc6885",
+      "differencesFromFinalBrowserInputs": [
+        "docs/image-storage.md",
+        "scripts/fixtures/image-history-runtime.mjs",
+        "scripts/verify-e2e.mjs",
+        "src/tests/unit/image-history-e2e-safety.test.ts"
+      ],
+      "differencesFromPreviousFinalE2EInputs": [],
+      "differencesFromFinalE2EInputs": [
+        ".gitattributes",
+        "contracts/canvas/v1/schema.json",
+        "contracts/media/v1/schema.json",
+        "prisma/migrations/20261112100000_canvas_image_storage/migration.sql",
+        "src/tests/unit/featured-gallery.test.tsx"
+      ]
+    },
+    {
+      "gate": "types-final",
+      "receipt": "../../11-12-image-storage-foundation/checks/.runtime/storage-4e37900e/receipts/20261115T183838-types-aec1c4.json",
+      "receiptSha256": "830f2cdb46abd6856d95825219238812866ea1cc9b46410018505c4a91c95a61",
+      "exitCode": 0,
+      "finishedAt": "2026-11-15T18:38:41.718202+00:00",
+      "durationSeconds": 3.179,
+      "sourceChanges": [],
+      "snapshotModifications": [],
+      "productInputsSha256": "765f4633d66a7607bef9faa023b759cb4978e68e83fbee5b4bc0d12c27cc6885",
+      "differencesFromFinalBrowserInputs": [
+        "docs/image-storage.md",
+        "scripts/fixtures/image-history-runtime.mjs",
+        "scripts/verify-e2e.mjs",
+        "src/tests/unit/image-history-e2e-safety.test.ts"
+      ],
+      "differencesFromPreviousFinalE2EInputs": [],
+      "differencesFromFinalE2EInputs": [
+        ".gitattributes",
+        "contracts/canvas/v1/schema.json",
+        "contracts/media/v1/schema.json",
+        "prisma/migrations/20261112100000_canvas_image_storage/migration.sql",
+        "src/tests/unit/featured-gallery.test.tsx"
+      ]
+    },
+    {
+      "gate": "lint-final",
+      "receipt": "../../11-12-image-storage-foundation/checks/.runtime/storage-4e37900e/receipts/20261115T183856-lint-ed3d80.json",
+      "receiptSha256": "f1d0ace7a7e9722ef1a68d88e689e4dd71a2c4760cb01e5468bc4a59ba964856",
+      "exitCode": 0,
+      "finishedAt": "2026-11-15T18:39:10.121330+00:00",
+      "durationSeconds": 13.721,
+      "sourceChanges": [],
+      "snapshotModifications": [],
+      "productInputsSha256": "765f4633d66a7607bef9faa023b759cb4978e68e83fbee5b4bc0d12c27cc6885",
+      "differencesFromFinalBrowserInputs": [
+        "docs/image-storage.md",
+        "scripts/fixtures/image-history-runtime.mjs",
+        "scripts/verify-e2e.mjs",
+        "src/tests/unit/image-history-e2e-safety.test.ts"
+      ],
+      "differencesFromPreviousFinalE2EInputs": [],
+      "differencesFromFinalE2EInputs": [
+        ".gitattributes",
+        "contracts/canvas/v1/schema.json",
+        "contracts/media/v1/schema.json",
+        "prisma/migrations/20261112100000_canvas_image_storage/migration.sql",
+        "src/tests/unit/featured-gallery.test.tsx"
+      ]
+    },
+    {
+      "gate": "history-integrated-e2e-previous-final",
+      "receipt": "../../11-12-image-storage-foundation/checks/.runtime/storage-4e37900e/receipts/20261115T184531-history-integrated-e2e-765657.json",
+      "receiptSha256": "f54ca5d611a00dcb90d2b46aaffe577776a53434f0fe3dafa91844e0e8aa5bfb",
+      "exitCode": 0,
+      "finishedAt": "2026-11-15T19:06:50.123367+00:00",
+      "durationSeconds": 1278.531,
+      "sourceChanges": [],
+      "snapshotModifications": [],
+      "productInputsSha256": "765f4633d66a7607bef9faa023b759cb4978e68e83fbee5b4bc0d12c27cc6885",
+      "differencesFromFinalBrowserInputs": [
+        "docs/image-storage.md",
+        "scripts/fixtures/image-history-runtime.mjs",
+        "scripts/verify-e2e.mjs",
+        "src/tests/unit/image-history-e2e-safety.test.ts"
+      ],
+      "differencesFromPreviousFinalE2EInputs": [],
+      "differencesFromFinalE2EInputs": [
+        ".gitattributes",
+        "contracts/canvas/v1/schema.json",
+        "contracts/media/v1/schema.json",
+        "prisma/migrations/20261112100000_canvas_image_storage/migration.sql",
+        "src/tests/unit/featured-gallery.test.tsx"
+      ],
+      "previousGateName": "history-integrated-e2e-final"
+    },
+    {
+      "gate": "delivery-focus-regression",
+      "receipt": "../../11-12-image-storage-foundation/checks/.runtime/storage-4e37900e/receipts/20261116T023830-test-128545.json",
+      "receiptSha256": "46e3ef2bb9b9a901323a8dbcf6169577e979885205d5cf2a18194cb3a588a3c3",
+      "exitCode": 0,
+      "finishedAt": "2026-11-16T02:38:39.183432+00:00",
+      "durationSeconds": 8.219,
+      "sourceChanges": [],
+      "snapshotModifications": [],
+      "productInputsSha256": "da14302ceb1264c4baa15caeb0e802568456fc038ab4308e6c325d23e61efac2",
+      "differencesFromOriginalFinalE2EInputs": [
+        ".gitattributes",
+        "contracts/canvas/v1/schema.json",
+        "contracts/media/v1/schema.json",
+        "prisma/migrations/20261112100000_canvas_image_storage/migration.sql",
+        "src/tests/unit/featured-gallery.test.tsx"
+      ],
+      "differencesFromPreviousFinalE2EInputs": [
+        ".gitattributes",
+        "contracts/canvas/v1/schema.json",
+        "contracts/media/v1/schema.json",
+        "prisma/migrations/20261112100000_canvas_image_storage/migration.sql",
+        "src/tests/unit/featured-gallery.test.tsx"
+      ],
+      "differencesFromFinalE2EInputs": []
+    },
+    {
+      "gate": "delivery-ci-bounded",
+      "receipt": "../../11-12-image-storage-foundation/checks/.runtime/storage-4e37900e/receipts/20261116T023915-ci-bounded-c5b0f5.json",
+      "receiptSha256": "301253188c5354c84f6ee7f42af1a1a7e2d0ab57d933c48f6ed1b667a56ca21f",
+      "exitCode": 0,
+      "finishedAt": "2026-11-16T02:42:58.542908+00:00",
+      "durationSeconds": 222.859,
+      "sourceChanges": [],
+      "snapshotModifications": [],
+      "productInputsSha256": "da14302ceb1264c4baa15caeb0e802568456fc038ab4308e6c325d23e61efac2",
+      "differencesFromOriginalFinalE2EInputs": [
+        ".gitattributes",
+        "contracts/canvas/v1/schema.json",
+        "contracts/media/v1/schema.json",
+        "prisma/migrations/20261112100000_canvas_image_storage/migration.sql",
+        "src/tests/unit/featured-gallery.test.tsx"
+      ],
+      "differencesFromPreviousFinalE2EInputs": [
+        ".gitattributes",
+        "contracts/canvas/v1/schema.json",
+        "contracts/media/v1/schema.json",
+        "prisma/migrations/20261112100000_canvas_image_storage/migration.sql",
+        "src/tests/unit/featured-gallery.test.tsx"
+      ],
+      "differencesFromFinalE2EInputs": []
+    },
+    {
+      "gate": "delivery-history-catalog",
+      "receipt": "../../11-12-image-storage-foundation/checks/.runtime/storage-4e37900e/receipts/20261116T024314-history-catalog-bbe283.json",
+      "receiptSha256": "accc0b5914997b0ee33c82e48456ac456623d5dd389abff8fea7918eb0081aa8",
+      "exitCode": 0,
+      "finishedAt": "2026-11-16T02:43:23.691159+00:00",
+      "durationSeconds": 9.315,
+      "sourceChanges": [],
+      "snapshotModifications": [],
+      "productInputsSha256": "da14302ceb1264c4baa15caeb0e802568456fc038ab4308e6c325d23e61efac2",
+      "differencesFromOriginalFinalE2EInputs": [
+        ".gitattributes",
+        "contracts/canvas/v1/schema.json",
+        "contracts/media/v1/schema.json",
+        "prisma/migrations/20261112100000_canvas_image_storage/migration.sql",
+        "src/tests/unit/featured-gallery.test.tsx"
+      ],
+      "differencesFromPreviousFinalE2EInputs": [
+        ".gitattributes",
+        "contracts/canvas/v1/schema.json",
+        "contracts/media/v1/schema.json",
+        "prisma/migrations/20261112100000_canvas_image_storage/migration.sql",
+        "src/tests/unit/featured-gallery.test.tsx"
+      ],
+      "differencesFromFinalE2EInputs": []
+    },
+    {
+      "gate": "delivery-canvas-db",
+      "receipt": "../../11-12-image-storage-foundation/checks/.runtime/storage-4e37900e/receipts/20261116T024338-canvas-db-a4e74b.json",
+      "receiptSha256": "06744ddf00071b71195831643ed3624f11316d4623b7915e8cc2cd0ff7d4536f",
+      "exitCode": 0,
+      "finishedAt": "2026-11-16T02:44:49.114796+00:00",
+      "durationSeconds": 70.154,
+      "sourceChanges": [],
+      "snapshotModifications": [],
+      "productInputsSha256": "da14302ceb1264c4baa15caeb0e802568456fc038ab4308e6c325d23e61efac2",
+      "differencesFromOriginalFinalE2EInputs": [
+        ".gitattributes",
+        "contracts/canvas/v1/schema.json",
+        "contracts/media/v1/schema.json",
+        "prisma/migrations/20261112100000_canvas_image_storage/migration.sql",
+        "src/tests/unit/featured-gallery.test.tsx"
+      ],
+      "differencesFromPreviousFinalE2EInputs": [
+        ".gitattributes",
+        "contracts/canvas/v1/schema.json",
+        "contracts/media/v1/schema.json",
+        "prisma/migrations/20261112100000_canvas_image_storage/migration.sql",
+        "src/tests/unit/featured-gallery.test.tsx"
+      ],
+      "differencesFromFinalE2EInputs": []
+    },
+    {
+      "gate": "delivery-worker-db",
+      "receipt": "../../11-12-image-storage-foundation/checks/.runtime/storage-4e37900e/receipts/20261116T024526-worker-db-4e4b18.json",
+      "receiptSha256": "cddec45b90e6d76d9918266279c2211c44fc1fbc5ec71491e906e06938e70b07",
+      "exitCode": 0,
+      "finishedAt": "2026-11-16T02:45:38.614700+00:00",
+      "durationSeconds": 11.966,
+      "sourceChanges": [],
+      "snapshotModifications": [],
+      "productInputsSha256": "da14302ceb1264c4baa15caeb0e802568456fc038ab4308e6c325d23e61efac2",
+      "differencesFromOriginalFinalE2EInputs": [
+        ".gitattributes",
+        "contracts/canvas/v1/schema.json",
+        "contracts/media/v1/schema.json",
+        "prisma/migrations/20261112100000_canvas_image_storage/migration.sql",
+        "src/tests/unit/featured-gallery.test.tsx"
+      ],
+      "differencesFromPreviousFinalE2EInputs": [
+        ".gitattributes",
+        "contracts/canvas/v1/schema.json",
+        "contracts/media/v1/schema.json",
+        "prisma/migrations/20261112100000_canvas_image_storage/migration.sql",
+        "src/tests/unit/featured-gallery.test.tsx"
+      ],
+      "differencesFromFinalE2EInputs": []
+    },
+    {
+      "gate": "delivery-gateway-db",
+      "receipt": "../../11-12-image-storage-foundation/checks/.runtime/storage-4e37900e/receipts/20261116T024608-gateway-db-eea182.json",
+      "receiptSha256": "e27d8a2f0d6ace290d31a73f7d13b1876a06d4550062efcc7874db73306abe31",
+      "exitCode": 0,
+      "finishedAt": "2026-11-16T02:46:21.211087+00:00",
+      "durationSeconds": 12.219,
+      "sourceChanges": [],
+      "snapshotModifications": [],
+      "productInputsSha256": "da14302ceb1264c4baa15caeb0e802568456fc038ab4308e6c325d23e61efac2",
+      "differencesFromOriginalFinalE2EInputs": [
+        ".gitattributes",
+        "contracts/canvas/v1/schema.json",
+        "contracts/media/v1/schema.json",
+        "prisma/migrations/20261112100000_canvas_image_storage/migration.sql",
+        "src/tests/unit/featured-gallery.test.tsx"
+      ],
+      "differencesFromPreviousFinalE2EInputs": [
+        ".gitattributes",
+        "contracts/canvas/v1/schema.json",
+        "contracts/media/v1/schema.json",
+        "prisma/migrations/20261112100000_canvas_image_storage/migration.sql",
+        "src/tests/unit/featured-gallery.test.tsx"
+      ],
+      "differencesFromFinalE2EInputs": []
+    },
+    {
+      "gate": "delivery-migrations",
+      "receipt": "../../11-12-image-storage-foundation/checks/.runtime/storage-4e37900e/receipts/20261116T024637-migrations-061d91.json",
+      "receiptSha256": "064cd967810cb401591af6c8e8c48c536f7ffdc16dd5e3fc540fea06c607210c",
+      "exitCode": 0,
+      "finishedAt": "2026-11-16T02:47:28.068756+00:00",
+      "durationSeconds": 50.509,
+      "sourceChanges": [],
+      "snapshotModifications": [],
+      "productInputsSha256": "da14302ceb1264c4baa15caeb0e802568456fc038ab4308e6c325d23e61efac2",
+      "differencesFromOriginalFinalE2EInputs": [
+        ".gitattributes",
+        "contracts/canvas/v1/schema.json",
+        "contracts/media/v1/schema.json",
+        "prisma/migrations/20261112100000_canvas_image_storage/migration.sql",
+        "src/tests/unit/featured-gallery.test.tsx"
+      ],
+      "differencesFromPreviousFinalE2EInputs": [
+        ".gitattributes",
+        "contracts/canvas/v1/schema.json",
+        "contracts/media/v1/schema.json",
+        "prisma/migrations/20261112100000_canvas_image_storage/migration.sql",
+        "src/tests/unit/featured-gallery.test.tsx"
+      ],
+      "differencesFromFinalE2EInputs": []
+    },
+    {
+      "gate": "delivery-history-integrated-e2e-final",
+      "receipt": "../../11-12-image-storage-foundation/checks/.runtime/storage-4e37900e/receipts/20261116T025107-history-integrated-e2e-f78bd8.json",
+      "receiptSha256": "cdf1d0fff9836396feb175148702ade0745fb90c0d5ddb6288743c9453154e2a",
+      "exitCode": 0,
+      "finishedAt": "2026-11-16T03:17:47.675996+00:00",
+      "durationSeconds": 1600.576,
+      "sourceChanges": [],
+      "snapshotModifications": [],
+      "productInputsSha256": "da14302ceb1264c4baa15caeb0e802568456fc038ab4308e6c325d23e61efac2",
+      "differencesFromFinalBrowserInputs": [
+        ".gitattributes",
+        "contracts/canvas/v1/schema.json",
+        "contracts/media/v1/schema.json",
+        "docs/image-storage.md",
+        "prisma/migrations/20261112100000_canvas_image_storage/migration.sql",
+        "scripts/fixtures/image-history-runtime.mjs",
+        "scripts/verify-e2e.mjs",
+        "src/tests/unit/featured-gallery.test.tsx",
+        "src/tests/unit/image-history-e2e-safety.test.ts"
+      ],
+      "differencesFromPreviousFinalE2EInputs": [
+        ".gitattributes",
+        "contracts/canvas/v1/schema.json",
+        "contracts/media/v1/schema.json",
+        "prisma/migrations/20261112100000_canvas_image_storage/migration.sql",
+        "src/tests/unit/featured-gallery.test.tsx"
+      ],
+      "differencesFromFinalE2EInputs": []
+    }
+  ],
+  "ciFinalBoundary": "The current five-file delivery correction snapshot passed all 10 original CI stages in one invocation: 168 suites / 2150 tests, global types/lint, TS/Go contracts, full Go tests/build and complete native Next production build. Every current non-.trellis input exactly matches this CI and the final 11-scenario Docker E2E. Historical receipts retain their actual input boundaries.",
+  "finalE2E": {
+    "receipt": "../../11-12-image-storage-foundation/checks/.runtime/storage-4e37900e/receipts/20261116T025107-history-integrated-e2e-f78bd8.json",
+    "receiptSha256": "cdf1d0fff9836396feb175148702ade0745fb90c0d5ddb6288743c9453154e2a",
+    "stdoutSha256": "7eb94d2d536121befab8e1dacb835d2d2adadc0567ef83727f51774c4738e4aa",
+    "stderrSha256": "1a63543b3f0375c62780310c1d7bab96eb6c70af35f9b26192b4d7d36bb6ad32",
+    "exitCode": 0,
+    "durationSeconds": 1600.576,
+    "sourceChanges": [],
+    "snapshotModifications": [],
+    "owner": "6b3ebd8c-fddf-479e-bb1a-ea31d68526e0",
+    "scenarios": [
+      {
+        "name": "embedded",
+        "durationMilliseconds": 14664
+      },
+      {
+        "name": "dedicated",
+        "durationMilliseconds": 15968
+      },
+      {
+        "name": "conflict",
+        "durationMilliseconds": 17672
+      },
+      {
+        "name": "schema",
+        "durationMilliseconds": 22401
+      },
+      {
+        "name": "dbdown",
+        "durationMilliseconds": 33968
+      },
+      {
+        "name": "propagate",
+        "durationMilliseconds": 7437
+      },
+      {
+        "name": "canvas-embedded",
+        "durationMilliseconds": 134529
+      },
+      {
+        "name": "canvas-dedicated",
+        "durationMilliseconds": 133855
+      },
+      {
+        "name": "canvas-mismatch",
+        "durationMilliseconds": 18826
+      },
+      {
+        "name": "image-embedded",
+        "durationMilliseconds": 245367
+      },
+      {
+        "name": "image-dedicated",
+        "durationMilliseconds": 263211
+      }
+    ],
+    "scenarioSelection": "Every default scenario in one invocation; no scenario or assertion skipped",
+    "builderDependencyTree": {
+      "builderDependencyTreeCaptured": true,
+      "entries": 55432,
+      "sha256": "2ec77b87d24425b94c5f7d8a2e4be988a042178c5115a266a5f78c39fe6e540d"
+    },
+    "runnerDependencyTree": {
+      "runnerDependencyTreeMatchesFullBuild": true,
+      "entries": 55432,
+      "sha256": "2ec77b87d24425b94c5f7d8a2e4be988a042178c5115a266a5f78c39fe6e540d"
+    },
+    "imageHistoryTopologies": [
+      {
+        "imageHistoryTopology": "image-embedded",
+        "result": "passed",
+        "actualAppAndWorker": true,
+        "sourceBindings": 4,
+        "migrationJobs": 3,
+        "sourceRetained": 3,
+        "sourceRetired": 1,
+        "dryRunStateUnchanged": true,
+        "exactCopiesAndQuota": true,
+        "canvasTupleAndFrozenInputsPreserved": true,
+        "compatibilityGcDrainedBeforeAdoption": true,
+        "publicReaderFailureRetainedSource": true,
+        "disabledPolicyRefusedRetirement": true,
+        "realOptimizer": true,
+        "recreatedContainersPreserveBytes": true,
+        "actualLocalFiles": 8,
+        "volumeId": "97167bde-6642-46ca-bbe2-1406d3b0d6fd",
+        "usedBytes": "770",
+        "productionStorageAccessed": false
+      },
+      {
+        "imageHistoryTopology": "image-dedicated",
+        "result": "passed",
+        "actualAppAndWorker": true,
+        "sourceBindings": 4,
+        "migrationJobs": 3,
+        "sourceRetained": 3,
+        "sourceRetired": 1,
+        "dryRunStateUnchanged": true,
+        "exactCopiesAndQuota": true,
+        "canvasTupleAndFrozenInputsPreserved": true,
+        "compatibilityGcDrainedBeforeAdoption": true,
+        "publicReaderFailureRetainedSource": true,
+        "disabledPolicyRefusedRetirement": true,
+        "realOptimizer": true,
+        "recreatedContainersPreserveBytes": true,
+        "actualLocalFiles": 8,
+        "volumeId": "c0e71cc0-22ba-4625-bf03-6c968f14cdee",
+        "usedBytes": "770",
+        "productionStorageAccessed": false
+      }
+    ],
+    "priorWorkers": [
+      {
+        "priorWorker": "rejected",
+        "topology": "embedded",
+        "binarySha256": "f16bec7352122be5b921392313fa0b34db83d01f201bee926e0d2fe9a04a784d",
+        "priorReaderRevision": 2,
+        "currentReaderRevision": 3,
+        "reason": "TOPOLOGY_CONFLICT",
+        "unchangedInventory": true
+      },
+      {
+        "priorWorker": "rejected",
+        "topology": "dedicated",
+        "binarySha256": "f16bec7352122be5b921392313fa0b34db83d01f201bee926e0d2fe9a04a784d",
+        "priorReaderRevision": 2,
+        "currentReaderRevision": 3,
+        "reason": "IMAGE_SCHEMA_INCOMPATIBLE",
+        "unchangedInventory": true
+      }
+    ],
+    "buildDurationsMilliseconds": {
+      "app": 364209,
+      "worker": 107474
+    },
+    "generatedBuildVariants": [
+      {
+        "dependencyImage": "sha256:049c6f5b898d0e93065aecea08c6b82e203e8ee142cecf0d545332b59431aed0",
+        "dependencyCacheTag": "narra-history-deps:b551ce24859d4c168b67d2cdda83427d",
+        "dependencyCacheOwner": "b551ce24-859d-4c16-8b67-d2cdda83427d",
+        "inputs": {
+          "package.json": "af404da2a44b7b994016bfc7e67bfc4cf945e16d80b8698df2a44b7943d2144b",
+          "pnpm-lock.yaml": "5201950763cc0d98b0a08473efd4cbbb1e4900f641e4edf36313e51e25cd6283",
+          "pnpm-workspace.yaml": "26ab5626dd04f8dc4eb683d77efbed493087ed5858e8bf7e8dd1c6bda81f939d"
+        },
+        "nodeBaseImage": "sha256:06d7adf3e0ef61a13f1d28682726366f97a15aa1888c934d3ecec86c33918b53",
+        "inheritedRuntimeConfigurationValidated": true,
+        "corepackCache": {
+          "root": "/root/.cache/node/corepack",
+          "versions": [
+            "10.32.1"
+          ],
+          "packageVersion": "10.32.1",
+          "marker": {
+            "locator": {
+              "name": "pnpm",
+              "reference": "10.32.1"
+            },
+            "bin": {
+              "pnpm": "./bin/pnpm.cjs",
+              "pnpx": "./bin/pnpx.cjs"
+            },
+            "hash": "sha512.a706938f0e89ac1456b6563eab4edf1d1faf3368d1191fc5c59790e96dc918e4456ab2e67d613de1043d2e8c81f87303e6b40d4ffeca9df15ef1ad567348f2be"
+          }
+        },
+        "corepackCacheInheritedBy": [
+          "builder",
+          "runner"
+        ],
+        "offlineVersionProbeRequired": true,
+        "dependencyAppEntries": [
+          "node_modules",
+          "package.json",
+          "pnpm-lock.yaml",
+          "pnpm-workspace.yaml"
+        ],
+        "builderDependencyCopyReplacedByInheritance": true,
+        "runnerDependencyCopyReplacedByInheritanceAndFreshPrisma": true,
+        "runnerFullTreeEqualityRequired": true,
+        "originalDockerfileSha256": "c6c0df5c68089570e2069c1ab709a83cceb0b8ebaa4e9f8c57bf083c929e34e8",
+        "generatedDockerfileSha256": "b840b2586c1f0be423fcb7c3edea66bc88ce3c69930579cf8daada61645f4828",
+        "originalInstallCommandRetained": true,
+        "originalProductionBuildRetained": true,
+        "goDependencyDownloadAttempts": 3,
+        "buildResourceLimits": {
+          "memory": "3g",
+          "cpus": 1,
+          "cpuSet": "0",
+          "nextWorkers": 1,
+          "rayonThreads": 1,
+          "tokioThreads": 1,
+          "uvThreads": 2,
+          "oldSpaceMiB": 1536,
+          "semiSpaceMiB": 4
+        }
+      },
+      {
+        "originalDockerfileSha256": "ea6374bce35dd3ce5fe93cbfb694c5f6fa0250e19a90f7f8d7f6d9a0431c6a74",
+        "generatedDockerfileSha256": "0e673519bd24dc44df525acbe343f8e7993f524ade547a68cfd4dae4f878fa88",
+        "goDependencyDownloadAttempts": 3,
+        "originalGoBuildsRetained": true,
+        "cpuSet": "0",
+        "memory": "3g"
+      }
+    ],
+    "buildVariant": "Recorded task-local generated Dockerfiles, exact dependency trees and runtime configuration checked; original frozen install, full Next/TypeScript/pages and Go builds/start commands retained; at most three original go mod download attempts. This is not an unchanged production-Dockerfile build."
+  },
+  "finalSourceAudit": {
+    "receipt": "../../11-12-image-storage-foundation/checks/.runtime/storage-4e37900e/receipts/final-current-source-audit-20261116-b43e9d43.json",
+    "receiptSha256": "7e7b4d764182750a42aa1238a4d5d11ead516448d50ec24e242c18004b3053cf",
+    "checkedAt": "2026-11-16T03:29:42.349762+00:00",
+    "files": 950,
+    "currentMatchesFinalReceipt": true,
+    "currentMatchesCompleteCI": true,
+    "changedAddedOrMissing": [],
+    "productInputsSha256": "da14302ceb1264c4baa15caeb0e802568456fc038ab4308e6c325d23e61efac2",
+    "helpers": {
+      ".trellis/tasks/11-12-image-history-migration/checks/cached-dependencies.mjs": {
+        "sha256": "576fd42c2302aaa23c20efadb3a8f52863d58fc456bec54ee700913ee78fc9ec",
+        "matchesFinalReceipt": true
+      },
+      ".trellis/tasks/11-12-image-history-migration/checks/integrated-e2e.mjs": {
+        "sha256": "48fa650c85952b8d329b23e41fecdff87c3f5776e973462b995f3a3ec51568d6",
+        "matchesFinalReceipt": true
+      }
+    },
+    "metadataBoundary": "Task records and .trellis/spec are finalized after validation; all non-.trellis source/test/deploy inputs and both build helpers match the successful current run."
+  },
+  "resourceCleanup": {
+    "receipt": "../../11-12-image-storage-foundation/checks/.runtime/storage-4e37900e/receipts/final-resource-audit-20261116-6565af27.json",
+    "receiptSha256": "8ee74bbdb3d1a36c394da2887503b60324f92530bce3c0580cb61a678d831091",
+    "remainingOwnedE2EResources": {
+      "containers": [],
+      "networks": [],
+      "volumes": [],
+      "images": []
+    },
+    "cacheTagAbsentAfterRemoval": true,
+    "cacheRemovalForce": false,
+    "cacheRecordArchivedAs": "history-dependency-cache-final-20261116-6eb71f2d.json.before",
+    "cacheRecordArchiveSha256": "9f1eace2da281428826ec0315e044dad87b64649da261a7a29222118e7593e7e",
+    "cacheMarkerAbsent": true,
+    "historicalFailureReceiptsUnchanged": true
+  },
+  "deliveryByteCorrection": {
+    "status": "passed-current-final-gates-and-independent-cleanup",
+    "beforeEvidence": "../../11-12-image-storage-foundation/checks/.runtime/storage-4e37900e/receipts/before-delivery-eol-20261116-f8411648/evidence.json",
+    "reason": "Remove one extra unpublished migration EOF line and pin all four byte-bound image migrations to LF; original successful runtime evidence unchanged.",
+    "oldCanvasStorageMigrationSha256": "b2d884d8837b0cdd0a304d03b05ec601d03e4b1b40441413609022fbedf414cf",
+    "newCanvasStorageMigrationSha256": "6f6d8fef83291f2888f5f5a47a2213c8131f027ffd8a7116b5549263d2513b3c",
+    "removedBytes": "one final LF only",
+    "publishedCanvasMigrationUnchanged": true,
+    "C2C3MigrationBytesUnchanged": true,
+    "LFPaths": [
+      "20261029090000_canvas_v1",
+      "20261112090000_image_storage",
+      "20261112100000_canvas_image_storage",
+      "20261115090000_image_retention",
+      "20261115180000_image_history"
+    ],
+    "currentPassedGates": [
+      "test",
+      "ci-bounded",
+      "history-catalog",
+      "canvas-db",
+      "worker-db",
+      "gateway-db",
+      "migrations",
+      "history-integrated-e2e"
+    ],
+    "currentProductInputsSha256": "da14302ceb1264c4baa15caeb0e802568456fc038ab4308e6c325d23e61efac2",
+    "differencesFromOriginalFinalE2EInputs": [
+      ".gitattributes",
+      "contracts/canvas/v1/schema.json",
+      "contracts/media/v1/schema.json",
+      "prisma/migrations/20261112100000_canvas_image_storage/migration.sql",
+      "src/tests/unit/featured-gallery.test.tsx"
+    ],
+    "gitCheckoutProof": {
+      "authority": "Independent trellis-check actual git cat-file --filters, no index/object writes",
+      "coreAutocrlf": true,
+      "allFiveDeclaredPathsPreserveLF": true,
+      "sourceHeadBlobSha256": "1247ec0bb7985a465028e4e05abb0b0ffa6ce80e964d57b37351c2943c3513f4",
+      "unmatchedControlCRLFPairs": 883,
+      "unmatchedControlSha256": "2c73d8ebe99b116b5a88d97638c0c1730bbb00cc7073258c66ee2cb0e685a9f4",
+      "controlNormalizesBackExactly": true,
+      "canvasStorageFullFunctionDefinitionsUnchanged": 13
+    },
+    "focusSynchronization": {
+      "beforeEvidence": "../../11-12-image-storage-foundation/checks/.runtime/storage-4e37900e/receipts/before-focus-sync-20261116-c444ad5d/evidence.json",
+      "file": "src/tests/unit/featured-gallery.test.tsx",
+      "oldSha256": "3dbd54f50d03b4ad417d25b834c1531fc2ec498786ceb0b960eb0fe6379aeeba",
+      "newSha256": "4cfd35386e6fc774d368b243e33712fe7063cdf1c549b4b3ea4e52e2a4c64827",
+      "change": "Await existing focus and full selection assertions after manual feedback commit and passive effect",
+      "productRuntimeChanged": false,
+      "tests": 24
+    },
+    "ciResourceOverride": {
+      "defaultNodeOldSpaceMiB": 384,
+      "defaultNodeSemiSpaceMiB": 4,
+      "denyEnvPreloadPreserved": true,
+      "TypeScriptAndBuildRetainOldSpaceMiB": 1536,
+      "VitestRetainsOldSpaceMiB": 512,
+      "originalStages": 10,
+      "skippedStages": 0,
+      "productionSourceOrConfigChanged": false
+    },
+    "redReceipts": [
+      {
+        "receipt": "20261116T021641-ci-bounded-802b4e.json",
+        "sha256": "ea4fdc0dc0f2ccb27bb8ff88d12a39193ebe4285b4e5b725634df429f84cb2b2",
+        "exitCode": 134
+      },
+      {
+        "receipt": "20261116T022306-ci-bounded-6e651f.json",
+        "sha256": "21a2a0c60ba00ac8a9fa30d11e87248088dc9f5b740a58d97890f2250b785e21",
+        "exitCode": 1
+      },
+      {
+        "receipt": "20261116T024744-history-integrated-e2e-5865be.json",
+        "sha256": "035c226f85da1c9da07bb655d92a79784988cbc43c817b18c6fd2d3b77df9c8b",
+        "exitCode": 2
+      }
+    ],
+    "retiredCacheRecord": "../../11-12-image-storage-foundation/checks/.runtime/storage-4e37900e/receipts/history-dependency-cache-retired-20261116-027e9df8.json.before",
+    "finalE2EReceipt": "../../11-12-image-storage-foundation/checks/.runtime/storage-4e37900e/receipts/20261116T025107-history-integrated-e2e-f78bd8.json",
+    "retiredCacheRecordSha256": "58674d1e06ffc1e491ba6827a2b60a4b90726c632744362e86b2b72d95991bb4",
+    "finalCacheRecordArchive": "../../11-12-image-storage-foundation/checks/.runtime/storage-4e37900e/receipts/history-dependency-cache-final-20261116-6eb71f2d.json.before",
+    "retryAggregate": {
+      "receipt": "../../11-12-image-storage-foundation/checks/.runtime/storage-4e37900e/receipts/delivery-e2e-retry-20261116-d1a7e4f5.json",
+      "sha256": "6d2e3c1c1a60c7bc61a684670cff4796fc0d4cd5c53604366bf2fc4d7b62387e",
+      "status": "passed"
+    }
+  },
+  "previousFinalIntegration": {
+    "label": "Successful integration before the five-file byte/test delivery corrections",
+    "ciBoundary": "Full 2150-test CI remains the complete baseline. The subsequent public CLI envelope correction changed two E2E fixtures and one unit test; it passed 57 focused tests, global types/lint and the complete final 11-scenario actual Docker E2E. docs/image-storage.md added policy wording. Production Go/SQL/API/UI inputs did not change. Historical receipt boundaries remain explicit in each run.",
+    "finalE2E": {
+      "receipt": "../../11-12-image-storage-foundation/checks/.runtime/storage-4e37900e/receipts/20261115T184531-history-integrated-e2e-765657.json",
+      "stdoutSha256": "76dc58cbb76a4a191542173cb750598f11be0c2b978eaa11640fbbf673292c8e",
+      "stderrSha256": "0032f7d53cec8ccbfe1b961d22806cf9e8a492a6e6263dad747e25623e656aca",
+      "scenarios": [
+        {
+          "name": "embedded",
+          "durationMilliseconds": 13146
+        },
+        {
+          "name": "dedicated",
+          "durationMilliseconds": 16105
+        },
+        {
+          "name": "conflict",
+          "durationMilliseconds": 15696
+        },
+        {
+          "name": "schema",
+          "durationMilliseconds": 21447
+        },
+        {
+          "name": "dbdown",
+          "durationMilliseconds": 33556
+        },
+        {
+          "name": "propagate",
+          "durationMilliseconds": 9449
+        },
+        {
+          "name": "canvas-embedded",
+          "durationMilliseconds": 136128
+        },
+        {
+          "name": "canvas-dedicated",
+          "durationMilliseconds": 135099
+        },
+        {
+          "name": "canvas-mismatch",
+          "durationMilliseconds": 17211
+        },
+        {
+          "name": "image-embedded",
+          "durationMilliseconds": 229725
+        },
+        {
+          "name": "image-dedicated",
+          "durationMilliseconds": 256931
+        }
+      ],
+      "scenarioSelection": "Every default scenario; no scenario or assertion skipped",
+      "builderDependencyTree": {
+        "builderDependencyTreeCaptured": true,
+        "entries": 55432,
+        "sha256": "24a9f2ffd34268575e0916d2ce4a34196c02c0c83c4744ef6da0d49f37e083cd"
+      },
+      "runnerDependencyTree": {
+        "runnerDependencyTreeMatchesFullBuild": true,
+        "entries": 55432,
+        "sha256": "24a9f2ffd34268575e0916d2ce4a34196c02c0c83c4744ef6da0d49f37e083cd"
+      },
+      "priorWorkers": [
+        {
+          "priorWorker": "rejected",
+          "topology": "embedded",
+          "binarySha256": "f16bec7352122be5b921392313fa0b34db83d01f201bee926e0d2fe9a04a784d",
+          "priorReaderRevision": 2,
+          "currentReaderRevision": 3,
+          "reason": "TOPOLOGY_CONFLICT",
+          "unchangedInventory": true
+        },
+        {
+          "priorWorker": "rejected",
+          "topology": "dedicated",
+          "binarySha256": "f16bec7352122be5b921392313fa0b34db83d01f201bee926e0d2fe9a04a784d",
+          "priorReaderRevision": 2,
+          "currentReaderRevision": 3,
+          "reason": "IMAGE_SCHEMA_INCOMPATIBLE",
+          "unchangedInventory": true
+        }
+      ],
+      "buildVariant": "Recorded task-local generated Dockerfiles, exact dependencies and runtime configuration checked; original frozen install, full Next/TypeScript/pages and Go builds/start commands retained; at most three original go mod download attempts."
+    },
+    "finalSourceAudit": {
+      "checkedAt": "2026-11-16T01:37:47.266311+00:00",
+      "files": 950,
+      "currentMatchesFinalReceipt": true,
+      "changedAddedOrMissing": [],
+      "productInputsSha256": "765f4633d66a7607bef9faa023b759cb4978e68e83fbee5b4bc0d12c27cc6885",
+      "helpers": {
+        ".trellis/tasks/11-12-image-history-migration/checks/cached-dependencies.mjs": {
+          "sha256": "576fd42c2302aaa23c20efadb3a8f52863d58fc456bec54ee700913ee78fc9ec",
+          "matchesFinalReceipt": true
+        },
+        ".trellis/tasks/11-12-image-history-migration/checks/integrated-e2e.mjs": {
+          "sha256": "48fa650c85952b8d329b23e41fecdff87c3f5776e973462b995f3a3ec51568d6",
+          "matchesFinalReceipt": true
+        }
+      },
+      "metadataBoundary": "Task records and .trellis/spec were updated after validation; all non-.trellis source/test/deploy inputs and both build helpers match the successful run."
+    },
+    "resourceCleanup": {
+      "receipt": "../../11-12-image-storage-foundation/checks/.runtime/storage-4e37900e/receipts/final-resource-audit-20261116-617547e9.json",
+      "receiptSha256": "1d318646d8b562513e7e573c37319944cbd952f9e2f5f52eb0473a0c57d37e5f",
+      "remainingOwnedE2EResources": {
+        "containers": [],
+        "networks": [],
+        "volumes": [],
+        "images": []
+      },
+      "cacheTagAbsentAfterRemoval": true,
+      "cacheRemovalForce": false,
+      "historicalFailureReceiptsUnchanged": true
+    },
+    "gatesBeforeCurrentFinalReceipt": "../../11-12-image-storage-foundation/checks/.runtime/storage-4e37900e/receipts/gates-before-final-current-20261116-7f2126dc.json.before",
+    "gatesBeforeCurrentFinalReceiptSha256": "82706a7b37d9978401d8843f18ef2b41d36ecf45787a70bb5a263663d92131b3"
+  },
+  "browserInputBoundary": {
+    "receipt": "../../11-12-image-storage-foundation/checks/.runtime/storage-4e37900e/receipts/20261115T171857-retention-http-4b17cb.json",
+    "productInputsSha256": "e59c9e66b4675acf56869566fff8a0af307f7ea6eeef1049fe463e4a7b766ff1",
+    "differencesFromFinalE2EInputs": [
+      ".gitattributes",
+      "contracts/canvas/v1/schema.json",
+      "contracts/media/v1/schema.json",
+      "docs/image-storage.md",
+      "prisma/migrations/20261112100000_canvas_image_storage/migration.sql",
+      "scripts/fixtures/image-history-runtime.mjs",
+      "scripts/verify-e2e.mjs",
+      "src/tests/unit/featured-gallery.test.tsx",
+      "src/tests/unit/image-history-e2e-safety.test.ts"
+    ],
+    "unchangedBehavior": "The browser-relevant product/UI runtime code is unchanged by the later E2E fixture/docs correction and migration EOF/LF/checksum/test-focus correction. Original six actual browser checks / five reviewed screenshots remain evidence of that behavior boundary."
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "node": {
+    "version": "v24.22.1",
+    "archive": "node-v24.22.1-win-x64.zip",
+    "source": "https://nodejs.org/dist/v24.22.1/node-v24.22.1-win-x64.zip",
+    "sha256": "d2046d28c2c3dcd211ac5145c0bf30e2047ef9dfb306693c8c6e2eccd8b95fa5"
+  },
+  "go": {
+    "version": "go1.25.14",
+    "source": "https://go.dev/dl/go1.25.14.windows-amd64.zip",
+    "sha256": "119044a92b3987c341cd6aebb256676dd4780d292f7b4e72a3e9976677841697"
+  },
+  "pnpm": {
+    "version": "10.32.1",
+    "source": "previously installed package copied into the isolated workspace"
+  },
+  "docker": {
+    "serverVersion": "29.9.2",
+    "endpoint": "npipe:////./pipe/dockerDesktopLinuxEngine",
+    "localPrerequisiteImages": [
+      "node:24.22.1-alpine",
+      "postgres:17-alpine",
+      "golang:1.25-alpine",
+      "alpine:3.22"
+    ]
+  },
+  "globalInstallationChanged": false,
+  "runtimeArtifactsCommitted": false
+}

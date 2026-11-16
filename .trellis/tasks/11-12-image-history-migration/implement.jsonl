@@ -1,0 +1,14 @@
+{"file": ".trellis/spec/operations/media-storage.md", "reason": "现有媒体持久化、失败和历史兼容契约"}
+{"file": ".trellis/spec/operations/canvas-contracts.md", "reason": "原图 roots、七天宽限、能力修订与 SQL/Node/Go 一致性"}
+{"file": ".trellis/spec/operations/release-hardening.md", "reason": "追加迁移、环境配置、两种拓扑、隔离验证与回滚"}
+{"file": ".trellis/spec/frontend/generation-worker-contracts.md", "reason": "生成准入、handoff 和 v0/v1 计费失败边界"}
+{"file": ".trellis/spec/guides/cross-layer-thinking-guide.md", "reason": "统一跨 Node/Go/数据库/网页的状态和字节表示"}
+{"file": ".trellis/spec/frontend/type-safety.md", "reason": "历史 URL 别名/可用性投影与类型边界"}
+{"file": ".trellis/tasks/11-12-local-media-retention/research/storage-paths.md", "reason": "全图片读写路径、本地读取、部署与历史兼容"}
+{"file": ".trellis/tasks/11-12-local-media-retention/research/retention-contracts.md", "reason": "全站计量、永久引用、清理回执与恢复"}
+{"file": ".trellis/tasks/11-12-local-media-retention/research/quota-admission.md", "reason": "真实输出上界、预留时序与 pre/post-handoff 失败"}
+{"file": ".trellis/tasks/11-12-local-media-retention/research/canvas-local-evolution.md", "reason": "真实 LOCAL provider、副本映射与旧 GC 隔离"}
+{"file": ".trellis/spec/operations/image-storage.md", "reason": "迁移与历史登记复用C1身份、物理副本与读取契约"}
+{"file": ".trellis/tasks/11-12-image-storage-foundation/research/retention-data-handoff.md", "reason": "复制准备、读者保护、源退休与历史实际量登记接口来源"}
+{"file": ".trellis/tasks/11-12-image-retention-management/research/data-interface.md", "reason": "C2实际维护任务、45秒读保护、复制准备和同一源退休执行器接口；不用早期提案替代真实方法"}
+{"file": ".trellis/tasks/11-12-image-retention-management/research/c3-data-handoff.md", "reason": "C2最终源码核对的独立observed登记、诚实超额计量、COPY恢复、未知URL引用并发和dry-run零副作用接缝；新增接口是C3实施提案"}

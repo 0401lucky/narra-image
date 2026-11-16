@@ -1,0 +1,109 @@
+{
+  "scope": "C2 acceptance before C3 changes",
+  "date": "2026-11-15",
+  "status": "passed",
+  "ciNote": "075820 exited134 in final Next build; its first nine stages and later complete native production build on identical product inputs compose the gate. Original failure preserved.",
+  "browserEvidence": "../../11-12-image-storage-foundation/checks/.runtime/storage-4e37900e/receipts/retention-browser-fdc1a2e9-7105-4b7f-ac75-ef033e90971a",
+  "screenshotsReviewed": 5,
+  "runs": [
+    {
+      "gate": "ci-first-nine-stages",
+      "receipt": "../../11-12-image-storage-foundation/checks/.runtime/storage-4e37900e/receipts/20261115T075820-ci-bounded-1e367d.json",
+      "receiptSha256": "1a5ead7a6ca39704912581c65a9df24cdf3e87c5d78d32fea6838fabd17a6454",
+      "exitCode": 134,
+      "finishedAt": "2026-11-15T08:01:21.433193+00:00",
+      "durationSeconds": 181.396,
+      "sourceChanges": [],
+      "snapshotModifications": [],
+      "productInputsSha256": "5da923778d2e052028889a98b8d2c6eeb8c5d6c18ed5790aceb82ddab0483b83"
+    },
+    {
+      "gate": "standalone-full-build",
+      "receipt": "../../11-12-image-storage-foundation/checks/.runtime/storage-4e37900e/receipts/20261115T132252-build-55c84c.json",
+      "receiptSha256": "ae42c72946c8cee99ba267ddcb6cd3ccd740145b2674e832c857932939332192",
+      "exitCode": 0,
+      "finishedAt": "2026-11-15T13:23:19.171230+00:00",
+      "durationSeconds": 26.27,
+      "sourceChanges": [],
+      "snapshotModifications": [],
+      "productInputsSha256": "5da923778d2e052028889a98b8d2c6eeb8c5d6c18ed5790aceb82ddab0483b83"
+    },
+    {
+      "gate": "real-retention-http-browser",
+      "receipt": "../../11-12-image-storage-foundation/checks/.runtime/storage-4e37900e/receipts/20261115T132509-retention-http-f8a633.json",
+      "receiptSha256": "a3426140f7578fbdc87100671e7e6a23af4047cb298b914c36cc969293151a26",
+      "exitCode": 0,
+      "finishedAt": "2026-11-15T13:27:21.524018+00:00",
+      "durationSeconds": 132.266,
+      "sourceChanges": [],
+      "snapshotModifications": [],
+      "productInputsSha256": "5da923778d2e052028889a98b8d2c6eeb8c5d6c18ed5790aceb82ddab0483b83"
+    },
+    {
+      "gate": "canvas-db",
+      "receipt": "../../11-12-image-storage-foundation/checks/.runtime/storage-4e37900e/receipts/20261115T073819-canvas-db-0941d9.json",
+      "receiptSha256": "3015291bf8705c6084324fc262b861e169d6e71d46a9690aa32940475c65bcff",
+      "exitCode": 0,
+      "finishedAt": "2026-11-15T07:39:13.209452+00:00",
+      "durationSeconds": 53.534,
+      "sourceChanges": [],
+      "snapshotModifications": [],
+      "productInputsSha256": "aa7cca1fd7dd71ee56ebf0ad1cd26b8cb1403925c1e65397942cd3efa5d6aff1"
+    },
+    {
+      "gate": "worker-db",
+      "receipt": "../../11-12-image-storage-foundation/checks/.runtime/storage-4e37900e/receipts/20261115T092521-worker-db-384562.json",
+      "receiptSha256": "d6173fd412a0e256c13e8bfc0965c4a58bf76cf763bf7bf3ac270c52a38b24e0",
+      "exitCode": 0,
+      "finishedAt": "2026-11-15T09:25:33.597448+00:00",
+      "durationSeconds": 12.259,
+      "sourceChanges": [],
+      "snapshotModifications": [],
+      "productInputsSha256": "5da923778d2e052028889a98b8d2c6eeb8c5d6c18ed5790aceb82ddab0483b83"
+    },
+    {
+      "gate": "gateway-db",
+      "receipt": "../../11-12-image-storage-foundation/checks/.runtime/storage-4e37900e/receipts/20261115T092738-gateway-db-c1be1e.json",
+      "receiptSha256": "588d9b8d347e540144d931e2c4914a8ec687c9b83a8da37ec70c9d80937d217a",
+      "exitCode": 0,
+      "finishedAt": "2026-11-15T09:27:48.992124+00:00",
+      "durationSeconds": 10.073,
+      "sourceChanges": [],
+      "snapshotModifications": [],
+      "productInputsSha256": "5da923778d2e052028889a98b8d2c6eeb8c5d6c18ed5790aceb82ddab0483b83"
+    },
+    {
+      "gate": "migrations",
+      "receipt": "../../11-12-image-storage-foundation/checks/.runtime/storage-4e37900e/receipts/20261115T074719-migrations-f68b91.json",
+      "receiptSha256": "25fe2047cac9da2717b829fa8426d4756b0daeabb05389e1a182a0f97c243c56",
+      "exitCode": 0,
+      "finishedAt": "2026-11-15T07:48:07.839333+00:00",
+      "durationSeconds": 48.231,
+      "sourceChanges": [],
+      "snapshotModifications": [],
+      "productInputsSha256": "aa7cca1fd7dd71ee56ebf0ad1cd26b8cb1403925c1e65397942cd3efa5d6aff1"
+    },
+    {
+      "gate": "go-vet",
+      "receipt": "../../11-12-image-storage-foundation/checks/.runtime/storage-4e37900e/receipts/20261115T092305-go-vet-57313a.json",
+      "receiptSha256": "48b7e7b52120f991f9f8f59872c7b596a6e04e9b0c0a58856366d42b8062f1af",
+      "exitCode": 0,
+      "finishedAt": "2026-11-15T09:23:07.084266+00:00",
+      "durationSeconds": 1.795,
+      "sourceChanges": [],
+      "snapshotModifications": [],
+      "productInputsSha256": "5da923778d2e052028889a98b8d2c6eeb8c5d6c18ed5790aceb82ddab0483b83"
+    }
+  ],
+  "finalParentIntegration": {
+    "date": "2026-11-16",
+    "status": "passed",
+    "record": "../../11-12-image-history-migration/checks/gates.json",
+    "currentFullCIReceipt": "../../11-12-image-storage-foundation/checks/.runtime/storage-4e37900e/receipts/20261116T023915-ci-bounded-c5b0f5.json",
+    "currentFullCIReceiptSha256": "301253188c5354c84f6ee7f42af1a1a7e2d0ab57d933c48f6ed1b667a56ca21f",
+    "currentFinalE2EReceipt": "../../11-12-image-storage-foundation/checks/.runtime/storage-4e37900e/receipts/20261116T025107-history-integrated-e2e-f78bd8.json",
+    "currentFinalE2EReceiptSha256": "cdf1d0fff9836396feb175148702ade0745fb90c0d5ddb6288743c9453154e2a",
+    "currentProductInputsSha256": "da14302ceb1264c4baa15caeb0e802568456fc038ab4308e6c325d23e61efac2",
+    "boundary": "The original child-stage receipts and nonzero CI invocations are retained above; the final C3/parent gate passed complete current CI, all DB/migration gates and all 11 deployment scenarios."
+  }
+}

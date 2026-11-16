@@ -1,0 +1,83 @@
+{
+  "id": "local-media-retention",
+  "name": "local-media-retention",
+  "title": "Local media storage and 5GB retention management",
+  "description": "服务器持久化图片存储、PostgreSQL 媒体元数据、管理员一键/定时/容量清理与全站 5GB 图片额度；用户已明确排除视频。",
+  "status": "in_progress",
+  "dev_type": "fullstack",
+  "scope": "image-storage",
+  "package": null,
+  "priority": "P2",
+  "creator": "0401lucky",
+  "assignee": "0401lucky",
+  "createdAt": "2026-11-12",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": "1368518dfe0e2b3d9a78789f022b4e0859240ff6",
+  "pr_url": null,
+  "subtasks": [],
+  "children": [
+    "11-12-image-storage-foundation",
+    "11-12-image-retention-management",
+    "11-12-image-history-migration"
+  ],
+  "parent": null,
+  "relatedFiles": [],
+  "notes": "用户已明确批准最新最终规划。按父计划 C1→C2→C3 的依赖和质量门禁实施；不再重复请求任务创建或方案审批。真实迁移/源删除/部署另按用户明确操作授权。",
+  "meta": {
+    "plan_review": "approved",
+    "depends_on": [],
+    "parent_requirements": [
+      "R1",
+      "R2",
+      "R3",
+      "R4",
+      "R5",
+      "R6",
+      "R7",
+      "R8",
+      "R9"
+    ],
+    "media_scope": "images_only",
+    "implementation_approval": {
+      "date": "2026-11-12",
+      "user_response": "没问题",
+      "scope": "本轮最终规划摘要及三个图片子任务；不含生产操作"
+    },
+    "quality_gate": {
+      "status": "passed",
+      "date": "2026-11-16",
+      "record": "verification.md",
+      "commit_status": "code_committed_records_pending",
+      "final_parent_integration": {
+        "status": "passed",
+        "date": "2026-11-16",
+        "record": ".trellis/tasks/11-12-image-history-migration/checks/gates.json",
+        "current_full_ci": "20261116T023915-ci-bounded-c5b0f5",
+        "current_full_e2e": "20261116T025107-history-integrated-e2e-f78bd8",
+        "current_product_inputs_sha256": "da14302ceb1264c4baa15caeb0e802568456fc038ab4308e6c325d23e61efac2",
+        "source_and_cleanup_audits": "passed",
+        "review_scope": "C1/C2/C3 full scope; parent A1-A10 and C3 H-A1-H-A6"
+      }
+    },
+    "commit_plan": {
+      "status": "approved",
+      "record": ".trellis/tasks/11-12-local-media-retention/commit-plan.md",
+      "work_commits": 2,
+      "archive_and_journal_after_work_commits": true,
+      "push": false,
+      "approval": {
+        "date": "2026-11-16",
+        "recordedAt": "2026-11-16T04:04:22.693076+00:00",
+        "user_response": "没问题",
+        "scope": "Two work commits; archive C3, C2, C1 and parent; record journal; exclude six prior GHCR records; no push",
+        "source": ".trellis/workflow.md section 3.4 one-shot confirmation"
+      }
+    },
+    "work_commits": [
+      "1368518dfe0e2b3d9a78789f022b4e0859240ff6"
+    ]
+  }
+}
