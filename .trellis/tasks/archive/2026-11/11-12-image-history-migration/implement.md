@@ -12,7 +12,7 @@
 - [x] 收敛 README、公开环境示例、Compose/镜像 overlay、embedded 启动、卷准备、盘点/启用/迁移/回滚操作说明及 rollback preflight。
 - [x] 在 disposable PostgreSQL、临时卷和模拟 S3 上完成旧数据迁移与故障竞争矩阵，最终运行两种部署拓扑 E2E。
 - [x] trellis-check 全范围复核；主会话将父 A1–A10 与 H-A1–H-A6 证据对应，更新 specs。
-- [ ] 按父任务的具体提交计划取得一次确认后提交/归档，不提前标记 Git 收尾完成。
+- [x] 按父任务的具体提交计划取得一次确认后提交/归档，不提前标记 Git 收尾完成。
 
 ## 验证顺序
 

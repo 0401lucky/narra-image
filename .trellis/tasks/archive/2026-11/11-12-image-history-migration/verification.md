@@ -165,3 +165,7 @@ reviewer 从 stdout 独立核对恰好全部默认 11 个 PASS 与最终 all-11 
 ## 用户确认后的工作提交（2026-11-16）
 
 用户已回复“没问题”，一次批准父commit-plan的两笔工作提交、C3/C2/C1/父任务归档和journal收尾，不push。Root再次核对351个候选及六个GHCR排除文件与readiness审计原SHA相同；功能暂存的272个路径、cached空白和各Git blob均核对通过，共享migration原字节保持。功能提交为 `1368518dfe0e2b3d9a78789f022b4e0859240ff6`，实际提交范围与清单完全一致。首次提交因本机作者未配置而退出128、未创建commit；重试只沿用最近八笔Git/Trellis一致的0401lucky身份到本轮进程，没有改全局/仓库Git配置。当前提交任务记录，之后按获批顺序归档/journal；本段是Git收尾记录，不改变前述验证输入边界。
+
+## 已完成的工作提交与归档（2026-11-16）
+
+两笔工作提交依次为 `1368518dfe0e2b3d9a78789f022b4e0859240ff6`（272个功能/spec路径）和 `67b0edfd777629bd1dcd37117a1d0e892a115c9e`（79个任务记录路径），实际范围均与用户一次批准的清单一致。本任务已通过native `task.py archive`移动到 `.trellis/tasks/archive/2026-11/11-12-image-history-migration`，status为completed，quality gate保持passed；归档Git提交只暂存本任务原路径删除及新路径文件。journal由父任务统一记录，两笔工作提交先于全部归档/journal提交，未push，六份既有GHCR文件字节保留。
