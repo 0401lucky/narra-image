@@ -28,6 +28,7 @@ type Config struct {
 	Concurrency                    int
 	ContractsV1Enabled             bool
 	DatabaseURL                    string
+	EnableDatabaseImageStorage     bool
 	EnableLocalImageFallback       bool
 	HTTPAddr                       string
 	JobTimeout                     time.Duration
@@ -92,6 +93,10 @@ func LoadConfig() (Config, error) {
 	if err != nil {
 		return Config{}, err
 	}
+	databaseImageStorage, err := getenvStrictBool("ENABLE_DATABASE_IMAGE_STORAGE", false)
+	if err != nil {
+		return Config{}, err
+	}
 	canvasGCIntervalSeconds, err := getenvBoundedInt("CANVAS_ASSET_GC_INTERVAL_SECONDS", 60, 60, 2147483647)
 	if err != nil {
 		return Config{}, err
@@ -123,6 +128,7 @@ func LoadConfig() (Config, error) {
 		Concurrency:                    getenvInt("WORKER_CONCURRENCY", 2),
 		ContractsV1Enabled:             getenvBool("WORKER_CONTRACTS_V1_ENABLED", false),
 		DatabaseURL:                    databaseURL,
+		EnableDatabaseImageStorage:     databaseImageStorage,
 		EnableLocalImageFallback:       getenvBool("ENABLE_LOCAL_IMAGE_FALLBACK", true),
 		HTTPAddr:                       getenv("WORKER_HTTP_ADDR", "127.0.0.1:8081"),
 		JobTimeout:                     time.Duration(getenvInt("WORKER_JOB_TIMEOUT_SECONDS", 900)) * time.Second,
@@ -155,16 +161,19 @@ func LoadConfig() (Config, error) {
 // LoadStorageConfig 只读取媒体持久化相关配置，供回填等运维命令使用，
 // 不校验 AUTH_SECRET / WORKER_RUNTIME_MODE 等运行时要求。
 func LoadStorageConfig() Config {
+	// 保持运维读取的无错误接口；无效值不能开启数据库存图。
+	databaseImageStorage, _ := getenvStrictBool("ENABLE_DATABASE_IMAGE_STORAGE", false)
 	return Config{
-		AppURL:                   getenv("APP_URL", "http://localhost:3000"),
-		EnableLocalImageFallback: getenvBool("ENABLE_LOCAL_IMAGE_FALLBACK", true),
-		NodeEnv:                  strings.TrimSpace(os.Getenv("NODE_ENV")),
-		S3AccessKeyID:            os.Getenv("S3_ACCESS_KEY_ID"),
-		S3Bucket:                 os.Getenv("S3_BUCKET"),
-		S3Endpoint:               os.Getenv("S3_ENDPOINT"),
-		S3PublicBaseURL:          os.Getenv("S3_PUBLIC_BASE_URL"),
-		S3Region:                 getenv("S3_REGION", "auto"),
-		S3SecretAccessKey:        os.Getenv("S3_SECRET_ACCESS_KEY"),
+		AppURL:                     getenv("APP_URL", "http://localhost:3000"),
+		EnableDatabaseImageStorage: databaseImageStorage,
+		EnableLocalImageFallback:   getenvBool("ENABLE_LOCAL_IMAGE_FALLBACK", true),
+		NodeEnv:                    strings.TrimSpace(os.Getenv("NODE_ENV")),
+		S3AccessKeyID:              os.Getenv("S3_ACCESS_KEY_ID"),
+		S3Bucket:                   os.Getenv("S3_BUCKET"),
+		S3Endpoint:                 os.Getenv("S3_ENDPOINT"),
+		S3PublicBaseURL:            os.Getenv("S3_PUBLIC_BASE_URL"),
+		S3Region:                   getenv("S3_REGION", "auto"),
+		S3SecretAccessKey:          os.Getenv("S3_SECRET_ACCESS_KEY"),
 	}
 }
 

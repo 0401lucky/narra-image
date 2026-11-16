@@ -64,6 +64,35 @@ func TestLoadConfigReadsVideoSettings(t *testing.T) {
 	}
 }
 
+func TestDatabaseImageStorageConfig(t *testing.T) {
+	setRequiredConfigEnv(t, RuntimeModeDedicated)
+	for _, test := range []struct {
+		value string
+		want  bool
+	}{
+		{"", false}, {"true", true}, {" YES ", true}, {"1", true},
+		{"false", false}, {" NO ", false}, {"0", false},
+	} {
+		t.Run(test.value, func(t *testing.T) {
+			t.Setenv("ENABLE_DATABASE_IMAGE_STORAGE", test.value)
+			cfg, err := LoadConfig()
+			if err != nil {
+				t.Fatal(err)
+			}
+			if cfg.EnableDatabaseImageStorage != test.want || LoadStorageConfig().EnableDatabaseImageStorage != test.want {
+				t.Fatalf("database storage opt-in was not parsed as %v", test.want)
+			}
+		})
+	}
+	t.Setenv("ENABLE_DATABASE_IMAGE_STORAGE", "enabled")
+	if _, err := LoadConfig(); err == nil {
+		t.Fatal("invalid database storage opt-in must fail runtime configuration")
+	}
+	if LoadStorageConfig().EnableDatabaseImageStorage {
+		t.Fatal("storage-only loader must not enable database storage for an invalid value")
+	}
+}
+
 func TestLoadConfigVideoSettingsDefaults(t *testing.T) {
 	setRequiredConfigEnv(t, RuntimeModeDedicated)
 

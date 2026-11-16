@@ -1,0 +1,8 @@
+{
+  "checked_at": "2026-11-16T01:59:19.645736+00:00",
+  "source_sha256": "edb331209c83cda80ec4929dca18d2f4091e584de93ce04ad772b374708d7aa0",
+  "image_tag": "narra-image-app:db-storage-edb331209c83",
+  "reviewed_files": 12,
+  "mismatches": [],
+  "status": "matched"
+}

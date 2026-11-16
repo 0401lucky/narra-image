@@ -1,0 +1,23 @@
+{
+  "captured_at": "2026-11-16T02:04:56.005663+00:00",
+  "files": {
+    "contracts/runtime/v1/environment.json": "d699d02596e968a4efaab8f2bacd7091c7d56579bde0c842f3f81bace2f2fc6b",
+    "src/lib/env.ts": "37ca40f3a9ec60450a5cccc948b06211c6a80c1a5d40c00077fc6c9ab8e8bd35",
+    "src/lib/storage/persist-generated-image.ts": "3667f337dddb1b1ed16e69779d8d0e5dde435cbe53436945199d8e30599058a9",
+    "worker/internal/worker/config.go": "768e913740f115da48c6b31a23f6a0a01bc9cb28d85a53c1b2bedc38b741f3b0",
+    "worker/internal/worker/storage.go": "baec242e37172227a35ec5f1884f96b1bef04046ab30ac8dc08b335334fdb9ba",
+    "worker/internal/worker/config_test.go": "2ee8b2becc7e801328011ad944981e38e162637bfa0df3cacf4caa9668780fc2",
+    "worker/internal/worker/storage_test.go": "ba2c408913e7fea3c379cb91530654a6edb305717ed19a1e8a1a500e41eddd0c",
+    "src/tests/contracts/runtime-environment-contract.test.ts": "68b6cd734de88f5c32ee29c6a39fb90c79819aea13b2d490bb4dda58b5f4f73d",
+    "src/tests/unit/persist-generated-image.test.ts": "c6343f0f7f962de32358a7ea8840e59ceddbbddbb76745e521d50e49b3690d81",
+    ".env.example": "4f80bfde1786635b544a6d746cbf22595f3d4049018d30439b81776351626140",
+    "README.md": "3b032659503f3f80ead1aede3fb3f866e8909c100cfcce3a013a78f1e7340a69",
+    "docker-compose.yml": "3e8f5ead300726200c846970ec5670c660c208d7bad8834dd0fdff3e00bbf401"
+  },
+  "changed_from_implementation": [
+    "src/tests/contracts/runtime-environment-contract.test.ts",
+    ".env.example",
+    "README.md"
+  ],
+  "note": "Reviewer clarified two documentation lines and supplied required NODE_ENV in invalid-boolean parseEnv test fixture; runtime logic unchanged."
+}

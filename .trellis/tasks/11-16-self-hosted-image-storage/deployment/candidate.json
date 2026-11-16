@@ -1,0 +1,26 @@
+{
+  "artifact_directory": "D:\\code\\Claude code program\\narra image\\.trellis\\tasks\\11-16-self-hosted-image-storage\\deployment\\artifacts\\20261116T020550Z-c8d5df6b2894",
+  "bundle": "D:\\code\\Claude code program\\narra image\\.trellis\\tasks\\11-16-self-hosted-image-storage\\deployment\\artifacts\\20261116T020550Z-c8d5df6b2894\\candidate.tar.gz",
+  "bundle_sha256": "fdea922f101ce0a794e7d8b275e5463b9c4d7d35ad57274c8e4dd8289081abc2",
+  "bundle_bytes": 76138492,
+  "image_tag": "narra-image-app:db-storage-c8d5df6b2894",
+  "source_sha256": "c8d5df6b289416708f5255c5664b6924c1df72dc36cb861cf904c970bdd4c455",
+  "binaries": {
+    "narra-worker": {
+      "sha256": "f5074cad0cf04428aa494e0a232e9ca4cc444461f66440c4b02012cc331ffcba",
+      "bytes": 20980606
+    },
+    "narra-prompt-sync": {
+      "sha256": "12194dc29e493c6001e45b9b765f45ed518191f56e204c1b59310aea874a3814",
+      "bytes": 15121183
+    },
+    "narra-rollback-preflight": {
+      "sha256": "ed2584dc5ef33d08dd7f1d63f72ba0551052b2b380d1dbd660cb75a2cadc391b",
+      "bytes": 13837943
+    },
+    "worker-tests": {
+      "sha256": "7169fb14b1e176179d5d9ed5862bfdc261062deb81c3a99e53123dd23f64fe9b",
+      "bytes": 22392725
+    }
+  }
+}

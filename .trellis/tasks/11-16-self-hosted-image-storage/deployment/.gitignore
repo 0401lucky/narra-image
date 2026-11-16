@@ -1,0 +1,4 @@
+artifacts/
+__pycache__/
+# Exact logs are stored as lossless .log.gz archives in Git.
+*.log

@@ -1,0 +1,21 @@
+{
+  "command": [
+    "C:\\Program Files\\Go\\bin\\go.exe",
+    "-C",
+    "worker",
+    "test",
+    "-count=1",
+    "-timeout=50s",
+    "-run",
+    "TestPersistImageProductionDatabaseStorage|TestPersistImageFromURLProductionDatabaseStorage|TestNormalizeGeneratedImageProductionDatabaseStorage",
+    "./internal/worker"
+  ],
+  "cwd": "D:\\code\\Claude code program\\narra image",
+  "exitCode": 1,
+  "durationSeconds": 1.625,
+  "timeoutSeconds": 60,
+  "timedOut": false,
+  "stdout": "D:\\code\\Claude code program\\narra image\\.trellis\\tasks\\11-16-self-hosted-image-storage\\checks\\implementation\\20261116T014111-opt-in-before.stdout.log",
+  "stderr": "D:\\code\\Claude code program\\narra image\\.trellis\\tasks\\11-16-self-hosted-image-storage\\checks\\implementation\\20261116T014111-opt-in-before.stderr.log",
+  "configuration": "OS allowlist; GOENV/GOPROXY off; no database/provider settings"
+}

@@ -1,0 +1,17 @@
+{
+  "command": [
+    "C:\\Program Files\\Go\\bin\\go.exe",
+    "-C",
+    "worker",
+    "vet",
+    "./..."
+  ],
+  "cwd": "D:\\code\\Claude code program\\narra image",
+  "exitCode": 0,
+  "durationSeconds": 4.39,
+  "timeoutSeconds": 60,
+  "timedOut": false,
+  "stdout": "D:\\code\\Claude code program\\narra image\\.trellis\\tasks\\11-16-self-hosted-image-storage\\checks\\implementation\\20261116T014220-go-vet.stdout.log",
+  "stderr": "D:\\code\\Claude code program\\narra image\\.trellis\\tasks\\11-16-self-hosted-image-storage\\checks\\implementation\\20261116T014220-go-vet.stderr.log",
+  "configuration": "OS allowlist; GOENV/GOPROXY off; no database/provider settings"
+}

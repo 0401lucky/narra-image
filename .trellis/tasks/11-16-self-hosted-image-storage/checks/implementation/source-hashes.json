@@ -1,0 +1,17 @@
+{
+  "files": {
+    "contracts/runtime/v1/environment.json": "d699d02596e968a4efaab8f2bacd7091c7d56579bde0c842f3f81bace2f2fc6b",
+    "src/lib/env.ts": "37ca40f3a9ec60450a5cccc948b06211c6a80c1a5d40c00077fc6c9ab8e8bd35",
+    "src/lib/storage/persist-generated-image.ts": "3667f337dddb1b1ed16e69779d8d0e5dde435cbe53436945199d8e30599058a9",
+    "worker/internal/worker/config.go": "768e913740f115da48c6b31a23f6a0a01bc9cb28d85a53c1b2bedc38b741f3b0",
+    "worker/internal/worker/storage.go": "baec242e37172227a35ec5f1884f96b1bef04046ab30ac8dc08b335334fdb9ba",
+    "worker/internal/worker/config_test.go": "2ee8b2becc7e801328011ad944981e38e162637bfa0df3cacf4caa9668780fc2",
+    "worker/internal/worker/storage_test.go": "ba2c408913e7fea3c379cb91530654a6edb305717ed19a1e8a1a500e41eddd0c",
+    "src/tests/contracts/runtime-environment-contract.test.ts": "42774a27864d6e8cdf30c908f3349bae47cbb92e63a72cdbffb59e9e745e7d8a",
+    "src/tests/unit/persist-generated-image.test.ts": "c6343f0f7f962de32358a7ea8840e59ceddbbddbb76745e521d50e49b3690d81",
+    ".env.example": "03ff275148aaca630977bf4d4ca6587091480252c49f48350b49dd471a6b4cf5",
+    "README.md": "4a3a2761e8d2402a61863683d57c2ff536cb1ddf6e49abbec6ed09f70a2b1c48",
+    "docker-compose.yml": "3e8f5ead300726200c846970ec5670c660c208d7bad8834dd0fdff3e00bbf401"
+  },
+  "note": "Final implementation bytes; Node checks delegated to root"
+}

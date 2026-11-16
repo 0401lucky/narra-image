@@ -1,0 +1,14 @@
+{
+  "service": "narra",
+  "previous_image": "ghcr.io/0401lucky/narra-image-app@sha256:53417173c98e66c2f8d0033a6501f305e8807b39c063f3efcd3f122eabf17be1",
+  "candidate_image": "sha256:2ad1448481ba67f41447cc0e169aea94c6234200b6bfdb2a8caf6182dd69f4fb",
+  "new_environment": {
+    "ENABLE_DATABASE_IMAGE_STORAGE": "true"
+  },
+  "only_image_and_database_flag_changed": true,
+  "other_services_unchanged": true,
+  "schema_migration_required": false,
+  "compose_sha256": "b7e07bf1ab1d56f6078a122a92c2a90af12aacf437a2e5f74e7631fee39e5603",
+  "env_sha256": "283bfa97df7dc6bcd087320cb6bf0970f8b35a9bd7073a6657b45b0121c2580a",
+  "production_modified": false
+}

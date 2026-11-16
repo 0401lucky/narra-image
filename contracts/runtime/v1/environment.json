@@ -169,6 +169,19 @@
       "documentation": { "envExample": true, "readme": true }
     },
     {
+      "name": "ENABLE_DATABASE_IMAGE_STORAGE",
+      "owner": "shared",
+      "type": "boolean",
+      "default": false,
+      "requiredInProduction": false,
+      "secret": false,
+      "phase": "runtime",
+      "constraints": {},
+      "consumers": ["next", "worker"],
+      "allowedReadPaths": ["src/lib/env.ts", "worker/internal/worker/config.go"],
+      "documentation": { "envExample": true, "readme": true }
+    },
+    {
       "name": "ENABLE_LOCAL_IMAGE_FALLBACK",
       "owner": "shared",
       "type": "boolean",

@@ -150,7 +150,7 @@ export async function persistGeneratedImage(input: PersistImageInput) {
     return `${(env.S3_ENDPOINT || "").replace(/\/$/, "")}/${env.S3_BUCKET}/${fileName}`;
   }
 
-  if (env.ENABLE_LOCAL_IMAGE_FALLBACK) {
+  if (env.ENABLE_DATABASE_IMAGE_STORAGE || env.ENABLE_LOCAL_IMAGE_FALLBACK) {
     const base64 = "buffer" in input ? input.buffer.toString("base64") : input.b64Json;
     return `data:${input.mimeType ?? "image/png"};base64,${base64}`;
   }

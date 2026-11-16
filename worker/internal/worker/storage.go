@@ -29,7 +29,7 @@ const sourceImagesTotalMaxBytes = 32 * 1024 * 1024
 const referenceImageMaxRedirects = 5
 
 // MediaStorage 标识生成结果的持久化形态，随 GenerationImage/GeneratedVideo 落库。
-// B64 仅允许开发/测试 data URL fallback；S3 是生产强制形态；
+// B64 用于显式数据库存图或开发/测试 data URL fallback；S3 用于对象存储；
 // UPSTREAM 表示上游直连，仅历史数据，新写入不会产生。
 type MediaStorage string
 
@@ -124,10 +124,10 @@ func (s *Storage) PersistImage(ctx context.Context, userID string, data []byte, 
 		}, nil
 	}
 
-	if s.cfg.EnableLocalImageFallback {
-		// 生产环境禁止把大 base64 作为数据库主存储；即使显式开启 fallback 也拒绝。
-		if s.cfg.isProductionEnvironment() {
-			return PersistedMedia{}, errors.New("生产环境禁止 data URL 图片存储，请配置对象存储（S3/R2）")
+	if s.cfg.EnableDatabaseImageStorage || s.cfg.EnableLocalImageFallback {
+		// 数据库存图必须显式选择；开发回退开关不能单独解除生产存储限制。
+		if !s.cfg.EnableDatabaseImageStorage && s.cfg.isProductionEnvironment() {
+			return PersistedMedia{}, errors.New("生产环境禁止 data URL 图片存储，请配置对象存储（S3/R2）或显式启用数据库存图")
 		}
 		return PersistedMedia{
 			URL:          fmt.Sprintf("data:%s;base64,%s", mimeType, base64.StdEncoding.EncodeToString(data)),

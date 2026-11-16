@@ -3,6 +3,9 @@ package worker
 import (
 	"bytes"
 	"context"
+	"encoding/base64"
+	"net/http"
+	"net/http/httptest"
 	"strings"
 	"testing"
 
@@ -73,6 +76,95 @@ func TestPersistImageProductionRejectsFallbackWithNodeEnv(t *testing.T) {
 	_, err := storage.PersistImage(context.Background(), "user-1", minimalPNG(8, 8), "png", "image/png")
 	if err == nil || !strings.Contains(err.Error(), "生产环境禁止") {
 		t.Fatalf("expected production fallback rejection, got %v", err)
+	}
+}
+
+func TestPersistImageProductionDatabaseStorage(t *testing.T) {
+	for _, cfg := range []Config{
+		{NodeEnv: "production", EnableDatabaseImageStorage: true},
+		{AppURL: "https://narra.example.com", EnableDatabaseImageStorage: true},
+		{NodeEnv: "production", EnableDatabaseImageStorage: true, EnableLocalImageFallback: true},
+	} {
+		t.Run(cfg.NodeEnv+cfg.AppURL, func(t *testing.T) {
+			storage := &Storage{cfg: cfg}
+			data := minimalPNG(8, 8)
+			persisted, err := storage.PersistImage(context.Background(), "user-1", data, "png", "image/png")
+			if err != nil {
+				t.Fatalf("explicit production database storage rejected: %v", err)
+			}
+			assertDatabaseImage(t, persisted, data)
+		})
+	}
+}
+
+func TestPersistImageS3TakesPriorityOverDatabaseStorage(t *testing.T) {
+	storage := s3TestStorage()
+	storage.cfg.NodeEnv = "production"
+	storage.cfg.EnableDatabaseImageStorage = true
+	persisted, err := storage.PersistImage(context.Background(), "user-1", minimalPNG(8, 8), "png", "image/png")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if persisted.MediaStorage != MediaStorageS3 || persisted.StorageKey == "" || !strings.HasPrefix(persisted.URL, "https://cdn.example.test/user-1/") {
+		t.Fatalf("S3 priority was lost: %+v", persisted)
+	}
+}
+
+func TestPersistImageFromURLProductionDatabaseStorage(t *testing.T) {
+	data := minimalPNG(8, 8)
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		w.Header().Set("Content-Type", "image/png")
+		_, _ = w.Write(data)
+	}))
+	defer server.Close()
+	storage := &Storage{cfg: Config{NodeEnv: "production", EnableDatabaseImageStorage: true}}
+	persisted, err := storage.PersistImageFromURL(context.Background(), "user-1", server.URL+"/temporary.png", server.Client())
+	if err != nil {
+		t.Fatal(err)
+	}
+	assertDatabaseImage(t, PersistedMedia{URL: persisted.URL, MediaStorage: persisted.MediaStorage, StorageKey: persisted.StorageKey}, data)
+	if persisted.MimeType != "image/png" || !bytes.Equal(persisted.Data, data) {
+		t.Fatal("downloaded image content or MIME changed")
+	}
+}
+
+func TestNormalizeGeneratedImageProductionDatabaseStorage(t *testing.T) {
+	data := minimalPNG(8, 8)
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		w.Header().Set("Content-Type", "image/png")
+		_, _ = w.Write(data)
+	}))
+	defer server.Close()
+	for name, item := range map[string]map[string]any{
+		"base64":     {"b64_json": base64.StdEncoding.EncodeToString(data)},
+		"remote-url": {"url": server.URL + "/temporary.png"},
+	} {
+		t.Run(name, func(t *testing.T) {
+			storage := &Storage{cfg: Config{NodeEnv: "production", EnableDatabaseImageStorage: true}}
+			image, err := normalizeGeneratedImage(context.Background(), storage, GenerationJob{UserID: "user-1", OutputFormat: "png"}, item, imagePayload{})
+			if err != nil {
+				t.Fatalf("production result could not be normalized: %v", err)
+			}
+			assertDatabaseImage(t, PersistedMedia{URL: image.URL, MediaStorage: image.MediaStorage, StorageKey: image.StorageKey}, data)
+			if image.Width == nil || image.Height == nil || *image.Width != 8 || *image.Height != 8 {
+				t.Fatal("production result lost its dimensions")
+			}
+		})
+	}
+}
+
+func assertDatabaseImage(t *testing.T, persisted PersistedMedia, want []byte) {
+	t.Helper()
+	if persisted.MediaStorage != MediaStorageB64 || persisted.StorageKey != "" {
+		t.Fatalf("incorrect database media metadata: %+v", persisted)
+	}
+	const prefix = "data:image/png;base64,"
+	if !strings.HasPrefix(persisted.URL, prefix) {
+		t.Fatalf("database image does not have the expected MIME prefix")
+	}
+	decoded, err := base64.StdEncoding.DecodeString(strings.TrimPrefix(persisted.URL, prefix))
+	if err != nil || !bytes.Equal(decoded, want) {
+		t.Fatalf("database image does not retain complete bytes: %v", err)
 	}
 }
 

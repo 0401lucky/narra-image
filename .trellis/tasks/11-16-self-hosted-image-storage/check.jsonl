@@ -1,0 +1,4 @@
+{"file":".trellis/spec/operations/media-storage.md","reason":"Verify B64 metadata, default production rejection, S3 compatibility, and explicit planned contract extension."}
+{"file":".trellis/spec/operations/release-hardening.md","reason":"Verify runtime environment single source and keep production writes/deployments out of child scope."}
+{"file":".trellis/spec/frontend/quality-guidelines.md","reason":"Verify meaningful tests, loader/manifest consistency, lint, typecheck, and reporting limits."}
+{"file":".trellis/tasks/11-16-self-hosted-image-storage/research/server-diagnosis.md","reason":"Root cause evidence and exact deployed baseline."}

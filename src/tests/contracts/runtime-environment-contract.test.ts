@@ -63,6 +63,28 @@ function lineNumberAt(content: string, offset: number) {
 }
 
 describe("runtime environment manifest", () => {
+  it.each([
+    [undefined, false], ["", false], ["true", true], [" YES ", true], ["1", true],
+    ["false", false], [" NO ", false], ["0", false],
+  ] as const)("数据库存图开关显式解析 %s 为 %s", (value, expected) => {
+    const parsed = parseEnv({
+      AUTH_SECRET: "unit-test-secret",
+      DATABASE_URL: "postgresql://localhost/test",
+      NODE_ENV: "test",
+      ENABLE_DATABASE_IMAGE_STORAGE: value,
+    });
+    expect(parsed.ENABLE_DATABASE_IMAGE_STORAGE).toBe(expected);
+  });
+
+  it("拒绝无效的数据库存图开关", () => {
+    expect(() => parseEnv({
+      AUTH_SECRET: "unit-test-secret",
+      DATABASE_URL: "postgresql://localhost/test",
+      NODE_ENV: "development",
+      ENABLE_DATABASE_IMAGE_STORAGE: "enabled",
+    })).toThrow();
+  });
+
   it("定义唯一变量名且允许读取路径真实存在", () => {
     const names = RUNTIME_ENVIRONMENT_CONTRACT.variables.map((variable) => variable.name);
     expect(new Set(names).size).toBe(names.length);

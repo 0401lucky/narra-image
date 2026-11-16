@@ -1,0 +1,36 @@
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE} AS builder
+
+WORKDIR /app
+COPY payload/ ./
+
+RUN env -i PATH=/usr/local/bin:/usr/bin:/bin HOME=/tmp/narra-check NODE_ENV=test NEXT_TELEMETRY_DISABLED=1 node node_modules/vitest/vitest.mjs run --testTimeout=30000 --maxWorkers=2 src/tests/contracts/runtime-environment-contract.test.ts src/tests/unit/persist-generated-image.test.ts src/tests/contracts/generation-contract.test.ts src/tests/integration/worker-contracts/worker-contracts.test.ts src/tests/unit/external-generation-service.test.ts src/tests/unit/job-refund.test.ts src/tests/unit/generation-cancel-route.test.ts src/tests/unit/prompt-sync-forwarder.test.ts
+RUN env -i PATH=/usr/local/bin:/usr/bin:/bin HOME=/tmp/narra-check NODE_ENV=test NEXT_TELEMETRY_DISABLED=1 node node_modules/eslint/bin/eslint.js .
+
+ENV DATABASE_URL="postgresql://build:build@127.0.0.1:1/never_connect?schema=public"
+ENV AUTH_SECRET="database-image-storage-build-only-secret-32-characters"
+ENV APP_URL="https://narra-build.invalid"
+ENV BUILTIN_PROVIDER_BASE_URL="https://example.invalid/v1"
+ENV BUILTIN_PROVIDER_API_KEY="build-only-demo-key"
+ENV NEXT_TELEMETRY_DISABLED=1
+
+RUN node -e "const fs=require('node:fs'); if(!fs.readFileSync('node_modules/next/dist/server/config-shared.js','utf8').includes('Number(process.env.CIRCLE_NODE_TOTAL)')) process.exit(1); fs.rmSync('.next',{recursive:true,force:true});"
+RUN CIRCLE_NODE_TOTAL=3 node node_modules/next/dist/bin/next build
+RUN env -i PATH=/usr/local/bin:/usr/bin:/bin HOME=/tmp/narra-check NODE_ENV=test node node_modules/typescript/bin/tsc --noEmit
+
+FROM ${BASE_IMAGE} AS candidate
+ARG SOURCE_SHA256
+LABEL io.narra.hotfix="database-image-storage"
+LABEL io.narra.hotfix.source-sha256="${SOURCE_SHA256}"
+LABEL io.narra.hotfix.base-revision="a8c2bc9b3d65fc6970fc895f109aec9728b10290"
+
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/contracts ./contracts
+COPY --from=builder /app/scripts ./scripts
+COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/prisma.config.ts ./prisma.config.ts
+COPY --from=builder /app/package.json ./package.json
+COPY --from=builder /app/next.config.ts ./next.config.ts
+COPY --from=builder /app/LICENSE /app/THIRD_PARTY_NOTICES.md ./
+COPY narra-worker narra-prompt-sync narra-rollback-preflight ./

@@ -29,6 +29,7 @@ vi.mock("@/lib/generation/external-api", () => ({ runExternalGeneration: mockRun
 ```
 
 - 测试环境变量：直接或间接需要 `getEnv()` 的测试在 `beforeEach` 用 `vi.stubEnv` 显式设置合成 `AUTH_SECRET` / `DATABASE_URL` 等，并在 `afterEach` 用 `vi.unstubAllEnvs()` 恢复原值或缺失状态；不依赖 `.env`、外层 runner 默认值或其他 suite。
+- `parseEnv({ ... })` 接受 `NodeJS.ProcessEnv`，对象测试夹具必须显式提供 `NODE_ENV`，包括只验证其他字段报错的负例。Zod 的 `NODE_ENV` 默认值不会放宽输入类型；Vitest 转译与 Next 构建通过也不能替代独立 `tsc --noEmit`（缺失时为 TS2345）。
 - `server-only` 在测试中由 `vitest.config.ts` alias 到 `src/tests/setup/server-only.ts`。
 - DB 集成测试必须带哨兵（`WORKER_CONTRACTS_REQUIRE_DB=1` + `TEST_DATABASE_URL`），禁止回退开发库（见 `generation-worker-contracts.md`）。
 

@@ -1,0 +1,36 @@
+{
+  "reviewed_at": "2026-11-16T02:34:36.589458+00:00",
+  "quality_gate": "passed",
+  "source_sha256": "c8d5df6b289416708f5255c5664b6924c1df72dc36cb861cf904c970bdd4c455",
+  "image_id": "sha256:2ad1448481ba67f41447cc0e169aea94c6234200b6bfdb2a8caf6182dd69f4fb",
+  "product_files_checked": 12,
+  "source_mismatches": [],
+  "checks": {
+    "vitest": {
+      "files": 8,
+      "tests": 50,
+      "result": "pass"
+    },
+    "eslint": {
+      "errors": 0,
+      "warnings": 9,
+      "result": "pass"
+    },
+    "next_build": "pass",
+    "standalone_tsc": "pass",
+    "linux_go_storage_config_normalization": {
+      "functions": 11,
+      "result": "pass"
+    },
+    "go_full_worker_tests": "pass",
+    "go_vet": "pass",
+    "go_build": "pass"
+  },
+  "evidence_sha256": {
+    "build-result.json": "eb9d86d1012fdc35cdbb9053ef906ac5b67298e2dd80008090e87e6f9e847ddd",
+    "build.log": "1a61026b4e2aac820e098d25bd0580d130351bb9eb8a0292a5c50447b9b88b96",
+    "linux-storage-tests.log": "16d0055aebeca34847e8da8647c2a305a30c107531131d03c32294b70eb28030"
+  },
+  "production_container_modified": false,
+  "known_out_of_scope_limit": "Existing /v1 gateway sourceImageUrls permit only HTTP(S) and body limit is 1 MiB; database data URL uploads are not supported through that gateway. Web DB-queue references remain compatible."
+}
