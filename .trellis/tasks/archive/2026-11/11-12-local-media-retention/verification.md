@@ -62,3 +62,7 @@ C1/C2 的验证记录保留各自历史输入；最终 C3 门禁负责覆盖新�
 两种实际图片拓扑分别验证4个来源绑定、3个持久任务、3个源保留/1个退休、8个LOCAL文件和最终770字节。任务构建变体保留原安装/完整Next及Go构建/启动/全部场景，Linux应用/Worker完整构建分别为364.209/107.474秒；builder与runner逐项核对55,432个依赖条目，摘要同为 `2ec77b87d24425b94c5f7d8a2e4be988a042178c5115a266a5f78c39fe6e540d`。这是核实的任务构建变体，不声称生产Dockerfile原样构建或真实R2服务验收。
 
 C3 `checks/gates.json` 保留23份实际通过回执，将每份相对当前最终输入的差异重新计算；原 `765657`、其950项摘要 `765f4633d66a7607bef9faa023b759cb4978e68e83fbee5b4bc0d12c27cc6885` 及旧清理另存在 `previousFinalIntegration`，不覆盖历史边界。三个当前失败（native ESLint OOM、焦点时序、陈旧cache marker预检）保留原退出码；后续成功回执独立绑定。父A1–A10及C3 H-A1–H-A6已完成隔离验收；两笔工作提交与逐文件范围见 `commit-plan.md`。用户已按workflow §3.4一次确认，功能提交 `1368518dfe0e2b3d9a78789f022b4e0859240ff6` 的272个路径与清单一致，当前提交79个任务记录，之后依序归档C3/C2/C1/父任务并记录journal。六份既有GHCR文件字节未变，不纳入本次提交，未推送。
+
+## 已完成的工作提交与归档（2026-11-16）
+
+两笔工作提交依次为 `1368518dfe0e2b3d9a78789f022b4e0859240ff6`（272个功能/spec路径）和 `67b0edfd777629bd1dcd37117a1d0e892a115c9e`（79个任务记录路径），实际范围均与用户一次批准的清单一致。本任务已通过native `task.py archive`移动到 `.trellis/tasks/archive/2026-11/11-12-local-media-retention`，status为completed，quality gate保持passed；归档Git提交只暂存本任务原路径删除及新路径文件。journal由父任务统一记录，两笔工作提交先于全部归档/journal提交，未push，六份既有GHCR文件字节保留。
