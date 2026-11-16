@@ -192,3 +192,7 @@ C2 可由主会话关闭任务元数据并交接到已批准的 C3 工作。此�
 前文保留C2原阶段、revision2及原失败边界。C3新增历史纳管/迁移与revision3后的最终完整门禁已通过；提交前的EOF/LF/checksum和旧首页焦点测试修正，不改变C2图片清理产品UI。`20261115T171857-retention-http-4b17cb` 最终真实浏览器六项检查、五张已复核截图仍适用于其清理行为边界；350→280字节、浏览器关闭/Worker重启/重放、70字节精确释放、410与提示词/计费保持均实际通过。
 
 当前 `20261116T023915-ci-bounded-c5b0f5` 同次完整十阶段CI通过（168套/2150项），Canvas完整/增量各4套87项及Worker/Gateway DB、迁移和 `20261116T025107-history-integrated-e2e-f78bd8` 同次默认11场景全部通过。950项产品输入与新完整CI/E2E完全一致；两种历史拓扑实际验证源退休失败保持量、策略拒绝/正式启用/同任务恢复与重试精确释放。独立资源清理通过，当前共享验收见 `checks/gates.json` 的 `finalParentIntegration` 和C3 `checks/gates.json`。用户已于2026-11-16一次确认工作提交及归档/journal计划，功能提交1368518已完成，当前提交任务记录，之后归档，不推送。
+
+## 已完成的工作提交与归档（2026-11-16）
+
+两笔工作提交依次为 `1368518dfe0e2b3d9a78789f022b4e0859240ff6`（272个功能/spec路径）和 `67b0edfd777629bd1dcd37117a1d0e892a115c9e`（79个任务记录路径），实际范围均与用户一次批准的清单一致。本任务已通过native `task.py archive`移动到 `.trellis/tasks/archive/2026-11/11-12-image-retention-management`，status为completed，quality gate保持passed；归档Git提交只暂存本任务原路径删除及新路径文件。journal由父任务统一记录，两笔工作提交先于全部归档/journal提交，未push，六份既有GHCR文件字节保留。
