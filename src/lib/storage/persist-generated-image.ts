@@ -144,6 +144,8 @@ export async function persistGeneratedImage(input: PersistImageInput) {
   }
 
   if (env.IMAGE_STORAGE_MANAGED_ENABLED) {
+    // Managed quota and persistence failures propagate even when legacy
+    // database storage is explicitly enabled.
     const { MAX_IMAGE_BYTES, ImageStorageError } = await import("./image-contract");
     if ("b64Json" in input && input.b64Json.length > Math.ceil(MAX_IMAGE_BYTES / 3) * 4) throw new ImageStorageError("IMAGE_INVALID_INPUT");
     const body = "buffer" in input ? input.buffer : Buffer.from(input.b64Json, "base64");
@@ -173,7 +175,7 @@ export async function persistGeneratedImage(input: PersistImageInput) {
     return `${(env.S3_ENDPOINT || "").replace(/\/$/, "")}/${env.S3_BUCKET}/${fileName}`;
   }
 
-  if (env.ENABLE_LOCAL_IMAGE_FALLBACK) {
+  if (env.ENABLE_DATABASE_IMAGE_STORAGE || env.ENABLE_LOCAL_IMAGE_FALLBACK) {
     const base64 = "buffer" in input ? input.buffer.toString("base64") : input.b64Json;
     return `data:${input.mimeType ?? "image/png"};base64,${base64}`;
   }

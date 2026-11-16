@@ -4,7 +4,7 @@
 
 - 修改 `contracts/media/v1/`、`src/lib/storage/`、`worker/internal/worker/image_*.go`、图片提交/上传/读取或图片清单 migration 时必须读取本规范。Canvas 的账户、场景与原图根规则同时遵循 [Canvas Contracts](./canvas-contracts.md)。
 - 范围是生成图片、普通上传参考图和 Canvas 导入。视频、视频专用封面、提示词库外部预览及未知第三方 URL 保持原有路径。
-- 图片文件存 LOCAL 持久卷或 S3；PostgreSQL 只存身份、物理副本、引用、额度和状态。不得把生产本地模式实现成大 base64/数据库 BLOB。
+- 受管理图片文件存 LOCAL 持久卷或 S3；此模式下 PostgreSQL 只存身份、物理副本、引用、额度和状态。不得把生产本地模式实现成大 base64/数据库 BLOB；managed 关闭时的显式数据库存图契约见 [Media Storage](./media-storage.md)。
 - 本规范不授权生产迁移、删除、调整额度或切换后端。
 
 ## 2. 签名与职责
@@ -59,7 +59,7 @@ JavaScript `$` 可在末尾换行前匹配；UUID、SHA256、key 校验需要绝
 ## 5. 正例、基线与反例
 
 - 正例：普通参考图先按确切大小预留，原子登记后 PUT；成功任务绑定输出且建立永久输入引用。两副本迁移期间两份实际字节都占全站额度。
-- 基线：managed 关闭时保留旧 S3/data URL 开发兼容；视频不进入此清单。旧媒体来源不明时保持可读、待盘点且不自动删除。
+- 基线：managed 关闭时保留旧 S3/data URL 开发兼容，以及 `ENABLE_DATABASE_IMAGE_STORAGE=true` 的显式生产数据库存图；数据库开关不能绕过 managed 额度或写入失败。视频不进入此清单。旧媒体来源不明时保持可读、待盘点且不自动删除。
 - 反例：按 `GenerationImage` 行数/URL估算物理量，删除用户时顺便丢清单，或把 reservation 到期当成文件已消失。
 - 反例：将 `INPUT + GENERATED` 当通用历史纳管入口。现有 backfill 的窄例外仅允许 `backfill-image:<legacy-id>`、owner 匹配且尚未关联的旧图片，并且仍要实际预算和新 PUT；无 PUT 的历史盘点需独立核实对象登记流程。
 - 正例：从实际 catalogue 对齐所有 Image 模型的 `dbgenerated`，再验证完整迁移历史和 baseline 升级均无差异；基线是原 DDL 和随机令牌行为不变。反例：只看 SQL 语义近似就宣布结构已一致，或把空的新 schema 当作旧 Worker 可安全回滚。

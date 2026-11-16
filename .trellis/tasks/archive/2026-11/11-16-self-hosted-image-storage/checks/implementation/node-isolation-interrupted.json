@@ -1,0 +1,13 @@
+{
+  "status": "not_executed",
+  "reason": "Root requested termination of slow Windows dependency copy; Node checks delegated to offline candidate Linux builder",
+  "ownedExecSession": 67129,
+  "termination": "Ctrl-C sent to the exact owned unified exec session",
+  "exitCode": 1,
+  "workspace": ".trellis/tasks/11-16-self-hosted-image-storage/checks/implementation/.runtime/db-images-e9aa1188/app",
+  "publicSourceFilesCopied": 844,
+  "nodeTestsExecuted": false,
+  "lintExecuted": false,
+  "typecheckExecuted": false,
+  "productionEnvironmentRead": false
+}

@@ -31,6 +31,7 @@ type Config struct {
 	Concurrency                    int
 	ContractsV1Enabled             bool
 	DatabaseURL                    string
+	EnableDatabaseImageStorage     bool
 	EnableLocalImageFallback       bool
 	HTTPAddr                       string
 	ImageStorageManagedEnabled     bool
@@ -99,6 +100,10 @@ func LoadConfig() (Config, error) {
 	if err != nil {
 		return Config{}, err
 	}
+	databaseImageStorage, err := getenvStrictBool("ENABLE_DATABASE_IMAGE_STORAGE", false)
+	if err != nil {
+		return Config{}, err
+	}
 	canvasGCIntervalSeconds, err := getenvBoundedInt("CANVAS_ASSET_GC_INTERVAL_SECONDS", 60, 60, 2147483647)
 	if err != nil {
 		return Config{}, err
@@ -153,6 +158,7 @@ func LoadConfig() (Config, error) {
 		Concurrency:                    getenvInt("WORKER_CONCURRENCY", 2),
 		ContractsV1Enabled:             getenvBool("WORKER_CONTRACTS_V1_ENABLED", false),
 		DatabaseURL:                    databaseURL,
+		EnableDatabaseImageStorage:     databaseImageStorage,
 		EnableLocalImageFallback:       getenvBool("ENABLE_LOCAL_IMAGE_FALLBACK", true),
 		HTTPAddr:                       getenv("WORKER_HTTP_ADDR", "127.0.0.1:8081"),
 		ImageStorageManagedEnabled:     imageConfig.ImageStorageManagedEnabled,
@@ -193,8 +199,13 @@ func LoadStorageConfig() (Config, error) {
 	if err != nil {
 		return Config{}, err
 	}
+	databaseImageStorage, err := getenvStrictBool("ENABLE_DATABASE_IMAGE_STORAGE", false)
+	if err != nil {
+		return Config{}, err
+	}
 	cfg := Config{
 		AppURL:                     getenv("APP_URL", "http://localhost:3000"),
+		EnableDatabaseImageStorage: databaseImageStorage,
 		EnableLocalImageFallback:   getenvBool("ENABLE_LOCAL_IMAGE_FALLBACK", true),
 		NodeEnv:                    strings.TrimSpace(os.Getenv("NODE_ENV")),
 		ImageStorageManagedEnabled: managed,

@@ -1,6 +1,6 @@
 # 图片存储父任务集成验收
 
-状态：C1/C2/C3的功能、工具、文档及当前最终字节快照完整隔离验收通过。两笔获批工作提交 `1368518dfe0e2b3d9a78789f022b4e0859240ff6` 和 `67b0edfd777629bd1dcd37117a1d0e892a115c9e` 已完成，实际272/79个路径与清单一致；三个子任务及父任务按序归档，journal第9次记录已写入 `.trellis/workspace/0401lucky/journal-1.md`。质量门禁passed，所有父A1–A10及C3 H-A1–H-A6闭合；未push或执行生产操作。
+状态：C1/C2/C3的功能、工具、文档及当前最终字节快照完整隔离验收通过。两笔获批工作提交 `1368518dfe0e2b3d9a78789f022b4e0859240ff6` 和 `67b0edfd777629bd1dcd37117a1d0e892a115c9e` 已完成，实际272/79个路径与清单一致；三个子任务及父任务按序归档，journal第10次记录已写入 `.trellis/workspace/0401lucky/journal-1.md`。质量门禁passed，所有父A1–A10及C3 H-A1–H-A6闭合；未push或执行生产操作。
 
 ## 验证边界
 
@@ -69,4 +69,4 @@ C3 `checks/gates.json` 保留23份实际通过回执，将每份相对当前最�
 
 ## 归档与session记录完成
 
-四任务归档提交依次为 `2d8830252f578d5d84aad8713325189a06b23315`、`d5ed97563cac177cbc899fec54c1ed0a64c7b4de`、`7d570e77d8207e239f8bdd5be99b569623ff94df`、`9749ecbe533ddd373bc950e54da9aec0f0846152`，均在两笔工作提交之后。native `add_session.py` 第9次记录仅引用两笔工作提交，位于 `.trellis/workspace/0401lucky/journal-1.md`；父实施清单全部完成，任务状态completed，最后journal提交收录本轮session与最终完成元数据。六份原GHCR文件原字节保留，未推送。
+四任务归档提交依次为 `2d8830252f578d5d84aad8713325189a06b23315`、`d5ed97563cac177cbc899fec54c1ed0a64c7b4de`、`7d570e77d8207e239f8bdd5be99b569623ff94df`、`9749ecbe533ddd373bc950e54da9aec0f0846152`，均在两笔工作提交之后。native `add_session.py` 第10次记录仅引用两笔工作提交，位于 `.trellis/workspace/0401lucky/journal-1.md`；父实施清单全部完成，任务状态completed，最后journal提交收录本轮session与最终完成元数据。六份原GHCR文件原字节保留，未推送。

@@ -438,7 +438,29 @@ Deliver the independently reviewed image-first canvas refactor while preserving 
 - Physical/live/actual CI and rollout gates remain unperformed; keep active task, no automatic archive or deployment.
 
 
-## Session 9: 图片本地存储与5GB管理：提交、归档和验收收尾
+## Session 9: Database image storage and yunyou rollout
+
+**Date**: 2026-11-16
+**Task**: Database image storage and yunyou rollout
+**Branch**: `main`
+
+### Summary
+
+Added explicit production PostgreSQL image storage; pushed bc4dbaa to GitHub, all CI and public GHCR release checks passed, deployed app digest fc922190d8f2c7c2fb9924c4ded0a6dab76ceb2dd72142fae72b025cc29762ac to yunyou .22 with ENABLE_DATABASE_IMAGE_STORAGE=true. App, Worker and public readiness returned 200. Real generation verification is user-owned; no paid image request made. Preserved original PostgreSQL volume and unrelated user edits.
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `bc4dbaa` | (see git log) |
+| `8517c7d` | (see git log) |
+
+### Status
+
+[OK] **Completed**
+
+
+## Session 10: 图片本地存储与5GB管理：提交、归档和验收收尾
 
 **Date**: 2026-11-16
 **Task**: 图片本地存储与5GB管理：提交、归档和验收收尾

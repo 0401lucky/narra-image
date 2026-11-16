@@ -1,0 +1,13 @@
+{
+  "image_tag": "narra-image-app:db-storage-c8d5df6b2894",
+  "image_id": "sha256:2ad1448481ba67f41447cc0e169aea94c6234200b6bfdb2a8caf6182dd69f4fb",
+  "source_sha256": "c8d5df6b289416708f5255c5664b6924c1df72dc36cb861cf904c970bdd4c455",
+  "platform": "linux/amd64",
+  "build_seconds": 376.373,
+  "base_image_id": "sha256:53417173c98e66c2f8d0033a6501f305e8807b39c063f3efcd3f122eabf17be1",
+  "binaries_verified": true,
+  "linux_storage_tests": "passed",
+  "production_container_id": "f4ab3ffed844f9fbf2de127b82e754d33ea759a61de97a99ae702b7556471bbd",
+  "production_container_modified": false,
+  "registry_push": false
+}

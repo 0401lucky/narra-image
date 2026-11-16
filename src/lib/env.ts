@@ -190,6 +190,7 @@ const envSchema = z.object({
   CANVAS_ASSET_GC_BATCH_SIZE: integerEnv(20, 1, 100),
   DATABASE_READY_ATTEMPTS: integerEnv(180, 1, 10_000),
   DATABASE_READY_DELAY_MS: integerEnv(2_000, 100, 60_000),
+  ENABLE_DATABASE_IMAGE_STORAGE: booleanEnv(false),
   ENABLE_EMBEDDED_WORKER: booleanEnv(true),
   ENABLE_LOCAL_IMAGE_FALLBACK: booleanEnv(true),
   EXTERNAL_GENERATION_POLL_INTERVAL_MS: integerEnv(1_000, 1, 60_000),

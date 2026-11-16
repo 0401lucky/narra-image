@@ -72,6 +72,52 @@ describe("runtime environment manifest", () => {
     expect(parseEnv({ ...base, IMAGE_STORAGE_MANAGED_ENABLED: "true", WORKER_JOB_TIMEOUT_SECONDS: "3480" }).WORKER_JOB_TIMEOUT_SECONDS).toBe(3480);
     expect(() => parseEnv({ ...base, IMAGE_STORAGE_MANAGED_ENABLED: "true", WORKER_JOB_TIMEOUT_SECONDS: "3481" })).toThrow("3480");
   });
+
+  it.each([
+    [undefined, false], ["", false], ["true", true], [" YES ", true], ["1", true],
+    ["false", false], [" NO ", false], ["0", false],
+  ] as const)("数据库存图开关显式解析 %s 为 %s", (value, expected) => {
+    const parsed = parseEnv({
+      AUTH_SECRET: "unit-test-secret",
+      DATABASE_URL: "postgresql://localhost/test",
+      NODE_ENV: "test",
+      ENABLE_DATABASE_IMAGE_STORAGE: value,
+    });
+    expect(parsed.ENABLE_DATABASE_IMAGE_STORAGE).toBe(expected);
+  });
+
+  it.each(["enabled", " "])("拒绝无效的数据库存图开关 %s", (value) => {
+    expect(() => parseEnv({
+      AUTH_SECRET: "unit-test-secret",
+      DATABASE_URL: "postgresql://localhost/test",
+      NODE_ENV: "development",
+      ENABLE_DATABASE_IMAGE_STORAGE: value,
+    })).toThrow();
+  });
+
+  it.each(["s3", "local"] as const)("数据库存图开关保留受管理 %s 配置与限制", (backend) => {
+    const base = {
+      AUTH_SECRET: "production-test-secret-with-at-least-32-characters",
+      DATABASE_URL: "postgresql://127.0.0.1:1/test",
+      NODE_ENV: "production" as const,
+      APP_URL: "https://narra.example.com",
+      ENABLE_DATABASE_IMAGE_STORAGE: "true",
+      IMAGE_STORAGE_MANAGED_ENABLED: "true",
+      IMAGE_STORAGE_BACKEND: backend,
+      IMAGE_STORAGE_PATH: path.resolve("fixture-images"),
+      IMAGE_STORAGE_VOLUME_ID: "00112233-4455-4677-8899-aabbccddeeff",
+    };
+    expect(parseEnv(base)).toMatchObject({
+      ENABLE_DATABASE_IMAGE_STORAGE: true,
+      IMAGE_STORAGE_MANAGED_ENABLED: true,
+      IMAGE_STORAGE_BACKEND: backend,
+    });
+    expect(() => parseEnv({ ...base, WORKER_JOB_TIMEOUT_SECONDS: "3481" })).toThrow("3480");
+    if (backend === "local") {
+      expect(() => parseEnv({ ...base, IMAGE_STORAGE_MANAGED_ENABLED: "false" })).toThrow("本地图片存储必须启用受管理存储");
+    }
+  });
+
   it("定义唯一变量名且允许读取路径真实存在", () => {
     const names = RUNTIME_ENVIRONMENT_CONTRACT.variables.map((variable) => variable.name);
     expect(new Set(names).size).toBe(names.length);

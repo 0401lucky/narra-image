@@ -1,0 +1,4 @@
+{"file":".trellis/spec/operations/media-storage.md","reason":"Existing media persistence and failure contract; approved PRD explicitly adds production database opt-in."}
+{"file":".trellis/spec/operations/release-hardening.md","reason":"Runtime environment manifest, loaders, production topology, and deployment boundaries."}
+{"file":".trellis/spec/frontend/quality-guidelines.md","reason":"Targeted tests, environment isolation, lint/type checks, and manifest consistency."}
+{"file":".trellis/tasks/11-16-self-hosted-image-storage/research/server-diagnosis.md","reason":"Confirmed deployed version, absent S3 config, exact failure, and user database-storage choice."}

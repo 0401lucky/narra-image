@@ -64,6 +64,72 @@ func TestLoadConfigReadsVideoSettings(t *testing.T) {
 	}
 }
 
+func TestDatabaseImageStorageConfig(t *testing.T) {
+	setRequiredConfigEnv(t, RuntimeModeDedicated)
+	for _, test := range []struct {
+		value string
+		want  bool
+	}{
+		{"", false}, {"true", true}, {" YES ", true}, {"1", true},
+		{"false", false}, {" NO ", false}, {"0", false},
+	} {
+		t.Run(test.value, func(t *testing.T) {
+			t.Setenv("ENABLE_DATABASE_IMAGE_STORAGE", test.value)
+			cfg, err := LoadConfig()
+			if err != nil {
+				t.Fatal(err)
+			}
+			storageConfig, err := LoadStorageConfig()
+			if err != nil {
+				t.Fatal(err)
+			}
+			if cfg.EnableDatabaseImageStorage != test.want || storageConfig.EnableDatabaseImageStorage != test.want {
+				t.Fatalf("database storage opt-in was not parsed as %v", test.want)
+			}
+		})
+	}
+	for _, invalid := range []string{"enabled", " "} {
+		t.Run("invalid/"+invalid, func(t *testing.T) {
+			t.Setenv("ENABLE_DATABASE_IMAGE_STORAGE", invalid)
+			if cfg, err := LoadConfig(); err == nil || cfg.EnableDatabaseImageStorage {
+				t.Fatal("invalid database storage opt-in must fail runtime configuration")
+			}
+			if cfg, err := LoadStorageConfig(); err == nil || cfg.EnableDatabaseImageStorage {
+				t.Fatal("invalid database storage opt-in must fail storage-only configuration")
+			}
+		})
+	}
+}
+
+func TestDatabaseImageStorageDoesNotBypassManagedConfig(t *testing.T) {
+	setRequiredConfigEnv(t, RuntimeModeDedicated)
+	t.Setenv("NODE_ENV", "production")
+	t.Setenv("APP_URL", "https://narra.example.com")
+	t.Setenv("AUTH_SECRET", "production-test-secret-with-at-least-32-characters")
+	t.Setenv("ENABLE_DATABASE_IMAGE_STORAGE", "true")
+	t.Setenv("IMAGE_STORAGE_PATH", t.TempDir())
+	t.Setenv("IMAGE_STORAGE_VOLUME_ID", "00112233-4455-4677-8899-aabbccddeeff")
+	for _, backend := range []string{"local", "s3"} {
+		t.Run(backend, func(t *testing.T) {
+			t.Setenv("IMAGE_STORAGE_MANAGED_ENABLED", "true")
+			t.Setenv("IMAGE_STORAGE_BACKEND", backend)
+			for _, load := range []func() (Config, error){LoadConfig, LoadStorageConfig} {
+				cfg, err := load()
+				if err != nil || !cfg.EnableDatabaseImageStorage || !cfg.ImageStorageManagedEnabled || cfg.ImageStorageBackend != backend {
+					t.Fatalf("combined storage settings were lost: %+v %v", cfg, err)
+				}
+			}
+		})
+	}
+	t.Setenv("IMAGE_STORAGE_MANAGED_ENABLED", "false")
+	t.Setenv("IMAGE_STORAGE_BACKEND", "local")
+	for _, load := range []func() (Config, error){LoadConfig, LoadStorageConfig} {
+		if _, err := load(); err == nil {
+			t.Fatal("database opt-in must not authorize an unmanaged local backend")
+		}
+	}
+}
+
 func TestLoadConfigVideoSettingsDefaults(t *testing.T) {
 	setRequiredConfigEnv(t, RuntimeModeDedicated)
 
@@ -153,6 +219,9 @@ func setRequiredConfigEnv(t *testing.T, mode RuntimeMode) {
 	t.Setenv("AUTH_SECRET", "unit-test-secret")
 	t.Setenv("DATABASE_URL", "postgresql://user:pass@localhost:5432/app?schema=public")
 	t.Setenv("WORKER_RUNTIME_MODE", string(mode))
+	t.Setenv("ENABLE_DATABASE_IMAGE_STORAGE", "")
+	t.Setenv("IMAGE_STORAGE_MANAGED_ENABLED", "false")
+	t.Setenv("IMAGE_STORAGE_BACKEND", "s3")
 }
 
 func TestLoadConfigReadsPromptSyncSettings(t *testing.T) {

@@ -77,9 +77,17 @@ pnpm dev
   `BUILTIN_PROVIDER_VIDEO_CREDIT_COST`。
 - 存储：`S3_ENDPOINT`、`S3_REGION`、`S3_ACCESS_KEY_ID`、
   `S3_SECRET_ACCESS_KEY`、`S3_BUCKET`、`S3_PUBLIC_BASE_URL`、
-  `ENABLE_LOCAL_IMAGE_FALLBACK`。
+  `ENABLE_DATABASE_IMAGE_STORAGE`、`ENABLE_LOCAL_IMAGE_FALLBACK`。
+  未启用受管理图片且未配置 S3/R2 的自建部署可显式设置
+  `ENABLE_DATABASE_IMAGE_STORAGE=true`，将生成图片及上传参考图以完整 data URL
+  保存在现有 PostgreSQL 中，无需数据库迁移。此选项默认关闭，且不依赖
+  `ENABLE_LOCAL_IMAGE_FALLBACK`；这条路径已配置对象存储时仍优先使用 S3。
+  Go 生成结果的 `ENABLE_LOCAL_IMAGE_FALLBACK` 仅用于开发/测试回退，不能单独
+  解除生产生成结果限制。数据库存图会增加数据库及备份体积，不提供视频存储或
+  Canvas 原图存储；视频使用 S3，Canvas 原图可使用 S3 或下述受管理 LOCAL。
 - 受管理图片：`IMAGE_STORAGE_MANAGED_ENABLED` 默认关闭；明确启用后使用
   `IMAGE_STORAGE_BACKEND` 选择 `s3` 或 `local`，所有图片写入登记并经过全站额度预留。
+  此模式先于数据库存图开关；额度或持久化失败不会改走未经计量的数据库回退。
   本地模式要求同时开启受管理存储，`IMAGE_STORAGE_PATH` 是共享持久化目录，
   `IMAGE_STORAGE_VOLUME_ID` 是该卷唯一的小写 UUID。首次使用先在空目录执行
   `docker compose run --rm --no-deps worker /app/narra-worker --init-image-volume`

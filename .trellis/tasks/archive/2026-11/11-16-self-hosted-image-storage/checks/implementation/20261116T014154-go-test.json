@@ -1,0 +1,19 @@
+{
+  "command": [
+    "C:\\Program Files\\Go\\bin\\go.exe",
+    "-C",
+    "worker",
+    "test",
+    "-count=1",
+    "-timeout=50s",
+    "./internal/worker/..."
+  ],
+  "cwd": "D:\\code\\Claude code program\\narra image",
+  "exitCode": 0,
+  "durationSeconds": 11.157,
+  "timeoutSeconds": 60,
+  "timedOut": false,
+  "stdout": "D:\\code\\Claude code program\\narra image\\.trellis\\tasks\\11-16-self-hosted-image-storage\\checks\\implementation\\20261116T014154-go-test.stdout.log",
+  "stderr": "D:\\code\\Claude code program\\narra image\\.trellis\\tasks\\11-16-self-hosted-image-storage\\checks\\implementation\\20261116T014154-go-test.stderr.log",
+  "configuration": "OS allowlist; GOENV/GOPROXY off; no database/provider settings"
+}
