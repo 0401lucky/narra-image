@@ -436,3 +436,42 @@ Deliver the independently reviewed image-first canvas refactor while preserving 
 ### Next Steps
 
 - Physical/live/actual CI and rollout gates remain unperformed; keep active task, no automatic archive or deployment.
+
+
+## Session 9: 图片本地存储与5GB管理：提交、归档和验收收尾
+
+**Date**: 2026-11-16
+**Task**: 图片本地存储与5GB管理：提交、归档和验收收尾
+**Branch**: `main`
+
+### Summary
+
+续接既有会话并完成已批准的图片本地存储、5GB额度、管理员清理及历史R2到LOCAL迁移交付；当前完整CI、数据库、迁移与11场景E2E通过。用户一次确认后完成两笔工作提交和四个任务归档，记录本轮收尾；未推送或执行生产操作。
+
+### Main Changes
+
+- 图片功能和规范按272个路径提交为1368518，79个任务记录随后提交为67b0edf；再按C3/C2/C1/父任务顺序归档，工作提交与收尾提交不交错。
+- 提交前修正未发布Canvas migration最后一个多余LF、共享链精确LF规则与manifest SHA，并等待Gallery测试的focus/selection effect；原失败回执及before字节完整保留。
+- 最终950个产品输入与当前完整CI/E2E逐项一致，集合SHA256 da14302ceb1264c4baa15caeb0e802568456fc038ab4308e6c325d23e61efac2；所有实际默认场景和完整构建保留。
+- owned Docker资源及独立依赖cache已核实清理，cache marker以原SHA归档，无陈旧marker。四任务位于.trellis/tasks/archive/2026-11/，质量门禁passed。
+- 六份原有GHCR记录未纳入任何提交且原字节保持；首次Git作者缺失失败后，仅在本轮进程沿用既有0401lucky身份，不改变Git全局/仓库配置。
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `1368518dfe0e2b3d9a78789f022b4e0859240ff6` | (see git log) |
+| `67b0edfd777629bd1dcd37117a1d0e892a115c9e` | (see git log) |
+
+### Testing
+
+- [OK] 当前完整CI c5b0f5：同次全部10阶段，168套/2150项、types/lint、TS/Go契约、Go全量测试/构建和完整原生Next build通过。
+- [OK] 真实catalogue media820/Canvas201与原对象数组相同；Canvas full/additive各4套87项、Worker/Gateway DB、全部迁移/Prisma零漂移通过。
+- [OK] 完整E2E f78bd8：同次默认11场景全部通过（1600.576秒），两种历史拓扑各8个LOCAL文件/770字节；源退休拒绝/失败/恢复、同卷重建、实际旧Worker拒绝均通过。
+- [OK] 任务Linux构建变体保留完整安装/构建/启动/断言；builder/runner各55,432依赖项逐项一致，摘要2ec77b87d24425b94c5f7d8a2e4be988a042178c5115a266a5f78c39fe6e540d。
+- [OK] 适用输入下的真实浏览器6项检查/5张已复核截图：350到280字节、精确70字节释放、浏览器关闭/Worker重启/重放、410与历史占位、提示词和计费保持。
+- [OK] 最终readiness：156个tracked/195个untracked候选空白通过；两笔工作提交实际272/79路径与获批清单相同，共享migration Git blob原字节保持；独立源码及资源审计通过。
+
+### Status
+
+[OK] **Completed**

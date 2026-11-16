@@ -25,7 +25,7 @@
 
 ## 当前进度
 
-功能实现与当前最终字节快照的隔离验收已完成，`20261116T025107-history-integrated-e2e-f78bd8` 同次默认11场景全部通过；当前完整CI、真实数据库/catalogue/迁移和独立源码/资源核对均通过。提交前只修正未发布迁移的最后一个EOF字节、shared链三条精确LF规则、两份manifest中的对应SHA，以及旧首页测试等待focus effect的时序。原Linux CLI/浏览器仍保留其实际行为边界，历史 `765657` 及失败回执未改写。用户已于2026-11-16一次确认提交/归档/journal，功能提交1368518已完成，任务记录及归档按序执行，未推送。
+功能实现、当前最终字节快照的完整隔离验收和获批Git收尾均已完成。完整CI、真实DB/catalogue/迁移、默认11场景E2E及源码/资源审计通过；两笔工作提交1368518/67b0edf之后，C3/C2/C1/父任务按序归档，journal第9次记录写入 `.trellis/workspace/0401lucky/journal-1.md`，未push或执行生产操作。以下保留所有原失败与阶段输入边界。
 
 ## 首轮实施与实际诊断
 
@@ -119,3 +119,7 @@
 - 再次逐项核对351个候选和六个排除文件，与最终readiness审计原SHA一致。功能暂存只包含272个获批路径；cached空白及每个Git blob核对通过，全部shared migration原字节保持。
 - 首次Git commit因作者配置缺失退出128，未创建提交，原阶段证据保留。最近八笔Git作者/提交者与Trellis开发者均为0401lucky；仅为本轮Git/archive/journal进程使用既有身份，未修改全局或仓库Git配置。
 - `feat(storage): add local image storage and retention management` 已提交为 `1368518dfe0e2b3d9a78789f022b4e0859240ff6`，实际272个路径与清单完全一致，index归空。当前提交79份任务记录，之后才进入finish-work归档/journal；没有真实服务操作或推送。
+
+## Git收尾完成
+
+两笔工作提交 `1368518dfe0e2b3d9a78789f022b4e0859240ff6`、`67b0edfd777629bd1dcd37117a1d0e892a115c9e`；之后依序完成四次归档，任务均completed/quality passed。native session第9次记录 `.trellis/workspace/0401lucky/journal-1.md` 只关联两笔工作提交；最後journal提交记录session和最终完成元数据。原GHCR六份文件字节保留，无暂存遗留、无推送、无生产操作。

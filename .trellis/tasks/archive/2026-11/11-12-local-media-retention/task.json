@@ -63,7 +63,7 @@
       }
     },
     "commit_plan": {
-      "status": "work_commits_completed",
+      "status": "completed",
       "record": ".trellis/tasks/archive/2026-11/11-12-local-media-retention/commit-plan.md",
       "work_commits": 2,
       "archive_and_journal_after_work_commits": true,
@@ -74,12 +74,23 @@
         "user_response": "没问题",
         "scope": "Two work commits; archive C3, C2, C1 and parent; record journal; exclude six prior GHCR records; no push",
         "source": ".trellis/workflow.md section 3.4 one-shot confirmation"
-      }
+      },
+      "completedAt": "2026-11-16"
     },
     "work_commits": [
       "1368518dfe0e2b3d9a78789f022b4e0859240ff6",
       "67b0edfd777629bd1dcd37117a1d0e892a115c9e"
     ],
-    "archive_path": ".trellis/tasks/archive/2026-11/11-12-local-media-retention"
+    "archive_path": ".trellis/tasks/archive/2026-11/11-12-local-media-retention",
+    "session_record": {
+      "session": 9,
+      "record": ".trellis/workspace/0401lucky/journal-1.md",
+      "date": "2026-11-16",
+      "work_commits": [
+        "1368518dfe0e2b3d9a78789f022b4e0859240ff6",
+        "67b0edfd777629bd1dcd37117a1d0e892a115c9e"
+      ],
+      "branch": "main"
+    }
   }
 }

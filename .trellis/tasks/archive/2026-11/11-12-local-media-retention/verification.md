@@ -1,6 +1,6 @@
 # 图片存储父任务集成验收
 
-状态：C1/C2/C3 的功能、工具、文档和当前最终字节快照的完整隔离验收通过。提交前发现的未发布迁移EOF/LF规则遗漏及旧首页异步焦点断言已修正，新完整CI、真实DB/catalogue/迁移和同一次全部11场景E2E均通过，独立清理及950项源码身份核对通过。用户于2026-11-16一次确认具体提交及归档/journal计划；功能提交 `1368518dfe0e2b3d9a78789f022b4e0859240ff6` 已完成，当前提交任务记录，随后归档，不推送。
+状态：C1/C2/C3的功能、工具、文档及当前最终字节快照完整隔离验收通过。两笔获批工作提交 `1368518dfe0e2b3d9a78789f022b4e0859240ff6` 和 `67b0edfd777629bd1dcd37117a1d0e892a115c9e` 已完成，实际272/79个路径与清单一致；三个子任务及父任务按序归档，journal第9次记录已写入 `.trellis/workspace/0401lucky/journal-1.md`。质量门禁passed，所有父A1–A10及C3 H-A1–H-A6闭合；未push或执行生产操作。
 
 ## 验证边界
 
@@ -66,3 +66,7 @@ C3 `checks/gates.json` 保留23份实际通过回执，将每份相对当前最�
 ## 已完成的工作提交与归档（2026-11-16）
 
 两笔工作提交依次为 `1368518dfe0e2b3d9a78789f022b4e0859240ff6`（272个功能/spec路径）和 `67b0edfd777629bd1dcd37117a1d0e892a115c9e`（79个任务记录路径），实际范围均与用户一次批准的清单一致。本任务已通过native `task.py archive`移动到 `.trellis/tasks/archive/2026-11/11-12-local-media-retention`，status为completed，quality gate保持passed；归档Git提交只暂存本任务原路径删除及新路径文件。journal由父任务统一记录，两笔工作提交先于全部归档/journal提交，未push，六份既有GHCR文件字节保留。
+
+## 归档与session记录完成
+
+四任务归档提交依次为 `2d8830252f578d5d84aad8713325189a06b23315`、`d5ed97563cac177cbc899fec54c1ed0a64c7b4de`、`7d570e77d8207e239f8bdd5be99b569623ff94df`、`9749ecbe533ddd373bc950e54da9aec0f0846152`，均在两笔工作提交之后。native `add_session.py` 第9次记录仅引用两笔工作提交，位于 `.trellis/workspace/0401lucky/journal-1.md`；父实施清单全部完成，任务状态completed，最后journal提交收录本轮session与最终完成元数据。六份原GHCR文件原字节保留，未推送。

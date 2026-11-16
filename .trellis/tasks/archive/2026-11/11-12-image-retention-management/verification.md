@@ -1,5 +1,7 @@
 # C2 图片清理与管理审查
 
+归档状态：本子任务的质量门禁及父最终集成均passed，两笔工作提交1368518/67b0edf与获批清单一致，四任务已按序归档；journal第9次记录位于 `.trellis/workspace/0401lucky/journal-1.md`，未push。下文保留原阶段及最终补验的实际输入边界。
+
 ## 当前结论与范围
 
 2026-11-15，C2 质量门禁通过。`trellis-check` 已完成 SQL 状态机、Node/Go 接口、执行器、管理员操作及图片可用性消费路径的全范围审查，四个跨层行为问题、一处实际 lint 错误及关键数据库覆盖缺口均已修复。最终版本的全量 Vitest 为 161 套、2065 项全部通过；lint、TypeScript、Worker TypeScript/Go 契约、Go 全量测试/构建、新 SQL 的 full/additive 各 60 项真实 DB、Worker/Gateway DB 和迁移验证均有实际通过回执。
@@ -196,3 +198,5 @@ C2 可由主会话关闭任务元数据并交接到已批准的 C3 工作。此�
 ## 已完成的工作提交与归档（2026-11-16）
 
 两笔工作提交依次为 `1368518dfe0e2b3d9a78789f022b4e0859240ff6`（272个功能/spec路径）和 `67b0edfd777629bd1dcd37117a1d0e892a115c9e`（79个任务记录路径），实际范围均与用户一次批准的清单一致。本任务已通过native `task.py archive`移动到 `.trellis/tasks/archive/2026-11/11-12-image-retention-management`，status为completed，quality gate保持passed；归档Git提交只暂存本任务原路径删除及新路径文件。journal由父任务统一记录，两笔工作提交先于全部归档/journal提交，未push，六份既有GHCR文件字节保留。
+
+最终session第9次记录已写入 `.trellis/workspace/0401lucky/journal-1.md`，关联两笔工作提交；本任务commit-plan收尾状态completed，原验证回执/源码边界未变化。

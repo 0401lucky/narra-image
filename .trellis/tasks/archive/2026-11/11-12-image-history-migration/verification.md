@@ -1,6 +1,6 @@
 # C3 历史图片迁移复核与验证
 
-状态：C1/C2/C3 全范围复核与当前交付门禁通过。当前完整 CI `20261116T023915-ci-bounded-c5b0f5` 一次通过十阶段、168 套/2150 项、全局类型/lint、Go/契约及完整生产构建；当前 Worker/gateway DB、Canvas/image full/additive DB 与迁移验证均通过。最终完整 E2E 为 `20261116T025107-history-integrated-e2e-f78bd8`，默认 11 场景全部通过，exit 0、1600.576 秒、source/snapshot drift 为空。当前 950 份产品输入与该 CI/E2E 一致，摘要 `da14302ceb1264c4baa15caeb0e802568456fc038ab4308e6c325d23e61efac2`；最新 owned E2E 资源和 task cache 的独立清理通过。旧 `765657`、F12 两套 57 项及浏览器/Linux CLI 等回执按下文历史或未变行为边界保留。C3 的 H-A1–H-A6 通过；父 A1–A10 汇总、其他任务元数据与提交/归档由主会话收尾。
+状态：C1/C2/C3全范围复核、当前完整CI（168套/2150项）、全部DB/迁移及默认11场景E2E通过，950产品输入与当前成功回执一致，独立资源清理通过。两笔工作提交 `1368518dfe0e2b3d9a78789f022b4e0859240ff6` / `67b0edfd777629bd1dcd37117a1d0e892a115c9e` 已完成，本任务及相关C1/C2/父任务按序归档；journal第9次记录位于 `.trellis/workspace/0401lucky/journal-1.md`，未push。历史失败、旧765657及浏览器/Linux CLI的适用输入边界保留于下文。
 
 ## 执行边界
 
@@ -169,3 +169,5 @@ reviewer 从 stdout 独立核对恰好全部默认 11 个 PASS 与最终 all-11 
 ## 已完成的工作提交与归档（2026-11-16）
 
 两笔工作提交依次为 `1368518dfe0e2b3d9a78789f022b4e0859240ff6`（272个功能/spec路径）和 `67b0edfd777629bd1dcd37117a1d0e892a115c9e`（79个任务记录路径），实际范围均与用户一次批准的清单一致。本任务已通过native `task.py archive`移动到 `.trellis/tasks/archive/2026-11/11-12-image-history-migration`，status为completed，quality gate保持passed；归档Git提交只暂存本任务原路径删除及新路径文件。journal由父任务统一记录，两笔工作提交先于全部归档/journal提交，未push，六份既有GHCR文件字节保留。
+
+最终session第9次记录已写入 `.trellis/workspace/0401lucky/journal-1.md`，关联两笔工作提交；本任务commit-plan收尾状态completed，原验证回执/源码边界未变化。

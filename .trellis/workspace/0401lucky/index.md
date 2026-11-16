@@ -8,8 +8,8 @@
 
 <!-- @@@auto:current-status -->
 - **Active File**: `journal-1.md`
-- **Total Sessions**: 8
-- **Last Active**: 2026-11-03
+- **Total Sessions**: 9
+- **Last Active**: 2026-11-16
 <!-- @@@/auto:current-status -->
 
 ---
@@ -19,7 +19,7 @@
 <!-- @@@auto:active-documents -->
 | File | Lines | Status |
 |------|-------|--------|
-| `journal-1.md` | ~438 | Active |
+| `journal-1.md` | ~477 | Active |
 <!-- @@@/auto:active-documents -->
 
 ---
@@ -29,6 +29,7 @@
 <!-- @@@auto:session-history -->
 | # | Date | Title | Commits | Branch |
 |---|------|-------|---------|--------|
+| 9 | 2026-11-16 | 图片本地存储与5GB管理：提交、归档和验收收尾 | `1368518dfe0e2b3d9a78789f022b4e0859240ff6`, `67b0edfd777629bd1dcd37117a1d0e892a115c9e` | `main` |
 | 8 | 2026-11-03 | Image-first canvas delivery to GitHub main | `69f30065700a56081ee7347db01653b0b42d1e6d`, `5f233b3e9d75df08cfb2bccf8cfcac48bbe68cc3` | `main` |
 | 7 | 2026-11-01 | Deliver homepage and accumulated studio tasks | `d1960ecc53ceadcda70e3bf9616cc8020c70b570`, `f689ff7d78eecba5864b334b50fe8b230c22aa5f` | `main` |
 | 6 | 2026-10-30 | Studio 双模式：恢复验收证据并完成无提交归档 | - | `main` |

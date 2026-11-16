@@ -1,5 +1,7 @@
 # C1 图片存储基础验收
 
+归档状态：本子任务的质量门禁及父最终集成均passed，两笔工作提交1368518/67b0edf与获批清单一致，四任务已按序归档；journal第9次记录位于 `.trellis/workspace/0401lucky/journal-1.md`，未push。下文保留原阶段及最终补验的实际输入边界。
+
 ## 当前结论
 
 2026-11-15 从会话 `01a1cedd-fc26-7220-94ad-6b40642e29cf` 续接。C1 全范围静态复核和本阶段必需验证已完成，可以交付 C2。Prisma 默认表达式漂移已修复并通过真实迁移。完整 CI 前九阶段通过，最后 Next 构建发生本机内存不足；对同一源码单独重跑原生产构建已通过。下面保留失败与重跑的独立回执，不将退出 134 的单次 CI 命令标为通过。
@@ -78,3 +80,5 @@ HTTP 夹具未配置 S3，共调用模拟 provider 两次，登记 4 个真实 L
 ## 已完成的工作提交与归档（2026-11-16）
 
 两笔工作提交依次为 `1368518dfe0e2b3d9a78789f022b4e0859240ff6`（272个功能/spec路径）和 `67b0edfd777629bd1dcd37117a1d0e892a115c9e`（79个任务记录路径），实际范围均与用户一次批准的清单一致。本任务已通过native `task.py archive`移动到 `.trellis/tasks/archive/2026-11/11-12-image-storage-foundation`，status为completed，quality gate保持passed；归档Git提交只暂存本任务原路径删除及新路径文件。journal由父任务统一记录，两笔工作提交先于全部归档/journal提交，未push，六份既有GHCR文件字节保留。
+
+最终session第9次记录已写入 `.trellis/workspace/0401lucky/journal-1.md`，关联两笔工作提交；本任务commit-plan收尾状态completed，原验证回执/源码边界未变化。
