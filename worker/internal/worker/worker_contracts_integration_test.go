@@ -153,6 +153,11 @@ INSERT INTO "GenerationJob" (
 		}
 	}
 
+	t.Run("rollback preflight covers image storage and partial upgrades", func(t *testing.T) {
+		reset()
+		runRollbackStorageDBTests(t, ctx, pool)
+	})
+
 	t.Run("claim and successful image writeback uses ordinal and lease", func(t *testing.T) {
 		reset()
 		insertUser("db_success_user")
@@ -416,6 +421,13 @@ VALUES ('img_backfill_1', 'db_backfill_job', $1, 'PRIVATE', false, CURRENT_TIMES
 		if result2.ImagesScanned != 0 || result2.ImagesUpdated != 0 {
 			t.Fatalf("expected no reprocess on second run, got %+v", result2)
 		}
+	})
+
+	t.Run("backfill skips bound images with original NULL metadata", func(t *testing.T) {
+		reset()
+		insertUser("db_backfill_bound_owner")
+		insertJob("db_backfill_bound_job", "db_backfill_bound_owner", 5)
+		testBackfillBoundImageDB(t, ctx, pool, "db_backfill_bound_owner", "db_backfill_bound_job")
 	})
 
 	insertPromptSource := func(id, slug, parser string, enabled bool) {

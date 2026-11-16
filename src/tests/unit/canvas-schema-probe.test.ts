@@ -8,7 +8,11 @@ import expressions from "../../../contracts/canvas/v1/scenarios/catalog-expressi
 import { CANVAS_SCHEMA_CONTRACT, CANVAS_SCHEMA_QUERY_V1, checkCanvasSchemaInventoryV1, normalizeCanvasCatalogExpressionV1, probeCanvasSchemaV1 } from "@/lib/canvas/schema-probe";
 
 const inventory = () => structuredClone(CANVAS_SCHEMA_CONTRACT.objects);
-const sql = readFileSync(path.join(process.cwd(), "prisma/migrations/20261029090000_canvas_v1/migration.sql"), "utf8").replaceAll("\r\n", "\n");
+const migrations = CANVAS_SCHEMA_CONTRACT.migrations.map((migration) => ({ ...migration,
+  sql: readFileSync(path.join(process.cwd(), `prisma/migrations/${migration.name}/migration.sql`), "utf8").replaceAll("\r\n", "\n"),
+}));
+const sql = migrations.map((migration) => migration.sql).join("\n");
+const effectiveFunctions = () => new Map([...sql.matchAll(/CREATE (?:OR REPLACE )?FUNCTION (canvas_\w+)\((.*?)\)[\s\S]*? AS \$\$([\s\S]*?)\$\$;/g)].map((match) => [match[1], match]));
 
 describe("canvas read-only schema contract", () => {
   it("requires the complete inventory and tolerates unrelated additive objects", () => {
@@ -43,9 +47,10 @@ describe("canvas read-only schema contract", () => {
     expect(checkCanvasSchemaInventoryV1(rows).issues).toContainEqual({ kind, name, reason: "mismatch" });
   });
 
-  it("checks full function bodies/signatures against the unpublished SQL, not just names", () => {
-    expect(createHash("sha256").update(sql).digest("hex")).toBe(CANVAS_SCHEMA_CONTRACT.migrationSha256);
-    const definitions = [...sql.matchAll(/CREATE FUNCTION (canvas_\w+)\((.*?)\)[\s\S]*? AS \$\$([\s\S]*?)\$\$;/g)];
+  it("checks complete effective bodies and each immutable migration digest", () => {
+    for (const migration of migrations) expect(createHash("sha256").update(migration.sql).digest("hex")).toBe(migration.sha256);
+    expect(migrations[0].sha256).toBe(CANVAS_SCHEMA_CONTRACT.migrationSha256);
+    const definitions = [...effectiveFunctions().values()];
     const functions = CANVAS_SCHEMA_CONTRACT.objects.filter((item) => item.kind === "function");
     expect(functions).toHaveLength(definitions.length);
     for (const [, name, args, body] of definitions) {
@@ -55,8 +60,11 @@ describe("canvas read-only schema contract", () => {
       expect(expected?.definition).toMatchObject({
         bodyMd5: createHash("md5").update(body).digest("hex"), securityDefiner: false,
         argumentNames: parameters.map((parameter) => parameter.split(/\s/)[0]),
-        defaultCount: defaults.length, argumentDefaults: defaults.length ? defaults.join(", ") : null,
+        defaultCount: defaults.length,
       });
+      const recorded = (expected?.definition as Record<string, unknown>).argumentDefaults;
+      expect(typeof recorded === "string" ? recorded.split(",").map(normalizeCanvasCatalogExpressionV1) : [])
+        .toEqual(defaults.map(normalizeCanvasCatalogExpressionV1));
     }
     for (const [kind, pattern] of [
       ["table", /CREATE TABLE "(Canvas[^"]*)"/g],
@@ -106,7 +114,7 @@ describe("canvas read-only schema contract", () => {
     const definition = rows.find((item) => item.kind === "function" && item.name === "canvas_reserve_run")!.definition as Record<string, unknown>;
     definition.argumentDefaults = "NULL::text";
     expect(checkCanvasSchemaInventoryV1(rows).ready).toBe(true);
-    const body = sql.match(/CREATE FUNCTION canvas_lock_assets\([\s\S]*? AS \$\$([\s\S]*?)\$\$;/)![1];
+    const body = effectiveFunctions().get("canvas_lock_assets")![3];
     const fingerprint = (value: string) => createHash("md5").update(value.replaceAll("\r\n", "\n")).digest("hex");
     expect(fingerprint(body.replaceAll("\n", "\r\n"))).toBe(fingerprint(body));
     expect(fingerprint(body.replace("CANVAS_INVALID_INPUT", "CANVAS_INVALID_INPUT\r"))).not.toBe(fingerprint(body));
@@ -134,7 +142,7 @@ describe("canvas read-only schema contract", () => {
     expect(sql).toContain('DEFERRABLE INITIALLY DEFERRED');
     expect(sql).toContain('"physicalBytesAccounted" := true; NEW."needsReconciliation" := true');
     expect(sql).not.toMatch(/\bcurrent_time\b/i);
-    const finish = sql.slice(sql.indexOf('CREATE FUNCTION canvas_finish_asset_delete'));
+    const finish = effectiveFunctions().get("canvas_finish_asset_delete_v2")![3];
     expect(finish.indexOf('FOR UPDATE')).toBeLessThan(finish.indexOf('v_now := clock_timestamp()'));
   });
 });

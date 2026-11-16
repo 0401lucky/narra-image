@@ -42,7 +42,7 @@ return <MyWorksBoard currentUser={currentUser} ... />;
 
 ### 5.1 同步 effect 必须加挂载守卫
 
-把 server props 同步进 `useState` 的 effect，必须只跑一次，否则每次 `router.refresh()` 都会重跑并覆盖用户的本地操作。
+把 server props 用于初始化会话、分页和选择状态的 effect，必须只跑一次，否则每次 `router.refresh()` 都会重跑并覆盖用户的本地操作。图片可用性的窄事实合并见 §5.4，不能据此替换整份本地列表。
 
 ```tsx
 // src/components/create/generator-studio.tsx
@@ -95,6 +95,23 @@ if (stored.length === 0 && orphans.length > 0) {
 ```
 
 **回归测试**：`src/tests/unit/generator-studio-session-history.test.tsx`、`src/tests/unit/conversation-generations-api.test.ts`、`src/tests/unit/use-conversation-generations.test.tsx`。
+
+### 5.4 图片可用性、当前地址与用户界面状态分开合并
+
+- 图片清理不改变 `GenerationJob.updatedAt` 或终态；不能只按任务时间戳判断新旧。`mergeImageAvailabilityState(previous,incoming)` / `mergeImageAvailability(previous,incoming)` 按不可变图片 ID 保留 `cleaned`，迟到的 `available`、旧终态和缺字段缓存均不能复活已清理图片。临时 `unavailable` 在新数据明确恢复可用时可以恢复。
+- `use-studio-jobs`、会话分页、Canvas runtime/缓存合并都使用同一规则；只合并媒体事实，不覆盖提示词、计费、选中节点或场景编辑。缺失解析结果不能把已经观察到的 cleaned 状态清掉。
+- 合并必须收敛：`GeneratorStudio` 会把会话对象注册到 `useStudioJobs`，再将返回的 canonical 对象交回会话缓存。没有媒体变化时直接保留 incoming canonical，不无条件 `{...generation}` 或重建 images；否则每次 `canonical !== generation` 都再次 update/publish，两个缓存会无限回写。任务时间/终态的优先级保持原样，只有媒体事实确实变化才产生对应新对象。
+- `MyWorksBoard` 的新 server props 可以给本地列表中同 ID 的作品补充 availability 和当前 url。迁移会出现 available→available 但地址变化，不能仅比较可用性。用明确的新 props 引用/值守卫触发本组件内的窄状态更新，保留已加载分页、游标、搜索、筛选、选择和已删除记录；不重新赋值 `items = initialItems`，也不写无守卫的 props-sync effect。
+- 放大图和下载操作按当前列表/runtime 中该图片的可用性和地址决定，不能继续使用打开弹层时缓存的旧对象。`AdminWorksBoard` 按打开的 ID 从当前 works 取值。接收到 cleaned 后关闭或禁用失效查看器操作。
+- `useFeaturedGallery` 同一 viewer 的 RSC 更新只通过有界的同 ID 媒体覆盖表更新 image/availability，不重置权威分页数组/ref/游标、在途请求和点赞。每次 render 都传新数组时按值收敛；后到页结果不能覆盖已知 cleaned 或最新媒体地址。viewer 变化仍按原规则清理作用域。
+- 必测：同/旧时间戳终态覆盖、缺字段缓存、unavailable 恢复、RSC 同 ID 清理更新、已打开大图、加载第二页后刷新仍保留分页/搜索/选择、已删除条目不被 server 初值复活。完整 `generator-studio-origins` 的同账户新 props 和迟到终态用例还验证两套缓存实际组合后能停止回写；两个 hook 的独立状态断言不能替代它。
+
+| 原状态 / 新数据 | 媒体结果 | 本地界面状态 |
+| --- | --- | --- |
+| cleaned / available 或旧缓存 | cleaned | 保留用户选择与已加载数据，禁用图片消费 |
+| unavailable / 明确 available | available | 保留界面状态，可恢复图片消费 |
+| available / 新当前副本地址 | 使用新 URL | 保留分页/选择，已开查看器与下载随同 ID 更新 |
+| 本地已删除条目 / 新初始页包含它 | 不重新插入 | 保留本地删除决定 |
 
 ## 6. 表单状态
 

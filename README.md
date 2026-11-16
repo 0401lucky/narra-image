@@ -78,6 +78,19 @@ pnpm dev
 - 存储：`S3_ENDPOINT`、`S3_REGION`、`S3_ACCESS_KEY_ID`、
   `S3_SECRET_ACCESS_KEY`、`S3_BUCKET`、`S3_PUBLIC_BASE_URL`、
   `ENABLE_LOCAL_IMAGE_FALLBACK`。
+- 受管理图片：`IMAGE_STORAGE_MANAGED_ENABLED` 默认关闭；明确启用后使用
+  `IMAGE_STORAGE_BACKEND` 选择 `s3` 或 `local`，所有图片写入登记并经过全站额度预留。
+  本地模式要求同时开启受管理存储，`IMAGE_STORAGE_PATH` 是共享持久化目录，
+  `IMAGE_STORAGE_VOLUME_ID` 是该卷唯一的小写 UUID。首次使用先在空目录执行
+  `docker compose run --rm --no-deps worker /app/narra-worker --init-image-volume`
+  初始化；普通启动校验卷身份并用零字节文件验证写入能力。Node 与 Worker
+  应使用相同的文件访问身份，卷中的图片文件权限为 `0600`。
+  此模式的 `WORKER_JOB_TIMEOUT_SECONDS` 上限为 3480 秒（默认 900），为写入预留保留 120 秒余量。
+  视频文件继续使用原 S3 链路，不计入这项图片额度。
+  全站额度默认十进制 5GB，包含所有真实副本和在途预留；管理员在
+  `/admin/settings/storage` 查看用量、预览/确认清理，破坏性策略默认停用。
+  升级前先 drain 旧上传和 GC；持久卷准备、历史登记、迁移与恢复见
+  [图片存储运维](docs/image-storage.md)。
 - 内容审核：`MODERATION_ENABLED`（总开关，默认关闭）、
   `MODERATION_SENSITIVE_WORDS_ENABLED`、`MODERATION_AI_ENABLED`、
   `MODERATION_BASE_URL`、`MODERATION_API_KEY`、`MODERATION_MODEL`、
@@ -111,7 +124,12 @@ pnpm dev
   手动 CLI `worker/cmd/prompt-sync` 与管理后台同步入口共用同一实现。
 - 媒体回填：历史 data URL 图片/视频可用 `worker/cmd/backfill-media`
   转存对象存储（`--dry-run`/`--limit`/`--include-http`），幂等且仅在配置
-  S3/R2 后执行。
+  S3/R2 后处理视频。启用受管理图片后，旧图片回填同样经过额度登记，
+  可写入 LOCAL；本地模式没有 S3 时跳过视频。
+- 历史图片盘点与迁移：两个镜像均包含 `/app/narra-image-history`。
+  默认 dry-run；显式源绑定和 `--apply` 后才登记已有对象或复制。
+  `--target-location` 选择目标，默认保留源；`--retire-source` 只排入统一删除执行器。
+  此工具不扫描整个桶，视频及第三方图片不进入迁移范围，详见上述运维手册。
 - 观测：`WORKER_METRICS_WINDOW_MINUTES`、`WORKER_METRICS_TOKEN`、
   `LOG_LEVEL`。`WORKER_METRICS_TOKEN` 设置后至少 16 位。
 - `NEXT_PUBLIC_IMAGE_OPTIMIZER_BYPASS_HOSTS` 是构建期变量；修改后必须
@@ -128,18 +146,29 @@ pnpm dev
   错误码，不暴露 DSN、SQL、上游正文或密钥。
 
 `CANVAS_ENABLED=true` 时，Next 还会核验实际 Canvas schema 和自身存储能力，
-并要求 Worker `/readyz` 的 `capabilities.canvas` 精确返回
-`{"version":1,"schema":"ready","storage":"unversioned","gc":"running"}`；
+并要求 Worker `/readyz` 的 `capabilities.canvas` 返回场景版本 1、
+`storageRevision: 3`、`gcRevision: 3`，以及与 Next 相同的 provider 和 locationId。
+本地模式示例：
+
+```json
+{"version":1,"schema":"ready","storage":"local","gc":"running","storageRevision":3,"gcRevision":3,"provider":"LOCAL","locationId":"local-v1:00112233-4455-4677-8899-aabbccddeeff"}
+```
+
+S3 模式的 `storage` 为 `unversioned`、`provider` 为 `S3`，locationId 为原始 S3 tuple 的标识。
 即使 `WORKER_READINESS_REQUIRED=false`，旧版或关闭 Canvas 的 Worker 也不能
 让应用就绪。Worker 在 schema/拓扑/存储通过后启动 GC，探针和每次领取前
 重新检查能力；死亡的调度器、未知 schema 或存储均不能报告 Canvas 可用。
+受管理图片另有 `capabilities.images`，包含 `version: 1`、`schema: "ready"`、
+`provider`、`locationId`、`storageRevision: 3`、`readerRevision: 3`、`executorRevision: 3`
+与 `maintenance: "running"`；即使 Canvas 关闭，也必须通过独立清单和卷能力检查。
+Worker 的卷/维护就绪检查不依赖尚未启动的 Next 媒体路由。
 
-Canvas 导入必须配置 S3。普通 S3 通过 `GetBucketVersioning` 的原始响应验证无版本状态；
+Canvas 导入支持受管理 LOCAL 或 S3。普通 S3 通过 `GetBucketVersioning` 的原始响应验证无版本状态；
 Cloudflare R2 未实现此接口，官方 HTTPS 账户端点（含 `eu`、`fedramp`、`us`）使用
 带认证的 `HeadBucket`，仅确切 bucket 的 HTTP 200 且无版本相关响应头时通过。
 自定义端点仍按普通 S3 检查；版本已启用、暂停、拒绝访问或未知结果均关闭导入/回收。
-R2 探测不接受重定向。配置凭据或收到 403 本身不构成可用证明。GC 只删除
-已登记 IMPORT 的原始位置和精确 key，保护已保存快照及所有已提交任务的输入根，
+R2 探测不接受重定向。配置凭据或收到 403 本身不构成可用证明。兼容 GC 只处理
+尚未纳管的 S3 IMPORT 原始位置和精确 key，保护已保存快照及所有已提交任务的输入根，
 不删除生成作品或旧媒体。删除失败保留库存、物理占用和有界退避；UNKNOWN PUT
 即使遇到缺失 key 也保留墓碑及占用以核对迟到写入。Worker `/metrics` 的 `canvas`
 计数展示领取、失败、fence 失效及确认回收字节，不把远程失败计为已回收。
@@ -149,9 +178,10 @@ embedded 部署需重新创建应用容器，内嵌 Worker 会继承同一开关
 重新创建应用与独立 Worker 容器。完整 readiness 通过后，创作页显示“对话 / 画布”
 切换；管理员后台没有独立的画布开关。
 
-发布顺序是 additive migration → app/Worker 关闭 Canvas → 隔离数据库/模拟存储及
-双拓扑门禁 → 显式启用并验证。关闭开关可停止 Canvas 写入/GC；回滚仍须通过
+发布顺序是完成隔离门禁 → 停止并 drain 旧 app/Worker/GC → additive migration →
+匹配版本和持久卷就绪 → 显式启用并验证。关闭开关可停止 Canvas 写入/兼容 GC；回滚仍须通过
 现有 Worker rollback preflight，保留 schema、快照、引用、库存、任务和媒体。
+新图片 schema 即使为空也不兼容旧 Worker，关闭 managed 开关不能撤销这条约束。
 默认关闭或构建成功不代表启用态验收通过，也不授权真实数据库/对象存储操作。
 
 ## 提示词库同步

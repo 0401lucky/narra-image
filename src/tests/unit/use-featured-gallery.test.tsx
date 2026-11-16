@@ -91,6 +91,49 @@ describe("featured page command", () => {
     expect(result.current.nextCursor).toBe(galleryCursor(2));
   });
 
+  it("refreshes only matching media after migration while preserving pages, cursor and interaction data", async () => {
+    const first = createGalleryWork("work_1", { availability: "available" });
+    const second = createGalleryWork("work_2", { availability: "available" });
+    const publicUrl = `https://app.history.invalid/media/images/${"a".repeat(64)}`;
+    vi.mocked(fetch).mockResolvedValue(jsonResponse(galleryPage([second], galleryCursor(2))));
+    const { result, rerender } = renderHook((options) => useFeaturedGallery(options), {
+      initialProps: { works: [first], initialHasMore: true, initialNextCursor: galleryCursor(1) },
+    });
+    await act(async () => result.current.loadMore());
+    const incoming = { ...first, image: publicUrl, prompt: "Unrelated refresh value", likeCount: 99 };
+    rerender({ works: [incoming], initialHasMore: false, initialNextCursor: galleryCursor(99) });
+    expect(result.current.items).toEqual([{ ...first, image: publicUrl }, second]);
+    expect(result.current.nextCursor).toBe(galleryCursor(2));
+    expect(result.current.hasMore).toBe(true);
+    const settledItems = result.current.items;
+    rerender({ works: [{ ...incoming }], initialHasMore: false, initialNextCursor: galleryCursor(99) });
+    expect(result.current.items).toBe(settledItems);
+  });
+
+  it("keeps refreshed media when an in-flight page completes and does not revive a cleaned image", async () => {
+    const first = createGalleryWork("work_1", { availability: "available" });
+    const pending = deferred<ReturnType<typeof jsonResponse>>();
+    vi.mocked(fetch).mockReturnValue(pending.promise);
+    const { result, rerender } = renderHook((options) => useFeaturedGallery(options), {
+      initialProps: { works: [first], initialHasMore: true, initialNextCursor: galleryCursor(1) },
+    });
+    let loading!: Promise<void>;
+    act(() => { loading = result.current.loadMore(); });
+    rerender({ works: [{ ...first, availability: "cleaned", image: "" }], initialHasMore: true, initialNextCursor: galleryCursor(1) });
+    await act(async () => {
+      pending.resolve(jsonResponse(galleryPage([createGalleryWork("work_2")])));
+      await loading;
+    });
+    expect(result.current.items[0]).toMatchObject({ id: first.id, availability: "cleaned", image: "" });
+    rerender({ works: [first], initialHasMore: true, initialNextCursor: galleryCursor(1) });
+    expect(result.current.items[0]).toMatchObject({ availability: "cleaned", image: "" });
+    rerender({ works: [], initialHasMore: true, initialNextCursor: galleryCursor(1) });
+    expect(result.current.items[0]).toMatchObject({ availability: "cleaned", image: "" });
+    expect(result.current.items).toHaveLength(2);
+    expect(result.current.nextCursor).toBeNull();
+    expect(fetch).toHaveBeenCalledTimes(1);
+  });
+
   it("suspends a duplicate-only auto page, then permits explicit progress on its valid next cursor", async () => {
     vi.mocked(fetch)
       .mockResolvedValueOnce(jsonResponse(galleryPage(galleryWorks(1), galleryCursor(2))))

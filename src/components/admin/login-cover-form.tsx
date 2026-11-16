@@ -10,15 +10,17 @@ import type { LoginCoverConfig } from "@/lib/server/login-cover";
 
 type LoginCoverFormProps = {
   initialConfig: LoginCoverConfig;
+  resolvedCustomUrl?: string | null;
 };
 
-export function LoginCoverForm({ initialConfig }: LoginCoverFormProps) {
+export function LoginCoverForm({ initialConfig, resolvedCustomUrl }: LoginCoverFormProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [mode, setMode] = useState<"featured" | "custom">(initialConfig.mode);
   const [customUrl, setCustomUrl] = useState(initialConfig.customUrl ?? "");
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const previewUrl = customUrl === (initialConfig.customUrl ?? "") && resolvedCustomUrl !== undefined ? resolvedCustomUrl : customUrl;
 
   async function handleSave() {
     setError(null);
@@ -104,14 +106,14 @@ export function LoginCoverForm({ initialConfig }: LoginCoverFormProps) {
             placeholder="https://example.com/cover.jpg"
             className="mt-2 w-full rounded-2xl border border-[var(--line)] bg-white/70 px-4 py-3 text-sm outline-none transition focus:border-[var(--accent)]"
           />
-          {customUrl && (
+          {previewUrl && (
             <div className="mt-4 overflow-hidden rounded-2xl border border-[var(--line)]">
               <p className="border-b border-[var(--line)] bg-white/60 px-4 py-2 text-xs text-[var(--ink-soft)]">
                 预览
               </p>
               <div className="relative aspect-[3/4] max-h-80 bg-[var(--surface-strong)]">
                 <img
-                  src={customUrl}
+                  src={previewUrl}
                   alt="封面预览"
                   className="size-full object-cover"
                   onError={(e) => {

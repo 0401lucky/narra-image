@@ -2,6 +2,7 @@
 
 // 查看器和下载各自持有原图租约，不借用卡片的生命周期，也不向对话添加参考图。
 import { useCallback, useEffect, useRef, useState } from "react";
+import { imageUnavailableMessage, isImageAvailable, mergeImageAvailabilityState } from "@/lib/storage/image-availability";
 
 import type { CanvasController } from "../canvas/controller";
 import type { CanvasImageTarget } from "../parts/canvas-stage";
@@ -12,7 +13,7 @@ type PreviewLease = NonNullable<ReturnType<CanvasController["acquirePreview"]>>;
 type RetainablePreview = PreviewLease & { retain: () => PreviewLease };
 type DownloadImage = (url: string) => Promise<void>;
 type CanvasViewerImage = { src: string; meta: { dimensionLabel?: string; ratioLabel?: string } | null };
-type ViewerState = CanvasViewerImage & { controller: CanvasController };
+type ViewerState = CanvasViewerImage & { controller: CanvasController; target: CanvasImageTarget };
 type UseCanvasImageViewerResult = {
   image: CanvasViewerImage | null;
   error: string | null;
@@ -66,12 +67,22 @@ export function useCanvasImageViewer(controller: CanvasController | null, readJo
     setViewer(null);
   }, []);
 
+  const assertResultAvailable = useCallback((target: CanvasImageTarget) => {
+    if (target.kind !== "result") return;
+    const image = readJob(target.jobId)?.images.find((item) => item.id === target.imageId);
+    const active = controller?.getSnapshot().active;
+    const resolved = active?.document.id === target.canvasId ? active.images[target.imageId] : undefined;
+    const availability = mergeImageAvailabilityState(image?.availability, resolved?.jobId === target.jobId ? resolved.availability : undefined);
+    if (!isImageAvailable(availability)) throw new Error(imageUnavailableMessage(availability));
+  }, [controller, readJob]);
+
   const acquire = useCallback((target: CanvasImageTarget) => {
     if (!controller || !lifetime.current.active || lifetime.current.controller !== controller) throw new Error("图片暂时无法查看，请重新选择");
+    assertResultAvailable(target);
     const lease = target.kind === "reference" ? controller.acquirePreview(target.canvasId, target.nodeId) : null;
     if (target.url.startsWith("blob:") && !lease) throw new Error("参考原图暂不可用，请重新上传");
     return { lease, url: lease?.url ?? target.url };
-  }, [controller]);
+  }, [controller, assertResultAvailable]);
 
   const open = useCallback((target: CanvasImageTarget) => {
     try {
@@ -86,7 +97,7 @@ export function useCanvasImageViewer(controller: CanvasController | null, readJo
           : { dimensionLabel: target.actualSize ?? (target.actualWidth && target.actualHeight ? `${target.actualWidth}x${target.actualHeight}` : undefined) };
       }
       setError(null);
-      setViewer({ controller: controller!, src: url, meta });
+      setViewer({ controller: controller!, src: url, meta, target });
     } catch (failure) { if (lifetime.current.active && lifetime.current.controller === controller) setError(failure instanceof Error ? failure.message : "图片暂时无法查看"); }
   }, [acquire, controller, readJob]);
 
@@ -104,10 +115,11 @@ export function useCanvasImageViewer(controller: CanvasController | null, readJo
   const download = useCallback((target: CanvasImageTarget, downloadImage: DownloadImage) => performDownload(() => acquire(target), downloadImage), [acquire, performDownload]);
   const downloadCurrent = useCallback((downloadImage: DownloadImage) => performDownload(() => {
     if (!viewer || viewer.controller !== controller || !lifetime.current.active || lifetime.current.controller !== controller) throw new Error("图片暂时无法查看，请重新选择");
+    assertResultAvailable(viewer.target);
     const lease = preview.current?.url === viewer.src ? preview.current.retain() : null;
     if (viewer.src.startsWith("blob:") && !lease) throw new Error("参考原图暂不可用，请重新上传");
     return { url: viewer.src, lease };
-  }, downloadImage), [controller, performDownload, viewer]);
+  }, downloadImage), [controller, performDownload, assertResultAvailable, viewer]);
 
   return { image: viewer?.controller === controller ? viewer : null, error, dismissError: () => setError(null), open, close, download, downloadCurrent };
 }

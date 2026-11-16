@@ -4,7 +4,8 @@ import { CANVAS_LIMITS } from "@/lib/canvas/contracts";
 import { encodeCanvasCursor, type CanvasKeyset } from "@/lib/canvas/cursors";
 import type { ConversationGenerationsPage, StudioConversationSummary } from "@/lib/conversations/contracts";
 import { db } from "@/lib/db";
-import { serializeGeneration } from "@/lib/prisma-mappers";
+import { serializeGenerationsForClient } from "@/lib/prisma-mappers";
+import { imageAvailabilityInclude } from "@/lib/storage/image-availability";
 import { canvasCanonicalIdSchema, canvasPageQuerySchema } from "@/lib/validators";
 
 export class ConversationContentError extends Error {
@@ -54,7 +55,7 @@ export async function listConversationGenerations({
       } : {}),
     },
     include: {
-      images: { orderBy: [{ createdAt: "asc" }, { id: "asc" }] },
+      images: { include: imageAvailabilityInclude, orderBy: [{ createdAt: "asc" }, { id: "asc" }] },
       videos: { orderBy: [{ createdAt: "asc" }, { id: "asc" }] },
     },
     orderBy: [{ createdAt: "desc" }, { id: "desc" }],
@@ -64,7 +65,7 @@ export async function listConversationGenerations({
   const last = visible.at(-1);
   return {
     conversationId: id.data,
-    generations: visible.map(serializeGeneration),
+    generations: await serializeGenerationsForClient(visible),
     nextCursor: jobs.length > page.data.limit && last
       ? encodeCanvasCursor({ ownerId, scope: "conversation", parentId: id.data }, { at: last.createdAt, id: last.id })
       : null,

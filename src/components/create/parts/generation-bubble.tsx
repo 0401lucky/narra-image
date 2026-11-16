@@ -9,6 +9,8 @@ import { useState } from "react";
 
 import { getAspectRatio as getGenerationAspectRatio } from "@/lib/generation/sizes";
 import { getThumbUrl } from "@/lib/image-url";
+import { isImageAvailable } from "@/lib/storage/image-availability";
+import { ImageUnavailable } from "@/components/ui/image-unavailable";
 
 import {
   describeSizeDowngrade,
@@ -162,6 +164,7 @@ export function GenerationBubble({
                 }`}
               >
                 {generation.images.map((image) => {
+                  const imageAvailable = isImageAvailable(image.availability);
                   const downgrade = describeSizeDowngrade(generation, image);
                   const dimensionLabel = getImageDimensionLabel(generation, image);
                   const ratioLabel = getImageRatioLabel(generation, image);
@@ -174,14 +177,14 @@ export function GenerationBubble({
                         className="relative overflow-hidden bg-[var(--surface-strong)]/40"
                         style={getGenerationAspectRatio(generation.size) ? { aspectRatio: getGenerationAspectRatio(generation.size) } : undefined}
                       >
-                        <img
+                        {imageAvailable ? <img
                           src={getThumbUrl(image.url, 640)}
                           alt="生成结果"
                           loading="lazy"
                           decoding="async"
                           className="size-full cursor-pointer object-cover transition-transform duration-200 ease-out hover:scale-[1.015]"
                           onClick={() => onZoom(image.url, { dimensionLabel, ratioLabel })}
-                        />
+                        /> : <ImageUnavailable availability={image.availability} className="size-full min-h-40" />}
                         <div className="absolute bottom-2 left-2 flex flex-wrap gap-1.5">
                           <span className="inline-flex items-center gap-1 rounded-full bg-black/58 px-2 py-1 text-[10px] font-medium text-white shadow-sm backdrop-blur-sm">
                             <Ruler className="size-3" />
@@ -207,6 +210,7 @@ export function GenerationBubble({
                         <div className="grid min-w-0 grid-cols-2 gap-1.5">
                           <button
                             type="button"
+                            disabled={!imageAvailable}
                             onClick={() => onUseForEdit(image.url)}
                             className="relative z-10 inline-flex min-h-8 min-w-0 cursor-pointer touch-manipulation items-center justify-center gap-1 rounded-full border border-[var(--line)] bg-[#f3eadc] px-2 py-1.5 text-[11px] font-medium text-[var(--ink)] transition-colors duration-150 hover:border-[var(--accent)] hover:bg-[#fff6e8] hover:text-[var(--accent)] active:scale-[0.98] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
                           >
@@ -227,6 +231,7 @@ export function GenerationBubble({
                         <div className="flex shrink-0 items-center gap-0.5">
                           <button
                             type="button"
+                            disabled={!imageAvailable}
                             onClick={() => onZoom(image.url, { dimensionLabel, ratioLabel })}
                             className="rounded-lg p-1.5 text-[var(--ink-soft)] transition hover:bg-[var(--surface-strong)] hover:text-[var(--ink)]"
                             title="放大查看"
@@ -235,6 +240,7 @@ export function GenerationBubble({
                           </button>
                           <button
                             type="button"
+                            disabled={!imageAvailable}
                             onClick={() => onDownload(image.url)}
                             className="rounded-lg p-1.5 text-[var(--ink-soft)] transition hover:bg-[var(--surface-strong)] hover:text-[var(--ink)]"
                             title="下载保存"

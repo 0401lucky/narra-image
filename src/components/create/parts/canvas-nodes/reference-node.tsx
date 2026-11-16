@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { CANVAS_IMPORT_IMAGE_TYPES } from "@/lib/canvas/contracts";
 import { getThumbUrl } from "@/lib/image-url";
+import { imageUnavailableMessage, isImageAvailable } from "@/lib/storage/image-availability";
 import { cn } from "@/lib/utils";
 
 import { CANVAS_INPUT_CLASS, CANVAS_PORTS, CANVAS_REFERENCE_LABELS } from "../../canvas/renderer-constants";
@@ -16,7 +17,7 @@ import { CanvasNodeShell, CanvasPort } from "./node-shell";
 export function CanvasReferenceNode({ data, selected }: NodeProps<CanvasReferenceFlowNode>) {
   return <CanvasNodeShell kind="reference" selected={selected} readOnly={data.readOnly} previewOnly={data.previewOnly} onRemove={() => data.actions.removeNode(data.node.id)}>
     <CanvasReferenceContent data={data} />
-    <CanvasPort id={CANVAS_PORTS.imageOutput} type="source" label="参考图输出" readOnly={data.readOnly || Boolean(data.previewOnly) || data.graphView === false} />
+    <CanvasPort id={CANVAS_PORTS.imageOutput} type="source" label="参考图输出" readOnly={data.readOnly || Boolean(data.previewOnly) || data.graphView === false || !isImageAvailable(data.reference?.availability)} />
   </CanvasNodeShell>;
 }
 
@@ -56,7 +57,7 @@ export function CanvasReferenceContent({ data }: CanvasReferenceContentProps) {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={getThumbUrl(target.url, 640)} alt="画布参考图" draggable={false} loading="lazy" decoding="async" />
         </div> : (
-          <div className={styles.missingImage}><ImageOff aria-hidden className="size-8" /><span>参考原图暂不可用</span></div>
+          <div className={styles.missingImage}><ImageOff aria-hidden className="size-8" /><span>{reference?.availability ? imageUnavailableMessage(reference.availability) : "参考原图暂不可用"}</span></div>
         )}
         <p className={cn(styles.referenceState, state === "missing" && styles.problemText)} role="status">{CANVAS_REFERENCE_LABELS[state]}</p>
         {!previewOnly && <div className={cn(CANVAS_INPUT_CLASS, styles.nodeActions)} onClick={(event) => event.stopPropagation()}>

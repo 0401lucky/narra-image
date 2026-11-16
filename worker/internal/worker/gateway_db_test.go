@@ -179,6 +179,14 @@ SELECT "workerManaged", "clientSource", model FROM "GenerationJob" WHERE id = $1
 		}
 	})
 
+	t.Run("managed token inputs keep exact aliases and permanent roots with writes disabled", func(t *testing.T) {
+		reset()
+		insertUser("gw_input_user")
+		insertUser("gw_input_source_owner")
+		insertAPIKey("gw_input_key", "gw_input_user")
+		testGatewayManagedInputAliasesDB(t, ctx, pool, "gw_input_user", "gw_input_key", "gw_input_source_owner")
+	})
+
 	t.Run("wait returns succeeded result with images", func(t *testing.T) {
 		reset()
 		insertUser("gw_user_d")

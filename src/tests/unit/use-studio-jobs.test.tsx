@@ -119,6 +119,42 @@ describe("useStudioJobs", () => {
     expect(result.current.getJob(pending.id)).toMatchObject({ status: "succeeded", images: terminal.images, sourceImageUrls: ["https://media.invalid/source.png"] });
   });
 
+  it.each(["equal timestamp", "older timestamp", "legacy availability"])("does not resurrect cleaned images from a DTO with %s", (source) => {
+    const notify = vi.fn();
+    const readable: GenerationItem = { ...terminal, images: terminal.images.map((image) => ({ ...image, availability: "available" })) };
+    const { result } = renderHook(() => useStudioJobs({ ownerId: "owner_a", onConversationUpdate: notify }));
+    act(() => result.current.registerConversation("conversation_a", readable));
+    act(() => result.current.updateJob({ ...readable, images: readable.images.map((image) => ({ ...image, availability: "cleaned" })) }));
+    const cleaned = result.current.getJob(terminal.id);
+    act(() => result.current.updateJob({
+      ...readable,
+      updatedAt: source === "older timestamp" ? "2026-10-02T00:00:00.000Z" : readable.updatedAt,
+      images: source === "legacy availability" ? terminal.images : readable.images,
+    }));
+    expect(result.current.getJob(terminal.id)).toBe(cleaned);
+    expect(cleaned).toMatchObject({ status: "succeeded", creditsSpent: terminal.creditsSpent, prompt: terminal.prompt, images: [{ id: "image_a", availability: "cleaned" }] });
+    expect(notify).toHaveBeenCalledTimes(2);
+    expect(fetch).not.toHaveBeenCalled();
+  });
+
+  it("learns cleanup from older task metadata without reverting the generation facts", () => {
+    const current: GenerationItem = { ...terminal, prompt: "current prompt", updatedAt: "2026-10-05T00:00:00.000Z" };
+    const { result } = renderHook(() => useStudioJobs({ ownerId: "owner_a" }));
+    act(() => result.current.registerConversation("conversation_a", current));
+    act(() => result.current.updateJob({ ...terminal, images: terminal.images.map((image) => ({ ...image, availability: "cleaned" })) }));
+    expect(result.current.getJob(terminal.id)).toMatchObject({
+      prompt: current.prompt, status: current.status, creditsSpent: current.creditsSpent, updatedAt: current.updatedAt,
+      images: [{ id: "image_a", availability: "cleaned" }],
+    });
+  });
+
+  it("allows a temporarily unavailable image to recover without a new generation timestamp", () => {
+    const { result } = renderHook(() => useStudioJobs({ ownerId: "owner_a" }));
+    act(() => result.current.registerConversation("conversation_a", { ...terminal, images: terminal.images.map((image) => ({ ...image, availability: "unavailable" })) }));
+    act(() => result.current.updateJob({ ...terminal, images: terminal.images.map((image) => ({ ...image, availability: "available" })) }));
+    expect(result.current.getJob(terminal.id)).toMatchObject({ status: "succeeded", images: [{ id: "image_a", availability: "available" }] });
+  });
+
   it("keeps the first conversation origin immutable even if another workspace registers the same ID", async () => {
     const onConversationUpdate = vi.fn();
     const canvasUpdate = vi.fn();
@@ -329,6 +365,49 @@ describe("captured conversation membership", () => {
     const jobs = useStudioJobs({ ownerId: "owner_a", onConversationUpdate: (_id, job) => content.updateGeneration(job) });
     return { content, jobs };
   }
+
+  it("settles repeated canonical echoes and publishes a cleanup change only once", () => {
+    const { result } = renderHook(() => useScopedJobs());
+    act(() => {
+      result.current.content.selectConversation("conversation_a");
+      result.current.content.acceptGeneration("conversation_a", terminal);
+    });
+    const readableView = result.current.content.generations;
+    act(() => {
+      const canonical = result.current.jobs.registerConversation("conversation_a", terminal);
+      expect(canonical).not.toBe(terminal);
+      result.current.content.updateGeneration(canonical);
+    });
+    // The studio owns a copy, but synchronizing the same facts must not publish
+    // a new conversation list that triggers another registration effect.
+    expect(result.current.content.generations).toBe(readableView);
+    act(() => result.current.jobs.updateJob({
+      ...terminal, images: terminal.images.map((image) => ({ ...image, availability: "cleaned" })),
+    }));
+    const cleanedCanonical = result.current.jobs.getJob(terminal.id)!;
+    const cleanedView = result.current.content.generations;
+    expect(cleanedView).not.toBe(readableView);
+    expect(cleanedView[0]).toBe(cleanedCanonical);
+    expect(cleanedView[0]).toMatchObject({ status: "succeeded", creditsSpent: terminal.creditsSpent, prompt: terminal.prompt, images: [{ id: "image_a", availability: "cleaned" }] });
+
+    for (const incoming of [
+      cleanedCanonical,
+      { ...cleanedCanonical, images: cleanedCanonical.images.map((image) => ({ ...image })) },
+      terminal,
+    ]) {
+      act(() => {
+        result.current.content.updateGeneration(incoming);
+        const canonical = result.current.jobs.registerConversation("conversation_a", result.current.content.generations[0]);
+        result.current.content.updateGeneration(canonical);
+        expect(result.current.content.acceptGeneration("conversation_a", canonical)).toBe(true);
+      });
+      expect(result.current.content.generations).toBe(cleanedView);
+      expect(result.current.jobs.getJob(terminal.id)).toBe(cleanedCanonical);
+    }
+    expect(result.current.content.conversationId).toBe("conversation_a");
+    expect(result.current.jobs.pendingGenerations).toEqual([]);
+    expect(fetch).not.toHaveBeenCalled();
+  });
 
   it("merges an A response while B is selected without projecting A into B", async () => {
     const { result } = renderHook(() => useScopedJobs());

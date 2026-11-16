@@ -76,6 +76,18 @@
       "refundable": true,
       "userMessage": "参考图无效或无法读取"
     },
+    "IMAGE_QUOTA_EXCEEDED": {
+      "category": "validation",
+      "retryable": false,
+      "refundable": true,
+      "userMessage": "图片存储空间不足，请清理后重试"
+    },
+    "IMAGE_STORAGE_UNAVAILABLE": {
+      "category": "configuration",
+      "retryable": false,
+      "refundable": true,
+      "userMessage": "图片存储暂不可用，请稍后重试"
+    },
     "GENERATION_CANCELLED": {
       "category": "cancelled",
       "retryable": false,

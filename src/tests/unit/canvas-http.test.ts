@@ -140,6 +140,33 @@ describe("shared strict owner keysets", () => {
 });
 
 describe("bounded canvas transactions", () => {
+  it("waits for the reference gate before entering a business transaction and fails closed when it cannot lock", async () => {
+    const events: string[] = [];
+    let release!: () => void;
+    const gate = new Promise<void>((resolve) => { release = resolve; });
+    const execute = vi.fn(async (parts: TemplateStringsArray) => {
+      expect(parts.join("")).toBe("SELECT image_lock_reference_epoch()");
+      events.push("gate");
+      await gate;
+      return 1;
+    });
+    const tx = { $executeRaw: execute } as unknown as CanvasTransaction;
+    const database = { $transaction: vi.fn() };
+    database.$transaction.mockImplementation(async (operation: (client: CanvasTransaction) => Promise<string>) => operation(tx));
+    const operation = vi.fn(async () => { events.push("business"); return "committed"; });
+    const result = canvasTransaction(operation, database);
+    await vi.waitFor(() => expect(events).toEqual(["gate"]));
+    expect(operation).not.toHaveBeenCalled();
+    release();
+    await expect(result).resolves.toBe("committed");
+    expect(events).toEqual(["gate", "business"]);
+
+    execute.mockRejectedValueOnce({ code: "08006" });
+    operation.mockClear();
+    await expect(canvasTransaction(operation, database)).rejects.toMatchObject({ code: "08006" });
+    expect(operation).not.toHaveBeenCalled();
+  });
+
   it.each([canvasGuardSqlState, "P0001", "40P01"])("handles the real Prisma CRUD adapter error for %s without a database", async (code) => {
     const pool = new Pool({ host: "127.0.0.1", port: 1 });
     const query = vi.spyOn(pool, "query").mockRejectedValue(Object.assign(new Error("CANVAS_QUOTA_EXCEEDED"), { code, severity: "ERROR" }));

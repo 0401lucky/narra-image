@@ -2,7 +2,8 @@ import { redirect } from "next/navigation";
 import { GenerationType } from "@prisma/client";
 
 import { db } from "@/lib/db";
-import { serializeGeneration, serializeUser } from "@/lib/prisma-mappers";
+import { serializeGenerationsForClient, serializeUser } from "@/lib/prisma-mappers";
+import { imageAvailabilityInclude } from "@/lib/storage/image-availability";
 import { getCurrentUserRecord } from "@/lib/server/current-user";
 import { getPublicTurnstileConfig } from "@/lib/auth/turnstile";
 import { SiteHeader } from "@/components/marketing/site-header";
@@ -27,7 +28,7 @@ export default async function VideoPage() {
         generationType: { in: [GenerationType.TEXT_TO_VIDEO, GenerationType.IMAGE_TO_VIDEO] },
       },
       include: {
-        images: { orderBy: { createdAt: "asc" } },
+        images: { include: imageAvailabilityInclude, orderBy: { createdAt: "asc" } },
         videos: { orderBy: { createdAt: "asc" } },
       },
       orderBy: { createdAt: "desc" },
@@ -53,7 +54,7 @@ export default async function VideoPage() {
       <section className="relative flex flex-1 flex-col overflow-hidden">
         <VideoStudio
           currentUser={currentUser}
-          initialGenerations={jobs.map(serializeGeneration)}
+          initialGenerations={await serializeGenerationsForClient(jobs)}
           channels={serializedChannels}
           turnstile={{
             isEnabled: turnstileConfig.isEnabled,

@@ -63,6 +63,7 @@ vi.mock("@/lib/storage/persist-generated-image", () => ({
 import { runExternalGeneration } from "@/lib/generation/external-api";
 
 const tx = {
+  $executeRaw: vi.fn().mockResolvedValue(1),
   generationJob: {
     create: mockCreateGenerationJob,
   },

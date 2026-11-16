@@ -4,8 +4,9 @@ import (
 	"context"
 	"database/sql"
 	"errors"
-	"fmt"
 	"time"
+
+	"github.com/jackc/pgx/v5"
 )
 
 var (
@@ -33,6 +34,61 @@ type gatewayJob struct {
 // Next 已预扣积分并完成渠道/媒体校验，这里只落库并开放 Worker 领取，
 // 不重复扣分、不重复上传参考图。
 func (w *Worker) ensureGatewayJob(ctx context.Context, env gatewayEnvelope) (gatewayJob, error) {
+	// A completed/replayed job keeps its frozen inputs. Do not revalidate the
+	// new envelope's source URLs or register aliases for an existing job.
+	if existing, err := w.readGatewayJob(ctx, env.JobID, env.Auth.APIKeyID); err == nil {
+		return existing, nil
+	} else if !errors.Is(err, errGatewayJobNotFound) {
+		return gatewayJob{}, err
+	}
+	repository := NewImageRepository(w.pool)
+	var reservation ImageReservation
+	committed := false
+	if w.cfg.ImageStorageManagedEnabled {
+		var err error
+		budget, budgetErr := ImageOutputBudget(env.Payload.Count)
+		if budgetErr != nil {
+			return gatewayJob{}, budgetErr
+		}
+		reservation, err = reserveImageWithCleanup(ctx, repository, env.Auth.UserID, "output:"+env.JobID, budget,
+			func(reserveCtx context.Context) (ImageReservation, error) {
+				return repository.ReserveOutputs(reserveCtx, ImageReserveOutputsInput{OwnerID: env.Auth.UserID, IntentKey: "output:" + env.JobID, Count: env.Payload.Count})
+			})
+		if err != nil {
+			if existing, readErr := w.readGatewayJob(ctx, env.JobID, env.Auth.APIKeyID); readErr == nil {
+				return existing, nil
+			}
+			return gatewayJob{}, err
+		}
+		defer func() {
+			if !committed {
+				finishCtx, cancel := context.WithTimeout(context.WithoutCancel(ctx), 5*time.Second)
+				defer cancel()
+				_, _ = repository.CloseReservation(finishCtx, ImageCloseReservationInput{ReservationID: reservation.ID, Token: reservation.Token})
+			}
+		}()
+	}
+	// Reference protection is independent of the new-output write flag. The
+	// epoch precedes both alias locks and business rows, including empty-input
+	// jobs, whose database trigger also acquires the same reference epoch.
+	transaction, err := w.pool.BeginTx(ctx, pgx.TxOptions{})
+	if err != nil {
+		return gatewayJob{}, err
+	}
+	defer rollbackSilently(ctx, transaction)
+	if err := lockImageReferenceEpoch(ctx, transaction); err != nil {
+		return gatewayJob{}, err
+	}
+	// Another request may have committed this job while the first lookup was
+	// waiting for the epoch. Replay that row before validating new inputs.
+	if existing, err := readGatewayJobFrom(ctx, transaction, env.JobID, env.Auth.APIKeyID); err == nil {
+		return existing, nil
+	} else if !errors.Is(err, errGatewayJobNotFound) {
+		return gatewayJob{}, err
+	}
+	if err := registerGatewayManagedInputAliases(ctx, NewImageRepository(transaction), w.cfg.AppURL, env.SourceImageURLs); err != nil {
+		return gatewayJob{}, err
+	}
 	writeFields := sharedContractWriteFields(w.cfg.ContractsV1Enabled)
 	now := time.Now().UTC()
 	handoff := sql.NullString{}
@@ -46,7 +102,7 @@ func (w *Worker) ensureGatewayJob(ctx context.Context, env gatewayEnvelope) (gat
 	outputCompression := nullableInt(env.Payload.OutputCompression)
 	seed := nullableInt(env.Payload.Seed)
 
-	_, err := w.pool.Exec(ctx, `
+	_, err = transaction.Exec(ctx, `
 INSERT INTO "GenerationJob" (
   id, "userId", "apiKeyId", "workerManaged", "clientSource",
   "generationType", "providerMode", "providerChannelId", "providerModels",
@@ -88,14 +144,36 @@ ON CONFLICT (id) DO NOTHING
 	if err != nil {
 		return gatewayJob{}, err
 	}
+	var apiKeyID string
+	if err := transaction.QueryRow(ctx, `SELECT "apiKeyId" FROM "GenerationJob" WHERE id=$1`, env.JobID).Scan(&apiKeyID); err != nil {
+		return gatewayJob{}, err
+	}
+	if apiKeyID != env.Auth.APIKeyID {
+		return gatewayJob{}, errGatewayJobConflict
+	}
+	if w.cfg.ImageStorageManagedEnabled {
+		if _, err := NewImageRepository(transaction).BindReservation(ctx, ImageBindReservationInput{
+			ReservationID: reservation.ID, Token: reservation.Token, OwnerID: env.Auth.UserID, JobID: env.JobID,
+		}); err != nil {
+			return gatewayJob{}, err
+		}
+	}
+	if err := transaction.Commit(ctx); err != nil {
+		return gatewayJob{}, err
+	}
+	committed = true
 
 	return w.readGatewayJob(ctx, env.JobID, env.Auth.APIKeyID)
 }
 
 // readGatewayJob 读回 job 并校验 apiKeyId 归属，防止跨 API Key 复用 jobId。
 func (w *Worker) readGatewayJob(ctx context.Context, jobID string, apiKeyID string) (gatewayJob, error) {
+	return readGatewayJobFrom(ctx, w.pool, jobID, apiKeyID)
+}
+
+func readGatewayJobFrom(ctx context.Context, queryer ImageQueryer, jobID string, apiKeyID string) (gatewayJob, error) {
 	var job gatewayJob
-	err := w.pool.QueryRow(ctx, `
+	err := queryer.QueryRow(ctx, `
 SELECT
   id, "userId", "apiKeyId", status, "contractVersion", "handoffState",
   "errorCode", "errorMessage", "creditsSpent", count, model, "createdAt"
@@ -117,7 +195,7 @@ WHERE id = $1
 	)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return gatewayJob{}, fmt.Errorf("生成任务不存在: %s", jobID)
+			return gatewayJob{}, errGatewayJobNotFound
 		}
 		return gatewayJob{}, err
 	}

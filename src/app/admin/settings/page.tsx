@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { Cog, ImageIcon, KeyRound, Server, ShieldAlert, ShieldCheck } from "lucide-react";
+import { Cog, HardDrive, ImageIcon, KeyRound, Server, ShieldAlert, ShieldCheck } from "lucide-react";
 
 import { SettingsSubNav } from "@/components/admin/settings-sub-nav";
 import { requireAdminRecord } from "@/lib/server/current-user";
@@ -12,6 +12,12 @@ export const metadata = {
 };
 
 const cards = [
+  {
+    href: "/admin/settings/storage",
+    icon: HardDrive,
+    title: "图片存储",
+    description: "查看图片用量，配置容量与保留期限，预览并清理可回收的历史图片。",
+  },
   {
     href: "/admin/settings/oauth",
     icon: KeyRound,

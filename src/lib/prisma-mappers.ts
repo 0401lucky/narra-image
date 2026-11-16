@@ -11,9 +11,12 @@ import {
   type User,
 } from "@prisma/client";
 
-import type { ProviderMode as UiProviderMode, UserRole } from "@/lib/types";
+import type { ImageAvailability, ProviderMode as UiProviderMode, UserRole } from "@/lib/types";
 import type { GenerationType as UiGenerationType } from "@/lib/types";
 import { canShowWorkPrompt, type WorkShowcaseStatus } from "@/lib/work-showcase";
+import { isImageAvailable, type ImageAvailabilitySource } from "@/lib/storage/image-availability";
+import { presentGenerationImage } from "@/lib/storage/image-presentation";
+import { projectGenerationSourceUrls, type ImageSourceUrlReader } from "@/lib/storage/image-source-presentation";
 
 export type SerializedGeneration = {
   cancelRequestedAt: string | null;
@@ -33,6 +36,7 @@ export type SerializedGeneration = {
   aspectRatio: string | null;
   durationSeconds: number | null;
   images: Array<{
+    availability?: ImageAvailability;
     actualHeight: number | null;
     actualSize: string | null;
     actualWidth: number | null;
@@ -93,14 +97,14 @@ type WorkJobFields = Pick<
 
 type WorkReviewerFields = Pick<User, "email" | "id">;
 
-export type WorkRecord = GenerationImage & {
+export type WorkRecord = GenerationImage & ImageAvailabilitySource & {
   job: WorkJobFields & {
     user?: { nickname: string | null } | null;
   };
   reviewedBy?: WorkReviewerFields | null;
 };
 
-export type AdminWorkRecord = GenerationImage & {
+export type AdminWorkRecord = GenerationImage & ImageAvailabilitySource & {
   job: WorkJobFields & {
     user: WorkReviewerFields & { nickname: string | null };
   };
@@ -108,6 +112,7 @@ export type AdminWorkRecord = GenerationImage & {
 };
 
 export type SerializedWork = {
+  availability?: ImageAvailability;
   authorNickname: string | null;
   createdAt: string;
   featuredAt: string | null;
@@ -141,6 +146,7 @@ export type SerializedAdminWork = SerializedWork & {
 };
 
 export type SerializedPublicWorkDetail = {
+  availability?: ImageAvailability;
   authorNickname: string | null;
   createdAt: string;
   featuredAt: string | null;
@@ -155,6 +161,7 @@ export type SerializedPublicWorkDetail = {
 };
 
 export type SerializedFeaturedWork = {
+  availability?: ImageAvailability;
   authorAvatar: string | null;
   authorName: string;
   featuredAt: string | null;
@@ -226,7 +233,9 @@ export function serializeUser(user: Pick<User, "id" | "email" | "role" | "credit
 }
 
 export function serializeWork(work: WorkRecord): SerializedWork {
+  const presentation = presentGenerationImage(work);
   return {
+    availability: presentation.availability,
     authorNickname: work.job.user?.nickname ?? null,
     createdAt: work.createdAt.toISOString(),
     featuredAt: work.featuredAt?.toISOString() ?? null,
@@ -256,7 +265,7 @@ export function serializeWork(work: WorkRecord): SerializedWork {
     showPromptPublic: work.showPromptPublic,
     size: work.job.size,
     submittedAt: work.submittedAt?.toISOString() ?? null,
-    url: work.url,
+    url: presentation.url,
   };
 }
 
@@ -279,6 +288,7 @@ export function serializePublicWorkDetail(work: SerializedWork): SerializedPubli
   });
 
   return {
+    availability: work.availability ?? "available",
     authorNickname: work.authorNickname,
     createdAt: work.createdAt,
     featuredAt: work.featuredAt,
@@ -289,7 +299,7 @@ export function serializePublicWorkDetail(work: SerializedWork): SerializedPubli
     showcaseStatus: work.showcaseStatus,
     showPromptPublic: work.showPromptPublic,
     size: work.size,
-    url: work.url,
+    url: isImageAvailable(work.availability) ? work.url : "",
   };
 }
 
@@ -307,12 +317,14 @@ export type FeaturedWorkRecord = WorkRecord & {
 
 export function serializeFeaturedWork(work: FeaturedWorkRecord): SerializedFeaturedWork {
   const author = work.job.user;
+  const presentation = presentGenerationImage(work);
   return {
+    availability: presentation.availability,
     authorAvatar: author.avatarUrl,
     authorName: author.nickname || "匿名创作者",
     featuredAt: work.featuredAt?.toISOString() ?? null,
     id: work.id,
-    image: work.url,
+    image: presentation.url,
     likeCount: work._count?.likes ?? 0,
     likedByMe: Boolean(work.likes?.length),
     prompt: work.showPromptPublic ? work.job.prompt : "作者未公开提示词",
@@ -368,7 +380,7 @@ export function serializeFeaturedVideo(video: FeaturedVideoRecord): SerializedFe
 }
 
 export function serializeGeneration(
-  job: GenerationJob & { images: GenerationImage[]; videos?: GeneratedVideo[] },
+  job: GenerationJob & { images: Array<GenerationImage & ImageAvailabilitySource>; videos?: GeneratedVideo[] },
 ): SerializedGeneration {
   const generationType = fromPrismaGenerationType(
     "generationType" in job && job.generationType
@@ -437,12 +449,14 @@ export function serializeGeneration(
       const width = "width" in image && typeof image.width === "number" ? image.width : null;
       const height = "height" in image && typeof image.height === "number" ? image.height : null;
       const actualSize = width && height ? `${width}x${height}` : null;
+      const presentation = presentGenerationImage(image);
       return {
+        availability: presentation.availability,
         actualHeight: height,
         actualSize,
         actualWidth: width,
         id: image.id,
-        url: image.url,
+        url: presentation.url,
       };
     }),
     videos:
@@ -493,4 +507,16 @@ export function serializeGeneration(
           : "pending",
     updatedAt: job.updatedAt.toISOString(),
   };
+}
+
+export async function serializeGenerationsForClient(
+  jobs: Array<Parameters<typeof serializeGeneration>[0]>, reader?: ImageSourceUrlReader,
+): Promise<SerializedGeneration[]> {
+  return projectGenerationSourceUrls(jobs.map(serializeGeneration), reader);
+}
+
+export async function serializeGenerationForClient(
+  job: Parameters<typeof serializeGeneration>[0], reader?: ImageSourceUrlReader,
+): Promise<SerializedGeneration> {
+  return (await serializeGenerationsForClient([job], reader))[0];
 }

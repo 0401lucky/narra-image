@@ -186,8 +186,8 @@ async function age(id: string, seconds = 604801) {
 async function claim(location: string, client = db) {
   const token = randomUUID();
   await client.query('UPDATE "CanvasGcLease" SET token=NULL,"expiresAt"=NULL WHERE id=\'canvas-imports\'');
-  expect((await client.query('SELECT canvas_acquire_gc_lease($1) AS ok', [token])).rows[0].ok).toBe(true);
-  return (await client.query('SELECT * FROM canvas_claim_imports($1,$2,20)', [token, location])).rows;
+  expect((await client.query('SELECT canvas_acquire_gc_lease_v2($1) AS ok', [token])).rows[0].ok).toBe(true);
+  return (await client.query('SELECT * FROM canvas_claim_imports_v2($1,$2,20)', [token, location])).rows;
 }
 
 describe("canvas v1 disposable PostgreSQL (not ordinary Vitest)", () => {
@@ -322,11 +322,19 @@ describe("canvas v1 disposable PostgreSQL (not ordinary Vitest)", () => {
     const user = await owner(); const id = await canvas(user); const first = await asset(user); const a = await connection(); const b = await connection();
     await age(first.id);
     await a.query("BEGIN");
+    let pendingClaim: ReturnType<typeof claim> | undefined;
     try {
       await save(user, id, scene([first.id]), 0, randomUUID(), a);
-      expect(await claim(first.location, b)).toEqual([]);
+      const blocker = (await a.query("SELECT pg_backend_pid() AS pid")).rows[0].pid;
+      const waiter = (await b.query("SELECT pg_backend_pid() AS pid")).rows[0].pid;
+      pendingClaim = claim(first.location, b);
+      void pendingClaim.catch(() => undefined);
+      // The history/reference epoch now precedes individual SKIP LOCKED rows.
+      // Prove that the other connection waits, then rechecks the committed root.
+      await waitForBlock(waiter, blocker);
       await a.query("COMMIT");
-    } catch (error) { await a.query("ROLLBACK"); throw error; }
+      expect(await pendingClaim).toEqual([]);
+    } catch (error) { await a.query("ROLLBACK"); await pendingClaim?.catch(() => undefined); throw error; }
     const second = await asset(user); await age(second.id);
     await a.query("BEGIN");
     try {
@@ -458,30 +466,30 @@ describe("canvas v1 disposable PostgreSQL (not ordinary Vitest)", () => {
       const invalid = { ...wire(await canvas(user)), parameters: { ...parameters, [field]: null } };
       await expect(db.query('SELECT canvas_assert_run_snapshot($1::jsonb)', [JSON.stringify(invalid)])).rejects.toMatchObject({ message: "CANVAS_INVALID_INPUT" });
     }
-    await expect(db.query('SELECT * FROM canvas_claim_imports($1,$2,NULL)', [randomUUID(), original.location])).rejects.toMatchObject({ message: "CANVAS_LIMIT_EXCEEDED" });
+    await expect(db.query('SELECT * FROM canvas_claim_imports_v2($1,$2,NULL)', [randomUUID(), original.location])).rejects.toMatchObject({ message: "CANVAS_LIMIT_EXCEEDED" });
   });
 
   it("retains failed deletes with backoff, verifies leases after blocking, and keeps the inventory", async () => {
     const user = await owner(); const original = await asset(user); await age(original.id);
     const [first] = await claim(original.location);
-    expect((await db.query('SELECT canvas_finish_asset_delete($1,$2,\'FAILED\',\'CANVAS_STORAGE_UNAVAILABLE\') AS ok', [original.id, first.deleteToken])).rows[0].ok).toBe(true);
+    expect((await db.query('SELECT canvas_finish_asset_delete_v2($1,$2,\'FAILED\',\'CANVAS_STORAGE_UNAVAILABLE\') AS ok', [original.id, first.deleteToken])).rows[0].ok).toBe(true);
     expect(await claim(original.location)).toEqual([]);
     await age(original.id);
     const [retry] = await claim(original.location);
     expect(retry.deleteToken).not.toBe(first.deleteToken);
-    expect((await db.query('SELECT canvas_finish_asset_delete($1,$2,\'DELETED\') AS ok', [original.id, first.deleteToken])).rows[0].ok).toBe(false);
+    expect((await db.query('SELECT canvas_finish_asset_delete_v2($1,$2,\'DELETED\') AS ok', [original.id, first.deleteToken])).rows[0].ok).toBe(false);
     await fixtureSql('UPDATE "CanvasImportAsset" SET "deleteExpiresAt"=clock_timestamp()+interval \'200 milliseconds\' WHERE id=$1', [original.id]);
     const a = await connection(); const b = await connection();
     await a.query("BEGIN");
     try {
       await a.query('SELECT id FROM "CanvasImportAsset" WHERE id=$1 FOR UPDATE', [original.id]);
-      const finish = b.query('SELECT canvas_finish_asset_delete($1,$2,\'DELETED\') AS ok', [original.id, retry.deleteToken]);
+      const finish = b.query('SELECT canvas_finish_asset_delete_v2($1,$2,\'DELETED\') AS ok', [original.id, retry.deleteToken]);
       await new Promise((resolve) => setTimeout(resolve, 300));
       await a.query("COMMIT");
       expect((await finish).rows[0].ok).toBe(false);
     } catch (error) { await a.query("ROLLBACK"); throw error; }
     await age(original.id); const [last] = await claim(original.location);
-    await db.query('SELECT canvas_finish_asset_delete($1,$2,\'DELETED\')', [original.id, last.deleteToken]);
+    await db.query('SELECT canvas_finish_asset_delete_v2($1,$2,\'DELETED\')', [original.id, last.deleteToken]);
     expect((await db.query('SELECT state,"physicalBytesAccounted" FROM "CanvasImportAsset" WHERE id=$1', [original.id])).rows[0]).toEqual({ state: "DELETED", physicalBytesAccounted: false });
   });
 
@@ -489,20 +497,20 @@ describe("canvas v1 disposable PostgreSQL (not ordinary Vitest)", () => {
     const user = await owner(); const original = await asset(user); await age(original.id);
     const first = randomUUID(); const next = randomUUID(); const a = await connection(); const b = await connection();
     await db.query('UPDATE "CanvasGcLease" SET token=NULL,"expiresAt"=NULL WHERE id=\'canvas-imports\'');
-    expect((await a.query('SELECT canvas_acquire_gc_lease($1) AS ok', [first])).rows[0].ok).toBe(true);
-    expect((await b.query('SELECT canvas_acquire_gc_lease($1) AS ok', [next])).rows[0].ok).toBe(false);
-    await expect(b.query('SELECT * FROM canvas_claim_imports($1,$2,20)', [next, original.location])).rejects.toMatchObject({ message: "CANVAS_LEASE_LOST" });
+    expect((await a.query('SELECT canvas_acquire_gc_lease_v2($1) AS ok', [first])).rows[0].ok).toBe(true);
+    expect((await b.query('SELECT canvas_acquire_gc_lease_v2($1) AS ok', [next])).rows[0].ok).toBe(false);
+    await expect(b.query('SELECT * FROM canvas_claim_imports_v2($1,$2,20)', [next, original.location])).rejects.toMatchObject({ message: "CANVAS_LEASE_LOST" });
     await db.query('UPDATE "CanvasGcLease" SET "expiresAt"=clock_timestamp()-interval \'1 second\' WHERE id=\'canvas-imports\'');
-    expect((await b.query('SELECT canvas_acquire_gc_lease($1) AS ok', [next])).rows[0].ok).toBe(true);
-    await expect(a.query('SELECT * FROM canvas_claim_imports($1,$2,20)', [first, original.location])).rejects.toMatchObject({ message: "CANVAS_LEASE_LOST" });
-    expect((await b.query('SELECT * FROM canvas_claim_imports($1,$2,20)', [next, original.location])).rows.map((row) => row.id)).toEqual([original.id]);
+    expect((await b.query('SELECT canvas_acquire_gc_lease_v2($1) AS ok', [next])).rows[0].ok).toBe(true);
+    await expect(a.query('SELECT * FROM canvas_claim_imports_v2($1,$2,20)', [first, original.location])).rejects.toMatchObject({ message: "CANVAS_LEASE_LOST" });
+    expect((await b.query('SELECT * FROM canvas_claim_imports_v2($1,$2,20)', [next, original.location])).rows.map((row) => row.id)).toEqual([original.id]);
   });
 
   it.each(CANVAS_CAPABILITY_CONTRACT.latePutVersionReceipt.states)("retains a late version receipt in %s without reopening or falsely reclaiming the object", async (state) => {
     const user = await owner(); const original = await asset(user, false);
     await db.query('UPDATE "CanvasImportAsset" SET state=\'QUARANTINED\',"putOutcome"=\'UNKNOWN\' WHERE id=$1', [original.id]);
     await age(original.id); const [claimed] = await claim(original.location);
-    if (state === "DELETED") expect((await db.query('SELECT canvas_finish_asset_delete($1,$2,\'MISSING\') AS ok', [original.id, claimed.deleteToken])).rows[0].ok).toBe(true);
+    if (state === "DELETED") expect((await db.query('SELECT canvas_finish_asset_delete_v2($1,$2,\'MISSING\') AS ok', [original.id, claimed.deleteToken])).rows[0].ok).toBe(true);
     const before = (await db.query('SELECT * FROM "CanvasImportAsset" WHERE id=$1', [original.id])).rows[0];
     const receipt = '"storageVersionId"=\'late-version-1\',"physicalBytesAccounted"=true,"needsReconciliation"=true,"lastStorageErrorCode"=\'CANVAS_STORAGE_CAPABILITY_INVALID\'';
     for (const forbidden of ['state=\'READY\'', '"deleteToken"=gen_random_uuid()', '"putOutcome"=\'CONFIRMED\'']) {
@@ -512,7 +520,7 @@ describe("canvas v1 disposable PostgreSQL (not ordinary Vitest)", () => {
     const after = (await db.query('SELECT * FROM "CanvasImportAsset" WHERE id=$1', [original.id])).rows[0];
     expect(after).toEqual({ ...before, storageVersionId: "late-version-1", physicalBytesAccounted: true, needsReconciliation: true, lastStorageErrorCode: "CANVAS_STORAGE_CAPABILITY_INVALID", updatedAt: after.updatedAt });
     expect(after.state).toBe(state);
-    expect((await db.query('SELECT canvas_finish_asset_delete($1,$2,\'DELETED\') AS ok', [original.id, claimed.deleteToken])).rows[0].ok).toBe(false);
+    expect((await db.query('SELECT canvas_finish_asset_delete_v2($1,$2,\'DELETED\') AS ok', [original.id, claimed.deleteToken])).rows[0].ok).toBe(false);
     if (state === "DELETING") await expect(db.query('UPDATE "CanvasImportAsset" SET state=\'DELETED\',"deleteOutcome"=\'DELETED\' WHERE id=$1', [original.id])).rejects.toMatchObject({ message: "CANVAS_STORAGE_CAPABILITY_INVALID" });
     await expect(db.query('UPDATE "CanvasImportAsset" SET "storageVersionId"=\'different-version\' WHERE id=$1', [original.id])).rejects.toMatchObject({ message: "CANVAS_INVENTORY_IMMUTABLE" });
     await expect(db.query('UPDATE "CanvasImportAsset" SET state=\'READY\',"putOutcome"=\'CONFIRMED\' WHERE id=$1', [original.id])).rejects.toMatchObject({ message: "CANVAS_INVENTORY_IMMUTABLE" });
@@ -528,11 +536,11 @@ describe("canvas v1 disposable PostgreSQL (not ordinary Vitest)", () => {
     const remoteDelete = (key: string) => { deletedKeys.push(key); return fakeStorage.delete(key) ? "DELETED" : "MISSING"; };
     await db.query('UPDATE "CanvasImportAsset" SET state=\'QUARANTINED\',"putOutcome"=\'UNKNOWN\' WHERE id=$1', [original.id]);
     await age(original.id); const [first] = await claim(original.location);
-    await db.query('SELECT canvas_finish_asset_delete($1,$2,$3::"CanvasDeleteOutcome")', [original.id, first.deleteToken, remoteDelete(first.storageKey)]);
+    await db.query('SELECT canvas_finish_asset_delete_v2($1,$2,$3::"CanvasDeleteOutcome")', [original.id, first.deleteToken, remoteDelete(first.storageKey)]);
     fakeStorage.add(original.key); // the original in-flight PUT completes after DELETE
     expect((await db.query('SELECT state,"needsReconciliation","physicalBytesAccounted" FROM "CanvasImportAsset" WHERE id=$1', [original.id])).rows[0]).toEqual({ state: "DELETED", needsReconciliation: true, physicalBytesAccounted: true });
     await age(original.id); const [retry] = await claim(original.location);
-    await db.query('SELECT canvas_finish_asset_delete($1,$2,$3::"CanvasDeleteOutcome")', [original.id, retry.deleteToken, remoteDelete(retry.storageKey)]);
+    await db.query('SELECT canvas_finish_asset_delete_v2($1,$2,$3::"CanvasDeleteOutcome")', [original.id, retry.deleteToken, remoteDelete(retry.storageKey)]);
     expect(deletedKeys).toEqual([original.key, original.key]);
     expect([...fakeStorage].sort()).toEqual(["generated/key", "legacy/key"]);
     expect((await db.query('SELECT "putOutcome","physicalBytesAccounted" FROM "CanvasImportAsset" WHERE id=$1', [original.id])).rows[0]).toEqual({ putOutcome: "UNKNOWN", physicalBytesAccounted: true });

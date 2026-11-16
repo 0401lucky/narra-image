@@ -34,10 +34,13 @@ type BackfillResult struct {
 }
 
 // BackfillMedia 扫描 mediaStorage IS NULL 的历史生成媒体行并转存对象存储。
-// 幂等：仅处理 mediaStorage IS NULL 的行，重复执行不会重复转存；
-// 每行在事务内更新 url + mediaStorage + storageKey。
+// 图片还必须尚未关联 mediaAssetId；历史纳管保留的 NULL metadata 不是新 PUT 授权。
+// 每行用原 URL 和 NULL metadata/association 做条件更新。
 func BackfillMedia(ctx context.Context, pool *pgxpool.Pool, storage *Storage, opts BackfillOptions) (BackfillResult, error) {
-	if !storage.hasObjectStorage() {
+	if storage.cfg.ImageStorageManagedEnabled {
+		storage.imageRepository = NewImageRepository(pool)
+	}
+	if !storage.hasObjectStorage() && !(storage.cfg.ImageStorageManagedEnabled && storage.cfg.ImageStorageBackend == "local") {
 		return BackfillResult{}, errors.New("未配置对象存储（S3/R2），无法执行媒体回填")
 	}
 	if opts.Limit < 0 {
@@ -81,6 +84,10 @@ func BackfillMedia(ctx context.Context, pool *pgxpool.Pool, storage *Storage, op
 	}
 
 	if remaining == 0 && opts.Limit > 0 {
+		return result, nil
+	}
+	// A LOCAL image deployment does not opt video files into this image ledger.
+	if !storage.hasObjectStorage() {
 		return result, nil
 	}
 
@@ -137,14 +144,18 @@ const (
 )
 
 func scanMediaRows(ctx context.Context, pool *pgxpool.Pool, table string, limit int) ([]mediaRow, error) {
+	imageFilter := ""
+	if table == "GenerationImage" {
+		imageFilter = ` AND m."mediaAssetId" IS NULL`
+	}
 	query := fmt.Sprintf(`
 SELECT m.id, m.url, u.id
 FROM %q m
 JOIN "GenerationJob" j ON j.id = m."jobId"
 JOIN "User" u ON u.id = j."userId"
-WHERE m."mediaStorage" IS NULL
+WHERE m."mediaStorage" IS NULL%s
 ORDER BY m."jobId", m.id
-`, table)
+`, table, imageFilter)
 	if limit > 0 {
 		query += fmt.Sprintf(" LIMIT %d", limit)
 	}
@@ -164,7 +175,22 @@ ORDER BY m."jobId", m.id
 	return items, rows.Err()
 }
 
+func backfillImageEligible(ctx context.Context, pool *pgxpool.Pool, row mediaRow) (bool, error) {
+	var eligible bool
+	err := pool.QueryRow(ctx, `SELECT EXISTS (
+  SELECT 1 FROM "GenerationImage" i JOIN "GenerationJob" j ON j.id = i."jobId"
+  WHERE i.id = $1 AND i.url = $2 AND j."userId" = $3
+    AND i."mediaStorage" IS NULL AND i."mediaAssetId" IS NULL
+)`, row.ID, row.URL, row.UserID).Scan(&eligible)
+	return eligible, err
+}
+
 func backfillImageRow(ctx context.Context, pool *pgxpool.Pool, storage *Storage, row mediaRow, opts BackfillOptions) (bool, skipKind) {
+	if eligible, err := backfillImageEligible(ctx, pool, row); err != nil {
+		return false, skipNoS3
+	} else if !eligible {
+		return false, skipNoData
+	}
 	if strings.HasPrefix(row.URL, "data:") {
 		image, err := parseDataURL(row.URL, 0)
 		if err != nil {
@@ -192,18 +218,27 @@ func persistAndUpdateImage(
 	mimeType string,
 	opts BackfillOptions,
 ) (bool, skipKind) {
+	// Downloads may outlive the scan. Recheck immediately before new storage IO;
+	// the managed BeginObject guard also verifies the origin before its PUT grant.
+	// Unmanaged backfill must be drained before history apply: it has no durable
+	// write grant that a later adoption can revoke while network IO is in flight.
+	if eligible, err := backfillImageEligible(ctx, pool, row); err != nil {
+		return false, skipNoS3
+	} else if !eligible {
+		return false, skipNoData
+	}
 	if opts.DryRun {
 		return true, skipNone
 	}
-	persisted, err := storage.PersistImage(ctx, row.UserID, data, extension, mimeType)
+	persisted, err := storage.PersistImage(context.WithValue(ctx, imageHistoricalGenerationKey{}, row.ID), row.UserID, data, extension, mimeType)
 	if err != nil {
 		return false, skipNoS3
 	}
 	tag, err := pool.Exec(ctx, `
 UPDATE "GenerationImage"
-SET url = $2, "mediaStorage" = $3, "storageKey" = $4
-WHERE id = $1 AND "mediaStorage" IS NULL
-`, row.ID, persisted.URL, string(persisted.MediaStorage), nullableStringFromString(persisted.StorageKey))
+SET url = $2, "mediaStorage" = $3, "storageKey" = $4, "mediaAssetId" = $5::uuid
+WHERE id = $1 AND "mediaStorage" IS NULL AND "mediaAssetId" IS NULL AND url = $6
+`, row.ID, persisted.URL, string(persisted.MediaStorage), nullableStringFromString(persisted.StorageKey), nullableStringFromString(persisted.MediaAssetID), row.URL)
 	if err != nil {
 		return false, skipNoS3
 	}

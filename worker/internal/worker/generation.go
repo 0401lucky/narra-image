@@ -34,11 +34,13 @@ func (provider ProviderConfig) httpClient() *http.Client {
 }
 
 type GeneratedImage struct {
+	ID           string
 	Height       *int
 	URL          string
 	Width        *int
 	MediaStorage MediaStorage
 	StorageKey   string
+	MediaAssetID string
 }
 
 type imagePayload struct {
@@ -50,6 +52,9 @@ const providerErrorBodyMaxBytes = 8 * 1024
 const generationErrorMessageMaxBytes = 2 * 1024
 
 func generateImages(ctx context.Context, storage *Storage, job GenerationJob, provider ProviderConfig) ([]GeneratedImage, error) {
+	if job.Count < 1 || job.Count > ImageMaxOutputCount {
+		return nil, ContractFailure{Code: errorProviderRequestInvalid, Message: "图片生成数量必须为 1 到 4 张"}
+	}
 	if strings.TrimSpace(job.Model) == "" {
 		job.Model = provider.Model
 	}
@@ -57,7 +62,7 @@ func generateImages(ctx context.Context, storage *Storage, job GenerationJob, pr
 	sourceImages := []SourceImage{}
 	var err error
 	if job.GenerationType == "IMAGE_TO_IMAGE" {
-		sourceImages, err = loadSourceImages(ctx, job.SourceImageURLs)
+		sourceImages, err = storage.loadImageSources(ctx, job.SourceImageURLs)
 		if err != nil {
 			return nil, err
 		}
@@ -80,13 +85,22 @@ func generateImages(ctx context.Context, storage *Storage, job GenerationJob, pr
 	if len(payload.Data) == 0 {
 		return nil, ResultPersistError{Cause: errors.New("渠道没有返回图片结果")}
 	}
+	maximumOutputs := job.Count
+	if job.GenerationType == "IMAGE_TO_IMAGE" {
+		maximumOutputs = 1
+	}
+	if len(payload.Data) > maximumOutputs {
+		return nil, ResultPersistError{Cause: errors.New("渠道返回的图片数量超过本次请求的上限")}
+	}
 
 	records := make([]GeneratedImage, 0, len(payload.Data))
-	for _, item := range payload.Data {
-		record, err := normalizeGeneratedImage(ctx, storage, job, item, payload)
+	for index, item := range payload.Data {
+		imageID := cuidLikeID()
+		record, err := normalizeGeneratedImage(imageOutputContext(ctx, index, imageID), storage, job, item, payload)
 		if err != nil {
 			return nil, err
 		}
+		record.ID = imageID
 		records = append(records, record)
 	}
 	return records, nil
@@ -201,6 +215,9 @@ func generateWithResponsesImageTool(ctx context.Context, job GenerationJob, prov
 		)
 		if err != nil {
 			return imagePayload{}, err
+		}
+		if len(items) != 1 {
+			return imagePayload{}, ResultPersistError{Cause: errors.New("渠道单次图片工具调用必须返回一张图片")}
 		}
 		for _, item := range items {
 			results = append(results, map[string]any{"b64_json": item})
@@ -340,9 +357,15 @@ func idempotencyKey(jobID string, operation string) string {
 
 func normalizeGeneratedImage(ctx context.Context, storage *Storage, job GenerationJob, item map[string]any, payload imagePayload) (GeneratedImage, error) {
 	if b64JSON, ok := pickString(item, "b64_json"); ok {
+		if len(b64JSON) > base64.StdEncoding.EncodedLen(int(ImageMaxBytes)) {
+			return GeneratedImage{}, ResultPersistError{Cause: errors.New("生成图片超过 50MiB，无法保存")}
+		}
 		data, err := base64.StdEncoding.DecodeString(b64JSON)
 		if err != nil {
-			return GeneratedImage{}, err
+			return GeneratedImage{}, ResultPersistError{Cause: errors.New("渠道图片编码无效")}
+		}
+		if len(data) == 0 || int64(len(data)) > ImageMaxBytes {
+			return GeneratedImage{}, ResultPersistError{Cause: errors.New("生成图片为空或超过 50MiB，无法保存")}
 		}
 		dimensions := extractDimensionsFromMetadata(item)
 		if dimensions == nil {
@@ -373,10 +396,11 @@ func normalizeGeneratedImage(ctx context.Context, storage *Storage, job Generati
 			URL:          persisted.URL,
 			MediaStorage: persisted.MediaStorage,
 			StorageKey:   persisted.StorageKey,
+			MediaAssetID: persisted.MediaAssetID,
 		}, dimensions), nil
 	}
 
-	return GeneratedImage{}, errors.New("返回结果里没有可用图片")
+	return GeneratedImage{}, ResultPersistError{Cause: errors.New("返回结果里没有可用图片")}
 }
 
 func generatedImageRecord(persisted PersistedMedia, dimensions *ImageDimensions) GeneratedImage {
@@ -384,6 +408,7 @@ func generatedImageRecord(persisted PersistedMedia, dimensions *ImageDimensions)
 		URL:          persisted.URL,
 		MediaStorage: persisted.MediaStorage,
 		StorageKey:   persisted.StorageKey,
+		MediaAssetID: persisted.MediaAssetID,
 	}
 	if dimensions == nil {
 		return record

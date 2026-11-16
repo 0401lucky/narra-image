@@ -12,6 +12,7 @@ import {
   type CanvasViewportV1,
 } from "@/lib/canvas/contracts";
 import type { CanvasInputRuntimeV1 } from "@/lib/canvas/graph";
+import { isImageAvailable, mergeImageAvailabilityState } from "@/lib/storage/image-availability";
 import {
   canvasClientIdSchema,
   canvasGenerationParametersSchema,
@@ -160,7 +161,7 @@ export function createCanvasController(options: CanvasControllerOptions) {
         const captured = captureCanvasReference(node, entry.originals);
         const assetId = captured.original?.assetId ?? (node.source.kind === "imported" ? node.source.assetId : null);
         const asset = assetId ? entry.assets.get(assetId) : null;
-        references[node.id] = { assetId, blobId: captured.original?.blobId ?? null, url: asset?.state === "READY" ? asset.url : null,
+        references[node.id] = { assetId, availability: captured.original ? "available" : asset?.availability, blobId: captured.original?.blobId ?? null, url: asset?.state === "READY" && isImageAvailable(asset.availability) ? asset.url : null,
           state: asset?.state === "READY" && asset.url ? "ready" : asset?.state === "UPLOADING" ? "uploading" : captured.original ? "local" : "missing" };
       } else if (node.kind === "result") {
         const image = entry.images.get(node.imageId);
@@ -309,7 +310,7 @@ export function createCanvasController(options: CanvasControllerOptions) {
 
   function rememberImages(entry: Entry, job: GenerationItem) {
     if (job.status !== "succeeded") return;
-    for (const image of job.images) entry.images.set(image.id, { id: image.id, jobId: job.id, url: image.url,
+    for (const image of job.images) entry.images.set(image.id, { id: image.id, jobId: job.id, url: image.url, availability: mergeImageAvailabilityState(entry.images.get(image.id)?.availability, image.availability),
       actualWidth: image.actualWidth ?? null, actualHeight: image.actualHeight ?? null, actualSize: image.actualSize ?? null });
   }
   function receiveJob(origin: CanvasJobOrigin, incoming: GenerationItem) {
@@ -415,13 +416,14 @@ export function createCanvasController(options: CanvasControllerOptions) {
         if (response.canvasId !== entry.envelope.canvasId) throw new CanvasContractError("CANVAS_ORIGIN_MISMATCH");
         for (const id of request.assetIds) {
           const asset = response.assets[id];
-          if (asset) entry.assets.set(id, asset); else entry.assets.delete(id);
+          if (asset) entry.assets.set(id, { ...asset, availability: mergeImageAvailabilityState(entry.assets.get(id)?.availability, asset.availability) });
+          else if (entry.assets.get(id)?.availability !== "cleaned") entry.assets.delete(id);
         }
         for (const id of request.imageIds) {
           const image = response.images[id];
           const node = scene.nodes.find((item) => item.kind === "result" && item.imageId === id);
-          if (image && node?.kind === "result" && image.jobId === node.jobId) entry.images.set(id, image);
-          else entry.images.delete(id);
+          if (image && node?.kind === "result" && image.jobId === node.jobId) entry.images.set(id, { ...image, availability: mergeImageAvailabilityState(entry.images.get(id)?.availability, image.availability) });
+          else if (entry.images.get(id)?.availability !== "cleaned") entry.images.delete(id);
         }
         for (const runId of [...request.runBindings.map((binding) => binding.runId), ...request.runIds]) {
           const lookup = response.runs[runId];
@@ -529,8 +531,8 @@ export function createCanvasController(options: CanvasControllerOptions) {
     return {
       ownerId: options.ownerId,
       localBlobs: Object.fromEntries([...entry.originals].map(([id, original]) => [id, { available: true, byteLength: original.blob.size }])),
-      assets: Object.fromEntries([...entry.assets].map(([id, asset]) => [id, { assetId: id, ownerId: options.ownerId, state: asset.url ? asset.state : "UNAVAILABLE", byteLength: asset.byteLength, uploadId: asset.uploadId }])),
-      images: Object.fromEntries([...entry.images].map(([id, image]) => [id, { imageId: id, jobId: image.jobId, ownerId: options.ownerId, status: "SUCCEEDED", available: Boolean(image.url) }])),
+      assets: Object.fromEntries([...entry.assets].map(([id, asset]) => [id, { assetId: id, ownerId: options.ownerId, state: asset.url && isImageAvailable(asset.availability) ? asset.state : "UNAVAILABLE", byteLength: asset.byteLength, uploadId: asset.uploadId }])),
+      images: Object.fromEntries([...entry.images].map(([id, image]) => [id, { imageId: id, jobId: image.jobId, ownerId: options.ownerId, status: "SUCCEEDED", available: Boolean(image.url) && isImageAvailable(image.availability) }])),
     };
   }
   function captures(entry: Entry, scene: CanvasLocalSceneV1): Map<string, CanvasReferenceCapture> {
@@ -627,12 +629,12 @@ export function createCanvasController(options: CanvasControllerOptions) {
     const node = entry.envelope.scene.nodes.find((value) => value.id === source);
     if (node?.kind === "result") {
       const image = entry.images.get(node.imageId);
-      if (!image || image.id !== node.imageId || image.jobId !== node.jobId || !image.url) throw new CanvasContractError("CANVAS_INPUT_UNAVAILABLE");
+      if (!image || image.id !== node.imageId || image.jobId !== node.jobId || !image.url || !isImageAvailable(image.availability)) throw new CanvasContractError("CANVAS_INPUT_UNAVAILABLE");
     } else if (node?.kind === "reference") {
       const captured = captureCanvasReference(node, entry.originals);
       const assetId = captured.original?.assetId ?? (node.source.kind === "imported" ? node.source.assetId : null);
       const asset = assetId ? entry.assets.get(assetId) : null;
-      if (!captured.original && (asset?.state !== "READY" || !asset.url)) throw new CanvasContractError("CANVAS_INPUT_UNAVAILABLE");
+      if (!captured.original && (asset?.state !== "READY" || !asset.url || !isImageAvailable(asset.availability))) throw new CanvasContractError("CANVAS_INPUT_UNAVAILABLE");
     } else throw new CanvasContractError("CANVAS_INVALID_CONNECTION");
   }
   function importReferences(id: string, input: { files: readonly File[]; position: CanvasPositionV1; placementBounds?: CanvasInsertionBounds; attachToGenerationNodeId?: string }) {

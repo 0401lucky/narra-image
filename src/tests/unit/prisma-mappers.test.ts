@@ -24,6 +24,7 @@ describe("精选作品序列化", () => {
     },
     jobId: "job_1",
     mediaStorage: "S3",
+    mediaAssetId: null,
     reviewNote: null,
     reviewedAt: null,
     reviewedBy: null,

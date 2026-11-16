@@ -1,8 +1,11 @@
 import { GenerationStatus, type Prisma } from "@prisma/client";
 
 import { db } from "@/lib/db";
+import { imageAvailabilityInclude } from "@/lib/storage/image-availability";
+import { lockImageReferenceEpoch } from "@/lib/storage/image-reference-lock";
 import { failGenerationJobAndRefundInTransaction } from "@/lib/generation/job-refund";
 import { serializeGeneration } from "@/lib/prisma-mappers";
+import { projectGenerationSourceUrls } from "@/lib/storage/image-source-presentation";
 import { requireAdminRecord } from "@/lib/server/current-user";
 import { getErrorMessage, jsonError, jsonOk, parseJsonBody } from "@/lib/server/http";
 import { adminGenerationBulkDeleteSchema } from "@/lib/validators";
@@ -27,8 +30,7 @@ export async function GET() {
       },
       orderBy: { createdAt: "desc" },
       include: {
-        images: {
-          orderBy: { createdAt: "asc" },
+        images: { include: imageAvailabilityInclude, orderBy: { createdAt: "asc" },
         },
         user: {
           select: {
@@ -41,10 +43,10 @@ export async function GET() {
     });
 
     return jsonOk({
-      generations: jobs.map((job) => ({
+      generations: await projectGenerationSourceUrls(jobs.map((job) => ({
         ...serializeGeneration(job),
         user: job.user,
-      })),
+      }))),
     });
   } catch (error) {
     return jsonError(getErrorMessage(error), 403);
@@ -60,6 +62,7 @@ export async function DELETE(request: Request) {
 
     const uniqueIds = Array.from(new Set(body.ids));
     const result = await db.$transaction(async (tx) => {
+      await lockImageReferenceEpoch(tx);
       const jobs = await tx.generationJob.findMany({
         where: {
           id: {

@@ -40,6 +40,7 @@ const otherCanvasId = "aaaaaaaa-0000-4000-8000-000000000005";
 const at = new Date("2026-10-29T00:00:00.000Z");
 const storage = canvasStorageLocation({ endpoint: "https://storage.unit.invalid", region: "auto", bucket: "canvas-unit" });
 const environment = {
+  APP_URL: "https://app.unit.invalid",
   CANVAS_ENABLED: true, S3_ENDPOINT: storage.endpoint, S3_REGION: storage.region, S3_BUCKET: storage.bucket,
   S3_ACCESS_KEY_ID: "unit-test-key", S3_SECRET_ACCESS_KEY: "unit-test-secret", S3_PUBLIC_BASE_URL: "https://media.unit.invalid",
 };
@@ -88,6 +89,7 @@ function asset(id = "asset_requested", overrides: Partial<CanvasImportAsset> = {
     id, ownerId, userId: ownerId, uploadId: "aaaaaaaa-0000-4000-8000-000000000006", kind: "IMPORT",
     sha256: "a".repeat(64), byteLength: 100, mimeType: "image/png", state: "READY",
     storageLocation: storage.id, storageEndpoint: storage.endpoint, storageRegion: storage.region, storageBucket: storage.bucket,
+    mediaAssetId: null, sourceProvider: "S3",
     storageKey: "canvas-imports/registered.png", storageVersionId: null,
     uploadToken: "aaaaaaaa-0000-4000-8000-000000000007", uploadExpiresAt: at, preparationExpiresAt: null, readyAt: at,
     detachedAt: at, putOutcome: "CONFIRMED", deleteOutcome: "NOT_STARTED", deleteToken: null, deleteExpiresAt: null,
@@ -151,7 +153,7 @@ describe("explicit-ID canvas runtime hydration", () => {
     expect(Object.keys(result.images)).toEqual(["image_requested"]);
     expect(Object.keys(result.assets)).toEqual(["asset_requested"]);
     expect(result.runs[runId]).toMatchObject({ state: "COMMITTED", origin: { canvasId, nodeId, runId }, jobId: "job_run", generation: { id: "job_run" }, unavailable: null });
-    expect(result.images.image_requested).toEqual({ id: "image_requested", jobId: "job_image_actual", url: "https://media.invalid/requested.png", actualWidth: 640, actualHeight: 480, actualSize: "640x480" });
+    expect(result.images.image_requested).toEqual({ id: "image_requested", jobId: "job_image_actual", url: "https://media.invalid/requested.png", availability: "available", actualWidth: 640, actualHeight: 480, actualSize: "640x480" });
     expect(result.assets.asset_requested).toMatchObject({ state: "READY", url: "https://media.unit.invalid/canvas-imports/registered.png", readyAt: at.toISOString() });
     expect(result.missing).toEqual([]);
     expect(JSON.stringify(result)).not.toMatch(/unrequested|old-saved-node|encrypted-private|private-provider|private-result|storageKey|uploadToken|ownerId|userId/);
@@ -164,6 +166,43 @@ describe("explicit-ID canvas runtime hydration", () => {
   it("an empty selection does not query any jobs, runs, images or imports", async () => {
     expect(await payload(await resolve())).toEqual({ canvasId, generations: {}, images: {}, assets: {}, runs: {}, missing: [] });
     for (const query of [mocks.runs, mocks.jobs, mocks.images, mocks.assets]) expect(query).not.toHaveBeenCalled();
+  });
+  it("keeps result and generation URLs stable across a source-to-LOCAL switch without leaking provenance", async () => {
+    const publicToken = "c".repeat(64);
+    const oldUrl = "https://old-r2.unit.invalid/result.png";
+    for (const activeObjectId of ["old-s3-copy", "verified-local-copy"]) {
+      const metadata = { state: "AVAILABLE", activeObjectId, publicToken };
+      const original = job();
+      const output = { ...original.images[0], url: oldUrl, mediaAssetId: "managed-asset", mediaAsset: metadata };
+      mocks.jobs.mockResolvedValue([{ ...original, images: [output] }]);
+      mocks.images.mockResolvedValue([image("image_requested", { url: oldUrl, mediaAssetId: "managed-asset", mediaAsset: metadata })]);
+      const result = await payload(await resolve({ jobIds: [original.id], imageIds: ["image_requested"] }));
+      expect(result.images.image_requested.url).toBe(`https://app.unit.invalid/media/images/${publicToken}`);
+      expect(result.generations[original.id].images[0].url).toBe(result.images.image_requested.url);
+      expect(result.missing).toEqual([]);
+      expect(JSON.stringify(result)).not.toMatch(/old-r2|activeObjectId|mediaAssetId|publicToken/);
+      expect(output.url).toBe(oldUrl);
+    }
+  });
+
+  it("keeps owned cleaned results and successful generation facts without reading the deleted file", async () => {
+    const original = job();
+    const cleanedImage = {
+      ...original.images[0], mediaAssetId: "cleaned_asset", mediaAsset: { state: "DELETED", activeObjectId: null },
+    };
+    mocks.runs.mockResolvedValue([run()]);
+    mocks.jobs.mockResolvedValue([{ ...original, images: [cleanedImage] }]);
+    mocks.images.mockResolvedValue([{ ...cleanedImage, job: { id: original.id, userId: ownerId, status: "SUCCEEDED" } }]);
+    const result = await payload(await resolve({ runBindings: [binding()], imageIds: [cleanedImage.id] }));
+
+    expect(result.images[cleanedImage.id]).toMatchObject({ id: cleanedImage.id, jobId: original.id, availability: "cleaned", actualWidth: 512, actualHeight: 768 });
+    expect(result.generations[original.id]).toMatchObject({
+      status: "succeeded", prompt: original.prompt, creditsSpent: original.creditsSpent,
+      images: [{ id: cleanedImage.id, availability: "cleaned" }],
+    });
+    expect(result.runs[runId]).toMatchObject({ state: "COMMITTED", unavailable: null, generation: { status: "succeeded" } });
+    expect(result.missing).toEqual([{ kind: "image", id: cleanedImage.id, code: "CANVAS_INPUT_UNAVAILABLE" }]);
+    expect(JSON.stringify(result)).not.toMatch(/mediaAssetId|activeObjectId|storageKey|private-result-key/);
   });
 
   it("deduplicates bounded identities and repeated accepted bindings into one batch per model", async () => {
@@ -180,7 +219,10 @@ describe("explicit-ID canvas runtime hydration", () => {
     expect(Object.keys(result.generations)).toEqual(["job_run"]);
     for (const query of [mocks.runs, mocks.jobs, mocks.images, mocks.assets]) expect(query).toHaveBeenCalledTimes(1);
     expect(mocks.images).toHaveBeenCalledWith(expect.objectContaining({ where: { id: { in: ["image_requested"] }, job: { userId: ownerId } } }));
-    expect(mocks.assets).toHaveBeenCalledWith({ where: { id: { in: ["asset_requested"] }, ownerId, userId: ownerId, kind: "IMPORT" } });
+    expect(mocks.assets).toHaveBeenCalledWith({
+      where: { id: { in: ["asset_requested"] }, ownerId, userId: ownerId, kind: "IMPORT" },
+      include: { mediaAsset: { select: { activeObjectId: true, publicToken: true, state: true } } },
+    });
   });
 
   it.each([
@@ -268,7 +310,7 @@ describe("explicit-ID canvas runtime hydration", () => {
     const url = "data:image/png;base64,iVBORw0KGgo=";
     mocks.images.mockResolvedValue([image("legacy_image", { url, width: null, height: null })]);
     const result = await payload(await resolve({ imageIds: ["legacy_image"] }));
-    expect(result.images.legacy_image).toEqual({ id: "legacy_image", jobId: "job_image_actual", url, actualWidth: null, actualHeight: null, actualSize: null });
+    expect(result.images.legacy_image).toEqual({ id: "legacy_image", jobId: "job_image_actual", url, availability: "available", actualWidth: null, actualHeight: null, actualSize: null });
     expect(result.generations).toEqual({});
     expect(mocks.jobs).not.toHaveBeenCalled();
   });

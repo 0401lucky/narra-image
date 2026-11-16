@@ -41,6 +41,7 @@ COPY worker/ ./
 RUN CGO_ENABLED=0 GOOS=linux go build -o /out/narra-worker ./cmd/worker
 RUN CGO_ENABLED=0 GOOS=linux go build -o /out/narra-prompt-sync ./cmd/prompt-sync
 RUN CGO_ENABLED=0 GOOS=linux go build -o /out/narra-rollback-preflight ./cmd/rollback-preflight
+RUN CGO_ENABLED=0 GOOS=linux go build -o /out/narra-image-history ./cmd/image-history
 
 FROM base AS runner
 
@@ -62,6 +63,7 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=worker-builder /out/narra-worker ./narra-worker
 COPY --from=worker-builder /out/narra-prompt-sync ./narra-prompt-sync
 COPY --from=worker-builder /out/narra-rollback-preflight ./narra-rollback-preflight
+COPY --from=worker-builder /out/narra-image-history ./narra-image-history
 
 EXPOSE 3000
 

@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 
 import { requireAdminRecord } from "@/lib/server/current-user";
-import { getLoginCoverConfig } from "@/lib/server/login-cover";
+import { getLoginCoverConfig, getLoginCoverDisplayConfig } from "@/lib/server/login-cover";
 import { LoginCoverForm } from "@/components/admin/login-cover-form";
 import { SettingsSubNav } from "@/components/admin/settings-sub-nav";
 
@@ -19,6 +19,7 @@ export default async function LoginCoverSettingsPage() {
   }
 
   const config = await getLoginCoverConfig();
+  const display = await getLoginCoverDisplayConfig(config);
 
   return (
     <main className="pb-16">
@@ -35,7 +36,7 @@ export default async function LoginCoverSettingsPage() {
 
         <SettingsSubNav currentPath="/admin/settings/login-cover" />
 
-        <LoginCoverForm initialConfig={config} />
+        <LoginCoverForm initialConfig={config} resolvedCustomUrl={display.customUrl} />
       </section>
     </main>
   );

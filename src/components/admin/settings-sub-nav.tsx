@@ -9,6 +9,7 @@ const settingsLinks = [
   { href: "/admin/settings/channels", label: "生图渠道" },
   { href: "/admin/settings/login-cover", label: "登录封面" },
   { href: "/admin/settings/moderation", label: "内容审核" },
+  { href: "/admin/settings/storage", label: "图片存储" },
 ];
 
 export function SettingsSubNav({ currentPath }: { currentPath: string }) {

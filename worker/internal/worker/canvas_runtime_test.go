@@ -60,7 +60,8 @@ func TestCanvasWorkerRunStartsOneManagedGCInBothTopologies(t *testing.T) {
 					t.Fatal("enabled readiness omitted capability location")
 				}
 				capability := worker.canvasGC.contract.Capability.ReadyCapability
-				want := map[string]any{"version": float64(capability.Version), "schema": capability.Schema, "storage": capability.Storage, "gc": capability.GC}
+				want := map[string]any{"version": float64(capability.Version), "schema": capability.Schema, "storage": capability.Storage, "gc": capability.GC,
+					"storageRevision": float64(capability.StorageRevision), "gcRevision": float64(capability.GCRevision), "provider": "S3", "locationId": worker.canvasGC.storage.Location().ID}
 				if !reflect.DeepEqual(capabilities["canvas"], want) {
 					t.Fatalf("wrong capability: %v", capabilities)
 				}

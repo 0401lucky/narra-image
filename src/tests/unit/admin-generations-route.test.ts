@@ -20,6 +20,7 @@ const {
 }));
 
 const tx = {
+  $executeRaw: vi.fn().mockResolvedValue(1),
   generationJob: {
     deleteMany: mockDeleteMany,
     findMany: mockFindMany,

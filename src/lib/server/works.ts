@@ -3,6 +3,7 @@ import "server-only";
 import { Prisma, ShowcaseStatus } from "@prisma/client";
 
 import { db } from "@/lib/db";
+import { imageAvailabilityInclude } from "@/lib/storage/image-availability";
 import {
   serializeAdminWork,
   serializeFeaturedVideo,
@@ -18,6 +19,7 @@ const USER_WORKS_PAGE_SIZE = 24;
 const USER_WORKS_MAX_LIMIT = 60;
 
 const workBaseInclude = Prisma.validator<Prisma.GenerationImageInclude>()({
+  ...imageAvailabilityInclude,
   job: {
     select: {
       createdAt: true,
@@ -44,6 +46,7 @@ const workBaseInclude = Prisma.validator<Prisma.GenerationImageInclude>()({
 });
 
 const workAdminInclude = Prisma.validator<Prisma.GenerationImageInclude>()({
+  ...imageAvailabilityInclude,
   job: {
     select: {
       createdAt: true,

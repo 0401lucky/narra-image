@@ -86,7 +86,7 @@ describe("generation contract v1", () => {
       expect(mediaScenario.video.resultFields).toContain(field);
     }
     expect(mediaScenario.image.storageKinds).toEqual(
-      expect.arrayContaining(["B64", "S3", "UPSTREAM"]),
+      expect.arrayContaining(["B64", "S3", "LOCAL", "UPSTREAM"]),
     );
     expect(mediaScenario.video.storageKinds).toEqual(
       expect.arrayContaining(["B64", "S3", "UPSTREAM"]),
@@ -95,6 +95,9 @@ describe("generation contract v1", () => {
     expect(mediaScenario.image.sampleUrls.b64).toMatch(/^data:image\/png;base64,/);
     expect(mediaScenario.image.sampleUrls.upstream).toMatch(/^https:\/\//);
     expect(mediaScenario.video.sampleUrls.s3).toMatch(/\.mp4$/);
+    expect(mediaScenario.image.resultFields).toContain("mediaAssetId");
+    expect(mediaScenario.video.storageKinds).not.toContain("LOCAL");
+    expect(mediaScenario.video.resultFields).not.toContain("mediaAssetId");
   });
 
   it("Go/Node 使用同一固定 AES-GCM 密钥 fixture", async () => {

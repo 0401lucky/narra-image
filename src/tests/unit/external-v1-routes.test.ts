@@ -35,6 +35,10 @@ vi.mock("@/lib/moderation/check", () => ({
 vi.mock("@/lib/external-api/source-images", () => ({
   downloadExternalImage: mockDownloadExternalImage,
 }));
+vi.mock("@/lib/storage/managed-image-storage", () => ({
+  resolveManagedImageUrl: vi.fn(async () => null),
+  readManagedImage: vi.fn(),
+}));
 
 vi.mock("@/lib/server/api-auth", () => ({
   requireApiUser: mockRequireApiUser,
@@ -175,6 +179,7 @@ describe("OpenAI 兼容外部 API", () => {
 
   afterEach(() => {
     vi.unstubAllGlobals();
+    vi.unstubAllEnvs();
   });
 
   it("/v1/images/generations 返回图片生成结果", async () => {
@@ -463,6 +468,27 @@ describe("OpenAI 兼容外部 API", () => {
     );
   });
 
+  it.each([
+    { state: "DELETED", stream: false },
+    { state: "DELETED", stream: true },
+    { state: "DELETING", stream: false },
+    { state: "DELETING", stream: true },
+  ])("/v1/chat/completions 拒绝 $state 图片，stream=$stream 不输出失效地址", async ({ state, stream }) => {
+    mockRunExternalGeneration.mockResolvedValue({
+      ...completedJob,
+      images: [{ ...completedJob.images[0], mediaAssetId: "managed_asset", mediaAsset: { state, activeObjectId: null } }],
+    });
+    const response = await chatPost(jsonRequest("/v1/chat/completions", {
+      messages: [{ role: "user", content: "画一张海报" }], stream,
+    }));
+
+    expect(response.status).toBe(410);
+    expect(response.headers.get("content-type")).toContain("application/json");
+    const result = await response.json();
+    expect(result).toMatchObject({ error: { code: "IMAGE_UNAVAILABLE" } });
+    expect(JSON.stringify(result)).not.toContain(completedJob.images[0].url);
+  });
+
   it("/v1/chat/completions 支持 image_url 参考图并转为图生图", async () => {
     const response = await chatPost(
       jsonRequest("/v1/chat/completions", {
@@ -660,6 +686,7 @@ describe("OpenAI 兼容外部 API", () => {
       id: "job_1",
       images: [
         {
+          availability: "available",
           height: 1024,
           id: "img_1",
           url: "https://example.com/out.png",
@@ -670,6 +697,35 @@ describe("OpenAI 兼容外部 API", () => {
       object: "image.generation",
       status: "succeeded",
     });
+  });
+
+  it.each([
+    { state: "DELETED", availability: "cleaned" },
+    { state: "DELETING", availability: "unavailable" },
+    { state: "QUARANTINED", availability: "unavailable" },
+  ])("/v1/generations/:id 保留 $state 任务终态且不公开失效图片地址", async ({ state, availability }) => {
+    mockFindGeneration.mockResolvedValue({
+      createdAt: completedJob.createdAt, errorMessage: null, id: "job_1", model: completedJob.model, status: "SUCCEEDED",
+      images: [{ ...completedJob.images[0], id: "img_1", mediaAssetId: "managed_asset", mediaAsset: { state, activeObjectId: null } }],
+    });
+    const response = await generationGet(jsonRequest("/v1/generations/job_1", undefined, "GET"), { params: Promise.resolve({ id: "job_1" }) });
+    expect(response.status).toBe(200);
+    const result = await response.json();
+    expect(result).toMatchObject({ id: "job_1", status: "succeeded", error: null, images: [{ id: "img_1", url: null, availability }] });
+    expect(JSON.stringify(result)).not.toContain(completedJob.images[0].url);
+    expect(JSON.stringify(result)).not.toMatch(/mediaAssetId|activeObjectId/);
+  });
+  it("/v1/generations/:id projects an adopted result to its stable public URL", async () => {
+    vi.stubEnv("APP_URL", "https://app.unit.invalid");
+    const publicToken = "c".repeat(64);
+    const rawImage = { ...completedJob.images[0], id: "img_1", mediaAssetId: "asset", mediaAsset: { state: "AVAILABLE", activeObjectId: "local-copy", publicToken } };
+    mockFindGeneration.mockResolvedValue({ ...completedJob, errorMessage: null, status: "SUCCEEDED", images: [rawImage] });
+    const response = await generationGet(jsonRequest("/v1/generations/job_1", undefined, "GET"), { params: Promise.resolve({ id: "job_1" }) });
+    expect(response.status).toBe(200);
+    const payload = await response.json();
+    expect(payload.images).toEqual([{ id: "img_1", height: 1024, width: 1024, availability: "available", url: `https://app.unit.invalid/media/images/${publicToken}` }]);
+    expect(rawImage.url).toBe(completedJob.images[0].url);
+    expect(JSON.stringify(payload)).not.toMatch(/mediaAsset|publicToken|local-copy/);
   });
 
   it("/v1/images/generations 网关开启时转发并透传 Go 响应", async () => {

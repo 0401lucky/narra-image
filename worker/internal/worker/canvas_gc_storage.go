@@ -58,6 +58,13 @@ type canvasS3GCStorage struct {
 }
 
 func newCanvasGCStorage(storage *Storage) (canvasGCStorage, error) {
+	if storage != nil && storage.cfg.ImageStorageManagedEnabled && storage.cfg.ImageStorageBackend == "local" {
+		identity, err := NewImageLocalLocation(storage.cfg.ImageStorageVolumeID)
+		if err != nil || storage.localImages == nil {
+			return nil, errCanvasStorageCapability
+		}
+		return &canvasLocalGCStorage{local: storage.localImages, location: CanvasStorageLocation{ID: identity.ID, Provider: "LOCAL", VolumeID: identity.VolumeID}}, nil
+	}
 	if storage == nil || storage.cfg.S3AccessKeyID == "" || storage.cfg.S3SecretAccessKey == "" {
 		return nil, errCanvasStorageCapability
 	}
@@ -77,6 +84,24 @@ func newCanvasGCStorage(storage *Storage) (canvasGCStorage, error) {
 		}
 	}
 	return adapter, nil
+}
+
+// Revision 2's compatibility GC only claims unmanaged S3 rows. Managed LOCAL
+// objects are owned by the shared image executor, never this legacy finalizer.
+type canvasLocalGCStorage struct {
+	local    *LocalImageStore
+	location CanvasStorageLocation
+}
+
+func (storage *canvasLocalGCStorage) Location() CanvasStorageLocation { return storage.location }
+func (storage *canvasLocalGCStorage) Verify(ctx context.Context) error {
+	if _, err := storage.local.ProbeWritable(ctx); err != nil {
+		return errCanvasStorageCapability
+	}
+	return nil
+}
+func (storage *canvasLocalGCStorage) Delete(context.Context, canvasGCAsset) (string, error) {
+	return canvasDeleteUnknown, errCanvasStorageCapability
 }
 
 func (storage *canvasS3GCStorage) Location() CanvasStorageLocation { return storage.location }
@@ -356,9 +381,16 @@ func (storage *canvasS3GCStorage) Delete(ctx context.Context, asset canvasGCAsse
 	if err := validateCanvasGCAsset(asset, storage.location); err != nil {
 		return canvasDeleteUnknown, err
 	}
-	receipt, err := storage.client.DeleteObject(ctx, &s3.DeleteObjectInput{
-		Bucket: aws.String(storage.location.Bucket),
-		Key:    aws.String(asset.StorageKey),
+	return deleteUnversionedS3Object(ctx, storage.client, storage.location.Bucket, asset.StorageKey)
+}
+
+// Both the compatibility Canvas GC and managed-image maintenance use this
+// exact-key wire receipt check. Database ownership/eligibility is checked by
+// their respective claim protocols before reaching this physical operation.
+func deleteUnversionedS3Object(ctx context.Context, client canvasObjectStorageClient, bucket, key string) (string, error) {
+	receipt, err := client.DeleteObject(ctx, &s3.DeleteObjectInput{
+		Bucket: aws.String(bucket),
+		Key:    aws.String(key),
 	}, canvasSingleAttempt)
 	if err != nil {
 		var apiError smithy.APIError
@@ -374,7 +406,7 @@ func (storage *canvasS3GCStorage) Delete(ctx context.Context, asset canvasGCAsse
 	if receipt == nil || canvasStorageResponseStatus(receipt.ResultMetadata) != http.StatusNoContent {
 		return canvasDeleteUnknown, errCanvasStorageCapability
 	}
-	if receipt.VersionId != nil || aws.ToBool(receipt.DeleteMarker) {
+	if receipt.VersionId != nil || receipt.DeleteMarker != nil {
 		return canvasDeleteUnknown, errCanvasStorageCapability
 	}
 	return canvasDeleteDeleted, nil

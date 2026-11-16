@@ -3,9 +3,11 @@
 // 根工作台持有账户内已知任务及不可变来源，切换/删除视图不取消任务。
 // 命令先同步合并 canonical cache，再通知捕获的会话或画布；仅挂载期命令/effect 可调用。
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { mergeImageAvailability } from "@/lib/storage/image-availability";
 
 import type { CanvasJobOrigin, CanvasJobsPort } from "../canvas/studio-bridge";
 import type { GenerationItem } from "../types";
+import { sameGenerationValue } from "./generation-value";
 import { useImagePoller } from "./use-image-poller";
 
 type ConversationOrigin = Readonly<{ kind: "conversation"; ownerId: string; conversationId: string }>;
@@ -49,19 +51,6 @@ function sameOrigin(left: JobOrigin, right: JobOrigin) {
   return false;
 }
 
-function sameJobValue(left: unknown, right: unknown): boolean {
-  if (left === right) return true;
-  if (Array.isArray(left) || Array.isArray(right)) {
-    return Array.isArray(left) && Array.isArray(right) && left.length === right.length
-      && left.every((value, index) => sameJobValue(value, right[index]));
-  }
-  if (!left || !right || typeof left !== "object" || typeof right !== "object") return false;
-  const leftFields = left as Record<string, unknown>;
-  const rightFields = right as Record<string, unknown>;
-  return [...new Set([...Object.keys(leftFields), ...Object.keys(rightFields)])]
-    .every((key) => sameJobValue(leftFields[key], rightFields[key]));
-}
-
 function copyJob(job: GenerationItem): GenerationItem {
   return {
     ...job,
@@ -75,10 +64,11 @@ function mergeJob(current: GenerationItem | undefined, incoming: GenerationItem)
   if (!current) return copyJob(incoming);
   if (current === incoming) return current;
   if (current.status !== "pending" && incoming.status !== current.status) return current;
-  if (current.status === incoming.status && current.updatedAt && incoming.updatedAt
-    && Date.parse(current.updatedAt) > Date.parse(incoming.updatedAt)) return current;
-  const merged = { ...current, ...incoming };
-  return sameJobValue(current, merged) ? current : copyJob(merged);
+  const stale = current.status === incoming.status && current.updatedAt && incoming.updatedAt
+    && Date.parse(current.updatedAt) > Date.parse(incoming.updatedAt);
+  const preferred = stale ? current : { ...current, ...incoming };
+  const merged = { ...preferred, images: mergeImageAvailability(stale ? incoming.images : current.images, preferred.images) };
+  return sameGenerationValue(current, merged) ? current : copyJob(merged);
 }
 
 export function useStudioJobs({ ownerId, onConversationUpdate }: UseStudioJobsOptions): UseStudioJobsResult {

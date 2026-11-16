@@ -13,11 +13,15 @@ import { listLocalMigrations } from "./lib/migration-safety.mjs";
 export const CANVAS_DB_DEADLINE_MS = 360_000;
 export const CANVAS_DB_CLEANUP_RESERVE_MS = 20_000;
 export const CANVAS_DB_TEST_TARGET = "src/tests/integration/canvas-contracts/canvas-contracts-db.test.ts";
+export const IMAGE_DB_TEST_TARGET = "src/tests/integration/canvas-contracts/image-storage-db.test.ts";
+export const IMAGE_RETENTION_DB_TEST_TARGET = "src/tests/integration/canvas-contracts/image-retention-db.test.ts";
+export const IMAGE_HISTORY_DB_TEST_TARGET = "src/tests/integration/canvas-contracts/image-history-db.test.ts";
+export const CANVAS_DB_TEST_TARGETS = [CANVAS_DB_TEST_TARGET, IMAGE_DB_TEST_TARGET, IMAGE_RETENTION_DB_TEST_TARGET, IMAGE_HISTORY_DB_TEST_TARGET];
 export const CANVAS_DB_CONFIG_TARGET = "src/tests/integration/canvas-contracts/runner-vitest.config.ts";
-export const CANVAS_DB_VITEST_ARGS = ["exec", "vitest", "run", CANVAS_DB_TEST_TARGET, "--config", CANVAS_DB_CONFIG_TARGET, "--reporter=dot", "--testTimeout=15000", "--hookTimeout=15000"];
+export const CANVAS_DB_VITEST_ARGS = ["exec", "vitest", "run", ...CANVAS_DB_TEST_TARGETS, "--config", CANVAS_DB_CONFIG_TARGET, "--reporter=dot", "--testTimeout=15000", "--hookTimeout=15000"];
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const MIGRATIONS = path.join(ROOT, "prisma/migrations");
-const CANVAS_MIGRATION = "20261029090000_canvas_v1";
+const CANVAS_MIGRATION = "20261112090000_image_storage";
 const EXIT = { success: 0, preflight: 2, migration: 3, assertions: 4, cleanup: 8 };
 
 function failure(code, message) { return Object.assign(new Error(message), { exitCode: code }); }
@@ -52,7 +56,7 @@ export async function main() {
   const workspaces = [];
   let exitCode = EXIT.success;
   try {
-    assertFixedTargets(ROOT, [CANVAS_DB_TEST_TARGET, CANVAS_DB_CONFIG_TARGET, "src/lib/canvas/schema-probe.ts", "contracts/canvas/v1/schema.json", "node_modules/prisma/build/index.js", "scripts/lib/deny-disposable-env.cjs", `prisma/migrations/${CANVAS_MIGRATION}/migration.sql`], options.scope);
+    assertFixedTargets(ROOT, [...CANVAS_DB_TEST_TARGETS, CANVAS_DB_CONFIG_TARGET, "src/lib/canvas/schema-probe.ts", "contracts/canvas/v1/schema.json", "contracts/media/v1/schema.json", "node_modules/prisma/build/index.js", "scripts/lib/deny-disposable-env.cjs", `prisma/migrations/${CANVAS_MIGRATION}/migration.sql`, "prisma/migrations/20261112100000_canvas_image_storage/migration.sql"], options.scope);
     const migrations = listLocalMigrations(MIGRATIONS);
     const canvasIndex = migrations.findIndex(({ name }) => name === CANVAS_MIGRATION);
     if (canvasIndex < 1) throw failure(EXIT.preflight, "The known canvas migration must follow complete previous history");

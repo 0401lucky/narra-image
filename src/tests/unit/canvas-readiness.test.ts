@@ -4,13 +4,13 @@ const { transaction, execute, query, createStorage, verifyStorage, closeStorage 
   transaction: vi.fn(), execute: vi.fn(), query: vi.fn(), createStorage: vi.fn(), verifyStorage: vi.fn(), closeStorage: vi.fn(),
 }));
 vi.mock("@/lib/db", () => ({ db: { $transaction: transaction } }));
-vi.mock("@/lib/canvas/storage", () => ({ createCanvasStorageAdapter: createStorage, verifyCanvasStorageCapability: verifyStorage }));
+vi.mock("@/lib/canvas/storage", async (original) => ({ ...await original<typeof import("@/lib/canvas/storage")>(), createCanvasStorageAdapter: createStorage, verifyCanvasStorageCapability: verifyStorage }));
 
 import { CANVAS_CAPABILITY_CONTRACT } from "@/lib/canvas/contracts";
 import { CANVAS_SCHEMA_CONTRACT, CANVAS_SCHEMA_QUERY_V1 } from "@/lib/canvas/schema-probe";
 import { checkApplicationReadiness, probeApplicationCanvasSchema, probeApplicationCanvasStorage, probeWorkerReadiness } from "@/lib/readiness";
 
-const readyCapability = CANVAS_CAPABILITY_CONTRACT.readyCapability;
+const readyCapability = { ...CANVAS_CAPABILITY_CONTRACT.readyCapability, storage: "unversioned" as const, provider: "S3" as const, locationId: `s3-v1:${"f".repeat(64)}` };
 const environment = {
   CANVAS_ENABLED: true,
   WORKER_INTERNAL_URL: "http://worker:8081",
@@ -24,7 +24,7 @@ function enabledDependencies() {
     logFailure: vi.fn(),
     pingDatabase: vi.fn().mockResolvedValue(undefined),
     probeCanvasSchema: vi.fn().mockResolvedValue(true),
-    probeCanvasStorage: vi.fn().mockResolvedValue(undefined),
+    probeCanvasStorage: vi.fn().mockResolvedValue(readyCapability),
     probeWorker: vi.fn().mockResolvedValue({ ready: true, canvas: readyCapability }),
   };
 }
@@ -34,7 +34,7 @@ beforeEach(() => {
   execute.mockResolvedValue(1);
   query.mockResolvedValue(CANVAS_SCHEMA_CONTRACT.objects);
   transaction.mockImplementation(async (operation) => operation({ $executeRaw: execute, $queryRawUnsafe: query }));
-  createStorage.mockReturnValue({ location: { id: "location", endpoint: "https://s3.example.invalid", region: "auto", bucket: "imports" }, close: closeStorage });
+  createStorage.mockReturnValue({ location: { id: readyCapability.locationId, endpoint: "https://s3.example.invalid", region: "auto", bucket: "imports" }, close: closeStorage });
   verifyStorage.mockResolvedValue(undefined);
 });
 
@@ -44,7 +44,7 @@ describe("enabled canvas readiness", () => {
     await expect(checkApplicationReadiness(dependencies)).resolves.toEqual({ ready: true, code: "READY" });
     expect(dependencies.probeCanvasSchema).toHaveBeenCalledWith(2000);
     expect(dependencies.probeCanvasStorage).toHaveBeenCalledWith(2000);
-    expect(dependencies.probeWorker).toHaveBeenCalledWith({ baseUrl: environment.WORKER_INTERNAL_URL, timeoutMs: 2000, requireCanvas: true });
+    expect(dependencies.probeWorker).toHaveBeenCalledWith({ baseUrl: environment.WORKER_INTERNAL_URL, timeoutMs: 2000, requireCanvas: true, expectedCanvas: readyCapability });
   });
 
   it("does not trust an old/disabled worker's generic ready response", async () => {
@@ -98,6 +98,9 @@ describe("Worker canvas capability wire", () => {
     { capabilities: { canvas: null } },
     { capabilities: { canvas: { ...readyCapability, version: 2 } } },
     { capabilities: { canvas: { ...readyCapability, version: "1" } } },
+    { capabilities: { canvas: { ...readyCapability, storageRevision: 1 } } },
+    { capabilities: { canvas: { ...readyCapability, gcRevision: 1 } } },
+    { capabilities: { canvas: CANVAS_CAPABILITY_CONTRACT.readyCapability } },
     { capabilities: { canvas: { ...readyCapability, schema: "missing" } } },
     { capabilities: { canvas: { ...readyCapability, storage: "suspended" } } },
     { capabilities: { canvas: { ...readyCapability, storage: "unknown" } } },
@@ -143,7 +146,7 @@ describe("real readiness adapter composition with fake dependencies", () => {
     if (fail) verifyStorage.mockRejectedValue(new Error("versioning unknown"));
     const operation = probeApplicationCanvasStorage(125);
     if (fail) await expect(operation).rejects.toThrow("versioning unknown");
-    else await expect(operation).resolves.toBeUndefined();
+    else await expect(operation).resolves.toEqual(readyCapability);
     const adapter = createStorage.mock.results[0].value;
     expect(verifyStorage).toHaveBeenCalledWith(adapter, adapter.location, 125);
     expect(closeStorage).toHaveBeenCalledOnce();

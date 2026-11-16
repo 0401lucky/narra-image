@@ -1,4 +1,5 @@
 import type { GenerationItem } from "./types";
+import { isImageAvailability } from "@/lib/storage/image-availability";
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === "object" && !Array.isArray(value);
@@ -26,6 +27,7 @@ function optional(value: unknown, check: (value: unknown) => boolean, nullable =
 
 function isImage(value: unknown): boolean {
   return isRecord(value) && isIdentity(value.id) && isIdentity(value.url)
+    && optional(value.availability, isImageAvailability)
     && optional(value.actualSize, isString, true)
     && optional(value.actualWidth, isNumber, true)
     && optional(value.actualHeight, isNumber, true);

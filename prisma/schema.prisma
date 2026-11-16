@@ -549,6 +549,7 @@ model GenerationImage {
   height           Int?
   mediaStorage     String?
   storageKey       String?
+  mediaAssetId     String?        @unique @db.Uuid
   showcaseStatus   ShowcaseStatus @default(PRIVATE)
   showPromptPublic Boolean        @default(false)
   submittedAt      DateTime?
@@ -560,6 +561,7 @@ model GenerationImage {
   job              GenerationJob  @relation(fields: [jobId], references: [id], onDelete: Cascade)
   reviewedBy       User?          @relation("ReviewedWorks", fields: [reviewedById], references: [id], onDelete: SetNull)
   likes            WorkLike[]
+  mediaAsset       ImageAsset?    @relation(fields: [mediaAssetId], references: [id], onDelete: Restrict, onUpdate: Restrict)
 
   @@index([showcaseStatus, featuredAt(sort: Desc), id(sort: Desc)])
   @@index([jobId, createdAt])
@@ -624,10 +626,12 @@ model CanvasImportAsset {
   sha256                 String                 @db.Char(64)
   byteLength             Int
   mimeType               String                 @db.VarChar(64)
+  sourceProvider         String                 @default("S3") @db.VarChar(8)
+  mediaAssetId           String?                @unique @db.Uuid
   storageLocation        String                 @db.VarChar(128)
-  storageEndpoint        String                 @db.VarChar(512)
-  storageRegion          String                 @db.VarChar(128)
-  storageBucket          String                 @db.VarChar(255)
+  storageEndpoint        String?                @db.VarChar(512)
+  storageRegion          String?                @db.VarChar(128)
+  storageBucket          String?                @db.VarChar(255)
   storageKey             String                 @db.VarChar(512)
   storageVersionId       String?                @db.VarChar(1024)
   state                  CanvasImportAssetState @default(UPLOADING)
@@ -651,10 +655,14 @@ model CanvasImportAsset {
   user                   User?                  @relation(fields: [userId], references: [id], onDelete: SetNull, onUpdate: Restrict)
   savedAssetUses         CanvasSavedAssetUse[]
   jobAssetUses           CanvasJobAssetUse[]
+  mediaAsset             ImageAsset?            @relation(fields: [mediaAssetId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+
+  historyHolds ImageHistoryHold[]
 
   @@unique([id, ownerId], map: "CanvasImportAsset_id_owner_key")
   @@unique([ownerId, uploadId], map: "CanvasImportAsset_owner_upload_key")
   @@unique([storageEndpoint, storageBucket, storageKey], map: "CanvasImportAsset_physical_key")
+  @@unique([storageLocation, storageKey], map: "CanvasImportAsset_location_key")
   @@index([ownerId, physicalBytesAccounted], map: "CanvasImportAsset_owner_quota_idx")
   @@index([ownerId, state, uploadExpiresAt], map: "CanvasImportAsset_owner_upload_idx")
   @@index([storageLocation, state, nextDeleteAt, detachedAt], map: "CanvasImportAsset_gc_idx")
@@ -727,4 +735,386 @@ model CanvasGcLease {
   token     String?   @db.Uuid
   expiresAt DateTime? @db.Timestamptz(3)
   updatedAt DateTime  @default(dbgenerated("clock_timestamp()")) @db.Timestamptz(3)
+}
+
+/// Logical image identity survives deletion of its original user/job/business row.
+model ImageAsset {
+  id             String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  ownerId        String       @db.VarChar(128)
+  purpose        String       @db.VarChar(24)
+  originId       String?      @db.VarChar(128)
+  publicToken    String       @unique @default(dbgenerated("replace(((gen_random_uuid())::text || (gen_random_uuid())::text), '-'::text, ''::text)")) @db.VarChar(64)
+  byteLength     BigInt
+  mimeType       String       @db.VarChar(64)
+  sha256         String       @db.Char(64)
+  state          String       @default("PENDING") @db.VarChar(24)
+  activeObjectId String?      @db.Uuid
+  detachedAt     DateTime?    @db.Timestamptz(3)
+  deletedAt      DateTime?    @db.Timestamptz(3)
+  deleteReason   String?      @db.VarChar(64)
+  deleteJobId    String?      @db.Uuid
+  copyReservationId String?   @db.Uuid
+  copyProtectedUntil DateTime? @db.Timestamptz(3)
+  createdAt      DateTime     @default(dbgenerated("clock_timestamp()")) @db.Timestamptz(3)
+  updatedAt      DateTime     @default(dbgenerated("clock_timestamp()")) @db.Timestamptz(3)
+  objects        ImageObject[] @relation("ImageAssetObjects")
+  activeObject   ImageObject? @relation("ImageAssetActive", fields: [activeObjectId, id], references: [id, assetId], onDelete: Restrict, onUpdate: Restrict, map: "ImageAsset_active_object_fkey")
+  references     ImageReference[]
+  aliases        ImageUrlAlias[]
+  generationImage GenerationImage?
+  canvasImport   CanvasImportAsset?
+  deleteJob      ImageMaintenanceJob? @relation("ImageAssetDeleteJob", fields: [deleteJobId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  copyReservation ImageWriteReservation? @relation("ImageAssetCopy", fields: [copyReservationId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  maintenanceItems ImageMaintenanceItem[]
+  replicaVerifications ImageReplicaVerification[]
+  generationBinding ImageGenerationBinding?
+  historyItems ImageHistoryItem[]
+  historyHolds ImageHistoryHold[]
+
+  @@unique([activeObjectId, id], map: "ImageAsset_active_object_key")
+  @@unique([ownerId, purpose, originId], map: "ImageAsset_origin_key")
+  @@index([ownerId, createdAt], map: "ImageAsset_owner_idx")
+  @@index([state, createdAt, id], map: "ImageAsset_cleanup_idx")
+}
+
+model ImageStorageLocation {
+  id                String        @id @db.VarChar(128)
+  provider          String        @db.VarChar(8)
+  endpoint          String?       @db.VarChar(512)
+  region            String?       @db.VarChar(128)
+  bucket            String?       @db.VarChar(255)
+  volumeId          String?       @db.Uuid
+  publicBaseUrl     String?       @db.VarChar(2048)
+  physicalNamespace String        @db.VarChar(1024)
+  createdAt         DateTime      @default(dbgenerated("clock_timestamp()")) @db.Timestamptz(3)
+  objects           ImageObject[]
+  historyJobs       ImageHistoryJob[]
+  observations      ImageObjectObservation[]
+
+  @@unique([id, physicalNamespace], map: "ImageStorageLocation_namespace_key")
+}
+
+model ImageWriteReservation {
+  id             String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  token          String       @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  ownerId        String       @db.VarChar(128)
+  intentKey      String       @db.VarChar(256)
+  kind           String       @db.VarChar(16)
+  slotBytes      BigInt[]
+  remainingBytes BigInt
+  state          String       @default("ACTIVE") @db.VarChar(16)
+  outputJobId    String?      @unique @db.VarChar(128)
+  workerId       String?      @db.VarChar(128)
+  leaseExpiresAt DateTime     @db.Timestamptz(3)
+  createdAt      DateTime     @default(dbgenerated("clock_timestamp()")) @db.Timestamptz(3)
+  updatedAt      DateTime     @default(dbgenerated("clock_timestamp()")) @db.Timestamptz(3)
+  objects        ImageObject[]
+
+  copyAssets     ImageAsset[] @relation("ImageAssetCopy")
+  historyItems   ImageHistoryItem[]
+
+  @@unique([ownerId, intentKey], map: "ImageWriteReservation_intent_key")
+  @@index([state, leaseExpiresAt], map: "ImageWriteReservation_expiry_idx")
+}
+
+model ImageObject {
+  id                  String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  assetId             String        @db.Uuid
+  reservationId       String?       @db.Uuid
+  slot                Int?
+  provenance          String        @default("WRITE") @db.VarChar(16)
+  sourceObservationId String?       @unique @db.Uuid
+  reconciliationObservationId String? @unique @db.Uuid
+  locationId          String        @db.VarChar(128)
+  physicalNamespace   String        @db.VarChar(1024)
+  key                 String        @db.VarChar(512)
+  byteLength          BigInt
+  mimeType            String        @db.VarChar(64)
+  sha256              String        @db.Char(64)
+  state               String        @default("WRITING") @db.VarChar(24)
+  writeToken          String?       @db.Uuid
+  writeExpiresAt      DateTime?     @db.Timestamptz(3)
+  putOutcome          String        @default("NOT_STARTED") @db.VarChar(16)
+  versionId           String?       @db.VarChar(1024)
+  accounted           Boolean       @default(true)
+  needsReconciliation Boolean       @default(false)
+  deleteToken         String?       @db.Uuid
+  deleteExpiresAt     DateTime?     @db.Timestamptz(3)
+  deleteOutcome       String        @default("NOT_STARTED") @db.VarChar(16)
+  deleteAttempts      Int           @default(0)
+  nextDeleteAt        DateTime?     @db.Timestamptz(3)
+  deletedAt           DateTime?     @db.Timestamptz(3)
+  lastErrorCode       String?       @db.VarChar(64)
+  deleteItemId        String?       @db.Uuid
+  readProtectedUntil DateTime?     @db.Timestamptz(3)
+  createdAt           DateTime      @default(dbgenerated("clock_timestamp()")) @db.Timestamptz(3)
+  updatedAt           DateTime      @default(dbgenerated("clock_timestamp()")) @db.Timestamptz(3)
+  asset               ImageAsset   @relation("ImageAssetObjects", fields: [assetId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  activeFor           ImageAsset?  @relation("ImageAssetActive")
+  location            ImageStorageLocation @relation(fields: [locationId, physicalNamespace], references: [id, physicalNamespace], onDelete: Restrict, onUpdate: Restrict, map: "ImageObject_location_fkey")
+  reservation         ImageWriteReservation? @relation(fields: [reservationId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  deleteItem          ImageMaintenanceItem? @relation("ImageObjectDeleteItem", fields: [deleteItemId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  maintenanceItems    ImageMaintenanceItem[] @relation("ImageMaintenanceItemObject")
+  sourceVerifications ImageReplicaVerification[] @relation("ImageReplicaSource")
+  targetVerifications ImageReplicaVerification[] @relation("ImageReplicaTarget")
+  sourceObservation ImageObjectObservation? @relation("ObservedSource", fields: [sourceObservationId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  reconciliationObservation ImageObjectObservation? @relation("WriteReconciliation", fields: [reconciliationObservationId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  sourceHistoryItems ImageHistoryItem[] @relation("HistorySourceObject")
+  targetHistoryItems ImageHistoryItem[] @relation("HistoryTargetObject")
+
+  @@unique([id, assetId], map: "ImageObject_asset_key")
+  @@unique([physicalNamespace, key], map: "ImageObject_physical_key")
+  @@unique([reservationId, slot], map: "ImageObject_slot_key")
+  @@index([assetId, state], map: "ImageObject_asset_state_idx")
+  @@index([state, nextDeleteAt, createdAt], map: "ImageObject_cleanup_idx")
+}
+
+model ImageReference {
+  assetId      String     @db.Uuid
+  ownerId      String     @db.VarChar(128)
+  kind         String     @db.VarChar(24)
+  referenceKey String     @db.VarChar(256)
+  permanent    Boolean    @default(false)
+  createdAt    DateTime   @default(dbgenerated("clock_timestamp()")) @db.Timestamptz(3)
+  asset        ImageAsset @relation(fields: [assetId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+
+  @@id([assetId, kind, referenceKey])
+  @@index([ownerId, kind, referenceKey], map: "ImageReference_source_idx")
+}
+
+model ImageUrlAlias {
+  url       String     @id @db.VarChar(2048)
+  assetId   String     @db.Uuid
+  createdAt DateTime   @default(dbgenerated("clock_timestamp()")) @db.Timestamptz(3)
+  asset     ImageAsset @relation(fields: [assetId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+
+  @@index([assetId], map: "ImageUrlAlias_asset_idx")
+}
+
+model ImageQuota {
+  scope         String   @id @default("images") @db.VarChar(16)
+  usedBytes     BigInt   @default(0)
+  reservedBytes BigInt   @default(0)
+  updatedAt     DateTime @default(dbgenerated("clock_timestamp()")) @db.Timestamptz(3)
+}
+
+model ImageStoragePolicy {
+  scope               String    @id @default("images") @db.VarChar(16)
+  version             Int       @default(1)
+  limitBytes          BigInt    @default(5000000000)
+  enabled             Boolean   @default(false)
+  quotaCleanupEnabled Boolean   @default(true)
+  scheduleEnabled     Boolean   @default(false)
+  retentionDays       Int       @default(30)
+  intervalSeconds     Int       @default(86400)
+  nextRunAt           DateTime? @db.Timestamptz(3)
+  createdAt           DateTime  @default(dbgenerated("clock_timestamp()")) @db.Timestamptz(3)
+  updatedAt           DateTime  @default(dbgenerated("clock_timestamp()")) @db.Timestamptz(3)
+}
+
+model ImageMaintenanceJob {
+  id                 String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  requesterId        String   @db.VarChar(128)
+  requestKey         String   @unique @db.VarChar(256)
+  intent             Json
+  mode               String   @db.VarChar(24)
+  state              String   @default("PREVIEW") @db.VarChar(16)
+  policyVersion      Int
+  ageCutoff          DateTime? @db.Timestamptz(3)
+  neededBytes        BigInt   @default(0)
+  reclaimTargetBytes BigInt   @default(0)
+  previewExpiresAt   DateTime? @db.Timestamptz(3)
+  confirmedRequestId String?  @unique @db.Uuid
+  confirmedAt        DateTime? @db.Timestamptz(3)
+  nextAttemptAt      DateTime? @db.Timestamptz(3)
+  completedAt        DateTime? @db.Timestamptz(3)
+  cancelRequested    Boolean  @default(false)
+  truncated          Boolean  @default(false)
+  verificationId     String?  @db.Uuid
+  createdAt          DateTime @default(dbgenerated("clock_timestamp()")) @db.Timestamptz(3)
+  updatedAt          DateTime @default(dbgenerated("clock_timestamp()")) @db.Timestamptz(3)
+  verification       ImageReplicaVerification? @relation(fields: [verificationId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  items              ImageMaintenanceItem[]
+  deletingAssets     ImageAsset[] @relation("ImageAssetDeleteJob")
+  historyItems       ImageHistoryItem[]
+
+  @@index([state, nextAttemptAt, createdAt, id], map: "ImageMaintenanceJob_queue_idx")
+}
+
+model ImageMaintenanceItem {
+  id                     String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  jobId                  String @db.Uuid
+  assetId                String @db.Uuid
+  objectId               String @db.Uuid
+  byteLength             BigInt
+  assetCreatedAt         DateTime @db.Timestamptz(3)
+  expectedActiveObjectId String? @db.Uuid
+  manifest               String @db.Char(64)
+  state                  String @default("CANDIDATE") @db.VarChar(16)
+  reason                 String? @db.VarChar(64)
+  releasedBytes          BigInt @default(0)
+  completedAt            DateTime? @db.Timestamptz(3)
+  job                    ImageMaintenanceJob @relation(fields: [jobId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  asset                  ImageAsset @relation(fields: [assetId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  object                 ImageObject @relation("ImageMaintenanceItemObject", fields: [objectId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  deletingObjects        ImageObject[] @relation("ImageObjectDeleteItem")
+
+  @@unique([jobId, objectId], map: "ImageMaintenanceItem_job_object_key")
+  @@index([jobId, state, assetCreatedAt, assetId, id], map: "ImageMaintenanceItem_pending_idx")
+}
+
+model ImageMaintenanceLease {
+  scope     String @id @default("images") @db.VarChar(16)
+  workerId  String? @db.VarChar(128)
+  token     String? @db.Uuid
+  expiresAt DateTime? @db.Timestamptz(3)
+}
+
+model ImageReplicaVerification {
+  id                     String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  assetId                String @db.Uuid
+  sourceObjectId         String @db.Uuid
+  targetObjectId         String @db.Uuid
+  byteLength             BigInt
+  sha256                 String @db.Char(64)
+  aliasUrls              String[]
+  aliasManifest          String @db.Char(64)
+  readerProtocolRevision Int
+  revoked                Boolean @default(false)
+  verifiedAt             DateTime @default(dbgenerated("clock_timestamp()")) @db.Timestamptz(3)
+  asset                  ImageAsset @relation(fields: [assetId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  sourceObject           ImageObject @relation("ImageReplicaSource", fields: [sourceObjectId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  targetObject           ImageObject @relation("ImageReplicaTarget", fields: [targetObjectId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  jobs                   ImageMaintenanceJob[]
+  historyItems           ImageHistoryItem[]
+}
+
+model ImageGenerationBinding {
+  assetId   String @id @db.Uuid
+  imageId   String @unique @db.VarChar(128)
+  jobId     String @db.VarChar(128)
+  ownerId   String @db.VarChar(128)
+  createdAt DateTime @default(dbgenerated("clock_timestamp()")) @db.Timestamptz(3)
+  asset     ImageAsset @relation(fields: [assetId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+}
+
+model ImageHistoryJob {
+  id               String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  requestId        String   @unique @db.Uuid
+  actorId          String   @db.VarChar(128)
+  mode             String   @db.VarChar(8)
+  scope            String   @db.VarChar(24)
+  planDigest       String   @db.Char(64)
+  publicUrlBase    String   @db.VarChar(2048)
+  sourceBindings   Json
+  targetLocationId String?  @db.VarChar(128)
+  retireSource     Boolean  @default(false)
+  upperBound       DateTime @db.Timestamptz(3)
+  cursor           String?
+  scanComplete     Boolean  @default(false)
+  state            String   @default("PLANNED") @db.VarChar(16)
+  createdAt        DateTime @default(dbgenerated("clock_timestamp()")) @db.Timestamptz(3)
+  updatedAt        DateTime @default(dbgenerated("clock_timestamp()")) @db.Timestamptz(3)
+  targetLocation   ImageStorageLocation? @relation(fields: [targetLocationId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  items            ImageHistoryItem[]
+}
+
+model ImageHistoryItem {
+  id                    String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  jobId                 String   @db.Uuid
+  subjectKind           String   @db.VarChar(24)
+  subjectId             String   @db.VarChar(128)
+  ownerId               String?  @db.VarChar(128)
+  exactUrl              String?
+  snapshot              Json
+  snapshotHash          String   @db.Char(64)
+  sourceBinding         Json?
+  state                 String   @default("PENDING") @db.VarChar(24)
+  workerId              String?  @db.VarChar(128)
+  token                 String?  @db.Uuid
+  leaseExpiresAt        DateTime? @db.Timestamptz(3)
+  sourceObservationId   String?  @db.Uuid
+  assetId               String?  @db.Uuid
+  sourceObjectId        String?  @db.Uuid
+  targetObjectId        String?  @db.Uuid
+  reservationId         String?  @db.Uuid
+  attempt               Int      @default(0)
+  intentKey             String?  @db.VarChar(256)
+  targetKey             String?  @db.VarChar(512)
+  replicaVerificationId String?  @db.Uuid
+  retirementJobId       String?  @db.Uuid
+  errorCode             String?  @db.VarChar(64)
+  createdAt             DateTime @default(dbgenerated("clock_timestamp()")) @db.Timestamptz(3)
+  updatedAt             DateTime @default(dbgenerated("clock_timestamp()")) @db.Timestamptz(3)
+  job                   ImageHistoryJob @relation(fields: [jobId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  asset                 ImageAsset? @relation(fields: [assetId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  sourceObject          ImageObject? @relation("HistorySourceObject", fields: [sourceObjectId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  targetObject          ImageObject? @relation("HistoryTargetObject", fields: [targetObjectId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  reservation           ImageWriteReservation? @relation(fields: [reservationId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  sourceObservation     ImageObjectObservation? @relation("HistorySelectedSource", fields: [sourceObservationId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  replicaVerification   ImageReplicaVerification? @relation(fields: [replicaVerificationId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  retirementJob         ImageMaintenanceJob? @relation(fields: [retirementJobId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  observations          ImageObjectObservation[] @relation("HistoryObservations")
+  hold                  ImageHistoryHold?
+
+  @@unique([jobId, subjectKind, subjectId], map: "ImageHistoryItem_subject_key")
+  @@index([jobId, state, leaseExpiresAt, id], map: "ImageHistoryItem_queue_idx")
+}
+
+model ImageObjectObservation {
+  id                  String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  requestId           String   @unique @db.Uuid
+  itemId              String   @db.Uuid
+  kind                String   @db.VarChar(24)
+  sourceSnapshotHash  String   @db.Char(64)
+  locationId          String   @db.VarChar(128)
+  physicalNamespace  String   @db.VarChar(1024)
+  key                 String   @db.VarChar(512)
+  readResult          String   @db.VarChar(16)
+  byteLength          BigInt?
+  sha256              String?  @db.Char(64)
+  mimeType            String?  @db.VarChar(64)
+  versionEvidence     String   @db.VarChar(16)
+  versionId           String?  @db.VarChar(1024)
+  etag                String?  @db.VarChar(1024)
+  lastModified        String?  @db.VarChar(128)
+  writerEvidence      String   @db.VarChar(24)
+  originalWriteToken  String?  @db.Uuid
+  writerProofSha256   String?  @db.Char(64)
+  recordedBy          String   @db.VarChar(128)
+  recordedAt          DateTime @default(dbgenerated("clock_timestamp()")) @db.Timestamptz(3)
+  item                ImageHistoryItem @relation("HistoryObservations", fields: [itemId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  selectedBy          ImageHistoryItem[] @relation("HistorySelectedSource")
+  sourceObject        ImageObject? @relation("ObservedSource")
+  reconciledObject    ImageObject? @relation("WriteReconciliation")
+  location            ImageStorageLocation @relation(fields: [locationId, physicalNamespace], references: [id, physicalNamespace], onDelete: Restrict, onUpdate: Restrict, map: "ImageObjectObservation_location_fkey")
+
+  @@index([itemId, recordedAt, id], map: "ImageObjectObservation_item_idx")
+}
+
+model ImageHistoryReference {
+  urlHash      String   @db.Char(64)
+  exactUrl     String
+  ownerId      String   @db.VarChar(128)
+  kind         String   @db.VarChar(24)
+  referenceKey String   @db.VarChar(256)
+  permanent    Boolean
+  createdAt    DateTime @default(dbgenerated("clock_timestamp()")) @db.Timestamptz(3)
+
+  @@id([urlHash, kind, referenceKey])
+  @@index([ownerId, kind, referenceKey], map: "ImageHistoryReference_source_idx")
+}
+
+model ImageHistoryHold {
+  itemId         String   @id @db.Uuid
+  assetId        String?  @db.Uuid
+  canvasImportId String?  @db.VarChar(128)
+  releasedAt     DateTime? @db.Timestamptz(3)
+  createdAt      DateTime @default(dbgenerated("clock_timestamp()")) @db.Timestamptz(3)
+  item           ImageHistoryItem @relation(fields: [itemId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  asset          ImageAsset? @relation(fields: [assetId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  canvasImport   CanvasImportAsset? @relation(fields: [canvasImportId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+
+  @@index([assetId, releasedAt], map: "ImageHistoryHold_asset_idx")
+  @@index([canvasImportId, releasedAt], map: "ImageHistoryHold_canvas_idx")
 }

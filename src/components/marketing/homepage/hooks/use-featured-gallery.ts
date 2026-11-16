@@ -1,10 +1,11 @@
 "use client";
 
-// 初始 props 只引导一次；同账户刷新不丢分页和交互，换账户由 Home 的 key 重挂载。
+// 初始 props 只引导分页一次；同账户刷新仅合并已加载图片的 URL/可用性，换账户由 Home 的 key 重挂载。
 // 请求锁与游标快照同步更新，不依赖 React 提交时机；重复页/失败不自动循环重试。
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import type { SerializedFeaturedWork } from "@/lib/prisma-mappers";
+import { isImageAvailable, mergeImageAvailabilityState } from "@/lib/storage/image-availability";
 import { featuredCursorResponseSchema, featuredPageResponseSchema } from "@/lib/validators";
 
 import { GALLERY_ITEM_LIMIT, GALLERY_MESSAGES, GALLERY_PAGE_SIZE } from "../gallery-constants";
@@ -38,6 +39,27 @@ type UseFeaturedGalleryResult = GallerySnapshot & {
   loadMore: (source?: "manual" | "auto") => Promise<void>;
 };
 
+type GalleryMedia = Pick<SerializedFeaturedWork, "availability" | "image">;
+
+function refreshGalleryMedia(
+  current: Map<string, GalleryMedia>, items: SerializedFeaturedWork[], incoming: SerializedFeaturedWork[],
+): Map<string, GalleryMedia> {
+  const byId = new Map(incoming.map((work) => [work.id, work]));
+  let next = current;
+  // The current page list is capped, so retained media overrides are too.
+  for (const work of items) {
+    const fresh = byId.get(work.id);
+    if (!fresh) continue;
+    const previous = current.get(work.id) ?? work;
+    const availability = mergeImageAvailabilityState(previous.availability, fresh.availability);
+    const image = isImageAvailable(availability) ? fresh.image : "";
+    if (availability === previous.availability && image === previous.image) continue;
+    if (next === current) next = new Map(current);
+    next.set(work.id, { availability, image });
+  }
+  return next;
+}
+
 function mergeUniqueWorks(current: SerializedFeaturedWork[], incoming: SerializedFeaturedWork[]) {
   const seen = new Set(current.map((work) => work.id));
   const next = [...current];
@@ -70,6 +92,13 @@ function bootstrapGallery({
 
 export function useFeaturedGallery(options: UseFeaturedGalleryOptions): UseFeaturedGalleryResult {
   const [view, setView] = useState(() => bootstrapGallery(options));
+  const [mediaUpdates, setMediaUpdates] = useState(() => new Map<string, GalleryMedia>());
+  const refreshedMedia = refreshGalleryMedia(mediaUpdates, view.items, options.works);
+  if (refreshedMedia !== mediaUpdates) setMediaUpdates(refreshedMedia);
+  const items = useMemo(() => view.items.map((work) => {
+    const media = mediaUpdates.get(work.id);
+    return media ? { ...work, ...media } : work;
+  }), [mediaUpdates, view.items]);
   const snapshotRef = useRef(view);
   const activeRef = useRef(false);
   const epochRef = useRef(0);
@@ -153,6 +182,7 @@ export function useFeaturedGallery(options: UseFeaturedGalleryOptions): UseFeatu
 
   return {
     ...view,
+    items,
     atLimit: view.items.length >= GALLERY_ITEM_LIMIT,
     canLoadMore: view.items.length < GALLERY_ITEM_LIMIT && (view.needsBootstrap || (view.hasMore && Boolean(view.nextCursor))),
     loadMore,

@@ -3,6 +3,7 @@ import type {
   CanvasMetadataDtoV1, CanvasRuntimeImageDtoV1, CanvasViewportV1,
 } from "@/lib/canvas/contracts";
 import { CanvasContractError } from "@/lib/canvas/contracts";
+import type { ImageAvailability } from "@/lib/types";
 
 import type { GenerationItem } from "../types";
 import { canvasClientErrorMessage, type CanvasClientApi } from "./client-api";
@@ -31,7 +32,7 @@ export type CanvasDocumentView = {
   error: string | null;
   warning: string | null;
 };
-export type CanvasReferenceView = { state: "local" | "ready" | "missing" | "uploading"; assetId: string | null; blobId: string | null; url: string | null };
+export type CanvasReferenceView = { state: "local" | "ready" | "missing" | "uploading"; availability?: ImageAvailability; assetId: string | null; blobId: string | null; url: string | null };
 export type CanvasActiveView = {
   document: CanvasDocumentView;
   scene: CanvasLocalSceneV1;

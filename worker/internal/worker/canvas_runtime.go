@@ -78,6 +78,13 @@ func (w *Worker) canvasReadiness(ctx context.Context, snapshot runtimeSnapshot) 
 	if !w.state.snapshot().CanvasGCRunning {
 		return readinessResult{Code: readinessCodeCanvasGCNotReady}
 	}
-	capability := w.canvasGC.contract.Capability.ReadyCapability
+	capability := CanvasRuntimeReadyCapability{CanvasReadyCapability: w.canvasGC.contract.Capability.ReadyCapability}
+	location := w.canvasGC.storage.Location()
+	capability.Provider = "S3"
+	if location.Provider == "LOCAL" {
+		capability.Provider = "LOCAL"
+		capability.Storage = "local"
+	}
+	capability.LocationID = location.ID
 	return readinessResult{Ready: true, Canvas: &capability}
 }

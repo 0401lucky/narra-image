@@ -28,6 +28,8 @@ import type {
   GenerationSizeToken,
 } from "@/lib/types";
 import type { ExternalGenerationRequest } from "@/lib/generation/external-api";
+import type { ImageReservation } from "@/lib/storage/image-contract";
+import { closeManagedImageReservation, reserveManagedImageOutputs } from "@/lib/storage/managed-image-storage";
 
 /**
  * Next → Go 内部生成网关的薄代理。
@@ -250,7 +252,11 @@ export async function runExternalGenerationViaGateway(input: {
   const count = input.input.generationType === "image_to_image" ? 1 : input.input.count;
 
   let charged = false;
+  let forwarding = false;
+  let outputReservation: ImageReservation | null = null;
+  const jobId = gatewayJobId();
   try {
+    outputReservation = await reserveManagedImageOutputs({ ownerId: input.user.id, intentKey: `output:${jobId}`, count });
     await prechargeCredits(input.user.id, cost);
     charged = true;
 
@@ -258,11 +264,12 @@ export async function runExternalGenerationViaGateway(input: {
       ? await uploadSourceImages(input.input.sourceImages, input.user.id)
       : [];
 
-    return await runThroughGateway({
+    forwarding = true;
+    const response = await runThroughGateway({
       apiKeyId: input.apiKeyId,
       userId: input.user.id,
       endpoint: input.endpoint,
-      jobId: gatewayJobId(),
+      jobId,
       creditsSpent: cost,
       provider: {
         channelId: provider.id,
@@ -293,11 +300,18 @@ export async function runExternalGenerationViaGateway(input: {
       },
       signal: input.signal,
     });
+    if (!response.ok && !(await gatewayJobBelongsTo(jobId, input.apiKeyId))) {
+      await closeManagedImageReservation(outputReservation).catch(() => undefined);
+    }
+    return response;
   } catch (error) {
     // 预扣后、转发前失败（如参考图上传失败）需补偿退款。
-    if (charged) {
+    // Once forwarding starts, runThroughGateway owns compensation. A later
+    // database/read failure must not refund a response it already compensated.
+    if (charged && !forwarding) {
       await refundCredits(input.user.id, cost);
     }
+    await closeManagedImageReservation(outputReservation).catch(() => undefined);
     throw error;
   }
 }

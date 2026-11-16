@@ -5,12 +5,16 @@ import type { CanvasImportAsset } from "@prisma/client";
 import type { z } from "zod";
 
 import { db } from "@/lib/db";
+import { getEnv } from "@/lib/env";
+import { ImageRepository } from "@/lib/storage/image-repository";
+import { getImageAvailability } from "@/lib/storage/image-availability";
+import { abandonPreparedImageWrite, prepareManagedImageWrite, putManagedImageObject } from "@/lib/storage/managed-image-storage";
 import { canvasUploadDeclarationSchema } from "@/lib/validators";
 import { readCanvasBody } from "./body-limit";
 import { CANVAS_LIMITS, CanvasContractError, type CanvasAssetDtoV1, type CanvasErrorCode } from "./contracts";
 import { parseCanvasInput } from "./http";
 import { verifyCanvasImage } from "./image-container";
-import { boundedCanvasStorageCall, canvasAssetUrl, createCanvasStorageAdapter, verifyCanvasStorageCapability, type CanvasStorageAdapter } from "./storage";
+import { boundedCanvasStorageCall, canvasAssetUrl, canvasMediaInclude, createCanvasStorageAdapter, verifyCanvasStorageCapability, type CanvasStorageAdapter, type CanvasMediaRelation } from "./storage";
 import { canvasTransaction, lockCanvasOwner } from "./transactions";
 
 export type CanvasUploadDeclaration = z.output<typeof canvasUploadDeclarationSchema>;
@@ -32,8 +36,9 @@ export async function withCanvasUploadSlot<T>(ownerId: string, operation: () => 
   }
 }
 
-export function serializeCanvasAsset(asset: CanvasImportAsset): CanvasAssetDtoV1 {
+export function serializeCanvasAsset(asset: CanvasImportAsset & CanvasMediaRelation): CanvasAssetDtoV1 {
   return {
+    availability: asset.state === "DELETED" ? "cleaned" : asset.state === "READY" ? getImageAvailability(asset) : "unavailable",
     id: asset.id,
     uploadId: asset.uploadId,
     state: asset.state,
@@ -74,7 +79,7 @@ function requireMatchingUpload(asset: CanvasImportAsset, declaration: CanvasUplo
   if (asset.sha256 !== declaration.sha256 || asset.byteLength !== declaration.byteLength || asset.mimeType !== declaration.mimeType) throw new CanvasContractError("CANVAS_UPLOAD_CONFLICT");
 }
 
-function uploadReplay(asset: CanvasImportAsset): { asset: CanvasAssetDtoV1; pending: boolean } {
+function uploadReplay(asset: CanvasImportAsset & CanvasMediaRelation): { asset: CanvasAssetDtoV1; pending: boolean } {
   if (asset.state === "READY" || asset.state === "UPLOADING") {
     const dto = serializeCanvasAsset(asset);
     if (asset.state === "READY" && !dto.url) throw new CanvasContractError("CANVAS_INPUT_UNAVAILABLE");
@@ -90,7 +95,7 @@ async function expireCanvasUpload(ownerId: string, uploadId: string): Promise<vo
 
 export async function getCanvasUpload(ownerId: string, uploadId: string): Promise<CanvasAssetDtoV1> {
   await expireCanvasUpload(ownerId, uploadId);
-  const asset = await db.canvasImportAsset.findFirst({ where: { ownerId, userId: ownerId, uploadId } });
+  const asset = await db.canvasImportAsset.findFirst({ where: { ownerId, userId: ownerId, uploadId }, include: canvasMediaInclude });
   if (!asset) throw new CanvasContractError("CANVAS_INPUT_UNAVAILABLE");
   const dto = serializeCanvasAsset(asset);
   if (asset.state === "READY" && !dto.url) throw new CanvasContractError("CANVAS_INPUT_UNAVAILABLE");
@@ -98,7 +103,7 @@ export async function getCanvasUpload(ownerId: string, uploadId: string): Promis
 }
 
 export async function getCanvasAsset(ownerId: string, id: string): Promise<CanvasAssetDtoV1> {
-  const asset = await db.canvasImportAsset.findFirst({ where: { id, ownerId, userId: ownerId } });
+  const asset = await db.canvasImportAsset.findFirst({ where: { id, ownerId, userId: ownerId }, include: canvasMediaInclude });
   if (!asset) throw new CanvasContractError("CANVAS_INPUT_UNAVAILABLE");
   if (asset.state === "UPLOADING") return getCanvasUpload(ownerId, asset.uploadId);
   const dto = serializeCanvasAsset(asset);
@@ -131,7 +136,7 @@ export async function importCanvasAsset(ownerId: string, input: CanvasVerifiedUp
   if (bytes.length !== declaration.byteLength || createHash("sha256").update(bytes).digest("hex") !== declaration.sha256) throw new CanvasContractError("CANVAS_INVALID_INPUT");
   verifyCanvasImage(bytes, declaration.mimeType);
   await expireCanvasUpload(ownerId, declaration.uploadId);
-  const previous = await db.canvasImportAsset.findFirst({ where: { ownerId, userId: ownerId, uploadId: declaration.uploadId } });
+  const previous = await db.canvasImportAsset.findFirst({ where: { ownerId, userId: ownerId, uploadId: declaration.uploadId }, include: canvasMediaInclude });
   if (previous) { requireMatchingUpload(previous, declaration); return uploadReplay(previous); }
 
   const storage = (dependencies.storage ?? createCanvasStorageAdapter)();
@@ -141,6 +146,7 @@ export async function importCanvasAsset(ownerId: string, input: CanvasVerifiedUp
 
 async function importWithCanvasStorage(ownerId: string, { declaration, bytes }: CanvasVerifiedUpload, storage: CanvasStorageAdapter): Promise<{ asset: CanvasAssetDtoV1; pending: boolean }> {
   await verifyCanvasStorageCapability(storage);
+  if (getEnv().IMAGE_STORAGE_MANAGED_ENABLED) return importManagedCanvasAsset(ownerId, { declaration, bytes }, storage);
   const reservation = await canvasTransaction(async (tx) => {
     await lockCanvasOwner(tx, ownerId);
     const existing = await tx.canvasImportAsset.findFirst({ where: { ownerId, uploadId: declaration.uploadId } });
@@ -201,4 +207,82 @@ async function importWithCanvasStorage(ownerId: string, { declaration, bytes }: 
     throw new CanvasContractError("CANVAS_LEASE_LOST");
   }
   return uploadReplay(ready);
+}
+
+async function importManagedCanvasAsset(ownerId: string, { declaration, bytes }: CanvasVerifiedUpload, storage: CanvasStorageAdapter): Promise<{ asset: CanvasAssetDtoV1; pending: boolean }> {
+  const identity = createHash("sha256").update(JSON.stringify([ownerId, declaration.uploadId])).digest("hex");
+  const canvasAssetId = `import-${identity}`;
+  const extension = { "image/png": "png", "image/jpeg": "jpg", "image/webp": "webp" }[declaration.mimeType];
+  const prepared = await prepareManagedImageWrite({
+    ownerId, bytes, purpose: "CANVAS_IMPORT", originId: canvasAssetId,
+    intentKey: `canvas-import:${declaration.uploadId}`, key: `canvas-imports/${identity}.${extension}`, leaseSeconds: 120,
+  });
+  const repository = new ImageRepository();
+  const { ticket } = prepared;
+  let asset: CanvasImportAsset & CanvasMediaRelation;
+  try {
+    if (prepared.location.id !== storage.location.id) throw new CanvasContractError("CANVAS_STORAGE_CAPABILITY_INVALID");
+    asset = await canvasTransaction(async (tx) => {
+      await lockCanvasOwner(tx, ownerId);
+      const existing = await tx.canvasImportAsset.findFirst({ where: { ownerId, uploadId: declaration.uploadId }, include: canvasMediaInclude });
+      if (existing) {
+        requireMatchingUpload(existing, declaration);
+        if (existing.userId !== ownerId || existing.mediaAssetId !== ticket.asset.id || existing.storageKey !== ticket.object.key) throw new CanvasContractError("CANVAS_UPLOAD_CONFLICT");
+        return existing;
+      }
+      // Both the global physical gate and this original per-owner logical gate
+      // must succeed before the first (and only) physical PUT is permitted.
+      return tx.canvasImportAsset.create({ data: {
+        id: canvasAssetId, ownerId, userId: ownerId, ...declaration,
+        sourceProvider: prepared.location.provider, mediaAssetId: ticket.asset.id,
+        storageLocation: prepared.location.id, storageEndpoint: prepared.location.endpoint,
+        storageRegion: prepared.location.region, storageBucket: prepared.location.bucket,
+        storageKey: ticket.object.key, uploadToken: ticket.object.writeToken, uploadExpiresAt: new Date(0),
+      }, include: canvasMediaInclude });
+    });
+  } catch (error) {
+    // No caller can PUT a replayed grant. Definite registry rollback proves
+    // absence; uncertain database commit keeps an accounted reconciliation row.
+    await abandonPreparedImageWrite(prepared, error instanceof CanvasContractError).catch(() => undefined);
+    throw error;
+  }
+  if (!ticket.writeGranted) return uploadReplay(asset);
+  try {
+    let receipt: { versionId: string | null };
+    try {
+      receipt = await boundedCanvasStorageCall((signal) => putManagedImageObject({
+        location: prepared.location, key: ticket.object.key, bytes, mimeType: declaration.mimeType, sha256: declaration.sha256, signal,
+      }), undefined, async (late) => {
+        await repository.finishObject({ objectId: ticket.object.id, writeToken: ticket.object.writeToken, outcome: "UNKNOWN", versionId: late.versionId, errorCode: "IMAGE_STORAGE_UNAVAILABLE" });
+        if (late.versionId !== null) await quarantineCanvasUpload(asset, "CANVAS_STORAGE_CAPABILITY_INVALID", versionReceiptFence(late.versionId));
+      });
+    } catch {
+      await repository.finishObject({ objectId: ticket.object.id, writeToken: ticket.object.writeToken, outcome: "UNKNOWN", errorCode: "IMAGE_STORAGE_UNAVAILABLE" }).catch(() => undefined);
+      await quarantineCanvasUpload(asset, "CANVAS_UPLOAD_QUARANTINED");
+      throw new CanvasContractError("CANVAS_UPLOAD_QUARANTINED");
+    }
+    if (receipt.versionId !== null) {
+      await repository.finishObject({ objectId: ticket.object.id, writeToken: ticket.object.writeToken, outcome: "UNKNOWN", versionId: receipt.versionId, errorCode: "IMAGE_STORAGE_UNAVAILABLE" });
+      await quarantineCanvasUpload(asset, "CANVAS_STORAGE_CAPABILITY_INVALID", versionReceiptFence(receipt.versionId));
+      throw new CanvasContractError("CANVAS_STORAGE_CAPABILITY_INVALID");
+    }
+    const confirmed = await repository.finishObject({ objectId: ticket.object.id, writeToken: ticket.object.writeToken, outcome: "CONFIRMED" });
+    if (!confirmed.accepted || confirmed.asset.state !== "AVAILABLE") {
+      await quarantineCanvasUpload(asset, "CANVAS_LEASE_LOST");
+      throw new CanvasContractError("CANVAS_LEASE_LOST");
+    }
+    const ready = await canvasTransaction(async (tx) => {
+      const count = await tx.$executeRaw`UPDATE "CanvasImportAsset" SET state = 'READY', "putOutcome" = 'CONFIRMED', "lastStorageErrorCode" = NULL
+        WHERE id = ${asset.id}::text AND "ownerId" = ${ownerId}::text AND "userId" = ${ownerId}::text
+          AND state = 'UPLOADING' AND "uploadToken" = ${asset.uploadToken}::uuid AND "uploadExpiresAt" > clock_timestamp()`;
+      return count ? tx.canvasImportAsset.findFirst({ where: { id: asset.id, ownerId }, include: canvasMediaInclude }) : null;
+    });
+    if (!ready) {
+      await quarantineCanvasUpload(asset, "CANVAS_LEASE_LOST");
+      throw new CanvasContractError("CANVAS_LEASE_LOST");
+    }
+    return uploadReplay(ready);
+  } finally {
+    await repository.closeReservation({ reservationId: prepared.reservation.id, token: prepared.reservation.token }).catch(() => undefined);
+  }
 }

@@ -202,6 +202,14 @@ function getImageFileExtension(contentType: string) {
 }
 
 export async function downloadExternalImage(url: string, index = 0) {
+  const { resolveManagedImageUrl, readManagedImage } = await import("@/lib/storage/managed-image-storage");
+  const image = await resolveManagedImageUrl(url);
+  if (image) {
+    if (BigInt(image.asset.byteLength) > BigInt(MAX_EXTERNAL_IMAGE_BYTES)) throw new Error("参考图不能超过 10MB");
+    if (!ALLOWED_EXTERNAL_IMAGE_TYPES.has(image.asset.mimeType)) throw new Error("参考图 URL 必须返回 png、jpeg、webp 或 gif 图片");
+    return { data: await readManagedImage(image, AbortSignal.timeout(EXTERNAL_IMAGE_TIMEOUT_MS)),
+      fileName: `source-${index + 1}.${getImageFileExtension(image.asset.mimeType)}`, mimeType: image.asset.mimeType };
+  }
   const parsed = new URL(url);
   const response = await fetchExternalImage(parsed);
 

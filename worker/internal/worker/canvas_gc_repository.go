@@ -39,7 +39,7 @@ type postgresCanvasGCRepository struct{ db canvasGCQueryer }
 
 func (repository *postgresCanvasGCRepository) AcquireLease(ctx context.Context, token string) (bool, error) {
 	var acquired bool
-	err := repository.db.QueryRow(ctx, `SELECT canvas_acquire_gc_lease($1::uuid)`, token).Scan(&acquired)
+	err := repository.db.QueryRow(ctx, `SELECT canvas_acquire_gc_lease_v2($1::uuid)`, token).Scan(&acquired)
 	return acquired, err
 }
 
@@ -50,7 +50,7 @@ func (repository *postgresCanvasGCRepository) ClaimImports(ctx context.Context, 
 SELECT id, "ownerId", kind, state, "storageLocation", "storageEndpoint",
        "storageRegion", "storageBucket", "storageKey", "storageVersionId",
        "deleteToken"::text, "byteLength", "putOutcome", "physicalBytesAccounted"
-FROM canvas_claim_imports($1::uuid, $2::text, $3::integer)
+FROM canvas_claim_imports_v2($1::uuid, $2::text, $3::integer)
 `, token, location, limit)
 	if err != nil {
 		return nil, err
@@ -82,6 +82,6 @@ func (repository *postgresCanvasGCRepository) FinishDelete(ctx context.Context, 
 		code = &errorCode
 	}
 	// No host-clock timestamps, counters or accounting writes live in Go.
-	err := repository.db.QueryRow(ctx, `SELECT canvas_finish_asset_delete($1::text, $2::uuid, $3::"CanvasDeleteOutcome", $4::text)`, assetID, token, outcome, code).Scan(&finished)
+	err := repository.db.QueryRow(ctx, `SELECT canvas_finish_asset_delete_v2($1::text, $2::uuid, $3::"CanvasDeleteOutcome", $4::text)`, assetID, token, outcome, code).Scan(&finished)
 	return finished, err
 }

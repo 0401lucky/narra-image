@@ -8,6 +8,7 @@ const mocks = vi.hoisted(() => ({
   canvas: vi.fn(),
   getUser: vi.fn(),
   getEnv: vi.fn(),
+  aliases: vi.fn(),
   write: vi.fn(),
   refund: vi.fn(),
 }));
@@ -17,6 +18,7 @@ vi.mock("@/lib/db", () => ({
     canvasRun: { findUnique: mocks.run, create: mocks.write, update: mocks.write, updateMany: mocks.write },
     generationJob: { findFirst: mocks.job, create: mocks.write, update: mocks.write, updateMany: mocks.write, delete: mocks.write },
     canvas: { findFirst: mocks.canvas, create: mocks.write, update: mocks.write },
+    imageUrlAlias: { findMany: mocks.aliases },
     user: { update: mocks.write, updateMany: mocks.write },
     $executeRaw: mocks.write,
     $queryRaw: mocks.write,
@@ -68,9 +70,16 @@ async function lookup(id = runId) {
 beforeEach(() => {
   vi.resetAllMocks();
   mocks.getUser.mockResolvedValue({ id: ownerId });
-  mocks.getEnv.mockReturnValue({ CANVAS_ENABLED: true });
+  mocks.getEnv.mockReturnValue({ CANVAS_ENABLED: true, APP_URL: "https://app.invalid", IMAGE_STORAGE_MANAGED_ENABLED: false });
   mocks.run.mockResolvedValue(run());
   mocks.job.mockResolvedValue(job());
+  mocks.aliases.mockImplementation(async (query: unknown) => {
+    expect(query).toEqual({
+      where: { url: { in: ["https://media.invalid/original.png"] } },
+      select: { url: true, asset: { select: { id: true, state: true, activeObjectId: true, publicToken: true } } },
+    });
+    return [];
+  });
   mocks.write.mockImplementation(() => { throw new Error("A lookup must not write"); });
   mocks.refund.mockImplementation(() => { throw new Error("A lookup must not refund"); });
 });
@@ -103,6 +112,7 @@ describe("canvas run read-only lookup", () => {
     expect(JSON.stringify(body)).not.toMatch(/private-|encrypted-provider|provider-secret|ownerId|userId|preparationToken|inputSnapshot|storageKey/);
     expect(mocks.run).toHaveBeenCalledWith(expect.objectContaining({ where: { ownerId_runId: { ownerId, runId }, userId: ownerId } }));
     expect(mocks.job).toHaveBeenCalledWith(expect.objectContaining({ where: { id: jobId, userId: ownerId } }));
+    expect(mocks.aliases).toHaveBeenCalledTimes(1);
   });
 
   it("keeps lookup available after organization deletion without consulting its tombstone", async () => {
@@ -197,7 +207,7 @@ describe("canvas run read-only lookup", () => {
     [{ id: ownerId }, false, 404, "CANVAS_DISABLED"],
   ])("requires an authenticated owner and enabled feature before lookup", async (user, enabled, status, code) => {
     mocks.getUser.mockResolvedValue(user);
-    mocks.getEnv.mockReturnValue({ CANVAS_ENABLED: enabled });
+    mocks.getEnv.mockReturnValue({ ...mocks.getEnv(), CANVAS_ENABLED: enabled });
     const response = await lookup();
     expect(response.status).toBe(status);
     expect(await response.json()).toMatchObject({ code });

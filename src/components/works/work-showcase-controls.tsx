@@ -5,6 +5,7 @@ import { useState } from "react";
 import { createPortal } from "react-dom";
 
 import type { SerializedWork } from "@/lib/prisma-mappers";
+import { isImageAvailable } from "@/lib/storage/image-availability";
 import {
   getWorkShowcaseStatusLabel,
   type WorkShowcaseStatus,
@@ -131,7 +132,7 @@ export function WorkShowcaseControls({
           {work.showcaseStatus === "PRIVATE" ? (
             <button
               type="button"
-              disabled={isPending}
+              disabled={isPending || !isImageAvailable(work.availability)}
               onClick={() => setShowSubmitModal(true)}
               className="rounded-full bg-[var(--ink)] px-4 py-2 text-sm font-medium text-white transition hover:bg-[var(--accent)] disabled:opacity-60"
             >
@@ -165,7 +166,7 @@ export function WorkShowcaseControls({
         {error ? <p className="text-sm text-rose-600">{error}</p> : null}
       </div>
 
-      {showSubmitModal ? createPortal(
+      {showSubmitModal && isImageAvailable(work.availability) ? createPortal(
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm"
           onClick={() => setShowSubmitModal(false)}

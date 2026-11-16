@@ -69,10 +69,20 @@ type CanvasLimits struct {
 }
 
 type CanvasReadyCapability struct {
-	Version int    `json:"version"`
-	Schema  string `json:"schema"`
-	Storage string `json:"storage"`
-	GC      string `json:"gc"`
+	Version         int    `json:"version"`
+	Schema          string `json:"schema"`
+	Storage         string `json:"storage"`
+	GC              string `json:"gc"`
+	StorageRevision int    `json:"storageRevision"`
+	GCRevision      int    `json:"gcRevision"`
+}
+
+// Runtime location fields are mandatory on the wire, but are not part of the
+// location-independent fixture baseline consumed by the strict JSON loader.
+type CanvasRuntimeReadyCapability struct {
+	CanvasReadyCapability
+	Provider   string `json:"provider"`
+	LocationID string `json:"locationId"`
 }
 
 type CanvasCapability struct {
@@ -172,11 +182,19 @@ func loadCanvasContractFrom(cwd, executable string) (CanvasContract, error) {
 // launches, and both /app deployments, without using a compiler's source path.
 func canvasContractRoot(cwd, executable string) (string, error) {
 	seen := make(map[string]bool)
-	for _, start := range []string{cwd, filepath.Dir(executable)} {
-		if start == "" || !filepath.IsAbs(start) {
-			continue
-		}
-		for directory := filepath.Clean(start); ; directory = filepath.Dir(directory) {
+	starts := []string{cwd, filepath.Dir(executable)}
+	// Supported layouts are the project root, its worker/internal/worker package,
+	// and a binary at the root or bin/. Do not search arbitrary distant ancestors
+	// and accidentally load another checkout outside an isolated installation.
+	for depth := 0; depth <= 3; depth++ {
+		for _, start := range starts {
+			if start == "" || !filepath.IsAbs(start) {
+				continue
+			}
+			directory := filepath.Clean(start)
+			for level := 0; level < depth; level++ {
+				directory = filepath.Dir(directory)
+			}
 			candidate := filepath.Join(directory, "contracts", "canvas", "v1")
 			if !seen[candidate] {
 				seen[candidate] = true
@@ -192,9 +210,6 @@ func canvasContractRoot(cwd, executable string) (string, error) {
 				if !errors.Is(err, os.ErrNotExist) {
 					return "", errors.New("canvas contract root cannot be inspected")
 				}
-			}
-			if filepath.Dir(directory) == directory {
-				break
 			}
 		}
 	}
@@ -403,7 +418,7 @@ func (c CanvasContract) validate() error {
 	late := capability.LatePutVersionReceipt
 	if capability.Contract != "narra.canvas.capability" || capability.Version != canvasContractVersion || capability.FeatureFlag != "CANVAS_ENABLED" || capability.DefaultEnabled ||
 		!slices.Equal(capability.ReadyCapabilityPath, []string{"capabilities", "canvas"}) ||
-		capability.ReadyCapability != (CanvasReadyCapability{Version: canvasContractVersion, Schema: "ready", Storage: "unversioned", GC: "running"}) ||
+		capability.ReadyCapability != (CanvasReadyCapability{Version: canvasContractVersion, Schema: "ready", Storage: "unversioned", GC: "running", StorageRevision: 3, GCRevision: 3}) ||
 		!canvasUniqueStrings(capability.VersioningStates, false) || !slices.Contains(capability.VersioningStates, capability.RequiredStorageVersioning) || capability.RequiredStorageVersioning != "UNVERSIONED" ||
 		!capability.VerifyLocationBeforeClaim || !capability.UnexpectedPutVersionQuarantined || !capability.SchemaProbeMustVerifyGuardBodies || capability.UnknownCapabilityMayDelete ||
 		location.Prefix != canvasStorageLocationPrefix || location.Digest != "SHA-256" || location.Encoding != "UTF-8" || location.Material == "" || location.Endpoint == "" || location.RegionAndBucket == "" ||

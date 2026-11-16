@@ -17,6 +17,7 @@
 
 - 测试位置：`src/tests/unit/`（服务/组件/路由）、`src/tests/integration/`（真实依赖）、`src/tests/contracts/`（共享契约 fixtures）。
 - 组件测试用 `.test.tsx` 并渲染真实组件 + `@testing-library/user-event` 交互；服务/路由测试用 `.test.ts`。
+- 可见反馈和后续effect副作用是不同完成边界。提示词复制回退先显示manual消息，再由 `GalleryCard` 的effect聚焦并全选textarea；测试应在 `waitFor` 中一起等待focus与selectionStart/End，保留完整文本断言。仅等待消息出现后同步检查焦点会与提交后的effect竞争；不能改产品focus逻辑或删除选择范围断言来消除测试失败。
 - **依赖 mock 用 `vi.mock` + `vi.hoisted`** 声明 mock 函数，模块级 mock 放在 import 之前：
 
 ```ts
@@ -37,7 +38,7 @@ vi.mock("@/lib/generation/external-api", () => ({ runExternalGeneration: mockRun
 ```powershell
 pnpm lint
 pnpm exec tsc --noEmit
-pnpm exec vitest run --testTimeout=30000 # 非 DB 全量；默认排除两个带哨兵的 DB suite
+pnpm exec vitest run --testTimeout=30000 # 非 DB 全量；默认排除 Worker/Canvas/Image 带哨兵 DB suites
 pnpm build
 pnpm verify:ci                  # 一揽子：发布脚本单测 + tsc + lint + vitest + 契约 + go + build
 pnpm verify:worker-contracts:ts/go/db
@@ -49,20 +50,26 @@ pnpm verify:e2e
 
 - GitHub Actions 验证阶段只调用仓库内 wrapper（`.github/workflows/verify.yml`），不复制场景命令；依赖和明确的测试基础镜像准备在独立前置步骤执行，wrapper 自身仍不自动拉镜像。
 - `git diff --check` 提交前必须通过（无空白错误）。
+- 未暂存新文件不会出现在普通 `git diff --check` 中；提交前另用 `git diff --no-index --check -- NUL <file>`（Windows）检查候选新文本。difference退出1且无diagnostics与真实空白错误要分开处理。新SQL不得增加whitespace例外；shared migration链同时核对LF检出规则、原字节SHA与两份manifest。函数body测试的CRLF规范化不能证明Prisma原文件checksum稳定，详见 [Image Storage](../operations/image-storage.md)。
 - 新增文件也要执行 `git diff --cached --check`。原始 OFL 许可和 `.before` 取证副本必须保留字节；`.gitattributes` 的空白例外仅限这些明确路径，不能扩展到真实源码、任务脚本或自行编写的文档。真实源码末尾多余空行应修正，并以新哈希重新绑定验证，不能把旧回执标作新字节的验证结果。
 - 已绑定 SHA256 的机器回执/上游取证快照可用 task-local `-text` 保留 Git blob 原始字节；CRLF 回执用 `whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol` 识别行尾 CR，仍拒绝真实尾空格和多余末尾空行。普通源码/脚本/作者文档不加豁免；临时 index 的正例、尾空格/空行及脚本/文档负例和 raw blob 哈希必须一起核对，不修改全局 Git 配置。
 - `eslint.config.mjs` 仅将 `.trellis/tasks/**` 的历史测试夹具、第三方参考代码和生成快照排除于常规源码 lint；`src/`、生产 `scripts/` 和非任务工具不能随之被排除。`eslint-scope.test.ts` 用真实 `ESLint.isPathIgnored()` 保留任务路径负例与应用/测试/脚本正例。提交任务记录前需在凭证隔离、包含候选任务工具的 checkout 上执行 `eslint .`，不能只凭不含 metadata 的源代码快照宣称根目录 lint 通过。
 
 ## 5. 已知约束
 
-- 全量 vitest 需 `--testTimeout=30000`（部分组件测试冷启动较慢）；默认和 CI 都排除 `worker-contracts-db.test.ts`、`canvas-contracts-db.test.ts`，分别由独立 wrapper 和显式 runner config 覆盖，不能把排除当成 DB 验证通过。
+- 全量 vitest 需 `--testTimeout=30000`（部分组件测试冷启动较慢）；默认和 CI 排除 `worker-contracts-db.test.ts` 及只承载 DB suites/runner 的 `integration/canvas-contracts/`。后者包含 `canvas-contracts-db.test.ts`、`image-storage-db.test.ts`、`image-retention-db.test.ts`、`image-history-db.test.ts`，由独立 Canvas wrapper 显式固定目标、按文件串行执行；不能把排除当成 DB 验证通过，新增 DB 文件必须同时加入 runner 固定清单。
 - 多个隔离测试/构建同时运行导致 Node worker OOM 时，保留失败回执，先串行调度重任务，再用 `vitest run --testTimeout=30000 --maxWorkers=2` 重跑完整非 DB 清单并记录有限总截止。不得将部分完成的测试数合并成全量通过，也不能删除测试或修改生产内存限制来掩盖检查进程崩溃。
+- 若本机 commit capacity 仍不足，可在任务验证 harness 内进一步降为 `--maxWorkers=1`，并仅为测试子进程设置更小的 V8 old/semi-space 上限以促进回收；逐项日志用于定位失败用例。完整用例/断言和总截止不变，原生 OOM 与断言失败须分开记录。不得终止用户其他应用、修改系统分页配置或将本地限制带入生产配置；资源有界重试只有取得实际成功回执才算通过。
+- 低可用内存、原生 OOM 或退出 124 本身不能证明失败只来自环境。首次重试仍异常时记录 module/case 的开始和完成，找到未完成的具体用例；最后一条 React warning 可能属于已完成文件。检查对应缓存合并/订阅/effect 是否收敛，再决定调整验证资源；不要反复只减并发。追加 `NODE_OPTIONS` 必须保留既有 deny-env preload，不能覆盖隔离保护。
 - Next 16.2.4 的默认构建 CPU 数读取 `CIRCLE_NODE_TOTAL` 后减一。15-worker page-data 阶段因本机 commit capacity OOM 时，可仅在凭证隔离的验证子进程启动前设置 `CIRCLE_NODE_TOTAL=3` 得到 2 workers；先用已安装 `config-shared.js` 验证，再执行完整原始 `next build`、核对真实退出和源/配置哈希。不得改 `next.config`、依赖、生产内存限制或继承到测试/生产环境，也不得跳过类型/页面收集。默认失败和资源有界重试分别留回执；这不是默认并发或生产资源验收。
+- 同一已审计的本地构建参数允许 `CIRCLE_NODE_TOTAL=2` 得到 1 worker；如果完整 CI 仅最终构建因内存失败，单独重跑同一源码快照的完整 build，分别保留两份回执并准确描述组合验证，不能声称原失败的 CI 命令通过。
+- managed Canvas 的历史年龄夹具仅可在 runner 哨兵、owner 和精确 ID 核对后的 disposable DB 准备；事务本地 replica 仅调整允许的时间列，立即恢复并断言 `origin`，其他完整字段保持不变。资格/领取/回执/重放全部使用生产 guards，详细列边界见 [Image Storage](../operations/image-storage.md)。
 - Canvas DB wrapper 使用独立 360 秒截止及 20 秒清理预留，不嵌套到 Worker 的 57 秒父截止。缺少哨兵或 runner 自建 localhost 数据库必须失败；本地镜像缺失返回前置条件失败，不拉取镜像、不回退 `.env`。
 - 验证环境显式隔离构建与测试：仅构建注入非 loopback 的测试 `APP_URL`；要求缺失/默认环境的测试不得继承它。Prisma 使用隔离 config 或精确 `.env` 读取保护，禁止读取开发凭证。
 - Windows wrapper 会通过命令 shell 执行 `pnpm`；含 `=>`、重定向等字符的内联 JavaScript 不得经 `pnpm exec node -e` 传入。改用脚本文件和直接 Node argv，防止意外重定向写入工作区。
 - Vitest 直接导入带 shebang 的 CLI `.mjs` 时，脚本必须保留 LF 换行。Vite 8 的 SSR shebang 匹配不消费 CRLF 的 `\r`，可能把绑定插在 `#!` 前并报 `Invalid or unexpected token`；`node --check` 仍可能通过。`.gitattributes` 已固定三个 Canvas CLI / fixture 路径，验证须实际加载原测试套件，不能删除 shebang 或绕过测试。
 - 每个验证 wrapper 保留真实退出码并受全局截止保护（见各 `verify-*.mjs`）。
+- 跨进程 CLI 的测试夹具要对照真实 stdout 序列化结构，不能仅复制内部服务返回类型。图片历史命令的条目在 `historyCommandResult.progress.items`；真实 CLI 拓扑回归须验证与单测相同的公开外壳，避免消费者与 mock 同时错误仍让完整 CI 通过。字段、状态与退出码见 [Image Storage](../operations/image-storage.md) §9。
 - 环境变量修改必须先改 `contracts/runtime/v1/environment.json` 再同步 `src/lib/env.ts`、`.env.example`、README 与测试（`runtime-environment-contract.test.ts` 会校验一致性）。
 
 ## 6. 禁止与常见错误

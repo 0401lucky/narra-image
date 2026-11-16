@@ -393,15 +393,23 @@ describe("exact E2E resource cleanup and readiness contracts", () => {
   });
 
   it("uses exact capability DTOs and explicit 503 negatives, not generic health or arbitrary failures", () => {
-    const ready = { status: 200, body: { status: "ready", capabilities: { canvas: capability.readyCapability } } };
+    const runtime = { ...capability.readyCapability, provider: "S3", locationId: `s3-v1:${"a".repeat(64)}` };
+    const ready = { status: 200, body: { status: "ready", capabilities: { canvas: runtime } } };
     expect(matchesReadiness(ready, { canvas: true })).toBe(true);
+    expect(matchesReadiness(ready, { canvas: true, canvasLocation: { provider: "S3", locationId: `s3-v1:${"b".repeat(64)}` } })).toBe(false);
+    expect(hasExactCanvasCapability({ capabilities: { canvas: capability.readyCapability } })).toBe(false);
+    expect(hasExactCanvasCapability({ capabilities: { canvas: { ...runtime, storageRevision: 1 } } })).toBe(false);
+    expect(hasExactCanvasCapability({ capabilities: { canvas: { ...runtime, provider: "LOCAL", storage: "local", locationId: "local-v1:00112233-4455-4677-8899-aabbccddeeff" } } })).toBe(true);
     expect(matchesReadiness({ status: 200, body: { status: "ready" } }, { canvas: true })).toBe(false);
     expect(hasExactCanvasCapability({ capabilities: { canvas: { ...capability.readyCapability, other: true } } })).toBe(false);
     expect(matchesReadiness({ status: 503, body: { status: "not_ready", code: "CANVAS_STORAGE_CAPABILITY_INVALID" } }, { ready: false, code: "CANVAS_STORAGE_CAPABILITY_INVALID" })).toBe(true);
     expect(matchesReadiness({ status: 500, body: { status: "not_ready" } }, { ready: false })).toBe(false);
     expect(matchesReadiness({ status: 503, body: "not JSON" }, { ready: false })).toBe(false);
     expect(E2E_LIMITS.cleanupMs).toBeGreaterThanOrEqual(60_000);
-    expect(E2E_SCENARIOS).toHaveLength(9);
+    expect(E2E_SCENARIOS).toEqual([
+      "embedded", "dedicated", "conflict", "schema", "dbdown", "propagate",
+      "canvas-embedded", "canvas-dedicated", "canvas-mismatch", "image-embedded", "image-dedicated",
+    ]);
   });
 
   it("keeps Compose images no-pull, no implicit builds, in-memory S3 private, and actual .env excluded from builds", () => {

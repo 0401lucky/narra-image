@@ -23,6 +23,8 @@ type CanvasStorageLocation struct {
 	Endpoint string `json:"endpoint"`
 	Region   string `json:"region"`
 	Bucket   string `json:"bucket"`
+	Provider string `json:"provider,omitempty"`
+	VolumeID string `json:"volumeId,omitempty"`
 }
 
 func NewCanvasStorageLocation(endpoint, region, bucket string) (CanvasStorageLocation, error) {

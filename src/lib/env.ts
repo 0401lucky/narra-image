@@ -1,5 +1,6 @@
 import "server-only";
 
+import { isAbsolute } from "node:path";
 import { z } from "zod";
 
 const PUBLIC_AUTH_SECRETS = new Set([
@@ -194,6 +195,10 @@ const envSchema = z.object({
   EXTERNAL_GENERATION_POLL_INTERVAL_MS: integerEnv(1_000, 1, 60_000),
   EXTERNAL_GENERATION_WAIT_TIMEOUT_SECONDS: integerEnv(900, 1, 86_400),
   GATEWAY_ENABLED: booleanEnv(false),
+  IMAGE_STORAGE_MANAGED_ENABLED: booleanEnv(false),
+  IMAGE_STORAGE_BACKEND: z.enum(["s3", "local"]).default("s3"),
+  IMAGE_STORAGE_PATH: z.string().trim().min(1).default("/data/images"),
+  IMAGE_STORAGE_VOLUME_ID: optionalString(),
   LOG_LEVEL: z.enum(["debug", "info", "warn", "error"]).default("info"),
   MODERATION_AI_ENABLED: booleanEnv(false),
   MODERATION_API_KEY: optionalString(),
@@ -232,6 +237,20 @@ const envSchema = z.object({
   WORKER_SHUTDOWN_HARD_TIMEOUT_SECONDS: integerEnv(10, 1, 300),
   WORKER_VIDEO_POLL_INTERVAL_MS: integerEnv(5_000, 100, 60_000),
 }).superRefine((env, ctx) => {
+  if (env.IMAGE_STORAGE_MANAGED_ENABLED && env.WORKER_JOB_TIMEOUT_SECONDS > 3480) {
+    ctx.addIssue({ code: "custom", path: ["WORKER_JOB_TIMEOUT_SECONDS"], message: "受管理图片存储的任务超时不能超过 3480 秒" });
+  }
+  if (env.IMAGE_STORAGE_BACKEND === "local") {
+    if (!env.IMAGE_STORAGE_MANAGED_ENABLED) {
+      ctx.addIssue({ code: "custom", path: ["IMAGE_STORAGE_MANAGED_ENABLED"], message: "本地图片存储必须启用受管理存储" });
+    }
+    if (!isAbsolute(env.IMAGE_STORAGE_PATH)) {
+      ctx.addIssue({ code: "custom", path: ["IMAGE_STORAGE_PATH"], message: "本地图片目录必须是绝对路径" });
+    }
+    if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(env.IMAGE_STORAGE_VOLUME_ID)) {
+      ctx.addIssue({ code: "custom", path: ["IMAGE_STORAGE_VOLUME_ID"], message: "本地图片卷必须配置小写 UUID 身份" });
+    }
+  }
   if (env.NODE_ENV === "production" && !env.APP_URL) {
     ctx.addIssue({
       code: "custom",
@@ -284,4 +303,12 @@ export function getEnv() {
   }
 
   return cachedEnv;
+}
+
+// Optional image readers can retain their legacy path without constructing a
+// database client. Parse the rollout flag in its owning loader before loading
+// the managed repository; enabling it still requires the full runtime config.
+export function isManagedImageStorageConfigured(): boolean {
+  return cachedEnv?.IMAGE_STORAGE_MANAGED_ENABLED
+    ?? booleanEnv(false).parse(process.env.IMAGE_STORAGE_MANAGED_ENABLED);
 }

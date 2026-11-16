@@ -60,6 +60,32 @@ describe("public image detail consumer", () => {
 });
 
 describe("owner detail management compatibility", () => {
+  it("retains cleaned image history and private prompts without requesting or reusing its file", async () => {
+    const user = userEvent.setup();
+    const fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock);
+    const work = serializeWork(createPrivacyWork({
+      showcaseStatus: "PRIVATE", mediaAssetId: "cleaned_asset", mediaAsset: { state: "DELETED", activeObjectId: null },
+    }));
+    render(<WorkDetailPanel detailUrl={detailUrl} isOwner work={work} />);
+
+    expect(screen.getByTestId("work-image")).toHaveAttribute("data-availability", "cleaned");
+    expect(screen.getByText("图片已清理")).toBeInTheDocument();
+    expect(screen.queryByRole("img")).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "作品图片" })).not.toBeInTheDocument();
+    for (const name of ["下载图片", "投稿首页"]) {
+      const button = screen.getByRole("button", { name });
+      expect(button).toBeDisabled();
+      await user.click(button);
+    }
+    await user.click(screen.getByRole("button", { name: "查看完整提示词" }));
+    const fullPrompts = screen.getAllByText(workPrivacySentinels.prompt, { normalizer: (text) => text });
+    for (const fullPrompt of fullPrompts) expect(fullPrompt.textContent).toBe(workPrivacySentinels.prompt);
+    expect(work).toMatchObject({ generationStatus: "succeeded", jobId: workPrivacySentinels.jobId });
+    expect(mocks.download).not.toHaveBeenCalled();
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
   it("retains private prompts, rejection notes and opt-in submission", async () => {
     const user = userEvent.setup();
     const work = serializeWork(createPrivacyWork({ showcaseStatus: "PRIVATE" }));

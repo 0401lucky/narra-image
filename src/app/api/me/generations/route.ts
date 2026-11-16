@@ -1,6 +1,7 @@
 import { db } from "@/lib/db";
+import { imageAvailabilityInclude } from "@/lib/storage/image-availability";
 import { failStalePendingGenerationJobs } from "@/lib/generation/job-refund";
-import { serializeGeneration } from "@/lib/prisma-mappers";
+import { serializeGenerationsForClient } from "@/lib/prisma-mappers";
 import { getCurrentUserRecord } from "@/lib/server/current-user";
 import { jsonError, jsonOk } from "@/lib/server/http";
 
@@ -16,8 +17,7 @@ export async function GET() {
     where: { userId: user.id },
     orderBy: { createdAt: "desc" },
     include: {
-      images: {
-        orderBy: { createdAt: "asc" },
+      images: { include: imageAvailabilityInclude, orderBy: { createdAt: "asc" },
       },
       videos: {
         orderBy: { createdAt: "asc" },
@@ -27,6 +27,6 @@ export async function GET() {
   });
 
   return jsonOk({
-    generations: jobs.map(serializeGeneration),
+    generations: await serializeGenerationsForClient(jobs),
   });
 }

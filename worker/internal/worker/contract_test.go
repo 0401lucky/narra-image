@@ -108,6 +108,7 @@ func TestGenerationContractConsumesMediaScenario(t *testing.T) {
 		} `json:"image"`
 		Video struct {
 			Fields []string `json:"resultFields"`
+			Kinds  []string `json:"storageKinds"`
 		} `json:"video"`
 	}
 	if err := json.Unmarshal(contract.Scenarios["media"], &media); err != nil {
@@ -121,10 +122,13 @@ func TestGenerationContractConsumesMediaScenario(t *testing.T) {
 			t.Errorf("media contract missing result field %q", field)
 		}
 	}
-	for _, kind := range []string{"B64", "S3", "UPSTREAM"} {
+	for _, kind := range []string{"B64", "S3", "LOCAL", "UPSTREAM"} {
 		if !slices.Contains(media.Image.Kinds, kind) {
 			t.Errorf("media contract missing storage kind %q", kind)
 		}
+	}
+	if !slices.Contains(media.Image.Fields, "mediaAssetId") || slices.Contains(media.Video.Fields, "mediaAssetId") || slices.Contains(media.Video.Kinds, "LOCAL") {
+		t.Fatal("managed image metadata leaked into video scope")
 	}
 }
 

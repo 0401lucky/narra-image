@@ -23,11 +23,18 @@ import { ImageLightbox } from "@/components/works/image-lightbox";
 import { PromptModal } from "@/components/works/prompt-modal";
 import { Alert } from "@/components/ui/alert";
 import { getThumbUrl } from "@/lib/image-url";
+import { getImageAvailability, imageUnavailableMessage, type ImageAvailabilitySource } from "@/lib/storage/image-availability";
+import type { ImageAvailability } from "@/lib/types";
 
 export type GenerationAdminJob = GenerationJob & {
-  images: GenerationImage[];
+  images: Array<GenerationImage & ImageAvailabilitySource & { availability?: ImageAvailability }>;
   user: Pick<User, "email" | "nickname">;
 };
+type AdminImagePreview = { id: string | null; url: string };
+
+function adminImageAvailability(image: GenerationAdminJob["images"][number]) {
+  return image.availability ?? getImageAvailability(image);
+}
 
 function getUserDisplayName(user: GenerationAdminJob["user"] | null | undefined) {
   return user?.nickname?.trim() || user?.email || "未知用户";
@@ -48,10 +55,16 @@ function getGenerationStatusLabel(job: GenerationAdminJob) {
 }
 
 function getMissingImageLabel(job: GenerationAdminJob) {
+  const image = job.images[0];
+  if (image && adminImageAvailability(image) !== "available") return imageUnavailableMessage(adminImageAvailability(image));
   if (isGenerationCoordinationRequired(job)) return "等待人工协调";
   if (job.status === "PENDING" || job.status === "PROCESSING") return "生成中";
   if (job.status === "FAILED") return "生成失败";
   return "图片缺失";
+}
+
+function readableAdminImage(job: GenerationAdminJob) {
+  return job.images.find((image) => adminImageAvailability(image) === "available" && image.url);
 }
 
 function getCreditLabel(job: GenerationAdminJob) {
@@ -147,7 +160,7 @@ export function GenerationAdminList({ jobs }: { jobs: GenerationAdminJob[] }) {
   const [hiddenIds, setHiddenIds] = useState<Set<string>>(() => new Set());
   const [selectedIds, setSelectedIds] = useState<Set<string>>(() => new Set());
   const [promptJob, setPromptJob] = useState<GenerationAdminJob | null>(null);
-  const [zoomedGeneratedImage, setZoomedGeneratedImage] = useState<string | null>(null);
+  const [zoomedGeneratedImage, setZoomedGeneratedImage] = useState<AdminImagePreview | null>(null);
   const [zoomedSourceImage, setZoomedSourceImage] = useState<string | null>(null);
   const [deleteTargetIds, setDeleteTargetIds] = useState<string[] | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -190,7 +203,7 @@ export function GenerationAdminList({ jobs }: { jobs: GenerationAdminJob[] }) {
   }
 
   async function handleCopyImageUrl(job: GenerationAdminJob) {
-    const url = job.images[0]?.url;
+    const url = readableAdminImage(job)?.url;
     if (!url) return;
     try {
       await navigator.clipboard.writeText(url);
@@ -295,7 +308,7 @@ export function GenerationAdminList({ jobs }: { jobs: GenerationAdminJob[] }) {
 
         <div className="grid gap-3 p-3 lg:hidden">
           {visibleJobs.map((job) => {
-            const image = job.images[0];
+            const image = readableAdminImage(job);
             const checked = selectedIds.has(job.id);
             return (
               <article
@@ -315,7 +328,7 @@ export function GenerationAdminList({ jobs }: { jobs: GenerationAdminJob[] }) {
                   {image ? (
                     <button
                       type="button"
-                      onClick={() => setZoomedGeneratedImage(image.url)}
+                      onClick={() => setZoomedGeneratedImage({ id: image.id, url: image.url })}
                       className="shrink-0 overflow-hidden rounded-xl border border-[var(--line)] bg-[var(--surface-strong)]"
                       title="查看生成图片"
                       aria-label={`查看生成图片 ${job.id}`}
@@ -330,7 +343,7 @@ export function GenerationAdminList({ jobs }: { jobs: GenerationAdminJob[] }) {
                     </button>
                   ) : (
                     <div className="flex size-16 shrink-0 items-center justify-center rounded-xl border border-[var(--line)] bg-[var(--surface-strong)]/60 text-[var(--ink-soft)]">
-                      <ImageIcon className="size-5" />
+                      {job.images.length ? <span className="px-1 text-center text-xs">{getMissingImageLabel(job)}</span> : <ImageIcon className="size-5" />}
                     </div>
                   )}
                   <div className="min-w-0 flex-1">
@@ -450,7 +463,7 @@ export function GenerationAdminList({ jobs }: { jobs: GenerationAdminJob[] }) {
             </thead>
             <tbody className="divide-y divide-[var(--line)]/70">
               {visibleJobs.map((job) => {
-                const image = job.images[0];
+                const image = readableAdminImage(job);
                 const checked = selectedIds.has(job.id);
                 return (
                   <tr
@@ -472,7 +485,7 @@ export function GenerationAdminList({ jobs }: { jobs: GenerationAdminJob[] }) {
                       {image ? (
                         <button
                           type="button"
-                          onClick={() => setZoomedGeneratedImage(image.url)}
+                          onClick={() => setZoomedGeneratedImage({ id: image.id, url: image.url })}
                           className="block overflow-hidden rounded-xl border border-[var(--line)] bg-[var(--surface-strong)]"
                           title="查看生成图片"
                           aria-label={`查看生成图片 ${job.id}`}
@@ -487,7 +500,7 @@ export function GenerationAdminList({ jobs }: { jobs: GenerationAdminJob[] }) {
                         </button>
                       ) : (
                         <div className="flex size-14 items-center justify-center rounded-xl border border-[var(--line)] bg-[var(--surface-strong)]/60 text-[var(--ink-soft)]">
-                          <ImageIcon className="size-5" />
+                          {job.images.length ? <span className="px-1 text-center text-xs">{getMissingImageLabel(job)}</span> : <ImageIcon className="size-5" />}
                         </div>
                       )}
                     </td>
@@ -627,9 +640,9 @@ export function GenerationAdminList({ jobs }: { jobs: GenerationAdminJob[] }) {
         />
       ) : null}
 
-      {zoomedGeneratedImage ? (
+      {zoomedGeneratedImage && visibleJobs.some((job) => job.images.some((image) => image.id === zoomedGeneratedImage.id && adminImageAvailability(image) === "available")) ? (
         <ImageLightbox
-          src={zoomedGeneratedImage}
+          src={zoomedGeneratedImage.url}
           alt="生成图片大图"
           onClose={() => setZoomedGeneratedImage(null)}
         >
@@ -1318,7 +1331,8 @@ export function CreditAdjuster({ userId }: { userId: string }) {
 
 
 export function GenerationAdminCard({ job }: { job: GenerationAdminJob }) {
-  const [zoomedImage, setZoomedImage] = useState<string | null>(null);
+  const image = readableAdminImage(job);
+  const [zoomedImage, setZoomedImage] = useState<AdminImagePreview | null>(null);
   const [showPrompt, setShowPrompt] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
 
@@ -1329,15 +1343,15 @@ export function GenerationAdminCard({ job }: { job: GenerationAdminJob }) {
 
   return (
     <article className="studio-card flex flex-col xl:flex-row gap-5 p-5 rounded-[1.8rem]">
-      {job.images && job.images[0] ? (
+      {image ? (
         <div className="shrink-0 flex justify-center">
           <img
-            src={getThumbUrl(job.images[0].url, 384)}
+            src={getThumbUrl(image.url, 384)}
             alt="Thumbnail"
             loading="lazy"
             decoding="async"
             className="size-32 xl:size-40 rounded-xl object-cover cursor-pointer hover:scale-105 transition border border-[var(--line)] shadow-sm"
-            onClick={() => setZoomedImage(job.images[0].url)}
+            onClick={() => setZoomedImage({ id: image.id, url: image.url })}
           />
         </div>
       ) : (
@@ -1381,7 +1395,7 @@ export function GenerationAdminCard({ job }: { job: GenerationAdminJob }) {
               </div>
               <SourceImageThumbs
                 urls={job.sourceImageUrls}
-                onZoom={setZoomedImage}
+                onZoom={(url) => setZoomedImage({ id: null, url })}
               />
             </div>
           ) : null}
@@ -1402,7 +1416,7 @@ export function GenerationAdminCard({ job }: { job: GenerationAdminJob }) {
         </div>
       </div>
 
-      {isMounted && zoomedImage && createPortal(
+      {isMounted && zoomedImage && (zoomedImage.id === null || job.images.some((image) => image.id === zoomedImage.id && adminImageAvailability(image) === "available")) && createPortal(
         <div 
           className="fixed inset-0 z-[100] flex select-none items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
           onClick={() => setZoomedImage(null)}
@@ -1420,7 +1434,7 @@ export function GenerationAdminCard({ job }: { job: GenerationAdminJob }) {
             <X className="size-6" strokeWidth={2.6} />
           </button>
           <img
-            src={zoomedImage}
+            src={zoomedImage.url}
             alt="Zoomed"
             decoding="async"
             draggable={false}

@@ -5,6 +5,8 @@ import { Prisma } from "@prisma/client";
 import { db } from "@/lib/db";
 import { getGenerationErrorDefinition, isGenerationErrorCode } from "@/lib/generation/contracts";
 import { serializeGeneration, type SerializedGeneration } from "@/lib/prisma-mappers";
+import { imageAvailabilityInclude } from "@/lib/storage/image-availability";
+import { projectGenerationSourceUrls } from "@/lib/storage/image-source-presentation";
 import { CanvasContractError, isCanvasErrorCode, type CanvasRunLookupDtoV1 } from "./contracts";
 
 export const canvasRunLookupSelect = {
@@ -20,7 +22,7 @@ export const canvasRunLookupSelect = {
 } satisfies Prisma.CanvasRunSelect;
 
 export const canvasGenerationInclude = {
-  images: { orderBy: [{ createdAt: "asc" }, { id: "asc" }] },
+  images: { include: imageAvailabilityInclude, orderBy: [{ createdAt: "asc" }, { id: "asc" }] },
   videos: { orderBy: [{ createdAt: "asc" }, { id: "asc" }] },
 } satisfies Prisma.GenerationJobInclude;
 
@@ -82,5 +84,6 @@ export async function getCanvasRun(ownerId: string, runId: string): Promise<Canv
       include: canvasGenerationInclude,
     })
     : null;
-  return serializeCanvasRunLookup(run, job);
+  const presented = job ? (await projectGenerationSourceUrls([job]))[0] : null;
+  return serializeCanvasRunLookup(run, presented);
 }

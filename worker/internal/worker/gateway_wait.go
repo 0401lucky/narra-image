@@ -19,10 +19,34 @@ func nullableIntFromInt32(value sql.NullInt32) *int {
 
 // gatewayImage 是网关响应所需的图片视图。
 type gatewayImage struct {
-	ID     string
-	URL    string
-	Width  *int
-	Height *int
+	ID           string
+	URL          string
+	MediaAssetID string
+	Width        *int
+	Height       *int
+	Availability string
+}
+
+func projectGatewayImageURL(image gatewayImage, appURL, assetID, publicToken string) (gatewayImage, error) {
+	image.MediaAssetID = assetID
+	if assetID == "" {
+		return image, nil
+	}
+	if gatewayImageAvailability(image) != "available" {
+		image.URL = ""
+		return image, nil
+	}
+	if !imageUUIDPattern.MatchString(assetID) {
+		return gatewayImage{}, ImageStorageError{Code: "IMAGE_UNAVAILABLE"}
+	}
+	projected, err := ImagePublicURL(appURL, publicToken)
+	if err != nil {
+		return gatewayImage{}, ImageStorageError{Code: "IMAGE_UNAVAILABLE"}
+	}
+	// Original GenerationImage.url is immutable provenance. External readers
+	// must enter the media token route so retiring that source keeps working.
+	image.URL = projected
+	return image, nil
 }
 
 // gatewayJobResult 是等待完成后网关消费的结果视图。
@@ -105,11 +129,16 @@ WHERE id = $1
 }
 
 func (w *Worker) readGatewayImages(ctx context.Context, jobID string) ([]gatewayImage, error) {
+	// The schema is deployed independently of the rollout flag. Turning off
+	// managed writes cannot make a known tombstone an available legacy image.
 	rows, err := w.pool.Query(ctx, `
-SELECT id, url, width, height
-FROM "GenerationImage"
-WHERE "jobId" = $1
-ORDER BY "createdAt" ASC
+SELECT i.id, i.url, i.width, i.height,
+  CASE WHEN a.state = 'DELETED' THEN 'cleaned'
+       WHEN a.state IS NOT NULL AND a.state <> 'AVAILABLE' THEN 'unavailable'
+       ELSE 'available' END,
+  a.id, a."publicToken"
+FROM "GenerationImage" i LEFT JOIN "ImageAsset" a ON a.id=i."mediaAssetId"
+WHERE i."jobId"=$1 ORDER BY i."createdAt" ASC
 `, jobID)
 	if err != nil {
 		return nil, err
@@ -121,7 +150,13 @@ ORDER BY "createdAt" ASC
 		var image gatewayImage
 		var width sql.NullInt32
 		var height sql.NullInt32
-		if err := rows.Scan(&image.ID, &image.URL, &width, &height); err != nil {
+		var assetID sql.NullString
+		var publicToken sql.NullString
+		if err := rows.Scan(&image.ID, &image.URL, &width, &height, &image.Availability, &assetID, &publicToken); err != nil {
+			return nil, err
+		}
+		image, err = projectGatewayImageURL(image, w.cfg.AppURL, assetID.String, publicToken.String)
+		if err != nil {
 			return nil, err
 		}
 		image.Width = nullableIntFromInt32(width)

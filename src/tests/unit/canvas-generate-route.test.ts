@@ -3,20 +3,37 @@
 import type { Canvas, CanvasImportAsset } from "@prisma/client";
 import { S3Client } from "@aws-sdk/client-s3";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import type { ImageQueryer } from "@/lib/storage/image-repository";
 
 const mocks = vi.hoisted(() => ({
   getUser: vi.fn(), requireUser: vi.fn(), env: vi.fn(), turnstile: vi.fn(), moderation: vi.fn(),
   provider: vi.fn(), providerById: vi.fn(), decrypt: vi.fn(), encrypt: vi.fn(), savedProvider: vi.fn(), publicUrl: vi.fn(), persist: vi.fn(), refund: vi.fn(),
   transaction: vi.fn(), findRun: vi.fn(), findJob: vi.fn(), readAssets: vi.fn(), readImages: vi.fn(),
+  imageQuery: vi.fn(), sourceAliases: vi.fn(),
   createJob: vi.fn(), charge: vi.fn(), conversation: vi.fn(), detachJob: vi.fn(), updateConversation: vi.fn(),
 }));
 
 vi.mock("@/lib/db", () => ({ db: {
   $transaction: mocks.transaction,
+  $queryRaw: mocks.imageQuery,
+  imageUrlAlias: { findMany: mocks.sourceAliases },
   canvasRun: { findUnique: mocks.findRun }, generationJob: { findFirst: mocks.findJob },
   canvasImportAsset: { findMany: mocks.readAssets }, generationImage: { findMany: mocks.readImages },
   conversation: { findFirst: mocks.conversation }, savedProviderConfig: { findUnique: mocks.savedProvider },
 } }));
+vi.mock("@/lib/storage/image-repository", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/lib/storage/image-repository")>();
+  return {
+    ...actual,
+    // Parallel lazy imports can escape Vitest's db mock. Inject only that
+    // dependency; preserve real SQL/decoders and each explicit transaction client.
+    ImageRepository: class extends actual.ImageRepository {
+      constructor(queryer?: ImageQueryer) {
+        super(queryer ?? { $queryRaw: mocks.imageQuery });
+      }
+    },
+  };
+});
 vi.mock("@/lib/server/current-user", () => ({ getCurrentUserRecord: mocks.getUser, requireCurrentUserRecord: mocks.requireUser }));
 vi.mock("@/lib/env", () => ({ getEnv: mocks.env }));
 vi.mock("@/lib/auth/turnstile", () => ({ requireTurnstile: mocks.turnstile }));
@@ -186,12 +203,14 @@ function client(snapshot: FakeState) {
       throw new Error(`Unexpected fake SQL: ${sql}`);
     },
     async $executeRaw(strings: TemplateStringsArray) {
+      if (strings.join("?").includes("image_lock_reference_epoch")) return 1;
       if (!strings.join("?").includes("canvas_lock_assets")) throw new Error("Unexpected fake execute");
       events.push("lock-assets");
       if (expireDuringInputLock) now += CANVAS_LIMITS.preparationLeaseSeconds * 1_000 + 1;
       return 1;
     },
     canvasImportAsset: { findMany: async (query: AssetQuery) => assetRead(snapshot, query) },
+    imageUrlAlias: { findMany: mocks.sourceAliases },
     generationImage: { findMany: async (query: ImageQuery) => imageRead(snapshot, query) },
     generationJob: {
       create: async (input: { data: Record<string, unknown> }) => mocks.createJob(snapshot, input),
@@ -214,7 +233,17 @@ beforeEach(() => {
   loseJobAck = false; loseReservationAck = false; failRunReads = false; rejectUnavailable = false; commitError = null;
   commitFailures = []; expireDuringInputLock = false; rawReservationFailure = false;
   state = { canvas: canvasRow(), credits: 50, runs: new Map(), jobs: new Map(), assets: new Map(), images: new Map(), roots: [], sequence: 0 };
-  mocks.env.mockReturnValue({ ...canvasStorageTestEnv, AUTH_SECRET: "unit-test-intent-key", CANVAS_ENABLED: true, BUILTIN_PROVIDER_CREDIT_COST: 5, BUILTIN_PROVIDER_VIDEO_CREDIT_COST: 20, WORKER_CONTRACTS_V1_ENABLED: true });
+  mocks.env.mockReturnValue({ ...canvasStorageTestEnv, APP_URL: "https://app.invalid", IMAGE_STORAGE_MANAGED_ENABLED: false, AUTH_SECRET: "unit-test-intent-key", CANVAS_ENABLED: true, BUILTIN_PROVIDER_CREDIT_COST: 5, BUILTIN_PROVIDER_VIDEO_CREDIT_COST: 20, WORKER_CONTRACTS_V1_ENABLED: true });
+  // These originals predate the managed inventory. Exercise the real exact
+  // alias resolver with an explicit miss; unexpected managed queries still fail.
+  mocks.imageQuery.mockImplementation(async (query: { text: string; values: unknown[] }) => {
+    if (query.text !== "SELECT image_resolve_url($1::text,$2::text) AS result"
+      || query.values.length !== 2 || typeof query.values[0] !== "string" || query.values[1] !== null) {
+      throw new Error("Unexpected managed image query in legacy Canvas fixture");
+    }
+    return [{ result: null }];
+  });
+  mocks.sourceAliases.mockResolvedValue([]);
   mocks.getUser.mockImplementation(async () => ({ id: ownerId, credits: state.credits }));
   mocks.requireUser.mockImplementation(async () => ({ id: ownerId, credits: state.credits }));
   mocks.turnstile.mockImplementation(async () => { events.push("captcha"); });
@@ -310,14 +339,17 @@ describe("canvas run integration with the existing generation route", () => {
     run.input.references = [{ sourceNodeId: uuid(4), ordinal: 1, kind: "imported", assetId: "asset-one" }];
     state.assets.set("asset-one", canvasAssetRow());
     const first = await POST(generationRequest(run, { turnstileToken: "already-used" }));
+    expect(first.status).toBe(200);
     const original = await first.json();
     state.credits = 0; state.canvas.deletedAt = at; state.assets.clear();
     events = [];
+    mocks.imageQuery.mockClear();
     mocks.turnstile.mockRejectedValue(new Error("Used CAPTCHA")); mocks.provider.mockRejectedValue(new Error("Provider removed"));
     const response = await POST(generationRequest(run, { turnstileToken: "already-used" }));
     expect(response.status).toBe(200);
     expect((await response.json()).data.canvasRun).toEqual(original.data.canvasRun);
     expect(state.jobs.size).toBe(1); expect(state.credits).toBe(0); expect(state.roots).toHaveLength(1);
+    expect(mocks.imageQuery).not.toHaveBeenCalled();
     expect(events).toEqual(["reserve", "lookup-run", "lookup-job"]);
   });
 
@@ -582,7 +614,9 @@ describe("canvas run integration with the existing generation route", () => {
     state.assets.set("asset-z", canvasAssetRow({ id: "asset-z", storageKey: "canvas-imports/z.png" }));
     const dataUrl = `data:image/png;base64,${canvasPng().toString("base64")}`;
     state.images.set("legacy-image", { id: "legacy-image", jobId: "legacy-job", url: dataUrl, job: { id: "legacy-job", userId: ownerId, status: "SUCCEEDED" } });
-    const response = await POST(generationRequest(run)); expect(response.status).toBe(200);
+    const response = await POST(generationRequest(run));
+    expect(response.status).toBe(200);
+    expect(mocks.imageQuery).toHaveBeenCalledTimes(2);
     expect([...state.jobs.values()][0]).toMatchObject({ generationType: "IMAGE_TO_IMAGE", count: 1, negativePrompt: null, seed: null,
       sourceImageUrls: ["https://cdn.invalid/media/canvas-imports/a.png", dataUrl, "https://cdn.invalid/media/canvas-imports/z.png"] });
     expect(state.roots.map((root) => [root.assetId, root.ordinal])).toEqual([["asset-a", 1], ["asset-z", 3]]);
@@ -620,6 +654,7 @@ describe("canvas run integration with the existing generation route", () => {
     state.images.set("image_a", { id: "image_a", jobId: "job_a", url: "https://media.invalid/unknown-size.png", job: { id: "job_a", userId: ownerId, status: "SUCCEEDED" } });
     const response = await POST(generationRequest(run));
     expect(response.status).toBe(200); expect(state.jobs.size).toBe(1); expect(state.credits).toBe(45);
+    expect(mocks.imageQuery).toHaveBeenCalledTimes(5);
     expect([...state.jobs.values()][0].sourceImageUrls).toHaveLength(5); expect(state.roots).toHaveLength(4);
     expect(mocks.persist).not.toHaveBeenCalled();
   });

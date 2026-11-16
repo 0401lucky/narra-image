@@ -56,12 +56,17 @@ func main() {
 		os.Exit(1)
 	}
 
-	storage, err := narraw.NewStorage(ctx, narraw.LoadStorageConfig())
+	storageConfig, err := narraw.LoadStorageConfig()
+	if err != nil {
+		logger.Error("图片存储配置无效", "event", "image_storage_config_invalid")
+		os.Exit(1)
+	}
+	storage, err := narraw.NewStorage(ctx, storageConfig)
 	if err != nil {
 		logger.Error("存储初始化失败", "error", err)
 		os.Exit(1)
 	}
-	if !storage.HasObjectStorage() {
+	if !storage.HasObjectStorage() && !(storageConfig.ImageStorageManagedEnabled && storageConfig.ImageStorageBackend == "local") {
 		logger.Error("未配置对象存储（S3/R2），无法执行媒体回填")
 		os.Exit(1)
 	}

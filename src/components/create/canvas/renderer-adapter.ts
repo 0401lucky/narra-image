@@ -1,6 +1,7 @@
 import type { Connection, NodeChange } from "@xyflow/react";
 
 import type { CanvasLocalNodeV1, CanvasLocalSceneV1, CanvasPositionV1 } from "@/lib/canvas/contracts";
+import { imageUnavailableMessage, isImageAvailable } from "@/lib/storage/image-availability";
 
 import type { CanvasActiveView } from "./controller-types";
 import { CANVAS_DRAG_HANDLE, CANVAS_NODE_LABELS, CANVAS_PORTS } from "./renderer-constants";
@@ -71,9 +72,14 @@ export function canvasNodeLabel(node: CanvasLocalNodeV1): string {
 export function canvasSourceStatus(active: CanvasActiveView, node: CanvasLocalNodeV1): string {
   if (node.kind === "reference") {
     const reference = active.references[node.id];
+    if (reference?.availability === "cleaned") return imageUnavailableMessage(reference.availability);
     return reference?.state === "ready" ? "原图已就绪" : reference?.state === "local" ? "本地原图可用" : reference?.state === "uploading" ? "上传中" : "原图不可用";
   }
-  if (node.kind === "result") { const image = active.images[node.imageId]; return image?.id === node.imageId && image.jobId === node.jobId && image.url ? "结果已就绪" : "结果不可用"; }
+  if (node.kind === "result") {
+    const image = active.images[node.imageId];
+    if (image?.availability && !isImageAvailable(image.availability)) return imageUnavailableMessage(image.availability);
+    return image?.id === node.imageId && image.jobId === node.jobId && image.url ? "结果已就绪" : "结果不可用";
+  }
   if (node.kind === "prompt") return node.text.trim().length >= 2 ? "已填写" : "待填写提示词";
   return "生成节点";
 }

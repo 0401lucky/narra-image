@@ -90,7 +90,7 @@ func changeCanvasFixture(t *testing.T, root, name string, change func(map[string
 
 func TestCanvasContractLoadsActualSharedFiles(t *testing.T) {
 	contract := loadTestCanvasContract(t)
-	if contract.Schema.Contract != "narra.canvas.schema" || contract.Schema.Version != 1 || len(contract.Schema.Objects) != 180 {
+	if contract.Schema.Contract != "narra.canvas.schema" || contract.Schema.Version != 1 || contract.Schema.StorageRevision != 3 || len(contract.Schema.Objects) != 201 {
 		t.Fatalf("unexpected schema inventory: version=%d, objects=%d", contract.Schema.Version, len(contract.Schema.Objects))
 	}
 	functions := 0
@@ -99,8 +99,8 @@ func TestCanvasContractLoadsActualSharedFiles(t *testing.T) {
 			functions++
 		}
 	}
-	if functions != 27 {
-		t.Fatalf("loaded %d functions, want the complete 27-function inventory", functions)
+	if functions != 35 {
+		t.Fatalf("loaded %d functions, want the complete 35-function inventory", functions)
 	}
 	data, err := os.ReadFile(filepath.Join(canvasFixtureRoot(t), "limits.json"))
 	if err != nil {
@@ -126,7 +126,7 @@ func TestCanvasContractLoadsActualSharedFiles(t *testing.T) {
 	if contract.Retention.GraceSeconds != 604800 || contract.Retention.Clock != "database" {
 		t.Fatal("retention must remain exactly seven database-clock days")
 	}
-	if contract.Capability.ReadyCapability != (CanvasReadyCapability{Version: 1, Schema: "ready", Storage: "unversioned", GC: "running"}) ||
+	if contract.Capability.ReadyCapability != (CanvasReadyCapability{Version: 1, Schema: "ready", Storage: "unversioned", GC: "running", StorageRevision: 3, GCRevision: 3}) ||
 		!reflect.DeepEqual(contract.Capability.ReadyCapabilityPath, []string{"capabilities", "canvas"}) {
 		t.Fatalf("unexpected readiness capability: %+v", contract.Capability.ReadyCapability)
 	}
@@ -258,6 +258,8 @@ func TestCanvasContractRejectsMalformedShapeAndUnsafePolicy(t *testing.T) {
 		{"missing-ready-path", "capability.json", func(v map[string]any) { delete(v, "readyCapabilityPath") }},
 		{"missing-ready-gc", "capability.json", func(v map[string]any) { delete(v["readyCapability"].(map[string]any), "gc") }},
 		{"unknown-ready-version", "capability.json", func(v map[string]any) { v["readyCapability"].(map[string]any)["version"] = 2 }},
+		{"legacy-storage-revision", "capability.json", func(v map[string]any) { v["readyCapability"].(map[string]any)["storageRevision"] = 2 }},
+		{"legacy-gc-revision", "capability.json", func(v map[string]any) { v["readyCapability"].(map[string]any)["gcRevision"] = 2 }},
 		{"not-ready-schema", "capability.json", func(v map[string]any) { v["readyCapability"].(map[string]any)["schema"] = "unknown" }},
 		{"not-running-gc", "capability.json", func(v map[string]any) { v["readyCapability"].(map[string]any)["gc"] = "stopped" }},
 		{"unknown-may-delete", "capability.json", func(v map[string]any) { v["unknownCapabilityMayDelete"] = true }},

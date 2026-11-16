@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
+vi.mock("@/lib/storage/managed-image-storage", () => ({ resolveManagedImageUrl: vi.fn(async () => null), readManagedImage: vi.fn() }));
 
 import { downloadExternalImage } from "@/lib/external-api/source-images";
 

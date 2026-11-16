@@ -195,11 +195,11 @@ func TestImageDataURLToBase64(t *testing.T) {
 func TestFormatGatewayQueryResponse(t *testing.T) {
 	created := time.Date(2026, 8, 8, 12, 0, 0, 0, time.UTC)
 	job := gatewayJob{
-		ID:         "cjob1",
-		Status:     "SUCCEEDED",
-		Model:      "gpt-image-2",
-		CreatedAt:  created,
-		ErrorCode:  newNullString(""),
+		ID:           "cjob1",
+		Status:       "SUCCEEDED",
+		Model:        "gpt-image-2",
+		CreatedAt:    created,
+		ErrorCode:    newNullString(""),
 		CreditsSpent: 5,
 	}
 	image := gatewayImage{
@@ -275,7 +275,7 @@ func TestGatewayContractFixtures(t *testing.T) {
 	}
 
 	var scenarios struct {
-		Version int                       `json:"version"`
+		Version int                        `json:"version"`
 		Valid   map[string]json.RawMessage `json:"valid"`
 		Invalid map[string]json.RawMessage `json:"invalid"`
 	}

@@ -16,6 +16,7 @@ export const workPrivacySentinels = {
 } as const;
 
 export const publicWorkDetailKeys = [
+  "availability",
   "authorNickname",
   "createdAt",
   "featuredAt",
@@ -57,6 +58,7 @@ export function createPrivacyWork(
     jobId: workPrivacySentinels.jobId,
     likes: [],
     mediaStorage: "S3",
+    mediaAssetId: null,
     reviewNote: workPrivacySentinels.reviewNote,
     reviewedAt: new Date(workPrivacySentinels.reviewedAt),
     reviewedBy: {

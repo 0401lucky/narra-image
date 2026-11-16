@@ -13,6 +13,31 @@ import (
 )
 
 var errB64ResponseTooLarge = errors.New("生成图片超过 b64_json 响应大小限制")
+var errGatewayManagedImageUnavailable = errors.New("图片暂不可用，无法返回 b64_json")
+
+func gatewayImageAvailability(image gatewayImage) string {
+	if image.Availability == "cleaned" || image.Availability == "unavailable" {
+		return image.Availability
+	}
+	return "available"
+}
+
+func gatewayImageUnavailableMessage(image gatewayImage) string {
+	if gatewayImageAvailability(image) == "cleaned" {
+		return "图片已清理"
+	}
+	return "图片暂不可用"
+}
+
+func (w *Worker) rejectUnavailableGatewayImages(writer http.ResponseWriter, result gatewayJobResult) bool {
+	for _, image := range result.Images {
+		if gatewayImageAvailability(image) != "available" {
+			w.writeGatewayOpenAiError(writer, http.StatusGone, "IMAGE_UNAVAILABLE", gatewayImageUnavailableMessage(image), result.JobID)
+			return true
+		}
+	}
+	return false
+}
 
 // writeGatewayOpenAiError 输出 OpenAI 兼容错误响应，Next 薄代理原样透传。
 func (w *Worker) writeGatewayOpenAiError(
@@ -98,6 +123,9 @@ func (w *Worker) writeGatewayImages(
 		w.writeGatewayJobError(writer, result)
 		return
 	}
+	if w.rejectUnavailableGatewayImages(writer, result) {
+		return
+	}
 	format := env.Payload.ResponseFormat
 	if format == "" {
 		format = "url"
@@ -110,7 +138,7 @@ func (w *Worker) writeGatewayImages(
 			"width":  image.Width,
 		}
 		if format == "b64_json" {
-			b64, err := w.imageURLToBase64(image.URL)
+			b64, err := w.gatewayImageToBase64(image)
 			if err != nil {
 				w.writeGatewayOpenAiError(writer, http.StatusBadRequest, "GENERATION_IMAGE_B64_FAILED", err.Error(), result.JobID)
 				return
@@ -126,6 +154,38 @@ func (w *Worker) writeGatewayImages(
 	})
 }
 
+func (w *Worker) gatewayImageToBase64(image gatewayImage) (string, error) {
+	if image.MediaAssetID == "" {
+		return w.imageURLToBase64(image.URL)
+	}
+	if gatewayImageAvailability(image) != "available" || !imageUUIDPattern.MatchString(image.MediaAssetID) || w.storage == nil {
+		return "", errGatewayManagedImageUnavailable
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(ImageReadTimeoutMilliseconds)*time.Millisecond)
+	defer cancel()
+	// A managed read must still work when new managed writes are disabled. A
+	// local copy avoids mutating shared Worker initialization/state on requests.
+	storage := *w.storage
+	if storage.imageRepository == nil {
+		if w.pool == nil {
+			return "", errGatewayManagedImageUnavailable
+		}
+		storage.imageRepository = NewImageRepository(w.pool)
+	}
+	managed, err := storage.imageRepository.GetByAssetID(ctx, image.MediaAssetID, "")
+	if err != nil || managed == nil || managed.Asset.State != "AVAILABLE" {
+		return "", errGatewayManagedImageUnavailable
+	}
+	if managed.Asset.ByteLength > gatewayMaxB64ResponseImageBytes {
+		return "", errB64ResponseTooLarge
+	}
+	data, err := storage.readManagedImage(ctx, *managed)
+	if err != nil {
+		return "", errGatewayManagedImageUnavailable
+	}
+	return base64.StdEncoding.EncodeToString(data), nil
+}
+
 // imageURLToBase64 下载媒体 URL 转 base64，沿用 25MB 上限；兼容开发期 data URL fallback。
 func (w *Worker) imageURLToBase64(imageURL string) (string, error) {
 	if dataURL, ok := imageDataURLToBase64(imageURL); ok {
@@ -133,6 +193,22 @@ func (w *Worker) imageURLToBase64(imageURL string) (string, error) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
+	if w.cfg.ImageStorageManagedEnabled {
+		managed, err := w.storage.resolveManagedImage(ctx, imageURL)
+		if err != nil {
+			return "", err
+		}
+		if managed != nil {
+			if managed.Asset.ByteLength > gatewayMaxB64ResponseImageBytes {
+				return "", errB64ResponseTooLarge
+			}
+			data, err := w.storage.readManagedImage(ctx, *managed)
+			if err != nil {
+				return "", err
+			}
+			return base64.StdEncoding.EncodeToString(data), nil
+		}
+	}
 	request, err := http.NewRequestWithContext(ctx, http.MethodGet, imageURL, nil)
 	if err != nil {
 		return "", err
@@ -175,7 +251,11 @@ func imageDataURLToBase64(imageURL string) (string, bool) {
 func buildGatewayImageMarkdown(images []gatewayImage) string {
 	lines := make([]string, 0, len(images))
 	for index, image := range images {
-		lines = append(lines, fmt.Sprintf("![image-%d](%s)\n%s", index+1, image.URL, image.URL))
+		if gatewayImageAvailability(image) != "available" {
+			lines = append(lines, gatewayImageUnavailableMessage(image))
+		} else {
+			lines = append(lines, fmt.Sprintf("![image-%d](%s)\n%s", index+1, image.URL, image.URL))
+		}
 	}
 	return strings.Join(lines, "\n\n")
 }
@@ -189,6 +269,9 @@ func (w *Worker) writeGatewayChat(
 ) {
 	if result.Status == "FAILED" {
 		w.writeGatewayJobError(writer, result)
+		return
+	}
+	if w.rejectUnavailableGatewayImages(writer, result) {
 		return
 	}
 	content := "生成完成。\n\n" + buildGatewayImageMarkdown(result.Images)
@@ -287,6 +370,9 @@ func (w *Worker) writeGatewayResponses(
 		w.writeResponsesFailedSSE(writer, result)
 		return
 	}
+	if w.rejectUnavailableGatewayImages(writer, result) {
+		return
+	}
 
 	payload, err := w.formatResponsesPayload(env, result)
 	if err != nil {
@@ -304,7 +390,10 @@ func (w *Worker) writeGatewayResponses(
 func (w *Worker) formatResponsesPayload(env *gatewayEnvelope, result gatewayJobResult) (map[string]any, error) {
 	output := make([]any, 0, len(result.Images))
 	for index, image := range result.Images {
-		b64, err := w.imageURLToBase64(image.URL)
+		if gatewayImageAvailability(image) != "available" {
+			return nil, errors.New(gatewayImageUnavailableMessage(image))
+		}
+		b64, err := w.gatewayImageToBase64(image)
 		if err != nil {
 			return nil, err
 		}
@@ -343,11 +432,11 @@ func (w *Worker) formatResponsesPayload(env *gatewayEnvelope, result gatewayJobR
 		"tools":                tools,
 		"top_p":                nil,
 		"usage": map[string]any{
-			"input_tokens":  0,
+			"input_tokens":          0,
 			"input_tokens_details":  map[string]any{"cached_tokens": 0},
-			"output_tokens": 0,
+			"output_tokens":         0,
 			"output_tokens_details": map[string]any{"reasoning_tokens": 0},
-			"total_tokens":  0,
+			"total_tokens":          0,
 		},
 	}, nil
 }
@@ -432,11 +521,16 @@ func formatGatewayQueryResponse(job gatewayJob, images []gatewayImage) map[strin
 	}
 	imageList := make([]any, 0, len(images))
 	for _, image := range images {
+		var imageURL any = image.URL
+		if gatewayImageAvailability(image) != "available" {
+			imageURL = nil
+		}
 		imageList = append(imageList, map[string]any{
-			"height": image.Height,
-			"id":     image.ID,
-			"url":    image.URL,
-			"width":  image.Width,
+			"height":       image.Height,
+			"id":           image.ID,
+			"url":          imageURL,
+			"width":        image.Width,
+			"availability": gatewayImageAvailability(image),
 		})
 	}
 	errorMessage := job.ErrorMessage.String

@@ -76,7 +76,7 @@ func TestCanvasGCRepositoryKeepsAuthorityInSQLAndReleasesRows(t *testing.T) {
 	if err != nil || !finished {
 		t.Fatal("finalization result not propagated")
 	}
-	for index, function := range []string{"canvas_acquire_gc_lease", "canvas_claim_imports", "canvas_finish_asset_delete"} {
+	for index, function := range []string{"canvas_acquire_gc_lease_v2", "canvas_claim_imports_v2", "canvas_finish_asset_delete_v2"} {
 		if !strings.Contains(db.queries[index], function) || strings.Contains(db.queries[index], "UPDATE") || strings.Contains(db.queries[index], "NOW()") {
 			t.Fatalf("repository replaced SQL authority: %s", db.queries[index])
 		}

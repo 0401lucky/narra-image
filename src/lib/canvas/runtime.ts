@@ -4,10 +4,13 @@ import { GenerationStatus, Prisma } from "@prisma/client";
 import type { z } from "zod";
 
 import { db } from "@/lib/db";
+import { presentGenerationImage } from "@/lib/storage/image-presentation";
+import { projectGenerationSourceUrls } from "@/lib/storage/image-source-presentation";
 import type { canvasRuntimeResolveSchema } from "@/lib/validators";
 import { serializeCanvasAsset } from "./assets";
 import { CanvasContractError, type CanvasRuntimeResolveDtoV1 } from "./contracts";
 import { canvasGenerationInclude, canvasRunLookupSelect, serializeCanvasGeneration, serializeCanvasRunLookup } from "./runs";
+import { canvasMediaInclude } from "./storage";
 
 export type CanvasRuntimeResolveInput = z.output<typeof canvasRuntimeResolveSchema>;
 
@@ -51,15 +54,17 @@ export async function resolveCanvasRuntime(ownerId: string, input: CanvasRuntime
       input.imageIds.length ? tx.generationImage.findMany({
         where: { id: { in: input.imageIds }, job: { userId: ownerId } },
         select: {
-          id: true, jobId: true, url: true, width: true, height: true,
+          id: true, jobId: true, url: true, width: true, height: true, mediaAssetId: true, ...canvasMediaInclude,
           job: { select: { id: true, userId: true, status: true } },
         },
       }) : [],
       input.assetIds.length ? tx.canvasImportAsset.findMany({
         where: { id: { in: input.assetIds }, ownerId, userId: ownerId, kind: "IMPORT" },
+        include: canvasMediaInclude,
       }) : [],
     ]);
-    const jobs = new Map(jobRows.filter((job) => job.userId === ownerId && requestedJobs.includes(job.id)).map((job) => [job.id, job]));
+    const projectedJobs = await projectGenerationSourceUrls(jobRows.filter((job) => job.userId === ownerId && requestedJobs.includes(job.id)), tx);
+    const jobs = new Map(projectedJobs.map((job) => [job.id, job]));
     for (const id of requestedJobs) {
       if (!jobs.has(id)) missing.push({ kind: "job", id, code: "CANVAS_JOB_UNAVAILABLE" });
     }
@@ -72,8 +77,10 @@ export async function resolveCanvasRuntime(ownerId: string, input: CanvasRuntime
 
     const images = new Map(imageRows.filter((image) => image.job.userId === ownerId && image.jobId === image.job.id
       && image.job.status === GenerationStatus.SUCCEEDED && image.url && input.imageIds.includes(image.id)).map((image) => [image.id, image]));
+    const imagePresentations = new Map([...images].map(([id, image]) => [id, presentGenerationImage(image)]));
     for (const id of input.imageIds) {
-      if (!images.has(id)) missing.push({ kind: "image", id, code: "CANVAS_INPUT_UNAVAILABLE" });
+      const image = images.get(id);
+      if (!image || imagePresentations.get(id)?.availability !== "available") missing.push({ kind: "image", id, code: "CANVAS_INPUT_UNAVAILABLE" });
     }
 
     const assets = new Map(assetRows.filter((asset) => asset.ownerId === ownerId && asset.userId === ownerId
@@ -87,7 +94,7 @@ export async function resolveCanvasRuntime(ownerId: string, input: CanvasRuntime
       canvasId: input.canvasId,
       generations: Object.fromEntries([...jobs].map(([id, job]) => [id, serializeCanvasGeneration(job)])),
       images: Object.fromEntries([...images].map(([id, image]) => [id, {
-        id, jobId: image.jobId, url: image.url,
+        id, jobId: image.jobId, ...imagePresentations.get(id)!,
         actualWidth: image.width, actualHeight: image.height,
         actualSize: image.width && image.height ? `${image.width}x${image.height}` : null,
       }])),

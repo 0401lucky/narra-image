@@ -7,7 +7,7 @@ import { db } from "@/lib/db";
 import { canvasSceneSchema } from "@/lib/validators";
 import { CANVAS_LIMITS, CanvasContractError, canonicalCanvasJson, type CanvasDocumentDtoV1, type CanvasMetadataDtoV1, type CanvasMetadataPageDtoV1, type CanvasSaveReceiptDtoV1, type CanvasSceneV1 } from "./contracts";
 import { encodeCanvasCursor, type CanvasKeyset } from "./cursors";
-import { canvasAssetUrl } from "./storage";
+import { canvasAssetUrl, canvasMediaInclude } from "./storage";
 import { canvasTransaction, lockCanvasOwner, type CanvasTransaction } from "./transactions";
 
 type CanvasMetadataRecord = Pick<Canvas, "id" | "title" | "revision" | "lastSavedAt" | "createdAt" | "updatedAt">;
@@ -100,7 +100,7 @@ export async function saveCanvasSnapshot(ownerId: string, id: string, input: { e
       if (existing.revision !== input.expectedRevision) throw new CanvasContractError("CANVAS_REVISION_CONFLICT");
       const ids = [...new Set(input.scene.nodes.flatMap((node) => node.kind === "reference" ? [node.source.assetId] : []))];
       if (ids.length) {
-        const assets = await tx.canvasImportAsset.findMany({ where: { id: { in: ids }, ownerId, userId: ownerId, state: "READY" } });
+        const assets = await tx.canvasImportAsset.findMany({ where: { id: { in: ids }, ownerId, userId: ownerId, state: "READY" }, include: canvasMediaInclude });
         if (assets.length !== ids.length || assets.some((asset) => !canvasAssetUrl(asset))) throw new CanvasContractError("CANVAS_INPUT_UNAVAILABLE");
       }
     }

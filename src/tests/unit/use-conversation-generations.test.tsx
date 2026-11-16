@@ -146,6 +146,79 @@ describe("conversation page ownership and recovery", () => {
     expect(result.current.generations).toEqual([terminal]);
   });
 
+  it("keeps the visible page stable for canonical, equivalent and rejected stale updates", () => {
+    const terminal = generation("stable_job", "conversation_a", {
+      updatedAt: "2026-10-03T00:00:00.000Z",
+      images: [{ id: "stable_image", url: "https://media.invalid/stable.png", availability: "available", actualWidth: 1024, actualHeight: 1024, actualSize: "1024x1024" }],
+    });
+    const { result } = renderHook(() => useConversationGenerations({ ownerId: "owner_a", initialPage: page([terminal], "older_cursor") }));
+    act(() => result.current.selectConversation("conversation_a"));
+    const visible = result.current.generations;
+    for (const incoming of [
+      terminal,
+      { ...terminal, images: terminal.images.map((image) => ({ ...image })), sourceImageUrls: [...terminal.sourceImageUrls] },
+      { ...terminal, updatedAt: "2026-10-01T00:00:00.000Z", prompt: "obsolete prompt", images: [] },
+    ]) {
+      act(() => result.current.updateGeneration(incoming));
+      expect(result.current.generations).toBe(visible);
+    }
+    act(() => result.current.updateGeneration({ ...terminal, status: "pending", updatedAt: "2026-10-04T00:00:00.000Z" }));
+    expect(result.current.generations).toBe(visible);
+    expect(result.current.generations[0]).toBe(terminal);
+    expect(result.current.hasMore).toBe(true);
+    expect(result.current.conversationId).toBe("conversation_a");
+    expect(fetch).not.toHaveBeenCalled();
+  });
+
+  it.each(["equal timestamp", "older timestamp", "legacy availability"])("keeps cleaned results when an in-flight history page returns %s", async (source) => {
+    const terminal = generation("cleaned_job", "conversation_a", {
+      images: [{ id: "cleaned_image", url: "https://media.invalid/cleaned.png", availability: "available", actualWidth: 1024, actualHeight: 1024, actualSize: "1024x1024" }],
+    });
+    const { result } = renderHook(() => useConversationGenerations({ ownerId: "owner_a", initialPage: page([terminal]) }));
+    act(() => result.current.selectConversation("conversation_a"));
+    act(() => { void result.current.reload(); });
+    act(() => result.current.updateGeneration({ ...terminal, images: terminal.images.map((image) => ({ ...image, availability: "cleaned" })) }));
+    await finish(0, page([{
+      ...terminal,
+      updatedAt: source === "older timestamp" ? "2026-09-30T00:00:00.000Z" : terminal.updatedAt,
+      images: terminal.images.map((image) => ({ ...image, availability: source === "legacy availability" ? undefined : "available" })),
+    }]));
+    expect(result.current.generations).toHaveLength(1);
+    expect(result.current.generations[0]).toMatchObject({
+      prompt: terminal.prompt, status: "succeeded", creditsSpent: terminal.creditsSpent, updatedAt: terminal.updatedAt,
+      images: [{ id: "cleaned_image", availability: "cleaned" }],
+    });
+    expect(reads).toHaveLength(1);
+  });
+
+  it("learns cleanup from older metadata while keeping current task facts", () => {
+    const terminal = generation("cleaned_job", "conversation_a", {
+      prompt: "current prompt", updatedAt: "2026-10-03T00:00:00.000Z",
+      images: [{ id: "cleaned_image", url: "https://media.invalid/cleaned.png", availability: "available", actualWidth: 1024, actualHeight: 1024, actualSize: "1024x1024" }],
+    });
+    const { result } = renderHook(() => useConversationGenerations({ ownerId: "owner_a", initialPage: page([terminal]) }));
+    act(() => result.current.selectConversation("conversation_a"));
+    act(() => result.current.updateGeneration({
+      ...terminal, prompt: "older prompt", updatedAt: "2026-10-01T00:00:00.000Z",
+      images: terminal.images.map((image) => ({ ...image, availability: "cleaned" })),
+    }));
+    expect(result.current.generations[0]).toMatchObject({
+      prompt: terminal.prompt, updatedAt: terminal.updatedAt, creditsSpent: terminal.creditsSpent, status: "succeeded",
+      images: [{ id: "cleaned_image", availability: "cleaned" }],
+    });
+  });
+
+  it("restores a temporarily unavailable image from a fresh history page", async () => {
+    const terminal = generation("recovering_job", "conversation_a", {
+      images: [{ id: "recovering_image", url: "https://media.invalid/recovering.png", availability: "unavailable", actualWidth: 1024, actualHeight: 1024, actualSize: "1024x1024" }],
+    });
+    const { result } = renderHook(() => useConversationGenerations({ ownerId: "owner_a", initialPage: page([terminal]) }));
+    act(() => result.current.selectConversation("conversation_a"));
+    act(() => { void result.current.reload(); });
+    await finish(0, page([{ ...terminal, images: terminal.images.map((image) => ({ ...image, availability: "available" })) }]));
+    expect(result.current.generations[0]).toMatchObject({ status: "succeeded", images: [{ id: "recovering_image", availability: "available" }] });
+  });
+
   it("retains retry replacement suppression across stale pages and late updates", async () => {
     const failed = generation("failed_job", "conversation_a", { status: "failed" });
     const accepted = generation("replacement", "conversation_a", { status: "pending" });

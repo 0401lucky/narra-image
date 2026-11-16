@@ -1,6 +1,8 @@
+import { randomUUID } from "node:crypto";
 import { GenerationStatus, type Prisma } from "@prisma/client";
 
 import { db } from "@/lib/db";
+import { imageAvailabilityInclude } from "@/lib/storage/image-availability";
 import { getEnv } from "@/lib/env";
 import { CANVAS_RUN_OPT_IN_HEADER, CanvasContractError, type CanvasRunSubmissionDtoV1 } from "@/lib/canvas/contracts";
 import { canvasErrorResponse, canvasJson, requireCanvasOwner } from "@/lib/canvas/http";
@@ -11,6 +13,9 @@ import {
 } from "@/lib/canvas/run-submission";
 import { serializeCanvasGeneration } from "@/lib/canvas/runs";
 import { canvasTransaction, isCanvasTransactionRetryable } from "@/lib/canvas/transactions";
+import { lockImageReferenceEpoch } from "@/lib/storage/image-reference-lock";
+import { bindManagedImageInputAliases } from "@/lib/storage/image-input-aliases";
+import { projectGenerationSourceUrls } from "@/lib/storage/image-source-presentation";
 import {
   GenerationContractError,
   channelSupportsModel,
@@ -38,6 +43,8 @@ import { getErrorMessage, jsonError, jsonOk } from "@/lib/server/http";
 import { assertPublicHttpUrl } from "@/lib/server/safe-remote-url";
 import { persistGeneratedImage } from "@/lib/storage/persist-generated-image";
 import { failGenerationJobAndRefund } from "@/lib/generation/job-refund";
+import { ImageStorageError, type ImageReservation } from "@/lib/storage/image-contract";
+import { bindManagedImageOutputs, closeManagedImageReservation, reserveManagedImageOutputs, resolveManagedImageUrl } from "@/lib/storage/managed-image-storage";
 
 async function assertGenerationPublicHttpUrl(url: string, fieldName: string) {
   try {
@@ -49,6 +56,15 @@ async function assertGenerationPublicHttpUrl(url: string, fieldName: string) {
 
 class GenerationCreditError extends Error {}
 
+async function assertGenerationImageUrl(url: string) {
+  const managed = await resolveManagedImageUrl(url);
+  if (managed) {
+    if (managed.asset.state !== "AVAILABLE" || managed.object?.state !== "READY") throw new ImageStorageError("IMAGE_UNAVAILABLE");
+    return;
+  }
+  await assertGenerationPublicHttpUrl(url, "参考图 URL");
+}
+
 export async function POST(request: Request) {
   let jobId: string | null = null;
   const canvasTransport = request.headers.has(CANVAS_RUN_OPT_IN_HEADER);
@@ -56,6 +72,8 @@ export async function POST(request: Request) {
   let canvasPreparation: CanvasRunPreparation | null = null;
   let canvasCommitAttempted = false;
   let canvasCommitted = false;
+  let outputReservation: ImageReservation | null = null;
+  const reservedJobId = randomUUID();
 
   async function rejectPreparationResponse(response: Response): Promise<Response> {
     if (canvasPreparation) {
@@ -159,9 +177,7 @@ export async function POST(request: Request) {
     // 此处做入队前校验；Worker 仍需对实际请求和重定向目标重复校验。
     const canvasInputs = canvasPreparation ? await readCanvasRunInputs(user.id, canvasPreparation.run) : null;
     const referenceUrls = canvasInputs?.sourceImageUrls ?? body.imageUrls;
-    const urlChecks = referenceUrls.filter((url) => !canvasInputs || !isCanvasCanonicalDataUrl(url)).map((url) =>
-      assertGenerationPublicHttpUrl(url, "参考图 URL")
-    );
+    const urlChecks = referenceUrls.filter((url) => !canvasInputs || !isCanvasCanonicalDataUrl(url)).map(assertGenerationImageUrl);
     if (body.providerMode === "custom" && customProvider) {
       urlChecks.push(
         assertGenerationPublicHttpUrl(customProvider.baseUrl, "自填渠道 Base URL"),
@@ -185,6 +201,14 @@ export async function POST(request: Request) {
     const customProviderApiKeyEncrypted = customProvider
       ? await encryptProviderSecret(customProvider.apiKey, env.AUTH_SECRET)
       : null;
+
+    if (body.generationType === "text_to_image" || body.generationType === "image_to_image") {
+      outputReservation = await reserveManagedImageOutputs({
+        ownerId: user.id,
+        intentKey: canvasPreparation ? `canvas-output:${canvasPreparation.run.runId}:${canvasPreparation.intentHash}` : `output:${reservedJobId}`,
+        count: body.generationType === "image_to_image" ? 1 : body.count,
+      });
+    }
 
     const fileSourceImages = await Promise.all(
       body.images.map(async (image: File) => ({
@@ -212,10 +236,14 @@ export async function POST(request: Request) {
     // 让请求链路保持短平快，也避免 Next 进程重启导致后台生成丢失。
     const preparation = canvasPreparation;
     const createJob = async (tx: Prisma.TransactionClient) => {
+      if (!preparation) await lockImageReferenceEpoch(tx);
       let currentInputs: CanvasResolvedRunInputs | null = null;
       if (preparation && canvasInputs) currentInputs = await prepareCanvasRunCommit(tx, preparation, canvasInputs);
+      const committedSourceUrls = currentInputs?.sourceImageUrls ?? sourceImageUrls;
+      await bindManagedImageInputAliases(tx, committedSourceUrls, env.APP_URL);
       const created = await tx.generationJob.create({
         data: {
+          ...(outputReservation ? { id: reservedJobId } : {}),
           ...(conversationToBind ? { conversationId: conversationToBind } : {}),
           count: body.count,
           contractVersion: contractFields.contractVersion,
@@ -247,17 +275,19 @@ export async function POST(request: Request) {
           moderation: body.moderation,
           seed: body.seed,
           size: body.size,
-          sourceImageUrls: currentInputs?.sourceImageUrls ?? sourceImageUrls,
+          sourceImageUrls: committedSourceUrls,
           status: GenerationStatus.PENDING,
           handoffState: contractFields.handoffState,
           userId: user.id,
           workerManaged: true,
         },
         include: {
-          images: true,
+          images: { include: imageAvailabilityInclude },
           videos: true,
         },
       });
+
+      await bindManagedImageOutputs(tx, outputReservation, user.id, created.id);
 
       if (body.replaceGenerationId && conversationToBind) {
         await tx.generationJob.updateMany({
@@ -300,7 +330,9 @@ export async function POST(request: Request) {
       }
 
       if (preparation) await commitCanvasRun(tx, preparation, created.id);
-      return created;
+      // Project browser references before committing. A failed read must not
+      // enter the post-commit error/refund path for an already-created job.
+      return (await projectGenerationSourceUrls([created], tx))[0];
     };
     if (preparation) canvasCommitAttempted = true;
     const job = preparation ? await canvasTransaction(createJob) : await db.$transaction(createJob);
@@ -317,8 +349,9 @@ export async function POST(request: Request) {
       generation: serializeGeneration(job),
     });
   } catch (error) {
+    await closeManagedImageReservation(outputReservation).catch(() => undefined);
     if (canvasAttempt) {
-      const knownRollback = error instanceof CanvasContractError || error instanceof GenerationCreditError || isCanvasTransactionRetryable(error);
+      const knownRollback = error instanceof CanvasContractError || error instanceof GenerationCreditError || error instanceof ImageStorageError || isCanvasTransactionRetryable(error);
       if (canvasCommitted || (canvasCommitAttempted && !knownRollback)
         || (!canvasPreparation && !(error instanceof CanvasContractError))) {
         return recoverCanvasRunResponse(canvasAttempt);
@@ -337,6 +370,11 @@ export async function POST(request: Request) {
         response.headers.set("Cache-Control", "private, no-store");
         return response;
       }
+      if (error instanceof ImageStorageError) {
+        const response = jsonError(error.message, error.status, error.code);
+        response.headers.set("Cache-Control", "private, no-store");
+        return response;
+      }
       return canvasErrorResponse(error instanceof CanvasContractError ? error : new CanvasContractError("CANVAS_RUN_REJECTED"));
     }
     if (canvasTransport || error instanceof CanvasContractError) return canvasErrorResponse(error);
@@ -350,6 +388,7 @@ export async function POST(request: Request) {
     if (error instanceof GenerationContractError) {
       return jsonError(error.message, error.status, error.code);
     }
+    if (error instanceof ImageStorageError) return jsonError(error.message, error.status, error.code);
     return jsonError(getErrorMessage(error), 400);
   }
 }

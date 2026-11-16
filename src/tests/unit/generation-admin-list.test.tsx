@@ -55,6 +55,7 @@ function createJob(input: Partial<GenerationAdminJob> = {}): GenerationAdminJob 
         id: "image_1",
         jobId: "job_1",
         mediaStorage: "S3",
+        mediaAssetId: null,
         reviewNote: null,
         reviewedAt: null,
         reviewedById: null,
@@ -171,6 +172,25 @@ describe("后台生成记录列表视图", () => {
     );
     expect(screen.getByText("生成图片")).toBeInTheDocument();
     expect(screen.queryByText("完整提示词")).not.toBeInTheDocument();
+  });
+
+  it("清理状态到达后关闭已打开的生成图并保留任务与积分事实", async () => {
+    const user = userEvent.setup();
+    const job = createJob();
+    const { rerender } = render(<GenerationAdminList jobs={[job]} />);
+    await user.click(screen.getAllByRole("button", { name: "查看生成图片 job_1" })[0]);
+    expect(screen.getByAltText("生成图片大图")).toBeInTheDocument();
+    rerender(<GenerationAdminList jobs={[{
+      ...job, images: job.images.map((image) => ({ ...image, mediaAssetId: "cleaned_asset", mediaAsset: { state: "DELETED", activeObjectId: null } })),
+    }]} />);
+
+    expect(screen.getAllByText("图片已清理").length).toBeGreaterThan(0);
+    expect(screen.queryByAltText("生成图片大图")).not.toBeInTheDocument();
+    expect(screen.queryByAltText("生成预览")).not.toBeInTheDocument();
+    expect(screen.getAllByText("已完成").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("-20").length).toBeGreaterThan(0);
+    expect(screen.getAllByText(job.prompt).length).toBeGreaterThan(0);
+    expect(fetch).not.toHaveBeenCalled();
   });
 
   it("卡片视图展示图生图参考图", async () => {

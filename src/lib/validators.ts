@@ -11,9 +11,11 @@ import {
   CANVAS_CLIENT_ID_PATTERN,
   CANVAS_IMPORT_IMAGE_TYPES,
   CANVAS_LIMITS,
+  CANVAS_CAPABILITY_CONTRACT,
   canvasJsonByteLength,
 } from "@/lib/canvas/contracts";
 import { validateCanvasGraphV1, validateCanvasRunReferencesV1 } from "@/lib/canvas/graph";
+import { IMAGE_AVAILABILITIES } from "@/lib/storage/image-availability";
 
 function normalizeGenerationSize(value: string, ctx: z.RefinementCtx): GenerationSizeToken {
   const normalized = normalizeGenerationSizeValue(value);
@@ -428,25 +430,35 @@ export const canvasDocumentDtoSchema = z.object({ canvas: canvasMetadataDtoSchem
 });
 export const canvasMetadataPageDtoSchema = z.object({ canvases: z.array(canvasMetadataDtoSchema).max(CANVAS_LIMITS.maximumPageSize), nextCursor: z.string().max(2048).nullable() }).strict();
 export const canvasSaveReceiptDtoSchema = z.object({ canvas: canvasMetadataDtoSchema, saveId: canvasClientIdSchema, sceneHash: z.string().regex(/^[a-f0-9]{64}$/), acknowledgedRevision: canvasRevisionSchema }).strict();
-export const canvasAssetDtoSchema = z.object({ id: canvasCanonicalIdSchema, uploadId: canvasClientIdSchema, state: z.enum(["UPLOADING", "READY", "QUARANTINED", "DELETING", "DELETED"]), byteLength: z.number().int().positive().max(CANVAS_LIMITS.importBytes), mimeType: z.enum(CANVAS_IMPORT_IMAGE_TYPES as [string, ...string[]]), sha256: z.string().regex(/^[a-f0-9]{64}$/), readyAt: z.iso.datetime().nullable(), url: z.string().nullable() }).strict();
-export const canvasWorkerCapabilitySchema = z.object({ version: z.literal(1), schema: z.literal("ready"), storage: z.literal("unversioned"), gc: z.literal("running") }).strict();
+export const canvasAssetDtoSchema = z.object({ id: canvasCanonicalIdSchema, uploadId: canvasClientIdSchema, state: z.enum(["UPLOADING", "READY", "QUARANTINED", "DELETING", "DELETED"]), availability: z.enum(IMAGE_AVAILABILITIES).optional(), byteLength: z.number().int().positive().max(CANVAS_LIMITS.importBytes), mimeType: z.enum(CANVAS_IMPORT_IMAGE_TYPES as [string, ...string[]]), sha256: z.string().regex(/^[a-f0-9]{64}$/), readyAt: z.iso.datetime().nullable(), url: z.string().nullable() }).strict();
+export const canvasWorkerCapabilitySchema = z.object({
+  version: z.literal(1), schema: z.literal("ready"), storage: z.enum(["unversioned", "local"]), gc: z.literal("running"),
+  storageRevision: z.literal(CANVAS_CAPABILITY_CONTRACT.readyCapability.storageRevision), gcRevision: z.literal(CANVAS_CAPABILITY_CONTRACT.readyCapability.gcRevision), provider: z.enum(["S3", "LOCAL"]), locationId: z.string(),
+}).strict().superRefine((value, context) => {
+  const valid = value.provider === "LOCAL" ? value.storage === "local" && /^local-v1:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}(?![\s\S])/.test(value.locationId)
+    : value.storage === "unversioned" && /^s3-v1:[0-9a-f]{64}(?![\s\S])/.test(value.locationId);
+  if (!valid) context.addIssue({ code: "custom", message: "画布存储能力不匹配" });
+});
 
 // 游标内容由服务端解释；客户端只检查传输形状，不另建排序/解码规则。
 export const featuredCursorResponseSchema = z.string().min(1).max(2048)
   .regex(/^[A-Za-z0-9_-]+$/, "精选作品游标格式不正确");
 
 export const featuredWorkResponseSchema = z.object({
+  availability: z.enum(IMAGE_AVAILABILITIES).default("available"),
   authorAvatar: z.string().nullable(),
   authorName: z.string(),
   featuredAt: z.iso.datetime().nullable(),
   id: z.string().min(1),
-  image: z.string().min(1),
+  image: z.string(),
   likeCount: z.number().int().nonnegative().max(Number.MAX_SAFE_INTEGER),
   likedByMe: z.boolean(),
   prompt: z.string(),
   showPromptPublic: z.boolean().default(false),
   size: z.string(),
   title: z.string(),
+}).refine((work) => work.image.length > 0 || work.availability === "cleaned" || work.availability === "unavailable", {
+  message: "可用作品缺少图片地址", path: ["image"],
 }) satisfies z.ZodType<SerializedFeaturedWork>;
 
 export const featuredPageResponseSchema = z.object({
@@ -464,3 +476,44 @@ export const workLikeResponseSchema = z.object({
     liked: z.boolean(),
   }),
 });
+
+const storageRequestIdSchema = z.uuid("操作标识必须是 UUID")
+  .regex(/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}(?![\s\S])/, "操作标识格式不正确")
+  .transform((value) => value.toLowerCase());
+const storagePolicyVersionSchema = z.number().int().positive("策略版本不正确").max(2147483647);
+const storageLimitBytesSchema = z.string().max(16)
+  .regex(/^[1-9][0-9]*(?![\s\S])/, "容量上限必须是正整数字节数")
+  .refine((value) => value.length <= 16 && /^[1-9][0-9]*(?![\s\S])/.test(value) && BigInt(value) <= BigInt(Number.MAX_SAFE_INTEGER), "容量上限超出支持范围");
+
+export const imageStoragePolicySchema = z.object({
+  expectedVersion: storagePolicyVersionSchema,
+  limitBytes: storageLimitBytesSchema,
+  enabled: z.boolean(),
+  quotaCleanupEnabled: z.boolean(),
+  scheduleEnabled: z.boolean(),
+  retentionDays: z.number().int().min(1, "保留天数至少为 1 天").max(3650, "保留天数不能超过 3650 天"),
+  intervalSeconds: z.number().int().min(60, "清理间隔至少为 1 分钟").max(31536000, "清理间隔不能超过一年"),
+}).strict();
+
+export const imageCleanupPreviewSchema = z.object({
+  previewRequestId: storageRequestIdSchema,
+  expectedPolicyVersion: storagePolicyVersionSchema,
+  mode: z.enum(["MANUAL_AGE", "MANUAL_ALL"]),
+  retentionDays: z.number().int().min(1).max(3650).optional(),
+}).strict().refine((value) => value.mode !== "MANUAL_AGE" || value.retentionDays !== undefined, {
+  message: "请填写本次清理的保留天数", path: ["retentionDays"],
+});
+
+export const imageCleanupConfirmSchema = z.object({
+  previewId: storageRequestIdSchema,
+  requestId: storageRequestIdSchema,
+  expectedPolicyVersion: storagePolicyVersionSchema,
+}).strict();
+
+export const imageCleanupJobQuerySchema = z.object({
+  jobId: storageRequestIdSchema,
+  cursor: storageRequestIdSchema.optional(),
+  limit: z.coerce.number().int().min(1).max(100).default(20),
+}).strict();
+
+export const imageCleanupCancelSchema = z.object({ requestId: storageRequestIdSchema }).strict();

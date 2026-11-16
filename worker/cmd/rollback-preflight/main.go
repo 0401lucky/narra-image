@@ -24,11 +24,21 @@ const (
 )
 
 type rollbackPreflightResult struct {
-	ActiveV1Jobs       int64  `json:"active_v1_jobs"`
-	Code               string `json:"code"`
-	SchemaVersion      int    `json:"schema_version"`
-	Status             string `json:"status"`
-	UnresolvedHandoffs int64  `json:"unresolved_handoffs"`
+	ActiveV1Jobs                int64  `json:"active_v1_jobs"`
+	ActiveImageReservations     int64  `json:"active_image_reservations"`
+	CanvasStorageRevision       int    `json:"canvas_storage_revision"`
+	Code                        string `json:"code"`
+	ImageStorageRevision        int    `json:"image_storage_revision"`
+	LocalImageObjects           int64  `json:"local_image_objects"`
+	ManagedImageAssets          int64  `json:"managed_image_assets"`
+	SchemaVersion               int    `json:"schema_version"`
+	Status                      string `json:"status"`
+	UnresolvedHandoffs          int64  `json:"unresolved_handoffs"`
+	UnresolvedImageObjects      int64  `json:"unresolved_image_objects"`
+	ActiveImageHistoryJobs      int64  `json:"active_image_history_jobs"`
+	UnresolvedImageHistoryItems int64  `json:"unresolved_image_history_items"`
+	UnresolvedImageObservations int64  `json:"unresolved_image_observations"`
+	ActiveImageHistoryHolds     int64  `json:"active_image_history_holds"`
 }
 
 type rollbackPreflightDeps struct {
@@ -73,7 +83,7 @@ func runRollbackPreflight(
 ) int {
 	databaseURL, err := deps.loadURL()
 	if err != nil {
-		logger.Error("回滚预检配置无效", "event", "rollback_preflight_config_invalid", "error", err)
+		logger.Error("回滚预检配置无效", "event", "rollback_preflight_config_invalid", "error_code", "CONFIG_INVALID")
 		writeRollbackResult(output, rollbackPreflightResult{
 			Code: "CONFIG_INVALID", SchemaVersion: 1, Status: "error",
 		})
@@ -82,7 +92,7 @@ func runRollbackPreflight(
 
 	pool, err := deps.openPool(ctx, databaseURL)
 	if err != nil {
-		logger.Error("回滚预检数据库连接池创建失败", "event", "rollback_preflight_pool_failed", "error", err)
+		logger.Error("回滚预检数据库连接池创建失败", "event", "rollback_preflight_pool_failed", "error_code", "DATABASE_UNAVAILABLE")
 		writeRollbackResult(output, rollbackPreflightResult{
 			Code: "DATABASE_UNAVAILABLE", SchemaVersion: 1, Status: "error",
 		})
@@ -90,7 +100,7 @@ func runRollbackPreflight(
 	}
 	defer deps.close(pool)
 	if err := deps.ping(ctx, pool); err != nil {
-		logger.Error("回滚预检数据库不可用", "event", "rollback_preflight_database_unavailable", "error", err)
+		logger.Error("回滚预检数据库不可用", "event", "rollback_preflight_database_unavailable", "error_code", "DATABASE_UNAVAILABLE")
 		writeRollbackResult(output, rollbackPreflightResult{
 			Code: "DATABASE_UNAVAILABLE", SchemaVersion: 1, Status: "error",
 		})
@@ -99,16 +109,26 @@ func runRollbackPreflight(
 
 	report, err := deps.check(ctx, pool)
 	if err != nil {
-		logger.Error("回滚安全检查失败", "event", "rollback_preflight_check_failed", "error", err)
+		logger.Error("回滚安全检查失败", "event", "rollback_preflight_check_failed", "error_code", "PREFLIGHT_FAILED")
 		writeRollbackResult(output, rollbackPreflightResult{
 			Code: "PREFLIGHT_FAILED", SchemaVersion: 1, Status: "error",
 		})
 		return exitRollbackCheckFailed
 	}
 	result := rollbackPreflightResult{
-		ActiveV1Jobs:       report.ActiveV1Jobs,
-		SchemaVersion:      1,
-		UnresolvedHandoffs: report.UnresolvedHandoffs,
+		ActiveV1Jobs:                report.ActiveV1Jobs,
+		ActiveImageReservations:     report.ActiveImageReservations,
+		CanvasStorageRevision:       report.CanvasStorageRevision,
+		ImageStorageRevision:        report.ImageStorageRevision,
+		LocalImageObjects:           report.LocalImageObjects,
+		ManagedImageAssets:          report.ManagedImageAssets,
+		SchemaVersion:               1,
+		UnresolvedHandoffs:          report.UnresolvedHandoffs,
+		UnresolvedImageObjects:      report.UnresolvedImageObjects,
+		ActiveImageHistoryJobs:      report.ActiveImageHistoryJobs,
+		UnresolvedImageHistoryItems: report.UnresolvedImageHistoryItems,
+		UnresolvedImageObservations: report.UnresolvedImageObservations,
+		ActiveImageHistoryHolds:     report.ActiveImageHistoryHolds,
 	}
 	if !report.Safe() {
 		result.Code = "ROLLBACK_UNSAFE"

@@ -10,6 +10,7 @@ import {
 import { tmpdir } from "node:os";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
+import { isDeepStrictEqual } from "node:util";
 
 import {
   assertFixedTargets,
@@ -319,25 +320,74 @@ async function verifyFailedMigration(resource, options) {
   }
 }
 
-async function verifyPgxUrl(databaseEnv, options) {
-  const result = await runStage(
+export async function verifyPgxUrl(databaseEnv, scratchDirectory, options, run = runStage) {
+  const executable = path.join(
+    scratchDirectory,
+    process.platform === "win32" ? "rollback-preflight.exe" : "rollback-preflight",
+  );
+  const commandOptions = {
+    scope: "verify:migrations",
+    deadlineAt: options.deadlineAt,
+  };
+  const built = await run(
     {
-      label: "Go rollback preflight 解析特殊字符 DATABASE_URL",
+      label: "构建 Go rollback preflight 验证程序",
       executable: "go",
-      args: ["-C", "worker", "run", "./cmd/rollback-preflight"],
+      args: ["-C", "worker", "build", "-o", executable, "./cmd/rollback-preflight"],
       cwd: PROJECT_ROOT,
       env: databaseEnv,
       capture: true,
     },
-    {
-      scope: "verify:migrations",
-      deadlineAt: options.deadlineAt,
-    },
+    commandOptions,
   );
-  if (result.code !== 0) {
+  if (built.code !== 0) {
+    if (built.stderr.trim()) console.error(built.stderr.trim());
+    throw failure(EXIT.pgx, "Go rollback preflight 验证程序构建失败");
+  }
+  // Execute the binary directly: `go run` converts every nonzero program exit
+  // into its own exit 1, losing the CLI's distinction between unsafe and failure.
+  const result = await run(
+    {
+      label: "Go rollback preflight 解析特殊字符 DATABASE_URL",
+      executable,
+      args: [],
+      cwd: PROJECT_ROOT,
+      env: databaseEnv,
+      capture: true,
+    },
+    commandOptions,
+  );
+  let report;
+  try {
+    report = JSON.parse(result.stdout);
+  } catch {
+    throw failure(EXIT.pgx, "Go rollback preflight 未返回有效检查报告");
+  }
+  const imageSchema = JSON.parse(readFileSync(path.join(PROJECT_ROOT, "contracts/media/v1/schema.json"), "utf8"));
+  const canvasSchema = JSON.parse(readFileSync(path.join(PROJECT_ROOT, "contracts/canvas/v1/schema.json"), "utf8"));
+  const expectedReport = {
+    active_v1_jobs: 0,
+    active_image_reservations: 0,
+    canvas_storage_revision: canvasSchema.storageRevision,
+    code: "ROLLBACK_UNSAFE",
+    image_storage_revision: imageSchema.storageRevision,
+    local_image_objects: 0,
+    managed_image_assets: 0,
+    schema_version: 1,
+    status: "unsafe",
+    unresolved_handoffs: 0,
+    unresolved_image_objects: 0,
+    active_image_history_jobs: 0,
+    unresolved_image_history_items: 0,
+    unresolved_image_observations: 0,
+    active_image_history_holds: 0,
+  };
+  // The newly migrated empty database is reachable, but its image schema is
+  // intentionally incompatible with old workers even before its first image.
+  if (result.code !== 2 || !isDeepStrictEqual(report, expectedReport)) {
     if (result.stdout.trim()) console.error(result.stdout.trim());
     if (result.stderr.trim()) console.error(result.stderr.trim());
-    throw failure(EXIT.pgx, "Go rollback preflight 无法连接特殊字符 URL");
+    throw failure(EXIT.pgx, "Go rollback preflight 未证明特殊字符 URL 可连接且拒绝图片 schema 回滚");
   }
 }
 
@@ -397,7 +447,7 @@ export async function main() {
     await verifyNoHistoryBaseline(resource, scratchDirectory, options);
     await verifyMissingPrehistory(resource, scratchDirectory, options);
     await verifyFailedMigration(resource, options);
-    await verifyPgxUrl(empty.env, options);
+    await verifyPgxUrl(empty.env, scratchDirectory, options);
     console.log(
       `[verify:migrations] 全部场景通过；owner=${resource.ownerToken}`,
     );
@@ -418,4 +468,6 @@ export async function main() {
   return exitCode;
 }
 
-process.exitCode = await main();
+if (path.resolve(process.argv[1] ?? "") === fileURLToPath(import.meta.url)) {
+  process.exitCode = await main();
+}

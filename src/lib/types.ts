@@ -11,3 +11,5 @@ export type GenerationOutputFormat = "png" | "jpeg" | "webp";
 export type GenerationModeration = "auto" | "low";
 
 export type UserRole = "user" | "admin";
+
+export type ImageAvailability = "available" | "cleaned" | "unavailable";

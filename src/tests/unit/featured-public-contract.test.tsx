@@ -28,6 +28,7 @@ import {
 } from "./helpers/work-privacy-fixtures";
 
 const publicFeaturedKeys = [
+  "availability",
   "authorAvatar",
   "authorName",
   "featuredAt",

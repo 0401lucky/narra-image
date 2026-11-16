@@ -1,0 +1,142 @@
+{
+  "contract": "narra.image.storage",
+  "version": 1,
+  "limits": {
+    "defaultQuotaBytes": "5000000000",
+    "imageBytes": 52428800,
+    "outputCount": 4,
+    "defaultLeaseSeconds": 1200,
+    "maximumLeaseSeconds": 3600,
+    "keyBytes": 512,
+    "referenceCount": 1000
+  },
+  "providers": [
+    "S3",
+    "LOCAL"
+  ],
+  "purposes": [
+    "GENERATED",
+    "REFERENCE",
+    "CANVAS_IMPORT"
+  ],
+  "mimeTypes": [
+    "image/png",
+    "image/jpeg",
+    "image/webp",
+    "image/gif",
+    "image/avif"
+  ],
+  "assetStates": [
+    "PENDING",
+    "AVAILABLE",
+    "QUARANTINED",
+    "DELETING",
+    "DELETED"
+  ],
+  "objectStates": [
+    "WRITING",
+    "READY",
+    "UNKNOWN",
+    "DELETING",
+    "DELETED"
+  ],
+  "reservationKinds": [
+    "OUTPUT",
+    "INPUT",
+    "COPY"
+  ],
+  "referenceKinds": [
+    "JOB_INPUT",
+    "CANVAS_SAVED",
+    "SHOWCASE",
+    "SITE_COVER"
+  ],
+  "errors": {
+    "IMAGE_INVALID_INPUT": {
+      "status": 400,
+      "message": "图片存储参数无效"
+    },
+    "IMAGE_QUOTA_EXCEEDED": {
+      "status": 409,
+      "message": "图片存储空间不足，请清理可回收图片后重试"
+    },
+    "IMAGE_RESERVATION_CONFLICT": {
+      "status": 409,
+      "message": "图片存储预留状态已变化"
+    },
+    "IMAGE_RESERVATION_EXPIRED": {
+      "status": 409,
+      "message": "图片存储预留已过期"
+    },
+    "IMAGE_WRITE_CONFLICT": {
+      "status": 409,
+      "message": "图片写入状态已变化"
+    },
+    "IMAGE_UNAVAILABLE": {
+      "status": 410,
+      "message": "图片已清理或暂不可用"
+    },
+    "IMAGE_LOCATION_CONFLICT": {
+      "status": 503,
+      "message": "图片存储位置不匹配"
+    },
+    "IMAGE_REFERENCE_CONFLICT": {
+      "status": 409,
+      "message": "图片仍在使用或引用已变化"
+    },
+    "IMAGE_STORAGE_UNAVAILABLE": {
+      "status": 503,
+      "message": "图片存储暂不可用"
+    },
+    "IMAGE_INTERNAL_ERROR": {
+      "status": 500,
+      "message": "图片存储操作失败"
+    },
+    "IMAGE_POLICY_CONFLICT": {
+      "status": 409,
+      "message": "存储策略已更新，请刷新后重试"
+    },
+    "IMAGE_PREVIEW_EXPIRED": {
+      "status": 409,
+      "message": "清理预览已过期，请重新预览"
+    },
+    "IMAGE_MAINTENANCE_CONFLICT": {
+      "status": 409,
+      "message": "清理任务状态已改变，请刷新后重试"
+    },
+    "IMAGE_POLICY_DISABLED": {
+      "status": 409,
+      "message": "请先启用图片存储管理"
+    },
+    "IMAGE_HISTORY_CONFLICT": {
+      "status": 409,
+      "message": "历史图片盘点状态已变化"
+    },
+    "IMAGE_OBSERVATION_REQUIRED": {
+      "status": 409,
+      "message": "缺少完整的图片存储观测证明"
+    },
+    "IMAGE_HISTORY_BLOCKED": {
+      "status": 409,
+      "message": "历史图片待核实，原始存储与计量仍被保留"
+    },
+    "IMAGE_READER_INCOMPATIBLE": {
+      "status": 409,
+      "message": "当前图片读取入口尚未准备好，原始图片仍被保留"
+    }
+  },
+  "accounting": {
+    "scope": "images",
+    "bytesEncoding": "decimal-string",
+    "clock": "database",
+    "quotaLock": "ImageQuota:images",
+    "unknownWriteRemainsAccounted": true,
+    "reservationExpiryProvesAbsence": false,
+    "singleWriteGrantPerSlot": true,
+    "immutablePhysicalKey": true
+  },
+  "objectProvenances": [
+    "WRITE",
+    "OBSERVED"
+  ]
+}

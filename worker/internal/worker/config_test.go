@@ -259,3 +259,27 @@ func TestLoadConfigCanvasDefaultsAndBounds(t *testing.T) {
 		})
 	}
 }
+
+func TestLoadConfigManagedImageTimeoutAndVolume(t *testing.T) {
+	setRequiredConfigEnv(t, RuntimeModeDedicated)
+	t.Setenv("IMAGE_STORAGE_MANAGED_ENABLED", "false")
+	t.Setenv("WORKER_JOB_TIMEOUT_SECONDS", "86400")
+	if _, err := LoadConfig(); err != nil {
+		t.Fatalf("legacy timeout changed: %v", err)
+	}
+	t.Setenv("IMAGE_STORAGE_MANAGED_ENABLED", "true")
+	if _, err := LoadConfig(); err == nil {
+		t.Fatal("managed timeout outlived its bounded write reservation")
+	}
+	t.Setenv("WORKER_JOB_TIMEOUT_SECONDS", "3480")
+	t.Setenv("IMAGE_STORAGE_BACKEND", "local")
+	t.Setenv("IMAGE_STORAGE_PATH", t.TempDir())
+	t.Setenv("IMAGE_STORAGE_VOLUME_ID", "00112233-4455-4677-8899-aabbccddeeff")
+	if _, err := LoadConfig(); err != nil {
+		t.Fatalf("valid local image config rejected: %v", err)
+	}
+	t.Setenv("IMAGE_STORAGE_PATH", "relative-images")
+	if _, err := LoadConfig(); err == nil {
+		t.Fatal("relative local path accepted")
+	}
+}

@@ -148,7 +148,12 @@ supervisor 的顺序是：数据库可连接、`prisma migrate deploy`、Worker
 - app 保持 `WORKER_READINESS_REQUIRED=true`
 
 多个 dedicated Worker 可以共享服务地址；Next 不依赖 `worker_id` 等扩展字段，
-只以 HTTP 200 且 JSON `status=ready` 判断至少一个副本可用。
+需要 HTTP 200 且 JSON `status=ready`。启用图片管理或 Canvas 后，还必须精确匹配
+当前协议修订、provider、locationId 和维护状态，generic ready 不能替代这些能力。
+
+图片 LOCAL 的两种拓扑卷准备、旧 Worker drain、revision 3 升级及历史 R2 迁移见
+[图片存储运维](image-storage.md)。两个镜像均提供 `/app/narra-image-history` 和
+`/app/narra-rollback-preflight`；历史工具不在正常启动时自动执行。
 
 ## 3. 平台探针
 
@@ -246,20 +251,29 @@ repair 入口放进普通容器启动命令。
 
 回滚代码前运行：
 
-```powershell
-go -C worker run ./cmd/rollback-preflight
+```bash
+# 在当前版本镜像内直接执行，保留程序的稳定退出码。
+/app/narra-rollback-preflight
 ```
+
+源码环境先 `go -C worker build -o ../narra-rollback-preflight ./cmd/rollback-preflight`，
+再运行生成的二进制。`go run` 会把程序退出2折叠为退出1，不能用它判断下表的结果。
 
 稳定退出码：
 
 - `0`：`ROLLBACK_SAFE`
-- `2`：`ROLLBACK_UNSAFE`，存在活动 contract v1 任务或未决 handoff
+- `2`：`ROLLBACK_UNSAFE`，存在新图片/Canvas schema，或活动任务、handoff、图片/迁移状态
 - `3`：配置无效
 - `4`：数据库不可用
 - `5`：预检查询失败
 
 返回 `ROLLBACK_UNSAFE` 时，不得启动旧 Worker/finalizer。应先停止新 claim，
 排空任务或使用兼容终结器；additive schema 不随代码回滚删除。
+预检在同一只读 REPEATABLE READ 快照内核验完整实际 Image/Canvas catalogue，再报告
+修订号、managed/LOCAL 对象、预留、未决对象、历史任务/条目/观察与接管保护数量。
+partial schema 是检查失败；新 schema 即使所有计数为零仍不允许旧 Worker。
+报告不包含本地路径、endpoint、SQL 或凭据。清空任务、关闭功能、改默认存储后端都不会
+把 revision 3 降回旧协议。切回同版本 S3 写入仍需保留旧 LOCAL 卷的读取能力。
 
 ## 8. 日志与指标
 

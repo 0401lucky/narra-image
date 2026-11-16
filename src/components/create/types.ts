@@ -5,6 +5,7 @@ import type {
   GenerationQuality,
   GenerationSizeToken,
   GenerationType,
+  ImageAvailability,
   ProviderMode,
 } from "@/lib/types";
 
@@ -14,6 +15,7 @@ export type ViewerUser = {
 } | null;
 
 export type GenerationImage = {
+  availability?: ImageAvailability;
   actualHeight?: number | null;
   actualSize?: string | null;
   actualWidth?: number | null;

@@ -83,6 +83,7 @@ beforeEach(() => {
   });
   mocks.execute.mockImplementation(async (parts: TemplateStringsArray, ...values: unknown[]) => {
     const sql = parts.join("");
+    if (sql.includes("image_lock_reference_epoch")) return 1;
     if (sql.includes("canvas_lock_owner")) return 1;
     if (sql.includes('"uploadExpiresAt" <= clock_timestamp()')) {
       const [owner, uploadId] = values;

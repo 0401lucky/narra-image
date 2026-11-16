@@ -63,6 +63,15 @@ function lineNumberAt(content: string, offset: number) {
 }
 
 describe("runtime environment manifest", () => {
+  it("keeps the legacy timeout range while bounding managed image write leases", () => {
+    const variable = RUNTIME_ENVIRONMENT_CONTRACT.variables.find((entry) => entry.name === "WORKER_JOB_TIMEOUT_SECONDS")!;
+    expect(variable.consumers).toEqual(expect.arrayContaining(["next", "worker"]));
+    expect(variable.constraints).toMatchObject({ maximum: 86400, maximumWhenManagedImagesEnabled: 3480, managedImagesFlag: "IMAGE_STORAGE_MANAGED_ENABLED", imageWriteLeaseMarginSeconds: 120 });
+    const base = { AUTH_SECRET: "unit-test-secret", DATABASE_URL: "postgresql://localhost/test", NODE_ENV: "development" as const };
+    expect(parseEnv({ ...base, WORKER_JOB_TIMEOUT_SECONDS: "86400" }).WORKER_JOB_TIMEOUT_SECONDS).toBe(86400);
+    expect(parseEnv({ ...base, IMAGE_STORAGE_MANAGED_ENABLED: "true", WORKER_JOB_TIMEOUT_SECONDS: "3480" }).WORKER_JOB_TIMEOUT_SECONDS).toBe(3480);
+    expect(() => parseEnv({ ...base, IMAGE_STORAGE_MANAGED_ENABLED: "true", WORKER_JOB_TIMEOUT_SECONDS: "3481" })).toThrow("3480");
+  });
   it("定义唯一变量名且允许读取路径真实存在", () => {
     const names = RUNTIME_ENVIRONMENT_CONTRACT.variables.map((variable) => variable.name);
     expect(new Set(names).size).toBe(names.length);

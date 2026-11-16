@@ -6,10 +6,12 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { CANVAS_LIMITS } from "@/lib/canvas/contracts";
 import type { ConversationGenerationsPage } from "@/lib/conversations/contracts";
+import { mergeImageAvailability } from "@/lib/storage/image-availability";
 
 import { STUDIO_READ_TIMEOUT_MS } from "../constants";
 import { isGenerationItem } from "../generation-item";
 import type { GenerationItem, SessionInfo } from "../types";
+import { sameGenerationValue } from "./generation-value";
 
 type ConversationEntry = {
   generations: Map<string, GenerationItem>;
@@ -73,15 +75,25 @@ function emptyEntry(loaded = false): ConversationEntry {
   return { generations: new Map(), replacedIds: new Set(), loaded, nextCursor: null, loading: false, loadingOlder: false, error: null, failedCursor: null };
 }
 
-function mergeGeneration(entry: ConversationEntry, generation: GenerationItem) {
-  if (entry.replacedIds.has(generation.id)) return;
+function mergeGeneration(entry: ConversationEntry, generation: GenerationItem): boolean {
+  if (entry.replacedIds.has(generation.id)) return false;
   const current = entry.generations.get(generation.id);
-  if (current) {
-    if (current.status !== "pending" && generation.status !== current.status) return;
-    if (current.status === generation.status && current.updatedAt && generation.updatedAt
-      && Date.parse(current.updatedAt) > Date.parse(generation.updatedAt)) return;
+  if (!current) {
+    entry.generations.set(generation.id, generation);
+    return true;
   }
-  entry.generations.set(generation.id, generation);
+  if (current === generation) return false;
+  if (current.status !== "pending" && generation.status !== current.status) return false;
+  const stale = current.status === generation.status && current.updatedAt && generation.updatedAt
+    && Date.parse(current.updatedAt) > Date.parse(generation.updatedAt);
+  const preferred = stale ? current : generation;
+  const images = mergeImageAvailability(stale ? generation.images : current.images, preferred.images);
+  // Retain an incoming canonical object unless availability actually needs a
+  // correction; allocating a copy on every echo prevents the studio settling.
+  const merged = images.some((image, index) => image !== preferred.images[index]) ? { ...preferred, images } : preferred;
+  if (sameGenerationValue(current, merged)) return false;
+  entry.generations.set(generation.id, merged);
+  return true;
 }
 
 function seedContext(scope: object, { ownerId, initialPage, initialConversations = [], initialGenerations = [] }: UseConversationGenerationsOptions): ConversationContext {
@@ -284,27 +296,29 @@ export function useConversationGenerations(options: UseConversationGenerationsOp
     if (!context || context.deletedIds.has(conversationId) || generation.conversationId !== conversationId) return false;
     const entry = context.entries.get(conversationId);
     if (!entry) return false;
+    let changed = false;
     if (replaceId && replaceId !== generation.id) {
       entry.replacedIds.add(replaceId);
-      entry.generations.delete(replaceId);
+      changed = entry.generations.delete(replaceId);
     }
-    mergeGeneration(entry, generation);
-    publish();
+    changed = mergeGeneration(entry, generation) || changed;
+    if (changed) publish();
     return true;
   }, [getContext, publish]);
 
   const updateGeneration = useCallback((generation: GenerationItem) => {
     const context = getContext();
     if (!context) return;
+    let changed = false;
     for (const [id, entry] of context.entries) {
       if (context.deletedIds.has(id) || !entry.generations.has(generation.id)) continue;
       if (generation.conversationId !== undefined && generation.conversationId !== id) {
-        entry.generations.delete(generation.id);
+        changed = entry.generations.delete(generation.id) || changed;
       } else {
-        mergeGeneration(entry, generation);
+        changed = mergeGeneration(entry, generation) || changed;
       }
     }
-    publish();
+    if (changed) publish();
   }, [getContext, publish]);
 
   const loadOlder = useCallback(async () => {

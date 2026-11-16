@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "invalidVolumeIds": [
+    "00112233-4455-4677-8899-aabbccddeeff\n",
+    "00112233-4455-4677-8899-aabbccddeeff\r",
+    "00112233-4455-4677-8899-aabbccddeeff\r\n",
+    "00112233-4455-4677-8899-aabbccddeeff\u2028",
+    "00112233-4455-4677-8899-aabbccddeeff\u2029",
+    "00112233-4455-4677-8899-AABBCCDDEEFF"
+  ],
+  "invalidDigests": [
+    "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n",
+    "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\r",
+    "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\r\n",
+    "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\u2028",
+    "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\u2029"
+  ],
+  "invalidByteLengths": ["10\n", "10\r", "10\r\n", "10\u2028", "10\u2029", "01", "1e1", "+10", " 10", "10 "]
+}

@@ -1,44 +1,79 @@
 #!/usr/bin/env node
 
 import { readFileSync } from "node:fs";
+import { createHash, randomUUID } from "node:crypto";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { assertFixedTargets } from "./lib/command-runner.mjs";
 import {
-  createE2EConfiguration, E2EHarness, e2eFailure, printE2ECaptured,
+  createE2EConfiguration, E2EHarness, e2eComposeEnvironment, e2eFailure, printE2ECaptured,
 } from "./lib/e2e-safety.mjs";
-import { APP_HTTP_LIMITS, encodeCanvasAppRequest } from "./fixtures/canvas-object-store.mjs";
+import { APP_HTTP_LIMITS, encodeCanvasAppRequest, encodeImageAppRequest } from "./fixtures/canvas-object-store.mjs";
 import { runCanvasRuntimeSmoke } from "./fixtures/canvas-runtime.mjs";
+import { runImageHistorySmoke } from "./fixtures/image-history-runtime.mjs";
 
 const PROJECT_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const CAPABILITY = JSON.parse(readFileSync(path.join(PROJECT_ROOT, "contracts/canvas/v1/capability.json"), "utf8"));
+const IMAGE_MAINTENANCE = JSON.parse(readFileSync(path.join(PROJECT_ROOT, "contracts/media/v1/maintenance.json"), "utf8"));
 const FIXTURE = "scripts/fixtures/canvas-object-store.mjs";
-export const E2E_LIMITS = Object.freeze({ totalMs: 30 * 60_000, cleanupMs: 120_000, scenarioMs: 300_000, shutdownMs: 35_000 });
+export const E2E_LIMITS = Object.freeze({ totalMs: 40 * 60_000, cleanupMs: 120_000, scenarioMs: 300_000, imageScenarioMs: 600_000, shutdownMs: 35_000 });
 export const E2E_SCENARIOS = Object.freeze([
   "embedded", "dedicated", "conflict", "schema", "dbdown", "propagate",
   "canvas-embedded", "canvas-dedicated", "canvas-mismatch",
+  "image-embedded", "image-dedicated",
 ]);
 
 function assert(condition, message, exitCode = 1) {
   if (!condition) throw e2eFailure(message, exitCode);
 }
 
-export function hasExactCanvasCapability(payload) {
-  let actual = payload;
-  for (const key of CAPABILITY.readyCapabilityPath) actual = actual?.[key];
-  const expected = CAPABILITY.readyCapability;
-  return Boolean(actual && typeof actual === "object" && !Array.isArray(actual)
-    && Object.keys(actual).length === Object.keys(expected).length
+// Preserve the CLI's original safe error code without logging bindings,
+// public URL bases, object keys or arbitrary error messages.
+export function imageHistoryCliProgress(report) {
+  const word = (value) => typeof value === "string" && value.length > 0 && value.length <= 64 && !/[^A-Z_]/.test(value) ? value : null;
+  const code = (value) => word(value)?.startsWith("IMAGE_") ? value : null;
+  const count = (value) => Number.isSafeInteger(value) && value >= 0 ? value : null;
+  const progress = report?.progress;
+  return { processed: count(progress?.processed), blocked: count(progress?.blocked), hasMore: progress?.hasMore === true,
+    code: code(report?.code), items: (Array.isArray(progress?.items) ? progress.items : []).slice(0, 100).map((item) => ({
+      subjectKind: ["GENERATED", "REFERENCE_URL", "CANVAS_IMPORT"].includes(item?.subjectKind) ? item.subjectKind : null,
+      state: word(item?.state), code: code(item?.code), stateAcknowledged: item?.stateAcknowledged === true,
+      readerVerified: item?.readerVerified === true, putAttempted: item?.putAttempted === true, switched: item?.switched === true,
+    })) };
+}
+
+/** @param {unknown} payload @param {{provider: string, locationId: string}} [location] */
+export function hasExactImageCapability(payload, location) {
+  const actual = payload?.capabilities?.images;
+  const validLocation = actual?.provider === "S3" ? /^s3-v1:[a-f0-9]{64}(?![\s\S])/.test(actual.locationId)
+    : actual?.provider === "LOCAL" && /^local-v1:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}(?![\s\S])/.test(actual.locationId);
+  const expected = { version: 1, schema: "ready", storageRevision: IMAGE_MAINTENANCE.storageRevision,
+    readerRevision: IMAGE_MAINTENANCE.readerRevision, executorRevision: IMAGE_MAINTENANCE.executorRevision,
+    maintenance: "running", provider: location?.provider ?? actual?.provider, locationId: location?.locationId ?? actual?.locationId };
+  return Boolean(validLocation && actual && typeof actual === "object" && !Array.isArray(actual) && Object.keys(actual).length === 8
     && Object.entries(expected).every(([key, value]) => actual[key] === value));
 }
 
-/** @param {unknown} result @param {{ready?: boolean, canvas?: boolean, code?: string}} [options] */
-export function matchesReadiness(result, { ready = true, canvas = false, code } = {}) {
+/** @param {unknown} payload @param {{provider: string, locationId: string}} [location] */
+export function hasExactCanvasCapability(payload, location) {
+  let actual = payload;
+  for (const key of CAPABILITY.readyCapabilityPath) actual = actual?.[key];
+  const expected = { ...CAPABILITY.readyCapability, storage: actual?.provider === "LOCAL" ? "local" : "unversioned" };
+  const validLocation = actual?.provider === "S3" ? /^s3-v1:[a-f0-9]{64}(?![\s\S])/.test(actual.locationId)
+    : actual?.provider === "LOCAL" && /^local-v1:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}(?![\s\S])/.test(actual.locationId);
+  return Boolean(actual && typeof actual === "object" && !Array.isArray(actual)
+    && validLocation && Object.keys(actual).length === Object.keys(expected).length + 2
+    && (!location || (actual.provider === location.provider && actual.locationId === location.locationId))
+    && Object.entries(expected).every(([key, value]) => actual[key] === value));
+}
+
+/** @param {unknown} result @param {{ready?: boolean, canvas?: boolean, code?: string, canvasLocation?: {provider: string, locationId: string}}} [options] */
+export function matchesReadiness(result, { ready = true, canvas = false, code, canvasLocation } = {}) {
   const body = result?.body;
   if (!body || typeof body !== "object" || Array.isArray(body)) return false;
   return result.status === (ready ? 200 : 503) && body.status === (ready ? "ready" : "not_ready")
-    && (!code || body.code === code) && (!ready || !canvas || hasExactCanvasCapability(body));
+    && (!code || body.code === code) && (!ready || !canvas || hasExactCanvasCapability(body, canvasLocation));
 }
 
 async function poll(probe, accept, { deadlineAt, timeoutMs = 90_000, intervalMs = 750, label }) {
@@ -58,8 +93,8 @@ async function poll(probe, accept, { deadlineAt, timeoutMs = 90_000, intervalMs 
 
 async function appRequest(harness, project, mode, route, requestOptions, options) {
   const service = mode === "embedded" ? "embedded" : "app";
-  const input = await encodeCanvasAppRequest(project.owner, route, requestOptions);
-  const result = await harness.checkedCompose(project, ["exec", "-T", service, "node", FIXTURE, "app-http"], {
+  const input = await (project.images ? encodeImageAppRequest : encodeCanvasAppRequest)(project.owner, route, requestOptions);
+  const result = await harness.checkedCompose(project, ["exec", "-T", service, "node", FIXTURE, project.images ? "image-http" : "app-http"], {
     ...options, input, timeoutMs: 20_000, label: `${project.label} internal HTTP ${requestOptions?.method ?? "GET"} ${route}`,
   });
   assert(Buffer.byteLength(result.stdout) <= APP_HTTP_LIMITS.responseBytes * 8, "App HTTP envelope exceeded its bound");
@@ -75,6 +110,13 @@ async function appReady(harness, project, mode, expected, options) {
 async function workerReady(harness, project, mode, expected, options) {
   const service = mode === "embedded" ? "embedded" : "app";
   const url = mode === "embedded" ? "http://127.0.0.1:8081/readyz" : "http://worker:8081/readyz";
+  if (expected.canvas) {
+    const environment = e2eComposeEnvironment(harness.configuration, project);
+    const material = JSON.stringify([environment.E2E_S3_ENDPOINT, environment.E2E_S3_REGION, environment.E2E_S3_BUCKET]);
+    expected = { ...expected, canvasLocation: project.images && project.imageBackend === "local"
+      ? { provider: "LOCAL", locationId: `local-v1:${project.volumeId}` }
+      : { provider: "S3", locationId: `s3-v1:${createHash("sha256").update(material).digest("hex")}` } };
+  }
   return poll(async (deadlineAt) => {
     const result = await harness.checkedCompose(project, ["exec", "-T", service, "node", FIXTURE, "probe", url], {
       ...options, deadlineAt, timeoutMs: 10_000, label: `${project.label} Worker readiness probe`,
@@ -268,18 +310,134 @@ async function scenarioCanvasMismatch(harness, project, options) {
   await shutdownTopology(harness, project, "dedicated", options);
 }
 
-/** @param {{source?: Record<string, string | undefined>, run?: typeof import("./lib/command-runner.mjs").runStage}} [options] */
-export async function main({ source = process.env, run } = {}) {
+async function scenarioImageHistory(harness, project, mode, options, imageHistoryVerifier) {
+  const appService = mode === "embedded" ? "embedded" : "app";
+  const workerService = mode === "embedded" ? "embedded" : "worker";
+  const local = { provider: "LOCAL", locationId: `local-v1:${project.volumeId}` };
+  const historyCopyName = `${project.name}-image-history-copy`;
+  const historyCli = async (args, manifest, standalone = false) => {
+    if (standalone) project.oneOffNames.add(historyCopyName);
+    const command = standalone
+      ? ["run", "--rm", "--no-deps", "-T", "--name", historyCopyName, "worker"]
+      : ["exec", "-T", workerService];
+    const result = await harness.compose(project, [...command, "/app/narra-image-history", "--bindings", "-", "--timeout", "40s", ...args], {
+      ...options, input: JSON.stringify(manifest), timeoutMs: 50_000, label: "Run the packaged history CLI with reviewed stdin bindings",
+    });
+    let report;
+    try { report = JSON.parse(result.stdout.trim()); }
+    catch { throw e2eFailure(`Image history CLI returned invalid JSON (exit ${result.code})`); }
+    if (result.code !== 0) console.log(`[verify:e2e] ${mode} history CLI progress: ${JSON.stringify(imageHistoryCliProgress(report))}`);
+    assert([0, 2].includes(result.code), `Image history CLI failed (${result.code})`);
+    return report;
+  };
+  const recreate = async () => {
+    const before = (await harness.containers(project, options)).filter((container) => [appService, workerService].includes(container.Config.Labels["com.docker.compose.service"])).map((container) => container.Id);
+    await harness.checkedCompose(project, [...(mode === "embedded" ? ["--profile", "embedded"] : []), "up", "-d", "--no-deps", "--force-recreate", "--wait", "--wait-timeout", "150", ...new Set([workerService, appService])], { ...options, timeoutMs: 180_000, label: "Recreate actual image app/Worker containers on their original persistent volume" });
+    await appReady(harness, project, mode, { ready: true, code: "READY" }, options);
+    const ready = await workerReady(harness, project, mode, { ready: true, canvas: true }, options);
+    assert(hasExactImageCapability(ready.body, local), "Managed Worker did not advertise the exact current image capability");
+    const after = (await harness.containers(project, options)).filter((container) => [appService, workerService].includes(container.Config.Labels["com.docker.compose.service"])).map((container) => container.Id);
+    assert(before.every((id) => !after.includes(id)), "Image persistence proof reused an existing runtime container");
+  };
+  const name = `${project.name}-image-volume-init`;
+  project.oneOffNames.add(name);
+  await harness.checkedCompose(project, ["run", "--rm", "--no-deps", "-T", "--name", name, "worker", "/app/narra-worker", "--init-image-volume"], {
+    ...options, timeoutMs: 20_000, label: "Explicitly initialize only the owned empty LOCAL image volume",
+  });
+  project.managedImages = false;
+  project.workerManagedImages = false;
+  project.imageBackend = "s3";
+  await topologyUp(harness, project, mode, options);
+  const negativeChecks = async () => {
+    const result = await harness.compose(project, ["exec", "-T", workerService, "/app/narra-rollback-preflight"], { ...options, timeoutMs: 15_000, label: "Current image schema must refuse rollback to old Workers" });
+    assert(result.code === 2, "New image revision was incorrectly marked rollback-safe");
+    const report = JSON.parse(result.stdout.trim());
+    assert(report.code === "ROLLBACK_UNSAFE" && report.image_storage_revision === IMAGE_MAINTENANCE.storageRevision && report.canvas_storage_revision === CAPABILITY.readyCapability.storageRevision,
+      "Rollback report did not inspect the actual current image/Canvas revisions");
+    assert(!/storage_path|endpoint|postgresql:|\/data\/images/.test(result.stdout), "Rollback report exposed storage/config details");
+    const originalId = project.volumeId;
+    if (mode === "embedded") project.volumeId = randomUUID();
+    else project.workerVolumeId = randomUUID();
+    await harness.checkedCompose(project, [...(mode === "embedded" ? ["--profile", "embedded"] : []), "up", "-d", "--no-deps", "--force-recreate", workerService], { ...options, label: "Reject a Worker configured for a different persistent-volume identity" });
+    const failed = await exited(harness, project, workerService, { ...options, timeoutMs: 120_000 });
+    assert(failed.every((container) => container.State.ExitCode !== 0), "Mismatched volume Worker did not refuse startup");
+    const logs = await serviceLogs(harness, project, workerService, options);
+    assert(/IMAGE_STORAGE_UNAVAILABLE|IMAGE_LOCATION_CONFLICT/.test(logs), "Mismatched volume failed for an unrelated reason");
+    project.volumeId = originalId;
+    project.workerVolumeId = null;
+    await recreate();
+    if (mode === "dedicated") {
+      project.canvas = false;
+      project.workerManagedImages = false;
+      project.workerCanvas = false;
+      project.workerImageBackend = "s3";
+      await harness.checkedCompose(project, ["up", "-d", "--no-deps", "--force-recreate", "--wait", "--wait-timeout", "90", "worker"], { ...options, label: "Run a real generic Worker without managed-image capabilities" });
+      await harness.checkedCompose(project, ["up", "-d", "--no-deps", "--force-recreate", "app"], { ...options, label: "Require image capability even with Canvas disabled" });
+      const generic = await workerReady(harness, project, mode, { ready: true }, options);
+      assert(!generic.body?.capabilities?.images, "Generic Worker unexpectedly advertised image capabilities");
+      await appReady(harness, project, mode, { ready: false, code: "WORKER_NOT_READY" }, options);
+      project.workerManagedImages = true;
+      project.canvas = true;
+      project.workerCanvas = true;
+      project.workerImageBackend = null;
+      await recreate();
+    }
+    if (imageHistoryVerifier) await imageHistoryVerifier({ harness, project, mode, options,
+      sql: async (sql) => (await fixtureSql(harness, project, sql, options)).stdout.trim() });
+  };
+  await runImageHistorySmoke({
+    configuration: harness.configuration, project,
+    request: (route, requestOptions) => appRequest(harness, project, mode, route, requestOptions, options),
+    sql: async (sql) => (await fixtureSql(harness, project, sql, options)).stdout.trim(),
+    control: (state) => fixtureControl(harness, project, state, options),
+    objects: async (method, keys) => JSON.parse((await harness.checkedCompose(project, ["exec", "-T", "object-store", "node", FIXTURE, "objects", method, JSON.stringify(keys)], { ...options, timeoutMs: 20_000, label: "Inspect or seed only the explicit legacy fixture object keys" })).stdout.trim()),
+    cli: historyCli,
+    withDrainedCanvas: async (copy) => {
+      // A live compatibility scheduler renews its 90-second lease even when
+      // this LOCAL deployment has no legacy S3 originals eligible for GC.
+      // Drain the real processes first; never edit the database clock/lease.
+      await shutdownTopology(harness, project, mode, options);
+      if (mode === "dedicated") await harness.checkedCompose(project, ["stop", "-t", "10", "app"], { ...options, label: "Stop the app during legacy Canvas adoption" });
+      try {
+        await poll(async () => JSON.parse((await fixtureSql(harness, project,
+          'SELECT to_json(NOT EXISTS (SELECT 1 FROM "CanvasGcLease" WHERE "expiresAt" > clock_timestamp()));', options)).stdout.trim()),
+        (expired) => expired === true, { ...options, intervalMs: 1_000, timeoutMs: 100_000, label: "Wait for the drained compatibility GC lease to expire naturally" });
+        return await copy((args, manifest) => historyCli(args, manifest, true));
+      } finally {
+        await recreate();
+      }
+    },
+    wait: (probe, accept, label, timeoutMs = 90_000) => poll(probe, accept, { ...options, intervalMs: 1_000, timeoutMs, label: `${project.label} ${label}` }),
+    enableManaged: async () => {
+      await shutdownTopology(harness, project, mode, options);
+      if (mode === "dedicated") await harness.checkedCompose(project, ["stop", "-t", "10", "app"], { ...options, label: "Drain the legacy app before managed-image activation" });
+      project.managedImages = true;
+      project.workerManagedImages = true;
+      project.imageBackend = "local";
+      await recreate();
+    },
+    recreate, negativeChecks,
+    volumeFiles: async () => JSON.parse((await harness.checkedCompose(project, ["exec", "-T", appService, "node", "scripts/fixtures/image-history-volume.mjs"], {
+      ...options, timeoutMs: 15_000, label: "Read and hash actual image files and marker in the owned Linux volume",
+    })).stdout.trim()),
+  });
+  await shutdownTopology(harness, project, mode, options);
+}
+
+/** @param {{source?: Record<string, string | undefined>, run?: typeof import("./lib/command-runner.mjs").runStage, scenarioLabels?: readonly string[], imageHistoryVerifier?: (input: {harness: E2EHarness, project: object, mode: string, options: {deadlineAt: number}, sql: (command: string) => Promise<string>}) => Promise<void>}} [options] */
+export async function main({ source = process.env, run, scenarioLabels = E2E_SCENARIOS, imageHistoryVerifier } = {}) {
   const runnerDeadlineAt = Date.now() + E2E_LIMITS.totalMs;
   const workDeadlineAt = runnerDeadlineAt - E2E_LIMITS.cleanupMs;
   let harness;
   let exitCode = 0;
   try {
+    assert(scenarioLabels.length > 0 && new Set(scenarioLabels).size === scenarioLabels.length && scenarioLabels.every((label) => E2E_SCENARIOS.includes(label)), "Unknown E2E scenario selection", 2);
     assertFixedTargets(PROJECT_ROOT, [
       "docker-compose.e2e.yml", "Dockerfile", "worker/Dockerfile", ".dockerignore",
       "scripts/migrate-deploy.mjs", "scripts/start-prod.mjs", FIXTURE,
       "scripts/fixtures/canvas-runtime.mjs", "src/lib/auth/session-token.ts", "src/lib/constants.ts",
       "contracts/canvas/v1/capability.json", "contracts/canvas/v1/retention.json", "contracts/canvas/v1/scenarios/graph.json",
+      "contracts/media/v1/maintenance.json", "docker-compose.image-history.e2e.yml", "scripts/fixtures/image-history-runtime.mjs", "scripts/fixtures/image-history-volume.mjs",
     ], "verify:e2e");
     harness = new E2EHarness({ projectRoot: PROJECT_ROOT, configuration: createE2EConfiguration(source), ...(run ? { run } : {}), deadlineAt: workDeadlineAt });
     await harness.preflight();
@@ -291,14 +449,18 @@ export async function main({ source = process.env, run } = {}) {
       ["canvas-embedded", (h, p, o) => scenarioCanvas(h, p, "embedded", o)],
       ["canvas-dedicated", (h, p, o) => scenarioCanvas(h, p, "dedicated", o)],
       ["canvas-mismatch", scenarioCanvasMismatch],
+      ["image-embedded", (h, p, o) => scenarioImageHistory(h, p, "embedded", o, imageHistoryVerifier)],
+      ["image-dedicated", (h, p, o) => scenarioImageHistory(h, p, "dedicated", o, imageHistoryVerifier)],
     ];
     for (const [label, scenario] of scenarios) {
+      if (!scenarioLabels.includes(label)) continue;
       const startedAt = Date.now();
-      const options = { deadlineAt: Math.min(workDeadlineAt, Date.now() + E2E_LIMITS.scenarioMs) };
+      const options = { deadlineAt: Math.min(workDeadlineAt, Date.now() + (label.startsWith("image-") ? E2E_LIMITS.imageScenarioMs : E2E_LIMITS.scenarioMs)) };
       const project = await harness.createProject(label, {
-        canvas: label.startsWith("canvas-"),
-        workerCanvas: label.startsWith("canvas-") && label !== "canvas-mismatch",
+        canvas: label.startsWith("canvas-") || label.startsWith("image-"),
+        workerCanvas: (label.startsWith("canvas-") && label !== "canvas-mismatch") || label.startsWith("image-"),
         genericReadinessRequired: label !== "canvas-mismatch",
+        images: label.startsWith("image-"),
       });
       try {
         await scenario(harness, project, options);
@@ -314,7 +476,7 @@ export async function main({ source = process.env, run } = {}) {
         if (!cleaned) console.error(`[verify:e2e] Cleanup incomplete for ${label}; final cleanup will recheck exact ownership`);
       }
     }
-    console.log(`[verify:e2e] All legacy and enabled-canvas scenarios passed; owner=${harness.configuration.owner}`);
+    console.log(`[verify:e2e] All ${scenarioLabels.length} selected legacy, Canvas and image-history scenarios passed; owner=${harness.configuration.owner}`);
   } catch (error) {
     exitCode = Number.isInteger(error.exitCode) ? error.exitCode : 2;
     console.error(`[verify:e2e] ${error.message}`);

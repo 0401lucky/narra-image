@@ -16,6 +16,10 @@ x-runtime-environment: &runtime-environment
   S3_BUCKET: ${S3_BUCKET:-}
   S3_PUBLIC_BASE_URL: ${S3_PUBLIC_BASE_URL:-}
   ENABLE_LOCAL_IMAGE_FALLBACK: ${ENABLE_LOCAL_IMAGE_FALLBACK:-true}
+  IMAGE_STORAGE_MANAGED_ENABLED: ${IMAGE_STORAGE_MANAGED_ENABLED:-false}
+  IMAGE_STORAGE_BACKEND: ${IMAGE_STORAGE_BACKEND:-s3}
+  IMAGE_STORAGE_PATH: ${IMAGE_STORAGE_PATH:-/data/images}
+  IMAGE_STORAGE_VOLUME_ID: ${IMAGE_STORAGE_VOLUME_ID:-}
   CANVAS_ENABLED: ${CANVAS_ENABLED:-false}
   CANVAS_ASSET_GC_INTERVAL_SECONDS: ${CANVAS_ASSET_GC_INTERVAL_SECONDS:-60}
   CANVAS_ASSET_GC_BATCH_SIZE: ${CANVAS_ASSET_GC_BATCH_SIZE:-20}
@@ -72,6 +76,8 @@ services:
         GO_BASE_IMAGE: ${GO_BASE_IMAGE:-golang:1.25-alpine}
         ALPINE_BASE_IMAGE: ${ALPINE_BASE_IMAGE:-alpine:3.22}
     restart: unless-stopped
+    volumes:
+      - image_data:${IMAGE_STORAGE_PATH:-/data/images}
     stop_grace_period: 45s
     depends_on:
       migrate:
@@ -102,6 +108,8 @@ services:
   app:
     image: ${APP_IMAGE:-narra-image-app:local}
     restart: unless-stopped
+    volumes:
+      - image_data:${IMAGE_STORAGE_PATH:-/data/images}
     stop_grace_period: 20s
     depends_on:
       migrate:
@@ -133,3 +141,6 @@ services:
 
 volumes:
   postgres_data:
+  # Both images use the same physical volume and IMAGE_STORAGE_VOLUME_ID.
+  # Preserve project name and this volume across recreation; see docs/image-storage.md.
+  image_data:

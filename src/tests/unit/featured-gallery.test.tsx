@@ -116,6 +116,13 @@ describe("live editorial gallery", () => {
     expect(screen.getByRole("link", { name: "查看作品 title-work_1" })).toHaveAttribute("href", "/works/work_1");
   });
 
+  it("shows known cleanup immediately without trying the thumbnail or original URL", () => {
+    render(<FeaturedGallery works={[createGalleryWork("work_1", { availability: "cleaned" })]} />);
+    expect(screen.getByText("图片已清理", { exact: false })).toBeInTheDocument();
+    expect(screen.queryByAltText("title-work_1")).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "查看作品 title-work_1" })).toHaveAttribute("href", "/works/work_1");
+  });
+
   it("renders legacy CDN images over HTTPS without an empty srcset, including in server markup", () => {
     const work = createGalleryWork("work_1", {
       image: "http://image.204152.xyz/user/result.png",
@@ -233,9 +240,11 @@ describe("public prompt controls", () => {
     await waitFor(() => expect(screen.getByText(GALLERY_MESSAGES.clipboardManual)).toBeInTheDocument());
     const textarea = screen.getByRole("textbox") as HTMLTextAreaElement;
     expect(textarea).toHaveValue(full);
-    expect(textarea).toHaveFocus();
-    expect(textarea.selectionStart).toBe(0);
-    expect(textarea.selectionEnd).toBe(full.length);
+    await waitFor(() => {
+      expect(textarea).toHaveFocus();
+      expect(textarea.selectionStart).toBe(0);
+      expect(textarea.selectionEnd).toBe(full.length);
+    });
     expect(screen.queryByText("完整提示词已复制。")).not.toBeInTheDocument();
   });
 

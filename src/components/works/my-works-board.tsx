@@ -23,6 +23,8 @@ import type { SerializedWork } from "@/lib/prisma-mappers";
 import { downloadImage } from "@/components/works/download-image";
 import { Alert } from "@/components/ui/alert";
 import { getThumbUrl } from "@/lib/image-url";
+import { isImageAvailable, mergeImageAvailabilityState } from "@/lib/storage/image-availability";
+import { ImageUnavailable } from "@/components/ui/image-unavailable";
 import {
   WorkShowcaseControls,
   WorkStatusBadge,
@@ -121,7 +123,20 @@ export function MyWorksBoard({
   initialCursor,
 }: MyWorksBoardProps) {
   const router = useRouter();
-  const [items, setItems] = useState<SerializedWork[]>(initialItems);
+  const [workList, setWorkList] = useState({ items: initialItems, receivedItems: initialItems });
+  const items = workList.items;
+  if (workList.receivedItems !== initialItems) {
+    const incoming = new Map(initialItems.map((work) => [work.id, work]));
+    // Refresh only file presentation for already loaded IDs. Preserve local
+    // paging, selection and removals; a later snapshot cannot revive a tombstone.
+    setWorkList({ receivedItems: initialItems, items: items.map((work) => {
+      const fresh = incoming.get(work.id);
+      if (!fresh) return work;
+      const availability = mergeImageAvailabilityState(work.availability, fresh.availability);
+      const url = isImageAvailable(availability) ? fresh.url : "";
+      return availability === work.availability && url === work.url ? work : { ...work, availability, url };
+    }) });
+  }
   const [hasMore, setHasMore] = useState(initialHasMore);
   const [cursor, setCursor] = useState<string | null>(initialCursor);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
@@ -164,6 +179,7 @@ export function MyWorksBoard({
     filteredItems[0] ??
     items.find((work) => work.id === selectedWorkId) ??
     null;
+  const currentZoomedWork = zoomedWork ? items.find((work) => work.id === zoomedWork.id) : null;
 
   async function handleLoadMore() {
     if (!hasMore || !cursor || isLoadingMore) return;
@@ -178,7 +194,7 @@ export function MyWorksBoard({
         setLoadMoreError(result.error || "加载更多失败，请稍后再试");
         return;
       }
-      setItems((prev) => [...prev, ...result.data!.items]);
+      setWorkList((current) => ({ ...current, items: [...current.items, ...result.data!.items] }));
       setHasMore(result.data.hasMore);
       setCursor(result.data.nextCursor);
     } catch (err) {
@@ -232,7 +248,7 @@ export function MyWorksBoard({
         setDeleteError(result.error || "删除失败，请稍后再试");
         return;
       }
-      setItems((prev) => prev.filter((item) => item.id !== deletedId));
+      setWorkList((current) => ({ ...current, items: current.items.filter((item) => item.id !== deletedId) }));
       setSelectedWorkId((current) =>
         current === deletedId ? nextSelected?.id ?? null : current,
       );
@@ -371,6 +387,8 @@ export function MyWorksBoard({
               {filteredItems.map((work, index) => (
                 <motion.article
                   key={work.id}
+                  data-work-id={work.id}
+                  data-availability={work.availability ?? "available"}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{
@@ -392,13 +410,13 @@ export function MyWorksBoard({
                     className="relative overflow-hidden rounded-lg bg-[var(--surface-strong)]"
                     style={{ aspectRatio: getAspectRatio(work.size) }}
                   >
-                    <img
+                    {isImageAvailable(work.availability) ? <img
                       src={getThumbUrl(work.url, 640)}
                       alt="作品预览"
                       loading="lazy"
                       decoding="async"
                       className="size-full object-cover transition duration-500 group-hover:scale-[1.03]"
-                    />
+                    /> : <ImageUnavailable availability={work.availability} className="size-full" />}
                     <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/72 via-black/22 to-transparent p-3 text-white">
                       <p className="line-clamp-1 text-sm font-semibold">
                         {work.prompt}
@@ -413,6 +431,7 @@ export function MyWorksBoard({
                     <div className="absolute right-3 top-3 flex gap-1.5">
                       <button
                         type="button"
+                        disabled={!isImageAvailable(work.availability)}
                         onClick={(event) => {
                           event.stopPropagation();
                           setZoomedWork(work);
@@ -424,6 +443,7 @@ export function MyWorksBoard({
                       </button>
                       <button
                         type="button"
+                        disabled={!isImageAvailable(work.availability)}
                         onClick={(event) => {
                           event.stopPropagation();
                           void downloadImage(work.url);
@@ -509,14 +529,15 @@ export function MyWorksBoard({
 
               <button
                 type="button"
+                disabled={!isImageAvailable(selectedWork.availability)}
                 onClick={() => setZoomedWork(selectedWork)}
                 className="overflow-hidden rounded-xl border border-[var(--line)] bg-[var(--surface-strong)]"
               >
-                <img
+                {isImageAvailable(selectedWork.availability) ? <img
                   src={getThumbUrl(selectedWork.url, 1080)}
                   alt="选中作品预览"
                   className="max-h-[28rem] w-full object-cover"
-                />
+                /> : <ImageUnavailable availability={selectedWork.availability} />}
               </button>
 
               <div>
@@ -577,6 +598,7 @@ export function MyWorksBoard({
               <div className="grid grid-cols-2 gap-2">
                 <button
                   type="button"
+                  disabled={!isImageAvailable(selectedWork.availability)}
                   onClick={() => void downloadImage(selectedWork.url)}
                   className="inline-flex items-center justify-center gap-2 rounded-lg border border-[var(--line)] bg-white/60 px-4 py-2.5 text-sm font-semibold text-[var(--ink)] transition hover:border-[var(--accent)]"
                 >
@@ -634,11 +656,11 @@ export function MyWorksBoard({
         </aside>
       </div>
 
-      {zoomedWork ? (
-        <ImageLightbox src={zoomedWork.url} onClose={() => setZoomedWork(null)}>
+      {currentZoomedWork && isImageAvailable(currentZoomedWork.availability) ? (
+        <ImageLightbox src={currentZoomedWork.url} onClose={() => setZoomedWork(null)}>
           <button
             type="button"
-            onClick={() => void downloadImage(zoomedWork.url)}
+            onClick={() => void downloadImage(currentZoomedWork.url)}
             className="rounded-full bg-white/20 px-5 py-3 text-sm font-medium text-white backdrop-blur-md transition hover:bg-[var(--accent)]"
           >
             下载这张图
@@ -734,14 +756,15 @@ export function MyWorksBoard({
               <div className="p-6 grid gap-5">
                 <button
                   type="button"
+                  disabled={!isImageAvailable(selectedWork.availability)}
                   onClick={() => setZoomedWork(selectedWork)}
                   className="overflow-hidden rounded-xl border border-[var(--line)] bg-[var(--surface-strong)] shadow-sm"
                 >
-                  <img
+                  {isImageAvailable(selectedWork.availability) ? <img
                     src={getThumbUrl(selectedWork.url, 1080)}
                     alt="选中作品预览"
                     className="max-h-[50vh] w-full object-contain mx-auto"
-                  />
+                  /> : <ImageUnavailable availability={selectedWork.availability} />}
                 </button>
 
                 <div>
@@ -804,6 +827,7 @@ export function MyWorksBoard({
                 <div className="grid grid-cols-2 gap-2">
                   <button
                     type="button"
+                    disabled={!isImageAvailable(selectedWork.availability)}
                     onClick={() => void downloadImage(selectedWork.url)}
                     className="inline-flex items-center justify-center gap-2 rounded-lg border border-[var(--line)] bg-white/60 px-4 py-2.5 text-sm font-semibold text-[var(--ink)] transition hover:border-[var(--accent)]"
                   >

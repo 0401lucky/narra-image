@@ -3,8 +3,9 @@ import "server-only";
 import { GenerationStatus, Prisma } from "@prisma/client";
 
 import { db } from "@/lib/db";
+import { presentGenerationImage } from "@/lib/storage/image-presentation";
 import { CANVAS_LIMITS, CanvasContractError, type CanvasRunWireV1 } from "./contracts";
-import { canvasAssetUrl } from "./storage";
+import { canvasAssetUrl, canvasMediaInclude } from "./storage";
 import type { CanvasTransaction } from "./transactions";
 
 type CanvasInputReader = Pick<CanvasTransaction, "canvasImportAsset" | "generationImage">;
@@ -28,10 +29,11 @@ export async function readCanvasRunInputs(ownerId: string, run: CanvasRunWireV1,
   const [assets, images] = await Promise.all([
     importedAssetIds.length ? reader.canvasImportAsset.findMany({
       where: { id: { in: importedAssetIds }, ownerId, userId: ownerId, kind: "IMPORT", state: "READY" },
+      include: canvasMediaInclude,
     }) : [],
     imageIds.length ? reader.generationImage.findMany({
       where: { id: { in: imageIds }, job: { userId: ownerId, status: GenerationStatus.SUCCEEDED } },
-      select: { id: true, jobId: true, url: true, job: { select: { id: true, userId: true, status: true } } },
+      select: { id: true, jobId: true, url: true, mediaAssetId: true, ...canvasMediaInclude, job: { select: { id: true, userId: true, status: true } } },
     }) : [],
   ]);
   const assetsById = new Map(assets.map((asset) => [asset.id, asset]));
@@ -48,8 +50,10 @@ export async function readCanvasRunInputs(ownerId: string, run: CanvasRunWireV1,
     }
     const image = imagesById.get(reference.imageId);
     if (!image || image.jobId !== reference.jobId || image.job.id !== reference.jobId
-      || image.job.userId !== ownerId || image.job.status !== GenerationStatus.SUCCEEDED || !usableCanonicalImageUrl(image.url)) throw new CanvasContractError("CANVAS_INPUT_UNAVAILABLE");
-    return image.url;
+      || image.job.userId !== ownerId || image.job.status !== GenerationStatus.SUCCEEDED) throw new CanvasContractError("CANVAS_INPUT_UNAVAILABLE");
+    const presentation = presentGenerationImage(image);
+    if (presentation.availability !== "available" || !usableCanonicalImageUrl(presentation.url)) throw new CanvasContractError("CANVAS_INPUT_UNAVAILABLE");
+    return presentation.url;
   });
   // Generated/legacy images have no verified byte-length column. The worker
   // still enforces the aggregate decoded limit for every downloaded source.

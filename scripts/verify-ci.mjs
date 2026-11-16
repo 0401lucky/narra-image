@@ -75,6 +75,8 @@ export function createCiStages(environment = process.env) {
         "src/tests/integration/worker-contracts/worker-contracts-db.test.ts",
         "--exclude",
         "src/tests/integration/canvas-contracts/canvas-contracts-db.test.ts",
+        "--exclude",
+        "src/tests/integration/canvas-contracts/**",
       ],
       // 全量组件/单测进程独立截止；单个用例由 --testTimeout=30000 兜底。
       // Sentinelled DB suites have independent worker/canvas wrappers and deadlines.

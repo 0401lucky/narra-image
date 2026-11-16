@@ -1,11 +1,12 @@
 import { GenerationStatus } from "@prisma/client";
 
 import { db } from "@/lib/db";
+import { imageAvailabilityInclude } from "@/lib/storage/image-availability";
 import {
   failGenerationJobAndRefund,
   failStalePendingGenerationJobs,
 } from "@/lib/generation/job-refund";
-import { serializeGeneration } from "@/lib/prisma-mappers";
+import { serializeGenerationForClient } from "@/lib/prisma-mappers";
 import { getCurrentUserRecord } from "@/lib/server/current-user";
 import { jsonError, jsonOk } from "@/lib/server/http";
 
@@ -25,8 +26,7 @@ export async function GET(
   const job = await db.generationJob.findFirst({
     where: { id, userId: user.id },
     include: {
-      images: {
-        orderBy: { createdAt: "asc" },
+      images: { include: imageAvailabilityInclude, orderBy: { createdAt: "asc" },
       },
       videos: {
         orderBy: { createdAt: "asc" },
@@ -39,7 +39,7 @@ export async function GET(
   }
 
   return jsonOk({
-    generation: serializeGeneration(job),
+    generation: await serializeGenerationForClient(job),
   });
 }
 
@@ -96,7 +96,7 @@ export async function DELETE(
     const updated = await db.generationJob.findFirst({
       where: { id, userId: user.id },
       include: {
-        images: { orderBy: { createdAt: "asc" } },
+        images: { include: imageAvailabilityInclude, orderBy: { createdAt: "asc" } },
         videos: { orderBy: { createdAt: "asc" } },
       },
     });
@@ -105,7 +105,7 @@ export async function DELETE(
     }
     return jsonOk({
       cancellationRequested: true,
-      generation: serializeGeneration(updated),
+      generation: await serializeGenerationForClient(updated),
       refundedCredits: 0,
     });
   }
@@ -127,8 +127,7 @@ export async function DELETE(
   const updated = await db.generationJob.findFirst({
     where: { id, userId: user.id },
     include: {
-      images: {
-        orderBy: { createdAt: "asc" },
+      images: { include: imageAvailabilityInclude, orderBy: { createdAt: "asc" },
       },
       videos: {
         orderBy: { createdAt: "asc" },
@@ -141,7 +140,7 @@ export async function DELETE(
   }
 
   return jsonOk({
-    generation: serializeGeneration(updated),
+    generation: await serializeGenerationForClient(updated),
     refundedCredits: result.refundedCredits,
   });
 }

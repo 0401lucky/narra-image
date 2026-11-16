@@ -29,22 +29,24 @@ const sourceImagesTotalMaxBytes = 32 * 1024 * 1024
 const referenceImageMaxRedirects = 5
 
 // MediaStorage 标识生成结果的持久化形态，随 GenerationImage/GeneratedVideo 落库。
-// B64 仅允许开发/测试 data URL fallback；S3 是生产强制形态；
+// B64 仅允许开发/测试 data URL fallback；图片可使用受管理 LOCAL 或 S3；
 // UPSTREAM 表示上游直连，仅历史数据，新写入不会产生。
 type MediaStorage string
 
 const (
 	MediaStorageB64      MediaStorage = "B64"
 	MediaStorageS3       MediaStorage = "S3"
+	MediaStorageLocal    MediaStorage = "LOCAL"
 	MediaStorageUpstream MediaStorage = "UPSTREAM"
 )
 
-// PersistedMedia 是一次持久化操作的结果：公开 URL、存储形态与 S3 object key。
-// 非 S3 形态的 StorageKey 为空。
+// PersistedMedia carries the public URL, physical key and optional image ledger
+// identity. LOCAL and S3 have physical keys; the legacy B64 fallback does not.
 type PersistedMedia struct {
 	URL          string
 	MediaStorage MediaStorage
 	StorageKey   string
+	MediaAssetID string
 }
 
 // objectStorageClient 抽象 S3 客户端以便测试注入，生产由 *s3.Client 满足。
@@ -53,8 +55,10 @@ type objectStorageClient interface {
 }
 
 type Storage struct {
-	client objectStorageClient
-	cfg    Config
+	client          objectStorageClient
+	cfg             Config
+	imageRepository *ImageRepository
+	localImages     *LocalImageStore
 }
 
 type SourceImage struct {
@@ -69,10 +73,14 @@ type PersistedRemoteImage struct {
 	URL          string
 	MediaStorage MediaStorage
 	StorageKey   string
+	MediaAssetID string
 }
 
 func NewStorage(ctx context.Context, cfg Config) (*Storage, error) {
 	storage := &Storage{cfg: cfg}
+	if err := storage.initializeManagedImages(ctx); err != nil {
+		return nil, err
+	}
 	if cfg.S3Bucket == "" || cfg.S3Endpoint == "" || cfg.S3AccessKeyID == "" || cfg.S3SecretAccessKey == "" {
 		return storage, nil
 	}
@@ -98,6 +106,12 @@ func NewStorage(ctx context.Context, cfg Config) (*Storage, error) {
 }
 
 func (s *Storage) PersistImage(ctx context.Context, userID string, data []byte, extension string, mimeType string) (PersistedMedia, error) {
+	if s.cfg.ImageStorageManagedEnabled {
+		return s.persistManagedImage(ctx, userID, data)
+	}
+	if int64(len(data)) > ImageMaxBytes {
+		return PersistedMedia{}, errors.New("图片超过 50MiB，无法保存")
+	}
 	if extension == "" {
 		extension = "png"
 	}
@@ -144,7 +158,17 @@ func (s *Storage) PersistImageFromURL(
 	rawURL string,
 	client *http.Client,
 ) (PersistedRemoteImage, error) {
-	image, err := downloadRemoteImage(ctx, rawURL, client)
+	managed, err := s.resolveManagedImage(ctx, rawURL)
+	if err != nil {
+		return PersistedRemoteImage{}, err
+	}
+	var image SourceImage
+	if managed != nil {
+		image.Data, err = s.readManagedImage(ctx, *managed)
+		image.MimeType = managed.Asset.MimeType
+	} else {
+		image, err = downloadRemoteImage(ctx, rawURL, client)
+	}
 	if err != nil {
 		return PersistedRemoteImage{}, err
 	}
@@ -160,6 +184,7 @@ func (s *Storage) PersistImageFromURL(
 		URL:          persisted.URL,
 		MediaStorage: persisted.MediaStorage,
 		StorageKey:   persisted.StorageKey,
+		MediaAssetID: persisted.MediaAssetID,
 	}, nil
 }
 
@@ -530,6 +555,8 @@ func extensionFromMime(mimeType string) string {
 		return "webp"
 	case "image/gif":
 		return "gif"
+	case "image/avif":
+		return "avif"
 	default:
 		return "png"
 	}

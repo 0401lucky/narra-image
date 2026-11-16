@@ -34,6 +34,12 @@ func TestRunRollbackPreflightStableExitCodes(t *testing.T) {
 			wantExit: exitRollbackUnsafe,
 		},
 		{
+			name:     "image storage revision without v1 jobs",
+			deps:     testRollbackDeps(narraw.RollbackSafetyReport{ImageStorageRevision: 1, CanvasStorageRevision: 2}, nil),
+			wantCode: "ROLLBACK_UNSAFE",
+			wantExit: exitRollbackUnsafe,
+		},
+		{
 			name: "config",
 			deps: rollbackPreflightDeps{
 				loadURL: func() (string, error) { return "", errors.New("secret config failure") },
@@ -78,6 +84,75 @@ func TestRunRollbackPreflightStableExitCodes(t *testing.T) {
 			}
 			if bytes.Contains(output.Bytes(), []byte("password")) || bytes.Contains(output.Bytes(), []byte("query details")) {
 				t.Fatalf("preflight output leaked internal cause: %s", output.String())
+			}
+		})
+	}
+}
+
+func TestRunRollbackPreflightReportsImageState(t *testing.T) {
+	for _, report := range []narraw.RollbackSafetyReport{
+		{ImageStorageRevision: 1},
+		{CanvasStorageRevision: 2},
+		{ManagedImageAssets: 3},
+		{LocalImageObjects: 4},
+		{ActiveImageReservations: 2},
+		{UnresolvedImageObjects: 1},
+		{ImageStorageRevision: 3, CanvasStorageRevision: 3},
+		{ActiveImageHistoryJobs: 1},
+		{UnresolvedImageHistoryItems: 2},
+		{UnresolvedImageObservations: 3},
+		{ActiveImageHistoryHolds: 1},
+	} {
+		var output bytes.Buffer
+		exitCode := runRollbackPreflight(context.Background(), &output, narraw.NewJSONLogger(io.Discard, slog.LevelError), testRollbackDeps(report, nil))
+		if exitCode != exitRollbackUnsafe {
+			t.Fatalf("image storage was reported safe with no v1 jobs: %+v", report)
+		}
+		var payload rollbackPreflightResult
+		if err := json.Unmarshal(output.Bytes(), &payload); err != nil {
+			t.Fatal(err)
+		}
+		if payload.Status != "unsafe" || payload.Code != "ROLLBACK_UNSAFE" || payload.ActiveV1Jobs != 0 || payload.UnresolvedHandoffs != 0 ||
+			payload.ImageStorageRevision != report.ImageStorageRevision || payload.CanvasStorageRevision != report.CanvasStorageRevision ||
+			payload.ManagedImageAssets != report.ManagedImageAssets || payload.LocalImageObjects != report.LocalImageObjects ||
+			payload.ActiveImageReservations != report.ActiveImageReservations || payload.UnresolvedImageObjects != report.UnresolvedImageObjects ||
+			payload.ActiveImageHistoryJobs != report.ActiveImageHistoryJobs || payload.UnresolvedImageHistoryItems != report.UnresolvedImageHistoryItems ||
+			payload.UnresolvedImageObservations != report.UnresolvedImageObservations || payload.ActiveImageHistoryHolds != report.ActiveImageHistoryHolds {
+			t.Fatalf("image rollback diagnostics were lost: %+v", payload)
+		}
+	}
+}
+
+func TestRunRollbackPreflightDoesNotLogInspectionDetails(t *testing.T) {
+	for _, phase := range []string{"configuration", "pool", "database", "inspection"} {
+		t.Run(phase, func(t *testing.T) {
+			var output, logs bytes.Buffer
+			detail := errors.New("SELECT private-inspection-detail FROM /srv/private-volume; token=private-credential")
+			deps := testRollbackDeps(narraw.RollbackSafetyReport{}, nil)
+			want := exitRollbackCheckFailed
+			switch phase {
+			case "configuration":
+				deps.loadURL = func() (string, error) { return "", detail }
+				want = exitRollbackConfigInvalid
+			case "pool":
+				deps.openPool = func(context.Context, string) (*pgxpool.Pool, error) { return nil, detail }
+				want = exitRollbackDatabaseUnavailable
+			case "database":
+				deps.ping = func(context.Context, *pgxpool.Pool) error { return detail }
+				want = exitRollbackDatabaseUnavailable
+			case "inspection":
+				deps.check = func(context.Context, *pgxpool.Pool) (narraw.RollbackSafetyReport, error) {
+					return narraw.RollbackSafetyReport{}, detail
+				}
+			}
+			exitCode := runRollbackPreflight(context.Background(), &output, narraw.NewJSONLogger(&logs, slog.LevelError), deps)
+			if exitCode != want {
+				t.Fatalf("unexpected failure exit: %d", exitCode)
+			}
+			for _, sensitive := range []string{"private-inspection-detail", "/srv/private-volume", "private-credential"} {
+				if bytes.Contains(output.Bytes(), []byte(sensitive)) || bytes.Contains(logs.Bytes(), []byte(sensitive)) {
+					t.Fatalf("preflight leaked inspection/configuration details: stdout=%q stderr=%q", output.String(), logs.String())
+				}
 			}
 		})
 	}

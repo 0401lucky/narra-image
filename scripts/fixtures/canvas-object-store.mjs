@@ -23,35 +23,56 @@ function permittedAppRoute(route, method) {
     || (method === "PUT" && new RegExp(`^/api/me/canvases/${id}/snapshot$`).test(route));
 }
 
-export function validateCanvasAppRequest(value, owner) {
+function permittedImageRoute(route, method) {
+  if (permittedAppRoute(route, method)) return true;
+  if (["GET", "HEAD"].includes(method) && /^\/media\/images\/[a-f0-9]{64}(?![\s\S])/.test(route)) return true;
+  if (method !== "GET") return false;
+  if (route === "/login" || /^\/api\/me\/generations\/[A-Za-z0-9_.:-]{1,128}(?![\s\S])/.test(route)) return true;
+  const parsed = new URL(route, "http://127.0.0.1:3000");
+  if (!["/api/proxy-image", "/_next/image"].includes(parsed.pathname)) return false;
+  const imageUrl = parsed.searchParams.get("url");
+  if (!imageUrl || (!/^(?:https:\/\/narra-e2e\.invalid|http:\/\/(?:app|embedded):3000)\/media\/images\/[a-f0-9]{64}(?![\s\S])/.test(imageUrl)
+    && !/^http:\/\/object-store:9090\/narra-e2e-[a-f0-9]{16}-[a-f0-9]{8}\/[A-Za-z0-9_./-]+(?![\s\S])/.test(imageUrl))) return false;
+  if (imageUrl.split("/").some((part) => part === "." || part === "..")) return false;
+  return route === `${parsed.pathname}?url=${encodeURIComponent(imageUrl)}${parsed.pathname === "/_next/image" ? "&w=384&q=75" : ""}`;
+}
+
+function validateAppRequest(value, owner, images = false) {
   if (!value || typeof value !== "object" || Array.isArray(value)
     || Object.keys(value).sort().join(",") !== "bodyBase64,headers,method,owner,path"
     || !/^[a-f0-9-]{36}$/.test(owner ?? "") || value.owner !== owner
-    || typeof value.path !== "string" || /[\\%?#\x00-\x20\x7f]/.test(value.path)
+    || typeof value.path !== "string" || (images ? /[\\#\x00-\x20\x7f]/ : /[\\%?#\x00-\x20\x7f]/).test(value.path)
+    || !value.path.startsWith("/") || value.path.startsWith("//")
     || value.path.split("/").some((part) => part === "." || part === "..")
-    || !permittedAppRoute(value.path, value.method)) throw new Error("Only owned, allowlisted local app requests are permitted");
+    || !(images ? permittedImageRoute : permittedAppRoute)(value.path, value.method)) throw new Error("Only owned, allowlisted local app requests are permitted");
   if (!value.headers || typeof value.headers !== "object" || Array.isArray(value.headers)
-    || Object.entries(value.headers).some(([name, header]) => !["cookie", "content-type", "x-narra-canvas-run"].includes(name)
+    || Object.entries(value.headers).some(([name, header]) => !["cookie", "content-type", "x-narra-canvas-run", ...(images ? ["if-none-match"] : [])].includes(name)
       || typeof header !== "string" || header.length > 8192 || /[\x00-\x1f\x7f]/.test(header))
-    || (value.path === "/api/generate" && value.headers["x-narra-canvas-run"] !== "1")) throw new Error("Unsafe app request headers");
+    || (!images && value.path === "/api/generate" && value.headers["x-narra-canvas-run"] !== "1")) throw new Error("Unsafe app request headers");
   if (typeof value.bodyBase64 !== "string" || value.bodyBase64.length > Math.ceil(APP_HTTP_LIMITS.bodyBytes / 3) * 4
     || Buffer.from(value.bodyBase64, "base64").toString("base64") !== value.bodyBase64
     || Buffer.from(value.bodyBase64, "base64").length > APP_HTTP_LIMITS.bodyBytes
-    || (value.method === "GET" && value.bodyBase64 !== "")) throw new Error("App request body exceeds the fixture bound or is malformed");
+    || (["GET", "HEAD"].includes(value.method) && value.bodyBase64 !== "")) throw new Error("App request body exceeds the fixture bound or is malformed");
   if (Buffer.byteLength(JSON.stringify(value)) > APP_HTTP_LIMITS.requestBytes) throw new Error("App request envelope exceeds the fixture bound");
   return value;
 }
 
-export async function encodeCanvasAppRequest(owner, route, options = {}) {
-  if (!permittedAppRoute(route, options.method ?? "GET") || /[\\%?#\x00-\x20\x7f]/.test(route)
+export function validateCanvasAppRequest(value, owner) { return validateAppRequest(value, owner); }
+export function validateImageAppRequest(value, owner) { return validateAppRequest(value, owner, true); }
+
+async function encodeAppRequest(owner, route, options, images) {
+  if (!(images ? permittedImageRoute : permittedAppRoute)(route, options.method ?? "GET") || (images ? /[\\#\x00-\x20\x7f]/ : /[\\%?#\x00-\x20\x7f]/).test(route)
     || route.split("/").some((part) => part === "." || part === "..")) throw new Error("Only allowlisted local app paths are permitted");
   const request = new Request(`http://127.0.0.1:3000${route}`, options);
   const value = { owner, path: route, method: request.method, headers: Object.fromEntries(request.headers), bodyBase64: Buffer.from(await request.arrayBuffer()).toString("base64") };
-  return JSON.stringify(validateCanvasAppRequest(value, owner));
+  return JSON.stringify(validateAppRequest(value, owner, images));
 }
 
-export async function performCanvasAppRequest(value, owner) {
-  validateCanvasAppRequest(value, owner);
+export function encodeCanvasAppRequest(owner, route, options = {}) { return encodeAppRequest(owner, route, options, false); }
+export function encodeImageAppRequest(owner, route, options = {}) { return encodeAppRequest(owner, route, options, true); }
+
+async function performAppRequest(value, owner, images) {
+  validateAppRequest(value, owner, images);
   const response = await fetch(`http://127.0.0.1:3000${value.path}`, {
     method: value.method, headers: value.headers, redirect: "error", signal: AbortSignal.timeout(APP_HTTP_LIMITS.timeoutMs),
     ...(value.bodyBase64 ? { body: Buffer.from(value.bodyBase64, "base64") } : {}),
@@ -63,11 +84,16 @@ export async function performCanvasAppRequest(value, owner) {
     if (size > APP_HTTP_LIMITS.responseBytes) throw new Error("App response exceeds the fixture bound");
     chunks.push(chunk);
   }
-  const text = Buffer.concat(chunks).toString("utf8");
+  const bytes = Buffer.concat(chunks);
+  const text = bytes.toString("utf8");
   let body;
   try { body = JSON.parse(text); } catch { body = text; }
-  return { status: response.status, contentType: response.headers.get("content-type"), body };
+  return { status: response.status, contentType: response.headers.get("content-type"), body,
+    ...(images ? { bodyBase64: bytes.toString("base64"), headers: Object.fromEntries(["etag", "content-length", "x-content-type-options"].map((name) => [name, response.headers.get(name)])) } : {}) };
 }
+
+export function performCanvasAppRequest(value, owner) { return performAppRequest(value, owner, false); }
+export function performImageAppRequest(value, owner) { return performAppRequest(value, owner, true); }
 
 function requestError(status, code) { return Object.assign(new Error(code), { status, code }); }
 
@@ -143,6 +169,7 @@ export function createCanvasObjectStore({
   }
   const objects = new Map();
   const counters = { versioning: 0, put: 0, head: 0, get: 0, delete: 0 };
+  let providerRequests = 0;
   let bytesStored = 0;
   let versioning = "unversioned";
   let failDeletes = false;
@@ -167,11 +194,18 @@ export function createCanvasObjectStore({
           if (control.versioning !== undefined) versioning = control.versioning;
           if (control.failDeletes !== undefined) failDeletes = control.failDeletes;
         } else if (rawUrl !== "/__e2e/status" || request.method !== "GET") throw requestError(405, "MethodNotAllowed");
-        reply(response, 200, JSON.stringify({ versioning, failDeletes, objectCount: objects.size, bytesStored, counters }), { "content-type": "application/json" });
+        reply(response, 200, JSON.stringify({ versioning, failDeletes, objectCount: objects.size, bytesStored, counters, providerRequests }), { "content-type": "application/json" });
         return;
       }
 
       const authorization = request.headers.authorization ?? "";
+      if (["/v1/images/generations", "/v1/images/edits"].includes(rawUrl)) {
+        if (request.method !== "POST" || authorization !== `Bearer ${controlToken}`) throw requestError(403, "AccessDenied");
+        await readBody(request, 2 * 1024 * 1024);
+        providerRequests++;
+        reply(response, 200, JSON.stringify({ data: [{ b64_json: FIXTURE_PNG }] }), { "content-type": "application/json" });
+        return;
+      }
       if (!authorization.startsWith("AWS4-HMAC-SHA256 ") || !authorization.includes(`Credential=${accessKey}/`)) throw requestError(403, "AccessDenied");
       const { key, query } = objectRoute(rawUrl, bucket);
       if (!key && request.method === "GET" && query.has("versioning") && [...query.keys()].every((key) => ["versioning", "x-id"].includes(key))) {
@@ -195,15 +229,16 @@ export function createCanvasObjectStore({
         const digest = createHash("sha256").update(bytes).digest("base64");
         if (request.headers["x-amz-checksum-sha256"] && request.headers["x-amz-checksum-sha256"] !== digest) throw requestError(400, "BadDigest");
         const etag = `"${createHash("md5").update(bytes).digest("hex")}"`;
-        objects.set(key, { bytes, etag, type: request.headers["content-type"] ?? "application/octet-stream" });
+        objects.set(key, { bytes, etag, lastModified: new Date().toUTCString(), type: request.headers["content-type"] ?? "application/octet-stream" });
         bytesStored += bytes.length - (previous?.bytes.length ?? 0);
         counters.put++;
         reply(response, 200, "", { etag, "x-amz-checksum-sha256": digest });
       } else if (request.method === "HEAD" || request.method === "GET") {
         counters[request.method === "HEAD" ? "head" : "get"]++;
         if (!existing) throw requestError(404, "NoSuchKey");
+        if (request.headers["if-match"] && request.headers["if-match"] !== existing.etag) throw requestError(412, "PreconditionFailed");
         reply(response, 200, request.method === "HEAD" ? "" : existing.bytes, {
-          "content-type": existing.type, "content-length": String(existing.bytes.length), etag: existing.etag,
+          "content-type": existing.type, "content-length": String(existing.bytes.length), etag: existing.etag, "last-modified": existing.lastModified,
         });
       } else if (request.method === "DELETE") {
         counters.delete++;
@@ -236,7 +271,7 @@ export async function readFixtureResponse(url, options = {}) {
 
 /** @param {string[]} [args] @param {Record<string, string | undefined>} [source] */
 export async function fixtureMain(args = process.argv.slice(2), source = process.env) {
-  if (args[0] === "app-http") {
+  if (["app-http", "image-http"].includes(args[0])) {
     if (args.length !== 1 || source.E2E_FIXTURE_APP_HTTP !== "1" || !/^[a-f0-9-]{36}$/.test(source.E2E_OWNER_TOKEN ?? "")) throw new Error("App HTTP requires the runner-owned internal container");
     const chunks = [];
     let size = 0;
@@ -250,7 +285,7 @@ export async function fixtureMain(args = process.argv.slice(2), source = process
       }
     } finally { clearTimeout(timer); }
     const value = JSON.parse(Buffer.concat(chunks).toString("utf8"));
-    console.log(JSON.stringify(await performCanvasAppRequest(value, source.E2E_OWNER_TOKEN)));
+    console.log(JSON.stringify(await performAppRequest(value, source.E2E_OWNER_TOKEN, args[0] === "image-http")));
     return;
   }
   if (args[0] === "probe") {

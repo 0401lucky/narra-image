@@ -14,6 +14,8 @@ import { ImageLightbox } from "@/components/works/image-lightbox";
 import { PromptModal } from "@/components/works/prompt-modal";
 import { WorkStatusBadge } from "@/components/works/work-showcase-controls";
 import { getThumbUrl } from "@/lib/image-url";
+import { isImageAvailable } from "@/lib/storage/image-availability";
+import { ImageUnavailable } from "@/components/ui/image-unavailable";
 
 type SectionConfig = {
   empty: string;
@@ -86,6 +88,7 @@ export function AdminWorksBoard({ works }: { works: SerializedAdminWork[] }) {
   const [pendingWorkId, setPendingWorkId] = useState<string | null>(null);
   const [errors, setErrors] = useState<Record<string, string | null>>({});
   const [confirmTakedownWork, setConfirmTakedownWork] = useState<SerializedAdminWork | null>(null);
+  const currentZoomedWork = zoomedWork ? works.find((work) => work.id === zoomedWork.id) : null;
 
   const groupedWorks = useMemo(
     () =>
@@ -164,16 +167,17 @@ export function AdminWorksBoard({ works }: { works: SerializedAdminWork[] }) {
                     <div className="flex gap-4">
                       <button
                         type="button"
+                        disabled={!isImageAvailable(work.availability)}
                         onClick={() => setZoomedWork(work)}
                         className="group relative shrink-0 overflow-hidden rounded-[1.3rem] border border-[var(--line)]"
                       >
-                        <img
+                        {isImageAvailable(work.availability) ? <img
                           src={getThumbUrl(work.url, 256)}
                           alt="作品缩略图"
                           loading="lazy"
                           decoding="async"
                           className="size-32 object-cover transition duration-500 group-hover:scale-[1.04]"
-                        />
+                        /> : <ImageUnavailable availability={work.availability} className="size-32" />}
                         <span className="absolute right-2 top-2 rounded-full bg-black/55 p-1.5 text-white opacity-0 transition group-hover:opacity-100">
                           <Expand className="size-4" />
                         </span>
@@ -297,8 +301,8 @@ export function AdminWorksBoard({ works }: { works: SerializedAdminWork[] }) {
         ))}
       </div>
 
-      {zoomedWork ? (
-        <ImageLightbox src={zoomedWork.url} onClose={() => setZoomedWork(null)} />
+      {currentZoomedWork && isImageAvailable(currentZoomedWork.availability) ? (
+        <ImageLightbox src={currentZoomedWork.url} onClose={() => setZoomedWork(null)} />
       ) : null}
 
       {promptWork ? (

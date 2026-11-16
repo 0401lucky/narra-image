@@ -16,8 +16,11 @@ describe("central featured response validation", () => {
   it("projects only the shared featured DTO fields, never negative prompts or review data", () => {
     const work = createGalleryWork("public", { prompt: "作者未公开提示词" });
     const result = featuredWorkResponseSchema.parse({ ...work, negativePrompt: "private", reviewer: { email: "private" } });
-    expect(result).toEqual(work);
-    expect(Object.keys(result).sort()).toEqual(Object.keys(work).sort());
+    expect(result).toEqual({ ...work, availability: "available" });
+    expect(Object.keys(result).sort()).toEqual([
+      "availability", "authorAvatar", "authorName", "featuredAt", "id", "image",
+      "likeCount", "likedByMe", "prompt", "showPromptPublic", "size", "title",
+    ].sort());
   });
 
   it.each(["", "contains space", "cursor/unsafe", "cursor?query", "a".repeat(2049), null, 12])("rejects an invalid opaque cursor %s", (cursor) => {

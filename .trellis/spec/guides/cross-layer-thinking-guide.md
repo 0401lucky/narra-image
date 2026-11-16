@@ -40,6 +40,8 @@ For each arrow, ask:
 | Service ↔ Database    | Format conversions, null handling |
 | Backend ↔ Frontend    | Serialization, date formats       |
 | Component ↔ Component | Props shape changes               |
+| Canonical cache ↔ View cache | Equivalent values repeatedly copied and published |
+| Related database state rows | An intermediate transition violates another row's guard |
 
 ### Step 3: Define Contracts
 
@@ -100,6 +102,24 @@ create one owner for:
 
 Rendering code may format fields, but it must not redefine the payload contract.
 
+### Mistake 5: Final Values Match, but the Transition Never Settles
+
+**Bad**: A view cache wraps every incoming canonical job in a fresh object. The
+parent compares references, writes the canonical object back, and the cache
+copies and publishes it again. Individual hook tests can pass while the mounted
+workbench loops until timeout or memory exhaustion.
+
+**Good**: Copy at the owning boundary when needed; preserve the canonical object
+when a projection adds no new facts. Test the complete register → merge → publish
+→ view path with unchanged values and with one real media-state change.
+
+The same question applies to transactional state machines: every intermediate
+UPDATE must satisfy the existing related-row guards. Renew a Canvas delete token
+while both logical rows are still DELETING, then finish their tombstones; a valid
+final state does not make an invalid intermediate transition acceptable. The
+executable contracts are in `frontend/state-management.md` and
+`operations/image-storage.md`.
+
 ---
 
 ## Checklist for Cross-Layer Features
@@ -120,6 +140,10 @@ After implementation:
       casting payload fields locally
 - [ ] Checked that derived state points back to the source event identifier
       (`seq`, `id`, `version`) instead of inventing a second cursor
+- [ ] Verified repeated identical input stops publishing, and tested the actual
+      composed consumer rather than only isolated hooks
+- [ ] Verified every intermediate database transition remains legal under all
+      related-row guards, including lease renewal after recovery
 
 ---
 

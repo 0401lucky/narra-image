@@ -6,17 +6,23 @@ import { GetBucketVersioningCommand, HeadBucketCommand, PutObjectCommand, S3Clie
 
 import { getEnv } from "@/lib/env";
 import { stringifyLogRecord } from "@/lib/logging/redact";
-import { CanvasContractError, canvasStorageLocationMaterialV1, type CanvasStorageLocationInputV1 } from "./contracts";
+import { imageLocalLocation, imagePublicUrl } from "@/lib/storage/image-contract";
+import { createLocalImageStore } from "@/lib/storage/local-image-store";
+import { CANVAS_CAPABILITY_CONTRACT, CanvasContractError, canvasStorageLocationMaterialV1, type CanvasStorageLocationInputV1, type CanvasWorkerCapabilityV2 } from "./contracts";
 
-export type CanvasStorageLocation = CanvasStorageLocationInputV1 & { id: string };
+type CanvasS3StorageLocation = CanvasStorageLocationInputV1 & { id: string; provider?: "S3" };
+export type CanvasStorageLocation = CanvasS3StorageLocation | { id: string; provider: "LOCAL"; volumeId: string; endpoint: null; region: null; bucket: null };
 export type CanvasStorageAdapter = {
   location: CanvasStorageLocation;
   getBucketVersioning: (signal: AbortSignal) => Promise<{ locationId: string; verified: boolean; status?: string }>;
   putObject: (input: { key: string; bytes: Buffer; mimeType: string; sha256: string; signal: AbortSignal }) => Promise<{ versionId: string | null }>;
   close?: () => void;
 };
-type StorageEnvironment = Pick<ReturnType<typeof getEnv>, "S3_ENDPOINT" | "S3_REGION" | "S3_BUCKET" | "S3_ACCESS_KEY_ID" | "S3_SECRET_ACCESS_KEY" | "S3_PUBLIC_BASE_URL">;
-type RegisteredLocation = { storageLocation: string; storageEndpoint: string; storageRegion: string; storageBucket: string; storageKey: string };
+type StorageEnvironment = Pick<ReturnType<typeof getEnv>, "S3_ENDPOINT" | "S3_REGION" | "S3_BUCKET" | "S3_ACCESS_KEY_ID" | "S3_SECRET_ACCESS_KEY" | "S3_PUBLIC_BASE_URL">
+  & Partial<Pick<ReturnType<typeof getEnv>, "APP_URL" | "IMAGE_STORAGE_MANAGED_ENABLED" | "IMAGE_STORAGE_BACKEND" | "IMAGE_STORAGE_PATH" | "IMAGE_STORAGE_VOLUME_ID">>;
+export const canvasMediaInclude = { mediaAsset: { select: { publicToken: true, state: true, activeObjectId: true } } } as const;
+export type CanvasMediaRelation = { mediaAssetId?: string | null; mediaAsset?: { publicToken: string; state: string; activeObjectId: string | null } | null };
+type RegisteredLocation = CanvasMediaRelation & { sourceProvider?: string; storageLocation: string; storageEndpoint: string | null; storageRegion: string | null; storageBucket: string | null; storageKey: string };
 const STORAGE_TIMEOUT_MS = 30_000;
 const VERSIONING_BODY_LIMIT = 16 * 1024;
 const S3_XML_NAMESPACE = "http://s3.amazonaws.com/doc/2006-03-01/";
@@ -96,12 +102,17 @@ function isCanvasUnversionedXml(body: Buffer): boolean {
   return skipMisc() && offset === xml.length;
 }
 
-export function canvasStorageLocation(input: CanvasStorageLocationInputV1): CanvasStorageLocation {
+export function canvasStorageLocation(input: CanvasStorageLocationInputV1): CanvasS3StorageLocation {
   const material = canvasStorageLocationMaterialV1(input);
   return { endpoint: new URL(input.endpoint.trim()).origin, region: input.region.trim(), bucket: input.bucket.trim(), id: `s3-v1:${createHash("sha256").update(material, "utf8").digest("hex")}` };
 }
 
-async function probeCanvasR2Bucket(client: S3Client, location: CanvasStorageLocation, signal: AbortSignal) {
+export function canvasStorageReadyCapability(location: CanvasStorageLocation): CanvasWorkerCapabilityV2 {
+  return { ...CANVAS_CAPABILITY_CONTRACT.readyCapability, storage: location.provider === "LOCAL" ? "local" : "unversioned",
+    provider: location.provider === "LOCAL" ? "LOCAL" : "S3", locationId: location.id };
+}
+
+async function probeCanvasR2Bucket(client: S3Client, location: CanvasS3StorageLocation, signal: AbortSignal) {
   const command = new HeadBucketCommand({ Bucket: location.bucket });
   let wireVerified = false;
   command.middlewareStack.add((next) => async (args) => {
@@ -126,6 +137,22 @@ async function probeCanvasR2Bucket(client: S3Client, location: CanvasStorageLoca
 }
 
 export function createCanvasStorageAdapter(environment: StorageEnvironment = getEnv()): CanvasStorageAdapter {
+  if (environment.IMAGE_STORAGE_MANAGED_ENABLED && environment.IMAGE_STORAGE_BACKEND === "local") {
+    if (!environment.IMAGE_STORAGE_PATH || !environment.IMAGE_STORAGE_VOLUME_ID) throw new CanvasContractError("CANVAS_STORAGE_UNAVAILABLE");
+    const identity = imageLocalLocation(environment.IMAGE_STORAGE_VOLUME_ID);
+    const local = createLocalImageStore({ rootDirectory: environment.IMAGE_STORAGE_PATH, volumeId: environment.IMAGE_STORAGE_VOLUME_ID });
+    return {
+      location: { id: identity.id, provider: "LOCAL", volumeId: environment.IMAGE_STORAGE_VOLUME_ID, endpoint: null, region: null, bucket: null },
+      async getBucketVersioning(signal) {
+        const receipt = await local.probeWritable(signal);
+        return { locationId: receipt.locationId, verified: receipt.locationId === identity.id };
+      },
+      async putObject(input) {
+        await local.put({ ...input, byteLength: input.bytes.length });
+        return { versionId: null };
+      },
+    };
+  }
   if (!environment.S3_ENDPOINT || !environment.S3_BUCKET || !environment.S3_ACCESS_KEY_ID || !environment.S3_SECRET_ACCESS_KEY) throw new CanvasContractError("CANVAS_STORAGE_UNAVAILABLE");
   const location = canvasStorageLocation({ endpoint: environment.S3_ENDPOINT, region: environment.S3_REGION, bucket: environment.S3_BUCKET });
   const client = new S3Client({
@@ -203,8 +230,13 @@ export async function boundedCanvasStorageCall<T>(operation: (signal: AbortSigna
 
 export async function verifyCanvasStorageCapability(adapter: CanvasStorageAdapter, expectedLocation: CanvasStorageLocation = adapter.location, timeoutMs = STORAGE_TIMEOUT_MS): Promise<void> {
   try {
-    const normalized = canvasStorageLocation(expectedLocation);
-    if (normalized.id !== expectedLocation.id || adapter.location.id !== normalized.id || canvasStorageLocation(adapter.location).id !== normalized.id) throw new Error("location mismatch");
+    const normalize = (location: CanvasStorageLocation) => {
+      if (location.provider !== "LOCAL") return canvasStorageLocation(location);
+      if (location.endpoint !== null || location.region !== null || location.bucket !== null) throw new Error("invalid local source tuple");
+      return imageLocalLocation(location.volumeId);
+    };
+    const normalized = normalize(expectedLocation);
+    if (normalized.id !== expectedLocation.id || adapter.location.id !== normalized.id || normalize(adapter.location).id !== normalized.id) throw new Error("location mismatch");
     const receipt = await boundedCanvasStorageCall((signal) => adapter.getBucketVersioning(signal), timeoutMs);
     if (!receipt.verified || receipt.locationId !== normalized.id || receipt.status !== undefined) throw new Error("versioning not verified unversioned");
   } catch {
@@ -214,6 +246,11 @@ export async function verifyCanvasStorageCapability(adapter: CanvasStorageAdapte
 
 export function canvasAssetUrl(asset: RegisteredLocation, environment: StorageEnvironment = getEnv()): string | null {
   try {
+    if (asset.mediaAssetId) {
+      const media = asset.mediaAsset;
+      return media?.state === "AVAILABLE" && media.activeObjectId && environment.APP_URL ? imagePublicUrl(environment.APP_URL, media.publicToken) : null;
+    }
+    if (asset.sourceProvider === "LOCAL" || !asset.storageEndpoint || !asset.storageRegion || !asset.storageBucket) return null;
     const location = canvasStorageLocation({ endpoint: asset.storageEndpoint, region: asset.storageRegion, bucket: asset.storageBucket });
     if (location.id !== asset.storageLocation || !asset.storageKey || asset.storageKey.split("/").some((part) => !part || part === "." || part === "..")) return null;
     if (!environment.S3_ENDPOINT || !environment.S3_BUCKET) return null;

@@ -19,9 +19,11 @@
 
 - 普通生产启动只执行 `prisma migrate deploy` + 只读状态检查；禁止自动 `db push`、`migrate resolve`、手写 DDL repair 或"全部标记已应用"。
 - 空库必须通过完整 migration 历史建库。
+- 完整历史可应用不代表 Prisma 声明无漂移；baseline/deploy 后保留 `prisma migrate diff --from-config-datasource --to-schema prisma/schema.prisma --exit-code` 零差异门禁。若失败，先在 disposable 库输出实际 diff，按数据库规范化表达式核对 `dbgenerated` 和映射约束，不能仅凭静态 SQL 比较推测原因。图片默认值回归见 [Image Storage](./image-storage.md)。
 - 已有表但缺历史的库只能走显式 `scripts/migrations/baseline.mjs`（默认 dry-run、连续前缀、digest 绑定）。
 - failed migration 只能走显式 `scripts/migrations/repair.mjs`（allowlist + checksum 核对）。
 - 缺失前置迁移走 `scripts/migrations/prehistory.mjs`；`20260423000000_initial_schema` 是 synthetic foundation，禁止修改已发布 migration SQL/checksum。
+- `listLocalMigrations` 与Prisma迁移记录使用原SQL文件字节checksum；shared Image/Canvas声明链的全部路径以 `text eol=lf` 固定检出，含已发布Canvas基座。函数body的CRLF规范化不替代原字节核对。未发布迁移的EOF/换行修正须同步声明hash、保留原通过/失败范围，并重新运行当前迁移/数据库/CI及最终拓扑门禁。
 - 所有自动 migration 测试只用 runner 自建随机 localhost PostgreSQL（tmpfs、owner label、`--pull=never`），拒绝回退 `.env`/开发/生产库。
 - shared PostgreSQL helper 与 standalone worker DB runner 使用 `scripts/lib/local-docker-safety.mjs` 的 `LocalDockerSession`：只读解析 context 后只接受 local unix/npipe endpoint，随后每条 Docker 命令固定 `--host`。本地镜像检查通过后才建空 Docker config，容器操作不得继承用户 auth/proxy/context；删除需同时核对原 ID、精确名称和 owner label，不传 `--volumes`。
 - worker/canvas DB runner 使用 `createDisposablePrismaWorkspace` 的显式隔离 Prisma config 与 `disposableTestEnvironment` 的 deny-env preload；仅注入 URL 不等于阻止读取本地凭证。旧 `verify:migrations` 的 `buildDatabaseEnvironment` 仍继承调用者环境，执行它必须额外使用已审计外层隔离/deny-env，不能宣称所有旧 wrapper 已自主隔离。
@@ -67,14 +69,24 @@ docker compose -f docker-compose.e2e.yml config --quiet
 - E2E 与 DB runner 复用 `local-docker-safety.mjs` 的 endpoint、OS-only env 和 owner-marked scratch 校验。`LocalDockerSession.pin(probe)` 前仅允许 context 读取；`prepare()` 后才允许容器命令；scratch/config 的 resolved path、owner 和空配置必须在使用及清理时核对。验证缺镜像的安全退出不等于验证成功创建/清理容器。
 - CI 在 wrapper 外显式准备 PostgreSQL17、Node24.22.1、Go1.25、Alpine3.22 四个 E2E 基础镜像；本地显式准备需用户授权。wrapper 只使用已核验的本地镜像/ID，保留 `--pull=false`/`--pull=never`，不能因缓存缺失自动联网拉镜像。
 - E2E 网络保持 owner-labelled `--internal` 且不发布 app/embedded 端口；Docker29 的 internal bridge 可能保留请求的 HostConfig port binding 却不分配实际 host port。不要改成外部网络绕过：`checkedCompose exec` 执行固定 `canvas-object-store.mjs app-http`，目的地固定容器内 `127.0.0.1:3000`，会话 cookie/请求体仅走有界 stdin、不进入 argv/日志。
-- fixture HTTP 只允许就绪、`/create` 及指定画布 API 路径/方法，禁止任意 host/query/编码路径/重定向。envelope256KiB、正文128KiB、响应1MiB，读取和 HTTP 各有10秒截止；这只是测试通道，不是生产反向代理或新 API。
+- fixture HTTP 以固定模式区分就绪/Canvas 与图片迁移所需的 API、媒体/optimizer/封面路径；仅允许明确的路径/方法/查询形状。图片模式的发布地址为本轮 internal 网络的 `http://app:3000` 或 `http://embedded:3000`，以实际 canonical GET 校验退休前读者；不放宽生产 SSRF。禁止任意 host/编码路径/重定向。envelope256KiB、正文128KiB、响应1MiB，读取和 HTTP 各有10秒截止；这只是测试通道，不是生产反向代理或新 API。
 - fixture 复用共享请求头时用 `Headers.set` 做大小写不敏感覆盖；对象展开同时带 `content-type`/`Content-Type` 会组合成 `application/json, application/json`，应修 fixture，不能放宽生产 JSON Content-Type 校验。图片 fixture 先经生产容器/CRC 校验，不能用任意字节冒充原图。
 - 本地经典 Docker builder 使用已核验 base ID、`--pull=false` 和 `--force-rm`；`.dockerignore` 排除嵌套 dotenv/package 凭证、assistant metadata、node_modules/build 输出与无关子仓库。应用 builder 设 `NEXT_TELEMETRY_DISABLED=1`，不为隐藏工具弃用提示而改变生产 module-type。
+- 本机依赖/构建环境故障的 task-only 缓存复用必须核实 Node/pnpm、全部lock输入、基础层和运行环境，并保留原完整 build/type/scenario 门禁。若为避免重复复制而重建 runner 的生成依赖，完整目录路径/type/权限/内容及字面symlink必须与实际成功builder逐项一致，不可排除cache或直接沿用旧Prisma Client；报告明确原Dockerfile与验证变体的边界。EOF、WSL退出和明确V8 heap exhaustion保留各自证据，不互相推断原因。
+- task-only 依赖缓存的镜像与本地marker共享生命周期：清理核实精确image ID、owner label、唯一tag、无使用容器后非force移除；Docker29可记录同一owned repository与同一image摘要的RepoDigest，不能据此接受其他repository/digest。移除后核对tag不存在，并在核实resolved路径及原字节后将marker归档为 `.before`，保留SHA；陈旧marker的预检失败保留原退出码，不以全局prune或未知镜像删除修复。
+- 全局桌面服务恢复与测试凭证隔离是两个环境：启动本机已安装Docker Desktop使用其原Windows profile和隐藏窗口，不能继承测试合成APPDATA/USERPROFILE；运行测试继续空Docker配置、合成HOME及deny-env。长期后台子进程不可持有捕获管道导致父截止失效；恢复清理只按原daemon和本轮精确owner/ID，不能清空用户资源或覆盖原失败回执。
 - Compose 必须使用 runner 创建的空 `--env-file` 和隔离 Docker config；只保留经路径/文件校验的 Compose plugin 信息，不继承本地 auth、proxy、context 或 `.env`。所有启动禁用 pull 和隐式 build。
-- E2E 清理只移除逐个验证 ID、owner/project label 及本轮创建记录的精确 container/network/image。禁止 `down --volumes`、`--rmi local`、任意调用者镜像删除及无限清理截止；实际容器清理验证缺基础设施时必须报告未执行。
+- E2E 图片场景可创建本轮随机、owner/project-labelled 的 LOCAL named volume：只接受 local driver、空 options，并检查 Name/CreatedAt/labels 和实际 `/data/images` 挂载。清理先移除核实容器，再检查全 daemon 无任何挂载并重核该卷身份，使用精确名字非 force 删除；不接受用户卷。其他 container/network/image 仍逐个核对 ID/labels/创建记录。禁止 `down --volumes`、`--rmi local`、prune、任意调用者镜像删除及无限清理截止。
+- 默认 `verify:e2e` 含 11 项 legacy/Canvas/图片场景，总截止40分钟，图片单场景10分钟，清理独立120秒。两种图片拓扑必须实际生成/上传/导入、登记/迁移、读取验证、失败退休再恢复、重建同卷读取，并拒绝错卷/无对应能力的 Worker；测试源码白名单须包含新增的 `docker-compose.image-history.e2e.yml`。
+- Canvas 历史纳管的拓扑测试真实停止服务并等待原 GC lease 到期，再用本轮固定名称的同卷 standalone CLI 完成复制。应用尚未恢复时 canonical reader proof 必须阻止源退休；重启后恢复同 job 并交给新执行器。不得修改数据库租约时间或弱化 guard 来让 live scheduler 下的纳管通过。
 
 ## 8. 回滚安全
 
 - 回滚代码前必须运行 `pnpm rollback:preflight`（调用 `CheckRollbackSafety`）；存在活动 contract v1 或未决 handoff 时不得启动旧 Worker/finalizer。
+- 图片清单升级后，preflight 还在同一只读 REPEATABLE READ 快照中检查 ledger、业务绑定和新 GC/history 标记，并复用完整实际 Image/Canvas catalogue 校验。partial schema 不能假报 legacy-safe；已存在受管理 image schema（当前 storage revision 3）/ Canvas storage revision 3 就拒绝旧 Worker，即使计数为零。完全没有新标记的历史库才保留原 v1/handoff 检查逻辑。
+- 图片管理 readiness 的 storage/reader/executor revision 当前均为 3，并要求 `maintenance=running`，与原 version/schema/provider/locationId 一同精确校验。清理默认停用，升级 schema 不自动启用破坏性策略；旧无读保护进程须 drain，再启用新执行器/LOCAL。maintenance loop 的就绪不依赖 Next 媒体路由，避免 embedded 启动循环。显式迁移源退休的 published reader GET 仅属于 CLI 运维动作。
+- `/app/narra-image-history` 在两个镜像内均可执行，默认只读，显式 apply/源绑定/目标/退休的运维协议见 `docs/image-storage.md` 与 [Image Storage](./image-storage.md#9-历史登记复制和读取投影revision-3)。代码/镜像准备与隔离验证不代表已对生产 R2 执行操作。
+- 回滚报告补充 `active_image_history_jobs`、`unresolved_image_history_items`、`unresolved_image_observations`、`active_image_history_holds`。部分 history/provenance 标记必须触发 catalogue 验证，不能在没有 ImageObject 时忽略已观察而未决的历史数据；输出保留固定错误码，不泄露连接配置、文件路径或 SQL。
+- 回滚报告 JSON 保持 `schema_version=1` 并追加图片/Canvas 修订、managed/local/active reservation/unresolved object 计数；错误不得打印原始 SQL、DSN 或本地路径。测试需要 current/legacy/partial 三类真实数据库夹具，不能只 mock 计数。
 - 回滚保留 additive schema；平台探针在回滚后不得把 readiness 重新指向纯 liveness。
 - 任何非 disposable 数据库 baseline/repair、volume 删除或生产配置变更需用户另行明确确认。

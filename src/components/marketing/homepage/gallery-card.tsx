@@ -9,6 +9,7 @@ import { ArrowUpRight, Check, ChevronDown, Copy, Heart, LockKeyhole, User } from
 import { GENERATION_PROMPT_MAX_LENGTH } from "@/lib/generation/limits";
 import { getThumbSrcSet, getThumbUrl, normalizeImageUrl } from "@/lib/image-url";
 import type { SerializedFeaturedWork } from "@/lib/prisma-mappers";
+import { imageUnavailableMessage, isImageAvailable } from "@/lib/storage/image-availability";
 import { cn } from "@/lib/utils";
 
 import { GALLERY_CASCADE_DELAY, GALLERY_MESSAGES, GALLERY_PAGE_SIZE, GALLERY_REMIX_MAX_TARGET_BYTES } from "./gallery-constants";
@@ -128,7 +129,9 @@ export function GalleryCard({ work, index, isAuthenticated, remixHintId }: Galle
       >
         <div ref={tiltRef} data-gallery-tilt data-motion-enabled={enabled && visible} className={styles.tilt}>
           <div data-gallery-image-layer className={styles.imageClip}>
-            {imageFailed ? (
+            {!isImageAvailable(work.availability) ? (
+              <div className={styles.imageUnavailable}>{imageUnavailableMessage(work.availability)}<br />仍可打开作品详情</div>
+            ) : imageFailed ? (
               <div className={styles.imageUnavailable}>图片暂时无法加载<br />仍可打开作品详情</div>
             ) : (
               <img

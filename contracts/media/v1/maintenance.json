@@ -1,0 +1,19 @@
+{
+  "contract": "narra.image.maintenance",
+  "version": 1,
+  "storageRevision": 3,
+  "readerRevision": 3,
+  "executorRevision": 3,
+  "limits": {
+    "previewAssets": 1000,
+    "previewSeconds": 600,
+    "jobItems": 100,
+    "leaseSeconds": 90,
+    "readLeaseSeconds": 45,
+    "readTimeoutMilliseconds": 30000,
+    "deleteSeconds": 30,
+    "passSeconds": 45,
+    "pollMilliseconds": 1000,
+    "quotaWaitMilliseconds": 10000
+  }
+}

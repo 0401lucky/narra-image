@@ -4,6 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import type { CanvasController } from "@/components/create/canvas/controller";
 import { useCanvasComposerPlacement } from "@/components/create/hooks/use-canvas-composer-placement";
+import { useCanvasImageViewer } from "@/components/create/hooks/use-canvas-image-viewer";
 import { CanvasImageToolbar } from "@/components/create/parts/canvas-image-toolbar";
 
 import { canvasControllerFixture, completedJob } from "./helpers/canvas-controller-fixtures";
@@ -288,6 +289,58 @@ describe("image-first creation loop on the real canvas", () => {
     expect(f.controller.getSnapshot().active!.scene.edges.find((edge) => edge.kind === "image-input" && edge.target === target)).toMatchObject({ source: source.id, ordinal: 1 });
     expect(f.controller.getSnapshot().active!.scene.nodes.find((node) => node.id === source.id)).toEqual(source);
     expect(f.api.port.submit).toHaveBeenCalledTimes(1);
+  });
+
+  it("keeps freshly cleaned results unavailable after reconciling an older terminal job cache", async () => {
+    const f = fixture();
+    const callbacks = canvasStageCallbacks();
+    const { canvasId, nodeId } = await f.newGraph();
+    await f.controller.runNode(canvasId, nodeId);
+    const binding = f.controller.getSnapshot().active!.scene.runBindings[0];
+    const origin = { ownerId: "owner-one", canvasId, nodeId, runId: binding.runId };
+    const terminal = completedJob(binding.jobId);
+    f.jobs.push(origin, terminal);
+    const source = f.controller.getSnapshot().active!.scene.nodes.find((node) => node.kind === "result")!;
+    f.controller.selectNode(canvasId, source.id);
+    const before = f.controller.getSnapshot().active!.scene;
+    const viewer = renderHook(() => useCanvasImageViewer(f.controller, f.jobs.port.read));
+    act(() => viewer.result.current.open({ kind: "result", canvasId, nodeId: source.id, imageId: terminal.images[0].id, jobId: terminal.id, url: terminal.images[0].url }));
+    expect(viewer.result.current.image?.src).toBe(terminal.images[0].url);
+    render(<CanvasStageHarness {...callbacks} controller={f.controller} />);
+    await settle();
+    expect(within(nodeElement(source.id)).getByAltText("画布生成结果")).toBeInTheDocument();
+
+    f.api.runs.set(binding.runId, {
+      state: "COMMITTED", origin: { canvasId, nodeId, runId: binding.runId }, jobId: terminal.id, unavailable: null,
+      generation: { ...terminal, images: terminal.images.map((image) => ({ ...image, availability: "cleaned" })) },
+    });
+    await act(async () => { await f.controller.refreshRuntime(canvasId); });
+    act(() => { f.jobs.push(origin, terminal); });
+    expect(f.jobs.port.read(terminal.id)).toBe(terminal);
+    expect(f.controller.getSnapshot().active!.images[terminal.images[0].id].availability).toBe("cleaned");
+    const download = vi.fn().mockResolvedValue(undefined);
+    await act(async () => { await viewer.result.current.downloadCurrent(download); });
+    expect(download).not.toHaveBeenCalled();
+    expect(viewer.result.current.error).toBe("图片已清理");
+    expect(within(nodeElement(source.id)).getByText("图片已清理")).toBeInTheDocument();
+    expect(within(nodeElement(source.id)).queryByRole("img")).not.toBeInTheDocument();
+    const toolbar = await screen.findByRole("group", { name: "所选图片操作" });
+    for (const name of ["继续创作", "查看所选原图", "下载所选原图"]) {
+      const button = within(toolbar).getByRole("button", { name });
+      expect(button).toBeDisabled();
+      await userEvent.click(button);
+    }
+    expect(() => f.controller.createQuickGeneration(canvasId, { position: { x: 800, y: 0 }, sourceNodeIds: [source.id] })).toThrow();
+    expect(f.controller.getSnapshot().active!.scene).toEqual(before);
+    expect(callbacks.onViewImage).not.toHaveBeenCalled();
+    expect(callbacks.onDownloadImage).not.toHaveBeenCalled();
+    expect(f.api.port.submit).toHaveBeenCalledTimes(1);
+    expect(f.jobs.port.read(terminal.id)).toMatchObject({ status: "succeeded", prompt: terminal.prompt, creditsSpent: terminal.creditsSpent });
+
+    vi.mocked(f.api.port.resolve).mockResolvedValueOnce({ canvasId, images: {}, assets: {}, generations: {}, runs: {}, missing: [] });
+    await act(async () => { await f.controller.refreshRuntime(canvasId); });
+    expect(f.controller.getSnapshot().active!.images[terminal.images[0].id].availability).toBe("cleaned");
+    expect(within(nodeElement(source.id)).queryByRole("img")).not.toBeInTheDocument();
   });
 
   it("previews a whole-image drag locally and commits only the final pointerup coordinate", async () => {

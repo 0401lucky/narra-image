@@ -1,0 +1,36 @@
+# Used only by scripts/verify-e2e.mjs after local-image and resource-owner checks.
+# The runner creates the external volume and verifies it before every command.
+x-image-environment: &image-environment
+  APP_URL: "${E2E_IMAGE_APP_URL:?}"
+  IMAGE_STORAGE_MANAGED_ENABLED: "${E2E_IMAGE_MANAGED:?}"
+  IMAGE_STORAGE_BACKEND: "${E2E_IMAGE_BACKEND:?}"
+  IMAGE_STORAGE_PATH: /data/images
+  IMAGE_STORAGE_VOLUME_ID: "${E2E_IMAGE_VOLUME_ID:?}"
+  E2E_IMAGE_VOLUME_ID: "${E2E_IMAGE_VOLUME_ID:?}"
+  BUILTIN_PROVIDER_BASE_URL: http://object-store:9090/v1
+  BUILTIN_PROVIDER_API_KEY: "${E2E_STORE_TOKEN:?}"
+
+services:
+  worker:
+    environment:
+      <<: *image-environment
+      IMAGE_STORAGE_MANAGED_ENABLED: "${E2E_WORKER_IMAGE_MANAGED:?}"
+      IMAGE_STORAGE_BACKEND: "${E2E_WORKER_IMAGE_BACKEND:?}"
+      IMAGE_STORAGE_VOLUME_ID: "${E2E_WORKER_IMAGE_VOLUME_ID:?}"
+    volumes:
+      - image_history_data:/data/images
+  app:
+    environment:
+      <<: *image-environment
+    volumes:
+      - image_history_data:/data/images
+  embedded:
+    environment:
+      <<: *image-environment
+    volumes:
+      - image_history_data:/data/images
+
+volumes:
+  image_history_data:
+    external: true
+    name: "${E2E_IMAGE_VOLUME_NAME:?}"

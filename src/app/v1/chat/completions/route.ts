@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 
 import { parseChatGenerationInput } from "@/lib/external-api/chat";
 import { openAiChatStream, openAiError, unixSeconds } from "@/lib/external-api/http";
+import { formatImageGenerationData } from "@/lib/external-api/images";
 import {
   isGatewayEnabled,
   runExternalGenerationViaGateway,
@@ -60,7 +61,8 @@ export async function POST(request: Request) {
       user: auth.user,
     });
 
-    const imageMarkdown = job.images
+    const images = await formatImageGenerationData(job.images, "url");
+    const imageMarkdown = images
       .map((image, index) => `![image-${index + 1}](${image.url})\n${image.url}`)
       .join("\n\n");
     const content = `生成完成。\n\n${imageMarkdown}`;

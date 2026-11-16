@@ -26,6 +26,11 @@ type Worker struct {
 	canvasStorageFactory  func(*Storage) (canvasGCStorage, error)
 	checkCanvasSchema     func(context.Context) (SchemaContractReport, error)
 	checkSchema           func(context.Context) (SchemaContractReport, error)
+	checkImageStorage     func(context.Context) error
+	imageMaintenance      *imageMaintenanceScheduler
+	imageRepository       imageMaintenanceRepository
+	imageSchedulerRunner  func(context.Context, *imageMaintenanceScheduler)
+	imageStorageFactory   func(context.Context, ImageLocation) (imageMaintenanceStorage, error)
 	consumerLoop          func(context.Context, context.Context, int)
 	logger                *slog.Logger
 	metricsCollector      func(context.Context) (metricsResponse, error)
@@ -84,6 +89,7 @@ func New(pool *pgxpool.Pool, cfg Config, logger *slog.Logger) *Worker {
 		canvasContractLoader:  LoadCanvasContract,
 		canvasStorageFactory:  newCanvasGCStorage,
 		canvasSchedulerRunner: func(ctx context.Context, scheduler *canvasGCScheduler) { scheduler.Run(ctx) },
+		imageSchedulerRunner:  func(ctx context.Context, scheduler *imageMaintenanceScheduler) { scheduler.Run(ctx) },
 	}
 	worker.consumerLoop = worker.runLoop
 	if pool != nil {
@@ -102,6 +108,7 @@ func New(pool *pgxpool.Pool, cfg Config, logger *slog.Logger) *Worker {
 
 func (w *Worker) Run(ctx context.Context) error {
 	w.state.requireCanvas(w.cfg.CanvasEnabled)
+	w.state.requireImages(w.cfg.ImageStorageManagedEnabled)
 	httpRuntime, err := w.startHTTPServer()
 	if err != nil {
 		w.state.markStopped()
@@ -145,6 +152,9 @@ func (w *Worker) Run(ctx context.Context) error {
 	storage, startupErr := w.storageFactory(runtimeCtx, w.cfg)
 	if startupErr == nil {
 		w.storage = storage
+		if storage != nil {
+			storage.imageRepository = NewImageRepository(w.pool)
+		}
 		lock, startupErr = w.acquireTopologyLock(runtimeCtx)
 	}
 	if startupErr == nil {
@@ -158,6 +168,12 @@ func (w *Worker) Run(ctx context.Context) error {
 		}()
 		startupErr = w.waitForSchema(runtimeCtx)
 	}
+	if startupErr == nil && w.cfg.ImageStorageManagedEnabled {
+		startupErr = w.probeImageStorage(runtimeCtx)
+		if startupErr == nil {
+			startupErr = w.setupImageMaintenance()
+		}
+	}
 	if startupErr == nil && w.cfg.CanvasEnabled {
 		startupErr = w.setupCanvasRuntime(runtimeCtx)
 	}
@@ -167,6 +183,7 @@ func (w *Worker) Run(ctx context.Context) error {
 
 	var consumers sync.WaitGroup
 	var canvasGC sync.WaitGroup
+	var imageMaintenance sync.WaitGroup
 	consumersStarted := startupErr == nil && !shutdown.requested()
 	if consumersStarted {
 		w.state.markConsumersRunning(true)
@@ -208,6 +225,30 @@ func (w *Worker) Run(ctx context.Context) error {
 					return
 				case <-startGC:
 					w.canvasSchedulerRunner(runtimeCtx, w.canvasGC)
+				}
+			}()
+			<-started
+		}
+		if w.cfg.ImageStorageManagedEnabled {
+			started := make(chan struct{})
+			imageMaintenance.Add(1)
+			go func() {
+				defer imageMaintenance.Done()
+				defer func() {
+					w.state.markImageMaintenanceRunning(false)
+					if panicValue := recover(); panicValue != nil {
+						shutdown.request(fmt.Errorf("image maintenance panic: %v", panicValue))
+					} else if runtimeCtx.Err() == nil {
+						shutdown.request(errors.New("image maintenance scheduler exited unexpectedly"))
+					}
+				}()
+				w.state.markImageMaintenanceRunning(true)
+				close(started)
+				select {
+				case <-runtimeCtx.Done():
+					return
+				case <-startGC:
+					w.imageSchedulerRunner(runtimeCtx, w.imageMaintenance)
 				}
 			}()
 			<-started
@@ -260,6 +301,7 @@ func (w *Worker) Run(ctx context.Context) error {
 		go func() {
 			consumers.Wait()
 			canvasGC.Wait()
+			imageMaintenance.Wait()
 			close(drained)
 		}()
 		drainErr = waitForProcessingDrain(
@@ -604,6 +646,15 @@ func (w *Worker) processJob(parent context.Context, job GenerationJob) {
 
 	ctx, cancel := context.WithTimeout(parent, w.cfg.JobTimeout)
 	defer cancel()
+	if w.cfg.ImageStorageManagedEnabled && isImageGeneration(job) {
+		defer func() {
+			finishCtx, finishCancel := detachedFinalizationContext(parent, w.cfg.ShutdownGrace)
+			defer finishCancel()
+			if err := w.storage.closeFinishedImageReservation(finishCtx, job.ID); err != nil {
+				logger.Warn("图片未使用额度待协调", "event", "image_reservation_close_deferred", "error_code", "IMAGE_INTERNAL_ERROR")
+			}
+		}()
+	}
 
 	stopHeartbeat := make(chan struct{})
 	var heartbeatDone sync.WaitGroup
@@ -677,6 +728,18 @@ func (w *Worker) processJob(parent context.Context, job GenerationJob) {
 		return
 	}
 
+	if w.cfg.ImageStorageManagedEnabled {
+		reservation, reserveErr := w.storage.acquireImageOutputReservation(ctx, job)
+		if reserveErr != nil {
+			failure := imageAdmissionFailure(reserveErr)
+			logJobFailure(logger, "image_admission_failed", startedAt, failure)
+			if finalizeErr := w.handleJobFailure(parent, job, failure); finalizeErr != nil {
+				logJobFailure(logger, "job_failure_finalize_failed", startedAt, finalizeErr)
+			}
+			return
+		}
+		ctx = withImageOutputReservation(ctx, reservation)
+	}
 	images, err := generateImages(ctx, w.storage, job, provider)
 	if err != nil {
 		logJobFailure(logger, "image_generation_failed", startedAt, err)
@@ -1019,6 +1082,9 @@ func (w *Worker) completeJob(ctx context.Context, job GenerationJob, images []Ge
 		return err
 	}
 	defer rollbackSilently(ctx, tx)
+	if err := lockImageReferenceEpoch(ctx, tx); err != nil {
+		return err
+	}
 
 	now := time.Now().UTC()
 	if err := w.lockCompletionTarget(ctx, tx, job); err != nil {
@@ -1026,6 +1092,10 @@ func (w *Worker) completeJob(ctx context.Context, job GenerationJob, images []Ge
 	}
 
 	for _, image := range images {
+		imageID := image.ID
+		if imageID == "" {
+			imageID = cuidLikeID()
+		}
 		_, err := tx.Exec(ctx, `
 INSERT INTO "GenerationImage" (
   id,
@@ -1035,11 +1105,12 @@ INSERT INTO "GenerationImage" (
   height,
   "mediaStorage",
   "storageKey",
+  "mediaAssetId",
   "showcaseStatus",
   "showPromptPublic",
   "createdAt"
-) VALUES ($1, $2, $3, $4, $5, $6, $7, 'PRIVATE', false, $8)
-`, cuidLikeID(), job.ID, image.URL, nullableInt(image.Width), nullableInt(image.Height), nullableMediaStorage(image.MediaStorage), nullableStringFromString(image.StorageKey), now)
+) VALUES ($1, $2, $3, $4, $5, $6, $7, $8::uuid, 'PRIVATE', false, $9)
+`, imageID, job.ID, image.URL, nullableInt(image.Width), nullableInt(image.Height), nullableMediaStorage(image.MediaStorage), nullableStringFromString(image.StorageKey), nullableStringFromString(image.MediaAssetID), now)
 		if err != nil {
 			return err
 		}

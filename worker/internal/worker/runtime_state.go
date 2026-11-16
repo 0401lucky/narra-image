@@ -14,17 +14,18 @@ const (
 )
 
 const (
-	readinessCodeBooting             = "BOOTING"
-	readinessCodeCanvasNotReady      = "CANVAS_NOT_READY"
-	readinessCodeCanvasGCNotReady    = "CANVAS_GC_NOT_RUNNING"
-	readinessCodeConsumerNotReady    = "CONSUMER_NOT_READY"
-	readinessCodeDatabaseUnavailable = "DATABASE_UNAVAILABLE"
-	readinessCodeDraining            = "DRAINING"
-	readinessCodeRuntimeFailure      = "RUNTIME_FAILURE"
-	readinessCodeSchemaNotReady      = "SCHEMA_NOT_READY"
-	readinessCodeTopologyConflict    = "TOPOLOGY_CONFLICT"
-	readinessCodeTopologyLockLost    = "TOPOLOGY_LOCK_LOST"
-	readinessCodeTopologyNotReady    = "TOPOLOGY_NOT_READY"
+	readinessCodeBooting                  = "BOOTING"
+	readinessCodeCanvasNotReady           = "CANVAS_NOT_READY"
+	readinessCodeCanvasGCNotReady         = "CANVAS_GC_NOT_RUNNING"
+	readinessCodeConsumerNotReady         = "CONSUMER_NOT_READY"
+	readinessCodeImageMaintenanceNotReady = "IMAGE_MAINTENANCE_NOT_RUNNING"
+	readinessCodeDatabaseUnavailable      = "DATABASE_UNAVAILABLE"
+	readinessCodeDraining                 = "DRAINING"
+	readinessCodeRuntimeFailure           = "RUNTIME_FAILURE"
+	readinessCodeSchemaNotReady           = "SCHEMA_NOT_READY"
+	readinessCodeTopologyConflict         = "TOPOLOGY_CONFLICT"
+	readinessCodeTopologyLockLost         = "TOPOLOGY_LOCK_LOST"
+	readinessCodeTopologyNotReady         = "TOPOLOGY_NOT_READY"
 )
 
 type runtimePhase string
@@ -39,25 +40,30 @@ const (
 var ErrShutdownHardTimeout = errors.New("Worker 超过硬停止期限")
 
 type runtimeSnapshot struct {
-	CanvasConfigured bool
-	CanvasGCRunning  bool
-	ConsumersRunning bool
-	Phase            runtimePhase
-	ReadinessCode    string
-	StartedAt        time.Time
-	TopologyHeld     bool
+	CanvasConfigured           bool
+	CanvasGCRunning            bool
+	ConsumersRunning           bool
+	ImageMaintenanceConfigured bool
+	ImageMaintenanceRunning    bool
+	Phase                      runtimePhase
+	ReadinessCode              string
+	StartedAt                  time.Time
+	TopologyHeld               bool
 }
 
 type runtimeState struct {
-	mu               sync.RWMutex
-	canvasRequired   bool
-	canvasConfigured bool
-	canvasGCRunning  bool
-	consumersRunning bool
-	phase            runtimePhase
-	readinessCode    string
-	startedAt        time.Time
-	topologyHeld     bool
+	mu                         sync.RWMutex
+	canvasRequired             bool
+	canvasConfigured           bool
+	canvasGCRunning            bool
+	consumersRunning           bool
+	imagesRequired             bool
+	imageMaintenanceConfigured bool
+	imageMaintenanceRunning    bool
+	phase                      runtimePhase
+	readinessCode              string
+	startedAt                  time.Time
+	topologyHeld               bool
 }
 
 func newRuntimeState(now time.Time) *runtimeState {
@@ -72,13 +78,15 @@ func (state *runtimeState) snapshot() runtimeSnapshot {
 	state.mu.RLock()
 	defer state.mu.RUnlock()
 	return runtimeSnapshot{
-		CanvasConfigured: state.canvasConfigured,
-		CanvasGCRunning:  state.canvasGCRunning,
-		ConsumersRunning: state.consumersRunning,
-		Phase:            state.phase,
-		ReadinessCode:    state.readinessCode,
-		StartedAt:        state.startedAt,
-		TopologyHeld:     state.topologyHeld,
+		CanvasConfigured:           state.canvasConfigured,
+		CanvasGCRunning:            state.canvasGCRunning,
+		ConsumersRunning:           state.consumersRunning,
+		ImageMaintenanceConfigured: state.imageMaintenanceConfigured,
+		ImageMaintenanceRunning:    state.imageMaintenanceRunning,
+		Phase:                      state.phase,
+		ReadinessCode:              state.readinessCode,
+		StartedAt:                  state.startedAt,
+		TopologyHeld:               state.topologyHeld,
 	}
 }
 
@@ -114,7 +122,8 @@ func (state *runtimeState) markReady() bool {
 	state.mu.Lock()
 	defer state.mu.Unlock()
 	if state.phase != runtimePhaseBooting || !state.topologyHeld || !state.consumersRunning ||
-		(state.canvasRequired && (!state.canvasConfigured || !state.canvasGCRunning)) {
+		(state.canvasRequired && (!state.canvasConfigured || !state.canvasGCRunning)) ||
+		(state.imagesRequired && (!state.imageMaintenanceConfigured || !state.imageMaintenanceRunning)) {
 		return false
 	}
 	state.phase = runtimePhaseReady
@@ -126,6 +135,28 @@ func (state *runtimeState) requireCanvas(required bool) {
 	state.mu.Lock()
 	defer state.mu.Unlock()
 	state.canvasRequired = required
+}
+
+func (state *runtimeState) requireImages(required bool) {
+	state.mu.Lock()
+	defer state.mu.Unlock()
+	state.imagesRequired = required
+}
+
+func (state *runtimeState) markImageMaintenanceConfigured() {
+	state.mu.Lock()
+	defer state.mu.Unlock()
+	state.imageMaintenanceConfigured = true
+}
+
+func (state *runtimeState) markImageMaintenanceRunning(running bool) {
+	state.mu.Lock()
+	defer state.mu.Unlock()
+	state.imageMaintenanceRunning = running
+	if !running && state.phase == runtimePhaseReady {
+		state.phase = runtimePhaseDraining
+		state.readinessCode = readinessCodeImageMaintenanceNotReady
+	}
 }
 
 func (state *runtimeState) markCanvasConfigured() {
@@ -163,6 +194,7 @@ func (state *runtimeState) markStopped() {
 	state.phase = runtimePhaseStopped
 	state.consumersRunning = false
 	state.canvasGCRunning = false
+	state.imageMaintenanceRunning = false
 	state.topologyHeld = false
 	if state.readinessCode == "" {
 		state.readinessCode = readinessCodeDraining

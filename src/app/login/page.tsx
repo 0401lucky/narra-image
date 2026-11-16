@@ -7,7 +7,7 @@ import { getEnabledOAuthProviders } from "@/lib/auth/oauth-config";
 import { getPublicTurnstileConfig } from "@/lib/auth/turnstile";
 import { fromPrismaRole } from "@/lib/prisma-mappers";
 import { getCurrentUserRecord } from "@/lib/server/current-user";
-import { getLoginCoverConfig } from "@/lib/server/login-cover";
+import { getLoginCoverDisplayConfig } from "@/lib/server/login-cover";
 import { listFeaturedWorksPage } from "@/lib/server/works";
 
 export const dynamic = "force-dynamic";
@@ -36,7 +36,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
       nextCursor: null,
     })),
     getPublicTurnstileConfig(),
-    getLoginCoverConfig(),
+    getLoginCoverDisplayConfig(),
   ]);
   const featured = featuredPage.items[0] ?? null;
   const cover = loginCoverConfig.mode === "custom"

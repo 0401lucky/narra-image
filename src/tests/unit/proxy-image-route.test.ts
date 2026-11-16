@@ -12,6 +12,7 @@ vi.mock("@/lib/server/current-user", () => ({
 vi.mock("@/lib/server/safe-remote-url", () => ({
   fetchPublicHttpUrl: mockFetchPublicHttpUrl,
 }));
+vi.mock("@/lib/storage/managed-image-storage", () => ({ resolveManagedImageUrl: vi.fn(async () => null), readManagedImage: vi.fn() }));
 
 import { GET } from "@/app/api/proxy-image/route";
 

@@ -9,6 +9,8 @@ import { Download, Expand, FileText } from "lucide-react";
 import type { SerializedPublicWorkDetail, SerializedWork } from "@/lib/prisma-mappers";
 import { buildPromptPreview } from "@/lib/prompt-preview";
 import { getThumbUrl } from "@/lib/image-url";
+import { isImageAvailable } from "@/lib/storage/image-availability";
+import { ImageUnavailable } from "@/components/ui/image-unavailable";
 import { canShowWorkPrompt, isFeaturedWork } from "@/lib/work-showcase";
 import { downloadImage } from "@/components/works/download-image";
 import { ImageLightbox } from "@/components/works/image-lightbox";
@@ -55,12 +57,13 @@ export function WorkDetailPanel({
   });
   const promptPreview = buildPromptPreview(work.prompt ?? "", 150);
   const displayImageUrl = getThumbUrl(work.url, 1920, 90);
+  const imageAvailable = isImageAvailable(work.availability);
 
   return (
     <>
       <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_320px] xl:grid-cols-[minmax(0,1fr)_360px]">
-        <div className="studio-card overflow-hidden rounded-[1.8rem] p-3 md:p-4">
-          <button
+        <div className="studio-card overflow-hidden rounded-[1.8rem] p-3 md:p-4" data-testid="work-image" data-availability={work.availability ?? "available"}>
+          {imageAvailable ? <button
             type="button"
             onClick={() => setZoomed(true)}
             className="group relative block w-full overflow-hidden rounded-[1.4rem] border border-[var(--line)] bg-[var(--surface-strong)]/40"
@@ -74,7 +77,7 @@ export function WorkDetailPanel({
             <span className="absolute right-4 top-4 rounded-full bg-black/55 p-2 text-white opacity-0 transition group-hover:opacity-100">
               <Expand className="size-4" />
             </span>
-          </button>
+          </button> : <ImageUnavailable availability={work.availability} className="min-h-80 rounded-[1.4rem]" />}
         </div>
 
         <aside className="grid gap-4 self-start">
@@ -102,8 +105,9 @@ export function WorkDetailPanel({
             <div className="mt-5 flex flex-wrap gap-2">
               <button
                 type="button"
+                disabled={!imageAvailable}
                 onClick={() => void downloadImage(work.url)}
-                className="inline-flex items-center gap-2 rounded-full bg-[var(--ink)] px-4 py-2 text-sm font-medium text-white transition hover:bg-[var(--accent)]"
+                className="inline-flex items-center gap-2 rounded-full bg-[var(--ink)] px-4 py-2 text-sm font-medium text-white transition hover:bg-[var(--accent)] disabled:cursor-not-allowed disabled:opacity-50"
               >
                 <Download className="size-4" />
                 下载图片
@@ -157,7 +161,7 @@ export function WorkDetailPanel({
         </aside>
       </div>
 
-      {zoomed ? (
+      {zoomed && imageAvailable ? (
         <ImageLightbox src={work.url} onClose={() => setZoomed(false)}>
           <button
             type="button"

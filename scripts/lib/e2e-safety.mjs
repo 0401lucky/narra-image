@@ -91,7 +91,7 @@ function projectName(configuration, label, suffix) {
   return `narra-e2e-${label}-${configuration.suffix}-${suffix}`;
 }
 
-export function createE2EProject(configuration, label, { canvas = false, workerCanvas = canvas, genericReadinessRequired = true } = {}) {
+export function createE2EProject(configuration, label, { canvas = false, workerCanvas = canvas, genericReadinessRequired = true, images = false } = {}) {
   const suffix = randomBytes(4).toString("hex");
   const name = projectName(configuration, label, suffix);
   return {
@@ -104,6 +104,16 @@ export function createE2EProject(configuration, label, { canvas = false, workerC
     canvas,
     workerCanvas,
     genericReadinessRequired,
+    images,
+    managedImages: images,
+    workerManagedImages: images,
+    imageBackend: images ? "local" : "s3",
+    workerImageBackend: null,
+    volumeName: `${name}-images`,
+    volumeId: randomUUID(),
+    workerVolumeId: null,
+    volumeCreatedAt: null,
+    volumeCreationAttempted: false,
     missingDatabase: false,
     creationAttempted: false,
     networkId: null,
@@ -118,7 +128,9 @@ export function assertE2EProject(configuration, project) {
     || !/^[a-z0-9-]{1,63}$/.test(project.name) || !/^[a-f0-9]{8}$/.test(project.name.slice(expectedPrefix.length))
     || project.networkName !== `${project.name}-net`
     || project.databaseName !== `narra_e2e_${project.label.replaceAll("-", "_")}_${project.name.slice(-8)}`
-    || project.bucket !== `narra-e2e-${configuration.suffix}-${project.name.slice(-8)}`) {
+    || project.bucket !== `narra-e2e-${configuration.suffix}-${project.name.slice(-8)}`
+    || project.volumeName !== `${project.name}-images`
+    || !/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(project.volumeId)) {
     throw e2eFailure("Refusing an E2E resource outside this run's exact random namespace");
   }
 }
@@ -148,16 +160,24 @@ export function e2eComposeEnvironment(configuration, project) {
     E2E_CANVAS_ENABLED: String(project.canvas),
     E2E_WORKER_CANVAS_ENABLED: String(project.workerCanvas),
     E2E_WORKER_READINESS_REQUIRED: String(project.genericReadinessRequired),
+    E2E_IMAGE_MANAGED: String(project.managedImages),
+    E2E_WORKER_IMAGE_MANAGED: String(project.workerManagedImages),
+    E2E_IMAGE_BACKEND: project.imageBackend,
+    E2E_IMAGE_APP_URL: project.label === "image-embedded" ? "http://embedded:3000" : "http://app:3000",
+    E2E_WORKER_IMAGE_BACKEND: project.workerImageBackend ?? project.imageBackend,
+    E2E_IMAGE_VOLUME_NAME: project.volumeName,
+    E2E_IMAGE_VOLUME_ID: project.volumeId,
+    E2E_WORKER_IMAGE_VOLUME_ID: project.workerVolumeId ?? project.volumeId,
     E2E_STORE_BUCKET: project.bucket,
     E2E_STORE_TOKEN: configuration.storeToken,
     E2E_STORE_ACCESS_KEY: configuration.storeAccessKey,
     E2E_STORE_SECRET_KEY: configuration.storeSecretKey,
-    E2E_S3_ENDPOINT: project.canvas ? "http://object-store:9090" : "",
+    E2E_S3_ENDPOINT: project.canvas || project.images ? "http://object-store:9090" : "",
     E2E_S3_REGION: "us-east-1",
-    E2E_S3_BUCKET: project.canvas ? project.bucket : "",
-    E2E_S3_ACCESS_KEY_ID: project.canvas ? configuration.storeAccessKey : "",
-    E2E_S3_SECRET_ACCESS_KEY: project.canvas ? configuration.storeSecretKey : "",
-    E2E_S3_PUBLIC_BASE_URL: project.canvas ? `http://object-store:9090/${project.bucket}` : "",
+    E2E_S3_BUCKET: project.canvas || project.images ? project.bucket : "",
+    E2E_S3_ACCESS_KEY_ID: project.canvas || project.images ? configuration.storeAccessKey : "",
+    E2E_S3_SECRET_ACCESS_KEY: project.canvas || project.images ? configuration.storeSecretKey : "",
+    E2E_S3_PUBLIC_BASE_URL: project.canvas || project.images ? `http://object-store:9090/${project.bucket}` : "",
   };
 }
 
@@ -191,6 +211,7 @@ export function e2eComposeArgs(projectRoot, workspace, project, args) {
   return [
     "compose", "--env-file", workspace.envFile,
     "--project-directory", projectRoot, "-f", path.join(projectRoot, "docker-compose.e2e.yml"),
+    ...(project.images ? ["-f", path.join(projectRoot, "docker-compose.image-history.e2e.yml")] : []),
     "--project-name", project.name,
     ...args.slice(0, index + 1), ...policy, ...args.slice(index + 1),
   ];
@@ -202,7 +223,8 @@ export function assertE2EContainer(configuration, project, container) {
   const service = labels["com.docker.compose.service"];
   const name = container.Name?.replace(/^\//, "");
   const ordinaryName = SERVICES.has(service) && new RegExp(`^${project.name}-${service}-[1-9][0-9]*$`).test(name);
-  const oneOffName = service === "migrate" && name === `${project.name}-migrate-recovery` && project.oneOffNames.has(name);
+  const oneOffName = project.oneOffNames.has(name) && ((service === "migrate" && name === `${project.name}-migrate-recovery`)
+    || (project.images && service === "worker" && [`${project.name}-image-volume-init`, `${project.name}-image-history-copy`].includes(name)));
   if (!project.creationAttempted || !RESOURCE_ID.test(container.Id ?? "")
     || labels[E2E_OWNER_LABEL] !== configuration.owner || labels[PROJECT_LABEL] !== project.name
     || !SERVICES.has(service) || (!ordinaryName && !oneOffName)) {
@@ -213,7 +235,27 @@ export function assertE2EContainer(configuration, project, container) {
     || Object.values(container.NetworkSettings?.Ports ?? {}).some((bindings) => bindings?.length)) {
     throw e2eFailure("E2E containers may not publish host ports or use host networking");
   }
+  if (project.images && ["worker", "app", "embedded"].includes(service)) {
+    const mounts = container.Mounts ?? [];
+    if (mounts.length !== 1 || mounts[0].Type !== "volume" || mounts[0].Name !== project.volumeName
+      || mounts[0].Destination !== "/data/images" || mounts[0].RW !== true) {
+      throw e2eFailure("Image E2E runtime must mount only this project's verified image volume");
+    }
+  }
   return container.Id;
+}
+
+export function assertE2EImageVolume(configuration, project, volume) {
+  assertE2EProject(configuration, project);
+  if (!project.images || !project.creationAttempted || !project.volumeCreationAttempted
+    || volume.Name !== project.volumeName || volume.Driver !== "local" || volume.Scope !== "local"
+    || Object.keys(volume.Options ?? {}).length !== 0
+    || volume.Labels?.[E2E_OWNER_LABEL] !== configuration.owner || volume.Labels?.[PROJECT_LABEL] !== project.name
+    || typeof volume.CreatedAt !== "string" || !Number.isFinite(Date.parse(volume.CreatedAt))
+    || (project.volumeCreatedAt && volume.CreatedAt !== project.volumeCreatedAt)) {
+    throw e2eFailure("Refusing a volume without this run's exact name, local driver, creation identity and owner labels");
+  }
+  return volume.Name;
 }
 
 export function assertE2ENetwork(configuration, project, network) {
@@ -314,11 +356,13 @@ export class E2EHarness {
     const plugins = JSON.parse(await probe(["info", "--format", "{{json .ClientInfo.Plugins}}"], "Locate installed local Compose plugin"));
     this.workspace = createE2EWorkspace(this.configuration.owner, undefined, e2eComposePluginDirectory(plugins));
     await probe(["compose", "--env-file", this.workspace.envFile, "--project-directory", this.projectRoot, "version", "--short"], "Check Docker Compose plugin");
-    const preflightProject = createE2EProject(this.configuration, "preflight");
-    const config = await this.docker(e2eComposeArgs(this.projectRoot, this.workspace, preflightProject, ["config", "--quiet"]), {
-      label: "Validate isolated E2E Compose configuration", env: e2eComposeEnvironment(this.configuration, preflightProject),
-    });
-    if (config.code !== 0) { printE2ECaptured(config); throw e2eFailure(`E2E Compose configuration failed (exit ${config.code})`); }
+    for (const images of [false, true]) {
+      const preflightProject = createE2EProject(this.configuration, "preflight", { images });
+      const config = await this.docker(e2eComposeArgs(this.projectRoot, this.workspace, preflightProject, ["config", "--quiet"]), {
+        label: "Validate isolated E2E Compose configuration", env: e2eComposeEnvironment(this.configuration, preflightProject),
+      });
+      if (config.code !== 0) { printE2ECaptured(config); throw e2eFailure(`E2E Compose configuration failed (exit ${config.code})`); }
+    }
     if (!this.configuration.skipBuild) {
       for (const kind of ["app", "worker"]) {
         const existing = await this.docker(["image", "inspect", this.configuration.images[kind]], { label: `Check unused generated ${kind} image tag` });
@@ -373,6 +417,14 @@ export class E2EHarness {
       "--label", `${E2E_OWNER_LABEL}=${this.configuration.owner}`, "--label", `${PROJECT_LABEL}=${project.name}`, project.networkName], { label: `Create isolated network ${project.networkName}` });
     project.networkId = created.stdout.trim();
     await this.inspectNetwork(project);
+    if (project.images) {
+      const volume = await this.checkedDocker(["volume", "ls", "--quiet", "--filter", `name=^${project.volumeName}$`], { label: "Check unused image proof volume" });
+      if (volume.stdout.trim()) throw e2eFailure("Image proof volume already exists; no volume will be reused");
+      project.volumeCreationAttempted = true;
+      await this.checkedDocker(["volume", "create", "--driver", "local", "--label", `${E2E_OWNER_LABEL}=${this.configuration.owner}`,
+        "--label", `${PROJECT_LABEL}=${project.name}`, project.volumeName], { label: "Create owned image proof volume" });
+      project.volumeCreatedAt = (await this.inspectImageVolume(project)).CreatedAt;
+    }
     return project;
   }
 
@@ -387,6 +439,14 @@ export class E2EHarness {
     const network = parseInspection(result, "Network inspection");
     assertE2ENetwork(this.configuration, project, network);
     return network;
+  }
+
+  async inspectImageVolume(project, options = {}) {
+    this.assertRegisteredProject(project);
+    const result = await this.docker(["volume", "inspect", "--format", "{{json .}}", project.volumeName], { ...options, label: "Verify exact owned image proof volume" });
+    const volume = parseInspection(result, "Image volume inspection");
+    assertE2EImageVolume(this.configuration, project, volume);
+    return volume;
   }
 
   async containers(project, options = {}) {
@@ -426,6 +486,7 @@ export class E2EHarness {
     this.assertRegisteredProject(project);
     if (!project.creationAttempted || project.cleaned) throw e2eFailure("E2E project was not created by this run or is already cleaned");
     await this.inspectNetwork(project, options);
+    if (project.images) await this.inspectImageVolume(project, options);
     await this.containers(project, options);
     return this.docker(e2eComposeArgs(this.projectRoot, this.workspace, project, args), {
       timeoutMs: 240_000, ...options, env: e2eComposeEnvironment(this.configuration, project),
@@ -445,15 +506,26 @@ export class E2EHarness {
       const options = { deadlineAt, timeoutMs: 10_000 };
       const containers = await this.containers(project, options);
       const listed = await this.checkedDocker(["network", "ls", "--quiet", "--filter", `name=^${project.networkName}$`], { ...options, label: "Locate exact E2E network for cleanup" });
-      if (!listed.stdout.trim() && !containers.length) { project.cleaned = true; return true; }
-      const network = await this.inspectNetwork(project, options);
+      const network = listed.stdout.trim() ? await this.inspectNetwork(project, options) : null;
       const ids = new Set(containers.map((container) => container.Id));
-      if (Object.keys(network.Containers ?? {}).some((id) => !ids.has(id))) throw e2eFailure("Foreign container attached to E2E network; refusing cleanup");
-      // No compose down, volume deletion, prune or prefix-based fallback. All
+      if (network && Object.keys(network.Containers ?? {}).some((id) => !ids.has(id))) throw e2eFailure("Foreign container attached to E2E network; refusing cleanup");
+      // No compose down, anonymous-volume deletion, prune or prefix fallback. All
       // exact IDs are re-inspected before the first destructive command.
       if (ids.size) await this.checkedDocker(["container", "rm", "--force", ...ids], { ...options, timeoutMs: 30_000, label: `Remove owned containers for ${project.name}` });
-      await this.inspectNetwork(project, options);
-      await this.checkedDocker(["network", "rm", network.Id], { ...options, label: `Remove owned network for ${project.name}` });
+      if (network) {
+        await this.inspectNetwork(project, options);
+        await this.checkedDocker(["network", "rm", network.Id], { ...options, label: `Remove owned network for ${project.name}` });
+      }
+      if (project.images && project.volumeCreationAttempted) {
+        const found = await this.checkedDocker(["volume", "ls", "--quiet", "--filter", `name=^${project.volumeName}$`], { ...options, label: "Locate exact image proof volume" });
+        if (found.stdout.trim()) {
+          await this.inspectImageVolume(project, options);
+          const attached = await this.checkedDocker(["container", "ls", "--all", "--quiet", "--filter", `volume=${project.volumeName}`], { ...options, label: "Require the owned image volume to be unused" });
+          if (attached.stdout.trim()) throw e2eFailure("Image proof volume is still attached; refusing volume cleanup");
+          await this.inspectImageVolume(project, options);
+          await this.checkedDocker(["volume", "rm", project.volumeName], { ...options, label: "Remove only the verified disposable image volume" });
+        }
+      }
       project.cleaned = true;
       return true;
     } catch (error) {

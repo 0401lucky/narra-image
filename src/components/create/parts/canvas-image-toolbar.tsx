@@ -5,6 +5,7 @@ import { useEffect, useRef, useState, type CSSProperties, type RefObject } from 
 
 import type { CanvasLocalNodeV1 } from "@/lib/canvas/contracts";
 import { cn } from "@/lib/utils";
+import { isImageAvailable } from "@/lib/storage/image-availability";
 
 import type { CanvasActiveView } from "../canvas/controller-types";
 import { CANVAS_INPUT_CLASS } from "../canvas/renderer-constants";
@@ -40,7 +41,7 @@ export function CanvasImageToolbar({ active, node, viewport, actions, readOnly, 
   const url = reference?.url ?? (preview?.blobId === blobId ? preview?.url : null);
   const target: CanvasImageTarget | null = node.kind === "reference" && url
     ? { kind: "reference", canvasId: active.document.id, nodeId: node.id, url, ...(reference?.assetId ? { assetId: reference.assetId } : {}) }
-    : node.kind === "result" && image?.id === node.imageId && image.jobId === node.jobId && image.url
+    : node.kind === "result" && image?.id === node.imageId && image.jobId === node.jobId && image.url && isImageAvailable(image.availability)
       ? { kind: "result", canvasId: active.document.id, nodeId: node.id, url: image.url, imageId: node.imageId, jobId: node.jobId,
         actualWidth: image.actualWidth, actualHeight: image.actualHeight, actualSize: image.actualSize }
       : null;

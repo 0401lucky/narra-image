@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 
 import type { CanvasLocalNodeV1 } from "@/lib/canvas/contracts";
 import { getThumbUrl } from "@/lib/image-url";
+import { isImageAvailable } from "@/lib/storage/image-availability";
 
 import type { CanvasActiveView } from "../canvas/controller-types";
 import { canvasNodeLabel, canvasSourceStatus } from "../canvas/renderer-adapter";
@@ -40,7 +41,7 @@ export function CanvasSourceSummary({ active, node, actions }: CanvasSourceSumma
   }, [acquirePreview, blobId, node.id, reportError]);
   const image = node.kind === "result" ? active.images[node.imageId] : null;
   const url = reference?.url ?? (blobId && preview?.blobId === blobId ? preview.url : null)
-    ?? (node.kind === "result" && image?.id === node.imageId && image.jobId === node.jobId ? image.url : null);
+    ?? (node.kind === "result" && image?.id === node.imageId && image.jobId === node.jobId && isImageAvailable(image.availability) ? image.url : null);
   return <div className={styles.sourceSummary}>
     {/* eslint-disable-next-line @next/next/no-img-element */}
     {url && <img src={getThumbUrl(url, 160)} alt="所选输入预览" draggable={false} loading="lazy" />}

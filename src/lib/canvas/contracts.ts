@@ -12,6 +12,7 @@ import type {
   GenerationOutputFormat,
   GenerationQuality,
   GenerationSizeToken,
+  ImageAvailability,
   ProviderMode,
 } from "@/lib/types";
 import type { SerializedGeneration } from "@/lib/prisma-mappers";
@@ -30,6 +31,10 @@ export const CANVAS_RUN_CONTRACT = runFixture;
 export const CANVAS_STATE_CONTRACT = statesFixture;
 export const CANVAS_RETENTION_CONTRACT = retentionFixture;
 export const CANVAS_CAPABILITY_CONTRACT = capabilityFixture;
+export type CanvasWorkerCapabilityV2 = {
+  version: number; schema: string; storage: "unversioned" | "local"; gc: string;
+  storageRevision: number; gcRevision: number; provider: "S3" | "LOCAL"; locationId: string;
+};
 export const CANVAS_IMPORT_IMAGE_TYPES = limitsFixture.verifiedImageTypes;
 export const CANVAS_IMPORT_GRACE_MS = retentionFixture.graceSeconds * 1000;
 export const CANVAS_RUN_OPT_IN_HEADER = inputFixture.transport.header;
@@ -173,6 +178,7 @@ export type CanvasSaveReceiptDtoV1 = {
   acknowledgedRevision: number;
 };
 export type CanvasAssetDtoV1 = {
+  availability?: ImageAvailability;
   id: string;
   uploadId: string;
   state: CanvasAssetState;
@@ -191,7 +197,7 @@ export type CanvasRunLookupDtoV1 =
   | { state: "PREPARING"; origin: CanvasRunOriginV1; retryAfterMs: number }
   | { state: "REJECTED"; origin: CanvasRunOriginV1; code: CanvasErrorCode };
 export type CanvasRunSubmissionDtoV1 = { generation: SerializedGeneration; canvasRun: CanvasRunOriginV1 & { jobId: string } };
-export type CanvasRuntimeImageDtoV1 = { id: string; jobId: string; url: string; actualWidth: number | null; actualHeight: number | null; actualSize: string | null };
+export type CanvasRuntimeImageDtoV1 = { id: string; jobId: string; url: string; availability?: ImageAvailability; actualWidth: number | null; actualHeight: number | null; actualSize: string | null };
 export type CanvasRuntimeResolveDtoV1 = {
   canvasId: string;
   generations: Record<string, SerializedGeneration>;

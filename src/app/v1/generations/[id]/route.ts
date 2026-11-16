@@ -2,6 +2,8 @@ import { GenerationClientSource } from "@prisma/client";
 import { NextResponse } from "next/server";
 
 import { db } from "@/lib/db";
+import { imageAvailabilityInclude } from "@/lib/storage/image-availability";
+import { presentGenerationImage } from "@/lib/storage/image-presentation";
 import { openAiError, unixSeconds } from "@/lib/external-api/http";
 import {
   forwardGenerationQuery,
@@ -28,9 +30,7 @@ export async function GET(
         id,
       },
       include: {
-        images: {
-          orderBy: { createdAt: "asc" },
-        },
+        images: { include: imageAvailabilityInclude, orderBy: { createdAt: "asc" } },
       },
     });
 
@@ -42,12 +42,16 @@ export async function GET(
       created: unixSeconds(job.createdAt),
       error: job.errorMessage,
       id: job.id,
-      images: job.images.map((image) => ({
-        height: image.height,
-        id: image.id,
-        url: image.url,
-        width: image.width,
-      })),
+      images: job.images.map((image) => {
+        const presentation = presentGenerationImage(image);
+        return {
+          availability: presentation.availability,
+          height: image.height,
+          id: image.id,
+          url: presentation.url || null,
+          width: image.width,
+        };
+      }),
       model: job.model,
       object: "image.generation",
       status:

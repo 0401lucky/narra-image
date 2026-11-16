@@ -1,0 +1,22 @@
+{
+  "contract": "narra.image.history",
+  "version": 1,
+  "storageRevision": 3,
+  "limits": { "pageItems": 1000, "claimScanItems": 100, "leaseSeconds": 90 },
+  "scopes": ["ALL", "GENERATED", "CANVAS_IMPORT", "REFERENCE_URL"],
+  "provenances": ["WRITE", "OBSERVED"],
+  "observationKinds": ["SOURCE", "TARGET_READBACK", "WRITE_RECONCILIATION"],
+  "readResults": ["FULL", "DECLARED", "MISSING", "FAILED", "UNVERIFIED"],
+  "versionEvidence": ["UNVERSIONED", "VERSIONED", "UNKNOWN"],
+  "writerEvidence": ["NOT_APPLICABLE", "QUIESCED", "UNKNOWN"],
+  "itemStates": ["PENDING", "OBSERVED", "ADOPTED", "COPYING", "RECONCILING", "BLOCKED", "SOURCE_RETAINED", "RETIREMENT_REQUESTED", "EXCLUDED"],
+  "invariants": {
+    "observedSourceGrantsPut": false,
+    "historicalOverLimitAccounted": true,
+    "unknownWriteOutcomeImmutable": true,
+    "negativeObservationReleasesBytes": false,
+    "replayedCopyGrantsPut": false,
+    "defaultRetireSource": false,
+    "referenceEpochLock": [182736, 3]
+  }
+}

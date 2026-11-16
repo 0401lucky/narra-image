@@ -79,10 +79,20 @@ async function fetchRemoteImage(rawUrl: string) {
     throw new Error("远程图片过大，无法保存");
   }
 
-  const buffer = Buffer.from(await response.arrayBuffer());
-  if (buffer.length > REMOTE_IMAGE_MAX_BYTES) {
-    throw new Error("远程图片过大，无法保存");
-  }
+  if (!response.body) throw new Error("远程图片为空，无法保存");
+  const reader = response.body.getReader();
+  const chunks: Buffer[] = [];
+  let length = 0;
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      length += value.byteLength;
+      if (length > REMOTE_IMAGE_MAX_BYTES) throw new Error("远程图片过大，无法保存");
+      chunks.push(Buffer.from(value));
+    }
+  } finally { await reader.cancel().catch(() => undefined); reader.releaseLock(); }
+  const buffer = Buffer.concat(chunks, length);
 
   const mimeType = normalizeImageMimeType(response.headers.get("content-type"));
   return {
@@ -116,7 +126,14 @@ function createS3Client() {
 }
 
 export async function persistGeneratedImage(input: PersistImageInput) {
+  const env = getEnv();
   if ("url" in input) {
+    const { readManagedImage, resolveManagedImageUrl } = await import("./managed-image-storage");
+    const managed = await resolveManagedImageUrl(input.url);
+    if (managed) {
+      const bytes = await readManagedImage(managed);
+      return persistGeneratedImage({ buffer: bytes, mimeType: managed.asset.mimeType, userId: input.userId });
+    }
     const remoteImage = await fetchRemoteImage(input.url);
     return persistGeneratedImage({
       buffer: remoteImage.buffer,
@@ -126,7 +143,13 @@ export async function persistGeneratedImage(input: PersistImageInput) {
     });
   }
 
-  const env = getEnv();
+  if (env.IMAGE_STORAGE_MANAGED_ENABLED) {
+    const { MAX_IMAGE_BYTES, ImageStorageError } = await import("./image-contract");
+    if ("b64Json" in input && input.b64Json.length > Math.ceil(MAX_IMAGE_BYTES / 3) * 4) throw new ImageStorageError("IMAGE_INVALID_INPUT");
+    const body = "buffer" in input ? input.buffer : Buffer.from(input.b64Json, "base64");
+    const { persistManagedImageBytes } = await import("./managed-image-storage");
+    return persistManagedImageBytes(body, input.userId);
+  }
   const client = createS3Client();
   const extension = "fileExtension" in input ? input.fileExtension || "png" : "png";
   const fileName = `${input.userId}/${randomUUID()}.${extension}`;

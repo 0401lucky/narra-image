@@ -1,14 +1,19 @@
 import "server-only";
+import { lockImageReferenceEpoch } from "@/lib/storage/image-reference-lock";
 
+import { randomUUID } from "node:crypto";
 import { GenerationClientSource, GenerationStatus } from "@prisma/client";
 
 import { calculateGenerationCost } from "@/lib/credits";
 import { db } from "@/lib/db";
+import { imageAvailabilityInclude } from "@/lib/storage/image-availability";
 import { getEnv } from "@/lib/env";
 import { assertApiRateLimit } from "@/lib/api-config";
 import { ApiTimeoutError } from "@/lib/api-errors";
 import { persistGeneratedImage } from "@/lib/storage/persist-generated-image";
 import { failGenerationJobAndRefund } from "@/lib/generation/job-refund";
+import type { ImageReservation } from "@/lib/storage/image-contract";
+import { bindManagedImageOutputs, closeManagedImageReservation, reserveManagedImageOutputs } from "@/lib/storage/managed-image-storage";
 import {
   generationChannelModelSnapshot,
   getGenerationChannelForModel,
@@ -135,8 +140,7 @@ async function waitForExternalGeneration({
         id: jobId,
       },
       include: {
-        images: {
-          orderBy: { createdAt: "asc" },
+        images: { include: imageAvailabilityInclude, orderBy: { createdAt: "asc" },
         },
       },
     });
@@ -173,6 +177,8 @@ export async function runExternalGeneration({
 }: RunExternalGenerationInput) {
   let jobId: string | null = null;
   let handedToWorker = false;
+  let outputReservation: ImageReservation | null = null;
+  const reservedJobId = randomUUID();
   await assertApiRateLimit(apiKeyId);
 
   const env = getEnv();
@@ -190,9 +196,12 @@ export async function runExternalGeneration({
   );
 
   try {
+    outputReservation = await reserveManagedImageOutputs({ ownerId: user.id, intentKey: `output:${reservedJobId}`, count });
     const job = await db.$transaction(async (tx) => {
+      await lockImageReferenceEpoch(tx);
       const created = await tx.generationJob.create({
         data: {
+          ...(outputReservation ? { id: reservedJobId } : {}),
           apiKeyId,
           clientSource: GenerationClientSource.API,
           count,
@@ -220,8 +229,10 @@ export async function runExternalGeneration({
           userId: user.id,
           workerManaged: false,
         },
-        include: { images: true },
+        include: { images: { include: imageAvailabilityInclude } },
       });
+
+      await bindManagedImageOutputs(tx, outputReservation, user.id, created.id);
 
       if (cost > 0) {
         const charged = await tx.user.updateMany({
@@ -285,6 +296,7 @@ export async function runExternalGeneration({
         jobId,
       });
     }
+    await closeManagedImageReservation(outputReservation).catch(() => undefined);
     throw error;
   }
 }

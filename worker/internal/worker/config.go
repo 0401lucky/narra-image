@@ -4,8 +4,11 @@ import (
 	"errors"
 	"fmt"
 	"log/slog"
+	"net"
 	"net/url"
 	"os"
+	"path/filepath"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -30,6 +33,10 @@ type Config struct {
 	DatabaseURL                    string
 	EnableLocalImageFallback       bool
 	HTTPAddr                       string
+	ImageStorageManagedEnabled     bool
+	ImageStorageBackend            string
+	ImageStoragePath               string
+	ImageStorageVolumeID           string
 	JobTimeout                     time.Duration
 	LogLevel                       slog.Level
 	MaxAttempts                    int
@@ -100,6 +107,29 @@ func LoadConfig() (Config, error) {
 	if err != nil {
 		return Config{}, err
 	}
+	imageManaged, err := getenvStrictBool("IMAGE_STORAGE_MANAGED_ENABLED", false)
+	if err != nil {
+		return Config{}, err
+	}
+	jobTimeoutSeconds, err := getenvBoundedInt("WORKER_JOB_TIMEOUT_SECONDS", 900, 1, 86400)
+	if err != nil {
+		return Config{}, err
+	}
+	imageConfig := Config{
+		AppURL:                     getenv("APP_URL", "http://localhost:3000"),
+		ImageStorageManagedEnabled: imageManaged,
+		ImageStorageBackend:        strings.TrimSpace(getenv("IMAGE_STORAGE_BACKEND", "s3")),
+		ImageStoragePath:           strings.TrimSpace(getenv("IMAGE_STORAGE_PATH", "/data/images")),
+		ImageStorageVolumeID:       strings.TrimSpace(os.Getenv("IMAGE_STORAGE_VOLUME_ID")),
+		JobTimeout:                 time.Duration(jobTimeoutSeconds) * time.Second,
+		NodeEnv:                    strings.TrimSpace(os.Getenv("NODE_ENV")),
+	}
+	if err := ValidateImageStorageConfig(imageConfig); err != nil {
+		return Config{}, err
+	}
+	if err := validateManagedImagePublicURL(imageConfig); err != nil {
+		return Config{}, err
+	}
 
 	hostname, _ := os.Hostname()
 	if hostname == "" {
@@ -107,7 +137,7 @@ func LoadConfig() (Config, error) {
 	}
 
 	return Config{
-		AppURL:                         getenv("APP_URL", "http://localhost:3000"),
+		AppURL:                         imageConfig.AppURL,
 		AuthSecret:                     authSecret,
 		GatewayPollInterval:            time.Duration(getenvInt("GATEWAY_POLL_INTERVAL_MS", 1000)) * time.Millisecond,
 		GatewaySignatureSkew:           time.Duration(getenvInt("GATEWAY_SIGNATURE_SKEW_SECONDS", 300)) * time.Second,
@@ -125,13 +155,17 @@ func LoadConfig() (Config, error) {
 		DatabaseURL:                    databaseURL,
 		EnableLocalImageFallback:       getenvBool("ENABLE_LOCAL_IMAGE_FALLBACK", true),
 		HTTPAddr:                       getenv("WORKER_HTTP_ADDR", "127.0.0.1:8081"),
-		JobTimeout:                     time.Duration(getenvInt("WORKER_JOB_TIMEOUT_SECONDS", 900)) * time.Second,
+		ImageStorageManagedEnabled:     imageConfig.ImageStorageManagedEnabled,
+		ImageStorageBackend:            imageConfig.ImageStorageBackend,
+		ImageStoragePath:               imageConfig.ImageStoragePath,
+		ImageStorageVolumeID:           imageConfig.ImageStorageVolumeID,
+		JobTimeout:                     imageConfig.JobTimeout,
 		LogLevel:                       logLevel,
 		MaxAttempts:                    getenvInt("WORKER_MAX_ATTEMPTS", 2),
 		MaxActivePerUser:               getenvInt("WORKER_MAX_ACTIVE_PER_USER", 1),
 		MetricsToken:                   metricsToken,
 		MetricsWindow:                  time.Duration(getenvInt("WORKER_METRICS_WINDOW_MINUTES", 1440)) * time.Minute,
-		NodeEnv:                        strings.TrimSpace(os.Getenv("NODE_ENV")),
+		NodeEnv:                        imageConfig.NodeEnv,
 		PollInterval:                   time.Duration(getenvInt("WORKER_POLL_INTERVAL_MS", 1000)) * time.Millisecond,
 		PromptSyncEnabled:              getenvBool("PROMPT_SYNC_ENABLED", false),
 		PromptSyncInterval:             promptSyncInterval(),
@@ -154,18 +188,76 @@ func LoadConfig() (Config, error) {
 
 // LoadStorageConfig 只读取媒体持久化相关配置，供回填等运维命令使用，
 // 不校验 AUTH_SECRET / WORKER_RUNTIME_MODE 等运行时要求。
-func LoadStorageConfig() Config {
-	return Config{
-		AppURL:                   getenv("APP_URL", "http://localhost:3000"),
-		EnableLocalImageFallback: getenvBool("ENABLE_LOCAL_IMAGE_FALLBACK", true),
-		NodeEnv:                  strings.TrimSpace(os.Getenv("NODE_ENV")),
-		S3AccessKeyID:            os.Getenv("S3_ACCESS_KEY_ID"),
-		S3Bucket:                 os.Getenv("S3_BUCKET"),
-		S3Endpoint:               os.Getenv("S3_ENDPOINT"),
-		S3PublicBaseURL:          os.Getenv("S3_PUBLIC_BASE_URL"),
-		S3Region:                 getenv("S3_REGION", "auto"),
-		S3SecretAccessKey:        os.Getenv("S3_SECRET_ACCESS_KEY"),
+func LoadStorageConfig() (Config, error) {
+	managed, err := getenvStrictBool("IMAGE_STORAGE_MANAGED_ENABLED", false)
+	if err != nil {
+		return Config{}, err
 	}
+	cfg := Config{
+		AppURL:                     getenv("APP_URL", "http://localhost:3000"),
+		EnableLocalImageFallback:   getenvBool("ENABLE_LOCAL_IMAGE_FALLBACK", true),
+		NodeEnv:                    strings.TrimSpace(os.Getenv("NODE_ENV")),
+		ImageStorageManagedEnabled: managed,
+		ImageStorageBackend:        strings.TrimSpace(getenv("IMAGE_STORAGE_BACKEND", "s3")),
+		ImageStoragePath:           strings.TrimSpace(getenv("IMAGE_STORAGE_PATH", "/data/images")),
+		ImageStorageVolumeID:       strings.TrimSpace(os.Getenv("IMAGE_STORAGE_VOLUME_ID")),
+		S3AccessKeyID:              os.Getenv("S3_ACCESS_KEY_ID"),
+		S3Bucket:                   os.Getenv("S3_BUCKET"),
+		S3Endpoint:                 os.Getenv("S3_ENDPOINT"),
+		S3PublicBaseURL:            os.Getenv("S3_PUBLIC_BASE_URL"),
+		S3Region:                   getenv("S3_REGION", "auto"),
+		S3SecretAccessKey:          os.Getenv("S3_SECRET_ACCESS_KEY"),
+	}
+	return cfg, ValidateImageStorageConfig(cfg)
+}
+
+var imageRuntimeVolumeIDPattern = regexp.MustCompile(`^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$`)
+
+// ValidateImageStorageConfig is also used by storage-only maintenance commands.
+func ValidateImageStorageConfig(cfg Config) error {
+	if cfg.ImageStorageManagedEnabled && cfg.JobTimeout > 3480*time.Second {
+		return errors.New("受管理图片存储要求 WORKER_JOB_TIMEOUT_SECONDS 不超过 3480，以保持写入预留有效")
+	}
+	backend := cfg.ImageStorageBackend
+	if backend == "" {
+		backend = "s3"
+	}
+	if backend != "s3" && backend != "local" {
+		return errors.New("IMAGE_STORAGE_BACKEND 必须为 s3 或 local")
+	}
+	if backend == "local" {
+		if !cfg.ImageStorageManagedEnabled {
+			return errors.New("本地图片存储必须启用 IMAGE_STORAGE_MANAGED_ENABLED")
+		}
+		if !filepath.IsAbs(cfg.ImageStoragePath) {
+			return errors.New("IMAGE_STORAGE_PATH 必须是绝对路径")
+		}
+		if !imageRuntimeVolumeIDPattern.MatchString(cfg.ImageStorageVolumeID) {
+			return errors.New("IMAGE_STORAGE_VOLUME_ID 必须是小写 UUID")
+		}
+	}
+	return nil
+}
+
+// Managed producers persist APP_URL in permanent aliases. Validate before any
+// storage setup; volume initialization only needs ValidateImageStorageConfig.
+func validateManagedImagePublicURL(cfg Config) error {
+	if !cfg.ImageStorageManagedEnabled {
+		return nil
+	}
+	parsed, err := url.Parse(strings.TrimSpace(cfg.AppURL))
+	if err != nil || (parsed.Scheme != "http" && parsed.Scheme != "https") || parsed.Hostname() == "" || parsed.User != nil || parsed.ForceQuery || parsed.RawQuery != "" || parsed.Fragment != "" {
+		return errors.New("受管理图片存储要求 APP_URL 是有效的 HTTP(S) 地址，且不能包含凭据、查询参数或片段")
+	}
+	if !strings.EqualFold(strings.TrimSpace(cfg.NodeEnv), "production") {
+		return nil
+	}
+	host := strings.TrimSuffix(strings.ToLower(parsed.Hostname()), ".")
+	ip := net.ParseIP(host)
+	if host == "localhost" || strings.HasSuffix(host, ".localhost") || (ip != nil && (ip.IsLoopback() || ip.IsUnspecified())) {
+		return errors.New("生产环境受管理图片存储必须显式配置非 localhost 或 loopback 的 APP_URL")
+	}
+	return nil
 }
 
 func loadRuntimeMode(raw string) (RuntimeMode, error) {

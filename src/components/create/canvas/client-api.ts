@@ -17,6 +17,7 @@ import {
   type CanvasSceneV1,
 } from "@/lib/canvas/contracts";
 import type { SerializedGeneration } from "@/lib/prisma-mappers";
+import { isImageAvailability } from "@/lib/storage/image-availability";
 import {
   canvasAssetDtoSchema,
   canvasCanonicalIdSchema,
@@ -124,6 +125,7 @@ function runtime(value: unknown): CanvasRuntimeResolveDtoV1 {
     parse(canvasCanonicalIdSchema, id);
     parse(canvasCanonicalIdSchema, entry.jobId);
     if (entry.id !== id || typeof entry.url !== "string" || !entry.url
+      || !(entry.availability === undefined || isImageAvailability(entry.availability))
       || ![entry.actualWidth, entry.actualHeight].every((size) => size === null || (typeof size === "number" && Number.isFinite(size) && size > 0))
       || !(entry.actualSize === null || typeof entry.actualSize === "string")) throw new CanvasTransportError();
   }

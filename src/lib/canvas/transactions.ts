@@ -3,6 +3,8 @@ import "server-only";
 import { Prisma } from "@prisma/client";
 
 import { db } from "@/lib/db";
+import { imageDatabaseError } from "@/lib/storage/image-contract";
+import { lockImageReferenceEpoch } from "@/lib/storage/image-reference-lock";
 import { CanvasContractError, isCanvasErrorCode } from "./contracts";
 
 export type CanvasTransaction = Prisma.TransactionClient;
@@ -26,6 +28,9 @@ function databaseFailure(error: unknown): { code: unknown; message: unknown } | 
 }
 
 export function canvasDatabaseError(error: unknown): CanvasContractError | null {
+  const image = imageDatabaseError(error);
+  if (image) return new CanvasContractError(image.code === "IMAGE_QUOTA_EXCEEDED" ? "CANVAS_QUOTA_EXCEEDED"
+    : image.code === "IMAGE_UNAVAILABLE" ? "CANVAS_INPUT_UNAVAILABLE" : "CANVAS_STORAGE_UNAVAILABLE");
   const failure = databaseFailure(error);
   // canvas_raise emits a check violation; ordinary 23514 details are not public
   // business errors. Retain P0001 compatibility, always with an exact code match.
@@ -43,7 +48,10 @@ export function isCanvasTransactionRetryable(error: unknown): boolean {
 export async function canvasTransaction<T>(operation: (tx: CanvasTransaction) => Promise<T>, database: CanvasDatabase = db): Promise<T> {
   for (let attempt = 0; ; attempt += 1) {
     try {
-      return await database.$transaction(operation, {
+      return await database.$transaction(async (tx) => {
+        await lockImageReferenceEpoch(tx);
+        return operation(tx);
+      }, {
         isolationLevel: Prisma.TransactionIsolationLevel.ReadCommitted,
         maxWait: 3_000,
         timeout: 8_000,

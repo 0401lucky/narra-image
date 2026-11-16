@@ -5,6 +5,9 @@ import { GenerationStatus, type Prisma } from "@prisma/client";
 import { Grid2X2, List } from "lucide-react";
 
 import { db } from "@/lib/db";
+import { imageAvailabilityInclude } from "@/lib/storage/image-availability";
+import { presentGenerationImage } from "@/lib/storage/image-presentation";
+import { projectGenerationSourceUrls } from "@/lib/storage/image-source-presentation";
 import { requireAdminRecord } from "@/lib/server/current-user";
 import {
   GenerationAdminCard,
@@ -158,14 +161,13 @@ export default async function AdminGenerationsPage({
   const pendingWhere = withSearch({
     status: { in: [GenerationStatus.PENDING, GenerationStatus.PROCESSING] },
   });
-  const [jobs, totalCount, failedCount, pendingCount, coordinationCount] =
+  const [storedJobs, totalCount, failedCount, pendingCount, coordinationCount] =
     await Promise.all([
     db.generationJob.findMany({
       where: visibleWhere,
       orderBy: { createdAt: "desc" },
       include: {
-        images: {
-          orderBy: { createdAt: "asc" },
+        images: { include: imageAvailabilityInclude, orderBy: { createdAt: "asc" },
         },
         user: {
           select: {
@@ -189,6 +191,12 @@ export default async function AdminGenerationsPage({
     db.generationJob.count({ where: coordinationWhere }),
   ]);
 
+  const jobs = await projectGenerationSourceUrls(storedJobs.map((job) => ({
+    ...job,
+    images: job.images.map(({ mediaAsset, ...image }) => ({
+      ...image, ...presentGenerationImage({ ...image, mediaAsset }),
+    })),
+  })));
   const totalPages = Math.ceil(totalCount / PAGE_SIZE);
 
   return (

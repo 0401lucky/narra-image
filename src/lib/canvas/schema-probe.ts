@@ -2,6 +2,8 @@ import "server-only";
 
 import schemaFixture from "../../../contracts/canvas/v1/schema.json";
 
+if (schemaFixture.version !== 1 || schemaFixture.storageRevision !== 3) throw new Error("Unsupported Canvas storage schema revision");
+
 export const CANVAS_SCHEMA_CONTRACT = schemaFixture;
 export const CANVAS_SCHEMA_QUERY_V1 = schemaFixture.catalogQuery;
 

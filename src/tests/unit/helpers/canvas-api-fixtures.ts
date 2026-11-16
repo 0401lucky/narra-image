@@ -68,6 +68,7 @@ export function canvasAssetRow(overrides: Partial<CanvasImportAsset> = {}): Canv
     id: "asset-one", ownerId: "owner", userId: "owner", uploadId: canvasTestIds.upload, kind: "IMPORT",
     sha256: createHash("sha256").update(bytes).digest("hex"), byteLength: bytes.length, mimeType: "image/png",
     storageLocation: location.id, storageEndpoint: location.endpoint, storageRegion: location.region, storageBucket: location.bucket,
+    sourceProvider: "S3", mediaAssetId: null,
     storageKey: "canvas-imports/original.png", storageVersionId: null, state: "READY", uploadToken: canvasTestIds.token,
     uploadExpiresAt: new Date("2099-01-01T00:00:00.000Z"), preparationExpiresAt: null,
     readyAt: new Date("2026-10-20T00:00:00.000Z"), detachedAt: new Date("2026-10-20T00:00:00.000Z"),

@@ -9,7 +9,7 @@ import canvasConfig from "../integration/canvas-contracts/runner-vitest.config";
 import workerConfig from "../integration/worker-contracts/runner-vitest.config";
 import { workerBaselineChecksums, workerMigrationPlan, WORKER_ADDITIVE_MIGRATIONS } from "../integration/worker-contracts/migration-plan";
 import { assertDisposableTestDatabaseUrl, cleanupDisposablePrismaWorkspace, createDisposablePrismaWorkspace, disposableTestEnvironment } from "../../../scripts/lib/disposable-test-environment.mjs";
-import { CANVAS_DB_CLEANUP_RESERVE_MS, CANVAS_DB_DEADLINE_MS, CANVAS_DB_TEST_TARGET, CANVAS_DB_VITEST_ARGS } from "../../../scripts/verify-canvas-contracts-db.mjs";
+import { CANVAS_DB_CLEANUP_RESERVE_MS, CANVAS_DB_DEADLINE_MS, CANVAS_DB_TEST_TARGET, CANVAS_DB_TEST_TARGETS, IMAGE_DB_TEST_TARGET, IMAGE_RETENTION_DB_TEST_TARGET, CANVAS_DB_VITEST_ARGS } from "../../../scripts/verify-canvas-contracts-db.mjs";
 import { runCommand } from "../../../scripts/lib/command-runner.mjs";
 
 const root = process.cwd();
@@ -69,11 +69,14 @@ describe("canvas independent disposable runner safety", () => {
 
   it("excludes both sentinel suites normally but the independent wrapper selects the real DB suite", () => {
     expect(rootConfig.test?.exclude).toEqual(expect.arrayContaining(["**/worker-contracts-db.test.ts", "**/canvas-contracts-db.test.ts"]));
-    expect(canvasConfig.test?.include).toEqual([CANVAS_DB_TEST_TARGET]);
+    expect(canvasConfig.test?.include).toEqual(CANVAS_DB_TEST_TARGETS);
+    expect(rootConfig.test?.exclude).toContain("src/tests/integration/canvas-contracts/**");
     expect(canvasConfig.test?.exclude).toEqual([]);
     expect(workerConfig.test?.exclude).toEqual([]);
     expect(canvasConfig.envDir).toBe(false);
     expect(CANVAS_DB_VITEST_ARGS).toContain(CANVAS_DB_TEST_TARGET);
+    expect(CANVAS_DB_VITEST_ARGS).toContain(IMAGE_DB_TEST_TARGET);
+    expect(CANVAS_DB_VITEST_ARGS).toContain(IMAGE_RETENTION_DB_TEST_TARGET);
     expect(CANVAS_DB_VITEST_ARGS).toContain("--config");
     expect(CANVAS_DB_DEADLINE_MS).toBeGreaterThan(150000);
     expect(CANVAS_DB_CLEANUP_RESERVE_MS).toBeGreaterThanOrEqual(15000);

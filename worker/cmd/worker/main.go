@@ -5,6 +5,7 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 
@@ -13,6 +14,25 @@ import (
 
 func main() {
 	logger := narraw.NewJSONLogger(os.Stdout, 0)
+	if len(os.Args) > 1 {
+		if len(os.Args) != 2 || os.Args[1] != "--init-image-volume" {
+			logger.Error("不支持的 Worker 参数", "event", "config_invalid")
+			os.Exit(1)
+		}
+		cfg, err := narraw.LoadStorageConfig()
+		if err != nil || !cfg.ImageStorageManagedEnabled || cfg.ImageStorageBackend != "local" {
+			logger.Error("初始化要求启用本地图片存储并配置卷目录和 UUID", "event", "image_volume_config_invalid")
+			os.Exit(1)
+		}
+		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		defer cancel()
+		if _, err := narraw.InitializeLocalImageVolume(ctx, narraw.LocalImageStoreConfig{RootDirectory: cfg.ImageStoragePath, VolumeID: cfg.ImageStorageVolumeID}); err != nil {
+			logger.Error("图片卷初始化失败，目标必须是已存在的空目录", "event", "image_volume_init_failed")
+			os.Exit(1)
+		}
+		logger.Info("图片卷已初始化", "event", "image_volume_initialized")
+		return
+	}
 
 	cfg, err := narraw.LoadConfig()
 	if err != nil {

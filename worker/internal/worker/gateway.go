@@ -34,15 +34,15 @@ var (
 // gatewayEnvelope 是 Next → Go 内部生成网关的版本化请求契约。
 // 结构对应 contracts/gateway/v1/envelope.json；JSON 仍是唯一事实来源。
 type gatewayEnvelope struct {
-	SchemaVersion   int              `json:"schemaVersion"`
-	Endpoint        string           `json:"endpoint"`
-	JobID           string           `json:"jobId"`
-	IssuedAt        string           `json:"issuedAt"`
-	Auth            gatewayAuth      `json:"auth"`
-	Billing         gatewayBilling   `json:"billing"`
-	Provider        gatewayProvider  `json:"provider"`
-	SourceImageURLs []string         `json:"sourceImageUrls"`
-	Payload         gatewayPayload   `json:"payload"`
+	SchemaVersion   int             `json:"schemaVersion"`
+	Endpoint        string          `json:"endpoint"`
+	JobID           string          `json:"jobId"`
+	IssuedAt        string          `json:"issuedAt"`
+	Auth            gatewayAuth     `json:"auth"`
+	Billing         gatewayBilling  `json:"billing"`
+	Provider        gatewayProvider `json:"provider"`
+	SourceImageURLs []string        `json:"sourceImageUrls"`
+	Payload         gatewayPayload  `json:"payload"`
 }
 
 type gatewayAuth struct {
@@ -144,8 +144,8 @@ func (w *Worker) validateGatewayEnvelope(env *gatewayEnvelope) error {
 			return errors.New("sourceImageUrls 仅允许 http/https")
 		}
 	}
-	if env.Payload.Count < 1 {
-		return errors.New("payload.count 必须 >= 1")
+	if env.Payload.Count < 1 || env.Payload.Count > ImageMaxOutputCount {
+		return errors.New("payload.count 必须为 1 到 4")
 	}
 	if strings.TrimSpace(env.Payload.Model) == "" {
 		return errors.New("payload.model 必填")
@@ -155,6 +155,9 @@ func (w *Worker) validateGatewayEnvelope(env *gatewayEnvelope) error {
 	}
 	if env.Payload.GenerationType != "TEXT_TO_IMAGE" && env.Payload.GenerationType != "IMAGE_TO_IMAGE" {
 		return errors.New("payload.generationType 非法")
+	}
+	if env.Payload.GenerationType == "IMAGE_TO_IMAGE" && env.Payload.Count != 1 {
+		return errors.New("图生图的 payload.count 必须为 1")
 	}
 	return nil
 }
@@ -198,6 +201,16 @@ func (w *Worker) gatewayEndpointHandler(expected string) http.HandlerFunc {
 
 		job, err := w.ensureGatewayJob(ctx, env)
 		if err != nil {
+			var imageError ImageStorageError
+			if errors.As(err, &imageError) {
+				failure := imageAdmissionFailure(err)
+				status := http.StatusServiceUnavailable
+				if failure.Code == errorImageQuotaExceeded {
+					status = http.StatusInsufficientStorage
+				}
+				w.writeGatewayOpenAiError(writer, status, failure.Code, failure.Message, env.JobID)
+				return
+			}
 			w.logger.Error("网关创建任务失败", "event", "gateway_enqueue_failed", "endpoint", env.Endpoint, "jobId", env.JobID, "error", err)
 			w.writeGatewayOpenAiError(writer, http.StatusServiceUnavailable, "GATEWAY_UNAVAILABLE", "生成网关暂不可用", env.JobID)
 			return

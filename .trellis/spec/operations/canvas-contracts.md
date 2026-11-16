@@ -21,7 +21,7 @@
 | `GET /api/me/canvas-runs/:runId` | `{data:CanvasRunLookupDtoV1}`，只读，保留原 origin/job 身份。 |
 | `POST /api/me/canvas-runtime/resolve` | 显式 scene IDs -> owned DTO maps 和 missing；不枚举所有 runs。 |
 
-- 数据库辅助：`canvas_save_snapshot`、`canvas_delete_document`、`canvas_reserve_run`、`canvas_commit_run`、`canvas_reject_run`、`canvas_acquire_gc_lease`、`canvas_claim_imports`、`canvas_finish_asset_delete`。精确参数、默认值和函数体指纹由 `schema.json` 持有。
+- 数据库辅助：`canvas_save_snapshot`、`canvas_delete_document`、`canvas_reserve_run`、`canvas_commit_run`、`canvas_reject_run`；兼容 GC 使用 `canvas_acquire_gc_lease_v2`、`canvas_claim_imports_v2`、`canvas_finish_asset_delete_v2`。原 GC 签名被显式拒绝，不能用旧 finalizer 处理新图片。精确参数、默认值和函数体指纹由 `schema.json` 持有。
 - `CanvasJobAssetUse.runId` 引用内部 `CanvasRun.id`，不是外部 `runId` UUID。
 - Prisma 调用 void-returning lock 函数使用 `$executeRaw`，不能通过 `$queryRaw` 解码 PostgreSQL void/OID 2278。
 - 本地验证：`LocalDockerSession.pin(probe)` -> `prepare()` -> `command(args, extra)` -> `cleanup()`；共享 PG/worker runner 通过该边界执行 Docker，E2E 复用其 endpoint/env/scratch 校验。
@@ -35,14 +35,20 @@
 - 新任务、条件扣费、run commit 和 immutable job-input roots 同事务；canvas/run/admission 及 asset 顺序加锁，时间来自数据库。对象 I/O 不在数据库事务中执行。
 - 场景限制 512 KiB/200 nodes/400 edges；每账户 100 live shells；原图 8 MiB、每账户 1 GiB/1000 accounted imports、3 active uploads。数值以共享 `limits.json` 为准，不是容量测量。
 - Save 包括所有参考节点原图，不只已连接或提交过的。原图 registry 必须先于 PUT 建立；payload 身份不可变，READY 重试复用，UPLOADING 返回 202，未知 PUT 保留 key、计账和隔离状态。
+- managed 图片启用时，顺序为全站额度/图片 ticket → Canvas owner registry → 唯一 PUT → 两层就绪状态；replay 仍先于当前额度/存储探针。`mediaAssetId` 关联统一清单，账户原图额度计一次逻辑图片，全站额度计实际副本和预留，不能双算；详见 [Image Storage](./image-storage.md)。
 - S3 location 身份为共享规范化 `[origin,region,bucket]` UTF-8 JSON 的 SHA-256，加 `s3-v1:`；Node/Go 消费同一组向量。URL 前缀不是所有权证明。
-- Node 的 `CanvasStorageAdapter.getBucketVersioning(signal)` 与 Go `canvasGCStorage.Verify(ctx)` 按规范化 location 选择探测：普通 S3 使用有界原始 XML 的 `GetBucketVersioning`；官方 R2 使用带认证的 `HeadBucket`。接口名称和 readiness 的 `storage: "unversioned"` 不变。
+- `CanvasImportAsset.sourceProvider` 为 `S3 | LOCAL`。LOCAL 使用 `local-v1:<UUID>`，S3-only tuple 列为 NULL；已有 ID/上传身份/原始 tuple 不因迁移修改。`canvasAssetUrl` 读取统一图片的当前指针，不能用默认后端解释旧行。
+- Node 的 `CanvasStorageAdapter.getBucketVersioning(signal)` 与 Go `canvasGCStorage.Verify(ctx)` 按规范化 location 选择探测：普通 S3 使用有界原始 XML 的 `GetBucketVersioning`；官方 R2 使用带认证的 `HeadBucket`；LOCAL 验证自身持久卷和当前 UID 的可写/硬链接能力，绝不伪报 S3 探测成功。
 - R2 专用证明仅适用于 `https://<32 位十六进制账户 ID>[.eu|.fedramp|.us].r2.cloudflarestorage.com`，且同一请求对确切 bucket 返回原始 HTTP 200、没有版本 / delete-marker 响应头、未取消或重定向。官方服务端点范围与认证成功缺一不可；不接受单纯域名猜测、SDK 空字段或权限错误。
 - R2 不实现 `GetBucketVersioning` / `PutBucketVersioning`，不能把该接口的 403 当作凭据失效，也不能对任意服务把 403 / 501 转为无版本成功。HTTP、非默认端口、自定义域名、尾点和类似后缀不享有 R2 例外，仍须通过普通 S3 证明。事实依据为 [R2 S3 API 兼容表](https://developers.cloudflare.com/r2/api/s3/api/) 与 [地域端点说明](https://developers.cloudflare.com/r2/reference/data-location/)。
-- saved-snapshot roots 与所有已提交任务 roots 保护原图，包括完成任务。只回收新登记、无根且脱离满 604800 秒的 IMPORT；作品、旧未登记媒体永不进入此 GC。
+- saved-snapshot roots 与所有已提交任务 roots 保护原图，包括完成任务。兼容 Canvas GC 只回收本 registry 已登记、尚未关联统一清单的 S3 IMPORT，且必须无根、脱离满 604800 秒；managed 图片由全站执行器处理，作品和未知媒体不进入兼容 GC。全站清理同样不能缩短原图七天宽限或清除永久输入根。
+- managed 清理的领取遵守 quota→维护任务/预留→CanvasImportAsset→ImageAsset→ImageObject 锁序，不在 quota 锁内反向申请 Canvas document/User 锁。每份物理副本分别结算，最后一份确认删除后才释放一次 Canvas 逻辑额度；UNKNOWN/失败保留两层计量，接管时在 ImageAsset/CanvasImportAsset 均仍为 DELETING 的状态下先续期过期 Canvas delete token，再依次完成两者终态。冗余源退休只减源副本的全站用量。
+- 保存/提交旧 result 时先取全站引用协调 gate，再按稳定顺序读取 `GenerationImage FOR SHARE`，与后续 `mediaAssetId` 关联同步。历史 result/run 先保存、图片后纳管时必须补齐永久输入/保存根；原业务行删除不能消除不可变绑定。具体维护状态机见 [Image Storage](./image-storage.md#8-维护读者与迁移源退休)。
+- 历史纳管与 COPY 保留原 `CanvasImportAsset` tuple/upload ID、场景和输入快照；只追加物理副本与活动读取指针。待接管/未决的 `ImageHistoryHold` 同时排除新清理与兼容 GC。接管之前须真实 drain 并等待 `CanvasGcLease` 到期；任何有效 lease 都不能被登记动作越过。
 - 删除 canvas/node/result 不删除生成任务、媒体对象、不取消或退款。账户/管理员删除保留 immutable principal/job/key inventory，通过 nullable live FK 兼容既有删除规则。
 - 单一 Worker GC loop 在 schema/storage/topology 就绪后运行；60 秒默认/最小间隔、20 默认/100 最大批次；单对象 30 秒、单 pass 45 秒；90 秒 singleton lease 和逐 asset token。七天不是可缩短的环境参数。
-- `CANVAS_ENABLED=false` 默认。启用 Node 必须验证自身 canvas schema/storage，以及 Worker `capabilities.canvas` 精确 v1 DTO；即使 `WORKER_READINESS_REQUIRED=false` 也不能接受旧 Worker generic ready。
+- `CANVAS_ENABLED=false` 默认。场景 wire version 仍为 1，存储/GC 修订均为 3。启用 Node 必须验证自身 schema/storage，以及 Worker `capabilities.canvas` 精确八字段 DTO：`version=1,schema=ready,storage=unversioned|local,gc=running,storageRevision=3,gcRevision=3,provider=S3|LOCAL,locationId`；provider/storage/location 必须与 Node 的实际配置一致。即使 `WORKER_READINESS_REQUIRED=false` 也不能接受旧 Worker generic ready。
+- `capability.json.readyCapability` 是不含具体 location 的六字段模板；Go `CanvasReadyCapability` 保持其严格输入形状，运行时另用 `CanvasRuntimeReadyCapability` 承载 provider/location。不能给模板 struct 添加 `omitempty` 字段后假设严格反射 loader 会把字段当可选。单独的 managed image schema/capability 不受 `CANVAS_ENABLED` 开关控制。
 - 验证 runner 必须先只读解析并固定 local unix/npipe endpoint；仅保留 OS 环境，镜像 preflight 后创建 owner-marked 空 Docker config。容器创建/清理不能随 active context 改变或继承 auth/proxy；精确 ID/名称/owner 检查后才删除，不附带卷。worker/canvas Prisma 配置和 `.env` 读取独立隔离，旧 migration wrapper 需另加外层保护。
 
 ## 4. 校验与错误矩阵
@@ -81,9 +87,12 @@
 - SQL 错误映射回归从实际 canvas migration 的 `canvas_raise` 提取 SQLSTATE，再穿过真实 Prisma adapter 的 raw/CRUD 包装和路由/fence 分支；不能只用手写 `P0001` mock。非白名单 `23514` 必须保留安全未知错误行为。
 - 真实 `pg` 夹具若把同一个参数同时用于 `VARCHAR` principal 字段和 `TEXT` 外键/存储字段，显式写 `$n::text` 后交给目标列转换，避免 PostgreSQL 42P08 在测试构造阶段提前失败。该修复只改变 fixture 参数类型，不应通过改生产 schema 或移除实际锁/CAS断言来规避。
 - Node/Go raw storage wire：合法与非法 XML、16 KiB 限制、超时、迟到 receipt、版本状态、空/错误根 SDK 成功反例。
+- LOCAL 补充真实卷读写、原图上传重放、保存/历史输入根、旧 GC 签名拒绝及 provider/location 错配；实际 runtime 八字段与静态六字段模板分别验证，不能拿模板 JSON 冒充 Worker 响应。
 - Node/Go R2 探测测试复用 `storage-location.json` 的 `probeVectors`；通过真实 SDK + 模拟传输核验规范化端点、签名、确切 bucket、HEAD / GET 选择、单次请求、版本头、失败和取消。Go 的默认 HTTP 客户端可能跟随 307 / 308，专用探测客户端必须禁用并测试重定向目标零访问；不改变普通媒体客户端的配置。
 - Go `canvas_*`：共享 grammar/location/retention vectors，实际 Worker.Run 的多消费者单 scheduler、drain/panic/topology loss、有界 join。
 - 独立 `verify:canvas-contracts:db`：完整与 additive migrations、真实 catalogue、锁/lease/CAS/GC 竞争；必须有 runner sentinel 和 disposable localhost，缺基础设施明确未通过。
+- 此 wrapper 的固定清单同时运行 Canvas、Image storage、Image retention、Image history 四套 DB 用例。新清理器须实际覆盖 managed Canvas 的七天/保存与永久根、两副本最后完成后的账户减量、UNKNOWN 接管/旧物理 token 拒绝/Canvas token 续期/重放；旧 GC 的通过记录不能替代新执行器证据。历史套件覆盖已验证源与未决源纳管、原 tuple/账户量不变、有效旧 lease 拒绝、永久/未绑定 URL 根和源副本退休。
+- 串行 DB 套件前一测试留下的 Canvas singleton lease 不能被当作无关测试可占用的空闲状态。隔离 fixture 仅在核实 runner sentinel、前套件连接关闭、精确 token/expiry 后，以锁内 CAS 在 rollback 事务清除该已知测试 lease并断言新 acquire 成功；生产迁移仍真实 drain/等待，不修改租约时钟。新的全局 gate 会使 GC acquire 本身等待 Save，竞争测试须先启动 promise、观察真实锁等待、提交赢家再等待结果，不能同步等待被自己阻塞的对手。
 - `src/tests/integration/canvas-contracts/canvas-contracts-db.test.ts` 的跨模式回归使用真实 Prisma/会话 loader 与 GET：超过一页的旧任务必须在更多新画布/孤儿任务干扰下完整、有序恢复，更新 `updatedAt` 不改变创建游标；foreign/missing parent、跨 owner/parent/scope 游标不得回退到全局内容。
 - 同一 SQL 套件通过实际会话 DELETE、`deleteCanvas` 事务和 `listUserWorksPage`/作品 GET 验证删除只移除组织。PENDING/PROCESSING 删除前后完整任务/图片、余额、run ledger 和 job-input roots 保留，后续模拟完成可读且不复活组织。仅身份可 mock；应用 Prisma 还需独立验证 runner sentinel。模拟完成不等于 Worker/provider 执行，修改该套件必须重跑完整与 additive histories，不能沿用旧用例计数作通过证明。
 - `verify:e2e`：先安全 preflight，再启用态 embedded/dedicated/mismatch；mock S3，不使用真实对象存储。普通 Vitest 或 hidden-feature build 不能替代这些门禁。

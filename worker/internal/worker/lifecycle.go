@@ -16,20 +16,22 @@ const (
 	errorChannelNotFound            = "CHANNEL_NOT_FOUND"
 	errorChannelInactive            = "CHANNEL_INACTIVE"
 	errorChannelSecretDecryptFailed = "CHANNEL_SECRET_DECRYPT_FAILED"
-	errorModelNotSupported           = "MODEL_NOT_SUPPORTED_BY_CHANNEL"
-	errorProviderNotConfigured       = "PROVIDER_NOT_CONFIGURED"
+	errorModelNotSupported          = "MODEL_NOT_SUPPORTED_BY_CHANNEL"
+	errorProviderNotConfigured      = "PROVIDER_NOT_CONFIGURED"
 	errorProviderConnectionFailed   = "PROVIDER_CONNECTION_FAILED"
-	errorProviderRateLimited         = "PROVIDER_RATE_LIMITED"
-	errorProviderUnavailable         = "PROVIDER_UNAVAILABLE"
-	errorProviderAuthFailed          = "PROVIDER_AUTH_FAILED"
-	errorProviderRequestInvalid      = "PROVIDER_REQUEST_INVALID"
-	errorProviderPolicyRejected      = "PROVIDER_POLICY_REJECTED"
-	errorSourceImageInvalid          = "SOURCE_IMAGE_INVALID"
+	errorProviderRateLimited        = "PROVIDER_RATE_LIMITED"
+	errorProviderUnavailable        = "PROVIDER_UNAVAILABLE"
+	errorProviderAuthFailed         = "PROVIDER_AUTH_FAILED"
+	errorProviderRequestInvalid     = "PROVIDER_REQUEST_INVALID"
+	errorProviderPolicyRejected     = "PROVIDER_POLICY_REJECTED"
+	errorSourceImageInvalid         = "SOURCE_IMAGE_INVALID"
+	errorImageQuotaExceeded         = "IMAGE_QUOTA_EXCEEDED"
+	errorImageStorageUnavailable    = "IMAGE_STORAGE_UNAVAILABLE"
 	errorGenerationCancelled        = "GENERATION_CANCELLED"
-	errorMaxAttemptsExhausted        = "MAX_ATTEMPTS_EXHAUSTED"
-	errorLeaseLostBeforeHandoff      = "LEASE_LOST_BEFORE_HANDOFF"
-	errorHandoffUnknown              = "HANDOFF_UNKNOWN"
-	errorResultPersistFailed         = "RESULT_PERSIST_FAILED"
+	errorMaxAttemptsExhausted       = "MAX_ATTEMPTS_EXHAUSTED"
+	errorLeaseLostBeforeHandoff     = "LEASE_LOST_BEFORE_HANDOFF"
+	errorHandoffUnknown             = "HANDOFF_UNKNOWN"
+	errorResultPersistFailed        = "RESULT_PERSIST_FAILED"
 )
 
 type ContractFailure struct {
@@ -72,8 +74,8 @@ func (failure ResultPersistError) Unwrap() error {
 type providerLifecycleContextKey struct{}
 
 type providerLifecycleHooks struct {
-	markSubmitting func(context.Context) error
-	markSubmitted  func(context.Context, string) error
+	markSubmitting  func(context.Context) error
+	markSubmitted   func(context.Context, string) error
 	recordRequestID func(context.Context, string) error
 
 	submittingErr  error
@@ -89,8 +91,8 @@ func withProviderLifecycle(
 	recordRequestID func(context.Context, string) error,
 ) context.Context {
 	hooks := &providerLifecycleHooks{
-		markSubmitting: markSubmitting,
-		markSubmitted:  markSubmitted,
+		markSubmitting:  markSubmitting,
+		markSubmitted:   markSubmitted,
 		recordRequestID: recordRequestID,
 	}
 	return context.WithValue(ctx, providerLifecycleContextKey{}, hooks)

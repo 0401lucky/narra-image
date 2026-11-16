@@ -13,8 +13,13 @@ import (
 )
 
 type CanvasSchemaContract struct {
-	Contract              string                   `json:"contract"`
-	Version               int                      `json:"version"`
+	Contract        string `json:"contract"`
+	Version         int    `json:"version"`
+	StorageRevision int    `json:"storageRevision"`
+	Migrations      []struct {
+		Name   string `json:"name"`
+		SHA256 string `json:"sha256"`
+	} `json:"migrations"`
 	Migration             string                   `json:"migration"`
 	MigrationSHA256       string                   `json:"migrationSha256"`
 	BodyFingerprint       string                   `json:"bodyFingerprint"`
@@ -60,10 +65,15 @@ var canvasSHA256Pattern = regexp.MustCompile(`^[0-9a-f]{64}$`)
 
 func validateCanvasSchemaContract(schema CanvasSchemaContract) error {
 	invalid := errors.New("canvas contract schema.json is unsupported or incomplete")
-	if schema.Contract != "narra.canvas.schema" || schema.Version != canvasContractVersion || schema.Migration == "" || !canvasSHA256Pattern.MatchString(schema.MigrationSHA256) ||
+	if schema.Contract != "narra.canvas.schema" || schema.Version != canvasContractVersion || schema.StorageRevision != 3 || len(schema.Migrations) < 2 || schema.Migration == "" || !canvasSHA256Pattern.MatchString(schema.MigrationSHA256) ||
 		schema.BodyFingerprint == "" || schema.BodyLineEndings != "CRLF_TO_LF_ONLY" || schema.ExpressionConformance != "contracts/canvas/v1/scenarios/catalog-expressions.json" ||
 		!strings.HasPrefix(strings.TrimSpace(schema.CatalogQuery), "WITH ") || canvasCatalogMutation.MatchString(schema.CatalogQuery) || len(schema.Objects) == 0 {
 		return invalid
+	}
+	for _, migration := range schema.Migrations {
+		if migration.Name == "" || !canvasSHA256Pattern.MatchString(migration.SHA256) {
+			return invalid
+		}
 	}
 	grammar, err := newCanvasCatalogGrammar(schema)
 	if err != nil {
@@ -131,15 +141,16 @@ func canvasCatalogDefinitionTarget(object CanvasSchemaCatalogRow) any {
 		return new(canvasCatalogFunction)
 	case "trigger":
 		return new(struct {
-			Table                 string  `json:"table"`
-			Function              string  `json:"function"`
-			FunctionCurrentSchema bool    `json:"functionCurrentSchema"`
-			Type                  int     `json:"type"`
-			Enabled               string  `json:"enabled"`
-			Deferrable            bool    `json:"deferrable"`
-			Deferred              bool    `json:"deferred"`
-			Arguments             int     `json:"arguments"`
-			Condition             *string `json:"condition"`
+			Columns               []string `json:"columns"`
+			Table                 string   `json:"table"`
+			Function              string   `json:"function"`
+			FunctionCurrentSchema bool     `json:"functionCurrentSchema"`
+			Type                  int      `json:"type"`
+			Enabled               string   `json:"enabled"`
+			Deferrable            bool     `json:"deferrable"`
+			Deferred              bool     `json:"deferred"`
+			Arguments             int      `json:"arguments"`
+			Condition             *string  `json:"condition"`
 		})
 	case "constraint":
 		var header struct {

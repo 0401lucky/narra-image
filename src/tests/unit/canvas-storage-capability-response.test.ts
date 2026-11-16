@@ -201,6 +201,7 @@ describe("canvas R2 capability with a signed bucket HEAD", () => {
   it("rejects a location mismatch before a signed R2 request", async () => {
     const adapter = createCanvasStorageAdapter(r2Environment);
     try {
+      if (adapter.location.provider === "LOCAL") throw new Error("expected S3 fixture");
       await expect(verifyCanvasStorageCapability(adapter, { ...adapter.location, bucket: "other-bucket" })).rejects.toMatchObject({ code: "CANVAS_STORAGE_CAPABILITY_INVALID" });
       expect(wire.handle).not.toHaveBeenCalled();
     } finally { adapter.close?.(); }
@@ -295,6 +296,7 @@ describe("canvas versioning capability with real SDK deserialization", () => {
   it("checks location mismatch before any SDK request", async () => {
     const adapter = createCanvasStorageAdapter(environment);
     try {
+      if (adapter.location.provider === "LOCAL") throw new Error("expected S3 fixture");
       await expect(verifyCanvasStorageCapability(adapter, { ...adapter.location, bucket: "changed-bucket" })).rejects.toMatchObject({ code: "CANVAS_STORAGE_CAPABILITY_INVALID" });
       expect(wire.handle).not.toHaveBeenCalled();
     } finally { adapter.close?.(); }

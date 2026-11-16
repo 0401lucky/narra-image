@@ -13,6 +13,7 @@ COPY contracts/ ./contracts/
 RUN CGO_ENABLED=0 GOOS=linux go build -o /out/narra-worker ./cmd/worker
 RUN CGO_ENABLED=0 GOOS=linux go build -o /out/narra-prompt-sync ./cmd/prompt-sync
 RUN CGO_ENABLED=0 GOOS=linux go build -o /out/narra-rollback-preflight ./cmd/rollback-preflight
+RUN CGO_ENABLED=0 GOOS=linux go build -o /out/narra-image-history ./cmd/image-history
 
 FROM ${ALPINE_BASE_IMAGE}
 
@@ -22,6 +23,7 @@ COPY LICENSE THIRD_PARTY_NOTICES.md ./
 COPY --from=builder /out/narra-worker /app/narra-worker
 COPY --from=builder /out/narra-prompt-sync /app/narra-prompt-sync
 COPY --from=builder /out/narra-rollback-preflight /app/narra-rollback-preflight
+COPY --from=builder /out/narra-image-history /app/narra-image-history
 COPY --from=builder /src/contracts /app/contracts
 
 EXPOSE 8081

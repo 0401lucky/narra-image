@@ -63,6 +63,25 @@ CREATE TABLE "ProviderChannel" (
 CREATE UNIQUE INDEX "ProviderChannel_slug_key"
   ON "ProviderChannel"("slug");
 
+-- The baseline includes 20260505000000_add_conversation. Preserve its full
+-- published table and foreign keys: image history also fences conversation
+-- deletion before it can detach generation references.
+CREATE TABLE "Conversation" (
+  "id" TEXT NOT NULL,
+  "userId" TEXT NOT NULL,
+  "title" TEXT NOT NULL DEFAULT '新对话',
+  "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "updatedAt" TIMESTAMP(3) NOT NULL,
+  CONSTRAINT "Conversation_pkey" PRIMARY KEY ("id")
+);
+
+CREATE INDEX "Conversation_userId_createdAt_idx"
+  ON "Conversation"("userId", "createdAt");
+
+ALTER TABLE "Conversation" ADD CONSTRAINT "Conversation_userId_fkey"
+  FOREIGN KEY ("userId") REFERENCES "User"("id")
+  ON DELETE CASCADE ON UPDATE CASCADE;
+
 CREATE TABLE "GenerationJob" (
   "id" TEXT NOT NULL,
   "userId" TEXT NOT NULL,
@@ -117,6 +136,9 @@ CREATE INDEX "GenerationJob_clientSource_idx"
   ON "GenerationJob"("clientSource");
 CREATE INDEX "GenerationJob_conversationId_idx"
   ON "GenerationJob"("conversationId");
+ALTER TABLE "GenerationJob" ADD CONSTRAINT "GenerationJob_conversationId_fkey"
+  FOREIGN KEY ("conversationId") REFERENCES "Conversation"("id")
+  ON DELETE SET NULL ON UPDATE CASCADE;
 CREATE INDEX "GenerationJob_providerChannelId_idx"
   ON "GenerationJob"("providerChannelId");
 CREATE INDEX "GenerationJob_userId_createdAt_idx"
@@ -200,6 +222,22 @@ CREATE TABLE "SavedProviderConfig" (
 
 CREATE UNIQUE INDEX "SavedProviderConfig_userId_key"
   ON "SavedProviderConfig"("userId");
+
+-- The pre-worker baseline includes 20260512000000_add_login_cover_config.
+-- Keep its published table in the snapshot: later image-storage migrations
+-- attach the transactional site-cover reference guard to this table.
+CREATE TABLE "LoginCoverConfig" (
+  "id" TEXT NOT NULL,
+  "scope" TEXT NOT NULL DEFAULT 'default',
+  "mode" TEXT NOT NULL DEFAULT 'featured',
+  "customUrl" TEXT,
+  "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "updatedAt" TIMESTAMP(3) NOT NULL,
+  CONSTRAINT "LoginCoverConfig_pkey" PRIMARY KEY ("id")
+);
+
+CREATE UNIQUE INDEX "LoginCoverConfig_scope_key"
+  ON "LoginCoverConfig"("scope");
 
 CREATE TYPE "PromptSourceStatus" AS ENUM ('IDLE', 'SYNCING', 'SUCCESS', 'FAILED');
 

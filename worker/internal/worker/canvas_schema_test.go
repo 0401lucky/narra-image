@@ -280,17 +280,26 @@ func TestCanvasSchemaSharedQueryAndSafeFailures(t *testing.T) {
 func TestCanvasSchemaFunctionBodiesAndSignaturesMatchSharedMigration(t *testing.T) {
 	contract := loadTestCanvasContract(t)
 	root := canvasFixtureRoot(t)
-	path := filepath.Join(root, "..", "..", "..", "prisma", "migrations", contract.Schema.Migration, "migration.sql")
-	data, err := os.ReadFile(path)
+	definitions := map[string][]string{}
+	for _, migration := range contract.Schema.Migrations {
+		path := filepath.Join(root, "..", "..", "..", "prisma", "migrations", migration.Name, "migration.sql")
+		data, err := os.ReadFile(path)
+		if err != nil {
+			t.Fatal(err)
+		}
+		sql := strings.ReplaceAll(string(data), "\r\n", "\n")
+		digest := sha256.Sum256([]byte(sql))
+		if hex.EncodeToString(digest[:]) != migration.SHA256 {
+			t.Fatalf("migration fingerprint differs: %s", migration.Name)
+		}
+		for _, definition := range regexp.MustCompile(`(?s)CREATE (?:OR REPLACE )?FUNCTION (canvas_\w+)\((.*?)\).*? AS \$\$(.*?)\$\$;`).FindAllStringSubmatch(sql, -1) {
+			definitions[definition[1]] = definition
+		}
+	}
+	grammar, err := newCanvasCatalogGrammar(contract.Schema)
 	if err != nil {
 		t.Fatal(err)
 	}
-	sql := strings.ReplaceAll(string(data), "\r\n", "\n")
-	digest := sha256.Sum256([]byte(sql))
-	if hex.EncodeToString(digest[:]) != contract.Schema.MigrationSHA256 {
-		t.Fatal("shared migration fingerprint differs from actual unpublished SQL")
-	}
-	definitions := regexp.MustCompile(`(?s)CREATE FUNCTION (canvas_\w+)\((.*?)\).*? AS \$\$(.*?)\$\$;`).FindAllStringSubmatch(sql, -1)
 	functions := make(map[string]canvasCatalogFunction)
 	for _, object := range contract.Schema.Objects {
 		if object.Kind == "function" {
@@ -301,7 +310,7 @@ func TestCanvasSchemaFunctionBodiesAndSignaturesMatchSharedMigration(t *testing.
 			functions[object.Name] = function
 		}
 	}
-	if len(definitions) != len(functions) || len(definitions) != 27 {
+	if len(definitions) != len(functions) || len(definitions) != 35 {
 		t.Fatalf("actual SQL has %d functions, fixture has %d", len(definitions), len(functions))
 	}
 	for _, definition := range definitions {
@@ -346,8 +355,15 @@ func TestCanvasSchemaFunctionBodiesAndSignaturesMatchSharedMigration(t *testing.
 			if len(defaults) == 0 && function.ArgumentDefaults != nil {
 				t.Fatal("unexpected argument defaults")
 			}
-			if len(defaults) > 0 && (function.ArgumentDefaults == nil || *function.ArgumentDefaults != strings.Join(defaults, ", ")) {
-				t.Fatal("SQL argument defaults differ from shared inventory")
+			if len(defaults) > 0 {
+				if function.ArgumentDefaults == nil {
+					t.Fatal("SQL argument defaults missing")
+				}
+				actual, actualErr := normalizeCanvasCatalogValue(*function.ArgumentDefaults, "argumentDefaults", grammar)
+				expected, expectedErr := normalizeCanvasCatalogValue(strings.Join(defaults, ", "), "argumentDefaults", grammar)
+				if actualErr != nil || expectedErr != nil || !reflect.DeepEqual(actual, expected) {
+					t.Fatal("SQL argument defaults differ from shared inventory")
+				}
 			}
 		})
 	}

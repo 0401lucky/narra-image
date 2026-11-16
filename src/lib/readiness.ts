@@ -2,8 +2,11 @@ import "server-only";
 
 import { getEnv, type RuntimeEnvironment } from "@/lib/env";
 import { stringifyLogRecord } from "@/lib/logging/redact";
-import { CANVAS_CAPABILITY_CONTRACT } from "@/lib/canvas/contracts";
+import { CANVAS_CAPABILITY_CONTRACT, type CanvasWorkerCapabilityV2 } from "@/lib/canvas/contracts";
+import { canvasWorkerCapabilitySchema } from "@/lib/validators";
+import type { ImageReadyCapability } from "@/lib/storage/managed-image-storage";
 import type { CanvasSchemaCatalogRowV1 } from "@/lib/canvas/schema-probe";
+import { IMAGE_STORAGE_REVISION, IMAGE_READER_REVISION, IMAGE_MAINTENANCE_REVISION } from "@/lib/storage/image-maintenance-types";
 
 export const READINESS_SCHEMA_VERSION = 1;
 
@@ -12,6 +15,7 @@ export type ApplicationReadinessCode =
   | "CONFIG_INVALID"
   | "CANVAS_SCHEMA_CONTRACT_MISMATCH"
   | "CANVAS_STORAGE_CAPABILITY_INVALID"
+  | "IMAGE_STORAGE_UNAVAILABLE"
   | "DATABASE_UNAVAILABLE"
   | "WORKER_NOT_READY"
   | "WORKER_UNAVAILABLE";
@@ -21,7 +25,7 @@ export type ApplicationReadinessResult =
   | { code: Exclude<ApplicationReadinessCode, "READY">; ready: false };
 
 export type WorkerReadinessProbeResult =
-  | { ready: true; canvas?: typeof CANVAS_CAPABILITY_CONTRACT.readyCapability }
+  | { ready: true; canvas?: CanvasWorkerCapabilityV2; images?: ImageReadyCapability }
   | {
       cause?: unknown;
       kind: "not_ready" | "unavailable";
@@ -34,18 +38,22 @@ type ReadinessEnvironment = Pick<
   | "WORKER_INTERNAL_URL"
   | "WORKER_READINESS_REQUIRED"
   | "WORKER_READINESS_TIMEOUT_MS"
-> & Partial<Pick<RuntimeEnvironment, "CANVAS_ENABLED">>;
+> & Partial<Pick<RuntimeEnvironment, "CANVAS_ENABLED" | "IMAGE_STORAGE_MANAGED_ENABLED">>;
 
 type ReadinessDependencies = {
   loadEnvironment: () => ReadinessEnvironment;
   logFailure: (record: Record<string, unknown>) => void;
   pingDatabase: (timeoutMs: number) => Promise<void>;
   probeCanvasSchema: (timeoutMs: number) => Promise<boolean>;
-  probeCanvasStorage: (timeoutMs: number) => Promise<void>;
+  probeCanvasStorage: (timeoutMs: number) => Promise<CanvasWorkerCapabilityV2>;
+  probeImageStorage: (timeoutMs: number) => Promise<ImageReadyCapability>;
   probeWorker: (input: {
     baseUrl: string;
     timeoutMs: number;
     requireCanvas?: boolean;
+    requireImages?: boolean;
+    expectedCanvas?: CanvasWorkerCapabilityV2;
+    expectedImages?: ImageReadyCapability;
   }) => Promise<WorkerReadinessProbeResult>;
 };
 
@@ -79,11 +87,16 @@ export async function probeApplicationCanvasSchema(timeoutMs: number): Promise<b
   return report.ready;
 }
 
-export async function probeApplicationCanvasStorage(timeoutMs: number): Promise<void> {
-  const { createCanvasStorageAdapter, verifyCanvasStorageCapability } = await import("@/lib/canvas/storage");
+export async function probeApplicationCanvasStorage(timeoutMs: number): Promise<CanvasWorkerCapabilityV2> {
+  const { createCanvasStorageAdapter, verifyCanvasStorageCapability, canvasStorageReadyCapability } = await import("@/lib/canvas/storage");
   const storage = createCanvasStorageAdapter();
-  try { await verifyCanvasStorageCapability(storage, storage.location, timeoutMs); }
+  try { await verifyCanvasStorageCapability(storage, storage.location, timeoutMs); return canvasStorageReadyCapability(storage.location); }
   finally { storage.close?.(); }
+}
+
+export async function probeApplicationImageStorage(timeoutMs: number): Promise<ImageReadyCapability> {
+  const { verifyManagedImageStorage } = await import("@/lib/storage/managed-image-storage");
+  return withTimeout(verifyManagedImageStorage(), timeoutMs, "Image storage readiness");
 }
 
 function defaultLogFailure(record: Record<string, unknown>) {
@@ -94,10 +107,24 @@ function isObject(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
-function isCanvasReadyCapability(value: unknown): boolean {
-  const expected = CANVAS_CAPABILITY_CONTRACT.readyCapability;
-  return isObject(value) && Object.keys(value).length === Object.keys(expected).length &&
-    Object.entries(expected).every(([key, field]) => value[key] === field);
+function isCanvasReadyCapability(value: unknown): value is CanvasWorkerCapabilityV2 {
+  return canvasWorkerCapabilitySchema.safeParse(value).success;
+}
+
+function sameCapability(actual: unknown, expected: unknown): boolean {
+  return isObject(actual) && isObject(expected) && Object.keys(actual).length === Object.keys(expected).length
+    && Object.entries(expected).every(([key, value]) => actual[key] === value);
+}
+
+function readImageReadyCapability(payload: unknown): ImageReadyCapability | undefined {
+  if (!isObject(payload) || !isObject(payload.capabilities)) return undefined;
+  const value = payload.capabilities.images;
+  if (!isObject(value) || Object.keys(value).length !== 8 || value.version !== 1 || value.schema !== "ready" || typeof value.locationId !== "string"
+    || value.storageRevision !== IMAGE_STORAGE_REVISION || value.readerRevision !== IMAGE_READER_REVISION
+    || value.executorRevision !== IMAGE_MAINTENANCE_REVISION || value.maintenance !== "running") return undefined;
+  if (value.provider === "S3" && /^s3-v1:[0-9a-f]{64}(?![\s\S])/.test(value.locationId)) return value as ImageReadyCapability;
+  if (value.provider === "LOCAL" && /^local-v1:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}(?![\s\S])/.test(value.locationId)) return value as ImageReadyCapability;
+  return undefined;
 }
 
 function readCanvasReadyCapability(payload: unknown) {
@@ -106,7 +133,7 @@ function readCanvasReadyCapability(payload: unknown) {
     if (!isObject(value)) return undefined;
     value = value[key];
   }
-  return isCanvasReadyCapability(value) ? CANVAS_CAPABILITY_CONTRACT.readyCapability : undefined;
+  return isCanvasReadyCapability(value) ? value : undefined;
 }
 
 function readUpstreamCode(payload: unknown) {
@@ -119,6 +146,9 @@ export async function probeWorkerReadiness(input: {
   fetchImpl?: typeof fetch;
   timeoutMs: number;
   requireCanvas?: boolean;
+  requireImages?: boolean;
+  expectedCanvas?: CanvasWorkerCapabilityV2;
+  expectedImages?: ImageReadyCapability;
 }): Promise<WorkerReadinessProbeResult> {
   const fetchImpl = input.fetchImpl ?? fetch;
   const readyUrl = new URL("readyz", `${input.baseUrl.replace(/\/+$/, "")}/`);
@@ -147,13 +177,17 @@ export async function probeWorkerReadiness(input: {
       isObject(payload) &&
       payload.status === "ready"
     ) {
-      if (input.requireCanvas) {
-        const canvas = readCanvasReadyCapability(payload);
-        return canvas ? { ready: true, canvas } : {
+      const canvas = input.requireCanvas ? readCanvasReadyCapability(payload) : undefined;
+      const images = input.requireImages ? readImageReadyCapability(payload) : undefined;
+      if (input.requireCanvas && (!canvas || (input.expectedCanvas && !sameCapability(canvas, input.expectedCanvas)))) {
+        return {
           kind: "not_ready", ready: false, upstreamCode: "CANVAS_CAPABILITY_MISMATCH",
         };
       }
-      return { ready: true };
+      if (input.requireImages && (!images || (input.expectedImages && !sameCapability(images, input.expectedImages)))) {
+        return { kind: "not_ready", ready: false, upstreamCode: "IMAGE_CAPABILITY_MISMATCH" };
+      }
+      return { ready: true, ...(canvas ? { canvas } : {}), ...(images ? { images } : {}) };
     }
 
     return {
@@ -181,6 +215,7 @@ const defaultDependencies: ReadinessDependencies = {
   pingDatabase: pingApplicationDatabase,
   probeCanvasSchema: probeApplicationCanvasSchema,
   probeCanvasStorage: probeApplicationCanvasStorage,
+  probeImageStorage: probeApplicationImageStorage,
   probeWorker: probeWorkerReadiness,
 };
 
@@ -216,6 +251,12 @@ export async function checkApplicationReadiness(
     return reportFailure(dependencies, "DATABASE_UNAVAILABLE", { cause });
   }
 
+  let expectedImages: ImageReadyCapability | undefined;
+  let expectedCanvas: CanvasWorkerCapabilityV2 | undefined;
+  if (env.IMAGE_STORAGE_MANAGED_ENABLED) {
+    try { expectedImages = await dependencies.probeImageStorage(env.WORKER_READINESS_TIMEOUT_MS); }
+    catch (cause) { return reportFailure(dependencies, "IMAGE_STORAGE_UNAVAILABLE", { cause }); }
+  }
   if (env.CANVAS_ENABLED) {
     try {
       if (!await dependencies.probeCanvasSchema(DATABASE_READINESS_TIMEOUT_MS)) {
@@ -225,24 +266,28 @@ export async function checkApplicationReadiness(
       return reportFailure(dependencies, "CANVAS_SCHEMA_CONTRACT_MISMATCH", { cause });
     }
     try {
-      await dependencies.probeCanvasStorage(env.WORKER_READINESS_TIMEOUT_MS);
+      expectedCanvas = await dependencies.probeCanvasStorage(env.WORKER_READINESS_TIMEOUT_MS);
     } catch (cause) {
       return reportFailure(dependencies, "CANVAS_STORAGE_CAPABILITY_INVALID", { cause });
     }
   }
 
-  if (!env.WORKER_READINESS_REQUIRED && !env.CANVAS_ENABLED) {
+  if (!env.WORKER_READINESS_REQUIRED && !env.CANVAS_ENABLED && !env.IMAGE_STORAGE_MANAGED_ENABLED) {
     return { code: "READY", ready: true };
   }
 
   const worker = await dependencies.probeWorker({
     baseUrl: env.WORKER_INTERNAL_URL,
     timeoutMs: env.WORKER_READINESS_TIMEOUT_MS,
-    ...(env.CANVAS_ENABLED ? { requireCanvas: true } : {}),
+    ...(env.CANVAS_ENABLED ? { requireCanvas: true, expectedCanvas } : {}),
+    ...(env.IMAGE_STORAGE_MANAGED_ENABLED ? { requireImages: true, expectedImages } : {}),
   });
   if (worker.ready) {
-    if (env.CANVAS_ENABLED && !isCanvasReadyCapability(worker.canvas)) {
+    if (env.CANVAS_ENABLED && (!isCanvasReadyCapability(worker.canvas) || !sameCapability(worker.canvas, expectedCanvas))) {
       return reportFailure(dependencies, "WORKER_NOT_READY", { upstream_error_code: "CANVAS_CAPABILITY_MISMATCH" });
+    }
+    if (env.IMAGE_STORAGE_MANAGED_ENABLED && !sameCapability(worker.images, expectedImages)) {
+      return reportFailure(dependencies, "WORKER_NOT_READY", { upstream_error_code: "IMAGE_CAPABILITY_MISMATCH" });
     }
     return { code: "READY", ready: true };
   }

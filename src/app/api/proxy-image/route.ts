@@ -81,9 +81,16 @@ export async function GET(request: Request) {
       return new Response("Missing url parameter", { status: 400 });
     }
 
-    const upstream = await fetchPublicHttpUrl(imageUrl, {
-      signal: AbortSignal.timeout(PROXY_FETCH_TIMEOUT_MS),
+    let managedResponse: Response | null = null;
+    const { resolveManagedImageUrl, readManagedImage } = await import("@/lib/storage/managed-image-storage");
+    const managed = await resolveManagedImageUrl(imageUrl);
+    if (managed && BigInt(managed.asset.byteLength) > BigInt(PROXY_IMAGE_MAX_BYTES)) {
+      return new Response("Image is too large", { status: 413 });
+    }
+    if (managed) managedResponse = new Response(new Uint8Array(await readManagedImage(managed, AbortSignal.timeout(PROXY_FETCH_TIMEOUT_MS))), {
+      headers: { "Content-Type": managed.asset.mimeType, "Content-Length": managed.asset.byteLength },
     });
+    const upstream = managedResponse ?? await fetchPublicHttpUrl(imageUrl, { signal: AbortSignal.timeout(PROXY_FETCH_TIMEOUT_MS) });
 
     if (!upstream.ok || !upstream.body) {
       return new Response("Failed to fetch image", { status: upstream.status });

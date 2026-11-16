@@ -48,20 +48,22 @@ type runtimeMetrics struct {
 }
 
 type metricsResponse struct {
-	Canvas        *canvasGCMetrics   `json:"canvas,omitempty"`
-	Completed     completionMetrics  `json:"completed"`
-	GeneratedAt   string             `json:"generated_at"`
-	Queue         queueMetrics       `json:"queue"`
-	Reliability   reliabilityMetrics `json:"reliability"`
-	Runtime       runtimeMetrics     `json:"runtime"`
-	SchemaVersion int                `json:"schema_version"`
-	WorkerID      string             `json:"worker_id"`
+	Canvas        *canvasGCMetrics         `json:"canvas,omitempty"`
+	Images        *imageMaintenanceMetrics `json:"images,omitempty"`
+	Completed     completionMetrics        `json:"completed"`
+	GeneratedAt   string                   `json:"generated_at"`
+	Queue         queueMetrics             `json:"queue"`
+	Reliability   reliabilityMetrics       `json:"reliability"`
+	Runtime       runtimeMetrics           `json:"runtime"`
+	SchemaVersion int                      `json:"schema_version"`
+	WorkerID      string                   `json:"worker_id"`
 }
 
 type readinessResult struct {
-	Code   string                 `json:"code,omitempty"`
-	Ready  bool                   `json:"-"`
-	Canvas *CanvasReadyCapability `json:"-"`
+	Code   string                        `json:"code,omitempty"`
+	Ready  bool                          `json:"-"`
+	Canvas *CanvasRuntimeReadyCapability `json:"-"`
+	Images *ImageReadyCapability         `json:"-"`
 }
 
 type workerHTTPServer struct {
@@ -157,8 +159,15 @@ func (w *Worker) handleReady(writer http.ResponseWriter, request *http.Request) 
 		"schema_version": workerHTTPAPISchemaVersion,
 		"status":         "ready",
 	}
-	if result.Canvas != nil {
-		payload["capabilities"] = map[string]any{"canvas": result.Canvas}
+	if result.Canvas != nil || result.Images != nil {
+		capabilities := map[string]any{}
+		if result.Canvas != nil {
+			capabilities["canvas"] = result.Canvas
+		}
+		if result.Images != nil {
+			capabilities["images"] = result.Images
+		}
+		payload["capabilities"] = capabilities
 	}
 	writeJSON(writer, http.StatusOK, payload)
 }
@@ -182,7 +191,19 @@ func (w *Worker) evaluateReadiness(ctx context.Context) readinessResult {
 	if err != nil || !report.Ready() {
 		return readinessResult{Code: readinessCodeSchemaNotReady}
 	}
-	var canvas *CanvasReadyCapability
+	var canvas *CanvasRuntimeReadyCapability
+	var images *ImageReadyCapability
+	if w.cfg.ImageStorageManagedEnabled {
+		if w.probeImageStorage(ctx) != nil {
+			return readinessResult{Code: "IMAGE_STORAGE_UNAVAILABLE"}
+		}
+		location, err := w.storage.imageLocation()
+		if err != nil {
+			return readinessResult{Code: "IMAGE_STORAGE_UNAVAILABLE"}
+		}
+		images = &ImageReadyCapability{Version: 1, Schema: "ready", Provider: location.Provider, LocationID: location.ID,
+			StorageRevision: ImageStorageRevision, ReaderRevision: ImageReaderRevision, ExecutorRevision: ImageMaintenanceRevision, Maintenance: "running"}
+	}
 	if w.cfg.CanvasEnabled {
 		result := w.canvasReadiness(ctx, w.state.snapshot())
 		if !result.Ready {
@@ -211,7 +232,10 @@ func (w *Worker) evaluateReadiness(ctx context.Context) readinessResult {
 	if w.cfg.CanvasEnabled && !snapshot.CanvasGCRunning {
 		return readinessResult{Code: readinessCodeCanvasGCNotReady}
 	}
-	return readinessResult{Ready: true, Canvas: canvas}
+	if w.cfg.ImageStorageManagedEnabled && (!snapshot.ImageMaintenanceConfigured || !snapshot.ImageMaintenanceRunning) {
+		return readinessResult{Code: readinessCodeImageMaintenanceNotReady}
+	}
+	return readinessResult{Ready: true, Canvas: canvas, Images: images}
 }
 
 func (w *Worker) handleMetrics(writer http.ResponseWriter, request *http.Request) {
@@ -282,6 +306,10 @@ func (w *Worker) collectMetrics(ctx context.Context) (metricsResponse, error) {
 	if w.cfg.CanvasEnabled && snapshot.CanvasConfigured && w.canvasGC != nil {
 		metrics := w.canvasGC.snapshot(snapshot.CanvasGCRunning)
 		response.Canvas = &metrics
+	}
+	if w.cfg.ImageStorageManagedEnabled && snapshot.ImageMaintenanceConfigured && w.imageMaintenance != nil {
+		metrics := w.imageMaintenance.snapshot(snapshot.ImageMaintenanceRunning)
+		response.Images = &metrics
 	}
 
 	err := w.pool.QueryRow(ctx, `
