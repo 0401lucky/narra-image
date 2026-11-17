@@ -271,6 +271,13 @@ docker compose up --build -d
 - 如果某个渠道没有实现 `/models`，或者实现不完整，后台和创作页会提示你手动填写模型名。
 - 拉取到的是“渠道公开模型列表”，不保证每一个都能生图；界面会把更像生图模型的 ID 优先排在前面。
 
+## 对外 API 跨域调用
+
+公开 OpenAI 兼容接口（`/v1/*` 及 `/models`、`/images/*`、`/chat/*`、`/responses` 的已提供根路径别名）支持浏览器跨域调用。
+`OPTIONS` 预检无需 API Key，返回 204 并放行 `GET`、`HEAD`、`POST` 及客户端声明的请求头，预检缓存 600 秒。
+实际请求仍需 `Authorization: Bearer API_KEY`；成功、错误和流式响应均带跨域响应头。
+此策略使用 `Access-Control-Allow-Origin: *`，不启用跨域 Cookie；网站自身的 `/api/*` 登录、管理和用户接口不在此策略范围内。
+
 ## 系统设置
 
 低频但关键的配置统一放在 `/admin/settings`：
