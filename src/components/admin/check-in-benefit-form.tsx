@@ -93,7 +93,7 @@ export function CheckInBenefitForm({
           type="button"
           disabled={isPending}
           onClick={() => startTransition(() => void handleSave())}
-          className="inline-flex items-center justify-center gap-2 rounded-full bg-[var(--ink)] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#c85a32] disabled:opacity-60 sm:ml-auto"
+          className="inline-flex items-center justify-center gap-2 rounded-full bg-[#c25934] px-5 py-2.5 text-sm font-semibold text-white shadow-2xs transition hover:bg-[#ad4c2a] disabled:opacity-60 sm:ml-auto"
         >
           {isPending ? (
             <Loader2 className="size-4 animate-spin" aria-hidden />

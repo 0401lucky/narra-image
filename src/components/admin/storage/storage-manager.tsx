@@ -68,7 +68,7 @@ export function StorageManager(props: StorageManagerProps) {
         </div>
         <p className="mt-3 text-xs leading-6 text-[var(--ink-soft)]">定时清理按保留天数筛选；容量不足时可以更早清理普通历史图片。降低上限不会立即删除文件，无法回收足够空间时会暂停新增图片。</p>
         <div className="mt-5 flex flex-wrap items-center gap-3">
-          <button type="button" disabled={busy} onClick={state.savePolicy} className={cn(buttonClass, "border-transparent bg-[var(--ink)] text-white hover:bg-[var(--accent)]")}>保存清理策略</button>
+          <button type="button" disabled={busy} onClick={state.savePolicy} className={cn(buttonClass, "border-transparent bg-[#c25934] text-white hover:bg-[#ad4c2a]")}>保存清理策略</button>
           <button type="button" disabled={busy} onClick={state.reloadPolicy} className={buttonClass}>重新载入策略</button>
           <span className="text-xs text-[var(--ink-soft)]">下次定时清理：{overview.policy.enabled && overview.policy.scheduleEnabled ? storageTimestamp(overview.policy.nextRunAt) : "未启用"}</span>
         </div>

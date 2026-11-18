@@ -21,9 +21,15 @@ type AdminNavProps = {
 };
 
 const badgeToneStyles = {
-  accent: "bg-[#d87b37] text-white",
-  danger: "bg-rose-500 text-white",
-  warning: "bg-amber-500 text-[#1c130c]",
+  accent: "bg-[#c25934]/14 text-[#b54722] ring-1 ring-[#c25934]/20",
+  danger: "bg-rose-500/14 text-rose-700 ring-1 ring-rose-500/20",
+  warning: "bg-amber-500/16 text-amber-800 ring-1 ring-amber-600/20",
+} as const;
+
+const badgeDotStyles = {
+  accent: "bg-[#c25934]",
+  danger: "bg-rose-500",
+  warning: "bg-amber-500",
 } as const;
 
 export function AdminNav({
@@ -45,11 +51,11 @@ export function AdminNav({
       {ADMIN_NAV_GROUPS.map((group) => (
         <div key={group.id} className="flex flex-col gap-1">
           {!collapsed ? (
-            <div className="px-2.5 pb-1 text-[10px] font-semibold tracking-[0.14em] text-white/38 uppercase">
+            <div className="px-2.5 pb-1 text-[10px] font-semibold tracking-[0.14em] text-[#8c827a] uppercase">
               {group.label}
             </div>
           ) : (
-            <div className="mx-auto my-1 h-px w-6 bg-white/10" aria-hidden />
+            <div className="mx-auto my-1 h-px w-6 bg-[#dfd7c8]" aria-hidden />
           )}
 
           {group.items.map((item) => {
@@ -67,7 +73,7 @@ export function AdminNav({
                 aria-label={collapsed ? item.label : undefined}
                 aria-current={isActive ? "page" : undefined}
                 className={cn(
-                  "admin-nav-link w-full",
+                  "group admin-nav-link w-full",
                   collapsed ? "justify-center px-0 py-2.5" : "justify-between",
                   isActive && "admin-nav-link-active",
                 )}
@@ -76,7 +82,7 @@ export function AdminNav({
                   <motion.div
                     layoutId={`admin-nav-pill-${layoutNamespace}`}
                     transition={{ damping: 32, stiffness: 380, type: "spring" }}
-                    className="absolute inset-0 rounded-xl border border-[#d87b37]/35 bg-gradient-to-r from-[#d87b37]/24 to-[#d87b37]/8 shadow-[inset_3px_0_0_#d87b37]"
+                    className="absolute inset-0 rounded-xl border border-[#c25934]/20 bg-[#f9e6df] shadow-[0_1px_2px_rgba(194,89,52,0.06),inset_0_1px_0_rgba(255,255,255,0.75)]"
                   />
                 ) : null}
 
@@ -89,7 +95,9 @@ export function AdminNav({
                   <Icon
                     className={cn(
                       "size-4 shrink-0 transition-colors",
-                      isActive ? "text-[#f09a59]" : "text-white/65",
+                      isActive
+                        ? "text-[#c25934]"
+                        : "text-[#787068] group-hover:text-[#292524]",
                     )}
                     aria-hidden
                   />
@@ -102,7 +110,7 @@ export function AdminNav({
                       aria-hidden
                       className={cn(
                         "absolute top-1.5 right-2 z-10 size-2 rounded-full",
-                        badgeToneStyles[tone],
+                        badgeDotStyles[tone],
                       )}
                     />
                   ) : (

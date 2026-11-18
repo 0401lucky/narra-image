@@ -244,11 +244,8 @@ textarea {
 }
 
 .admin-sidebar-panel {
-  background:
-    linear-gradient(180deg, #1f160f 0%, #120d09 100%);
-  box-shadow:
-    0 20px 50px rgba(18, 13, 9, 0.28),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  background: linear-gradient(180deg, #f2ece4 0%, #ebe4da 100%);
+  box-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.6);
 }
 
 .admin-nav-link {
@@ -259,7 +256,7 @@ textarea {
   border: 1px solid transparent;
   border-radius: 0.75rem;
   padding: 0.62rem 0.85rem;
-  color: rgba(255, 248, 240, 0.66);
+  color: #292524;
   font-size: 0.875rem;
   font-weight: 500;
   transition:
@@ -269,12 +266,18 @@ textarea {
 }
 
 .admin-nav-link:hover {
-  background: rgba(255, 255, 255, 0.06);
-  color: #ffffff;
+  background: rgba(255, 255, 255, 0.65);
+  color: #292524;
 }
 
 .admin-nav-link-active {
-  color: #ffffff;
+  color: #c25934;
+  font-weight: 600;
+}
+
+.admin-nav-link-active:hover {
+  background: transparent;
+  color: #c25934;
 }
 
 .admin-topbar {
@@ -403,18 +406,6 @@ textarea {
 .works-surface select {
   border-color: rgba(73, 48, 27, 0.12);
   background: rgba(255, 250, 242, 0.82);
-}
-
-@media (max-width: 1023px) {
-  .admin-sidebar-panel {
-    position: sticky;
-    top: 0;
-    z-index: 35;
-  }
-
-  .admin-nav-link {
-    background: rgba(255, 255, 255, 0.05);
-  }
 }
 
 ::-webkit-scrollbar {

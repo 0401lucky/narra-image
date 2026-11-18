@@ -48,6 +48,7 @@
 ### 3.2 CSS 层叠与动效性能契约（Tailwind CSS v4）
 
 - `.admin-console` 下的元素级默认规则（`table`、`thead`、`input`、`select`、`textarea`）必须包裹在 `@layer components` 中，确保组件上的 Tailwind 工具类（如 `bg-transparent`、`rounded-full`、`border-dashed`）不会被未分层选择器覆盖。
+- **同色系温暖浅色色阶契约**：侧边栏（`.admin-sidebar-panel`）采用暖燕麦浅色渐变（`#f2ece4` → `#ebe4da`）搭配 `1px solid #e5dec9` 细描边；主菜单文字使用深暖褐灰 `#292524`，分组小标题使用中暖灰 `#8c827a`，选中态采用浅赤陶橙底色 `#f9e6df` 搭配品牌橙红 `#c25934`。`AdminTabs` / `AdminLinkTabs` 等分段切换控件统一采用浅燕麦灰轨道（`#efeae2`）配纯白浮起滑块（`#ffffff`），严禁在后台重新引入大面积纯黑/深褐黑（`#1f160f` / `#231810`）色块。
 - 禁止在列表普通卡片 `.admin-console .studio-card` 上挂载 `backdrop-filter: blur(...)` 或默认 `:hover { transform: translateY(...) }`；仅可点击导航卡显式添加 `.admin-card-interactive`，仅顶栏/模态框/抽屉/Toast 等少量浮层使用 `.admin-floating-surface`。
 - 积分与强调数值统一使用 `--admin-ink-credit: #b54722`（浅底对比度 ≥ 4.5:1）配合 `font-mono tabular-nums`。
 

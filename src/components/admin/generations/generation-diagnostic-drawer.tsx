@@ -236,7 +236,7 @@ export function GenerationDiagnosticDrawer({
             <button
               type="button"
               onClick={() => void handleCopyReport()}
-              className="inline-flex items-center gap-1.5 rounded-full bg-[#231810] px-4 py-2 text-xs font-semibold text-white transition hover:bg-[#c85a32]"
+              className="inline-flex items-center gap-1.5 rounded-full bg-[#c25934] px-4 py-2 text-xs font-semibold text-white shadow-2xs transition hover:bg-[#ad4c2a]"
             >
               {copiedReport ? (
                 <Check className="size-3.5 text-emerald-300" aria-hidden />
@@ -383,7 +383,7 @@ export function GenerationDiagnosticDrawer({
                   >
                     <div className="flex flex-wrap items-center justify-between gap-2">
                       <div className="flex flex-wrap items-center gap-2">
-                        <span className="rounded-md bg-[#231810] px-2 py-0.5 font-mono font-semibold text-white">
+                        <span className="rounded-md border border-[#e5dec9] bg-white px-2 py-0.5 font-mono font-semibold text-[#292524]">
                           #{attempt.ordinal}
                         </span>
                         <span

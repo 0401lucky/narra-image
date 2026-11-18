@@ -203,7 +203,7 @@ export function UsersManagementBoard({
             <button
               type="submit"
               disabled={isPending}
-              className="shrink-0 rounded-xl bg-[#231810] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#c85a32]"
+              className="shrink-0 rounded-xl bg-[#c25934] px-5 py-2.5 text-sm font-semibold text-white shadow-2xs transition hover:bg-[#ad4c2a]"
             >
               搜索
             </button>

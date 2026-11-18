@@ -1013,7 +1013,7 @@ export function InviteCreator() {
           type="button"
           disabled={isPending}
           onClick={() => startTransition(() => void handleCreate())}
-          className="inline-flex items-center gap-2 rounded-full bg-[var(--ink)] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#c85a32] disabled:opacity-60"
+          className="inline-flex items-center gap-2 rounded-full bg-[#c25934] px-5 py-2.5 text-sm font-semibold text-white shadow-2xs transition hover:bg-[#ad4c2a] disabled:opacity-60"
         >
           {isPending ? <Loader2 className="size-4 animate-spin" aria-hidden /> : null}
           {isPending ? "创建中…" : "批量生成"}
@@ -1451,7 +1451,7 @@ function InviteBatchViewModal({
                           className={cn(
                             "rounded-full px-2 py-0.5 text-[10px] font-semibold",
                             isUsed
-                              ? "bg-[#231810] text-white"
+                              ? "bg-[#ebe5dc] text-[#57534e]"
                               : "bg-amber-100 text-amber-800",
                           )}
                         >
@@ -1592,7 +1592,7 @@ export function CreditAdjuster({
           className={cn(
             "rounded-full px-3 py-1.5 text-xs font-semibold transition disabled:cursor-not-allowed disabled:opacity-50",
             direction === "add"
-              ? "bg-[#231810] text-white hover:bg-[#c85a32]"
+              ? "bg-[#c25934] text-white shadow-2xs hover:bg-[#ad4c2a]"
               : "border border-rose-200 bg-rose-50 text-rose-700 hover:bg-rose-100",
           )}
         >

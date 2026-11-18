@@ -159,7 +159,7 @@ export function UserDetailDrawer({
             <Link
               href={`/admin/generations?q=${encodeURIComponent(detail.email)}`}
               onClick={onClose}
-              className="inline-flex items-center gap-1.5 rounded-full bg-[#231810] px-4 py-1.5 text-xs font-semibold text-white transition hover:bg-[#c85a32]"
+              className="inline-flex items-center gap-1.5 rounded-full bg-[#c25934] px-4 py-1.5 text-xs font-semibold text-white shadow-2xs transition hover:bg-[#ad4c2a]"
             >
               查看该用户全部生成流水
               <ArrowUpRight className="size-3.5" aria-hidden />

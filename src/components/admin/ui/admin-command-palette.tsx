@@ -177,7 +177,7 @@ export function AdminCommandPalette({
                     className={cn(
                       "flex w-full items-center justify-between gap-3 rounded-xl px-3 py-2.5 text-left transition-colors",
                       active
-                        ? "bg-[#231810] text-white"
+                        ? "bg-[#f9e6df] text-[#292524]"
                         : "text-[var(--ink)] hover:bg-[#f5eee3]",
                     )}
                   >
@@ -186,7 +186,7 @@ export function AdminCommandPalette({
                         className={cn(
                           "grid size-8 shrink-0 place-items-center rounded-lg",
                           active
-                            ? "bg-white/15 text-[#f3a871]"
+                            ? "bg-white text-[#c25934] shadow-2xs"
                             : "bg-[#f6efe3] text-[#9e5322]",
                         )}
                       >
@@ -194,14 +194,19 @@ export function AdminCommandPalette({
                       </span>
                       <div className="min-w-0">
                         <div className="flex items-center gap-2">
-                          <span className="truncate text-sm font-medium">
+                          <span
+                            className={cn(
+                              "truncate text-sm",
+                              active ? "font-semibold text-[#c25934]" : "font-medium",
+                            )}
+                          >
                             {item.label}
                           </span>
                           <span
                             className={cn(
                               "rounded-full px-2 py-0.5 text-[10px]",
                               active
-                                ? "bg-white/12 text-white/80"
+                                ? "bg-white/85 font-medium text-[#c25934]"
                                 : "bg-black/5 text-[var(--ink-soft)]",
                             )}
                           >
@@ -211,7 +216,7 @@ export function AdminCommandPalette({
                         <p
                           className={cn(
                             "mt-0.5 truncate text-xs",
-                            active ? "text-white/70" : "text-[var(--ink-soft)]",
+                            active ? "text-[#6e655e]" : "text-[var(--ink-soft)]",
                           )}
                         >
                           {item.description}
@@ -221,7 +226,7 @@ export function AdminCommandPalette({
                     <ArrowRight
                       className={cn(
                         "size-4 shrink-0 transition-transform",
-                        active ? "translate-x-0.5 text-[#f3a871]" : "text-[var(--ink-soft)]/40",
+                        active ? "translate-x-0.5 text-[#c25934]" : "text-[var(--ink-soft)]/40",
                       )}
                       aria-hidden
                     />

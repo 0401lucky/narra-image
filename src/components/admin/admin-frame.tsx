@@ -119,13 +119,13 @@ export function AdminFrame({
         {/* 1. Desktop Collapsible Sidebar */}
         <aside
           className={cn(
-            "admin-sidebar-panel hidden lg:fixed lg:inset-y-3 lg:left-3 lg:z-40 lg:flex lg:flex-col lg:rounded-2xl lg:border lg:border-white/10 lg:py-4 transition-[width,padding] duration-200 ease-out",
+            "admin-sidebar-panel hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:flex lg:flex-col lg:border-r lg:border-[#e5dec9] lg:py-4 transition-[width,padding] duration-200 ease-out",
             isCollapsed ? "lg:w-[4.5rem] lg:px-2.5" : "lg:w-64 lg:px-3.5",
           )}
         >
           <div
             className={cn(
-              "flex items-center border-b border-white/10 pb-3.5",
+              "flex items-center border-b border-[#e5dec9]/90 pb-3.5",
               isCollapsed ? "justify-center" : "justify-between gap-2 px-1",
             )}
           >
@@ -133,14 +133,14 @@ export function AdminFrame({
               <Link
                 href="/admin"
                 prefetch={false}
-                className="min-w-0 text-white"
+                className="min-w-0 text-[#292524]"
                 aria-label="Narra Image 管理后台"
               >
                 <span className="editorial-title block text-2xl leading-none font-semibold">
-                  <span className="text-[#d87b37]">NARRA</span>{" "}
+                  <span className="text-[#c25934]">NARRA</span>{" "}
                   <span>Studio</span>
                 </span>
-                <span className="mt-1 block text-[10px] tracking-[0.2em] text-white/42 uppercase">
+                <span className="mt-1 block text-[10px] tracking-[0.2em] text-[#8c827a] uppercase">
                   Operations Console
                 </span>
               </Link>
@@ -151,7 +151,7 @@ export function AdminFrame({
               onClick={toggleCollapsed}
               aria-label={isCollapsed ? "展开侧边栏" : "收起侧边栏"}
               title={isCollapsed ? "展开侧边栏" : "收起侧边栏"}
-              className="grid size-8 shrink-0 place-items-center rounded-lg border border-white/10 bg-white/5 text-white/70 transition hover:border-[#d87b37]/40 hover:bg-white/10 hover:text-white"
+              className="grid size-8 shrink-0 place-items-center rounded-lg border border-[#e5dec9] bg-white/65 text-[#6e655e] shadow-2xs transition hover:border-[#c25934]/35 hover:bg-white hover:text-[#292524]"
             >
               {isCollapsed ? (
                 <PanelLeftOpen className="size-4" aria-hidden />
@@ -169,18 +169,18 @@ export function AdminFrame({
               aria-label="打开快捷跳转面板"
               title="快捷跳转 (Ctrl/⌘ + K)"
               className={cn(
-                "flex w-full items-center rounded-xl border border-white/10 bg-white/[0.04] text-xs text-white/60 transition hover:border-[#d87b37]/35 hover:bg-white/[0.08] hover:text-white",
+                "flex w-full items-center rounded-xl border border-[#e5dec9] bg-white/75 text-xs text-[#6e655e] shadow-[0_1px_2px_rgba(41,37,36,0.03)] transition hover:border-[#c25934]/35 hover:bg-white hover:text-[#292524]",
                 isCollapsed
                   ? "justify-center py-2.5"
                   : "justify-between px-3 py-2",
               )}
             >
               <span className="flex items-center gap-2">
-                <Search className="size-3.5 text-[#d87b37]" aria-hidden />
+                <Search className="size-3.5 text-[#c25934]" aria-hidden />
                 {!isCollapsed ? <span>搜索功能模块…</span> : null}
               </span>
               {!isCollapsed ? (
-                <kbd className="rounded border border-white/12 bg-black/25 px-1.5 py-0.5 font-mono text-[10px] text-white/50">
+                <kbd className="rounded border border-[#e5dec9] bg-[#f4efe7] px-1.5 py-0.5 font-mono text-[10px] text-[#8c827a]">
                   ⌘K
                 </kbd>
               ) : null}
@@ -195,10 +195,10 @@ export function AdminFrame({
             />
           </div>
 
-          <div className="mt-3 border-t border-white/10 pt-3">
+          <div className="mt-3 border-t border-[#e5dec9]/90 pt-3">
             {isCollapsed ? (
               <div
-                className="mx-auto grid size-9 place-items-center overflow-hidden rounded-full border border-white/15 bg-[#3a271a] text-xs font-semibold text-white"
+                className="mx-auto grid size-9 place-items-center overflow-hidden rounded-full border border-[#e5dec9] bg-[#f9e6df] text-xs font-semibold text-[#c25934]"
                 title={`${displayName} · ID ${shortId}`}
               >
                 {currentUser.avatarUrl ? (
@@ -212,9 +212,9 @@ export function AdminFrame({
                 )}
               </div>
             ) : (
-              <div className="rounded-xl border border-white/10 bg-white/[0.03] p-2.5">
+              <div className="rounded-xl border border-[#e5dec9] bg-white/65 p-2.5 shadow-[0_1px_2px_rgba(41,37,36,0.03)]">
                 <div className="flex items-center gap-2.5">
-                  <div className="grid size-9 shrink-0 place-items-center overflow-hidden rounded-full border border-white/15 bg-[#3a271a] text-xs font-semibold text-white">
+                  <div className="grid size-9 shrink-0 place-items-center overflow-hidden rounded-full border border-[#e5dec9] bg-[#f9e6df] text-xs font-semibold text-[#c25934]">
                     {currentUser.avatarUrl ? (
                       <img
                         src={getThumbUrl(currentUser.avatarUrl, 64)}
@@ -226,10 +226,10 @@ export function AdminFrame({
                     )}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <div className="truncate text-xs font-semibold text-white">
+                    <div className="truncate text-xs font-semibold text-[#292524]">
                       {displayName}
                     </div>
-                    <div className="truncate font-mono text-[10px] text-white/42">
+                    <div className="truncate font-mono text-[10px] text-[#8c827a]">
                       ID {shortId}
                     </div>
                   </div>
@@ -247,7 +247,7 @@ export function AdminFrame({
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.18 }}
-                  className="fixed inset-0 bg-black/55 backdrop-blur-xs"
+                  className="fixed inset-0 bg-[#292524]/30 backdrop-blur-xs"
                   onClick={() => setIsMobileMenuOpen(false)}
                 />
                 <motion.div
@@ -257,28 +257,28 @@ export function AdminFrame({
                   role="dialog"
                   aria-modal="true"
                   aria-label="后台导航抽屉"
-                  className="admin-sidebar-panel fixed inset-y-3 left-3 z-[96] flex w-72 flex-col rounded-2xl border border-white/10 p-4 shadow-2xl outline-none"
+                  className="admin-sidebar-panel fixed inset-y-0 left-0 z-[96] flex w-72 flex-col rounded-r-2xl border-r border-[#e5dec9] p-4 shadow-[0_24px_64px_rgba(41,37,36,0.18)] outline-none"
                 >
-                  <div className="flex items-center justify-between gap-3 border-b border-white/10 pb-3.5">
+                  <div className="flex items-center justify-between gap-3 border-b border-[#e5dec9]/90 pb-3.5">
                     <Link
                       href="/admin"
                       prefetch={false}
                       onClick={() => setIsMobileMenuOpen(false)}
-                      className="min-w-0 text-white"
+                      className="min-w-0 text-[#292524]"
                       aria-label="Narra Image 管理后台"
                     >
                       <span className="editorial-title block text-2xl font-semibold">
-                        <span className="text-[#d87b37]">NARRA</span>{" "}
+                        <span className="text-[#c25934]">NARRA</span>{" "}
                         <span>Studio</span>
                       </span>
-                      <span className="mt-0.5 block text-[10px] tracking-[0.18em] text-white/42 uppercase">
+                      <span className="mt-0.5 block text-[10px] tracking-[0.18em] text-[#8c827a] uppercase">
                         Operations Console
                       </span>
                     </Link>
                     <button
                       type="button"
                       onClick={() => setIsMobileMenuOpen(false)}
-                      className="grid size-8 shrink-0 place-items-center rounded-lg border border-white/10 bg-white/5 text-white/70 transition hover:text-white"
+                      className="grid size-8 shrink-0 place-items-center rounded-lg border border-[#e5dec9] bg-white/65 text-[#6e655e] transition hover:bg-white hover:text-[#292524]"
                       aria-label="关闭菜单"
                     >
                       <X className="size-4" aria-hidden />
@@ -293,16 +293,16 @@ export function AdminFrame({
                     />
                   </div>
 
-                  <div className="mt-3 space-y-3 border-t border-white/10 pt-3">
-                    <div className="flex items-center justify-between text-xs text-white/60">
-                      <span className="flex items-center gap-1.5 font-medium text-white/85">
+                  <div className="mt-3 space-y-3 border-t border-[#e5dec9]/90 pt-3">
+                    <div className="flex items-center justify-between text-xs text-[#8c827a]">
+                      <span className="flex items-center gap-1.5 font-medium text-[#292524]">
                         <span className={cn("size-2 rounded-full", statusDotClass)} aria-hidden />
                         {statusLabel}
                       </span>
                       <Link
                         href="/"
                         onClick={() => setIsMobileMenuOpen(false)}
-                        className="text-white/65 transition hover:text-white hover:underline"
+                        className="text-[#6e655e] transition hover:text-[#c25934] hover:underline"
                       >
                         返回主页
                       </Link>
@@ -321,7 +321,7 @@ export function AdminFrame({
         <div
           className={cn(
             "flex min-h-screen min-w-0 flex-1 flex-col transition-[padding] duration-200 ease-out",
-            isCollapsed ? "lg:pl-[5.75rem]" : "lg:pl-[17.25rem]",
+            isCollapsed ? "lg:pl-[4.5rem]" : "lg:pl-64",
           )}
         >
           {/* Sticky Topbar (Breadcrumb + Global Quick Actions; NO duplicate h1) */}

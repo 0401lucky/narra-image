@@ -226,7 +226,7 @@ export function TurnstileConfigForm({
               type="button"
               disabled={saving}
               onClick={() => void handleSave()}
-              className="inline-flex items-center gap-2 rounded-full bg-[var(--ink)] px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[#c85a32] disabled:opacity-60"
+              className="inline-flex items-center gap-2 rounded-full bg-[#c25934] px-6 py-2.5 text-sm font-semibold text-white shadow-2xs transition hover:bg-[#ad4c2a] disabled:opacity-60"
             >
               {saving ? (
                 <Loader2 className="size-4 animate-spin" aria-hidden />

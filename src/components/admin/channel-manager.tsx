@@ -456,7 +456,7 @@ export function ChannelManager({ initialChannels }: ChannelManagerProps) {
         <button
           type="button"
           onClick={openCreate}
-          className="inline-flex shrink-0 items-center gap-2 rounded-full bg-[var(--ink)] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#c85a32]"
+          className="inline-flex shrink-0 items-center gap-2 rounded-full bg-[#c25934] px-5 py-2.5 text-sm font-semibold text-white shadow-2xs transition hover:bg-[#ad4c2a]"
         >
           <Plus className="size-4" aria-hidden />
           新增渠道
@@ -686,7 +686,7 @@ export function ChannelManager({ initialChannels }: ChannelManagerProps) {
                 !formDefaultModel ||
                 (!editingChannel && !formApiKey)
               }
-              className="inline-flex items-center gap-2 rounded-full bg-[var(--ink)] px-6 py-2 text-sm font-semibold text-white transition hover:bg-[#c85a32] disabled:opacity-50"
+              className="inline-flex items-center gap-2 rounded-full bg-[#c25934] px-6 py-2 text-sm font-semibold text-white shadow-2xs transition hover:bg-[#ad4c2a] disabled:opacity-50"
             >
               {isPending ? <Loader2 className="size-4 animate-spin" aria-hidden /> : null}
               {isPending ? "保存中…" : editingChannel ? "保存修改" : "创建渠道"}
@@ -880,7 +880,7 @@ export function ChannelManager({ initialChannels }: ChannelManagerProps) {
                       className={cn(
                         "flex items-center justify-between gap-2 rounded-lg border px-2.5 py-1.5 transition",
                         isDefault
-                          ? "border-[#231810]/30 bg-white shadow-2xs"
+                          ? "border-[#c25934]/30 bg-white shadow-2xs"
                           : "border-transparent bg-white/70 hover:border-[var(--line)] hover:bg-white",
                       )}
                     >
@@ -909,7 +909,7 @@ export function ChannelManager({ initialChannels }: ChannelManagerProps) {
                           </span>
                         ) : null}
                         {isDefault ? (
-                          <span className="rounded bg-[#231810] px-1.5 py-0.5 text-[10px] font-semibold text-white">
+                          <span className="rounded bg-[#f9e6df] px-1.5 py-0.5 text-[10px] font-semibold text-[#c25934]">
                             默认
                           </span>
                         ) : (

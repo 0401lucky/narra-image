@@ -126,7 +126,7 @@ function ViewModeSwitch({
   ];
 
   return (
-    <div className="inline-flex rounded-xl border border-[var(--line)] bg-white p-1">
+    <div className="inline-flex rounded-xl border border-[#e5dec9] bg-[#efeae2]/85 p-1">
       {modes.map((item) => {
         const Icon = item.icon;
         const active = item.value === view;
@@ -136,12 +136,15 @@ function ViewModeSwitch({
             href={item.href}
             className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition sm:text-sm ${
               active
-                ? "bg-[#231810] text-white"
-                : "text-[var(--ink-soft)] hover:text-[var(--ink)]"
+                ? "border border-[#e5dec9]/90 bg-white font-semibold text-[#292524] shadow-[0_1px_3px_rgba(41,37,36,0.08)]"
+                : "text-[#787068] hover:text-[#292524]"
             }`}
             aria-current={active ? "page" : undefined}
           >
-            <Icon className="size-3.5" aria-hidden />
+            <Icon
+              className={`size-3.5 ${active ? "text-[#c25934]" : "text-[#8c827a]"}`}
+              aria-hidden
+            />
             {item.label}
           </Link>
         );

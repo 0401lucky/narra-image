@@ -273,7 +273,7 @@ export function ModerationReviewsBoard({
             <button
               type="submit"
               disabled={isPending}
-              className="shrink-0 rounded-xl bg-[#231810] px-4 py-2 text-xs font-semibold text-white transition hover:bg-[#c85a32] sm:text-sm"
+              className="shrink-0 rounded-xl bg-[#c25934] px-4 py-2 text-xs font-semibold text-white shadow-2xs transition hover:bg-[#ad4c2a] sm:text-sm"
             >
               筛选
             </button>

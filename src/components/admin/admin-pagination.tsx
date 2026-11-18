@@ -74,7 +74,7 @@ export function AdminPagination({
             className={cn(
               "inline-flex size-9 items-center justify-center rounded-xl text-xs font-medium tabular-nums transition-colors sm:text-sm",
               p === currentPage
-                ? "border border-[#231810] bg-[#231810] text-[#fcf9f4] shadow-xs"
+                ? "border border-[#c25934]/30 bg-[#f9e6df] font-semibold text-[#c25934] shadow-2xs"
                 : "border border-[var(--admin-line)] bg-white text-[var(--ink-soft)] hover:border-[#c85a32]/40 hover:text-[#c85a32]",
             )}
           >

@@ -245,7 +245,7 @@ export function OAuthProviderManager({
                     type="button"
                     disabled={saving || !formClientId}
                     onClick={() => void handleSave(sp.type, sp.label)}
-                    className="inline-flex items-center gap-2 rounded-full bg-[var(--ink)] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#c85a32] disabled:opacity-60"
+                    className="inline-flex items-center gap-2 rounded-full bg-[#c25934] px-5 py-2.5 text-sm font-semibold text-white shadow-2xs transition hover:bg-[#ad4c2a] disabled:opacity-60"
                   >
                     {saving ? (
                       <Loader2 className="size-4 animate-spin" aria-hidden />

@@ -20,7 +20,7 @@ type AdminTabsProps<T extends string = string> = {
   layoutId: string;
   onChange: (value: T) => void;
   options: AdminTabOption<T>[];
-  tone?: "dark" | "accent";
+  tone?: "dark" | "accent" | "surface";
   value: T;
 };
 
@@ -31,7 +31,7 @@ export function AdminTabs<T extends string = string>({
   layoutId,
   onChange,
   options,
-  tone = "dark",
+  tone = "surface",
   value,
 }: AdminTabsProps<T>) {
   return (
@@ -39,7 +39,7 @@ export function AdminTabs<T extends string = string>({
       role="tablist"
       aria-label={ariaLabel}
       className={cn(
-        "inline-flex flex-wrap items-center gap-1 rounded-xl border border-[var(--admin-line)] bg-[#efe8dc]/70 p-1",
+        "inline-flex flex-wrap items-center gap-1 rounded-xl border border-[#e5dec9] bg-[#efeae2]/85 p-1",
         className,
       )}
     >
@@ -57,10 +57,10 @@ export function AdminTabs<T extends string = string>({
             className={cn(
               "relative inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors sm:text-sm disabled:cursor-not-allowed disabled:opacity-55",
               active
-                ? tone === "dark"
-                  ? "text-white"
-                  : "text-[#9e5322]"
-                : "text-[var(--ink-soft)] hover:text-[var(--ink)]",
+                ? tone === "accent"
+                  ? "font-semibold text-[#c25934]"
+                  : "font-semibold text-[#292524]"
+                : "text-[#787068] hover:text-[#292524]",
             )}
           >
             {active ? (
@@ -68,25 +68,31 @@ export function AdminTabs<T extends string = string>({
                 layoutId={layoutId}
                 transition={{ damping: 32, stiffness: 380, type: "spring" }}
                 className={cn(
-                  "absolute inset-0 rounded-lg shadow-xs",
-                  tone === "dark"
-                    ? "bg-[#231810]"
-                    : "border border-[#c85a32]/25 bg-white",
+                  "absolute inset-0 rounded-lg bg-white shadow-[0_1px_3px_rgba(41,37,36,0.08),0_1px_1px_rgba(41,37,36,0.04)]",
+                  tone === "accent"
+                    ? "border border-[#c25934]/25"
+                    : "border border-[#e5dec9]/90",
                 )}
               />
             ) : null}
             <span className="relative z-10 inline-flex items-center gap-1.5">
-              {Icon ? <Icon className="size-3.5" aria-hidden /> : null}
+              {Icon ? (
+                <Icon
+                  className={cn(
+                    "size-3.5 transition-colors",
+                    active ? "text-[#c25934]" : "text-[#8c827a]",
+                  )}
+                  aria-hidden
+                />
+              ) : null}
               <span>{option.label}</span>
               {option.badge !== undefined ? (
                 <span
                   className={cn(
                     "rounded-full px-1.5 py-0.2 text-[11px] font-semibold tabular-nums",
                     active
-                      ? tone === "dark"
-                        ? "bg-white/18 text-white"
-                        : "bg-[#c85a32]/12 text-[#9e5322]"
-                      : "bg-black/6 text-[var(--ink-soft)]",
+                      ? "bg-[#f9e6df] text-[#c25934]"
+                      : "bg-black/6 text-[#787068]",
                   )}
                 >
                   {option.badge}
@@ -126,7 +132,7 @@ export function AdminLinkTabs({
     <nav
       aria-label={ariaLabel}
       className={cn(
-        "flex flex-wrap items-center gap-1 rounded-xl border border-[var(--admin-line)] bg-[#efe8dc]/65 p-1",
+        "flex flex-wrap items-center gap-1 rounded-xl border border-[#e5dec9] bg-[#efeae2]/85 p-1",
         className,
       )}
     >
@@ -141,27 +147,35 @@ export function AdminLinkTabs({
             className={cn(
               "relative inline-flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 text-xs font-medium transition-colors sm:text-sm",
               active
-                ? "text-white"
-                : "text-[var(--ink-soft)] hover:text-[var(--ink)]",
+                ? "font-semibold text-[#292524]"
+                : "text-[#787068] hover:text-[#292524]",
             )}
           >
             {active ? (
               <motion.div
                 layoutId={layoutId}
                 transition={{ damping: 32, stiffness: 380, type: "spring" }}
-                className="absolute inset-0 rounded-lg bg-[#231810] shadow-xs"
+                className="absolute inset-0 rounded-lg border border-[#e5dec9]/90 bg-white shadow-[0_1px_3px_rgba(41,37,36,0.08),0_1px_1px_rgba(41,37,36,0.04)]"
               />
             ) : null}
             <span className="relative z-10 inline-flex items-center gap-1.5">
-              {Icon ? <Icon className="size-3.5" aria-hidden /> : null}
+              {Icon ? (
+                <Icon
+                  className={cn(
+                    "size-3.5 transition-colors",
+                    active ? "text-[#c25934]" : "text-[#8c827a]",
+                  )}
+                  aria-hidden
+                />
+              ) : null}
               <span>{item.label}</span>
               {item.badge !== undefined ? (
                 <span
                   className={cn(
                     "rounded-full px-1.5 py-0.2 text-[11px] font-semibold tabular-nums",
                     active
-                      ? "bg-white/20 text-white"
-                      : "bg-black/6 text-[var(--ink-soft)]",
+                      ? "bg-[#f9e6df] text-[#c25934]"
+                      : "bg-black/6 text-[#787068]",
                   )}
                 >
                   {item.badge}

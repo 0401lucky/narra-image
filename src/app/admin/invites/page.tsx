@@ -292,7 +292,7 @@ export default async function AdminInvitesPage(props?: {
 
             <button
               type="submit"
-              className="rounded-xl bg-[#231810] px-4 py-2 text-xs font-semibold text-white transition hover:bg-[#c85a32] sm:text-sm"
+              className="rounded-xl bg-[#c25934] px-4 py-2 text-xs font-semibold text-white shadow-2xs transition hover:bg-[#ad4c2a] sm:text-sm"
             >
               检索
             </button>
@@ -329,7 +329,7 @@ export default async function AdminInvitesPage(props?: {
                 </div>
                 <div className="flex shrink-0 items-center gap-1.5">
                   {invite.usedAt ? (
-                    <span className="rounded-full bg-[#231810] px-2.5 py-0.5 text-xs font-medium text-white">
+                    <span className="rounded-full bg-[#ebe5dc] px-2.5 py-0.5 text-xs font-medium text-[#57534e]">
                       已使用
                     </span>
                   ) : invite.claimedAt ? (
@@ -441,7 +441,7 @@ function InviteTableRow({
       </td>
       <td className="px-5 py-3.5">
         {invite.usedAt ? (
-          <span className="rounded-full bg-[#231810] px-2.5 py-0.5 text-xs font-medium text-white">
+          <span className="rounded-full bg-[#ebe5dc] px-2.5 py-0.5 text-xs font-medium text-[#57534e]">
             已使用
           </span>
         ) : invite.claimedAt ? (

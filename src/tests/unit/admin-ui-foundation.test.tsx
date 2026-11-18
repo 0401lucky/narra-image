@@ -11,6 +11,7 @@ vi.mock("next/navigation", () => ({
   useRouter: () => ({ push: mockPush, refresh: vi.fn() }),
 }));
 
+import { AdminFrame } from "@/components/admin/admin-frame";
 import {
   ADMIN_NAV_GROUPS,
   isAdminNavItemActive,
@@ -20,6 +21,7 @@ import { useAdminToast } from "@/components/admin/hooks/use-admin-toast";
 import { AdminCommandPalette } from "@/components/admin/ui/admin-command-palette";
 import { AdminConfirmDialog } from "@/components/admin/ui/admin-modal";
 import { AdminSwitch } from "@/components/admin/ui/admin-switch";
+import { AdminTabs } from "@/components/admin/ui/admin-tabs";
 import { AdminToastProvider } from "@/components/admin/ui/admin-toast-provider";
 
 function ToastTriggerHarness() {
@@ -129,5 +131,37 @@ describe("后台基础 UI 原语与路由契约", () => {
     await waitFor(() => {
       expect(mockPush).toHaveBeenCalledWith("/admin/settings/channels");
     });
+  });
+
+  it("采用温暖浅色侧边栏与白底浮起滑块 Segmented Control", async () => {
+    const user = userEvent.setup();
+    const onTabChange = vi.fn();
+
+    render(
+      <AdminFrame
+        currentUser={{ avatarUrl: null, id: "admin_u12345678", nickname: "lucky" }}
+      >
+        <AdminTabs
+          ariaLabel="趋势指标切换"
+          layoutId="test-trend-tabs"
+          value="generations"
+          onChange={onTabChange}
+          options={[
+            { label: "生成任务量", value: "generations" },
+            { label: "积分消耗量", value: "credits" },
+          ]}
+        />
+      </AdminFrame>,
+    );
+
+    const activeNav = screen.getByRole("link", { name: "内容风控" });
+    expect(activeNav).toHaveAttribute("aria-current", "page");
+
+    const activeTab = screen.getByRole("tab", { name: "生成任务量" });
+    expect(activeTab).toHaveAttribute("aria-selected", "true");
+    expect(activeTab.className).toContain("text-[#292524]");
+
+    await user.click(screen.getByRole("tab", { name: "积分消耗量" }));
+    expect(onTabChange).toHaveBeenCalledWith("credits");
   });
 });

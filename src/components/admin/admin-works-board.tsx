@@ -298,7 +298,7 @@ export function AdminWorksBoard({
                 className={cn(
                   "inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-semibold transition disabled:cursor-not-allowed disabled:opacity-45",
                   btn.variant === "primary" &&
-                    "bg-[#231810] text-white hover:bg-[#c85a32]",
+                    "bg-[#c25934] text-white shadow-2xs hover:bg-[#ad4c2a]",
                   btn.variant === "secondary" &&
                     "border border-[var(--line)] bg-white text-[var(--ink)] hover:border-[#c85a32] hover:text-[#c85a32]",
                   btn.variant === "danger" &&
@@ -522,7 +522,7 @@ export function AdminWorksBoard({
                                     isDanger &&
                                       "border border-rose-200 bg-white text-rose-600 hover:bg-rose-50",
                                     isPrimary &&
-                                      "bg-[#231810] text-white hover:bg-[#c85a32]",
+                                      "bg-[#c25934] text-white shadow-2xs hover:bg-[#ad4c2a]",
                                     !isDanger &&
                                       !isPrimary &&
                                       "border border-[var(--line)] bg-white text-[var(--ink)] hover:border-[#c85a32] hover:text-[#c85a32]",

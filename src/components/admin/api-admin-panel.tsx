@@ -216,7 +216,7 @@ export function ApiAdminPanel({
           type="button"
           disabled={saving || isPending}
           onClick={() => void saveConfig()}
-          className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[var(--ink)] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#c85a32] disabled:opacity-60 sm:w-auto"
+          className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#c25934] px-5 py-2.5 text-sm font-semibold text-white shadow-2xs transition hover:bg-[#ad4c2a] disabled:opacity-60 sm:w-auto"
         >
           {saving ? (
             <Loader2 className="size-4 animate-spin" aria-hidden />
@@ -277,7 +277,7 @@ export function ApiAdminPanel({
 
             <button
               type="submit"
-              className="rounded-xl bg-[#231810] px-4 py-2 text-xs font-semibold text-white transition hover:bg-[#c85a32] sm:text-sm"
+              className="rounded-xl bg-[#c25934] px-4 py-2 text-xs font-semibold text-white shadow-2xs transition hover:bg-[#ad4c2a] sm:text-sm"
             >
               筛选
             </button>

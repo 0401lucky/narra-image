@@ -156,7 +156,7 @@ type AdminConfirmDialogProps = {
 
 const confirmToneStyles: Record<AdminConfirmTone, string> = {
   danger: "bg-rose-600 text-white hover:bg-rose-700",
-  primary: "bg-[var(--ink)] text-white hover:bg-[#c85a32]",
+  primary: "bg-[#c25934] text-white hover:bg-[#ad4c2a]",
   warning: "bg-amber-600 text-white hover:bg-amber-700",
 };
 
