@@ -1,72 +1,209 @@
 "use client";
 
+import { RotateCcw, Search, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { Search, X } from "lucide-react";
+
+export type GenerationStatusFilter =
+  | ""
+  | "ALL"
+  | "SUCCEEDED"
+  | "ACTIVE"
+  | "FAILED"
+  | "COORDINATION";
+
+export type GenerationTypeFilter =
+  | ""
+  | "TEXT_TO_IMAGE"
+  | "IMAGE_TO_IMAGE"
+  | "TEXT_TO_VIDEO"
+  | "IMAGE_TO_VIDEO";
+
+export type GenerationSourceFilter = "" | "WEB" | "API";
+export type GenerationModeFilter = "" | "BUILT_IN" | "CUSTOM";
 
 type GenerationSearchBarProps = {
   initialValue: string;
+  mode?: GenerationModeFilter;
+  source?: GenerationSourceFilter;
+  status?: GenerationStatusFilter;
+  type?: GenerationTypeFilter;
   view: "card" | "list";
 };
 
-function buildGenerationsUrl(view: GenerationSearchBarProps["view"], query?: string) {
-  const params = new URLSearchParams({ view });
-  if (query) {
-    params.set("q", query);
-  }
-  return `/admin/generations?${params.toString()}`;
+export function buildGenerationsFilterUrl(params: {
+  mode?: string;
+  page?: number;
+  q?: string;
+  source?: string;
+  status?: string;
+  type?: string;
+  view: "card" | "list";
+}) {
+  const sp = new URLSearchParams();
+  sp.set("view", params.view);
+  if (params.page && params.page > 1) sp.set("page", String(params.page));
+  if (params.q?.trim()) sp.set("q", params.q.trim());
+  if (params.status) sp.set("status", params.status);
+  if (params.type) sp.set("type", params.type);
+  if (params.source) sp.set("source", params.source);
+  if (params.mode) sp.set("mode", params.mode);
+  return `/admin/generations?${sp.toString()}`;
 }
 
 export function GenerationSearchBar({
   initialValue,
+  mode = "",
+  source = "",
+  status = "",
+  type = "",
   view,
 }: GenerationSearchBarProps) {
   const router = useRouter();
   const [value, setValue] = useState(initialValue);
 
+  const hasAnyFilter = Boolean(value || status || type || source || mode);
+
+  function pushNext(overrides: {
+    mode?: string;
+    q?: string;
+    source?: string;
+    status?: string;
+    type?: string;
+  }) {
+    router.push(
+      buildGenerationsFilterUrl({
+        mode: overrides.mode ?? mode,
+        q: overrides.q ?? value,
+        source: overrides.source ?? source,
+        status: overrides.status ?? status,
+        type: overrides.type ?? type,
+        view,
+      }),
+    );
+  }
+
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
-    const trimmed = value.trim();
-    router.push(buildGenerationsUrl(view, trimmed || undefined));
+    pushNext({ q: value.trim() });
   }
 
   function handleClear() {
     setValue("");
-    router.push(buildGenerationsUrl(view));
+    pushNext({ q: "" });
   }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="flex flex-col gap-2 rounded-[1.4rem] border border-[var(--admin-line)] bg-white/60 p-2 shadow-sm shadow-[#2c1d11]/3 sm:flex-row"
-    >
-      <div className="relative min-w-0 flex-1">
-        <Search className="absolute left-4 top-1/2 size-4 -translate-y-1/2 text-[var(--ink-soft)] pointer-events-none" />
-        <input
-          value={value}
-          onChange={(event) => setValue(event.target.value)}
-          placeholder="搜索用户昵称、邮箱、任务 ID、提示词或模型…"
-          className="min-h-12 w-full rounded-2xl border border-transparent bg-white/75 py-3 pl-11 pr-10 text-sm outline-none transition-all duration-200 placeholder:text-[var(--ink-soft)]/65 focus:border-[#d87b37] focus:bg-white focus:shadow-[0_0_0_4px_rgba(217,100,58,0.12)]"
-        />
-        {value ? (
+    <form onSubmit={handleSubmit} className="studio-card grid gap-3 p-4">
+      <div className="flex flex-col gap-2 sm:flex-row">
+        <div className="relative min-w-0 flex-1">
+          <Search
+            className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-[var(--ink-soft)]"
+            aria-hidden
+          />
+          <input
+            value={value}
+            onChange={(event) => setValue(event.target.value)}
+            placeholder="搜索用户昵称、邮箱、任务 ID、提示词或模型…"
+            className="w-full rounded-xl border border-[var(--admin-line)] bg-white py-2.5 pr-9 pl-10 text-sm outline-none"
+          />
+          {value ? (
+            <button
+              type="button"
+              onClick={handleClear}
+              className="absolute top-1/2 right-3 inline-flex size-6 -translate-y-1/2 items-center justify-center rounded-full text-[var(--ink-soft)] hover:bg-black/5 hover:text-[var(--ink)]"
+              title="清空搜索"
+              aria-label="清空搜索"
+            >
+              <X className="size-3.5" aria-hidden />
+            </button>
+          ) : null}
+        </div>
+        <button
+          type="submit"
+          className="inline-flex shrink-0 items-center justify-center gap-1.5 rounded-xl bg-[#231810] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#c85a32]"
+        >
+          <Search className="size-4" aria-hidden />
+          搜索
+        </button>
+      </div>
+
+      <div className="flex flex-wrap items-center gap-2 border-t border-[var(--line)]/60 pt-3 text-xs">
+        <label className="inline-flex items-center gap-1.5">
+          <span className="text-[var(--ink-soft)]">状态</span>
+          <select
+            value={status}
+            aria-label="按任务状态筛选"
+            onChange={(e) => pushNext({ status: e.target.value })}
+            className="rounded-lg border border-[var(--admin-line)] bg-white px-2.5 py-1.5 text-xs font-medium text-[var(--ink)] outline-none"
+          >
+            <option value="">默认视图（隐藏普通失败）</option>
+            <option value="ALL">全部状态（含失败）</option>
+            <option value="SUCCEEDED">仅已完成</option>
+            <option value="ACTIVE">生成中 / 排队中</option>
+            <option value="FAILED">已失败（排障模式）</option>
+            <option value="COORDINATION">需人工协调（HANDOFF_UNKNOWN）</option>
+          </select>
+        </label>
+
+        <label className="inline-flex items-center gap-1.5">
+          <span className="text-[var(--ink-soft)]">任务类型</span>
+          <select
+            value={type}
+            aria-label="按生成类型筛选"
+            onChange={(e) => pushNext({ type: e.target.value })}
+            className="rounded-lg border border-[var(--admin-line)] bg-white px-2.5 py-1.5 text-xs font-medium text-[var(--ink)] outline-none"
+          >
+            <option value="">全部类型</option>
+            <option value="TEXT_TO_IMAGE">文生图</option>
+            <option value="IMAGE_TO_IMAGE">图生图</option>
+            <option value="TEXT_TO_VIDEO">文生视频</option>
+            <option value="IMAGE_TO_VIDEO">图生视频</option>
+          </select>
+        </label>
+
+        <label className="inline-flex items-center gap-1.5">
+          <span className="text-[var(--ink-soft)]">调用入口</span>
+          <select
+            value={source}
+            aria-label="按调用来源筛选"
+            onChange={(e) => pushNext({ source: e.target.value })}
+            className="rounded-lg border border-[var(--admin-line)] bg-white px-2.5 py-1.5 text-xs font-medium text-[var(--ink)] outline-none"
+          >
+            <option value="">全部入口</option>
+            <option value="WEB">网页端</option>
+            <option value="API">API 密钥调用</option>
+          </select>
+        </label>
+
+        <label className="inline-flex items-center gap-1.5">
+          <span className="text-[var(--ink-soft)]">渠道模式</span>
+          <select
+            value={mode}
+            aria-label="按渠道模式筛选"
+            onChange={(e) => pushNext({ mode: e.target.value })}
+            className="rounded-lg border border-[var(--admin-line)] bg-white px-2.5 py-1.5 text-xs font-medium text-[var(--ink)] outline-none"
+          >
+            <option value="">全部渠道</option>
+            <option value="BUILT_IN">系统内置渠道</option>
+            <option value="CUSTOM">用户自填渠道</option>
+          </select>
+        </label>
+
+        {hasAnyFilter ? (
           <button
             type="button"
-            onClick={handleClear}
-            className="absolute right-3 top-1/2 inline-flex size-8 -translate-y-1/2 items-center justify-center rounded-full text-[var(--ink-soft)] transition-all duration-200 hover:bg-[#2c1d11]/5 hover:text-[var(--ink)]"
-            title="清空搜索"
-            aria-label="清空搜索"
+            onClick={() => {
+              setValue("");
+              router.push(buildGenerationsFilterUrl({ view }));
+            }}
+            className="ml-auto inline-flex items-center gap-1 rounded-lg border border-[var(--line)] bg-[#faf7f1] px-2.5 py-1.5 text-xs font-medium text-[var(--ink-soft)] transition hover:text-[#c85a32]"
           >
-            <X className="size-4" />
+            <RotateCcw className="size-3.5" aria-hidden />
+            重置筛选
           </button>
         ) : null}
       </div>
-      <button
-        type="submit"
-        className="inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-2xl bg-[#2a1b12] px-6 text-sm font-medium text-white transition-all duration-200 hover:bg-[#d87b37] hover:shadow-md hover:shadow-[#d87b37]/10 active:scale-95"
-      >
-        <Search className="size-4" />
-        搜索
-      </button>
     </form>
   );
 }
