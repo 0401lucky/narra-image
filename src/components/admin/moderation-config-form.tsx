@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
-import { CheckCircle2, Loader2, Save } from "lucide-react";
+import { Loader2, Save, Search, X } from "lucide-react";
+import { useMemo, useState } from "react";
 
-import { cn } from "@/lib/utils";
+import { Alert } from "@/components/ui/alert";
+import { useAdminToast } from "./hooks/use-admin-toast";
+import { AdminSwitch } from "./ui/admin-switch";
 
 type WordsSnapshot = {
   category: string;
@@ -11,33 +13,6 @@ type WordsSnapshot = {
   label: string;
   words: string[];
 };
-
-function ToggleField({
-  checked,
-  label,
-  hint,
-  onChange,
-}: {
-  checked: boolean;
-  label: string;
-  hint: string;
-  onChange: (value: boolean) => void;
-}) {
-  return (
-    <label className="flex cursor-pointer items-start gap-3">
-      <input
-        type="checkbox"
-        checked={checked}
-        onChange={(event) => onChange(event.target.checked)}
-        className="mt-0.5 size-4 accent-[var(--accent)]"
-      />
-      <span>
-        <span className="block text-sm font-medium text-[var(--ink)]">{label}</span>
-        <span className="mt-0.5 block text-xs text-[var(--ink-soft)]">{hint}</span>
-      </span>
-    </label>
-  );
-}
 
 type ModerationConfigFormProps = {
   config: {
@@ -57,6 +32,7 @@ export function ModerationConfigForm({
   config,
   words,
 }: ModerationConfigFormProps) {
+  const toast = useAdminToast();
   const [isEnabled, setIsEnabled] = useState(config.isEnabled);
   const [sensitiveWordsEnabled, setSensitiveWordsEnabled] = useState(
     config.sensitiveWordsEnabled,
@@ -71,15 +47,34 @@ export function ModerationConfigForm({
     text: string;
     type: "success" | "error";
   } | null>(null);
-  const [collapsed, setCollapsed] = useState(false);
+  const [wordQuery, setWordQuery] = useState("");
+
+  const totalWords = useMemo(
+    () => words.reduce((sum, item) => sum + item.count, 0),
+    [words],
+  );
+
+  const filteredWordGroups = useMemo(() => {
+    const q = wordQuery.trim().toLowerCase();
+    if (!q) return words;
+    return words
+      .map((group) => {
+        if (group.label.toLowerCase().includes(q)) return group;
+        const matched = group.words.filter((w) => w.toLowerCase().includes(q));
+        return {
+          ...group,
+          count: matched.length,
+          words: matched,
+        };
+      })
+      .filter((group) => group.words.length > 0);
+  }, [wordQuery, words]);
 
   async function handleSave() {
     setSaving(true);
     setMessage(null);
     try {
       const res = await fetch("/api/admin/moderation/config", {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           aiApiKey: aiApiKey || undefined,
           aiBaseUrl,
@@ -89,60 +84,74 @@ export function ModerationConfigForm({
           isEnabled,
           sensitiveWordsEnabled,
         }),
+        headers: { "Content-Type": "application/json" },
+        method: "PATCH",
       });
       const json = (await res.json().catch(() => ({}))) as {
         error?: string;
       };
       if (!res.ok) {
-        setMessage({ text: json.error || "保存失败", type: "error" });
+        const msg = json.error || "保存失败";
+        setMessage({ text: msg, type: "error" });
+        toast.error("审核配置保存失败", msg);
         return;
       }
       setAiApiKey("");
-      setMessage({ text: "审核配置已保存并立即生效。", type: "success" });
+      const okMsg = "内容审核规则已保存并立即生效。";
+      setMessage({ text: okMsg, type: "success" });
+      toast.success("审核规则已更新", okMsg);
     } catch {
-      setMessage({ text: "保存时发生错误", type: "error" });
+      setMessage({ text: "保存时发生网络错误", type: "error" });
     } finally {
       setSaving(false);
     }
   }
 
   return (
-    <div className="grid gap-5 lg:grid-cols-[1fr_360px]">
+    <div className="grid gap-5 lg:grid-cols-[1fr_400px]">
       <div className="grid gap-5 self-start">
-        <div className="studio-card rounded-[1.8rem] p-6">
-          <h2 className="text-xl font-semibold tracking-tight text-[var(--ink)]">
-            审核规则
+        <div className="studio-card p-5 md:p-6">
+          <h2 className="text-lg font-semibold tracking-tight text-[var(--ink)]">
+            审核拦截开关与 AI 阈值
           </h2>
-          <p className="mt-2 text-sm text-[var(--ink-soft)]">
-            命中敏感词或 AI 判定违规时，本次生成会被拒绝（不扣积分），并记为一条触发事件。
+          <p className="mt-1.5 text-sm text-[var(--ink-soft)]">
+            命中敏感词或 AI 判定超阈值时立即拒绝生成（不扣减用户积分），并自动写入风控拦截流水。
           </p>
 
-          <div className="mt-6 grid gap-4">
-            <ToggleField
-              checked={isEnabled}
-              label="启用内容审核"
-              hint="关闭后等于未接入审核，行为与之前一致。"
-              onChange={setIsEnabled}
-            />
-            <ToggleField
-              checked={sensitiveWordsEnabled}
-              label="敏感词匹配（内置词库）"
-              hint="中英文内置词库按类别匹配 prompt 与 negativePrompt。"
-              onChange={setSensitiveWordsEnabled}
-            />
-            <ToggleField
-              checked={aiEnabled}
-              label="启用 AI 审核"
-              hint="需配置下方端点与密钥。服务异常/超时自动放行，不会卡住生成。"
-              onChange={setAiEnabled}
-            />
+          <div className="mt-5 grid gap-3">
+            <div className="rounded-xl border border-[var(--line)] bg-[#faf7f1] px-4 py-3">
+              <AdminSwitch
+                checked={isEnabled}
+                label="启用全站内容审核"
+                hint="总开关；关闭后生图请求不经过敏感词与 AI 审查。"
+                onCheckedChange={setIsEnabled}
+              />
+            </div>
+
+            <div className="rounded-xl border border-[var(--line)] bg-[#faf7f1] px-4 py-3">
+              <AdminSwitch
+                checked={sensitiveWordsEnabled}
+                label="启用内置敏感词匹配"
+                hint="毫秒级同步扫描正向与负向提示词中的中英文高危词条。"
+                onCheckedChange={setSensitiveWordsEnabled}
+              />
+            </div>
+
+            <div className="rounded-xl border border-[var(--line)] bg-[#faf7f1] px-4 py-3">
+              <AdminSwitch
+                checked={aiEnabled}
+                label="启用上游 AI 语义审核"
+                hint="调用 OpenAI Moderations 兼容接口；上游异常或超时将自动降级放行，不阻塞生图。"
+                onCheckedChange={setAiEnabled}
+              />
+            </div>
           </div>
 
-          <div className="mt-6 grid gap-4 rounded-[1.2rem] border border-[var(--line)] bg-[var(--surface-strong)]/40 p-4">
+          <div className="mt-5 grid gap-4 rounded-xl border border-[var(--line)] bg-[#faf7f1]/70 p-4">
             <div>
               <label
                 htmlFor="moderation-base-url"
-                className="mb-2 block text-sm font-medium text-[var(--ink)]"
+                className="mb-1.5 block text-xs font-medium text-[var(--ink-soft)]"
               >
                 AI 审核 Base URL
               </label>
@@ -152,24 +161,24 @@ export function ModerationConfigForm({
                 value={aiBaseUrl}
                 onChange={(event) => setAiBaseUrl(event.target.value)}
                 placeholder="https://api.openai.com/v1"
-                className="w-full rounded-xl border border-[var(--line)] bg-[var(--surface)]/60 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-soft)]/60 focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/20"
+                className="w-full rounded-xl border border-[var(--line)] bg-white px-3.5 py-2.5 font-mono text-sm text-[var(--ink)] outline-none"
               />
             </div>
 
             <div>
               <label
                 htmlFor="moderation-api-key"
-                className="mb-2 block text-sm font-medium text-[var(--ink)]"
+                className="mb-1.5 block text-xs font-medium text-[var(--ink-soft)]"
               >
-                API Key
+                AI 审核 API Key
               </label>
               <input
                 id="moderation-api-key"
                 type="password"
                 value={aiApiKey}
                 onChange={(event) => setAiApiKey(event.target.value)}
-                placeholder={config.aiConfigured ? "已配置（留空不改）" : "未配置"}
-                className="w-full rounded-xl border border-[var(--line)] bg-[var(--surface)]/60 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-soft)]/60 focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/20"
+                placeholder={config.aiConfigured ? "已加密存储（留空不修改）" : "未配置"}
+                className="w-full rounded-xl border border-[var(--line)] bg-white px-3.5 py-2.5 font-mono text-sm text-[var(--ink)] outline-none"
               />
             </div>
 
@@ -177,9 +186,9 @@ export function ModerationConfigForm({
               <div>
                 <label
                   htmlFor="moderation-model"
-                  className="mb-2 block text-sm font-medium text-[var(--ink)]"
+                  className="mb-1.5 block text-xs font-medium text-[var(--ink-soft)]"
                 >
-                  Model
+                  审核模型（Model）
                 </label>
                 <input
                   id="moderation-model"
@@ -187,15 +196,19 @@ export function ModerationConfigForm({
                   value={aiModel}
                   onChange={(event) => setAiModel(event.target.value)}
                   placeholder="text-moderation-latest"
-                  className="w-full rounded-xl border border-[var(--line)] bg-[var(--surface)]/60 px-4 py-3 text-sm text-[var(--ink)] outline-none transition placeholder:text-[var(--ink-soft)]/60 focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/20"
+                  className="w-full rounded-xl border border-[var(--line)] bg-white px-3.5 py-2.5 font-mono text-sm text-[var(--ink)] outline-none"
                 />
               </div>
+
               <div>
                 <label
                   htmlFor="moderation-threshold"
-                  className="mb-2 block text-sm font-medium text-[var(--ink)]"
+                  className="mb-1.5 flex items-center justify-between text-xs font-medium text-[var(--ink-soft)]"
                 >
-                  违规阈值 {aiThreshold.toFixed(2)}
+                  <span>拦截违规分阈值</span>
+                  <span className="rounded bg-white px-2 py-0.5 font-mono font-semibold text-[#b54722]">
+                    {aiThreshold.toFixed(2)}
+                  </span>
                 </label>
                 <input
                   id="moderation-threshold"
@@ -205,82 +218,114 @@ export function ModerationConfigForm({
                   step={0.05}
                   value={aiThreshold}
                   onChange={(event) => setAiThreshold(Number(event.target.value))}
-                  className="w-full accent-[var(--accent)]"
+                  className="mt-2 w-full accent-[#c85a32]"
                 />
               </div>
             </div>
           </div>
 
           {message ? (
-            <div
-              className={cn(
-                "mt-5 rounded-xl px-4 py-3 text-sm",
-                message.type === "success"
-                  ? "border border-emerald-200 bg-emerald-50 text-emerald-700"
-                  : "border border-red-200 bg-red-50 text-red-700",
-              )}
-            >
-              {message.type === "success" ? (
-                <CheckCircle2 className="mr-1 inline-block size-4" />
-              ) : null}
-              {message.text}
+            <div className="mt-4">
+              <Alert variant={message.type === "success" ? "success" : "error"}>
+                {message.text}
+              </Alert>
             </div>
           ) : null}
 
-          <button
-            type="button"
-            disabled={saving}
-            onClick={() => void handleSave()}
-            className="mt-6 inline-flex items-center gap-2 rounded-full bg-[var(--ink)] px-6 py-3 text-sm font-semibold text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-[var(--accent)] disabled:opacity-60"
-          >
-            {saving ? (
-              <Loader2 className="size-4 animate-spin" />
-            ) : (
-              <Save className="size-4" />
-            )}
-            保存配置
-          </button>
-          <p className="mt-3 text-xs text-[var(--ink-soft)]">
-            {config.updatedAt
-              ? `最近更新：${new Date(config.updatedAt).toLocaleString("zh-CN", { hour12: false })}`
-              : "使用环境变量默认值（尚未在后台保存过）。"}
-          </p>
+          <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-[var(--line)] pt-4">
+            <span className="text-xs text-[var(--ink-soft)]">
+              {config.updatedAt
+                ? `最近保存：${new Date(config.updatedAt).toLocaleString("zh-CN", { hour12: false })}`
+                : "当前使用默认环境变量配置"}
+            </span>
+            <button
+              type="button"
+              disabled={saving}
+              onClick={() => void handleSave()}
+              className="inline-flex items-center gap-2 rounded-full bg-[var(--ink)] px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[#c85a32] disabled:opacity-60"
+            >
+              {saving ? (
+                <Loader2 className="size-4 animate-spin" aria-hidden />
+              ) : (
+                <Save className="size-4" aria-hidden />
+              )}
+              保存配置
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* 词库只读 */}
-      <div className="studio-card self-start rounded-[1.8rem] p-6">
-        <button
-          type="button"
-          onClick={() => setCollapsed((value) => !value)}
-          className="flex w-full items-center justify-between text-left"
-        >
-          <span>
-            <h3 className="font-semibold text-[var(--ink)]">内置敏感词库</h3>
-            <p className="mt-1 text-xs text-[var(--ink-soft)]">
-              只读展示；共 {words.reduce((sum, item) => sum + item.count, 0)} 词，按类别分组。
-            </p>
-          </span>
-          <span className="text-xs text-[var(--ink-soft)]">{collapsed ? "展开 ▾" : "收起 ▴"}</span>
-        </button>
+      {/* 内置敏感词库检索面板 */}
+      <div className="studio-card flex max-h-[720px] flex-col self-start p-5 md:p-6">
+        <div>
+          <div className="flex items-center justify-between gap-2">
+            <h3 className="text-base font-semibold text-[var(--ink)]">内置敏感词库</h3>
+            <span className="rounded-full bg-[#efe8dc] px-2.5 py-0.5 font-mono text-xs font-semibold text-[var(--ink-soft)]">
+              {totalWords} 词
+            </span>
+          </div>
+          <p className="mt-1 text-xs text-[var(--ink-soft)]">
+            只读内置词表，支持输入关键词即时检索定位所属分类。
+          </p>
+        </div>
 
-        {!collapsed ? (
-          <div className="mt-4 grid gap-4">
-            {words.map((group) => (
-              <div key={group.category}>
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-medium text-[var(--ink)]">
+        <div className="relative mt-3.5">
+          <Search
+            className="pointer-events-none absolute top-1/2 left-3 size-3.5 -translate-y-1/2 text-[var(--ink-soft)]"
+            aria-hidden
+          />
+          <input
+            type="text"
+            value={wordQuery}
+            onChange={(event) => setWordQuery(event.target.value)}
+            placeholder="检索敏感词或类别名称…"
+            className="w-full rounded-xl border border-[var(--line)] bg-white py-2 pr-8 pl-8.5 text-xs outline-none"
+          />
+          {wordQuery ? (
+            <button
+              type="button"
+              onClick={() => setWordQuery("")}
+              aria-label="清空词库搜索"
+              className="absolute top-1/2 right-2.5 -translate-y-1/2 text-[var(--ink-soft)] hover:text-[var(--ink)]"
+            >
+              <X className="size-3.5" aria-hidden />
+            </button>
+          ) : null}
+        </div>
+
+        <div className="premium-scrollbar mt-4 flex-1 space-y-4 overflow-y-auto pr-1">
+          {filteredWordGroups.length === 0 ? (
+            <div className="py-10 text-center text-xs text-[var(--ink-soft)]">
+              未匹配到包含「{wordQuery}」的内置词条
+            </div>
+          ) : (
+            filteredWordGroups.map((group) => (
+              <div
+                key={group.category}
+                className="rounded-xl border border-[var(--line)] bg-[#faf7f1] p-3"
+              >
+                <div className="mb-2 flex items-center justify-between">
+                  <span className="text-xs font-semibold text-[var(--ink)]">
                     {group.label}
                   </span>
-                  <span className="text-xs text-[var(--ink-soft)]">{group.count} 词</span>
+                  <span className="font-mono text-[11px] text-[var(--ink-soft)]">
+                    {group.count} 词
+                  </span>
                 </div>
-                <p className="mt-1 text-xs leading-5 text-[var(--ink-soft)]">
-                  {group.words.join("、")}
-                </p>
+                <div className="flex flex-wrap gap-1.5">
+                  {group.words.map((word) => (
+                    <span
+                      key={`${group.category}-${word}`}
+                      className="rounded-md border border-[var(--line)] bg-white px-2 py-0.5 font-mono text-[11px] text-[var(--ink-soft)]"
+                    >
+                      {word}
+                    </span>
+                  ))}
+                </div>
               </div>
-            ))}
-          </div>
-        ) : null}
+            ))
+          )}
+        </div>
       </div>
     </div>
   );

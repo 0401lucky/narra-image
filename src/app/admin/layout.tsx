@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 
 import { AdminFrame } from "@/components/admin/admin-frame";
 import { serializeUser } from "@/lib/prisma-mappers";
+import { getAdminShellSummary } from "@/lib/server/admin-overview";
 import { requireAdminRecord } from "@/lib/server/current-user";
 
 export default async function AdminLayout({
@@ -16,8 +17,13 @@ export default async function AdminLayout({
     redirect("/login");
   }
 
+  const shellSummary = await getAdminShellSummary();
+
   return (
-    <AdminFrame currentUser={serializeUser(admin)}>
+    <AdminFrame
+      currentUser={serializeUser(admin)}
+      shellSummary={shellSummary}
+    >
       {children}
     </AdminFrame>
   );

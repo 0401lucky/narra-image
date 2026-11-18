@@ -1,64 +1,103 @@
+import { ShowcaseStatus } from "@prisma/client";
+import { ImageIcon } from "lucide-react";
 import { redirect } from "next/navigation";
 
+import { AdminPagination } from "@/components/admin/admin-pagination";
 import { AdminWorksBoard } from "@/components/admin/admin-works-board";
-import { requireAdminRecord } from "@/lib/server/current-user";
-import { listAdminWorks } from "@/lib/server/works";
-import { getBenefitConfig } from "@/lib/benefits/config";
 import { ShowcaseAutoApproveToggle } from "@/components/admin/showcase-auto-approve-toggle";
+import { AdminPageHeader } from "@/components/admin/ui/admin-page-header";
+import { WorksFilterBar } from "@/components/admin/works/works-filter-bar";
+import { getBenefitConfig } from "@/lib/benefits/config";
+import { requireAdminRecord } from "@/lib/server/current-user";
+import {
+  getAdminReviewCounts,
+  listAdminReviewPage,
+  type AdminReviewMediaFilter,
+} from "@/lib/server/works";
 
 export const dynamic = "force-dynamic";
 
-export default async function AdminWorksPage() {
+const PAGE_SIZE = 20;
+
+export default async function AdminWorksPage(props?: {
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
+}) {
   try {
     await requireAdminRecord();
   } catch {
     redirect("/login");
   }
 
-  const [works, benefitConfig] = await Promise.all([
-    listAdminWorks(),
+  const params = props?.searchParams ? await props.searchParams : {};
+  const page = Math.max(1, Number(params.page) || 1);
+  const q = typeof params.q === "string" ? params.q.trim() : "";
+  const mediaType: AdminReviewMediaFilter =
+    params.media === "image" || params.media === "video" ? params.media : "all";
+
+  const counts = await getAdminReviewCounts();
+
+  let status: ShowcaseStatus = ShowcaseStatus.PENDING;
+  if (
+    params.status === "PENDING" ||
+    params.status === "TAKEDOWN_PENDING" ||
+    params.status === "FEATURED"
+  ) {
+    status = params.status;
+  } else if (counts.pending === 0 && counts.takedownPending > 0) {
+    status = ShowcaseStatus.TAKEDOWN_PENDING;
+  } else if (counts.pending === 0 && counts.takedownPending === 0) {
+    status = ShowcaseStatus.FEATURED;
+  }
+
+  const [pageData, benefitConfig] = await Promise.all([
+    listAdminReviewPage({
+      mediaType,
+      page,
+      pageSize: PAGE_SIZE,
+      q,
+      status,
+    }),
     getBenefitConfig(),
   ]);
 
-  const counts = {
-    featured: works.filter((work) => work.showcaseStatus === "FEATURED").length,
-    pending: works.filter((work) => work.showcaseStatus === "PENDING").length,
-    takedownPending: works.filter((work) => work.showcaseStatus === "TAKEDOWN_PENDING").length,
-  };
+  const totalPages = Math.ceil(pageData.totalCount / PAGE_SIZE);
+  const extraParams: Record<string, string> = { status };
+  if (mediaType !== "all") extraParams.media = mediaType;
+  if (q) extraParams.q = q;
 
   return (
     <main className="pb-16">
-      <section className="mx-auto grid max-w-7xl gap-6 px-5 pt-8 md:px-8">
-        <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
-          <div>
-            <p className="admin-eyebrow">Review</p>
-            <h1 className="text-3xl font-semibold tracking-tight text-[var(--ink)] md:text-4xl">
-              作品审核
-            </h1>
-            <p className="mt-2 text-sm leading-relaxed text-[var(--ink-soft)]">
-              审核投稿、处理下架申请，并查看当前公开中的单图作品。
-            </p>
-          </div>
-        </div>
+      <section className="mx-auto grid max-w-7xl gap-6 px-5 pt-7 md:px-8">
+        <AdminPageHeader
+          eyebrow="Works Review"
+          icon={ImageIcon}
+          title="作品投稿与公开审核"
+          description="分队列审核用户提交至精选画廊的图片与视频作品，支持关键词检索与多选批量处理。"
+        />
 
         <ShowcaseAutoApproveToggle
           initialValue={benefitConfig.autoApproveShowcase}
         />
 
-        <div className="grid gap-4 md:grid-cols-3">
-          {[
-            ["待审核投稿", counts.pending],
-            ["待处理下架", counts.takedownPending],
-            ["公开中作品", counts.featured],
-          ].map(([label, value]) => (
-            <div key={label} className="studio-card rounded-[1.8rem] p-5">
-              <p className="text-sm text-[var(--ink-soft)]">{label}</p>
-              <p className="mt-3 text-4xl font-semibold text-[var(--ink)]">{value}</p>
-            </div>
-          ))}
-        </div>
+        <WorksFilterBar
+          counts={counts}
+          mediaType={mediaType}
+          q={q}
+          status={status}
+        />
 
-        <AdminWorksBoard works={works} />
+        <AdminWorksBoard
+          activeStatus={status}
+          enableBatch
+          works={pageData.items}
+        />
+
+        <AdminPagination
+          basePath="/admin/works"
+          currentPage={page}
+          totalPages={totalPages}
+          extraParams={extraParams}
+        />
       </section>
     </main>
   );

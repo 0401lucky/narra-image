@@ -1,12 +1,15 @@
 "use client";
 
+import { Ban, Eye, Shield, ShieldOff, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
-import { Ban, Shield, ShieldOff, Trash2 } from "lucide-react";
 
 import { CreditAdjuster } from "@/components/admin/admin-actions";
+import { cn } from "@/lib/utils";
+import { useAdminToast } from "./hooks/use-admin-toast";
+import { AdminConfirmDialog } from "./ui/admin-modal";
 
-type UserData = {
+export type AdminUserCardData = {
   banned: boolean;
   bannedAt: string | null;
   createdAt: string;
@@ -15,24 +18,31 @@ type UserData = {
   generationCount: number;
   id: string;
   nickname: string | null;
+  oauthProvider?: string | null;
   role: "admin" | "user";
+};
+
+type UserAdminCardProps = {
+  isCurrentAdmin: boolean;
+  onInspect?: (user: AdminUserCardData) => void;
+  user: AdminUserCardData;
 };
 
 export function UserAdminCard({
   isCurrentAdmin,
+  onInspect,
   user,
-}: {
-  isCurrentAdmin: boolean;
-  user: UserData;
-}) {
+}: UserAdminCardProps) {
   const router = useRouter();
+  const toast = useAdminToast();
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [deleting, setDeleting] = useState(false);
-  // null=不弹窗；true=确认封禁；false=确认解封
   const [bannedAction, setBannedAction] = useState<boolean | null>(null);
   const [banning, setBanning] = useState(false);
+  const [confirmRoleChange, setConfirmRoleChange] = useState(false);
+  const [updatingRole, setUpdatingRole] = useState(false);
 
   async function handleDelete() {
     setError(null);
@@ -43,10 +53,13 @@ export function UserAdminCard({
       });
       const result = (await response.json().catch(() => ({}))) as { error?: string };
       if (!response.ok) {
-        setError(result.error || "删除失败");
+        const msg = result.error || "删除失败";
+        setError(msg);
+        toast.error("删除用户失败", msg);
         return;
       }
       setConfirmDelete(false);
+      toast.success("用户已永久删除", user.email);
       startTransition(() => {
         router.refresh();
       });
@@ -55,25 +68,36 @@ export function UserAdminCard({
     }
   }
 
-  async function handleRoleToggle() {
+  async function handleRoleConfirm() {
     setError(null);
-    const newRole = user.role === "admin" ? "USER" : "ADMIN";
+    setUpdatingRole(true);
+    const nextPrismaRole = user.role === "admin" ? "USER" : "ADMIN";
+    try {
+      const response = await fetch(`/api/admin/users/${user.id}/role`, {
+        body: JSON.stringify({ role: nextPrismaRole }),
+        headers: { "Content-Type": "application/json" },
+        method: "PATCH",
+      });
+      const result = (await response.json().catch(() => ({}))) as { error?: string };
 
-    const response = await fetch(`/api/admin/users/${user.id}/role`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ role: newRole }),
-    });
-    const result = (await response.json()) as { error?: string };
+      if (!response.ok) {
+        const msg = result.error || "修改权限失败";
+        setError(msg);
+        toast.error("修改角色失败", msg);
+        return;
+      }
 
-    if (!response.ok) {
-      setError(result.error || "操作失败");
-      return;
+      setConfirmRoleChange(false);
+      toast.success(
+        nextPrismaRole === "ADMIN" ? "已授予管理员权限" : "已撤销管理员权限",
+        user.email,
+      );
+      startTransition(() => {
+        router.refresh();
+      });
+    } finally {
+      setUpdatingRole(false);
     }
-
-    startTransition(() => {
-      router.refresh();
-    });
   }
 
   async function handleBan(banned: boolean) {
@@ -81,18 +105,21 @@ export function UserAdminCard({
     setBanning(true);
     try {
       const response = await fetch(`/api/admin/users/${user.id}/ban`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ banned }),
+        headers: { "Content-Type": "application/json" },
+        method: "PATCH",
       });
-      const result = (await response.json()) as { error?: string };
+      const result = (await response.json().catch(() => ({}))) as { error?: string };
 
       if (!response.ok) {
-        setError(result.error || "操作失败");
+        const msg = result.error || "操作失败";
+        setError(msg);
+        toast.error(banned ? "封禁失败" : "解封失败", msg);
         return;
       }
 
       setBannedAction(null);
+      toast.success(banned ? "用户已封禁" : "用户已解封", user.email);
       startTransition(() => {
         router.refresh();
       });
@@ -101,35 +128,50 @@ export function UserAdminCard({
     }
   }
 
+  const nextIsAdmin = user.role !== "admin";
+
   return (
     <>
-      <article className="studio-card grid gap-4 rounded-[1.8rem] p-5 xl:grid-cols-[1.2fr_0.6fr_0.5fr_0.8fr_auto]">
-        <div>
-          <div className="flex items-center gap-2">
+      <article className="studio-card grid gap-4 p-5 xl:grid-cols-[1.25fr_0.5fr_0.45fr_0.95fr_auto] xl:items-center">
+        <div className="min-w-0">
+          <div className="flex flex-wrap items-center gap-1.5">
             <span
-              className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${
+              className={cn(
+                "rounded-full px-2.5 py-0.5 text-[11px] font-semibold",
                 user.role === "admin"
-                  ? "bg-amber-100 text-amber-700"
-                  : "border border-[var(--line)] text-[var(--ink-soft)]"
-              }`}
+                  ? "bg-amber-100 text-amber-800"
+                  : "border border-[var(--line)] bg-[#f8f4ec] text-[var(--ink-soft)]",
+              )}
             >
-              {user.role === "admin" ? "管理员" : "用户"}
+              {user.role === "admin" ? "管理员" : "普通用户"}
             </span>
-            {user.banned && (
-              <span className="rounded-full bg-rose-100 px-2.5 py-0.5 text-xs font-medium text-rose-700">
+            {user.oauthProvider ? (
+              <span className="rounded-full bg-sky-50 px-2 py-0.5 text-[11px] font-medium text-sky-700">
+                {user.oauthProvider === "linuxdo" ? "LinuxDo" : user.oauthProvider}
+              </span>
+            ) : null}
+            {user.banned ? (
+              <span className="rounded-full bg-rose-100 px-2.5 py-0.5 text-[11px] font-semibold text-rose-700">
                 已封禁
               </span>
-            )}
-            {isCurrentAdmin && (
-              <span className="text-[10px] text-[var(--ink-soft)]">（当前登录）</span>
-            )}
+            ) : null}
+            {isCurrentAdmin ? (
+              <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-medium text-emerald-700">
+                当前登录
+              </span>
+            ) : null}
           </div>
-          <h2 className="mt-2 text-lg font-medium truncate">
-            {user.nickname?.trim() || user.email}
-          </h2>
-          {user.nickname?.trim() && (
-            <p className="mt-0.5 text-xs text-[var(--ink-soft)] truncate">{user.email}</p>
-          )}
+
+          <div className="mt-2 flex items-center gap-2">
+            <h2 className="truncate text-base font-semibold text-[var(--ink)]">
+              {user.nickname?.trim() || user.email}
+            </h2>
+          </div>
+          {user.nickname?.trim() ? (
+            <p className="mt-0.5 truncate font-mono text-xs text-[var(--ink-soft)]">
+              {user.email}
+            </p>
+          ) : null}
           <p className="mt-1 text-xs text-[var(--ink-soft)]">
             注册于 {new Date(user.createdAt).toLocaleString("zh-CN")}
             {user.bannedAt
@@ -140,169 +182,168 @@ export function UserAdminCard({
 
         <div>
           <div className="text-xs text-[var(--ink-soft)]">当前积分</div>
-          <div className="mt-2 text-2xl font-semibold text-[var(--accent)]">
-            {user.credits}
+          <div className="mt-1 font-mono text-2xl font-semibold tabular-nums text-[var(--admin-ink-credit)]">
+            {user.credits.toLocaleString("zh-CN")}
           </div>
         </div>
 
         <div>
-          <div className="text-xs text-[var(--ink-soft)]">生成次数</div>
-          <div className="mt-2 text-2xl font-semibold text-[var(--ink)]">
-            {user.generationCount}
+          <div className="text-xs text-[var(--ink-soft)]">生成任务</div>
+          <div className="mt-1 font-mono text-2xl font-semibold tabular-nums text-[var(--ink)]">
+            {user.generationCount.toLocaleString("zh-CN")}
           </div>
         </div>
 
         <CreditAdjuster userId={user.id} />
 
-        <div className="flex items-end gap-2">
-          {!isCurrentAdmin && (
+        <div className="flex flex-wrap items-center gap-1.5 xl:justify-end">
+          {onInspect ? (
+            <button
+              type="button"
+              onClick={() => onInspect(user)}
+              className="inline-flex items-center gap-1.5 rounded-full border border-[var(--line)] bg-white px-3 py-1.5 text-xs font-medium text-[var(--ink)] transition hover:border-[#c85a32] hover:text-[#c85a32]"
+            >
+              <Eye className="size-3.5" aria-hidden />
+              详情
+            </button>
+          ) : null}
+
+          {!isCurrentAdmin ? (
             <>
               <button
                 type="button"
-                disabled={isPending}
-                onClick={() => startTransition(handleRoleToggle)}
-                className={`inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-xs font-medium transition disabled:opacity-60 ${
+                disabled={isPending || updatingRole}
+                onClick={() => {
+                  setError(null);
+                  setConfirmRoleChange(true);
+                }}
+                className={cn(
+                  "inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition disabled:opacity-60",
                   user.role === "admin"
-                    ? "border border-amber-200 text-amber-700 hover:bg-amber-50"
-                    : "border border-[var(--line)] text-[var(--ink-soft)] hover:border-[var(--accent)] hover:text-[var(--accent)]"
-                }`}
+                    ? "border border-amber-200 bg-amber-50/50 text-amber-800 hover:bg-amber-100/70"
+                    : "border border-[var(--line)] bg-white text-[var(--ink-soft)] hover:border-[#c85a32] hover:text-[#c85a32]",
+                )}
               >
                 {user.role === "admin" ? (
                   <>
-                    <ShieldOff className="size-3.5" />
-                    {isPending ? "处理中…" : "取消管理员"}
+                    <ShieldOff className="size-3.5" aria-hidden />
+                    取消管理员
                   </>
                 ) : (
                   <>
-                    <Shield className="size-3.5" />
-                    {isPending ? "处理中…" : "设为管理员"}
+                    <Shield className="size-3.5" aria-hidden />
+                    设为管理员
                   </>
                 )}
               </button>
+
               <button
                 type="button"
-                onClick={() => setBannedAction(!user.banned)}
-                className={`inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-xs font-medium transition ${
+                onClick={() => {
+                  setError(null);
+                  setBannedAction(!user.banned);
+                }}
+                className={cn(
+                  "inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition",
                   user.banned
-                    ? "border border-emerald-200 text-emerald-700 hover:bg-emerald-50"
-                    : "border border-rose-200 text-rose-600 hover:bg-rose-50"
-                }`}
+                    ? "border border-emerald-200 bg-emerald-50/50 text-emerald-700 hover:bg-emerald-100/70"
+                    : "border border-rose-200 bg-white text-rose-600 hover:bg-rose-50",
+                )}
               >
-                <Ban className="size-3.5" />
+                <Ban className="size-3.5" aria-hidden />
                 {user.banned ? "解封" : "封禁"}
               </button>
+
               <button
                 type="button"
                 disabled={deleting}
-                onClick={() => setConfirmDelete(true)}
-                className="inline-flex items-center gap-1.5 rounded-full border border-rose-200 px-3 py-2 text-xs font-medium text-rose-600 transition hover:bg-rose-50 disabled:opacity-60"
+                onClick={() => {
+                  setError(null);
+                  setConfirmDelete(true);
+                }}
+                aria-label={`删除用户 ${user.email}`}
+                className="inline-flex items-center gap-1.5 rounded-full border border-rose-200 bg-white px-3 py-1.5 text-xs font-medium text-rose-600 transition hover:bg-rose-50 disabled:opacity-60"
               >
-                <Trash2 className="size-3.5" />
-                删除用户
+                <Trash2 className="size-3.5" aria-hidden />
+                删除
               </button>
             </>
-          )}
-          {error && <span className="text-xs text-rose-600">{error}</span>}
+          ) : null}
         </div>
       </article>
 
-      {confirmDelete ? (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm"
-          onClick={() => { if (!deleting) setConfirmDelete(false); }}
-        >
-          <div
-            className="studio-card w-full max-w-md rounded-[1.8rem] p-6"
-            onClick={(event) => event.stopPropagation()}
-          >
-            <h3 className="text-lg font-semibold text-[var(--ink)]">删除用户</h3>
-            <p className="mt-2 text-sm leading-relaxed text-[var(--ink-soft)]">
-              将永久删除该用户及其全部生成记录、对话、API Key、签到、兑换记录、点赞。该用户创建过的邀请码/兑换码将保留，作者字段会被清空。操作不可恢复。
-            </p>
-            <div className="mt-4 grid gap-2 rounded-[1.2rem] border border-[var(--line)] bg-[var(--surface-strong)]/40 p-3 text-xs text-[var(--ink-soft)]">
-              <div>邮箱：{user.email}</div>
-              <div>昵称：{user.nickname?.trim() || "—"}</div>
-              <div>角色：{user.role === "admin" ? "管理员" : "用户"}</div>
-              <div>生成次数：{user.generationCount}</div>
-            </div>
-            {error ? (
-              <p className="mt-3 text-sm text-rose-600">{error}</p>
-            ) : null}
-            <div className="mt-6 flex flex-wrap justify-end gap-2">
-              <button
-                type="button"
-                disabled={deleting}
-                onClick={() => setConfirmDelete(false)}
-                className="rounded-full border border-[var(--line)] px-4 py-2 text-sm text-[var(--ink-soft)] disabled:opacity-60"
-              >
-                取消
-              </button>
-              <button
-                type="button"
-                disabled={deleting}
-                onClick={handleDelete}
-                className="rounded-full bg-rose-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-rose-700 disabled:opacity-60"
-              >
-                {deleting ? "删除中..." : "确认删除"}
-              </button>
-            </div>
-          </div>
+      <AdminConfirmDialog
+        open={confirmRoleChange}
+        onClose={() => {
+          if (!updatingRole) setConfirmRoleChange(false);
+        }}
+        onConfirm={() => void handleRoleConfirm()}
+        busy={updatingRole}
+        tone="warning"
+        title={nextIsAdmin ? "授予管理员权限" : "撤销管理员权限"}
+        description={
+          nextIsAdmin
+            ? "授予管理员角色后，该用户将可访问整个管理后台并修改全站配置、渠道密钥与用户资产。"
+            : "撤销管理员角色后，该用户将恢复为普通注册用户，无法再访问 /admin 管理台。"
+        }
+        confirmLabel={updatingRole ? "保存中…" : nextIsAdmin ? "确认设为管理员" : "确认取消管理员"}
+        error={error}
+      >
+        <div className="grid gap-1.5 rounded-xl border border-[var(--line)] bg-[#f8f4ec] p-3 text-xs text-[var(--ink-soft)]">
+          <div>目标邮箱：{user.email}</div>
+          <div>当前昵称：{user.nickname?.trim() || "—"}</div>
+          <div>变更角色：{user.role === "admin" ? "管理员 → 普通用户" : "普通用户 → 管理员"}</div>
         </div>
-      ) : null}
+      </AdminConfirmDialog>
 
-      {bannedAction !== null ? (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm"
-          onClick={() => setBannedAction(null)}
-        >
-          <div
-            className="studio-card w-full max-w-md rounded-[1.8rem] p-6"
-            onClick={(event) => event.stopPropagation()}
-          >
-            <h3 className="text-lg font-semibold text-[var(--ink)]">
-              {bannedAction ? "封禁用户" : "解封用户"}
-            </h3>
-            <p className="mt-2 text-sm leading-relaxed text-[var(--ink-soft)]">
-              {bannedAction
-                ? "封禁后该用户将无法登录，已登录会话会被立即拦截登出。积分与作品数据保留，解封后恢复。"
-                : "解封后该用户可重新登录并恢复全部使用。"}
-            </p>
-            <div className="mt-4 grid gap-2 rounded-[1.2rem] border border-[var(--line)] bg-[var(--surface-strong)]/40 p-3 text-xs text-[var(--ink-soft)]">
-              <div>邮箱：{user.email}</div>
-              <div>昵称：{user.nickname?.trim() || "—"}</div>
-              <div>状态：{user.banned ? "已封禁" : "正常"}</div>
-            </div>
-            {error ? (
-              <p className="mt-3 text-sm text-rose-600">{error}</p>
-            ) : null}
-            <div className="mt-6 flex flex-wrap justify-end gap-2">
-              <button
-                type="button"
-                onClick={() => setBannedAction(null)}
-                className="rounded-full border border-[var(--line)] px-4 py-2 text-sm text-[var(--ink-soft)]"
-              >
-                取消
-              </button>
-              <button
-                type="button"
-                disabled={banning}
-                onClick={() => void handleBan(bannedAction)}
-                className={`rounded-full px-4 py-2 text-sm font-medium text-white transition disabled:opacity-60 ${
-                  bannedAction
-                    ? "bg-rose-600 hover:bg-rose-700"
-                    : "bg-emerald-600 hover:bg-emerald-700"
-                }`}
-              >
-                {banning
-                  ? "处理中..."
-                  : bannedAction
-                    ? "确认封禁"
-                    : "确认解封"}
-              </button>
-            </div>
-          </div>
+      <AdminConfirmDialog
+        open={confirmDelete}
+        onClose={() => {
+          if (!deleting) setConfirmDelete(false);
+        }}
+        onConfirm={() => void handleDelete()}
+        busy={deleting}
+        tone="danger"
+        title="永久删除用户"
+        description="将永久删除该用户及其全部生成记录、对话、API Key、签到、兑换记录与点赞。该用户创建过的邀请码/兑换码将保留但清空创建者引用。"
+        confirmLabel={deleting ? "删除中…" : "确认永久删除"}
+        error={error}
+      >
+        <div className="grid gap-1.5 rounded-xl border border-[var(--line)] bg-[#f8f4ec] p-3 text-xs text-[var(--ink-soft)]">
+          <div>邮箱：{user.email}</div>
+          <div>昵称：{user.nickname?.trim() || "—"}</div>
+          <div>角色：{user.role === "admin" ? "管理员" : "普通用户"}</div>
+          <div>累计生成：{user.generationCount} 次</div>
         </div>
-      ) : null}
+      </AdminConfirmDialog>
+
+      <AdminConfirmDialog
+        open={bannedAction !== null}
+        onClose={() => {
+          if (!banning) setBannedAction(null);
+        }}
+        onConfirm={() => {
+          if (bannedAction !== null) void handleBan(bannedAction);
+        }}
+        busy={banning}
+        tone={bannedAction ? "danger" : "primary"}
+        title={bannedAction ? "封禁用户账号" : "解封用户账号"}
+        description={
+          bannedAction
+            ? "封禁后该用户将无法登录，已登录会话会被立即拦截登出；历史积分与作品数据保留，后续可随时解封恢复。"
+            : "解封后该用户可重新登录并恢复全部创作与 API 调用权限。"
+        }
+        confirmLabel={
+          banning ? "处理中…" : bannedAction ? "确认封禁" : "确认解封"
+        }
+        error={error}
+      >
+        <div className="grid gap-1.5 rounded-xl border border-[var(--line)] bg-[#f8f4ec] p-3 text-xs text-[var(--ink-soft)]">
+          <div>邮箱：{user.email}</div>
+          <div>昵称：{user.nickname?.trim() || "—"}</div>
+          <div>当前状态：{user.banned ? "已封禁" : "正常"}</div>
+        </div>
+      </AdminConfirmDialog>
     </>
   );
 }

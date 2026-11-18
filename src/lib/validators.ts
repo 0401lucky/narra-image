@@ -175,6 +175,20 @@ export const adminWorkReviewSchema = z.object({
   reviewNote: z.string().trim().max(300, "审核备注最多 300 个字符").optional().nullable(),
 });
 
+export const adminWorkBatchReviewSchema = z.object({
+  action: z.enum(adminWorkReviewActions),
+  items: z
+    .array(
+      z.object({
+        id: z.string().trim().min(1),
+        mediaType: z.enum(["image", "video"]).default("image"),
+      }),
+    )
+    .min(1, "请至少选择一件作品")
+    .max(50, "单次批量审核最多处理 50 件作品"),
+  reviewNote: z.string().trim().max(300, "审核备注最多 300 个字符").optional().nullable(),
+});
+
 export const adminGenerationBulkDeleteSchema = z.object({
   ids: z.array(z.string().trim().min(1)).min(1, "请选择要删除的生成记录").max(100, "单次最多删除 100 条生成记录"),
 });

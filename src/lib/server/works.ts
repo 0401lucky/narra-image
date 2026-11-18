@@ -484,3 +484,290 @@ export async function getVideoMutationTarget(id: string) {
     },
   });
 }
+
+export type AdminReviewMediaFilter = "all" | "image" | "video";
+
+export type AdminReviewCounts = {
+  featured: number;
+  pending: number;
+  takedownPending: number;
+};
+
+export async function getAdminReviewCounts(): Promise<AdminReviewCounts> {
+  const countImg =
+    typeof db.generationImage?.count === "function"
+      ? (status: ShowcaseStatus) =>
+          db.generationImage.count({ where: { showcaseStatus: status } })
+      : async () => 0;
+  const countVid =
+    typeof db.generatedVideo?.count === "function"
+      ? (status: ShowcaseStatus) =>
+          db.generatedVideo.count({ where: { showcaseStatus: status } })
+      : async () => 0;
+
+  const [
+    imgPending,
+    vidPending,
+    imgTakedown,
+    vidTakedown,
+    imgFeatured,
+    vidFeatured,
+  ] = await Promise.all([
+    countImg(ShowcaseStatus.PENDING),
+    countVid(ShowcaseStatus.PENDING),
+    countImg(ShowcaseStatus.TAKEDOWN_PENDING),
+    countVid(ShowcaseStatus.TAKEDOWN_PENDING),
+    countImg(ShowcaseStatus.FEATURED),
+    countVid(ShowcaseStatus.FEATURED),
+  ]);
+
+  return {
+    featured: imgFeatured + vidFeatured,
+    pending: imgPending + vidPending,
+    takedownPending: imgTakedown + vidTakedown,
+  };
+}
+
+const videoAdminInclude = Prisma.validator<Prisma.GeneratedVideoInclude>()({
+  job: {
+    select: {
+      createdAt: true,
+      id: true,
+      model: true,
+      negativePrompt: true,
+      prompt: true,
+      size: true,
+      status: true,
+      user: {
+        select: {
+          email: true,
+          id: true,
+          nickname: true,
+        },
+      },
+      userId: true,
+    },
+  },
+  reviewedBy: {
+    select: {
+      email: true,
+      id: true,
+    },
+  },
+});
+
+export type SerializedAdminReviewItem = ReturnType<typeof serializeAdminWork> & {
+  durationSeconds?: number | null;
+  mediaType?: "image" | "video";
+  posterUrl?: string | null;
+};
+
+export async function listAdminReviewPage(options: {
+  mediaType?: AdminReviewMediaFilter;
+  page?: number;
+  pageSize?: number;
+  q?: string;
+  status: ShowcaseStatus;
+}): Promise<{
+  items: SerializedAdminReviewItem[];
+  totalCount: number;
+}> {
+  const mediaType = options.mediaType ?? "all";
+  const page = Math.max(1, options.page ?? 1);
+  const pageSize = Math.min(Math.max(options.pageSize ?? 20, 1), 60);
+  const q = (options.q ?? "").trim();
+
+  const jobSearchWhere: Prisma.GenerationJobWhereInput | undefined = q
+    ? {
+        OR: [
+          { prompt: { contains: q, mode: "insensitive" } },
+          { model: { contains: q, mode: "insensitive" } },
+          {
+            user: {
+              is: {
+                OR: [
+                  { email: { contains: q, mode: "insensitive" } },
+                  { nickname: { contains: q, mode: "insensitive" } },
+                ],
+              },
+            },
+          },
+        ],
+      }
+    : undefined;
+
+  const imageWhere: Prisma.GenerationImageWhereInput = {
+    showcaseStatus: options.status,
+    ...(jobSearchWhere ? { job: { is: jobSearchWhere } } : {}),
+  };
+
+  const videoWhere: Prisma.GeneratedVideoWhereInput = {
+    showcaseStatus: options.status,
+    ...(jobSearchWhere ? { job: { is: jobSearchWhere } } : {}),
+  };
+
+  const canCountImage = typeof db.generationImage?.count === "function";
+  const canQueryVideo = typeof db.generatedVideo?.findMany === "function";
+  const canCountVideo = typeof db.generatedVideo?.count === "function";
+
+  if (mediaType === "image") {
+    const rows = await db.generationImage.findMany({
+      include: workAdminInclude,
+      orderBy: [
+        { submittedAt: "desc" },
+        { featuredAt: "desc" },
+        { createdAt: "desc" },
+      ],
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+      where: imageWhere,
+    });
+    const totalCount = canCountImage
+      ? await db.generationImage.count({ where: imageWhere })
+      : rows.length;
+    return {
+      items: rows.map(serializeAdminWork),
+      totalCount,
+    };
+  }
+
+  if (mediaType === "video") {
+    const rows = canQueryVideo
+      ? await db.generatedVideo.findMany({
+          include: videoAdminInclude,
+          orderBy: [
+            { submittedAt: "desc" },
+            { featuredAt: "desc" },
+            { createdAt: "desc" },
+          ],
+          skip: (page - 1) * pageSize,
+          take: pageSize,
+          where: videoWhere,
+        })
+      : [];
+    const totalCount = canCountVideo
+      ? await db.generatedVideo.count({ where: videoWhere })
+      : rows.length;
+    return {
+      items: rows.map((row) => ({
+        author: row.job.user,
+        authorNickname: row.job.user.nickname ?? null,
+        availability: "available" as const,
+        createdAt: row.createdAt.toISOString(),
+        durationSeconds: row.durationSeconds,
+        featuredAt: row.featuredAt?.toISOString() ?? null,
+        generationCreatedAt: row.job.createdAt.toISOString(),
+        generationStatus:
+          row.job.status === "SUCCEEDED"
+            ? ("succeeded" as const)
+            : row.job.status === "FAILED"
+              ? ("failed" as const)
+              : ("pending" as const),
+        id: row.id,
+        jobId: row.jobId,
+        mediaType: "video" as const,
+        model: row.job.model,
+        negativePrompt: row.job.negativePrompt,
+        ownerId: row.job.userId,
+        posterUrl: row.posterUrl,
+        prompt: row.job.prompt,
+        reviewNote: row.reviewNote,
+        reviewedAt: row.reviewedAt?.toISOString() ?? null,
+        reviewedById: row.reviewedById,
+        reviewer: row.reviewedBy
+          ? { email: row.reviewedBy.email, id: row.reviewedBy.id }
+          : null,
+        showPromptPublic: row.showPromptPublic,
+        showcaseStatus: row.showcaseStatus,
+        size: row.job.size,
+        submittedAt: row.submittedAt?.toISOString() ?? null,
+        url: row.url,
+      })),
+      totalCount,
+    };
+  }
+
+  // mediaType === "all": fetch up to page * pageSize from each and merge-sort accurately
+  const windowLimit = page * pageSize;
+  const [imgRows, vidRows] = await Promise.all([
+    db.generationImage.findMany({
+      include: workAdminInclude,
+      orderBy: [
+        { submittedAt: "desc" },
+        { featuredAt: "desc" },
+        { createdAt: "desc" },
+      ],
+      take: windowLimit,
+      where: imageWhere,
+    }),
+    canQueryVideo
+      ? db.generatedVideo.findMany({
+          include: videoAdminInclude,
+          orderBy: [
+            { submittedAt: "desc" },
+            { featuredAt: "desc" },
+            { createdAt: "desc" },
+          ],
+          take: windowLimit,
+          where: videoWhere,
+        })
+      : Promise.resolve([]),
+  ]);
+
+  const [imgCount, vidCount] = await Promise.all([
+    canCountImage
+      ? db.generationImage.count({ where: imageWhere })
+      : Promise.resolve(imgRows.length),
+    canCountVideo
+      ? db.generatedVideo.count({ where: videoWhere })
+      : Promise.resolve(vidRows.length),
+  ]);
+
+  const mappedImages: SerializedAdminReviewItem[] = imgRows.map(serializeAdminWork);
+
+  const mappedVideos: SerializedAdminReviewItem[] = vidRows.map((row) => ({
+    author: row.job.user,
+    authorNickname: row.job.user.nickname ?? null,
+    availability: "available",
+    createdAt: row.createdAt.toISOString(),
+    durationSeconds: row.durationSeconds,
+    featuredAt: row.featuredAt?.toISOString() ?? null,
+    generationCreatedAt: row.job.createdAt.toISOString(),
+    generationStatus:
+      row.job.status === "SUCCEEDED"
+        ? "succeeded"
+        : row.job.status === "FAILED"
+          ? "failed"
+          : "pending",
+    id: row.id,
+    jobId: row.jobId,
+    mediaType: "video",
+    model: row.job.model,
+    negativePrompt: row.job.negativePrompt,
+    ownerId: row.job.userId,
+    posterUrl: row.posterUrl,
+    prompt: row.job.prompt,
+    reviewNote: row.reviewNote,
+    reviewedAt: row.reviewedAt?.toISOString() ?? null,
+    reviewedById: row.reviewedById,
+    reviewer: row.reviewedBy
+      ? { email: row.reviewedBy.email, id: row.reviewedBy.id }
+      : null,
+    showPromptPublic: row.showPromptPublic,
+    showcaseStatus: row.showcaseStatus,
+    size: row.job.size,
+    submittedAt: row.submittedAt?.toISOString() ?? null,
+    url: row.url,
+  }));
+
+  const combined = [...mappedImages, ...mappedVideos].sort((a, b) => {
+    const timeA = Date.parse(a.submittedAt ?? a.featuredAt ?? a.createdAt);
+    const timeB = Date.parse(b.submittedAt ?? b.featuredAt ?? b.createdAt);
+    return timeB - timeA;
+  });
+
+  return {
+    items: combined.slice((page - 1) * pageSize, page * pageSize),
+    totalCount: imgCount + vidCount,
+  };
+}
