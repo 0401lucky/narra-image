@@ -1,5 +1,7 @@
-import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import Link from "next/link";
+
+import { cn } from "@/lib/utils";
 
 type AdminPaginationProps = {
   basePath: string;
@@ -35,17 +37,24 @@ export function AdminPagination({
   }
 
   return (
-    <nav className="-mx-2 flex max-w-full items-center justify-start gap-1.5 overflow-x-auto px-2 pt-2 [scrollbar-width:none] sm:mx-0 sm:justify-center sm:px-0 [&::-webkit-scrollbar]:hidden">
+    <nav
+      aria-label="列表分页"
+      className="-mx-2 flex max-w-full items-center justify-start gap-1.5 overflow-x-auto px-2 pt-2 [scrollbar-width:none] sm:mx-0 sm:justify-center sm:px-0 [&::-webkit-scrollbar]:hidden"
+    >
       {currentPage > 1 ? (
         <Link
           href={buildUrl(basePath, currentPage - 1, extraParams)}
-          className="inline-flex size-9 items-center justify-center rounded-xl border border-[var(--admin-line)] text-[var(--ink-soft)] transition-all duration-200 hover:border-[#d87b37]/30 hover:bg-white/50 hover:text-[#d87b37] backdrop-blur-xs"
+          aria-label="上一页"
+          className="inline-flex size-9 items-center justify-center rounded-xl border border-[var(--admin-line)] bg-white text-[var(--ink-soft)] transition-colors hover:border-[#c85a32]/40 hover:text-[#c85a32]"
         >
-          <ChevronLeft className="size-4" />
+          <ChevronLeft className="size-4" aria-hidden />
         </Link>
       ) : (
-        <span className="inline-flex size-9 items-center justify-center rounded-xl border border-[var(--admin-line)]/40 text-[var(--ink-soft)]/30 bg-white/10 backdrop-blur-xs">
-          <ChevronLeft className="size-4" />
+        <span
+          aria-disabled="true"
+          className="inline-flex size-9 items-center justify-center rounded-xl border border-[var(--admin-line)]/50 bg-white/40 text-[var(--ink-soft)]/35"
+        >
+          <ChevronLeft className="size-4" aria-hidden />
         </span>
       )}
 
@@ -53,7 +62,7 @@ export function AdminPagination({
         p === "..." ? (
           <span
             key={`dots-${i}`}
-            className="inline-flex size-9 items-center justify-center text-xs text-[var(--ink-soft)] font-medium"
+            className="inline-flex size-9 items-center justify-center text-xs font-medium text-[var(--ink-soft)]"
           >
             …
           </span>
@@ -61,11 +70,13 @@ export function AdminPagination({
           <Link
             key={p}
             href={buildUrl(basePath, p, extraParams)}
-            className={`inline-flex size-9 items-center justify-center rounded-xl text-xs sm:text-sm font-medium transition-all duration-200 ${
+            aria-current={p === currentPage ? "page" : undefined}
+            className={cn(
+              "inline-flex size-9 items-center justify-center rounded-xl text-xs font-medium tabular-nums transition-colors sm:text-sm",
               p === currentPage
-                ? "bg-[#2c1d11] text-[#fcf9f4] shadow-md shadow-[#2c1d11]/15 border border-[#2c1d11] backdrop-blur-xs"
-                : "border border-[var(--admin-line)] text-[var(--ink-soft)] hover:border-[#d87b37]/30 hover:bg-white/50 hover:text-[#d87b37] backdrop-blur-xs"
-            }`}
+                ? "border border-[#231810] bg-[#231810] text-[#fcf9f4] shadow-xs"
+                : "border border-[var(--admin-line)] bg-white text-[var(--ink-soft)] hover:border-[#c85a32]/40 hover:text-[#c85a32]",
+            )}
           >
             {p}
           </Link>
@@ -75,13 +86,17 @@ export function AdminPagination({
       {currentPage < totalPages ? (
         <Link
           href={buildUrl(basePath, currentPage + 1, extraParams)}
-          className="inline-flex size-9 items-center justify-center rounded-xl border border-[var(--admin-line)] text-[var(--ink-soft)] transition-all duration-200 hover:border-[#d87b37]/30 hover:bg-white/50 hover:text-[#d87b37] backdrop-blur-xs"
+          aria-label="下一页"
+          className="inline-flex size-9 items-center justify-center rounded-xl border border-[var(--admin-line)] bg-white text-[var(--ink-soft)] transition-colors hover:border-[#c85a32]/40 hover:text-[#c85a32]"
         >
-          <ChevronRight className="size-4" />
+          <ChevronRight className="size-4" aria-hidden />
         </Link>
       ) : (
-        <span className="inline-flex size-9 items-center justify-center rounded-xl border border-[var(--admin-line)]/40 text-[var(--ink-soft)]/30 bg-white/10 backdrop-blur-xs">
-          <ChevronRight className="size-4" />
+        <span
+          aria-disabled="true"
+          className="inline-flex size-9 items-center justify-center rounded-xl border border-[var(--admin-line)]/50 bg-white/40 text-[var(--ink-soft)]/35"
+        >
+          <ChevronRight className="size-4" aria-hidden />
         </span>
       )}
     </nav>

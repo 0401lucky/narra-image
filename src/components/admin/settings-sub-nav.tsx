@@ -1,34 +1,23 @@
-import Link from "next/link";
+"use client";
 
-import { cn } from "@/lib/utils";
+import { ADMIN_SETTINGS_LINKS } from "./constants";
+import { AdminLinkTabs } from "./ui/admin-tabs";
 
-const settingsLinks = [
-  { href: "/admin/settings", label: "总览" },
-  { href: "/admin/settings/oauth", label: "登录源" },
-  { href: "/admin/settings/turnstile", label: "人机验证" },
-  { href: "/admin/settings/channels", label: "生图渠道" },
-  { href: "/admin/settings/login-cover", label: "登录封面" },
-  { href: "/admin/settings/moderation", label: "内容审核" },
-  { href: "/admin/settings/storage", label: "图片存储" },
-];
+type SettingsSubNavProps = {
+  currentPath: string;
+};
 
-export function SettingsSubNav({ currentPath }: { currentPath: string }) {
+export function SettingsSubNav({ currentPath }: SettingsSubNavProps) {
   return (
-    <nav className="flex flex-wrap gap-2 border-b border-[var(--line)] pb-3">
-      {settingsLinks.map((link) => (
-        <Link
-          key={link.href}
-          href={link.href}
-          className={cn(
-            "rounded-full px-3.5 py-1.5 text-xs transition",
-            currentPath === link.href
-              ? "bg-[var(--accent)]/10 text-[var(--accent)]"
-              : "text-[var(--ink-soft)] hover:text-[var(--ink)]",
-          )}
-        >
-          {link.label}
-        </Link>
-      ))}
-    </nav>
+    <AdminLinkTabs
+      ariaLabel="系统设置二级导航"
+      activeHref={currentPath}
+      layoutId="admin-settings-sub-nav"
+      items={ADMIN_SETTINGS_LINKS.map((item) => ({
+        href: item.href,
+        icon: item.icon,
+        label: item.label,
+      }))}
+    />
   );
 }

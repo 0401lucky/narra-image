@@ -13,6 +13,7 @@ type ImageLightboxProps = {
   alt?: string;
   children?: ReactNode;
   onClose: () => void;
+  rawSrc?: boolean;
   src: string;
 };
 
@@ -20,9 +21,10 @@ export function ImageLightbox({
   alt = "作品大图",
   children,
   onClose,
+  rawSrc = false,
   src,
 }: ImageLightboxProps) {
-  const displaySrc = getThumbUrl(src, 1920, 90);
+  const displaySrc = rawSrc ? src : getThumbUrl(src, 1920, 90);
   const [isMounted, setIsMounted] = useState(false);
   // 关闭时先在组件内播完退场动画，再通知父级卸载，调用方无需包 AnimatePresence
   const [isClosing, setIsClosing] = useState(false);
@@ -31,6 +33,18 @@ export function ImageLightbox({
     const timer = setTimeout(() => setIsMounted(true), 0);
     return () => clearTimeout(timer);
   }, []);
+
+  useEffect(() => {
+    if (!isMounted) return;
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        event.stopPropagation();
+        setIsClosing(true);
+      }
+    }
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isMounted]);
 
   if (!isMounted) return null;
 

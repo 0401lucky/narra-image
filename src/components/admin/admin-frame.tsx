@@ -1,15 +1,39 @@
 "use client";
 
 /* eslint-disable @next/next/no-img-element */
+import {
+  ChevronRight,
+  Home,
+  Menu,
+  PanelLeftClose,
+  PanelLeftOpen,
+  Search,
+  WandSparkles,
+  X,
+} from "lucide-react";
+import { motion } from "motion/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
-import { Home, Menu, WandSparkles, X } from "lucide-react";
-import { motion, AnimatePresence } from "motion/react";
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 
 import { LogoutButton } from "@/components/auth/logout-button";
-import { AdminNav } from "@/components/admin/admin-nav";
 import { getThumbUrl } from "@/lib/image-url";
+import { cn } from "@/lib/utils";
+import { AdminNav } from "./admin-nav";
+import {
+  resolveAdminBreadcrumb,
+  type AdminBadgeKey,
+} from "./constants";
+import { AdminCommandPalette } from "./ui/admin-command-palette";
+import { AdminToastProvider } from "./ui/admin-toast-provider";
+
+export type AdminShellSummary = {
+  badges?: Partial<Record<AdminBadgeKey, number>>;
+  statusHref?: string;
+  statusLabel: string;
+  statusTone: "healthy" | "attention" | "degraded";
+};
 
 type AdminFrameProps = {
   children: React.ReactNode;
@@ -18,251 +42,165 @@ type AdminFrameProps = {
     id: string;
     nickname?: string | null;
   };
+  shellSummary?: AdminShellSummary;
 };
 
-export function AdminFrame({ children, currentUser }: AdminFrameProps) {
+const SIDEBAR_STORAGE_KEY = "narra_admin_sidebar_collapsed";
+
+export function AdminFrame({
+  children,
+  currentUser,
+  shellSummary,
+}: AdminFrameProps) {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isPaletteOpen, setIsPaletteOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setMounted(true);
+    try {
+      const saved = window.localStorage.getItem(SIDEBAR_STORAGE_KEY);
+      if (saved === "1") {
+        setIsCollapsed(true);
+      }
+    } catch {
+      // ignore storage errors
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!isMobileMenuOpen) return;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setIsMobileMenuOpen(false);
+      }
+    }
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isMobileMenuOpen]);
+
+  function toggleCollapsed() {
+    setIsCollapsed((prev) => {
+      const next = !prev;
+      try {
+        window.localStorage.setItem(SIDEBAR_STORAGE_KEY, next ? "1" : "0");
+      } catch {
+        // ignore storage errors
+      }
+      return next;
+    });
+  }
 
   const displayName = currentUser.nickname?.trim() || "管理员";
   const shortId = currentUser.id.slice(0, 8);
+  const breadcrumb = resolveAdminBreadcrumb(pathname);
+  const statusTone = shellSummary?.statusTone ?? "healthy";
+  const statusLabel = shellSummary?.statusLabel ?? "系统就绪";
+  const badges = shellSummary?.badges;
 
-  // Resolve breadcrumbs dynamically
-  let currentBreadcrumb = "Overview";
-  let currentPageTitle = "管理中枢概览";
-
-  if (pathname.startsWith("/admin/users")) {
-    currentBreadcrumb = "Users";
-    currentPageTitle = "用户池运营管理";
-  } else if (pathname.startsWith("/admin/invites")) {
-    currentBreadcrumb = "Invites";
-    currentPageTitle = "注册准入邀请码";
-  } else if (pathname.startsWith("/admin/redeem-codes")) {
-    currentBreadcrumb = "Redeem Codes";
-    currentPageTitle = "积分兑换码发行";
-  } else if (pathname.startsWith("/admin/generations")) {
-    currentBreadcrumb = "Generations";
-    currentPageTitle = "任务生成记录流水";
-  } else if (pathname.startsWith("/admin/works")) {
-    currentBreadcrumb = "Works";
-    currentPageTitle = "作品广场投稿审核";
-  } else if (pathname.startsWith("/admin/prompts")) {
-    currentBreadcrumb = "Prompts";
-    currentPageTitle = "提示词库同步管理";
-  } else if (pathname.startsWith("/admin/benefits")) {
-    currentBreadcrumb = "Benefits";
-    currentPageTitle = "每日签到福利配置";
-  } else if (pathname.startsWith("/admin/settings")) {
-    currentBreadcrumb = "Settings";
-    currentPageTitle = "底层运行参数配置";
-  } else if (pathname.startsWith("/admin/api")) {
-    currentBreadcrumb = "API";
-    currentPageTitle = "自填渠道与密钥";
-  }
-
-  const handleCloseMobileMenu = () => setIsMobileMenuOpen(false);
+  const statusDotClass =
+    statusTone === "degraded"
+      ? "bg-rose-500"
+      : statusTone === "attention"
+        ? "bg-amber-500 animate-pulse"
+        : "bg-emerald-500";
 
   return (
-    <div className="admin-console min-h-screen text-[var(--ink)] flex">
-      {/* 1. Desktop Sidebar (Permanent) */}
-      <aside className="admin-sidebar-panel hidden lg:flex lg:flex-col lg:w-64 lg:fixed lg:inset-y-4 lg:left-4 lg:z-40 lg:rounded-2xl lg:border lg:border-white/10 px-4 py-4">
-        <div className="flex items-center justify-between gap-3 border-b border-white/10 pb-4">
-          <Link
-            href="/admin"
-            prefetch={false}
-            className="min-w-0 text-white"
-            aria-label="Narra Image 管理后台"
+    <AdminToastProvider>
+      <div className="admin-console flex min-h-screen text-[var(--ink)]">
+        {/* 1. Desktop Collapsible Sidebar */}
+        <aside
+          className={cn(
+            "admin-sidebar-panel hidden lg:fixed lg:inset-y-3 lg:left-3 lg:z-40 lg:flex lg:flex-col lg:rounded-2xl lg:border lg:border-white/10 lg:py-4 transition-[width,padding] duration-200 ease-out",
+            isCollapsed ? "lg:w-[4.5rem] lg:px-2.5" : "lg:w-64 lg:px-3.5",
+          )}
+        >
+          <div
+            className={cn(
+              "flex items-center border-b border-white/10 pb-3.5",
+              isCollapsed ? "justify-center" : "justify-between gap-2 px-1",
+            )}
           >
-            <span className="editorial-title block text-2xl font-semibold">
-              <span className="text-[#d87b37]">NARRA</span>{" "}
-              <span>Image</span>
-            </span>
-            <span className="mt-1 block text-[11px] uppercase text-white/40">
-              admin console
-            </span>
-          </Link>
-          <span className="grid size-8 shrink-0 place-items-center rounded-lg border border-white/10 bg-white/5 text-sm text-[#d87b37] font-semibold">
-            +
-          </span>
-        </div>
+            {!isCollapsed ? (
+              <Link
+                href="/admin"
+                prefetch={false}
+                className="min-w-0 text-white"
+                aria-label="Narra Image 管理后台"
+              >
+                <span className="editorial-title block text-2xl leading-none font-semibold">
+                  <span className="text-[#d87b37]">NARRA</span>{" "}
+                  <span>Studio</span>
+                </span>
+                <span className="mt-1 block text-[10px] tracking-[0.2em] text-white/42 uppercase">
+                  Operations Console
+                </span>
+              </Link>
+            ) : null}
 
-        <div className="mt-4 flex-1 overflow-y-auto pr-1">
-          <AdminNav />
-        </div>
-
-        <div className="mt-4 rounded-xl border border-white/10 bg-white/[0.03] p-3">
-          <div className="flex items-center gap-3">
-            <div className="grid size-11 shrink-0 place-items-center overflow-hidden rounded-full border border-white/15 bg-[#3a271a] text-sm font-semibold text-white">
-              {currentUser.avatarUrl ? (
-                <img
-                  src={getThumbUrl(currentUser.avatarUrl, 64)}
-                  alt="管理员头像"
-                  className="size-full object-cover"
-                />
-              ) : (
-                displayName[0]
-              )}
-            </div>
-            <div className="min-w-0">
-              <div className="truncate text-sm font-semibold text-white">
-                {displayName}
-              </div>
-              <div className="truncate text-xs text-white/40">ID {shortId}</div>
-            </div>
-          </div>
-        </div>
-      </aside>
-
-      {/* 2. Mobile Sidebar Slide-out Drawer */}
-      <AnimatePresence>
-        {isMobileMenuOpen && (
-          <div className="fixed inset-0 z-50 lg:hidden">
-            {/* Backdrop blur overlay */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="fixed inset-0 bg-black/60 backdrop-blur-xs"
-              onClick={handleCloseMobileMenu}
-            />
-            {/* Slider Drawer Panel */}
-            <motion.aside
-              initial={{ x: "-100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "-100%" }}
-              transition={{ type: "spring", damping: 25, stiffness: 220 }}
-              className="admin-sidebar-panel fixed inset-y-4 left-4 z-50 flex w-72 flex-col rounded-2xl border border-white/10 p-4 shadow-2xl outline-none"
-            >
-              <div className="flex items-center justify-between gap-3 border-b border-white/10 pb-4">
-                <Link
-                  href="/admin"
-                  prefetch={false}
-                  onClick={handleCloseMobileMenu}
-                  className="min-w-0 text-white"
-                  aria-label="Narra Image 管理后台"
-                >
-                  <span className="editorial-title block text-2xl font-semibold">
-                    <span className="text-[#d87b37]">NARRA</span>{" "}
-                    <span>Image</span>
-                  </span>
-                  <span className="mt-1 block text-[11px] uppercase text-white/40">
-                    admin console
-                  </span>
-                </Link>
-                <button
-                  type="button"
-                  onClick={handleCloseMobileMenu}
-                  className="grid size-8 shrink-0 place-items-center rounded-lg border border-white/10 bg-white/5 text-sm text-white/70 hover:text-white transition-colors"
-                  aria-label="关闭菜单"
-                >
-                  <X className="size-4" />
-                </button>
-              </div>
-
-              <div className="mt-4 flex-1 overflow-y-auto premium-scrollbar">
-                <AdminNav onItemClick={handleCloseMobileMenu} />
-              </div>
-
-              <div className="mt-4 space-y-3">
-                <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3">
-                  <div className="flex items-center gap-3">
-                    <div className="grid size-11 shrink-0 place-items-center overflow-hidden rounded-full border border-white/15 bg-[#3a271a] text-sm font-semibold text-white">
-                      {currentUser.avatarUrl ? (
-                        <img
-                          src={getThumbUrl(currentUser.avatarUrl, 64)}
-                          alt="管理员头像"
-                          className="size-full object-cover"
-                        />
-                      ) : (
-                        displayName[0]
-                      )}
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <div className="truncate text-sm font-semibold text-white">
-                        {displayName}
-                      </div>
-                      <div className="truncate text-xs text-white/40 mt-0.5">ID {shortId}</div>
-                    </div>
-                  </div>
-
-                  {/* Operational indicators in mobile card */}
-                  <div className="mt-3 flex items-center justify-between border-t border-white/10 pt-3 text-xs text-white/50">
-                    <span className="flex items-center gap-1.5 font-medium text-emerald-400">
-                      <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                      系统正常
-                    </span>
-                    <Link
-                      href="/"
-                      onClick={handleCloseMobileMenu}
-                      className="hover:text-white transition hover:underline"
-                    >
-                      返回主页
-                    </Link>
-                  </div>
-                </div>
-
-                <div className="flex justify-center border-t border-white/5 pt-3">
-                  <LogoutButton />
-                </div>
-              </div>
-            </motion.aside>
-          </div>
-        )}
-      </AnimatePresence>
-
-      {/* 3. Main Workspace Area */}
-      <div className="flex-1 min-w-0 lg:pl-72 flex flex-col min-h-screen">
-        {/* Sticky page header bar */}
-        <header className="admin-topbar sticky top-0 z-30 flex items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8 border-b border-[var(--admin-line)]">
-          <div className="flex items-center gap-3 min-w-0">
-            {/* Hamburger menu for small devices */}
             <button
               type="button"
-              onClick={() => setIsMobileMenuOpen(true)}
-              className="grid size-9 shrink-0 place-items-center rounded-xl border border-[var(--admin-line)] bg-white/70 text-[var(--ink)] hover:border-[var(--accent)] hover:text-[var(--accent)] lg:hidden transition"
-              aria-label="打开导航菜单"
+              onClick={toggleCollapsed}
+              aria-label={isCollapsed ? "展开侧边栏" : "收起侧边栏"}
+              title={isCollapsed ? "展开侧边栏" : "收起侧边栏"}
+              className="grid size-8 shrink-0 place-items-center rounded-lg border border-white/10 bg-white/5 text-white/70 transition hover:border-[#d87b37]/40 hover:bg-white/10 hover:text-white"
             >
-              <Menu className="size-5" />
+              {isCollapsed ? (
+                <PanelLeftOpen className="size-4" aria-hidden />
+              ) : (
+                <PanelLeftClose className="size-4" aria-hidden />
+              )}
             </button>
-
-            {/* Editorial Breadcrumbs */}
-            <div className="min-w-0">
-              <div className="flex items-center gap-1 text-[10px] sm:text-xs text-[var(--ink-soft)] uppercase tracking-wider">
-                <span className="hidden sm:inline">ADMIN</span>
-                <span className="opacity-40 hidden sm:inline">/</span>
-                <span className="font-semibold text-[#a65f2c]">{currentBreadcrumb}</span>
-              </div>
-              <h1 className="mt-0.5 text-sm sm:text-base font-semibold truncate text-[var(--ink)]">
-                {currentPageTitle}
-              </h1>
-            </div>
           </div>
 
-          {/* Quick Actions Panel */}
-          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-            <Link
-              href="/"
-              prefetch={false}
-              className="admin-topbar-link hidden md:inline-flex text-xs font-semibold"
+          {/* Command Palette Trigger */}
+          <div className="mt-3">
+            <button
+              type="button"
+              onClick={() => setIsPaletteOpen(true)}
+              aria-label="打开快捷跳转面板"
+              title="快捷跳转 (Ctrl/⌘ + K)"
+              className={cn(
+                "flex w-full items-center rounded-xl border border-white/10 bg-white/[0.04] text-xs text-white/60 transition hover:border-[#d87b37]/35 hover:bg-white/[0.08] hover:text-white",
+                isCollapsed
+                  ? "justify-center py-2.5"
+                  : "justify-between px-3 py-2",
+              )}
             >
-              <Home className="size-3.5" />
-              <span className="hidden lg:inline">返回主页</span>
-            </Link>
-            <Link
-              href="/create"
-              prefetch={false}
-              className="admin-topbar-link text-xs font-semibold"
-            >
-              <WandSparkles className="size-3.5" />
-              <span className="hidden md:inline">创作台</span>
-            </Link>
-            <span className="admin-topbar-status text-xs hidden lg:inline-flex font-medium">
-              <span className="size-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
-              系统正常
-            </span>
-            <div className="admin-topbar-user hidden lg:inline-flex text-xs font-semibold">
-              <span className="grid size-6 place-items-center overflow-hidden rounded-full bg-[#f5eadb]">
+              <span className="flex items-center gap-2">
+                <Search className="size-3.5 text-[#d87b37]" aria-hidden />
+                {!isCollapsed ? <span>搜索功能模块…</span> : null}
+              </span>
+              {!isCollapsed ? (
+                <kbd className="rounded border border-white/12 bg-black/25 px-1.5 py-0.5 font-mono text-[10px] text-white/50">
+                  ⌘K
+                </kbd>
+              ) : null}
+            </button>
+          </div>
+
+          <div className="premium-scrollbar mt-3.5 flex-1 overflow-y-auto pr-0.5">
+            <AdminNav
+              collapsed={isCollapsed}
+              badges={badges}
+              layoutNamespace="desktop"
+            />
+          </div>
+
+          <div className="mt-3 border-t border-white/10 pt-3">
+            {isCollapsed ? (
+              <div
+                className="mx-auto grid size-9 place-items-center overflow-hidden rounded-full border border-white/15 bg-[#3a271a] text-xs font-semibold text-white"
+                title={`${displayName} · ID ${shortId}`}
+              >
                 {currentUser.avatarUrl ? (
                   <img
                     src={getThumbUrl(currentUser.avatarUrl, 64)}
@@ -272,22 +210,257 @@ export function AdminFrame({ children, currentUser }: AdminFrameProps) {
                 ) : (
                   displayName[0]
                 )}
-              </span>
-              <span className="max-w-24 truncate">
-                {displayName}
-              </span>
-            </div>
-            <div className="hidden md:inline-flex">
-              <LogoutButton />
-            </div>
+              </div>
+            ) : (
+              <div className="rounded-xl border border-white/10 bg-white/[0.03] p-2.5">
+                <div className="flex items-center gap-2.5">
+                  <div className="grid size-9 shrink-0 place-items-center overflow-hidden rounded-full border border-white/15 bg-[#3a271a] text-xs font-semibold text-white">
+                    {currentUser.avatarUrl ? (
+                      <img
+                        src={getThumbUrl(currentUser.avatarUrl, 64)}
+                        alt="管理员头像"
+                        className="size-full object-cover"
+                      />
+                    ) : (
+                      displayName[0]
+                    )}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="truncate text-xs font-semibold text-white">
+                      {displayName}
+                    </div>
+                    <div className="truncate font-mono text-[10px] text-white/42">
+                      ID {shortId}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
-        </header>
+        </aside>
 
-        {/* Content body wrapper with subtle fade-in effect */}
-        <div className="admin-content flex-1 w-full transition-all duration-200">
-          {children}
+        {/* 2. Mobile Slide-out Drawer (Portal to body) */}
+        {mounted && isMobileMenuOpen
+          ? createPortal(
+              <div className="fixed inset-0 z-[95] lg:hidden">
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.18 }}
+                  className="fixed inset-0 bg-black/55 backdrop-blur-xs"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                />
+                <motion.div
+                  initial={{ x: "-100%" }}
+                  animate={{ x: 0 }}
+                  transition={{ damping: 28, stiffness: 260, type: "spring" }}
+                  role="dialog"
+                  aria-modal="true"
+                  aria-label="后台导航抽屉"
+                  className="admin-sidebar-panel fixed inset-y-3 left-3 z-[96] flex w-72 flex-col rounded-2xl border border-white/10 p-4 shadow-2xl outline-none"
+                >
+                  <div className="flex items-center justify-between gap-3 border-b border-white/10 pb-3.5">
+                    <Link
+                      href="/admin"
+                      prefetch={false}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="min-w-0 text-white"
+                      aria-label="Narra Image 管理后台"
+                    >
+                      <span className="editorial-title block text-2xl font-semibold">
+                        <span className="text-[#d87b37]">NARRA</span>{" "}
+                        <span>Studio</span>
+                      </span>
+                      <span className="mt-0.5 block text-[10px] tracking-[0.18em] text-white/42 uppercase">
+                        Operations Console
+                      </span>
+                    </Link>
+                    <button
+                      type="button"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="grid size-8 shrink-0 place-items-center rounded-lg border border-white/10 bg-white/5 text-white/70 transition hover:text-white"
+                      aria-label="关闭菜单"
+                    >
+                      <X className="size-4" aria-hidden />
+                    </button>
+                  </div>
+
+                  <div className="premium-scrollbar mt-3.5 flex-1 overflow-y-auto">
+                    <AdminNav
+                      badges={badges}
+                      layoutNamespace="mobile"
+                      onItemClick={() => setIsMobileMenuOpen(false)}
+                    />
+                  </div>
+
+                  <div className="mt-3 space-y-3 border-t border-white/10 pt-3">
+                    <div className="flex items-center justify-between text-xs text-white/60">
+                      <span className="flex items-center gap-1.5 font-medium text-white/85">
+                        <span className={cn("size-2 rounded-full", statusDotClass)} aria-hidden />
+                        {statusLabel}
+                      </span>
+                      <Link
+                        href="/"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className="text-white/65 transition hover:text-white hover:underline"
+                      >
+                        返回主页
+                      </Link>
+                    </div>
+                    <div className="flex justify-center">
+                      <LogoutButton />
+                    </div>
+                  </div>
+                </motion.div>
+              </div>,
+              document.body,
+            )
+          : null}
+
+        {/* 3. Main Workspace Area */}
+        <div
+          className={cn(
+            "flex min-h-screen min-w-0 flex-1 flex-col transition-[padding] duration-200 ease-out",
+            isCollapsed ? "lg:pl-[5.75rem]" : "lg:pl-[17.25rem]",
+          )}
+        >
+          {/* Sticky Topbar (Breadcrumb + Global Quick Actions; NO duplicate h1) */}
+          <header className="admin-topbar sticky top-0 z-30 flex items-center justify-between gap-4 px-4 py-2.5 sm:px-6 lg:px-8">
+            <div className="flex min-w-0 items-center gap-3">
+              <button
+                type="button"
+                onClick={() => setIsMobileMenuOpen(true)}
+                className="grid size-9 shrink-0 place-items-center rounded-xl border border-[var(--admin-line)] bg-white/85 text-[var(--ink)] transition hover:border-[#c85a32] hover:text-[#c85a32] lg:hidden"
+                aria-label="打开导航菜单"
+              >
+                <Menu className="size-4.5" aria-hidden />
+              </button>
+
+              <nav aria-label="面包屑导航" className="min-w-0">
+                <ol className="flex flex-wrap items-center gap-1 text-xs text-[var(--ink-soft)]">
+                  <li className="hidden font-mono text-[10px] tracking-wider text-[var(--ink-soft)]/70 uppercase sm:inline">
+                    ADMIN
+                  </li>
+                  {breadcrumb.items.map((crumb, index) => {
+                    const isLast = index === breadcrumb.items.length - 1;
+                    return (
+                      <li key={`${crumb.label}-${index}`} className="flex min-w-0 items-center gap-1">
+                        <ChevronRight
+                          className={cn(
+                            "size-3.5 shrink-0 text-[var(--ink-soft)]/45",
+                            index === 0 && "hidden sm:inline",
+                          )}
+                          aria-hidden
+                        />
+                        {crumb.href && !isLast ? (
+                          <Link
+                            href={crumb.href}
+                            className="truncate transition hover:text-[#c85a32]"
+                          >
+                            {crumb.label}
+                          </Link>
+                        ) : (
+                          <span
+                            className={cn(
+                              "truncate",
+                              isLast && "font-semibold text-[var(--ink)]",
+                            )}
+                          >
+                            {crumb.label}
+                          </span>
+                        )}
+                      </li>
+                    );
+                  })}
+                </ol>
+              </nav>
+            </div>
+
+            <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
+              <button
+                type="button"
+                onClick={() => setIsPaletteOpen(true)}
+                aria-label="快捷跳转搜索"
+                className="admin-topbar-link text-xs font-medium lg:hidden"
+              >
+                <Search className="size-3.5 text-[#c85a32]" aria-hidden />
+                <span className="hidden sm:inline">跳转</span>
+              </button>
+
+              <Link
+                href="/"
+                prefetch={false}
+                className="admin-topbar-link hidden text-xs font-medium md:inline-flex"
+              >
+                <Home className="size-3.5" aria-hidden />
+                <span className="hidden xl:inline">返回主页</span>
+              </Link>
+
+              <Link
+                href="/create"
+                prefetch={false}
+                className="admin-topbar-link text-xs font-medium"
+              >
+                <WandSparkles className="size-3.5 text-[#c85a32]" aria-hidden />
+                <span className="hidden sm:inline">创作台</span>
+              </Link>
+
+              {shellSummary?.statusHref ? (
+                <Link
+                  href={shellSummary.statusHref}
+                  data-tone={statusTone}
+                  className="admin-topbar-status hidden text-xs font-medium lg:inline-flex"
+                >
+                  <span className={cn("size-2 shrink-0 rounded-full", statusDotClass)} aria-hidden />
+                  <span>{statusLabel}</span>
+                </Link>
+              ) : (
+                <span
+                  data-tone={statusTone}
+                  className="admin-topbar-status hidden text-xs font-medium lg:inline-flex"
+                >
+                  <span className={cn("size-2 shrink-0 rounded-full", statusDotClass)} aria-hidden />
+                  <span>{statusLabel}</span>
+                </span>
+              )}
+
+              <div className="admin-topbar-user hidden text-xs font-medium xl:inline-flex">
+                <span className="grid size-6 place-items-center overflow-hidden rounded-full bg-[#f3e7d6]">
+                  {currentUser.avatarUrl ? (
+                    <img
+                      src={getThumbUrl(currentUser.avatarUrl, 64)}
+                      alt="管理员头像"
+                      className="size-full object-cover"
+                    />
+                  ) : (
+                    displayName[0]
+                  )}
+                </span>
+                <span className="max-w-24 truncate">{displayName}</span>
+              </div>
+
+              <div className="hidden md:inline-flex">
+                <LogoutButton />
+              </div>
+            </div>
+          </header>
+
+          <motion.div
+            key={pathname}
+            initial={{ opacity: 0, y: 4 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
+            className="admin-content w-full flex-1"
+          >
+            {children}
+          </motion.div>
         </div>
+
+        <AdminCommandPalette
+          open={isPaletteOpen}
+          onOpenChange={setIsPaletteOpen}
+        />
       </div>
-    </div>
+    </AdminToastProvider>
   );
 }

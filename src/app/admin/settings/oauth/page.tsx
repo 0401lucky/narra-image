@@ -1,9 +1,11 @@
+import { KeyRound } from "lucide-react";
 import { redirect } from "next/navigation";
 
-import { requireAdminRecord } from "@/lib/server/current-user";
-import { getAllOAuthProviders } from "@/lib/auth/oauth-config";
 import { OAuthProviderManager } from "@/components/admin/oauth-provider-manager";
 import { SettingsSubNav } from "@/components/admin/settings-sub-nav";
+import { AdminPageHeader } from "@/components/admin/ui/admin-page-header";
+import { getAllOAuthProviders } from "@/lib/auth/oauth-config";
+import { requireAdminRecord } from "@/lib/server/current-user";
 
 export const dynamic = "force-dynamic";
 
@@ -28,18 +30,13 @@ export default async function AdminOAuthPage() {
 
   return (
     <main className="pb-16">
-      <section className="mx-auto grid max-w-7xl gap-6 px-5 pt-8 md:px-8">
-        <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between mb-2">
-          <div>
-            <p className="admin-eyebrow">OAuth</p>
-            <h1 className="text-3xl font-semibold tracking-tight text-[var(--ink)] md:text-4xl">
-              登录源管理
-            </h1>
-            <p className="mt-2 text-sm text-[var(--ink-soft)]">
-              配置第三方 OAuth 登录源，启用后用户可在登录页使用第三方账号快捷登录。
-            </p>
-          </div>
-        </div>
+      <section className="mx-auto grid max-w-7xl gap-6 px-5 pt-7 md:px-8">
+        <AdminPageHeader
+          eyebrow="Settings / OAuth"
+          icon={KeyRound}
+          title="第三方登录源"
+          description="配置 OAuth2 登录源，启用后用户可在登录页直接使用社区或第三方账号快捷登录。"
+        />
 
         <SettingsSubNav currentPath="/admin/settings/oauth" />
 

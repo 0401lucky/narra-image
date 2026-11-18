@@ -1,19 +1,21 @@
 "use client";
 
-import Link from "next/link";
-import { useState, useTransition } from "react";
 import {
   CheckCircle2,
   ExternalLink,
   Loader2,
   PauseCircle,
-  PlayCircle,
   RefreshCw,
   XCircle,
 } from "lucide-react";
+import Link from "next/link";
+import { useState, useTransition } from "react";
 
+import { Alert } from "@/components/ui/alert";
 import type { AdminPromptSource } from "@/lib/prompts/types";
 import { cn } from "@/lib/utils";
+import { useAdminToast } from "./hooks/use-admin-toast";
+import { AdminSwitch } from "./ui/admin-switch";
 
 type PromptSourceManagerProps = {
   initialSources: AdminPromptSource[];
@@ -25,13 +27,14 @@ type ApiResponse<T> = {
 };
 
 const statusText: Record<AdminPromptSource["status"], string> = {
-  FAILED: "失败",
+  FAILED: "同步失败",
   IDLE: "待同步",
   SUCCESS: "已同步",
   SYNCING: "同步中",
 };
 
 export function PromptSourceManager({ initialSources }: PromptSourceManagerProps) {
+  const toast = useAdminToast();
   const [sources, setSources] = useState(initialSources);
   const [error, setError] = useState<string | null>(null);
   const [syncingId, setSyncingId] = useState<string | null>(null);
@@ -40,133 +43,170 @@ export function PromptSourceManager({ initialSources }: PromptSourceManagerProps
   async function syncSource(sourceId: string) {
     setError(null);
     setSyncingId(sourceId);
-    const response = await fetch("/api/admin/prompt-sources/sync", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ sourceId }),
-    });
-    const result = (await response.json()) as ApiResponse<{ sources: AdminPromptSource[] }>;
-    setSyncingId(null);
-    if (!response.ok || !result.data) {
-      setError(result.error || "同步失败");
-      return;
+    try {
+      const response = await fetch("/api/admin/prompt-sources/sync", {
+        body: JSON.stringify({ sourceId }),
+        headers: { "Content-Type": "application/json" },
+        method: "POST",
+      });
+      const result = (await response.json().catch(() => ({}))) as ApiResponse<{
+        sources: AdminPromptSource[];
+      }>;
+      if (!response.ok || !result.data) {
+        const msg = result.error || "同步失败";
+        setError(msg);
+        toast.error("提示词同步失败", msg);
+        return;
+      }
+      setSources(result.data.sources);
+      toast.success(
+        sourceId === "all" ? "全部提示词源已同步" : "提示词来源同步完成",
+      );
+    } finally {
+      setSyncingId(null);
     }
-    setSources(result.data.sources);
   }
 
-  async function toggleSource(source: AdminPromptSource) {
+  async function toggleSource(source: AdminPromptSource, nextEnabled: boolean) {
     setError(null);
     const response = await fetch("/api/admin/prompt-sources", {
-      method: "PATCH",
+      body: JSON.stringify({ id: source.id, isEnabled: nextEnabled }),
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id: source.id, isEnabled: !source.isEnabled }),
+      method: "PATCH",
     });
-    const result = (await response.json()) as ApiResponse<{ sources: AdminPromptSource[] }>;
+    const result = (await response.json().catch(() => ({}))) as ApiResponse<{
+      sources: AdminPromptSource[];
+    }>;
     if (!response.ok || !result.data) {
-      setError(result.error || "保存失败");
+      const msg = result.error || "保存失败";
+      setError(msg);
+      toast.error("切换来源状态失败", msg);
       return;
     }
     setSources(result.data.sources);
+    toast.success(
+      nextEnabled ? `已启用「${source.name}」` : `已停用「${source.name}」`,
+    );
   }
 
   const totalItems = sources.reduce((sum, source) => sum + source.itemCount, 0);
   const activeSources = sources.filter((source) => source.isEnabled).length;
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
+    <div className="space-y-5">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h2 className="text-xl font-semibold text-[var(--ink)]">GitHub 提示词来源</h2>
-          <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--ink-soft)]">
-            当前启用 {activeSources} 个来源，已入库 {totalItems} 条提示词。
+          <h2 className="text-lg font-semibold text-[var(--ink)]">GitHub 提示词同步源</h2>
+          <p className="mt-1 text-sm text-[var(--ink-soft)]">
+            当前启用 {activeSources} 个来源，累计入库 {totalItems.toLocaleString("zh-CN")} 条提示词。
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <Link
             href="/prompts"
-            className="inline-flex items-center gap-2 rounded-full border border-[var(--line)] bg-white/70 px-4 py-2 text-sm font-semibold text-[var(--ink)] transition hover:border-[var(--accent)]"
+            className="inline-flex items-center gap-1.5 rounded-full border border-[var(--line)] bg-white px-4 py-2 text-xs font-semibold text-[var(--ink)] transition hover:border-[#c85a32] hover:text-[#c85a32]"
           >
-            查看提示词库
-            <ExternalLink className="size-4" />
+            查看前台词库
+            <ExternalLink className="size-3.5" aria-hidden />
           </Link>
           <button
             type="button"
             onClick={() => startTransition(() => void syncSource("all"))}
             disabled={isPending || Boolean(syncingId)}
-            className="inline-flex items-center gap-2 rounded-full bg-[var(--ink)] px-5 py-2 text-sm font-semibold text-white shadow-lg transition hover:bg-[var(--accent)] disabled:opacity-55"
+            className="inline-flex items-center gap-2 rounded-full bg-[var(--ink)] px-5 py-2 text-xs font-semibold text-white transition hover:bg-[#c85a32] disabled:opacity-55 sm:text-sm"
           >
-            {syncingId === "all" ? <Loader2 className="size-4 animate-spin" /> : <RefreshCw className="size-4" />}
-            同步全部
+            {syncingId === "all" ? (
+              <Loader2 className="size-4 animate-spin" aria-hidden />
+            ) : (
+              <RefreshCw className="size-4" aria-hidden />
+            )}
+            同步全部来源
           </button>
         </div>
       </div>
 
-      {error && (
-        <div className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
-          {error}
-        </div>
-      )}
+      {error ? <Alert variant="error">{error}</Alert> : null}
 
       <div className="grid gap-4 xl:grid-cols-2">
         {sources.map((source) => {
           const syncing = syncingId === source.id || syncingId === "all";
           return (
-            <article key={source.id} className={cn("studio-card p-5", !source.isEnabled && "opacity-65")}>
-              <div className="flex items-start justify-between gap-4">
-                <div className="min-w-0">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <h3 className="text-base font-semibold text-[var(--ink)]">{source.name}</h3>
-                    <StatusBadge status={syncing ? "SYNCING" : source.status} />
-                  </div>
-                  <p className="mt-1 font-mono text-[11px] text-[var(--ink-soft)]">{source.slug}</p>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => startTransition(() => void toggleSource(source))}
-                  className={cn(
-                    "inline-flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold transition",
-                    source.isEnabled
-                      ? "bg-emerald-50 text-emerald-700 hover:bg-emerald-100"
-                      : "bg-stone-100 text-stone-500 hover:bg-stone-200",
-                  )}
-                >
-                  {source.isEnabled ? <PlayCircle className="size-3.5" /> : <PauseCircle className="size-3.5" />}
-                  {source.isEnabled ? "启用" : "停用"}
-                </button>
-              </div>
-
-              <p className="mt-4 min-h-12 text-sm leading-6 text-[var(--ink-soft)]">{source.description}</p>
-
-              <div className="mt-4 grid gap-3 rounded-xl border border-[var(--line)] bg-white/58 p-4 text-sm sm:grid-cols-3">
-                <Metric label="入库数量" value={String(source.itemCount)} />
-                <Metric label="解析器" value={source.parser} mono />
-                <Metric label="上次同步" value={formatTime(source.lastSyncedAt)} />
-              </div>
-
-              {source.lastSyncError && (
-                <div className="mt-3 rounded-xl border border-rose-200 bg-rose-50 px-3 py-2 text-xs leading-5 text-rose-700">
-                  {source.lastSyncError}
-                </div>
+            <article
+              key={source.id}
+              className={cn(
+                "studio-card flex flex-col justify-between p-5 transition-opacity",
+                !source.isEnabled && "opacity-65",
               )}
+            >
+              <div>
+                <div className="flex items-start justify-between gap-4">
+                  <div className="min-w-0">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <h3 className="text-base font-semibold text-[var(--ink)]">
+                        {source.name}
+                      </h3>
+                      <StatusBadge status={syncing ? "SYNCING" : source.status} />
+                    </div>
+                    <p className="mt-1 font-mono text-xs text-[var(--ink-soft)]">
+                      {source.slug}
+                    </p>
+                  </div>
 
-              <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
+                  <div className="flex shrink-0 items-center gap-2">
+                    <span className="text-xs text-[var(--ink-soft)]">
+                      {source.isEnabled ? "已启用" : "已停用"}
+                    </span>
+                    <AdminSwitch
+                      size="sm"
+                      ariaLabel={`启用来源 ${source.name}`}
+                      checked={source.isEnabled}
+                      disabled={isPending}
+                      onCheckedChange={(next) =>
+                        startTransition(() => void toggleSource(source, next))
+                      }
+                    />
+                  </div>
+                </div>
+
+                <p className="mt-3 text-sm leading-relaxed text-[var(--ink-soft)]">
+                  {source.description}
+                </p>
+
+                <div className="mt-4 grid gap-3 rounded-xl border border-[var(--line)] bg-[#faf7f1] p-3.5 text-sm sm:grid-cols-3">
+                  <Metric label="入库数量" value={source.itemCount.toLocaleString("zh-CN")} />
+                  <Metric label="解析器" value={source.parser} mono />
+                  <Metric label="最近同步" value={formatTime(source.lastSyncedAt)} />
+                </div>
+
+                {source.lastSyncError ? (
+                  <div className="mt-3 rounded-xl border border-rose-200 bg-rose-50 px-3 py-2 text-xs leading-5 text-rose-700">
+                    {source.lastSyncError}
+                  </div>
+                ) : null}
+              </div>
+
+              <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-[var(--line)]/70 pt-3.5">
                 <a
                   href={source.sourceUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center gap-2 rounded-full px-3 py-2 text-sm font-semibold text-[var(--ink-soft)] transition hover:bg-white/70 hover:text-[var(--ink)]"
+                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-[var(--ink-soft)] transition hover:text-[#c85a32]"
                 >
-                  GitHub
-                  <ExternalLink className="size-4" />
+                  查看 GitHub 源仓库
+                  <ExternalLink className="size-3.5" aria-hidden />
                 </a>
                 <button
                   type="button"
                   onClick={() => startTransition(() => void syncSource(source.id))}
                   disabled={syncing || isPending}
-                  className="inline-flex items-center gap-2 rounded-full border border-[var(--line)] bg-white/70 px-4 py-2 text-sm font-semibold text-[var(--ink)] transition hover:border-[var(--accent)] disabled:opacity-55"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-[var(--line)] bg-white px-3.5 py-1.5 text-xs font-semibold text-[var(--ink)] transition hover:border-[#c85a32] hover:text-[#c85a32] disabled:opacity-55"
                 >
-                  {syncing ? <Loader2 className="size-4 animate-spin" /> : <RefreshCw className="size-4" />}
-                  同步此来源
+                  {syncing ? (
+                    <Loader2 className="size-3.5 animate-spin" aria-hidden />
+                  ) : (
+                    <RefreshCw className="size-3.5" aria-hidden />
+                  )}
+                  单独同步
                 </button>
               </div>
             </article>
@@ -178,18 +218,25 @@ export function PromptSourceManager({ initialSources }: PromptSourceManagerProps
 }
 
 function StatusBadge({ status }: { status: AdminPromptSource["status"] }) {
-  const Icon = status === "FAILED" ? XCircle : status === "SUCCESS" ? CheckCircle2 : status === "SYNCING" ? Loader2 : PauseCircle;
+  const Icon =
+    status === "FAILED"
+      ? XCircle
+      : status === "SUCCESS"
+        ? CheckCircle2
+        : status === "SYNCING"
+          ? Loader2
+          : PauseCircle;
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold",
-        status === "FAILED" && "bg-rose-50 text-rose-700",
-        status === "SUCCESS" && "bg-emerald-50 text-emerald-700",
-        status === "SYNCING" && "bg-amber-50 text-amber-700",
-        status === "IDLE" && "bg-stone-100 text-stone-600",
+        "inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold",
+        status === "FAILED" && "bg-rose-100 text-rose-700",
+        status === "SUCCESS" && "bg-emerald-100 text-emerald-800",
+        status === "SYNCING" && "bg-amber-100 text-amber-800",
+        status === "IDLE" && "bg-stone-200 text-stone-600",
       )}
     >
-      <Icon className={cn("size-3.5", status === "SYNCING" && "animate-spin")} />
+      <Icon className={cn("size-3.5", status === "SYNCING" && "animate-spin")} aria-hidden />
       {statusText[status]}
     </span>
   );
@@ -199,7 +246,12 @@ function Metric({ label, mono, value }: { label: string; mono?: boolean; value: 
   return (
     <div className="min-w-0">
       <div className="text-xs text-[var(--ink-soft)]">{label}</div>
-      <div className={cn("mt-1 truncate font-semibold text-[var(--ink)]", mono && "font-mono text-xs")}>
+      <div
+        className={cn(
+          "mt-1 truncate font-semibold text-[var(--ink)]",
+          mono && "font-mono text-xs",
+        )}
+      >
         {value}
       </div>
     </div>

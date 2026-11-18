@@ -7,6 +7,7 @@ import { useState, useTransition } from "react";
 import { ImageIcon, Loader2, Sparkles } from "lucide-react";
 
 import type { LoginCoverConfig } from "@/lib/server/login-cover";
+import { useAdminToast } from "./hooks/use-admin-toast";
 
 type LoginCoverFormProps = {
   initialConfig: LoginCoverConfig;
@@ -15,6 +16,7 @@ type LoginCoverFormProps = {
 
 export function LoginCoverForm({ initialConfig, resolvedCustomUrl }: LoginCoverFormProps) {
   const router = useRouter();
+  const toast = useAdminToast();
   const [isPending, startTransition] = useTransition();
   const [mode, setMode] = useState<"featured" | "custom">(initialConfig.mode);
   const [customUrl, setCustomUrl] = useState(initialConfig.customUrl ?? "");
@@ -36,12 +38,15 @@ export function LoginCoverForm({ initialConfig, resolvedCustomUrl }: LoginCoverF
     });
 
     if (!response.ok) {
-      const result = (await response.json()) as { error?: string };
-      setError(result.error || "保存失败");
+      const result = (await response.json().catch(() => ({}))) as { error?: string };
+      const msg = result.error || "保存失败";
+      setError(msg);
+      toast.error("登录封面保存失败", msg);
       return;
     }
 
     setSuccess(true);
+    toast.success("登录封面配置已更新");
     setTimeout(() => setSuccess(false), 3000);
     startTransition(() => router.refresh());
   }
