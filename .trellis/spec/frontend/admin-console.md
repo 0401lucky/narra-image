@@ -55,6 +55,7 @@
 
 - `src/components/admin/ui/*` 与共享弹窗组件只允许 `import { motion } from "motion/react"` 并使用 `motion.div`，**禁止**静态导入 `AnimatePresence`（既有单测如 `admin-work-image-refresh.test.tsx` 仅部分 mock `{ motion: { div } }`）。
 - 后台页面组件（如 `AdminWorksPage`、`AdminInvitesPage`、`AdminRedeemCodesPage`、`AdminApiPage`）的 `props?: { searchParams?: Promise<...> }` 应设为可选，且服务端筛选条优先采用 `<form action="/admin/..." method="get">` + `AdminLinkTabs`，避免在仅 mock `{ redirect, notFound }` 的隐私回归测试中因调用 `useRouter()` 报错。
+- **RSC Client Reference 边界契约**：严禁在 `src/app/admin/**` 等 Server Component 中直接调用从 `"use client"` 模块导出的工具函数（Next.js 生产运行时会抛出 `Attempted to call ... from the server but ... is on the client`）。双端共用的纯函数与类型（如 `src/components/admin/generations/filter-url.ts`、`src/components/admin/storage/utils.ts`、`src/components/admin/constants.ts`）必须抽离到无 `"use client"` 指令的独立模块中。
 
 ---
 

@@ -1,3 +1,6 @@
+import fs from "node:fs";
+import path from "node:path";
+
 import {
   GenerationClientSource,
   GenerationStatus,
@@ -5,6 +8,7 @@ import {
   ProviderMode,
   Role,
 } from "@prisma/client";
+import { render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const {
@@ -56,11 +60,16 @@ vi.mock("@/lib/generation/job-refund", () => ({
 
 vi.mock("next/navigation", () => ({
   redirect: vi.fn(),
+  useRouter: () => ({
+    push: vi.fn(),
+    refresh: vi.fn(),
+  }),
 }));
 
 import AdminGenerationsPage from "@/app/admin/generations/page";
 import { GET as getGenerationDiagnostic } from "@/app/api/admin/generations/[id]/route";
 import { GET as getRedeemBatchDetail } from "@/app/api/admin/redeem-codes/batches/[id]/route";
+import { buildGenerationsFilterUrl } from "@/components/admin/generations/filter-url";
 
 describe("Stage 3 排障抽屉接口与多维运维工具", () => {
   beforeEach(() => {
@@ -274,6 +283,47 @@ describe("Stage 3 排障抽屉接口与多维运维工具", () => {
             ],
           },
         }),
+      );
+    });
+
+    it("服务端页面完整渲染视图切换链接且不从 use client 模块直接调用纯函数", async () => {
+      const filterModuleSource = fs.readFileSync(
+        path.resolve(process.cwd(), "src/components/admin/generations/filter-url.ts"),
+        "utf8",
+      );
+      expect(filterModuleSource.trimStart().startsWith('"use client"')).toBe(false);
+      expect(filterModuleSource.trimStart().startsWith("'use client'")).toBe(false);
+
+      expect(
+        buildGenerationsFilterUrl({
+          mode: "BUILT_IN",
+          page: 2,
+          q: "sora",
+          source: "API",
+          status: "FAILED",
+          type: "TEXT_TO_VIDEO",
+          view: "card",
+        }),
+      ).toBe(
+        "/admin/generations?view=card&page=2&q=sora&status=FAILED&type=TEXT_TO_VIDEO&source=API&mode=BUILT_IN",
+      );
+
+      const element = await AdminGenerationsPage({
+        searchParams: Promise.resolve({
+          mode: "BUILT_IN",
+          page: "2",
+          q: "sora",
+          source: "API",
+          status: "FAILED",
+          type: "TEXT_TO_VIDEO",
+          view: "list",
+        }),
+      });
+      render(element);
+
+      const cardLink = screen.getByRole("link", { name: "卡片" });
+      expect(cardLink.getAttribute("href")).toBe(
+        "/admin/generations?view=card&page=2&q=sora&status=FAILED&type=TEXT_TO_VIDEO&source=API&mode=BUILT_IN",
       );
     });
   });

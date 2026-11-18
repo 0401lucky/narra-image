@@ -11,14 +11,14 @@ import { redirect } from "next/navigation";
 
 import { AdminPagination } from "@/components/admin/admin-pagination";
 import { CleanupFailedButton } from "@/components/admin/cleanup-failed-button";
+import { GenerationSearchBar } from "@/components/admin/generation-search-bar";
 import {
   buildGenerationsFilterUrl,
-  GenerationSearchBar,
   type GenerationModeFilter,
   type GenerationSourceFilter,
   type GenerationStatusFilter,
   type GenerationTypeFilter,
-} from "@/components/admin/generation-search-bar";
+} from "@/components/admin/generations/filter-url";
 import { GenerationsBoard } from "@/components/admin/generations/generations-board";
 import { AdminPageHeader } from "@/components/admin/ui/admin-page-header";
 import { db } from "@/lib/db";
