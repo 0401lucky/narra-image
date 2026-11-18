@@ -497,3 +497,37 @@ Added explicit production PostgreSQL image storage; pushed bc4dbaa to GitHub, al
 ### Status
 
 [OK] **Completed**
+
+
+## Session 11: Admin Console Modern Operations Studio Redesign (Stages 1-3)
+
+**Date**: 2026-11-18
+**Task**: Admin Console Modern Operations Studio Redesign (Stages 1-3)
+**Branch**: `main`
+
+### Summary
+
+Audited and comprehensively redesigned all 18 /admin routes and 23+ admin components across 3 stages: fixed Tailwind v4 CSS cascade and scroll jank, built shared modal/drawer/toast/tab/command-palette primitives with zero native confirm/alert, shipped live overview dashboard with 7-day SVG trend chart, User 360 drawer, video+batch works review, read-only Worker v1 generation diagnostics drawer, channel probe/reorder, and redeem/invite/API batch tooling.
+
+### Main Changes
+
+- Stage 1: Scoped .admin-console defaults in @layer components, removed card backdrop-filter jank, added collapsible 4-group sidebar, Cmd+K palette, and shared UI primitives
+- Stage 2: Built live system health summary, 4-col KPI dashboard + SVG trend chart, unified moderation hub, User 360 redacted API + drawer, and video/batch works review
+- Stage 3: Added read-only GenerationAttempt diagnostic drawer preserving Worker v1 contracts, channel latency probe & sort, and redeem/invite/API search + pagination
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `5f73711` | (see git log) |
+| `5dfadd1` | (see git log) |
+| `77cba95` | (see git log) |
+| `8c2f94d` | (see git log) |
+
+### Testing
+
+- [OK] tsc --noEmit (0 errors), eslint src (0 errors), Vitest full repo suite 172/172 files (2,218/2,218 tests) passed including Worker v1 contracts
+
+### Status
+
+[OK] **Completed**
