@@ -1,0 +1,7 @@
+{"_example": "Fill with {\"file\": \"<path>\", \"reason\": \"<why>\"}. Put spec/research files only — no code paths. Run `python .trellis/scripts/get_context.py --mode packages` to list available specs. Delete this line once real entries are added."}
+{"file": ".trellis/spec/frontend/index.md", "reason": "前端开发总索引与规范入口"}
+{"file": ".trellis/spec/frontend/component-guidelines.md", "reason": "命名导出、cn()、variant 模式与无障碍约定"}
+{"file": ".trellis/spec/frontend/state-management.md", "reason": "Server props 到本地状态同步与挂载守卫约定"}
+{"file": ".trellis/spec/frontend/type-safety.md", "reason": "Zod 中文校验、prisma-mappers 序列化与 server-only 边界"}
+{"file": ".trellis/spec/frontend/generation-worker-contracts.md", "reason": "Worker v1 与 HANDOFF_UNKNOWN 保护红线"}
+{"file": ".trellis/tasks/11-18-admin-console-redesign/research/admin-audit-findings.md", "reason": "后台现有缺陷代码锚点与测试兼容清单"}

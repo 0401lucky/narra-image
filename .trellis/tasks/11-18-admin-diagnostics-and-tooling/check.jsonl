@@ -1,0 +1,6 @@
+{"_example": "Fill with {\"file\": \"<path>\", \"reason\": \"<why>\"}. Put spec/research files only — no code paths. Run `python .trellis/scripts/get_context.py --mode packages` to list available specs. Delete this line once real entries are added."}
+{"file": ".trellis/spec/frontend/quality-guidelines.md", "reason": "lint、tsc、vitest 与验证门禁命令"}
+{"file": ".trellis/spec/frontend/component-guidelines.md", "reason": "组件与无障碍合规检查"}
+{"file": ".trellis/spec/frontend/generation-worker-contracts.md", "reason": "验证未触碰 v1 契约写保护边界"}
+{"file": ".trellis/spec/guides/cross-layer-thinking-guide.md", "reason": "跨层 API 与前端数据流一致性检查"}
+{"file": ".trellis/tasks/11-18-admin-console-redesign/research/admin-audit-findings.md", "reason": "核对缺陷修复与既有单测锚点保留情况"}

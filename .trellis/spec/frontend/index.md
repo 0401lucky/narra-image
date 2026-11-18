@@ -26,6 +26,7 @@
 | [Generation Worker Contracts](./generation-worker-contracts.md) | Node/Go/PostgreSQL 生成生命周期与契约验证 | Active |
 | [Canvas Studio](./canvas-studio.md) | 合一创作卡/高级图谱、底部工具与原子参考、稳定编辑/整图拖动、账户草稿运行与真机验收边界 | Active |
 | [Canvas Presentation](./canvas-presentation.md) | 创作/图谱投影、外层节点命中、工具切换、同卡编辑与底部浮层避让 | Active |
+| [Admin Console](./admin-console.md) | 管理后台视觉层叠、通用交互原语、脱敏接口与 Worker v1 只读排障契约 | Active |
 
 ---
 

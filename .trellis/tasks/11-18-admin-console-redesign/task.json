@@ -1,0 +1,30 @@
+{
+  "id": "admin-console-redesign",
+  "name": "admin-console-redesign",
+  "title": "管理后台现代运营台重构（视觉、交互、动效与运营闭环）",
+  "description": "",
+  "status": "planning",
+  "dev_type": null,
+  "scope": "admin",
+  "package": null,
+  "priority": "P1",
+  "creator": "0401lucky",
+  "assignee": "0401lucky",
+  "createdAt": "2026-11-18",
+  "completedAt": null,
+  "branch": null,
+  "base_branch": "main",
+  "worktree_path": null,
+  "commit": null,
+  "pr_url": null,
+  "subtasks": [],
+  "children": [
+    "11-18-admin-ui-foundation",
+    "11-18-admin-core-operations",
+    "11-18-admin-diagnostics-and-tooling"
+  ],
+  "parent": null,
+  "relatedFiles": [],
+  "notes": "",
+  "meta": {}
+}
