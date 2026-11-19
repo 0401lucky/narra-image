@@ -1,0 +1,161 @@
+{
+  "recordedAt": "2026-11-04T14:49:51.618233+00:00",
+  "sourceSha": "a8c2bc9b3d65fc6970fc895f109aec9728b10290",
+  "repository": "0401lucky/narra-image",
+  "runId": 41846433683,
+  "runAttempt": 2,
+  "url": "https://github.com/0401lucky/narra-image/actions/runs/41846433683",
+  "conclusion": "success",
+  "jobs": [
+    {
+      "name": "verify:e2e",
+      "databaseId": 126632980945,
+      "url": "https://github.com/0401lucky/narra-image/actions/runs/41846433683/job/126632980945",
+      "conclusion": "success",
+      "startedAt": "2026-11-04T14:23:05Z",
+      "completedAt": "2026-11-04T14:34:12Z"
+    },
+    {
+      "name": "verify:migrations",
+      "databaseId": 126632983120,
+      "url": "https://github.com/0401lucky/narra-image/actions/runs/41846433683/job/126632983120",
+      "conclusion": "success",
+      "startedAt": "2026-11-04T14:19:44Z",
+      "completedAt": "2026-11-04T14:21:32Z"
+    },
+    {
+      "name": "verify:ci",
+      "databaseId": 126632984366,
+      "url": "https://github.com/0401lucky/narra-image/actions/runs/41846433683/job/126632984366",
+      "conclusion": "success",
+      "startedAt": "2026-11-04T14:19:43Z",
+      "completedAt": "2026-11-04T14:22:08Z"
+    },
+    {
+      "name": "Publish verified images",
+      "databaseId": 126639476181,
+      "url": "https://github.com/0401lucky/narra-image/actions/runs/41846433683/job/126639476181",
+      "conclusion": "success",
+      "startedAt": "2026-11-04T14:34:16Z",
+      "completedAt": "2026-11-04T14:40:22Z"
+    }
+  ],
+  "infrastructureRetry": {
+    "attempt1Failure": "Docker info probe timed out at 10s before E2E scenarios",
+    "failedJobId": 126631049293,
+    "retryCount": 1,
+    "onlyFailedJobAndDependents": true,
+    "sameSourceAndTimeouts": true,
+    "successfulCiAndMigrationResultsRetained": true
+  },
+  "release": {
+    "sha": "a8c2bc9b3d65fc6970fc895f109aec9728b10290",
+    "tag": "sha-a8c2bc9b3d65fc6970fc895f109aec9728b10290",
+    "status": "published",
+    "images": [
+      {
+        "image": "ghcr.io/0401lucky/narra-image-app",
+        "tag": "sha-a8c2bc9b3d65fc6970fc895f109aec9728b10290",
+        "digest": "sha256:53417173c98e66c2f8d0033a6501f305e8807b39c063f3efcd3f122eabf17be1",
+        "platform": "linux/amd64",
+        "reference": "ghcr.io/0401lucky/narra-image-app@sha256:53417173c98e66c2f8d0033a6501f305e8807b39c063f3efcd3f122eabf17be1"
+      },
+      {
+        "image": "ghcr.io/0401lucky/narra-image-worker",
+        "tag": "sha-a8c2bc9b3d65fc6970fc895f109aec9728b10290",
+        "digest": "sha256:e44d71c461529a61cad8b6ff55b27bc2fcc9b9797788b45696f586cc9c46b590",
+        "platform": "linux/amd64",
+        "reference": "ghcr.io/0401lucky/narra-image-worker@sha256:e44d71c461529a61cad8b6ff55b27bc2fcc9b9797788b45696f586cc9c46b590"
+      }
+    ],
+    "promoted": [
+      "ghcr.io/0401lucky/narra-image-app",
+      "ghcr.io/0401lucky/narra-image-worker"
+    ],
+    "anonymousAccess": true
+  },
+  "independentAnonymousMetadata": [
+    {
+      "event": "anonymous-manifest",
+      "image": "ghcr.io/0401lucky/narra-image-app",
+      "sourceSha": "a8c2bc9b3d65fc6970fc895f109aec9728b10290",
+      "digest": "sha256:53417173c98e66c2f8d0033a6501f305e8807b39c063f3efcd3f122eabf17be1",
+      "platform": "linux/amd64",
+      "latestMatches": true,
+      "personalCredentials": false
+    },
+    {
+      "event": "anonymous-manifest",
+      "image": "ghcr.io/0401lucky/narra-image-worker",
+      "sourceSha": "a8c2bc9b3d65fc6970fc895f109aec9728b10290",
+      "digest": "sha256:e44d71c461529a61cad8b6ff55b27bc2fcc9b9797788b45696f586cc9c46b590",
+      "platform": "linux/amd64",
+      "latestMatches": true,
+      "personalCredentials": false
+    }
+  ],
+  "independentAnonymousPulls": [
+    {
+      "event": "anonymous-pull-verified",
+      "reference": "ghcr.io/0401lucky/narra-image-app@sha256:53417173c98e66c2f8d0033a6501f305e8807b39c063f3efcd3f122eabf17be1",
+      "imageId": "sha256:53417173c98e66c2f8d0033a6501f305e8807b39c063f3efcd3f122eabf17be1",
+      "platform": "linux/amd64",
+      "sourceSha": "a8c2bc9b3d65fc6970fc895f109aec9728b10290",
+      "imageCacheRetained": true,
+      "containersStarted": false
+    },
+    {
+      "event": "anonymous-pull-verified",
+      "reference": "ghcr.io/0401lucky/narra-image-worker@sha256:e44d71c461529a61cad8b6ff55b27bc2fcc9b9797788b45696f586cc9c46b590",
+      "imageId": "sha256:e44d71c461529a61cad8b6ff55b27bc2fcc9b9797788b45696f586cc9c46b590",
+      "platform": "linux/amd64",
+      "sourceSha": "a8c2bc9b3d65fc6970fc895f109aec9728b10290",
+      "imageCacheRetained": true,
+      "containersStarted": false
+    }
+  ],
+  "localCheck": {
+    "id": "20261104T144550-public-image-pulls-69e9a1",
+    "exitCode": 0,
+    "durationSeconds": 84.248,
+    "timeoutSeconds": 1000,
+    "emptyOwnedDockerConfig": true,
+    "configCleanupPassed": true,
+    "imageCacheRetained": true,
+    "containersStarted": false
+  },
+  "artifacts": {
+    "attempt1": {
+      "path": "checks/.runtime/delivery-41846433683/status-attempt1-final.json",
+      "sha256": "b80641dccc7880ed13fe44c0210135e38ca64beb33810cd240f55227a0ff2191"
+    },
+    "failedE2eLog": {
+      "path": "checks/.runtime/delivery-41846433683/verify-e2e-attempt1.log",
+      "sha256": "ed41c6dc268a90153b6204fc5babbef70c3b09636866873ee58004edd3c57e28"
+    },
+    "retryRequest": {
+      "path": "checks/.runtime/delivery-41846433683/e2e-retry-request.json",
+      "sha256": "875e6bdc1bad8c05a5858e12b324d32e82a6c4e0f28bb6019b9b35b7f62bbcf4"
+    },
+    "attempt2": {
+      "path": "checks/.runtime/delivery-41846433683/status-attempt2.json",
+      "sha256": "5ade27f4f1212bceda5197fc7fa347e7d56c9f19960b0216e625813715414f97"
+    },
+    "publisherLog": {
+      "path": "checks/.runtime/delivery-41846433683/publish-attempt2.log",
+      "sha256": "e87add227e391ee137d792511e549a0b27b22ed0c9ba9c8c04c81edf605993ed"
+    },
+    "localPullReceipt": {
+      "path": "checks/.runtime/delivery-41846433683/public-image-verification.json",
+      "sha256": "1da074edc23eb5bec9c517812b4541bf7b6bb126e33ecc0a25ad1fc33c835f6c"
+    },
+    "localPullOutput": {
+      "path": "checks/.runtime/release-integration-5781d68e/receipts/20261104T144550-public-image-pulls-69e9a1.stdout.log",
+      "sha256": "bc7e18f21c9c4038fd7008cae1b75c15865733239101f3a2a45de1ee59cd3ab2"
+    }
+  },
+  "packageVisibilityChangesPerformed": false,
+  "productionDeploymentPerformed": false,
+  "taskArchivePerformed": false,
+  "recordCommitStatus": "Local post-publication evidence; no extra commit or push was authorized."
+}

@@ -2,6 +2,14 @@
 
 ## Status
 
+Delivery is verified at main `a8c2bc9b3d65fc6970fc895f109aec9728b10290`.
+Run `41846433683`, attempt 2, passes CI, migrations, E2E and image publication.
+Both images and latest aliases are public; independent anonymous metadata checks
+and actual digest-pinned pulls passed. No production deployment or package
+visibility change was performed. Final evidence is in `checks/hosted-publication.json`.
+
+## Earlier Local And First Hosted Evidence
+
 Original release implementation and independent review are complete. Its source is based
 on main `66a4d0273f9fd3229336945ed06d87d1995943dd`; the reviewed 12 product/docs/test
 files are bound by `checks/review/review-final-source.json`, not by an invented
@@ -85,19 +93,49 @@ the authorized hosted workflow must still execute all three real gates.
 
 ## Acceptance Reconciliation
 
-- AC1: Local Dockerfile/policy coverage is separate from the still-pending exact
-  main SHA's hosted build and real GHCR image metadata.
+- AC1: The exact tested main SHA has both published linux/amd64 images with
+  source/revision/license metadata, verified independently through anonymous OCI
+  metadata and local digest-pinned Docker inspection.
 - AC2: Local negative policy, serialization/guard, immutable-rerun and CLI output
-  tests pass. Actual registry behavior still needs first-publication evidence.
+  tests pass. Actual registry creation, digest identity and latest promotion are
+  recorded for the successful hosted publication.
 - AC3: Generation ordering/failure propagation and corrected shared TCP readiness
   are covered by focused tests and real isolated clean-start checks.
 - AC4: Authenticated/anonymous isolation, private-public bootstrap and safe rerun
-  behavior pass mocks. Real package permissions/public availability are pending.
+  behavior pass regressions. Both real packages are anonymously readable and
+  pullable; this release needed no manual visibility change.
 - AC5: Actual Compose merge, runtime parity and required selectors pass; update,
   backup, forward migration, readiness and rollback steps are documented.
 - AC6: Independent review and local gates pass as listed. The first real hosted
-  run is recorded as failed/skipped; a successful corrected workflow and public
-  registry results remain pending. The task stays in_progress.
+  failure remains recorded; the corrected workflow and public registry/pull
+  checks now pass. The task remains in_progress only because archive/extra
+  bookkeeping commits are outside the approved delivery.
+
+## Published Image Pair
+
+Source tag: `sha-a8c2bc9b3d65fc6970fc895f109aec9728b10290`.
+
+| Image | Verified digest |
+| --- | --- |
+| `ghcr.io/0401lucky/narra-image-app` | `sha256:53417173c98e66c2f8d0033a6501f305e8807b39c063f3efcd3f122eabf17be1` |
+| `ghcr.io/0401lucky/narra-image-worker` | `sha256:e44d71c461529a61cad8b6ff55b27bc2fcc9b9797788b45696f586cc9c46b590` |
+
+Both latest aliases matched these digests during the independent anonymous
+check. Use the matching source-tag or digest pair for deployment; aliases are
+not a cross-package transaction.
+
+Hosted run: https://github.com/0401lucky/narra-image/actions/runs/41846433683
+
+The first E2E attempt on this SHA hit Docker info's unchanged 10-second probe
+deadline before scenarios. One failed-job-only retry passed with the same source
+and guards; CI and migrations were not rerun or bypassed. The failed attempt and
+retry request remain in the recorded evidence.
+
+Independent public verification used no GitHub credentials and a fresh empty
+Docker config, pinned to the verified local Linux daemon. Both digest pulls and
+platform/source/license inspections passed in 84.248 seconds. Owned temporary
+configuration was cleaned; downloaded public image cache is retained. No runtime
+container, production database or provider operation occurred.
 
 ## Review And Deferred Risk
 
@@ -112,13 +150,10 @@ deferred, not described as fixed by the shared helper. See
 
 ## Delivery Gate
 
-The original approved batch is delivered. The separate fixture correction batch
-in `commit-plan.md` is now approved; commit/push normally and track all three
-verification jobs plus publisher to their real outcomes. If
-GHCR creates private packages, report the exact Public settings and retain SHA
-tags; after owner setup rerun the failed publication job and confirm anonymous
-digest/platform identity. Never infer a public release from authenticated push
-or an atomic deployment pair from two independent latest aliases.
+The original batch and separately approved fixture correction are delivered.
+All three verification jobs, publisher and independent public checks have real
+results. Future private-package cases still require owner setup and a safe rerun;
+authenticated push alone never proves public access.
 
 Local stdout/stderr and runtime snapshots are intentionally ignored by the
 existing task policy. Versioned receipts/review reports retain their IDs, hashes,
@@ -128,6 +163,8 @@ database state is included in the candidate commits.
 The original recovery/source checks are recorded in `checks/local-handoff.json`.
 All 15 first-commit blobs were compared to reviewed working bytes (allowing only
 Git line-ending normalization); all 31 machine receipt blobs in the second
-commit retained exact bytes. The correction index remains empty. Its staged
-whitespace/blob verification must run after follow-up approval. No force push,
-production operation, archive or journal commit is included.
+commit retained exact bytes. The correction's 41 approved paths passed staged
+whitespace/content checks, including 25 exact raw evidence blobs, before commit.
+Post-publication task records are left local rather than creating an unapproved
+extra commit/push and another release run. No force push, production operation,
+archive or journal commit is included.

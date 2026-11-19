@@ -82,7 +82,7 @@ path and no publication of failed or untrusted changes.
 
 ## Acceptance Criteria
 
-- [ ] AC1 / R1,R2: A tested exact main SHA has both correct amd64 images with
+- [x] AC1 / R1,R2: A tested exact main SHA has both correct amd64 images with
   source/revision/license metadata. Workflow tests prove publish needs all three
   gates and has no PR/fork/untrusted-ref credential or push path.
 - [x] AC2 / R3: Negative tests cover one missing image, registry denial/network
@@ -93,7 +93,7 @@ path and no publication of failed or untrusted changes.
   failed generation prevents later stages. Readiness tests simulate temporary
   socket success but TCP-not-ready until final startup; deadlines/errors and
   owner-verified resource cleanup remain intact. Relevant/full local checks pass.
-- [ ] AC4 / R5: Anonymous registry verification is separate from logged-in
+- [x] AC4 / R5: Anonymous registry verification is separate from logged-in
   operations. Private-first-publication is reported as a clear pending action,
   not public-release success. After explicit visibility setup, the same source
   tag can be reused and public verification completed without moving its digest.
@@ -102,15 +102,18 @@ path and no publication of failed or untrusted changes.
   startup dependencies, readiness and runtime environment. Missing selectors
   fail. Documentation explains updates/rollback without server-side compilation,
   destructive volume commands or automatically bypassing migrations.
-- [ ] AC6 / R1-R7: Independent review, lint/types, targeted and full non-DB
+- [x] AC6 / R1-R7: Independent review, lint/types, targeted and full non-DB
   checks, workflow/config validation and source-bound build evidence pass.
   First authorized Actions/registry run is tracked to its actual result, with
   public manifest/architecture/digest evidence distinguished from local mocks.
   Production and physical/live-provider actions are explicitly excluded.
 
-Local acceptance and pending real publication are reconciled in `verification.md`.
-The checked policy/CI/Compose criteria do not assert that images already exist
-publicly; AC1, AC4 and AC6 retain the actual Actions/GHCR delivery gate.
+Acceptance is reconciled in `verification.md` and `checks/hosted-publication.json`.
+Main `a8c2bc9b3d65fc6970fc895f109aec9728b10290` passes all three real hosted gates
+and publication. Independent anonymous manifest/latest checks and empty-config
+digest pulls confirm both linux/amd64 images. This run required no visibility
+change; the private-package branch remains covered by the reviewed regression,
+not an invented live visibility-change claim. Production deployment is excluded.
 
 ## Out Of Scope
 
@@ -134,6 +137,6 @@ registry garbage collection, dependency/runtime upgrades or unrelated canvas UI.
   loop. Independent review identified this existing same-class risk and main
   explicitly deferred it; the three publication gates use the approved shared
   helper correction, not that independent runner.
-- Changes are prepared locally first. Registry publication and actual Actions
-  evidence remain pending explicit commit/push/run approval; no remote success
-  follows merely from static workflow tests.
+- Changes are prepared locally first. Registry publication requires explicit
+  commit/push/run approval; completed approval and actual hosted/public evidence
+  are now recorded. Static workflow tests alone still cannot prove a release.

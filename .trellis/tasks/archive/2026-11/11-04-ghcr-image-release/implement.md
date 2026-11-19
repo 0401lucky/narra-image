@@ -152,3 +152,19 @@ See `checks/ci-followup/review/`. Original migration/E2E jobs passed; publisher
 was skipped. The user has now approved the separate correction delivery batch
 in `commit-plan.md`; staged checks, commit/push and the new hosted run follow.
 No new image is available from the first failed run.
+
+## Verified Delivery
+
+The correction was committed and pushed as
+`a8c2bc9b3d65fc6970fc895f109aec9728b10290`. Run `41846433683` passed CI and
+migrations; its initial E2E attempt stopped at the unchanged 10-second Docker
+info infrastructure probe before running scenarios. One rerun of that exact
+failed job and its dependent publisher passed, retaining the same source,
+timeouts and successful CI/migration results.
+
+Both fixed source images and latest aliases are public and identify linux/amd64,
+the expected source SHA and AGPL license. Independent no-credential registry
+checks and actual digest-pinned pulls with a fresh empty Docker config passed;
+no runtime containers were started. See `checks/hosted-publication.json`.
+Acceptance is complete. Post-publication records are left local without an
+extra commit/push, archive or journal operation outside the approved batch.

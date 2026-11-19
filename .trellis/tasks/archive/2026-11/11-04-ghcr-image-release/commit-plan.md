@@ -79,3 +79,9 @@ group, verify whitespace and raw evidence blobs, commit once and push main
 normally, then track the new exact SHA's three gates and publisher. Exclude all
 ignored stdout/stderr, runtime snapshots, credentials and the older canvas task.
 The original production/permission/archive boundaries remain unchanged.
+
+Delivery result: committed and pushed as
+`a8c2bc9b3d65fc6970fc895f109aec9728b10290`. Run `41846433683` attempt 2 and
+independent anonymous manifest/latest/digest-pull checks passed. See
+`checks/hosted-publication.json`. The original one-commit follow-up is complete;
+post-publication records remain local without another commit or archive.
