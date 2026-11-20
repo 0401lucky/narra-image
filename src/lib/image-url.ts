@@ -13,6 +13,25 @@ import { getPublicEnv } from "@/lib/public-env";
 const LEGACY_IMAGE_HOST = "image.204152.xyz";
 const DEFAULT_OPTIMIZER_BYPASS_HOSTS = [LEGACY_IMAGE_HOST];
 
+/**
+ * 与 next.config.ts 的 images.imageSizes ∪ images.deviceSizes 保持一致。
+ * 调用 /_next/image?w=xxx 时，xxx 必须落在此白名单内，否则 Next.js 会直接返回 400。
+ */
+export const ALLOWED_IMAGE_WIDTHS = [
+  16, 32, 48, 64, 96, 128, 192, 256, 384,
+  640, 750, 828, 1080, 1200, 1920, 2048, 3840,
+] as const;
+
+export function resolveAllowedImageWidth(width: number): number {
+  if (!Number.isFinite(width) || width <= ALLOWED_IMAGE_WIDTHS[0]) {
+    return ALLOWED_IMAGE_WIDTHS[0];
+  }
+  for (const allowed of ALLOWED_IMAGE_WIDTHS) {
+    if (allowed >= width) return allowed;
+  }
+  return ALLOWED_IMAGE_WIDTHS[ALLOWED_IMAGE_WIDTHS.length - 1];
+}
+
 export function normalizeImageUrl(src: string): string {
   // Only this verified CDN is upgraded; custom bypass hosts may be HTTP-only.
   const httpHost = /^http:\/\/([^/?#]+)/i.exec(src)?.[1];
@@ -56,9 +75,10 @@ export function getThumbUrl(
   // 对这些域名直接使用原图 URL，避免创作台结果图变成破图。
   if (shouldBypassOptimizer(imageSrc)) return imageSrc;
 
+  const safeWidth = resolveAllowedImageWidth(width);
   const params = new URLSearchParams({
     url: imageSrc,
-    w: String(width),
+    w: String(safeWidth),
     q: String(quality),
   });
   return `/_next/image?${params.toString()}`;
@@ -69,7 +89,7 @@ export function getThumbUrl(
  * 自己挑合适的档位，避免移动端高 DPR 屏拉糊、桌面大屏拉浪费。
  * Omit the srcset attribute when the result is empty.
  *
- * @param widths 必须命中 next.config 的 imageSizes/deviceSizes，否则 Next 会拒绝
+ * @param widths 会自动对齐到 next.config 的 imageSizes/deviceSizes
  */
 export function getThumbSrcSet(
   src: string | null | undefined,
@@ -79,5 +99,6 @@ export function getThumbSrcSet(
   if (!src) return "";
   if (src.startsWith("data:") || src.startsWith("blob:")) return "";
   if (shouldBypassOptimizer(src)) return "";
-  return widths.map((w) => `${getThumbUrl(src, w, quality)} ${w}w`).join(", ");
+  const uniqueWidths = [...new Set(widths.map(resolveAllowedImageWidth))];
+  return uniqueWidths.map((w) => `${getThumbUrl(src, w, quality)} ${w}w`).join(", ");
 }

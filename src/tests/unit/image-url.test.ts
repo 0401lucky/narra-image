@@ -1,4 +1,11 @@
-import { getThumbSrcSet, getThumbUrl, normalizeImageUrl } from "@/lib/image-url";
+import nextConfig from "../../../next.config";
+import {
+  ALLOWED_IMAGE_WIDTHS,
+  getThumbSrcSet,
+  getThumbUrl,
+  normalizeImageUrl,
+  resolveAllowedImageWidth,
+} from "@/lib/image-url";
 
 afterEach(() => {
   vi.unstubAllEnvs();
@@ -64,5 +71,21 @@ describe("图片缩略 URL", () => {
     "/_next/image?url=%2Flocal.png&w=640&q=75",
   ])("does not rewrap previews or already optimized URLs: %s", (source) => {
     expect(getThumbUrl(source, 640)).toBe(source);
+  });
+
+  it("keeps ALLOWED_IMAGE_WIDTHS in sync with next.config.ts and snaps non-standard widths", () => {
+    const configWidths = [
+      ...(nextConfig.images?.imageSizes ?? []),
+      ...(nextConfig.images?.deviceSizes ?? []),
+    ].sort((a, b) => a - b);
+    expect([...ALLOWED_IMAGE_WIDTHS]).toEqual(configWidths);
+    expect(resolveAllowedImageWidth(1024)).toBe(1080);
+    expect(resolveAllowedImageWidth(160)).toBe(192);
+    expect(getThumbUrl("/media/images/tok_1", 1024)).toBe(
+      "/_next/image?url=%2Fmedia%2Fimages%2Ftok_1&w=1080&q=75",
+    );
+    expect(getThumbUrl("https://example.com/result.png", 160)).toBe(
+      "/_next/image?url=https%3A%2F%2Fexample.com%2Fresult.png&w=192&q=75",
+    );
   });
 });

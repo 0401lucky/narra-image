@@ -71,10 +71,10 @@ describe("生图工作台：空状态、单条删除与刷新保持", () => {
     const rail = screen.getByRole("complementary", { name: "生成记录" });
     const stage = screen.getByRole("region", { name: "生成结果" });
 
-    // 删除第一条 -> 自动选中第二条
+    // 删除第一条 -> 自动选中第二条，右栏切换展示 job_2 的结果图
     await user.click(within(rail).getByRole("button", { name: /删除记录 第一条记录/ }));
     await waitFor(() => expect(within(rail).queryByText("第一条记录")).not.toBeInTheDocument());
-    expect(within(stage).getByText("第二条记录")).toBeInTheDocument();
+    expect(within(stage).getByAltText("生成结果 1")).toHaveAttribute("src", expect.stringContaining("job_2.png"));
 
     // 删除第二条失败 -> 回滚恢复并提示错误
     await user.click(within(rail).getByRole("button", { name: /删除记录 第二条记录/ }));

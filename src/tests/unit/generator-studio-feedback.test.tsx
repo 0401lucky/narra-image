@@ -69,8 +69,18 @@ describe("生图工作台：草稿保护、复用参数、提示词库与我的�
     await user.click(within(rail).getByText("古风白衣剑客"));
     expect(promptInput).toHaveValue("我写到一半的新草稿");
 
-    // 点右栏「复用参数」，中栏回填 recordB 的提示词与张数
+    // 右栏只聚焦图片与操作，不重复渲染提示词正文块，且图片使用 next.config 允许宽度并支持点击放大
     const stage = screen.getByRole("region", { name: "生成结果" });
+    expect(within(stage).queryByText("古风白衣剑客")).not.toBeInTheDocument();
+    expect(within(stage).queryByRole("button", { name: "复制提示词" })).not.toBeInTheDocument();
+    const resultImg = within(stage).getByAltText("生成结果 1");
+    expect(resultImg).toHaveAttribute("src", expect.stringContaining("w=1080"));
+    expect(resultImg.getAttribute("src")).not.toContain("w=1024");
+    await user.click(resultImg);
+    expect(await screen.findByAltText("放大查看")).toHaveAttribute("src", "https://cdn.example/b.png");
+    await user.click(screen.getByRole("button", { name: "关闭" }));
+
+    // 点右栏「复用参数」，中栏回填 recordB 的提示词与张数
     await user.click(within(stage).getByRole("button", { name: "复用参数" }));
     expect(promptInput).toHaveValue("古风白衣剑客");
     expect(screen.getByRole("button", { name: /开始生成/ })).toHaveTextContent("20 积分");
