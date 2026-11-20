@@ -531,3 +531,27 @@ Audited and comprehensively redesigned all 18 /admin routes and 23+ admin compon
 ### Status
 
 [OK] **Completed**
+
+
+## Session 12: Create studio three-column workbench redesign
+
+**Date**: 2026-11-20
+**Task**: Create studio three-column workbench redesign
+**Branch**: `main`
+
+### Summary
+
+Redesigned /create from chat bubbles into a three-column warm editorial image generation workbench (records rail, composer workbench, result gallery) with flat GenerationJob hide-only deletion (studioHiddenAt), auto T2I/I2I detection, visual size/ratio controls, prompt/works pickers, unified 1..4 multi-output for T2I & I2I across Next.js and Go Worker, and per-image credit billing. Verified via ESLint, tsc, full Vitest, Go tests/build, Next.js build, disposable Postgres migration check, and real browser desktop/mobile inspection.
+
+### Git Commits
+
+| Hash | Message |
+|------|---------|
+| `f722b84` | (see git log) |
+| `f7fd88f` | (see git log) |
+| `52047c1` | (see git log) |
+| `eb23bcb` | (see git log) |
+
+### Status
+
+[OK] **Completed**
