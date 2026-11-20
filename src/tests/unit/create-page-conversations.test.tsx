@@ -2,13 +2,17 @@ import { render } from "@testing-library/react";
 import type { ComponentProps } from "react";
 
 const mocks = vi.hoisted(() => ({
-  user: vi.fn(), conversations: vi.fn(), content: vi.fn(), provider: vi.fn(), studio: vi.fn(), stale: vi.fn(), redirect: vi.fn(), env: vi.fn(),
+  user: vi.fn(),
+  studioGenerations: vi.fn(),
+  provider: vi.fn(),
+  studio: vi.fn(),
+  stale: vi.fn(),
+  redirect: vi.fn(),
+  env: vi.fn(),
 }));
 vi.mock("@/lib/server/current-user", () => ({ getCurrentUserRecord: mocks.user }));
-vi.mock("@/lib/server/conversation-generations", async (importOriginal) => ({
-  ...await importOriginal<typeof import("@/lib/server/conversation-generations")>(),
-  listStudioConversations: mocks.conversations,
-  listConversationGenerations: mocks.content,
+vi.mock("@/lib/server/studio-generations", () => ({
+  listStudioGenerations: mocks.studioGenerations,
 }));
 vi.mock("@/lib/db", () => ({ db: { savedProviderConfig: { findUnique: mocks.provider } } }));
 vi.mock("@/lib/env", () => ({ getEnv: mocks.env }));
@@ -22,78 +26,77 @@ vi.mock("next/navigation", () => ({ redirect: mocks.redirect }));
 
 import CreatePage from "@/app/create/page";
 import type { GeneratorStudio } from "@/components/create/generator-studio";
-import { ConversationContentError } from "@/lib/server/conversation-generations";
-import { conversationGeneration, conversationPage } from "./helpers/conversation-fixtures";
+import { conversationGeneration } from "./helpers/conversation-fixtures";
 
 const ownerId = "owner_fixture";
-const summary = (id: string) => ({ id, title: id, createdAt: "2026-10-01T00:00:00.000Z", updatedAt: "2026-10-01T00:00:00.000Z", generationCount: 50_000 });
 
 beforeEach(() => {
   vi.resetAllMocks();
   mocks.env.mockReturnValue({ CANVAS_ENABLED: true });
-  mocks.user.mockResolvedValue({ id: ownerId, credits: 500, role: "USER", email: "fixture@unit.invalid", nickname: "Fixture", avatarUrl: null, oauthProvider: null });
+  mocks.user.mockResolvedValue({
+    id: ownerId,
+    credits: 500,
+    role: "USER",
+    email: "fixture@unit.invalid",
+    nickname: "Fixture",
+    avatarUrl: null,
+    oauthProvider: null,
+  });
   mocks.provider.mockResolvedValue(null);
   mocks.studio.mockReturnValue(null);
-  mocks.conversations.mockResolvedValue([summary("conversation_a"), summary("conversation_b")]);
-  mocks.content.mockResolvedValue(conversationPage([conversationGeneration("initial_job")], "older_page"));
-  mocks.redirect.mockImplementation(() => { throw new Error("redirected"); });
+  mocks.studioGenerations.mockResolvedValue({
+    generations: [conversationGeneration("initial_job")],
+    hasMore: true,
+    nextCursor: "older_page_cursor",
+  });
+  mocks.redirect.mockImplementation(() => {
+    throw new Error("redirected");
+  });
 });
 
 function studioProps() {
   return mocks.studio.mock.calls.at(-1)![0] as ComponentProps<typeof GeneratorStudio>;
 }
 
-describe("create page scoped bootstrap", () => {
-  it("loads bounded summaries and only the selected conversation's first page", async () => {
-    render(await CreatePage({ searchParams: { prompt: "Seed chat only" } }));
-    expect(mocks.conversations).toHaveBeenCalledWith(ownerId);
-    expect(mocks.content).toHaveBeenCalledExactlyOnceWith({ ownerId, conversationId: "conversation_a" });
+describe("create page workbench bootstrap", () => {
+  it("loads bounded flat image generation records for the current owner", async () => {
+    render(await CreatePage({ searchParams: { prompt: "Seed workbench prompt" } }));
+    expect(mocks.studioGenerations).toHaveBeenCalledExactlyOnceWith({ ownerId });
     const props = studioProps();
     expect(props.ownerId).toBe(ownerId);
     expect(props.canvasEnabled).toBe(true);
-    expect(props.initialPrompt).toBe("Seed chat only");
-    expect(props.initialGenerations).toBeUndefined();
-    expect(props.initialGenerationPage).toEqual(conversationPage([conversationGeneration("initial_job")], "older_page"));
-    expect(props.initialConversations).toEqual([
-      { ...summary("conversation_a"), generationIds: [] }, { ...summary("conversation_b"), generationIds: [] },
-    ]);
+    expect(props.initialPrompt).toBe("Seed workbench prompt");
+    expect(props.initialGenerations).toEqual([conversationGeneration("initial_job")]);
+    expect(props.initialHasMore).toBe(true);
+    expect(props.initialNextCursor).toBe("older_page_cursor");
     expect(mocks.stale).toHaveBeenCalledWith({ userId: ownerId });
-    // The DB mock has no job/conversation delegates: global/history bootstrap queries fail this test.
   });
 
-  it("passes the staged-off flag without changing conversation bootstrap", async () => {
+  it("passes the staged-off canvas flag without changing workbench bootstrap", async () => {
     mocks.env.mockReturnValue({ CANVAS_ENABLED: false });
     render(await CreatePage({}));
     expect(studioProps().canvasEnabled).toBe(false);
-    expect(studioProps().initialGenerationPage?.conversationId).toBe("conversation_a");
+    expect(studioProps().initialGenerations).toHaveLength(1);
   });
 
-  it("does not fetch orphan or canvas content when there are no conversations", async () => {
-    mocks.conversations.mockResolvedValue([]);
+  it("passes empty initial list when user has no visible image records", async () => {
+    mocks.studioGenerations.mockResolvedValue({ generations: [], hasMore: false, nextCursor: null });
     render(await CreatePage({}));
-    expect(mocks.content).not.toHaveBeenCalled();
-    expect(studioProps().initialGenerationPage).toBeNull();
-    expect(studioProps().initialConversations).toEqual([]);
+    expect(studioProps().initialGenerations).toEqual([]);
+    expect(studioProps().initialHasMore).toBe(false);
+    expect(studioProps().initialNextCursor).toBeNull();
   });
 
-  it("does not replace a concurrently deleted selected parent with unrelated content", async () => {
-    mocks.content.mockRejectedValue(new ConversationContentError("CONVERSATION_NOT_FOUND"));
-    render(await CreatePage({}));
-    expect(studioProps().initialGenerationPage).toBeNull();
-    expect(mocks.content).toHaveBeenCalledTimes(1);
-  });
-
-  it("does not mask ordinary content failures as a successful empty bootstrap", async () => {
-    mocks.content.mockRejectedValue(new Error("unavailable"));
+  it("does not mask loader failures as an empty bootstrap", async () => {
+    mocks.studioGenerations.mockRejectedValue(new Error("unavailable"));
     await expect(CreatePage({})).rejects.toThrow("unavailable");
     expect(mocks.studio).not.toHaveBeenCalled();
   });
 
-  it("redirects unauthenticated visitors before any content or metadata load", async () => {
+  it("redirects unauthenticated visitors before any content load", async () => {
     mocks.user.mockResolvedValue(null);
     await expect(CreatePage({})).rejects.toThrow("redirected");
     expect(mocks.redirect).toHaveBeenCalledWith("/login");
-    expect(mocks.content).not.toHaveBeenCalled();
-    expect(mocks.conversations).not.toHaveBeenCalled();
+    expect(mocks.studioGenerations).not.toHaveBeenCalled();
   });
 });

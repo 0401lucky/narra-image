@@ -10,8 +10,7 @@ import { GeneratorStudio } from "@/components/create/generator-studio";
 import { SiteHeader } from "@/components/marketing/site-header";
 import { getActiveChannels } from "@/lib/providers/built-in-provider";
 import { failStalePendingGenerationJobs } from "@/lib/generation/job-refund";
-import type { ConversationGenerationsPage } from "@/lib/conversations/contracts";
-import { ConversationContentError, listConversationGenerations, listStudioConversations } from "@/lib/server/conversation-generations";
+import { listStudioGenerations } from "@/lib/server/studio-generations";
 
 export const dynamic = "force-dynamic";
 
@@ -27,10 +26,10 @@ export default async function CreatePage({ searchParams }: CreatePageProps) {
 
   await failStalePendingGenerationJobs({ userId: user.id });
 
-  const [channels, checkInSummary, conversations, savedProvider, turnstileConfig] = await Promise.all([
+  const [channels, checkInSummary, studioPage, savedProvider, turnstileConfig] = await Promise.all([
     getActiveChannels(),
     getCheckInSummary(user.id),
-    listStudioConversations(user.id),
+    listStudioGenerations({ ownerId: user.id }),
     db.savedProviderConfig.findUnique({
       where: { userId: user.id },
       select: {
@@ -44,16 +43,6 @@ export default async function CreatePage({ searchParams }: CreatePageProps) {
     }),
     getPublicTurnstileConfig(),
   ]);
-
-  let initialGenerationPage: ConversationGenerationsPage | null = null;
-  if (conversations[0]) {
-    try {
-      initialGenerationPage = await listConversationGenerations({ ownerId: user.id, conversationId: conversations[0].id });
-    } catch (error) {
-      // Another device may delete the selected parent between these bounded reads.
-      if (!(error instanceof ConversationContentError) || error.code !== "CONVERSATION_NOT_FOUND") throw error;
-    }
-  }
 
   const currentUser = serializeUser(user);
   const params = await searchParams;
@@ -78,8 +67,9 @@ export default async function CreatePage({ searchParams }: CreatePageProps) {
           checkInSummary={checkInSummary}
           currentUser={currentUser}
           initialPrompt={initialPrompt}
-          initialGenerationPage={initialGenerationPage}
-          initialConversations={conversations.map((conversation) => ({ ...conversation, generationIds: [] }))}
+          initialGenerations={studioPage.generations}
+          initialHasMore={studioPage.hasMore}
+          initialNextCursor={studioPage.nextCursor}
           channels={serializedChannels}
           savedProvider={
             savedProvider

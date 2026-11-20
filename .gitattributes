@@ -19,6 +19,7 @@ prisma/migrations/20261112090000_image_storage/migration.sql text eol=lf
 prisma/migrations/20261112100000_canvas_image_storage/migration.sql text eol=lf
 prisma/migrations/20261115090000_image_retention/migration.sql text eol=lf
 prisma/migrations/20261115180000_image_history/migration.sql text eol=lf
+prisma/migrations/20261120093000_generation_studio_hidden_at/migration.sql text eol=lf
 
 # Preserve original license and forensic before-image bytes, including whitespace.
 # Application source, task helpers and authored documentation keep normal checks.

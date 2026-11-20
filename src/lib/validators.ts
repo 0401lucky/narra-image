@@ -193,6 +193,10 @@ export const adminGenerationBulkDeleteSchema = z.object({
   ids: z.array(z.string().trim().min(1)).min(1, "请选择要删除的生成记录").max(100, "单次最多删除 100 条生成记录"),
 });
 
+export const studioHideGenerationsSchema = z.object({
+  ids: z.array(z.string().trim().min(1)).min(1, "请选择要删除的生成记录").max(100, "单次最多删除 100 条生成记录"),
+});
+
 export const benefitConfigSchema = z.object({
   checkInReward: z.number().int().min(1).max(10000),
 });
