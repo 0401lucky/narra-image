@@ -45,6 +45,14 @@ func TestValidateGatewayEnvelope(t *testing.T) {
 		t.Fatalf("valid envelope rejected: %v", err)
 	}
 
+	multiEdit := base
+	multiEdit.Endpoint = "images.edits"
+	multiEdit.Payload.GenerationType = "IMAGE_TO_IMAGE"
+	multiEdit.Payload.Count = 4
+	if err := worker.validateGatewayEnvelope(&multiEdit); err != nil {
+		t.Fatalf("expected multi-output IMAGE_TO_IMAGE envelope to pass, got: %v", err)
+	}
+
 	tests := []struct {
 		name   string
 		mutate func(*gatewayEnvelope)

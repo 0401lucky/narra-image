@@ -83,7 +83,7 @@ export async function parseGenerateRequest(request: Request | FormData) {
     })();
 
     const body = generateSchema.parse({
-      count: 1,
+      count: toNullableNumber(formData.get("count")) ?? 1,
       customProvider:
         providerMode === "custom" && customApiKey
           ? {
@@ -116,7 +116,7 @@ export async function parseGenerateRequest(request: Request | FormData) {
       canvasRun: null,
       channelId: toNullableString(formData.get("channelId")) || undefined,
       conversationId: toNullableString(formData.get("conversationId")) || undefined,
-      count: 1,
+      count: body.count,
       image: images[0] ?? null,
       imageUrls,
       images,

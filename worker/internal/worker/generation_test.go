@@ -3,6 +3,7 @@ package worker
 import (
 	"bytes"
 	"context"
+	"encoding/base64"
 	"encoding/json"
 	"io"
 	"net/http"
@@ -264,6 +265,110 @@ func TestParseDataURLRejectsNonImageContent(t *testing.T) {
 	_, err := parseDataURL("data:image/png;base64,bm90IGFuIGltYWdl", 0)
 	if err == nil || !strings.Contains(err.Error(), "有效图片") {
 		t.Fatalf("expected invalid data URL image rejection, got %v", err)
+	}
+}
+
+func TestGenerateWithImageEditSupportsMultipleCount(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost || r.URL.Path != "/images/edits" {
+			http.Error(w, "unexpected request", http.StatusNotFound)
+			return
+		}
+		reader, err := r.MultipartReader()
+		if err != nil {
+			t.Fatalf("read multipart request: %v", err)
+		}
+		gotN := ""
+		for {
+			part, err := reader.NextPart()
+			if err == io.EOF {
+				break
+			}
+			if err != nil {
+				t.Fatalf("read multipart part: %v", err)
+			}
+			if part.FormName() == "n" {
+				raw, _ := io.ReadAll(part)
+				gotN = string(raw)
+			}
+		}
+		if gotN != "3" {
+			t.Fatalf("expected multipart n=3, got %q", gotN)
+		}
+		_ = json.NewEncoder(w).Encode(map[string]any{
+			"data": []map[string]any{
+				{"b64_json": "Y2F0MQ=="},
+				{"b64_json": "Y2F0Mg=="},
+				{"b64_json": "Y2F0Mw=="},
+			},
+		})
+	}))
+	defer server.Close()
+
+	payload, err := generateWithImageEdit(
+		context.Background(),
+		GenerationJob{
+			ID:             "job_edit_multi",
+			GenerationType: "IMAGE_TO_IMAGE",
+			Count:          3,
+			Model:          "gpt-image-2",
+			Prompt:         "生成三张不同光线版本",
+			Size:           "auto",
+		},
+		ProviderConfig{APIKey: "test-key", BaseURL: server.URL, AllowPrivateNetwork: true},
+		[]SourceImage{{Data: []byte("fake-image"), FileName: "source.png", MimeType: "image/png"}},
+	)
+	if err != nil {
+		t.Fatalf("generateWithImageEdit returned error: %v", err)
+	}
+	if len(payload.Data) != 3 {
+		t.Fatalf("expected 3 images, got %d", len(payload.Data))
+	}
+}
+
+func TestGenerateWithResponsesImageToolSupportsImageToImageMultipleCount(t *testing.T) {
+	pngBase64 := base64.StdEncoding.EncodeToString(minimalPNG(32, 32))
+	var idempotencyKeys []string
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost || r.URL.Path != "/responses" {
+			http.Error(w, "unexpected request", http.StatusNotFound)
+			return
+		}
+		idempotencyKeys = append(idempotencyKeys, r.Header.Get("Idempotency-Key"))
+		_ = json.NewEncoder(w).Encode(map[string]any{
+			"output": []map[string]any{
+				{
+					"type":   "image_generation_call",
+					"result": pngBase64,
+				},
+			},
+		})
+	}))
+	defer server.Close()
+
+	payload, err := generateWithResponsesImageTool(
+		context.Background(),
+		GenerationJob{
+			ID:             "job_resp_edit_multi",
+			GenerationType: "IMAGE_TO_IMAGE",
+			Count:          2,
+			Model:          "gpt-image-2",
+			Prompt:         "生成两张胶片风格参考变体",
+			Size:           "1024x1024",
+		},
+		ProviderConfig{APIKey: "test-key", BaseURL: server.URL, AllowPrivateNetwork: true},
+		[]SourceImage{{Data: minimalPNG(32, 32), FileName: "source.png", MimeType: "image/png"}},
+	)
+	if err != nil {
+		t.Fatalf("generateWithResponsesImageTool returned error: %v", err)
+	}
+	if len(idempotencyKeys) != 2 ||
+		idempotencyKeys[0] != "narra-image:job_resp_edit_multi:responses" ||
+		idempotencyKeys[1] != "narra-image:job_resp_edit_multi:responses:2" {
+		t.Fatalf("unexpected responses idempotency keys: %#v", idempotencyKeys)
+	}
+	if len(payload.Data) != 2 {
+		t.Fatalf("expected 2 images, got %d", len(payload.Data))
 	}
 }
 

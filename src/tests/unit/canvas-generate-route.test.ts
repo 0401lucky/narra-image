@@ -321,9 +321,9 @@ describe("canvas run integration with the existing generation route", () => {
     const body = await response.json();
     expect(body.data).toMatchObject({
       canvasRun: { canvasId: canvasTestIds.canvas, nodeId, runId, jobId: ledger().originalJobId },
-      generation: { id: ledger().originalJobId, status: "pending", count: 2, creditsSpent: 5, providerMode: "built_in", prompt: "frozen landscape", size: "1824x1024", outputFormat: "webp", outputCompression: 83, quality: "high", moderation: "low" },
+      generation: { id: ledger().originalJobId, status: "pending", count: 2, creditsSpent: 10, providerMode: "built_in", prompt: "frozen landscape", size: "1824x1024", outputFormat: "webp", outputCompression: 83, quality: "high", moderation: "low" },
     });
-    expect(ledger().state).toBe("COMMITTED"); expect(state.jobs.size).toBe(1); expect(state.credits).toBe(45);
+    expect(ledger().state).toBe("COMMITTED"); expect(state.jobs.size).toBe(1); expect(state.credits).toBe(40);
     expect([...state.jobs.values()][0]).toMatchObject({ workerManaged: true, handoffState: "NOT_STARTED", contractVersion: 1, providerModels: ["gpt-image-2"], providerChannelId: "channel_test", conversationId: null });
     expect(events.indexOf("reserve")).toBeLessThan(events.indexOf("captcha"));
     expect(events.indexOf("lock-canvas")).toBeLessThan(events.indexOf("lock-run"));
@@ -377,7 +377,7 @@ describe("canvas run integration with the existing generation route", () => {
     const response = await replay;
     expect(response.status).toBe(200);
     expect((await response.json()).data.canvasRun).toEqual((await accepted.json()).data.canvasRun);
-    expect(state.jobs.size).toBe(1); expect(state.credits).toBe(45);
+    expect(state.jobs.size).toBe(1); expect(state.credits).toBe(40);
     expect(mocks.turnstile).toHaveBeenCalledTimes(1); expect(mocks.createJob).toHaveBeenCalledTimes(1);
     expect(events).not.toContain("reject-run");
   });
@@ -396,7 +396,7 @@ describe("canvas run integration with the existing generation route", () => {
     const changed = wire(); changed.parameters.count = 3;
     const response = await POST(generationRequest(changed));
     expect(response.status).toBe(409); expect(await response.json()).toMatchObject({ code: "CANVAS_RUN_CONFLICT" });
-    expect(state.jobs.size).toBe(1); expect(state.credits).toBe(45); expect(mocks.turnstile).toHaveBeenCalledTimes(1);
+    expect(state.jobs.size).toBe(1); expect(state.credits).toBe(40); expect(mocks.turnstile).toHaveBeenCalledTimes(1);
   });
 
   it("keeps a stale reservation error uncertain when committed lookup is unavailable", async () => {
@@ -405,7 +405,7 @@ describe("canvas run integration with the existing generation route", () => {
     mocks.transaction.mockRejectedValueOnce(new CanvasContractError("CANVAS_NOT_FOUND"));
     const response = await POST(generationRequest());
     expect(response.status).toBe(202); expect(await response.json()).toMatchObject({ data: { state: "PREPARING", origin: { runId } } });
-    expect(ledger().state).toBe("COMMITTED"); expect(state.jobs.size).toBe(1); expect(state.credits).toBe(45);
+    expect(ledger().state).toBe("COMMITTED"); expect(state.jobs.size).toBe(1); expect(state.credits).toBe(40);
     expect(mocks.turnstile).toHaveBeenCalledTimes(1); expect(events).not.toContain("reject-run");
   });
 
@@ -416,7 +416,7 @@ describe("canvas run integration with the existing generation route", () => {
     const response = await POST(generationRequest());
     expect(response.status).toBe(410);
     expect(await response.json()).toMatchObject({ data: { state: "COMMITTED", jobId: originalJobId, generation: null, unavailable: "CANVAS_JOB_UNAVAILABLE" } });
-    expect(state.jobs.size).toBe(0); expect(state.credits).toBe(45); expect(mocks.createJob).toHaveBeenCalledTimes(1);
+    expect(state.jobs.size).toBe(0); expect(state.credits).toBe(40); expect(mocks.createJob).toHaveBeenCalledTimes(1);
   });
 
   it("conflicts on edited intent but not on a different CAPTCHA", async () => {
@@ -425,7 +425,7 @@ describe("canvas run integration with the existing generation route", () => {
     const conflict = await POST(generationRequest(changed));
     expect(conflict.status).toBe(409); expect(await conflict.json()).toMatchObject({ code: "CANVAS_RUN_CONFLICT" });
     expect((await POST(generationRequest(wire(), { turnstileToken: "new" }))).status).toBe(200);
-    expect(state.jobs.size).toBe(1); expect(state.credits).toBe(45); expect(mocks.turnstile).toHaveBeenCalledTimes(1);
+    expect(state.jobs.size).toBe(1); expect(state.credits).toBe(40); expect(mocks.turnstile).toHaveBeenCalledTimes(1);
   });
 
   it("deduplicates simultaneous same-run requests while the first preparation is outstanding", async () => {
@@ -437,17 +437,17 @@ describe("canvas run integration with the existing generation route", () => {
     expect(await second.json()).toMatchObject({ data: { state: "PREPARING", origin: { runId, nodeId, canvasId: canvasTestIds.canvas } } });
     expect(state.jobs.size).toBe(0);
     wait.resolve(); expect((await first).status).toBe(200);
-    expect(state.jobs.size).toBe(1); expect(state.credits).toBe(45); expect(mocks.turnstile).toHaveBeenCalledTimes(1);
+    expect(state.jobs.size).toBe(1); expect(state.credits).toBe(40); expect(mocks.turnstile).toHaveBeenCalledTimes(1);
   });
 
   it("admits only one run per busy node and permits an explicit new run after the prior job settles", async () => {
     await POST(generationRequest());
     const next = wire(); next.runId = uuid(9);
     expect((await POST(generationRequest(next))).status).toBe(409);
-    expect(state.jobs.size).toBe(1); expect(state.credits).toBe(45);
+    expect(state.jobs.size).toBe(1); expect(state.credits).toBe(40);
     state.jobs.get(ledger().originalJobId!)!.status = "SUCCEEDED";
     expect((await POST(generationRequest(next))).status).toBe(200);
-    expect(state.jobs.size).toBe(2); expect(state.credits).toBe(40);
+    expect(state.jobs.size).toBe(2); expect(state.credits).toBe(30);
   });
 
   it("recovers a committed transaction whose acknowledgement was lost without compensation or duplicate debit", async () => {
@@ -456,7 +456,7 @@ describe("canvas run integration with the existing generation route", () => {
     expect(response.status).toBe(200);
     expect(await response.json()).toMatchObject({ data: { canvasRun: { jobId: ledger().originalJobId }, generation: { id: ledger().originalJobId } } });
     expect((await POST(generationRequest())).status).toBe(200);
-    expect(state.jobs.size).toBe(1); expect(state.credits).toBe(45); expect(mocks.createJob).toHaveBeenCalledTimes(1);
+    expect(state.jobs.size).toBe(1); expect(state.credits).toBe(40); expect(mocks.createJob).toHaveBeenCalledTimes(1);
     expect(events).not.toContain("reject-run");
   });
 
@@ -466,7 +466,7 @@ describe("canvas run integration with the existing generation route", () => {
     const response = await POST(generationRequest());
     expect(response.status).toBe(200);
     expect(await response.json()).toMatchObject({ data: { generation: { id: ledger().originalJobId }, canvasRun: { runId } } });
-    expect(state.jobs.size).toBe(1); expect(state.credits).toBe(45); expect(events).not.toContain("reject-run");
+    expect(state.jobs.size).toBe(1); expect(state.credits).toBe(40); expect(events).not.toContain("reject-run");
   });
 
   it("keeps a failed unconfirmed transaction uncertain without automatically attempting another job", async () => {
@@ -485,7 +485,7 @@ describe("canvas run integration with the existing generation route", () => {
     commitFailures.push(error);
     const response = await POST(generationRequest());
     expect(response.status).toBe(200); expect(ledger().state).toBe("COMMITTED");
-    expect(state.jobs.size).toBe(1); expect(state.credits).toBe(45);
+    expect(state.jobs.size).toBe(1); expect(state.credits).toBe(40);
     expect(mocks.createJob).toHaveBeenCalledTimes(2); expect(mocks.charge).toHaveBeenCalledTimes(2);
     expect(mocks.turnstile).toHaveBeenCalledTimes(1); expect(events).not.toContain("reject-run");
   });
@@ -512,7 +512,7 @@ describe("canvas run integration with the existing generation route", () => {
     loseJobAck = true; failRunReads = true;
     const response = await POST(generationRequest());
     expect(response.status).toBe(202); expect(await response.json()).toMatchObject({ data: { state: "PREPARING", origin: { runId } } });
-    expect(ledger().state).toBe("COMMITTED"); expect(state.credits).toBe(45); expect(events).not.toContain("reject-run");
+    expect(ledger().state).toBe("COMMITTED"); expect(state.credits).toBe(40); expect(events).not.toContain("reject-run");
     failRunReads = false;
     expect((await POST(generationRequest())).status).toBe(200);
     expect(state.jobs.size).toBe(1); expect(mocks.turnstile).toHaveBeenCalledTimes(1);
@@ -530,7 +530,7 @@ describe("canvas run integration with the existing generation route", () => {
     const changed = wire(); changed.input.prompt.text = "different intent";
     const response = await POST(generationRequest(changed));
     expect(response.status).toBe(409); expect(await response.json()).toMatchObject({ code: "CANVAS_RUN_CONFLICT" });
-    expect(state.jobs.size).toBe(1); expect(state.credits).toBe(45);
+    expect(state.jobs.size).toBe(1); expect(state.credits).toBe(40);
   });
 
   it.each(["CANVAS_NODE_BUSY", "CANVAS_LEASE_LOST"] as const)("rolls back tentative job and debit on final %s", async (code) => {
@@ -593,7 +593,7 @@ describe("canvas run integration with the existing generation route", () => {
     expect((await POST(generationRequest())).status).toBe(200);
     expect(ledger().preparationToken).not.toBe(originalFence);
     wait.resolve(); expect((await slow).status).toBe(200);
-    expect(state.jobs.size).toBe(1); expect(state.credits).toBe(45); expect(mocks.createJob).toHaveBeenCalledTimes(1);
+    expect(state.jobs.size).toBe(1); expect(state.credits).toBe(40); expect(mocks.createJob).toHaveBeenCalledTimes(1);
   });
 
   it("a deletion winning before enqueue blocks attachment without cancellation or charging", async () => {

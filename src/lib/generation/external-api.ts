@@ -184,13 +184,14 @@ export async function runExternalGeneration({
   const env = getEnv();
   const requestedModel = input.model?.trim() || env.BUILTIN_PROVIDER_MODEL;
   const builtInProvider = await getGenerationChannelForModel(requestedModel);
-  const cost = calculateGenerationCost({
-    builtInCreditCost: builtInProvider.creditCost,
-    providerMode: "built_in",
-  });
   const sourceImages = input.sourceImages ?? [];
   const model = input.model || builtInProvider.defaultModel;
-  const count = input.generationType === "image_to_image" ? 1 : input.count;
+  const count = input.count;
+  const cost = calculateGenerationCost({
+    builtInCreditCost: builtInProvider.creditCost,
+    count,
+    providerMode: "built_in",
+  });
   const contractFields = generationContractWriteFields(
     env.WORKER_CONTRACTS_V1_ENABLED,
   );

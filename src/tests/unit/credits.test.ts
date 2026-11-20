@@ -6,20 +6,28 @@ import {
 } from "@/lib/credits";
 
 describe("积分规则", () => {
-  it("内置渠道默认每次扣 5 积分", () => {
+  it("内置渠道按张扣费（默认 1 张扣 5 积分，4 张扣 20 积分）", () => {
     expect(
       calculateGenerationCost({
         providerMode: "built_in",
         builtInCreditCost: 5,
       }),
     ).toBe(5);
+    expect(
+      calculateGenerationCost({
+        providerMode: "built_in",
+        builtInCreditCost: 5,
+        count: 4,
+      }),
+    ).toBe(20);
   });
 
-  it("自填渠道不扣积分", () => {
+  it("自填渠道无论张数均不扣积分", () => {
     expect(
       calculateGenerationCost({
         providerMode: "custom",
         builtInCreditCost: 5,
+        count: 4,
       }),
     ).toBe(0);
   });
@@ -29,7 +37,7 @@ describe("积分规则", () => {
     expect(shouldChargeCredits("custom")).toBe(false);
   });
 
-  it("积分不足时禁止内置渠道生成", () => {
+  it("积分不足时禁止内置渠道生成（含多张总价校验）", () => {
     expect(
       hasEnoughCredits({
         providerMode: "built_in",
@@ -37,6 +45,22 @@ describe("积分规则", () => {
         builtInCreditCost: 5,
       }),
     ).toBe(false);
+    expect(
+      hasEnoughCredits({
+        providerMode: "built_in",
+        credits: 15,
+        builtInCreditCost: 5,
+        count: 4,
+      }),
+    ).toBe(false);
+    expect(
+      hasEnoughCredits({
+        providerMode: "built_in",
+        credits: 20,
+        builtInCreditCost: 5,
+        count: 4,
+      }),
+    ).toBe(true);
   });
 
   it("视频生成类型取视频单价，图片类型取图片单价", () => {

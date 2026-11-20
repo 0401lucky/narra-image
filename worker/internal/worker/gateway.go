@@ -156,9 +156,6 @@ func (w *Worker) validateGatewayEnvelope(env *gatewayEnvelope) error {
 	if env.Payload.GenerationType != "TEXT_TO_IMAGE" && env.Payload.GenerationType != "IMAGE_TO_IMAGE" {
 		return errors.New("payload.generationType 非法")
 	}
-	if env.Payload.GenerationType == "IMAGE_TO_IMAGE" && env.Payload.Count != 1 {
-		return errors.New("图生图的 payload.count 必须为 1")
-	}
 	return nil
 }
 

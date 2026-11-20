@@ -244,12 +244,13 @@ export async function runExternalGenerationViaGateway(input: {
   const env = getEnv();
   const requestedModel = input.input.model?.trim() || env.BUILTIN_PROVIDER_MODEL;
   const provider: ResolvedChannel = await getGenerationChannelForModel(requestedModel);
+  const model = input.input.model || provider.defaultModel;
+  const count = input.input.count;
   const cost = calculateGenerationCost({
     builtInCreditCost: provider.creditCost,
+    count,
     providerMode: "built_in",
   });
-  const model = input.input.model || provider.defaultModel;
-  const count = input.input.generationType === "image_to_image" ? 1 : input.input.count;
 
   let charged = false;
   let forwarding = false;

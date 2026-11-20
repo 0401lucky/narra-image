@@ -148,7 +148,7 @@ describe("gateway-client", () => {
     expect(body.schemaVersion).toBe(1);
     expect(body.endpoint).toBe("images.generations");
     expect(body.auth).toEqual({ apiKeyId: "ck_1", userId: "usr_1" });
-    expect(body.billing).toEqual({ creditsSpent: 5, charged: true });
+    expect(body.billing).toEqual({ creditsSpent: 10, charged: true });
     expect(body.provider).toEqual({
       channelId: "chn_1",
       channelModels: ["gpt-image-2", "gpt-image-2"],
@@ -172,11 +172,11 @@ describe("gateway-client", () => {
       .digest("hex");
     expect(headers["x-gateway-signature"]).toBe(expected);
 
-    // 预扣只发生一次且金额正确
+    // 预扣只发生一次且金额正确（2 张 × 5 积分）
     expect(mockUpdateMany).toHaveBeenCalledWith(
       expect.objectContaining({
-        where: { credits: { gte: 5 }, id: "usr_1" },
-        data: { credits: { decrement: 5 } },
+        where: { credits: { gte: 10 }, id: "usr_1" },
+        data: { credits: { decrement: 10 } },
       }),
     );
   });

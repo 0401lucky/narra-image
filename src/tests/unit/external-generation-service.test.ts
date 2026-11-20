@@ -196,7 +196,8 @@ describe("外部 API 生成服务", () => {
     expect(mockCreateGenerationJob).toHaveBeenCalledWith(
       expect.objectContaining({
         data: expect.objectContaining({
-          count: 1,
+          count: 4,
+          creditsSpent: 20,
           generationType: "IMAGE_TO_IMAGE",
           sourceImageUrls: [],
           workerManaged: false,

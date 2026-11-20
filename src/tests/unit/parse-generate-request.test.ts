@@ -294,4 +294,25 @@ describe("生成请求解析", () => {
     const withoutToken = await parseGenerateRequest(build(false));
     expect(withoutToken.turnstileToken).toBeUndefined();
   });
+
+  it("解析 form-data 图生图请求支持 count=1..4 并拒绝超界值", async () => {
+    const validForm = new FormData();
+    validForm.append("generationType", "image_to_image");
+    validForm.append("model", "gpt-image-2");
+    validForm.append("prompt", "参考构图生成四张变体");
+    validForm.append("count", "4");
+    validForm.append("image", new File(["fake-image"], "ref.png", { type: "image/png" }));
+
+    const parsed = await parseGenerateRequest(validForm);
+    expect(parsed.count).toBe(4);
+
+    const invalidForm = new FormData();
+    invalidForm.append("generationType", "image_to_image");
+    invalidForm.append("model", "gpt-image-2");
+    invalidForm.append("prompt", "超出张数上限");
+    invalidForm.append("count", "5");
+    invalidForm.append("image", new File(["fake-image"], "ref.png", { type: "image/png" }));
+
+    await expect(parseGenerateRequest(invalidForm)).rejects.toThrow();
+  });
 });

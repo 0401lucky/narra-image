@@ -86,9 +86,6 @@ func generateImages(ctx context.Context, storage *Storage, job GenerationJob, pr
 		return nil, ResultPersistError{Cause: errors.New("渠道没有返回图片结果")}
 	}
 	maximumOutputs := job.Count
-	if job.GenerationType == "IMAGE_TO_IMAGE" {
-		maximumOutputs = 1
-	}
 	if len(payload.Data) > maximumOutputs {
 		return nil, ResultPersistError{Cause: errors.New("渠道返回的图片数量超过本次请求的上限")}
 	}
@@ -145,9 +142,13 @@ func generateWithImageEdit(ctx context.Context, job GenerationJob, provider Prov
 	var body bytes.Buffer
 	writer := multipart.NewWriter(&body)
 
+	editCount := job.Count
+	if editCount < 1 {
+		editCount = 1
+	}
 	fields := map[string]string{
 		"model":  job.Model,
-		"n":      "1",
+		"n":      strconv.Itoa(editCount),
 		"prompt": job.Prompt,
 		"size":   job.Size,
 	}
@@ -200,7 +201,7 @@ func generateWithImageEdit(ctx context.Context, job GenerationJob, provider Prov
 
 func generateWithResponsesImageTool(ctx context.Context, job GenerationJob, provider ProviderConfig, sourceImages []SourceImage) (imagePayload, error) {
 	count := job.Count
-	if job.GenerationType == "IMAGE_TO_IMAGE" {
+	if count < 1 {
 		count = 1
 	}
 

@@ -123,8 +123,11 @@ export async function POST(request: Request) {
         builtInProvider?.videoCreditCost ?? env.BUILTIN_PROVIDER_VIDEO_CREDIT_COST,
     });
 
+    const isVideo = body.generationType === "text_to_video" || body.generationType === "image_to_video";
+    const billableCount = isVideo ? 1 : body.count;
     const cost = calculateGenerationCost({
       builtInCreditCost,
+      count: billableCount,
       providerMode: body.providerMode,
     });
 
@@ -132,6 +135,7 @@ export async function POST(request: Request) {
       body.providerMode === "built_in" &&
       !hasEnoughCredits({
         builtInCreditCost,
+        count: billableCount,
         credits: user.credits,
         providerMode: body.providerMode,
       })
@@ -206,7 +210,7 @@ export async function POST(request: Request) {
       outputReservation = await reserveManagedImageOutputs({
         ownerId: user.id,
         intentKey: canvasPreparation ? `canvas-output:${canvasPreparation.run.runId}:${canvasPreparation.intentHash}` : `output:${reservedJobId}`,
-        count: body.generationType === "image_to_image" ? 1 : body.count,
+        count: body.count,
       });
     }
 
