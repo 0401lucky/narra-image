@@ -113,6 +113,38 @@ if (stored.length === 0 && orphans.length > 0) {
 | available / 新当前副本地址 | 使用新 URL | 保留分页/选择，已开查看器与下载随同 ID 更新 |
 | 本地已删除条目 / 新初始页包含它 | 不重新插入 | 保留本地删除决定 |
 
+### 5.5 创作台扁平生成记录、隐藏删除与按张计费契约
+
+1. **适用范围 / 触发条件**：修改 `/create` 工作台记录列表、隐藏删除、图生图多图输出（`1..4`）或按张计费逻辑时必须遵循本节。
+2. **签名（DB / API / Hook）**：
+   - DB：`GenerationJob.studioHiddenAt DateTime?` + `@@index([userId, studioHiddenAt, createdAt(sort: Desc)])`（纯追加可空列，不影响 `contracts/media/v1/schema.json` 与历史 Worker）。
+   - Server loader：`listStudioGenerations({ ownerId, limit = 30, cursor })`（`src/lib/server/studio-generations.ts`），过滤 `userId = ownerId`、`studioHiddenAt: null`、`generationType IN (TEXT_TO_IMAGE, IMAGE_TO_IMAGE)`，使用带 owner/scope 校验的 `(createdAt, id)` 游标分页（最大 `100`）。
+   - API：
+     - `GET /api/me/generations?scope=studio&cursor=...&limit=...` 返回 `{ data: { generations, hasMore, nextCursor } }`；无 `scope` 参数时保留旧返回结构。
+     - `POST /api/me/generations/hide`（body `{ ids: string[] }`，`1..100`）仅对当前用户终态（`SUCCEEDED`/`FAILED`）记录写入 `studioHiddenAt`，返回 `{ data: { hiddenIds, skippedPendingIds } }`；绝不删除 `GenerationJob`/`GenerationImage` 或影响 `/works` 与计费审计。
+   - Billing：`calculateGenerationCost({ providerMode, generationType, builtInCreditCost, videoCreditCost, count = 1 })` 对内置图片任务收取 `builtInCreditCost × count`（`count` 严格限制 `1..4`，文生图与图生图统一）；视频保持 `videoCreditCost`（`count = 1`）；自填 API 为 `0`；失败/取消全额退还 `creditsSpent`。
+   - Hook：`useWorkbenchRecords` + `useStudioJobs.registerWorkbench` 维护扁平记录、多选隐藏、游标翻页（`STUDIO_READ_TIMEOUT_MS = 30_000`）；中栏草稿与左栏记录选中解耦（切换记录/提交不清空草稿，仅 `+ 新建` 清空、`复用参数` 回填）。
+3. **校验与错误矩阵**：
+   - 隐藏请求包含 `PENDING`/`PROCESSING` 记录 → 跳过不隐藏，返回 `skippedPendingIds` 并提示先取消生成。
+   - 隐藏请求包含他人记录 ID → 查询条件绑定 `userId`，静默忽略且不越权写入。
+   - 隐藏请求 `ids` 为空或超过 `100` → `400` 中文校验错误。
+   - 轮询返回 `{ url: "", availability: "cleaned" | "unavailable" }` → `generation-item.ts` 的 `isImage()` 允许非可用图片 `url` 为空串，避免整条轮询响应被类型守卫静默丢弃。
+4. **Good / Base / Bad**：
+   - Good：点击左栏记录仅切换右栏 `生成结果`；`router.refresh()` 到达时仅通过 `recordState.receivedInitial !== initialGenerations` 在渲染期窄合并同 ID 媒体事实，并通过 `hiddenIdsRef` 阻止本地已隐藏记录复活。
+   - Base：历史对话内/孤儿图片任务因 `studioHiddenAt IS NULL` 自动展示在扁平记录中，无需回填迁移；旧 `/api/me/conversations/*` 路由保留兼容。
+   - Bad：在 `isImage()` 中用非空 `isIdentity(value.url)` 校验已清理图片导致 `cleaned` 更新被丢弃；或在 `IMAGE_TO_IMAGE` 链路硬编码 `count = 1` / 按次而非按张扣费。
+5. **必需测试**：`src/tests/unit/studio-generations-api.test.ts`、`src/tests/unit/credits.test.ts`、`src/tests/unit/parse-generate-request.test.ts`、`src/tests/unit/generation-item.test.ts`、`src/tests/unit/generator-studio-{conversations,edit,feedback,origins,ratio,retry-cancel,session-history,canvas}.test.tsx`、`worker/internal/worker/{generation_test.go,gateway_test.go}`。
+6. **错误 vs 正确**：
+```ts
+// Wrong：已清理图片 url 为 "" 时被 isIdentity 过滤掉，导致轮询无法收敛为 cleaned
+isIdentity(value.url)
+
+// Correct：非可用图片允许空串 url，保留 availability 供单调合并
+(value.availability === "cleaned" || value.availability === "unavailable"
+  ? isString(value.url)
+  : isIdentity(value.url))
+```
+
 ## 6. 表单状态
 
 - 表单输入用受控 `useState` 或 FormData；提交前用 zod schema（`src/lib/validators.ts`）校验，错误消息中文。
