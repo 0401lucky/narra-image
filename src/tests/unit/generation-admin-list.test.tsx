@@ -43,6 +43,7 @@ function createJob(input: Partial<GenerationAdminJob> = {}): GenerationAdminJob 
     errorMessage: null,
     featuredAt: null,
     featuredById: null,
+    studioHiddenAt: null,
     generationType: GenerationType.TEXT_TO_IMAGE,
     aspectRatio: null,
     id: "job_1",

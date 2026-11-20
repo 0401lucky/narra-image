@@ -15,9 +15,11 @@ describe("generation UI DTO guard", () => {
     const current = conversationGeneration("current");
     const video = { ...legacy, images: [], generationType: "text_to_video", videos: [{ id: "video_1", url: "https://media.invalid/video.mp4" }] };
     const original = JSON.stringify(legacy);
+    const cleaned = { ...legacy, images: [{ id: "img_cleaned", url: "", availability: "cleaned" as const }] };
     expect(isGenerationItem(current)).toBe(true);
     expect(isGenerationItem(legacy)).toBe(true);
     expect(isGenerationItem(video)).toBe(true);
+    expect(isGenerationItem(cleaned)).toBe(true);
     expect(JSON.stringify(legacy)).toBe(original);
   });
 

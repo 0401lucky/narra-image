@@ -130,11 +130,11 @@ describe("chat pane DOM lifetime", () => {
     const close = vi.fn();
     const src = "https://example.test/image.png";
     const { rerender } = render(<ImageZoomModal src={src} onDownload={download} onClose={close} />);
-    expect(screen.queryByRole("button", { name: "加入编辑" })).toBeNull();
+    expect(screen.queryByRole("button", { name: "加入参考图" })).toBeNull();
     fireEvent.click(screen.getByRole("button", { name: "保存高清原图" }));
     expect(download).toHaveBeenCalledWith(src);
     rerender(<ImageZoomModal src={src} onDownload={download} onClose={close} onUseForEdit={edit} />);
-    fireEvent.click(screen.getByRole("button", { name: "加入编辑" }));
+    fireEvent.click(screen.getByRole("button", { name: "加入参考图" }));
     expect(edit).toHaveBeenCalledWith(src);
     expect(close).toHaveBeenCalledTimes(1);
   });

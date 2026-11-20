@@ -1,152 +1,120 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import { GeneratorStudio } from "@/components/create/generator-studio";
+import type { GenerationItem } from "@/components/create/types";
 
 vi.mock("next/navigation", () => ({
-  useRouter: () => ({
-    push: vi.fn(),
-    refresh: vi.fn(),
-  }),
+  useRouter: () => ({ push: vi.fn(), refresh: vi.fn() }),
 }));
 
-Object.defineProperty(URL, "createObjectURL", {
-  configurable: true,
-  value: vi.fn(() => "blob:preview"),
+beforeEach(() => {
+  Object.defineProperty(URL, "createObjectURL", { configurable: true, value: vi.fn(() => "blob:preview") });
+  Object.defineProperty(URL, "revokeObjectURL", { configurable: true, value: vi.fn() });
 });
 
-function mockLocalStorage() {
-  const store = new Map<string, string>();
-  vi.stubGlobal("localStorage", {
-    clear: vi.fn(() => store.clear()),
-    getItem: vi.fn((key: string) => store.get(key) ?? null),
-    removeItem: vi.fn((key: string) => {
-      store.delete(key);
-    }),
-    setItem: vi.fn((key: string, value: string) => {
-      store.set(key, value);
-    }),
-  });
-}
+afterEach(() => {
+  vi.unstubAllGlobals();
+  vi.restoreAllMocks();
+});
 
-describe("创作台连续编辑", () => {
-  beforeEach(() => {
-    mockLocalStorage();
-  });
+const succeededRecord: GenerationItem = {
+  id: "job_1",
+  prompt: "电影感夜景肖像",
+  model: "gpt-image-2",
+  size: "1024x1024",
+  quality: "auto",
+  outputFormat: "png",
+  outputCompression: null,
+  moderation: "auto",
+  count: 1,
+  creditsSpent: 5,
+  generationType: "text_to_image",
+  providerMode: "built_in",
+  status: "succeeded",
+  createdAt: "2026-11-20T08:00:00.000Z",
+  updatedAt: "2026-11-20T08:00:25.000Z",
+  durationMs: 25_000,
+  images: [{ id: "image_1", url: "https://example.com/image.png", availability: "available" }],
+  sourceImageUrls: [],
+};
 
-  beforeEach(() => {
-    vi.stubGlobal(
-      "fetch",
-      vi.fn(async () => ({
-        blob: async () => new Blob(["fake-image"], { type: "image/png" }),
-        ok: true,
-      })),
-    );
-  });
-
-  afterEach(() => {
-    vi.unstubAllGlobals();
-  });
-
-  it("已有结果图时提供加入编辑入口", () => {
-    render(
-      <GeneratorStudio ownerId="owner_test"
-        checkInSummary={{
-          checkInReward: 50,
-          checkedInToday: false,
-        }}
-        currentUser={{
-          credits: 500,
-          role: "user",
-        }}
-        initialConversations={[
-          {
-            createdAt: "2026-04-23T08:00:00.000Z",
-            generationIds: ["job_1"],
-            id: "conversation_1",
-            title: "测试会话",
-          },
-        ]}
-        initialGenerations={[
-          {
-            conversationId: "conversation_1",
-            count: 1,
-            createdAt: "2026-04-23T08:00:00.000Z",
-            creditsSpent: 5,
-            generationType: "text_to_image",
-            id: "job_1",
-            images: [
-              {
-                id: "image_1",
-                url: "https://example.com/image.png",
-              },
-            ],
-            model: "gpt-image-1",
-            negativePrompt: null,
-            prompt: "电影感夜景肖像",
-            providerMode: "built_in",
-            size: "1024x1024",
-            sourceImageUrl: null,
-            status: "succeeded",
-          },
-        ]}
-      />,
-    );
-
-    expect(screen.getByRole("button", { name: "加入编辑" })).toBeInTheDocument();
-  });
-
-  it("点击加入编辑后切到图生图模式", async () => {
+describe("生图工作台：参考图自动模式、剪切板与多张图生图", () => {
+  it("不展示手动文生图/图生图切换按钮，加入参考图保留当前提示词并自动切换图生图且支持 1~4 张", async () => {
     const user = userEvent.setup();
+    const fetchMock = vi.fn(async (_url: string, init?: RequestInit) => {
+      const body = init?.body as FormData;
+      return new Response(JSON.stringify({
+        data: {
+          generation: {
+            ...succeededRecord,
+            id: "job_edit_multi",
+            generationType: "image_to_image",
+            count: Number(body.get("count")),
+            prompt: String(body.get("prompt")),
+            status: "pending",
+            images: [],
+          },
+        },
+      }), { status: 200 });
+    });
+    vi.stubGlobal("fetch", fetchMock);
 
     render(
-      <GeneratorStudio ownerId="owner_test"
-        checkInSummary={{
-          checkInReward: 50,
-          checkedInToday: false,
-        }}
-        currentUser={{
-          credits: 500,
-          role: "user",
-        }}
-        initialConversations={[
-          {
-            createdAt: "2026-04-23T08:00:00.000Z",
-            generationIds: ["job_1"],
-            id: "conversation_1",
-            title: "测试会话",
-          },
-        ]}
-        initialGenerations={[
-          {
-            conversationId: "conversation_1",
-            count: 1,
-            createdAt: "2026-04-23T08:00:00.000Z",
-            creditsSpent: 5,
-            generationType: "text_to_image",
-            id: "job_1",
-            images: [
-              {
-                id: "image_1",
-                url: "https://example.com/image.png",
-              },
-            ],
-            model: "gpt-image-1",
-            negativePrompt: null,
-            prompt: "电影感夜景肖像",
-            providerMode: "built_in",
-            size: "1024x1024",
-            sourceImageUrl: null,
-            status: "succeeded",
-          },
-        ]}
+      <GeneratorStudio
+        ownerId="owner_test"
+        checkInSummary={{ checkInReward: 50, checkedInToday: false }}
+        currentUser={{ credits: 500, role: "user" }}
+        channels={[{ id: "ch_1", name: "默认渠道", defaultModel: "gpt-image-2", models: ["gpt-image-2"], creditCost: 5 }]}
+        initialGenerations={[succeededRecord]}
       />,
     );
 
-    await user.click(screen.getByRole("button", { name: "加入编辑" }));
+    // 无手动生成模式按钮组
+    expect(screen.queryByRole("group", { name: "生成模式" })).not.toBeInTheDocument();
 
-    expect(screen.getByRole("button", { name: "图生图" })).toHaveClass("bg-white", "text-black", "shadow-sm");
-    expect(screen.getByPlaceholderText("描述你希望如何修改这些参考图...")).toBeInTheDocument();
-    expect(screen.getByAltText("Reference")).toBeInTheDocument();
+    // 输入提示词后点「加入参考图」，提示词不被清空，状态自动切为图生图
+    const promptInput = screen.getByLabelText("提示词");
+    await user.type(promptInput, "保留人物构图，改为冬日雪景");
+    await user.click(screen.getByRole("button", { name: "加入参考图" }));
+
+    expect(promptInput).toHaveValue("保留人物构图，改为冬日雪景");
+    expect(screen.getByText("图生图 · 1 张参考图")).toBeInTheDocument();
+
+    // 选择 3 张，按张计费显示 15 积分，FormData 携带 count=3
+    await user.click(within(screen.getByRole("group", { name: "生成张数" })).getByRole("button", { name: "3 张" }));
+    const submitBtn = screen.getByRole("button", { name: /开始生成/ });
+    expect(submitBtn).toHaveTextContent("15 积分");
+
+    await user.click(submitBtn);
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
+
+    const formData = fetchMock.mock.calls[0][1]?.body as FormData;
+    expect(formData).toBeInstanceOf(FormData);
+    expect(formData.get("generationType")).toBe("image_to_image");
+    expect(formData.get("count")).toBe("3");
+    expect(formData.get("prompt")).toBe("保留人物构图，改为冬日雪景");
+    expect(formData.getAll("referenceImageUrls")).toEqual(["https://example.com/image.png"]);
+  });
+
+  it("点击剪切板按钮在浏览器拒绝或不支持时给出友好回退提示", async () => {
+    const user = userEvent.setup();
+    Object.defineProperty(navigator, "clipboard", {
+      configurable: true,
+      value: {
+        read: vi.fn().mockRejectedValue(new DOMException("Denied", "NotAllowedError")),
+      },
+    });
+
+    render(
+      <GeneratorStudio
+        ownerId="owner_test"
+        checkInSummary={{ checkInReward: 50, checkedInToday: false }}
+        currentUser={{ credits: 500, role: "user" }}
+      />,
+    );
+
+    await user.click(screen.getByRole("button", { name: "剪切板" }));
+    expect(await screen.findByText(/请直接按 Ctrl\+V 粘贴图片/)).toBeInTheDocument();
   });
 });

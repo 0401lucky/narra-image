@@ -66,8 +66,8 @@ function server() {
 function response(data: unknown, status = 200) { return new Response(JSON.stringify({ data }), { status, headers: { "content-type": "application/json" } }); }
 function sends() { return requests.filter((request) => request.path === "/api/generate"); }
 function canvasSend(index = 0) { return sends()[index].body as CanvasGenerateRequestV1; }
-function composer() { return screen.getByPlaceholderText(/输入提示词生成图片|描述你希望如何修改这些参考图/) as HTMLTextAreaElement; }
-function switchMode(name: "对话" | "画布") { fireEvent.click(within(screen.getByRole("group", { name: "创作模式" })).getByRole("button", { name })); }
+function composer() { return screen.getByLabelText("提示词") as HTMLTextAreaElement; }
+function switchMode(name: "工作台" | "画布") { fireEvent.click(within(screen.getByRole("group", { name: "创作模式" })).getByRole("button", { name })); }
 async function openCanvas() {
   switchMode("画布");
   await screen.findByRole("region", { name: "画布工作区" });
@@ -198,12 +198,12 @@ describe("mounted studio canvas integration", () => {
 
   it("switches real lazy panes without importing drafts, and keeps empty New/catalog defaults and selection across refresh", async () => {
     const view = render(<GeneratorStudio {...baseProps} initialPrompt="URL seeds only chat" />);
-    fireEvent.drop(composer().closest(".composer-silk")!, { dataTransfer: { files: [new File(["chat"], "chat.png", { type: "image/png" })], types: ["Files"] } });
+    fireEvent.drop(screen.getByText(/暂无参考图/).closest("div")!, { dataTransfer: { files: [new File(["chat"], "chat.png", { type: "image/png" })], types: ["Files"] } });
     fireEvent.change(composer(), { target: { value: "Unsent chat and its reference" } });
-    fireEvent.change(screen.getByLabelText("尺寸"), { target: { value: "1536x1024" } });
+    fireEvent.click(within(screen.getByRole("group", { name: "宽高比" })).getByRole("button", { name: "3:2" }));
     const controller = await openCanvas();
-    expect(screen.queryByAltText("Reference")).not.toBeInTheDocument();
-    expect(screen.queryByRole("complementary", { name: "对话导航" })).not.toBeInTheDocument();
+    expect(screen.queryByAltText("参考图 1")).not.toBeInTheDocument();
+    expect(screen.queryByRole("complementary", { name: "生成记录" })).not.toBeInTheDocument();
     expect(requests.filter((request) => request.method !== "GET")).toEqual([]);
     await userEvent.click(screen.getByRole("button", { name: "新建空白画布" }));
     await screen.findByText("从一个想法开始");
@@ -214,10 +214,10 @@ describe("mounted studio canvas integration", () => {
     const generation = controller.getSnapshot().active!.scene.nodes.find((node) => node.kind === "generation")!;
     expect(generation.parameters).toMatchObject({ model: "image-account-default", providerMode: "built_in", channelId: "channel-account", size: "auto", count: 1 });
     act(() => controller.selectNode(first, generation.id));
-    switchMode("对话");
+    switchMode("工作台");
     expect(composer()).toHaveValue("Unsent chat and its reference");
-    expect(screen.getByAltText("Reference")).toBeInTheDocument();
-    view.rerender(<GeneratorStudio {...baseProps} initialPrompt="New server value" channels={[...canvasStageChannels]} initialConversations={[]} />);
+    expect(screen.getByAltText("参考图 1")).toBeInTheDocument();
+    view.rerender(<GeneratorStudio {...baseProps} initialPrompt="New server value" channels={[...canvasStageChannels]} initialGenerations={[]} />);
     await openCanvas();
     expect(controls.stage!.controller).toBe(controller);
     expect(controller.getSnapshot().active!.selectedNodeId).toBe(generation.id);
@@ -262,11 +262,11 @@ describe("mounted studio canvas integration", () => {
     const revision = controller.getSnapshot().active!.document.editRevision;
     act(() => controller.setViewport(canvasUuid(10), { x: -100, y: -50, zoom: 0.5 }));
     expect(controller.getSnapshot().active!.document.editRevision).toBe(revision + 1);
-    switchMode("对话");
+    switchMode("工作台");
     fireEvent.change(composer(), { target: { value: "Phone chat still creates images" } });
-    fireEvent.click(screen.getByRole("button", { name: "发送" }));
+    fireEvent.click(screen.getByRole("button", { name: /开始生成/ }));
     await waitFor(() => expect(sends()).toHaveLength(1));
-    expect(sends()[0].body).toMatchObject({ prompt: "Phone chat still creates images", conversationId: "new-chat" });
+    expect(sends()[0].body).toMatchObject({ prompt: "Phone chat still creates images" });
     expect(sends()[0].body).not.toHaveProperty("canvasRun");
     await openCanvas();
     act(() => { desktop.matches = true; desktop.listeners.forEach((notify) => notify()); });
@@ -289,7 +289,7 @@ describe("mounted studio canvas integration", () => {
     expect(secondController).not.toBe(firstController);
     expect(secondController.getSnapshot().documents).toEqual([]);
     expect(secondController.getSnapshot().activeCanvasId).toBeNull();
-    switchMode("对话");
+    switchMode("工作台");
     serverOwner = "owner-a";
     view.rerender(<GeneratorStudio {...baseProps} />);
     await screen.findByRole("region", { name: "画布工作区" });
@@ -313,7 +313,7 @@ describe("mounted studio canvas integration", () => {
     act(() => seed.focus());
     fireEvent.input(seed, { target: { value: "-" } });
     await userEvent.click(screen.getByRole("button", { name: "关闭节点设置" }));
-    switchMode("对话");
+    switchMode("工作台");
     expect(composer()).toHaveValue("Unsent chat survives mobile editing");
     await openCanvas();
     fireEvent.change(screen.getByLabelText("选择画布节点"), { target: { value: first.promptId } });
@@ -373,14 +373,13 @@ describe("mounted studio canvas integration", () => {
     expect(canvasSend()).toMatchObject({ canvasRun: { canvasId: target.canvasId, nodeId: target.nodeId, input: { prompt: { sourceNodeId: target.promptId, text: "Canvas original prompt" }, references: [] }, parameters: { model: "canvas-custom-model", providerMode: "custom", generationType: "text_to_image" } } });
     for (const key of ["customProvider", "turnstileToken", "conversationId", "replaceGenerationId", "prompt"]) expect(canvasSend()).not.toHaveProperty(key);
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
-    await act(async () => { switchMode("对话"); await Promise.resolve(); });
+    await act(async () => { switchMode("工作台"); await Promise.resolve(); });
     expect(composer()).toHaveValue("Unsent chat");
     expect(screen.queryByAltText("生成图片")).not.toBeInTheDocument();
   });
 
   it("keeps custom credentials and frozen origin/model independent from chat and later canvas selection", async () => {
     render(<GeneratorStudio {...baseProps} initialPrompt="Keep chat draft" />);
-    fireEvent.click(screen.getByRole("button", { name: "高级设置" }));
     fireEvent.click((await screen.findAllByRole("button", { name: "自填 API" }))[0]);
     fireEvent.change(screen.getAllByLabelText("第三方 API Key")[0], { target: { value: "chat-key-not-for-canvas" } });
     const controller = await openCanvas();
@@ -408,7 +407,7 @@ describe("mounted studio canvas integration", () => {
     expect(await screen.findByAltText("画布生成结果")).toBeInTheDocument();
     await act(() => controller.flushLocal());
     expect(JSON.stringify([...store.rows.values()])).not.toMatch(/canvas-runtime-key|chat-key-not-for-canvas/);
-    switchMode("对话");
+    switchMode("工作台");
     expect(composer()).toHaveValue("Keep chat draft");
     expect((await screen.findAllByLabelText("第三方 API Key"))[0]).toHaveValue("chat-key-not-for-canvas");
   });
@@ -463,7 +462,7 @@ describe("mounted studio canvas integration", () => {
     await run();
     await screen.findByAltText("画布生成结果");
     expect(canvasSend()).toMatchObject({ canvasRun: { canvasId: first.canvasId, nodeId: first.nodeId }, customProvider: { apiKey: "node-settings-key", remember: false } });
-    await act(async () => { switchMode("对话"); await Promise.resolve(); });
+    await act(async () => { switchMode("工作台"); await Promise.resolve(); });
     expect(composer()).toHaveValue("Chat remains built in");
     expect(screen.queryByText(/自填 API ·/)).not.toBeInTheDocument();
     expect(JSON.stringify([...store.rows.values()])).not.toContain("node-settings-key");
@@ -479,7 +478,7 @@ describe("mounted studio canvas integration", () => {
     const oldExpire = controls.challengeExpires.at(-1)!;
     verify("unsubmitted-before-switch");
     expect(within(modal()).getByRole("button", { name: "确认运行" })).toBeEnabled();
-    switchMode("对话");
+    switchMode("工作台");
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
     await openCanvas();
     expect(within(modal()).getByRole("button", { name: "确认运行" })).toBeDisabled();
@@ -501,7 +500,7 @@ describe("mounted studio canvas integration", () => {
     await run();
     await waitFor(() => expect(sends()).toHaveLength(1));
     const origin = canvasSend().canvasRun;
-    switchMode("对话");
+    switchMode("工作台");
     fireEvent.change(composer(), { target: { value: "Newer chat draft" } });
     const job = completedJob("late-canvas-job");
     await act(async () => {
@@ -534,7 +533,7 @@ describe("mounted studio canvas integration", () => {
     expect(controller.getSnapshot().activeCanvasId).toBe(target.canvasId);
     await userEvent.click(screen.getByRole("button", { name: "高级图谱" }));
     expect(await screen.findByRole("textbox", { name: "节点提示词" })).toHaveValue("Canvas original prompt");
-    switchMode("对话");
+    switchMode("工作台");
     expect(composer()).toHaveValue("Chat balance draft");
     fireEvent.change(composer(), { target: { value: "Newer independent chat" } });
     const failed = canvasJob(job.id, { status: "failed", completedAt: canvasDate, errorMessage: "Fixture failure" });
@@ -637,7 +636,7 @@ describe("mounted studio canvas integration", () => {
     fireEvent.click(screen.getByRole("button", { name: "保存高清原图" }));
     await waitFor(() => expect(requests.some((request) => request.path === preview)).toBe(true));
     if (operation === "close") fireEvent.click(screen.getByRole("button", { name: "关闭" }));
-    else if (operation === "switch") switchMode("对话");
+    else if (operation === "switch") switchMode("工作台");
     else {
       serverOwner = "owner-b";
       view.rerender(<GeneratorStudio {...baseProps} ownerId="owner-b" />);

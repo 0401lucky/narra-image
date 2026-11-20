@@ -26,8 +26,10 @@ function optional(value: unknown, check: (value: unknown) => boolean, nullable =
 }
 
 function isImage(value: unknown): boolean {
-  return isRecord(value) && isIdentity(value.id) && isIdentity(value.url)
-    && optional(value.availability, isImageAvailability)
+  if (!isRecord(value) || !isIdentity(value.id)) return false;
+  if (!optional(value.availability, isImageAvailability)) return false;
+  const unavailable = value.availability === "cleaned" || value.availability === "unavailable";
+  return (unavailable ? isString(value.url) : isIdentity(value.url))
     && optional(value.actualSize, isString, true)
     && optional(value.actualWidth, isNumber, true)
     && optional(value.actualHeight, isNumber, true);

@@ -11,7 +11,8 @@ import { sameGenerationValue } from "./generation-value";
 import { useImagePoller } from "./use-image-poller";
 
 type ConversationOrigin = Readonly<{ kind: "conversation"; ownerId: string; conversationId: string }>;
-type JobOrigin = ConversationOrigin | Readonly<{ kind: "canvas"; source: CanvasJobOrigin }>;
+type WorkbenchOrigin = Readonly<{ kind: "workbench"; ownerId: string }>;
+type JobOrigin = ConversationOrigin | WorkbenchOrigin | Readonly<{ kind: "canvas"; source: CanvasJobOrigin }>;
 type CanvasSubscription = {
   mountEpoch: number;
   listener: (origin: CanvasJobOrigin, job: GenerationItem) => void;
@@ -30,10 +31,12 @@ type JobsSnapshot = { scope: object; pendingGenerations: GenerationItem[] };
 export type UseStudioJobsOptions = {
   ownerId: string;
   onConversationUpdate?: (conversationId: string, job: GenerationItem) => void;
+  onWorkbenchUpdate?: (job: GenerationItem) => void;
 };
 
 export type UseStudioJobsResult = {
   registerConversation: (conversationId: string, job: GenerationItem) => GenerationItem;
+  registerWorkbench: (job: GenerationItem) => GenerationItem;
   getJob: (jobId: string) => GenerationItem | null;
   updateJob: (job: GenerationItem) => GenerationItem | null;
   canvasJobs: CanvasJobsPort;
@@ -43,6 +46,9 @@ export type UseStudioJobsResult = {
 function sameOrigin(left: JobOrigin, right: JobOrigin) {
   if (left.kind === "conversation" && right.kind === "conversation") {
     return left.ownerId === right.ownerId && left.conversationId === right.conversationId;
+  }
+  if (left.kind === "workbench" && right.kind === "workbench") {
+    return left.ownerId === right.ownerId;
   }
   if (left.kind === "canvas" && right.kind === "canvas") {
     return left.source.ownerId === right.source.ownerId && left.source.canvasId === right.source.canvasId
@@ -71,10 +77,11 @@ function mergeJob(current: GenerationItem | undefined, incoming: GenerationItem)
   return sameGenerationValue(current, merged) ? current : copyJob(merged);
 }
 
-export function useStudioJobs({ ownerId, onConversationUpdate }: UseStudioJobsOptions): UseStudioJobsResult {
+export function useStudioJobs({ ownerId, onConversationUpdate, onWorkbenchUpdate }: UseStudioJobsOptions): UseStudioJobsResult {
   const scope = useMemo(() => ({ ownerId }), [ownerId]);
   const contextRef = useRef<JobsContext | null>(null);
   const onConversationUpdateRef = useRef(onConversationUpdate);
+  const onWorkbenchUpdateRef = useRef(onWorkbenchUpdate);
   const [snapshot, setSnapshot] = useState<JobsSnapshot>(() => ({ scope, pendingGenerations: [] }));
 
   const getContext = useCallback(() => {
@@ -93,6 +100,10 @@ export function useStudioJobs({ ownerId, onConversationUpdate }: UseStudioJobsOp
   useEffect(() => {
     onConversationUpdateRef.current = onConversationUpdate;
   }, [onConversationUpdate]);
+
+  useEffect(() => {
+    onWorkbenchUpdateRef.current = onWorkbenchUpdate;
+  }, [onWorkbenchUpdate]);
 
   useEffect(() => {
     if (contextRef.current?.scope !== scope) {
@@ -123,6 +134,8 @@ export function useStudioJobs({ ownerId, onConversationUpdate }: UseStudioJobsOp
     const mountEpoch = context.mountEpoch;
     if (origin.kind === "conversation") {
       onConversationUpdateRef.current?.(origin.conversationId, canonical);
+    } else if (origin.kind === "workbench") {
+      onWorkbenchUpdateRef.current?.(canonical);
     } else {
       for (const subscription of [...context.subscribers]) {
         if (getContext() !== context || context.mountEpoch !== mountEpoch) break;
@@ -145,6 +158,11 @@ export function useStudioJobs({ ownerId, onConversationUpdate }: UseStudioJobsOp
 
   const registerConversation = useCallback((conversationId: string, job: GenerationItem) => {
     const origin: ConversationOrigin = Object.freeze({ kind: "conversation", ownerId, conversationId });
+    return register(origin, job);
+  }, [ownerId, register]);
+
+  const registerWorkbench = useCallback((job: GenerationItem) => {
+    const origin: WorkbenchOrigin = Object.freeze({ kind: "workbench", ownerId });
     return register(origin, job);
   }, [ownerId, register]);
 
@@ -176,5 +194,5 @@ export function useStudioJobs({ ownerId, onConversationUpdate }: UseStudioJobsOp
   const pendingGenerations = snapshot.scope === scope ? snapshot.pendingGenerations : [];
   useImagePoller({ ownerId, generations: pendingGenerations, onUpdate: updateJob });
 
-  return { registerConversation, getJob, updateJob, canvasJobs, pendingGenerations };
+  return { registerConversation, registerWorkbench, getJob, updateJob, canvasJobs, pendingGenerations };
 }

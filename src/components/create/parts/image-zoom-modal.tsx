@@ -105,7 +105,7 @@ export function ImageZoomModal({ src, meta, onClose, onDownload, onUseForEdit }:
                 className="inline-flex cursor-pointer items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-medium text-black shadow-lg transition-all duration-200 ease-out hover:bg-[var(--accent)] hover:text-white hover:shadow-xl"
               >
                 <ImagePlus aria-hidden className="size-4" />
-                加入编辑
+                加入参考图
               </button>
             )}
           </div>

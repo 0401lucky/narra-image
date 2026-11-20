@@ -1,582 +1,146 @@
-import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import type { ComponentProps } from "react";
-
-// 创作台交互用例在高负载 CI/本地下耗时波动大，放宽单用例截止以避免偶发超时。
-vi.setConfig({ testTimeout: 60_000 });
 
 import { GeneratorStudio } from "@/components/create/generator-studio";
-import { HISTORY_IMAGE_DRAG_MIME } from "@/components/create/constants";
+import type { GenerationItem } from "@/components/create/types";
 
 vi.mock("next/navigation", () => ({
-  useRouter: () => ({
-    push: vi.fn(),
-    refresh: vi.fn(),
-  }),
+  useRouter: () => ({ push: vi.fn(), refresh: vi.fn() }),
 }));
 
-Object.defineProperty(URL, "createObjectURL", {
-  configurable: true,
-  value: vi.fn((file: File) => `blob:${file.name}`),
-});
-
-Object.defineProperty(URL, "revokeObjectURL", {
-  configurable: true,
-  value: vi.fn(),
-});
-
-Object.defineProperty(HTMLElement.prototype, "scrollTo", {
-  configurable: true,
-  value: vi.fn(),
-});
-
-function mockLocalStorage() {
-  const store = new Map<string, string>();
-  vi.stubGlobal("localStorage", {
-    clear: vi.fn(() => store.clear()),
-    getItem: vi.fn((key: string) => store.get(key) ?? null),
-    removeItem: vi.fn((key: string) => {
-      store.delete(key);
-    }),
-    setItem: vi.fn((key: string, value: string) => {
-      store.set(key, value);
-    }),
-  });
-}
-
-const baseProps = {
-  ownerId: "owner_test",
-  checkInSummary: {
-    checkInReward: 50,
-    checkedInToday: false,
-  },
-  currentUser: {
-    credits: 500,
-    role: "user" as const,
-  },
+const recordA: GenerationItem = {
+  id: "job_a",
+  prompt: "海边落日胶片风",
+  model: "gpt-image-2",
+  size: "1536x2048",
+  quality: "high",
+  outputFormat: "webp",
+  outputCompression: 85,
+  moderation: "low",
+  negativePrompt: "低画质",
+  count: 2,
+  creditsSpent: 10,
+  generationType: "text_to_image",
+  providerChannelId: "ch_1",
+  providerMode: "built_in",
+  status: "succeeded",
+  createdAt: "2026-11-20T09:10:00.000Z",
+  updatedAt: "2026-11-20T09:10:30.000Z",
+  durationMs: 30_000,
+  images: [{ id: "img_a", url: "https://cdn.example/a.png", availability: "available" }],
+  sourceImageUrls: [],
 };
 
-type StudioProps = ComponentProps<typeof GeneratorStudio>;
-type Generation = NonNullable<StudioProps["initialGenerations"]>[number];
+const recordB: GenerationItem = {
+  ...recordA,
+  id: "job_b",
+  prompt: "古风白衣剑客",
+  size: "1024x1024",
+  quality: "medium",
+  count: 4,
+  creditsSpent: 20,
+  createdAt: "2026-11-20T08:00:00.000Z",
+  images: [{ id: "img_b", url: "https://cdn.example/b.png", availability: "available" }],
+};
 
-function createPendingGeneration(overrides: Partial<Generation> = {}): Generation {
-  return {
-    count: 1,
-    createdAt: "2026-04-23T08:00:00.000Z",
-    creditsSpent: 0,
-    generationType: "text_to_image",
-    id: "job_custom",
-    images: [],
-    model: "gpt-image-1",
-    moderation: "auto",
-    negativePrompt: null,
-    outputCompression: null,
-    outputFormat: "png",
-    prompt: "第三方 API 生成测试",
-    providerChannelId: null,
-    providerMode: "custom",
-    quality: "auto",
-    size: "auto",
-    sourceImageUrl: null,
-    sourceImageUrls: [],
-    status: "pending",
-    ...overrides,
-  };
-}
+afterEach(() => {
+  vi.unstubAllGlobals();
+  vi.restoreAllMocks();
+});
 
-function createSucceededGeneration(overrides: Partial<Generation> = {}): Generation {
-  return {
-    count: 1,
-    createdAt: "2026-04-23T08:00:00.000Z",
-    creditsSpent: 5,
-    generationType: "text_to_image",
-    id: "job_1",
-    images: [
-      {
-        actualHeight: 1152,
-        actualSize: "2048x1152",
-        actualWidth: 2048,
-        id: "image_1",
-        url: "https://example.com/image.png",
-      },
-    ],
-    model: "gpt-image-2",
-    moderation: "low",
-    negativePrompt: "低清晰度",
-    outputCompression: 82,
-    outputFormat: "webp",
-    prompt: "电影感夜景肖像",
-    providerChannelId: "channel_a",
-    providerMode: "built_in",
-    quality: "high",
-    size: "2048x1152",
-    sourceImageUrl: null,
-    sourceImageUrls: [],
-    status: "succeeded",
-    ...overrides,
-  };
-}
-
-function renderStudio(props: Partial<StudioProps> = {}) {
-  return render(
-    <GeneratorStudio
-      {...baseProps}
-      channels={[
-        {
-          creditCost: 5,
-          defaultModel: "gpt-image-2",
-          id: "channel_a",
-          models: ["gpt-image-2", "seedream"],
-          name: "主渠道",
-        },
-      ]}
-      {...props}
-    />,
-  );
-}
-
-function renderConversationGeneration(overrides: Partial<Generation> = {}) {
-  const generation = createSucceededGeneration({ conversationId: "conversation_1", ...overrides });
-  return renderStudio({
-    initialConversations: [
-      {
-        createdAt: generation.createdAt,
-        generationIds: [generation.id],
-        id: "conversation_1",
-        title: "测试会话",
-      },
-    ],
-    initialGenerations: [generation],
-  });
-}
-
-function getComposerDropTarget() {
-  const textarea =
-    screen.queryByPlaceholderText("输入提示词生成图片，或直接粘贴图片进入图生图...")
-    ?? screen.queryByPlaceholderText("描述你希望如何修改这些参考图...");
-  if (!textarea) throw new Error("找不到主输入框");
-  const target = textarea.closest(".composer-silk");
-  if (!target) throw new Error("找不到输入区");
-  return target;
-}
-
-function getFirstTextbox(name: string) {
-  const input = screen.getAllByRole("textbox", { name })[0];
-  if (!input) throw new Error(`找不到输入框：${name}`);
-  return input;
-}
-
-function getFirstLabelText(name: string) {
-  const input = screen.getAllByLabelText(name)[0];
-  if (!input) throw new Error(`找不到输入框：${name}`);
-  return input;
-}
-
-function getFirstButton(name: string) {
-  const button = screen.getAllByRole("button", { name })[0];
-  if (!button) throw new Error(`找不到按钮：${name}`);
-  return button;
-}
-
-function mockGenerateFetch() {
-  const generateRequests: RequestInit[] = [];
-  const fetchMock = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
-    const url = typeof input === "string" ? input : input.toString();
-
-    if (url === "/api/me/conversations" && init?.method === "POST") {
-      return {
-        json: async () => ({
-          data: {
-            conversation: {
-              createdAt: "2026-04-23T08:00:00.000Z",
-              generationIds: [],
-              id: "conversation_1",
-              title: "新对话",
-              updatedAt: "2026-04-23T08:00:00.000Z",
-            },
-          },
-        }),
-        ok: true,
-      };
-    }
-
-    if (url === "/api/generate") {
-      generateRequests.push(init ?? {});
-      return {
-        json: async () => ({
-          data: {
-            generation: createPendingGeneration({
-              conversationId: "conversation_1",
-            }),
-          },
-        }),
-        ok: true,
-      };
-    }
-
-    return {
-      blob: async () => new Blob(["fake-image"], { type: "image/png" }),
-      json: async () => ({ data: {} }),
-      ok: true,
-    };
-  });
-
-  vi.stubGlobal("fetch", fetchMock);
-
-  return {
-    fetchMock,
-    generateRequests,
-  };
-}
-
-describe("创作台反馈改进", () => {
-  beforeEach(() => {
-    mockLocalStorage();
-    vi.stubGlobal("requestAnimationFrame", (callback: FrameRequestCallback) => {
-      callback(0);
-      return 1;
-    });
-    vi.stubGlobal(
-      "fetch",
-      vi.fn(async () => ({
-        blob: async () => new Blob(["fake-image"], { type: "image/png" }),
-        ok: true,
-      })),
+describe("生图工作台：草稿保护、复用参数、提示词库与我的作品联动", () => {
+  it("切换左栏记录不覆盖中栏草稿，点复用参数才回填，点新建清空草稿", async () => {
+    const user = userEvent.setup();
+    render(
+      <GeneratorStudio
+        ownerId="owner_1"
+        checkInSummary={{ checkInReward: 50, checkedInToday: false }}
+        currentUser={{ credits: 100, role: "user" }}
+        channels={[{ id: "ch_1", name: "主力", defaultModel: "gpt-image-2", models: ["gpt-image-2"], creditCost: 5 }]}
+        initialGenerations={[recordA, recordB]}
+      />,
     );
+
+    const promptInput = screen.getByLabelText("提示词");
+    await user.type(promptInput, "我写到一半的新草稿");
+
+    // 切换左栏记录，只更新右栏，中栏草稿保持原样
+    const rail = screen.getByRole("complementary", { name: "生成记录" });
+    await user.click(within(rail).getByText("古风白衣剑客"));
+    expect(promptInput).toHaveValue("我写到一半的新草稿");
+
+    // 点右栏「复用参数」，中栏回填 recordB 的提示词与张数
+    const stage = screen.getByRole("region", { name: "生成结果" });
+    await user.click(within(stage).getByRole("button", { name: "复用参数" }));
+    expect(promptInput).toHaveValue("古风白衣剑客");
+    expect(screen.getByRole("button", { name: /开始生成/ })).toHaveTextContent("20 积分");
+
+    // 点左栏「新建」，清空草稿
+    await user.click(within(rail).getByRole("button", { name: "新建" }));
+    expect(promptInput).toHaveValue("");
   });
 
-  afterEach(() => {
-    vi.unstubAllGlobals();
-  });
-
-  it("支持把图片拖入输入区作为参考图", () => {
-    renderStudio();
-
-    const file = new File(["fake-a"], "source-a.png", { type: "image/png" });
-    fireEvent.drop(getComposerDropTarget(), {
-      dataTransfer: {
-        files: [file],
-        types: ["Files"],
-      },
-    });
-
-    expect(screen.getByAltText("Reference")).toHaveAttribute("src", "blob:source-a.png");
-    expect(screen.getByPlaceholderText("描述你希望如何修改这些参考图...")).toBeInTheDocument();
-  });
-
-  it("保留内部图片 URL 拖拽协议，移除历史栏后仍可作为参考图", () => {
-    renderStudio({
-      initialGenerations: [createSucceededGeneration()],
-    });
-
-    fireEvent.drop(getComposerDropTarget(), {
-      dataTransfer: {
-        files: [],
-        getData: (type: string) => (type === HISTORY_IMAGE_DRAG_MIME ? "https://example.com/image.png" : ""),
-        types: [HISTORY_IMAGE_DRAG_MIME],
-      },
-    });
-
-    expect(screen.getByAltText("Reference")).toHaveAttribute("src", "https://example.com/image.png");
-    expect(screen.getByPlaceholderText("描述你希望如何修改这些参考图...")).toBeInTheDocument();
-  });
-
-  it("支持把普通图片 URL 拖入输入区作为参考图", () => {
-    renderStudio();
-
-    fireEvent.drop(getComposerDropTarget(), {
-      dataTransfer: {
-        files: [],
-        getData: (type: string) => (type === "text/uri-list" ? "https://example.com/source.png" : ""),
-        types: ["text/uri-list"],
-      },
-    });
-
-    expect(screen.getByAltText("Reference")).toHaveAttribute("src", "https://example.com/source.png");
-    expect(screen.getByPlaceholderText("描述你希望如何修改这些参考图...")).toBeInTheDocument();
-  });
-
-  it("按底部输入区实际高度同步消息流留白", async () => {
-    const rectSpy = vi.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockReturnValue({
-      bottom: 180,
-      height: 180,
-      left: 0,
-      right: 360,
-      top: 0,
-      width: 360,
-      x: 0,
-      y: 0,
-      toJSON: () => ({}),
-    } as DOMRect);
-
-    try {
-      renderStudio();
-
-      const chatStream = screen.getByText("你好，你想创作什么？").closest(".premium-scrollbar");
-      expect(chatStream).not.toBeNull();
-      await waitFor(() => {
-        expect(chatStream).toHaveStyle({ paddingBottom: "192px" });
-      });
-    } finally {
-      rectSpy.mockRestore();
-    }
-  });
-
-  it("参考图可以用按钮调整提交顺序", async () => {
+  it("可通过提示词库与我的作品弹窗分别填入提示词与添加参考图", async () => {
     const user = userEvent.setup();
-    renderStudio();
-
-    fireEvent.drop(getComposerDropTarget(), {
-      dataTransfer: {
-        files: [
-          new File(["fake-a"], "source-a.png", { type: "image/png" }),
-          new File(["fake-b"], "source-b.png", { type: "image/png" }),
-        ],
-        types: ["Files"],
-      },
-    });
-
-    expect(screen.getAllByAltText("Reference").map((item) => item.getAttribute("src"))).toEqual([
-      "blob:source-a.png",
-      "blob:source-b.png",
-    ]);
-
-    await user.click(screen.getByRole("button", { name: "参考图 2 前移" }));
-
-    expect(screen.getAllByAltText("Reference").map((item) => item.getAttribute("src"))).toEqual([
-      "blob:source-b.png",
-      "blob:source-a.png",
-    ]);
-  });
-
-  it("结果图固定展示实际分辨率和比例", () => {
-    renderConversationGeneration();
-
-    expect(screen.getByText("2048x1152")).toBeInTheDocument();
-    expect(screen.getByText("16:9")).toBeInTheDocument();
-  });
-
-  it("可以从对话图片复用生成配置并回填参考图", async () => {
-    const user = userEvent.setup();
-    renderConversationGeneration({
-      generationType: "image_to_image",
-      sourceImageUrl: "https://example.com/source.png",
-      sourceImageUrls: ["https://example.com/source.png"],
-    });
-
-    await user.click(screen.getByRole("button", { name: "复用配置" }));
-
-    expect(screen.getByRole("textbox")).toHaveValue("电影感夜景肖像");
-    expect(screen.getByRole("combobox", { name: "尺寸" })).toHaveValue("2048x1152");
-    expect(screen.getByPlaceholderText("描述你希望如何修改这些参考图...")).toBeInTheDocument();
-    expect(screen.getAllByAltText("Reference").some((item) => item.getAttribute("src") === "https://example.com/source.png")).toBe(true);
-  });
-
-  it("不再提供历史栏右键菜单，对话图片仍可直接复用配置", async () => {
-    const user = userEvent.setup();
-    renderConversationGeneration();
-
-    expect(screen.queryByTitle("点击放大查看，右键可复用配置")).toBeNull();
-    fireEvent.contextMenu(screen.getByAltText("生成结果"), {
-      clientX: 300,
-      clientY: 120,
-    });
-
-    expect(screen.queryByRole("menu")).toBeNull();
-    expect(screen.queryByRole("menuitem", { name: "复用配置" })).toBeNull();
-    await user.click(screen.getByRole("button", { name: "复用配置" }));
-
-    expect(screen.getByRole("textbox")).toHaveValue("电影感夜景肖像");
-    expect(screen.getByRole("combobox", { name: "尺寸" })).toHaveValue("2048x1152");
-  });
-
-  it("移除历史栏后对话图片仍可放大并从遮罩加入编辑", async () => {
-    const user = userEvent.setup();
-    renderConversationGeneration();
-
-    await user.click(screen.getByTitle("放大查看"));
-    expect(await screen.findByAltText("放大查看")).toHaveAttribute("src", "https://example.com/image.png");
-
-    const closeButton = screen.getByRole("button", { name: "关闭" });
-    const overlay = closeButton.parentElement;
-    if (!overlay) throw new Error("找不到图片放大遮罩");
-    await user.click(within(overlay).getByRole("button", { name: "加入编辑" }));
-
-    expect(await screen.findByAltText("Reference")).toHaveAttribute("src", "https://example.com/image.png");
-    expect(screen.getByPlaceholderText("描述你希望如何修改这些参考图...")).toBeInTheDocument();
-    await waitFor(() => expect(screen.queryByAltText("放大查看")).toBeNull());
-  });
-
-  it("移除历史栏后对话图片仍通过代理下载原图", async () => {
-    const user = userEvent.setup();
-    let downloaded: { href: string; filename: string } | null = null;
-    const clickSpy = vi.spyOn(HTMLAnchorElement.prototype, "click").mockImplementation(function (this: HTMLAnchorElement) {
-      downloaded = { href: this.href, filename: this.download };
-    });
-    const objectUrlSpy = vi.spyOn(URL, "createObjectURL").mockReturnValue("blob:download");
-    const fetchMock = vi.fn(async () => ({
-      blob: async () => new Blob(["fake-image"], { type: "image/png" }),
-      headers: new Headers({ "content-type": "image/png" }),
-      ok: true,
+    vi.stubGlobal("fetch", vi.fn(async (url: string) => {
+      if (url.startsWith("/api/prompts")) {
+        return new Response(JSON.stringify({
+          data: {
+            categories: [{ id: "src_1", slug: "featured", name: "精选源", itemCount: 1 }],
+            items: [{
+              id: "p_1",
+              title: "晨光玻璃花房",
+              prompt: "清晨阳光穿透玻璃花房，柔和散景",
+              coverUrl: null,
+              preview: null,
+              tags: ["风景"],
+              source: { id: "src_1", slug: "featured", name: "精选源" },
+            }],
+            total: 1,
+          },
+        }), { status: 200 });
+      }
+      if (url.startsWith("/api/me/works")) {
+        return new Response(JSON.stringify({
+          data: {
+            items: [{
+              id: "w_1",
+              url: "https://cdn.example/work-1.png",
+              prompt: "旧作品提示词",
+              size: "1024x1024",
+              model: "gpt-image-2",
+              availability: "available",
+              createdAt: "2026-11-19T10:00:00.000Z",
+            }],
+            hasMore: false,
+            nextCursor: null,
+          },
+        }), { status: 200 });
+      }
+      return new Response("{}", { status: 404 });
     }));
-    vi.stubGlobal("fetch", fetchMock);
 
-    try {
-      renderConversationGeneration();
-      await user.click(screen.getByTitle("下载保存"));
+    render(
+      <GeneratorStudio
+        ownerId="owner_1"
+        checkInSummary={{ checkInReward: 50, checkedInToday: false }}
+        currentUser={{ credits: 100, role: "user" }}
+      />,
+    );
 
-      await waitFor(() => expect(downloaded).toEqual({ href: "blob:download", filename: "image.png" }));
-      expect(fetchMock).toHaveBeenCalledWith(`/api/proxy-image?url=${encodeURIComponent("https://example.com/image.png")}`, { signal: expect.any(AbortSignal) });
-      expect(document.querySelector("a[download]")).toBeNull();
-    } finally {
-      clickSpy.mockRestore();
-      objectUrlSpy.mockRestore();
-    }
-  });
+    // 打开提示词库并填入提示词
+    await user.click(screen.getByRole("button", { name: "提示词库" }));
+    const promptDialog = await screen.findByRole("dialog", { name: "选择提示词" });
+    await user.click(await within(promptDialog).findByRole("button", { name: "填入提示词" }));
+    await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
+    expect(screen.getByLabelText("提示词")).toHaveValue("清晨阳光穿透玻璃花房，柔和散景");
 
-  it("创建对话失败时恢复图生图输入和参考图顺序，不提交生成", async () => {
-    const user = userEvent.setup();
-    const requestedUrls: string[] = [];
-    vi.stubGlobal("fetch", vi.fn(async (input: RequestInfo | URL) => {
-      requestedUrls.push(typeof input === "string" ? input : input.toString());
-      return { json: async () => ({ error: "会话创建失败" }), ok: false };
-    }));
-    renderStudio();
-    fireEvent.drop(getComposerDropTarget(), {
-      dataTransfer: {
-        files: [
-          new File(["fake-a"], "source-a.png", { type: "image/png" }),
-          new File(["fake-b"], "source-b.png", { type: "image/png" }),
-        ],
-        types: ["Files"],
-      },
-    });
-    await user.click(screen.getByRole("button", { name: "参考图 2 前移" }));
-    await user.type(screen.getByPlaceholderText("描述你希望如何修改这些参考图..."), "保留草稿和参考顺序");
-    await user.click(screen.getByRole("button", { name: "发送" }));
-
-    expect(await screen.findByText("创建会话失败，请稍后再试")).toBeInTheDocument();
-    expect(screen.getByPlaceholderText("描述你希望如何修改这些参考图...")).toHaveValue("保留草稿和参考顺序");
-    expect(screen.getAllByAltText("Reference").map((image) => image.getAttribute("src"))).toEqual([
-      "blob:source-b.png",
-      "blob:source-a.png",
-    ]);
-    expect(requestedUrls).not.toContain("/api/generate");
-  });
-
-  it("自填 API 文生图提交时发送 customProvider", async () => {
-    const user = userEvent.setup();
-    const { generateRequests } = mockGenerateFetch();
-    renderStudio();
-
-    await user.click(getFirstButton("高级设置"));
-    await user.click(getFirstButton("自填 API"));
-    await user.clear(getFirstTextbox("第三方 Base URL"));
-    await user.type(getFirstTextbox("第三方 Base URL"), "https://api.custom.test/v1");
-    await user.type(getFirstLabelText("第三方 API Key"), "sk-custom-key");
-    await user.clear(getFirstLabelText("第三方模型"));
-    await user.type(getFirstLabelText("第三方模型"), "custom-image-model");
-    await user.clear(getFirstTextbox("第三方配置名称"));
-    await user.type(getFirstTextbox("第三方配置名称"), "测试渠道");
-    await user.type(screen.getByPlaceholderText("输入提示词生成图片，或直接粘贴图片进入图生图..."), "第三方 API 生成测试");
-    const sendButton = screen.getByRole("button", { name: "发送" });
-    await waitFor(() => expect(sendButton).not.toBeDisabled());
-    await user.click(sendButton);
-
-    await waitFor(() => {
-      expect(generateRequests).toHaveLength(1);
-    });
-
-    const body = JSON.parse(String(generateRequests[0].body)) as {
-      channelId?: string;
-      customProvider?: {
-        apiKey: string;
-        baseUrl: string;
-        label: string;
-        model: string;
-        remember: boolean;
-      };
-      model: string;
-      providerMode: string;
-    };
-
-    expect(body.providerMode).toBe("custom");
-    expect(body.channelId).toBeUndefined();
-    expect(body.model).toBe("custom-image-model");
-    expect(body.customProvider).toMatchObject({
-      apiKey: "sk-custom-key",
-      baseUrl: "https://api.custom.test/v1",
-      label: "测试渠道",
-      model: "custom-image-model",
-      remember: false,
-    });
-  });
-
-  it("自填 API 图生图提交时发送 FormData 参数", async () => {
-    const user = userEvent.setup();
-    const { generateRequests } = mockGenerateFetch();
-    renderStudio();
-
-    await user.click(getFirstButton("高级设置"));
-    await user.click(getFirstButton("自填 API"));
-    await user.clear(getFirstTextbox("第三方 Base URL"));
-    await user.type(getFirstTextbox("第三方 Base URL"), "https://api.custom.test/v1");
-    await user.type(getFirstLabelText("第三方 API Key"), "sk-custom-key");
-    await user.clear(getFirstLabelText("第三方模型"));
-    await user.type(getFirstLabelText("第三方模型"), "custom-image-model");
-
-    fireEvent.drop(getComposerDropTarget(), {
-      dataTransfer: {
-        files: [new File(["fake-a"], "source-a.png", { type: "image/png" })],
-        types: ["Files"],
-      },
-    });
-    await user.type(screen.getByPlaceholderText("描述你希望如何修改这些参考图..."), "把参考图改成电影感");
-    const sendButton = screen.getByRole("button", { name: "发送" });
-    await waitFor(() => expect(sendButton).not.toBeDisabled());
-    await user.click(sendButton);
-
-    await waitFor(() => {
-      expect(generateRequests).toHaveLength(1);
-    });
-
-    const body = generateRequests[0].body;
-    expect(body).toBeInstanceOf(FormData);
-    const formData = body as FormData;
-    expect(formData.get("providerMode")).toBe("custom");
-    expect(formData.get("customBaseUrl")).toBe("https://api.custom.test/v1");
-    expect(formData.get("customApiKey")).toBe("sk-custom-key");
-    expect(formData.get("customModel")).toBe("custom-image-model");
-    expect(formData.get("rememberProvider")).toBe("false");
-    expect(formData.get("channelId")).toBeNull();
-    expect((formData.get("referenceImages") as File | null)?.name).toBe("source-a.png");
-  });
-
-  it("保留内部图片 URL 拖拽协议，作为参考图提交时发送 referenceImageUrls", async () => {
-    const user = userEvent.setup();
-    const { generateRequests } = mockGenerateFetch();
-    renderStudio({
-      initialGenerations: [createSucceededGeneration()],
-    });
-
-    fireEvent.drop(getComposerDropTarget(), {
-      dataTransfer: {
-        files: [],
-        getData: (type: string) => (type === HISTORY_IMAGE_DRAG_MIME ? "https://example.com/image.png" : ""),
-        types: [HISTORY_IMAGE_DRAG_MIME],
-      },
-    });
-    await user.type(screen.getByPlaceholderText("描述你希望如何修改这些参考图..."), "换成海报风格");
-    await user.click(screen.getByRole("button", { name: "发送" }));
-
-    await waitFor(() => {
-      expect(generateRequests).toHaveLength(1);
-    });
-
-    const body = generateRequests[0].body;
-    expect(body).toBeInstanceOf(FormData);
-    const formData = body as FormData;
-    expect(formData.get("referenceImageUrls")).toBe("https://example.com/image.png");
-    expect(formData.get("referenceImages")).toBeNull();
+    // 打开我的作品并加入参考图，同时保留刚填入的提示词
+    await user.click(screen.getByRole("button", { name: "我的作品" }));
+    const worksDialog = await screen.findByRole("dialog", { name: "选择我的作品" });
+    await user.click(await within(worksDialog).findByRole("button", { name: "参考图" }));
+    await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
+    expect(screen.getByLabelText("提示词")).toHaveValue("清晨阳光穿透玻璃花房，柔和散景");
+    expect(screen.getByAltText("参考图 1")).toBeInTheDocument();
   });
 });

@@ -1,155 +1,99 @@
-import { cleanup, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import type { ComponentProps } from "react";
 
 import { GeneratorStudio } from "@/components/create/generator-studio";
+import type { GenerationItem } from "@/components/create/types";
 
 vi.mock("next/navigation", () => ({
-  useRouter: () => ({
-    push: vi.fn(),
-    refresh: vi.fn(),
-  }),
+  useRouter: () => ({ push: vi.fn(), refresh: vi.fn() }),
 }));
 
-Object.defineProperty(URL, "createObjectURL", {
-  configurable: true,
-  value: vi.fn(() => "blob:preview"),
+afterEach(() => {
+  vi.unstubAllGlobals();
 });
 
-Object.defineProperty(HTMLElement.prototype, "scrollTo", {
-  configurable: true,
-  value: vi.fn(),
-});
-
-function mockLocalStorage() {
-  const store = new Map<string, string>();
-  vi.stubGlobal("localStorage", {
-    clear: vi.fn(() => store.clear()),
-    getItem: vi.fn((key: string) => store.get(key) ?? null),
-    removeItem: vi.fn((key: string) => {
-      store.delete(key);
-    }),
-    setItem: vi.fn((key: string, value: string) => {
-      store.set(key, value);
-    }),
-  });
-}
-
-const baseProps = {
-  ownerId: "owner_test",
-  checkInSummary: {
-    checkInReward: 50,
-    checkedInToday: false,
-  },
-  currentUser: {
-    credits: 500,
-    role: "user" as const,
-  },
+const downgradedRecord: GenerationItem = {
+  id: "job_downgraded",
+  prompt: "超宽屏建筑摄影",
+  model: "gpt-image-2",
+  size: "3840x2160",
+  quality: "high",
+  outputFormat: "png",
+  outputCompression: null,
+  moderation: "auto",
+  count: 1,
+  creditsSpent: 5,
+  generationType: "text_to_image",
+  providerMode: "built_in",
+  status: "succeeded",
+  createdAt: "2026-11-20T08:00:00.000Z",
+  updatedAt: "2026-11-20T08:00:35.000Z",
+  durationMs: 35_000,
+  images: [
+    {
+      id: "img_down",
+      url: "https://cdn.example/down.png",
+      actualWidth: 1024,
+      actualHeight: 576,
+      actualSize: "1024x576",
+      availability: "available",
+    },
+  ],
+  sourceImageUrls: [],
 };
 
-type StudioProps = ComponentProps<typeof GeneratorStudio>;
-type Generation = NonNullable<StudioProps["initialGenerations"]>[number];
-
-function createSucceededGeneration(overrides: Partial<Generation> = {}) {
-  return {
-    count: 1,
-    completedAt: "2026-04-23T08:01:15.000Z",
-    createdAt: "2026-04-23T08:00:00.000Z",
-    creditsSpent: 5,
-    durationMs: 75_000,
-    generationType: "text_to_image" as const,
-    id: "job_1",
-    images: [
-      {
-        id: "image_1",
-        url: "https://example.com/image.png",
-      },
-    ],
-    model: "gpt-image-1",
-    negativePrompt: null,
-    prompt: "电影感夜景肖像",
-    providerMode: "built_in" as const,
-    size: "1024x1024",
-    sourceImageUrl: null,
-    startedAt: "2026-04-23T08:00:02.000Z",
-    status: "succeeded" as const,
-    ...overrides,
-  };
-}
-
-describe("创作台尺寸", () => {
-  beforeEach(() => {
-    mockLocalStorage();
-  });
-
-  afterEach(() => {
-    cleanup();
-    vi.restoreAllMocks();
-    vi.unstubAllGlobals();
-  });
-
-  it("在模式切换后仍可选择尺寸", async () => {
+describe("生图工作台：尺寸/分辨率/宽高比联动与结果尺寸校验", () => {
+  it("选择分辨率与宽高比自动同步 W×H 并随提交发送准确尺寸", async () => {
     const user = userEvent.setup();
-    vi.stubGlobal(
-      "fetch",
-      vi.fn(async () => ({
-        blob: async () => new Blob(["fake-image"], { type: "image/png" }),
-        ok: true,
-      })),
-    );
+    const fetchMock = vi.fn<typeof fetch>(async () => new Response(JSON.stringify({
+      data: { generation: { ...downgradedRecord, id: "job_new", size: "1536x2048", status: "pending", images: [] } },
+    }), { status: 200 }));
+    vi.stubGlobal("fetch", fetchMock);
 
     render(
       <GeneratorStudio
-        {...baseProps}
-        initialConversations={[
-          {
-            createdAt: "2026-04-23T08:00:00.000Z",
-            generationIds: ["job_1"],
-            id: "conversation_1",
-            title: "测试会话",
-          },
-        ]}
-        initialGenerations={[createSucceededGeneration({ conversationId: "conversation_1" })]}
+        ownerId="owner_1"
+        checkInSummary={{ checkInReward: 50, checkedInToday: false }}
+        currentUser={{ credits: 100, role: "user" }}
       />,
     );
 
-    const sizeSelect = screen.getByRole("combobox", { name: "尺寸" });
-    await user.selectOptions(sizeSelect, "2048x1152");
+    // 点 2K 分辨率 + 3:4 宽高比 -> W=1536, H=2048
+    await user.click(within(screen.getByRole("group", { name: "分辨率" })).getByRole("button", { name: "2K" }));
+    await user.click(within(screen.getByRole("group", { name: "宽高比" })).getByRole("button", { name: "3:4" }));
 
-    expect(sizeSelect).toHaveValue("2048x1152");
+    expect(screen.getByLabelText("宽度")).toHaveValue("1536");
+    expect(screen.getByLabelText("高度")).toHaveValue("2048");
 
-    await user.click(screen.getByRole("button", { name: "加入编辑" }));
+    // 互换宽高 -> W=2048, H=1536
+    await user.click(screen.getByRole("button", { name: "互换宽高" }));
+    expect(screen.getByLabelText("宽度")).toHaveValue("2048");
+    expect(screen.getByLabelText("高度")).toHaveValue("1536");
 
-    expect(screen.getByRole("combobox", { name: "尺寸" })).toHaveValue("2048x1152");
-    expect(await screen.findByPlaceholderText("描述你希望如何修改这些参考图...")).toBeInTheDocument();
-  }, 10_000);
+    // 切回 3:4 并提交
+    await user.click(within(screen.getByRole("group", { name: "宽高比" })).getByRole("button", { name: "3:4" }));
+    fireEvent.change(screen.getByLabelText("提示词"), { target: { value: "极简人像棚拍" } });
+    await user.click(screen.getByRole("button", { name: /开始生成/ }));
 
-  it("历史结果会按像素尺寸展示正确比例", () => {
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
+    const submitted = JSON.parse(String(fetchMock.mock.calls[0][1]?.body)) as { size: string };
+    expect(submitted.size).toBe("1536x2048");
+  });
+
+  it("右栏结果展示实际尺寸、比例并在渠道降级时显示告警条", () => {
     render(
       <GeneratorStudio
-        {...baseProps}
-        initialConversations={[
-          {
-            createdAt: "2026-04-23T08:00:00.000Z",
-            generationIds: ["legacy_size_job"],
-            id: "conversation_1",
-            title: "测试会话",
-          },
-        ]}
-        initialGenerations={[
-          createSucceededGeneration({
-            conversationId: "conversation_1",
-            id: "legacy_size_job",
-            size: "1024x1536",
-          }),
-        ]}
+        ownerId="owner_1"
+        checkInSummary={{ checkInReward: 50, checkedInToday: false }}
+        currentUser={{ credits: 100, role: "user" }}
+        initialGenerations={[downgradedRecord]}
       />,
     );
 
-    expect(screen.getByText("gpt-image-1 • 1.5K 竖图 2:3 • 质量自动 • PNG")).toBeInTheDocument();
-    expect(screen.getByText("用时 1分15秒")).toBeInTheDocument();
-
-    const resultImage = screen.getByAltText("生成结果");
-    expect(resultImage.parentElement).toHaveStyle({ aspectRatio: "1024 / 1536" });
+    const stage = screen.getByRole("region", { name: "生成结果" });
+    const card = within(stage).getByRole("article");
+    expect(within(card).getByText("1024x576")).toBeInTheDocument();
+    expect(within(card).getByText(/16:9/)).toBeInTheDocument();
+    expect(within(card).getByText(/渠道降级了请求尺寸：请求 3840x2160，实际 1024x576/)).toBeInTheDocument();
   });
 });
